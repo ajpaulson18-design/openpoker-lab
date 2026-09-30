@@ -72,13 +72,21 @@ are independent scenario inputs here, not a jointly calibrated behavioral model.
 
 ### Opponent learning
 
-Each metric uses a Beta prior with an effective sample size of 10 and updates
-from binary observed opportunities. The shown interval is a clipped normal
-approximation to the posterior. Profile labels and prior values are illustrative.
-Confidence labels describe sample size, not validated predictive accuracy.
+Each tendency uses its own Beta prior with an effective sample size of 10 and
+updates from explicitly counted opportunities. The model currently tracks VPIP,
+PFR, 3-bet, fold-to-bet, aggression, and shown-hand bluff rates independently;
+there is deliberately no global “fish score.” The shown interval is a clipped
+normal approximation to the posterior. Confidence labels describe sample size,
+not validated predictive accuracy.
+
+Unknown/default, Calling Station, Nit, Maniac, Loose-Passive, Tight-Passive,
+Overbluffer, and Underbluffer/Honest Player archetypes provide starting priors,
+not fixed scripts. Sufficient contrary evidence outweighs every archetype.
 
 The profile dashboard pools streets; decision analysis uses only the matching
-street. Unspecified observations remain in the pooled dashboard. The solver's
+street. Programmatic observations may also carry position, action context, and
+explicit qualifiers when those facts were actually observed. Unspecified
+observations remain in the pooled dashboard. The solver's
 profile shortcut copies pooled means into explicit uniform node locks. Aggregated
 aggression does not identify betting frequency conditional on a check, and
 aggregate fold data does not identify hand-specific calling frequencies.

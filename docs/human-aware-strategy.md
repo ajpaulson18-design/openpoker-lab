@@ -129,6 +129,8 @@ not grant mutation of the source object.
   as `profile:balanced` makes an archetype selection visible.
 - `Uncertainty` carries bounds, interval level, method, and confidence label.
 - `OpponentTendencyEstimate` is one opportunity-based posterior estimate.
+- `ObservationEvidence` and `TendencyEvidence` expose the immutable observations
+  underlying an estimate without exposing persistence internals.
 - `OpponentModelSnapshot` is the immutable collection passed into calculation.
 - `OpponentModelProvider` is the storage/model boundary implemented by `Store`.
 - `ActionFrequency` and `ActionValue` make strategy and EV entries explicit.
@@ -198,6 +200,7 @@ the opponent ID, selected prior archetype, model version, and modeled tendencies
 The opponent's display name, notes, raw observation records, database connection,
 and timestamps do not enter a solver snapshot.
 
-The existing `Store.get_opponent()` response and JSON export schema remain
-unchanged. Existing browser flows therefore continue to work while new strategy
-components can depend on an explicit immutable boundary.
+The existing `Store.get_opponent()` response remains unchanged. JSON exports are
+schema version 2 and include persisted priors plus both legacy and v2 observation
+rows. Existing browser flows continue to work while new strategy components can
+depend on an explicit immutable boundary.

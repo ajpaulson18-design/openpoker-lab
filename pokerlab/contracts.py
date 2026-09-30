@@ -124,6 +124,47 @@ class OpponentTendencyEstimate(SerializableContract):
 
 
 @dataclass(frozen=True, slots=True)
+class ObservationEvidence(SerializableContract):
+    """One persisted evidence item contributing to a tendency estimate."""
+
+    observation_id: str
+    successes: int
+    opportunities: int
+    context: TendencyContext
+    note: str = ""
+    created_at: str | None = None
+    legacy: bool = False
+
+    def __post_init__(self) -> None:
+        _require_text(self.observation_id, "Observation identifier")
+        if type(self.successes) is not int or type(self.opportunities) is not int:
+            raise ValueError("Successes and opportunities must be integers.")
+        if self.opportunities <= 0 or not 0 <= self.successes <= self.opportunities:
+            raise ValueError("Evidence counts must satisfy 0 <= successes <= opportunities.")
+        if not isinstance(self.note, str):
+            raise ValueError("Observation note must be a string.")
+        if self.created_at is not None:
+            _require_text(self.created_at, "Observation creation time")
+        if type(self.legacy) is not bool:
+            raise ValueError("Legacy evidence marker must be boolean.")
+
+
+@dataclass(frozen=True, slots=True)
+class TendencyEvidence(SerializableContract):
+    """An estimate together with the immutable observations behind it."""
+
+    estimate: OpponentTendencyEstimate
+    observations: tuple[ObservationEvidence, ...]
+
+    def __post_init__(self) -> None:
+        successes = sum(item.successes for item in self.observations)
+        opportunities = sum(item.opportunities for item in self.observations)
+        if (successes, opportunities) != (self.estimate.successes,
+                                           self.estimate.opportunities):
+            raise ValueError("Evidence totals must match the tendency estimate.")
+
+
+@dataclass(frozen=True, slots=True)
 class OpponentModelSnapshot(SerializableContract):
     """Immutable solver input derived only from observations, priors, and math."""
 

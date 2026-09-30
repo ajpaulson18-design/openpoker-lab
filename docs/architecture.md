@@ -61,6 +61,21 @@ identifier for idempotence at the API level. Supplying the same ID and data twic
 does not count twice; reusing the ID for different data is rejected. Separate
 submissions without a supplied ID count as separate observations.
 
+Archetypes initialize independent priors for each tendency and do not constrain
+later estimates. The v2 store persists those priors in `opponent_priors` and
+counted, contextual evidence in `opponent_observations`. Existing `opponents`
+and single-event `observations` rows remain readable and are combined with v2
+evidence. Malformed legacy evidence raises `OpponentDataError` instead of being
+used silently. Snapshot creation is deterministic and contains no timestamps.
+
+The public model boundary consists of `create_opponent()`,
+`create_opponent_from_archetype()`,
+`record_observation()`, `get_tendency_estimate()`,
+`get_tendency_evidence()`, `opponent_snapshot()`, and
+`reset_opponent_model()`/`reinitialize_opponent_model()`. The older
+`add_opponent()`, `observe()`, and
+`get_opponent()` shapes remain compatibility adapters.
+
 Metric definitions: VPIP and PFR each use dealt hands; 3-bet uses opportunities
 facing a preflop raise; fold-to-bet uses faced bets; aggression uses observed
 postflop actions; showdown bluff uses classified shown aggressive hands. The
