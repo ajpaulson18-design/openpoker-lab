@@ -160,6 +160,70 @@ which. "Baseline" alone does not mean GTO.
 Opponent assumptions belong only to the exploitative calculation. Reference
 results must remain reproducible without a profile or snapshot.
 
+## Restricted-river exploit implementation
+
+`pokerlab.exploit.solve_exploitative_river()` is the first executable bridge
+from `OpponentModelSnapshot` to strategy. It solves the existing restricted
+river game once for a reference CFR policy, translates only supported river
+estimates into inspectable IP node locks, and solves the same game against those
+locks. It can report either the OOP root decision (`check`/`bet`) or the OOP
+response after checking and facing a bet (`fold`/`call`). The two policies remain
+separate in `StrategyAnalysisResult`; neither is described as full-game GTO.
+
+The currently supported mappings are deliberately narrow:
+
+- `fold_to_bet` maps to IP's fold/call response when OOP bets. A single common
+  log-odds shift changes private-hand call frequencies while preserving their
+  reference ordering.
+- `showdown_bluff` maps to the bluff share when IP bets after an OOP check. Only
+  IP hands with negative showdown value against the supplied OOP range are
+  adjusted. Value-hand betting remains at its reference frequency. An
+  unattainable requested bluff share is clipped to the feasible range and
+  produces a warning.
+
+No other aggregate tendency changes a solver node. In particular, the
+`prior_archetype` string is retained for provenance but is never consumed as a
+solver instruction. The explicit tendency posterior, context, prior strength,
+and observed opportunity count are the mathematical inputs.
+
+### Confidence treatment
+
+For an estimate with `n` observed opportunities and Beta prior effective
+strength `k`, the exploit adapter uses the evidence share
+
+```text
+w = n / (n + k)
+modeled frequency = reference frequency + w × (posterior mean - reference frequency)
+```
+
+This has no arbitrary sample threshold: zero evidence gives `w = 0`, and the
+influence of evidence grows smoothly toward one. The resulting aggregate target
+is projected onto hand-specific node frequencies using a common log-odds shift,
+the minimum-discrimination-information update under one mean constraint. The
+reported hero policy is also blended between the reference policy and the raw
+best response by the largest applicable `w`. That second conservative step
+prevents tiny samples from causing a large strategy jump at an equilibrium
+indifference point.
+
+Every applied mapping produces an `OpponentAssumption` containing the tendency,
+context, reference frequency, posterior mean, modeled frequency, exact
+confidence weight, uncertainty, affected node and action, affected private
+hands, and a reason. Action EV differences mean modeled-opponent action EV minus
+the corresponding reference-opponent action EV. `BestResponseInfo` reports the
+decision best response, policy value and residual gap, while also retaining the
+restricted solver's unrestricted profile gap.
+
+### Mathematical limitations
+
+The bridge does not infer ranges from population statistics. Both private ranges
+remain explicit scenario inputs, and blocker removal is still performed by the
+restricted river solver. `showdown_bluff` is treated as a conditional bluff
+share at the IP-after-check node even though real showdown samples are
+selection-biased. The model has one bet size, no raises, no rake, no stack
+constraints, no future streets and no multiway play. Finite-iteration CFR and
+the behavioral translation are research approximations, not a claim of a full
+no-limit Hold'em solution.
+
 ## Calculation, explanation, and personality
 
 Calculation chooses frequencies and EVs. Explanation selection converts those

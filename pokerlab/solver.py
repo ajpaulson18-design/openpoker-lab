@@ -16,6 +16,35 @@ def strategy(regret):
     return [r/mass for r in positive] if mass else [.5, .5]
 
 
+def _node_locks(lock, h1):
+    """Validate public lock input and map hand names to IP information sets.
+
+    A scalar retains the legacy uniform lock.  A mapping locks only the named
+    private hands, which lets an upstream model adjust a behavioral segment
+    without pretending that an aggregate statistic reveals every hidden hand.
+    """
+    lock = lock or {}
+    if set(lock) - {"ip_bet", "ip_call"}:
+        raise ValueError("Available node locks are ip_bet and ip_call.")
+    hand_indexes = {"".join(hand): index for index, hand in enumerate(h1)}
+    nodes, report = {}, {}
+    for public_name, value in lock.items():
+        node = "b" if public_name == "ip_bet" else "c"
+        if isinstance(value, dict):
+            unknown = set(value) - set(hand_indexes)
+            if unknown:
+                raise ValueError(f"Node lock contains hands outside the IP range: {sorted(unknown)}")
+            nodes[node] = {hand_indexes[hand]: number(frequency, public_name, 0, 1)
+                           for hand, frequency in value.items()}
+            report[public_name] = {hand: nodes[node][hand_indexes[hand]]
+                                   for hand in sorted(value)}
+        else:
+            frequency = number(value, public_name, 0, 1)
+            nodes[node] = {index: frequency for index in range(len(h1))}
+            report[public_name] = frequency
+    return nodes, report
+
+
 def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None):
     board = cards(board, 5)
     pot, bet = number(pot, "Pot", .01), number(bet, "Bet", .01)
@@ -37,13 +66,11 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     sizes = {"a": len(h0), "d": len(h0), "b": len(h1), "c": len(h1)}
     regrets = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     sums = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
-    lock = lock or {}
-    if set(lock) - {"ip_bet", "ip_call"}:
-        raise ValueError("Available node locks are ip_bet and ip_call.")
-    locks = {"b" if k == "ip_bet" else "c": number(v, k, 0, 1) for k, v in lock.items()}
+    locks, lock_report = _node_locks(lock, h1)
     half = pot/2
     for _ in range(iterations):
-        s = {k: [[1-locks[k], locks[k]] if k in locks else strategy(r) for r in rows]
+        s = {k: [[1-locks[k][i], locks[k][i]] if k in locks and i in locks[k]
+                 else strategy(r) for i, r in enumerate(rows)]
              for k, rows in regrets.items()}
         delta = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
         for i, j, w, sign in deals:
@@ -94,6 +121,6 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
             "nash_conv": gap, "exploitability": gap/2,
             "oop_best_response_gain": max(0, br0-value),
             "gap_note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
-            "lock": lock, "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+            "lock": lock_report, "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
             "oop": [{"hand": "".join(h), "bet": avg["a"][i][1], "call_after_check": avg["d"][i][1]} for i, h in enumerate(h0)],
             "ip": [{"hand": "".join(h), "bet_after_check": avg["b"][i][1], "call": avg["c"][i][1]} for i, h in enumerate(h1)]}

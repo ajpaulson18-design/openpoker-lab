@@ -86,10 +86,12 @@ not fixed scripts. Sufficient contrary evidence outweighs every archetype.
 The profile dashboard pools streets; decision analysis uses only the matching
 street. Programmatic observations may also carry position, action context, and
 explicit qualifiers when those facts were actually observed. Unspecified
-observations remain in the pooled dashboard. The solver's
-profile shortcut copies pooled means into explicit uniform node locks. Aggregated
-aggression does not identify betting frequency conditional on a check, and
-aggregate fold data does not identify hand-specific calling frequencies.
+observations remain in the pooled dashboard. The
+human-aware river adapter consumes an immutable, street-filtered model snapshot.
+It confidence-blends supported posteriors toward the reference node frequencies
+and records the exact node-lock assumptions. Aggregated aggression does not
+identify betting frequency conditional on a check, and aggregate fold data does
+not identify a hidden-card range or hand-specific calling frequencies.
 
 Showdown bluff observations are selection-biased. VPIP, PFR, and related summary
 statistics cannot by themselves recover an opponent's hidden-card range.
@@ -110,8 +112,9 @@ both players' improvements from exact best responses to the average strategies;
 `exploitability` is half that sum. Best responses aggregate indistinguishable
 opponent hands **before** choosing an action.
 
-With opponent node locks, the unrestricted gap measures the exploitability of
-the resulting profile, not convergence in the locked game. The separate
+Node locks may be uniform or hand-specific. With opponent node locks, the
+unrestricted gap measures the exploitability of the resulting profile, not
+convergence in the locked game. The separate
 `oop_best_response_gain` measures remaining improvement for the unlocked player.
 Strategies at unreachable information sets need not be meaningful.
 

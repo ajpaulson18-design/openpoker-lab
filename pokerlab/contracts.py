@@ -228,12 +228,54 @@ class OpponentAssumption(SerializableContract):
     value: float
     evidence_count: int
     uncertainty: Uncertainty | None = None
+    node: str | None = None
+    action: str | None = None
+    baseline_frequency: float | None = None
+    posterior_mean: float | None = None
+    confidence_weight: float | None = None
+    reason: str | None = None
+    affected_hands: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _require_text(self.tendency_id, "Tendency identifier")
         _require_probability(self.value, "Assumption value")
         if type(self.evidence_count) is not int or self.evidence_count < 0:
             raise ValueError("Evidence count must be a non-negative integer.")
+        for label, probability in (("Baseline frequency", self.baseline_frequency),
+                                   ("Posterior mean", self.posterior_mean),
+                                   ("Confidence weight", self.confidence_weight)):
+            if probability is not None:
+                _require_probability(probability, label)
+        for label, text in (("Node", self.node), ("Action", self.action),
+                            ("Assumption reason", self.reason)):
+            if text is not None:
+                _require_text(text, label)
+        if any(not isinstance(hand, str) or not hand for hand in self.affected_hands):
+            raise ValueError("Affected hands must be non-empty strings.")
+
+
+@dataclass(frozen=True, slots=True)
+class BestResponseInfo(SerializableContract):
+    """Best-response facts for the reported hero decision."""
+
+    action: str
+    value: float
+    policy_value: float
+    gap: float
+    unrestricted_profile_gap: float | None = None
+
+    def __post_init__(self) -> None:
+        _require_text(self.action, "Best-response action")
+        for label, value in (("Best-response value", self.value),
+                             ("Policy value", self.policy_value),
+                             ("Best-response gap", self.gap),
+                             ("Unrestricted profile gap", self.unrestricted_profile_gap)):
+            if value is not None and (isinstance(value, bool)
+                                      or not isinstance(value, (int, float))
+                                      or not math.isfinite(value)):
+                raise ValueError(f"{label} must be finite.")
+        if self.gap < -1e-9:
+            raise ValueError("Best-response gap cannot be negative.")
 
 
 def _validate_strategy(items: tuple[ActionFrequency, ...], legal: tuple[str, ...], label: str) -> None:
@@ -261,6 +303,7 @@ class StrategyAnalysisResult(SerializableContract):
     model_version: str
     limitations: tuple[str, ...] = ()
     warnings: tuple[str, ...] = ()
+    best_response: BestResponseInfo | None = None
 
     def __post_init__(self) -> None:
         _require_text(self.analysis_id, "Analysis identifier")
@@ -277,6 +320,8 @@ class StrategyAnalysisResult(SerializableContract):
         for label, value in (("Confidence", self.confidence), ("Solver version", self.solver_version),
                              ("Model version", self.model_version)):
             _require_text(value, label)
+        if self.best_response and self.best_response.action not in self.legal_actions:
+            raise ValueError("Best-response action must be legal for this analysis.")
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,9 +1,12 @@
 import itertools
 import json
 import random
+import shutil
 import tempfile
 import threading
 import unittest
+import uuid
+from contextlib import contextmanager
 from dataclasses import FrozenInstanceError
 from pathlib import Path
 from urllib.error import HTTPError
@@ -22,6 +25,17 @@ from pokerlab.contracts import (ActionFrequency, ActionValue, BetaPrior,
 from pokerlab.game import Game, settle
 from pokerlab.solver import solve
 from pokerlab.server import make_server
+
+
+@contextmanager
+def writable_temp_directory():
+    """Avoid Python 3.14's owner-only Windows temp-directory ACL in sandboxes."""
+    path = Path(tempfile.gettempdir()) / f"openpoker-test-{uuid.uuid4().hex}"
+    path.mkdir()
+    try:
+        yield str(path)
+    finally:
+        shutil.rmtree(path, ignore_errors=True)
 
 
 class CardsTests(unittest.TestCase):
@@ -86,7 +100,7 @@ class EquityTests(unittest.TestCase):
 
 class ModelTests(unittest.TestCase):
     def test_update_filter_and_dedup(self):
-        with tempfile.TemporaryDirectory() as d:
+        with writable_temp_directory() as d:
             s=Store(Path(d)/'db.sqlite3'); o=s.add_opponent('Test','balanced'); identity=o['id']
             old=o['metrics']['fold_to_bet']['mean']
             s.observe(identity,'fold_to_bet',True,'river',id='hand1')
@@ -97,7 +111,7 @@ class ModelTests(unittest.TestCase):
             with self.assertRaises(ValueError):s.observe(identity,'fold_to_bet',False,'river',id='hand1')
 
     def test_immutable_snapshot_matches_street_filtered_model(self):
-        with tempfile.TemporaryDirectory() as d:
+        with writable_temp_directory() as d:
             store=Store(Path(d)/'db.sqlite3'); opponent=store.add_opponent('Test','tight')
             store.observe(opponent['id'],'fold_to_bet',True,'river',id='river-1')
             store.observe(opponent['id'],'fold_to_bet',False,'turn',id='turn-1')
@@ -250,7 +264,7 @@ class SolverTests(unittest.TestCase):
 
 class ServerTests(unittest.TestCase):
     def test_api_validation_and_persistence(self):
-        with tempfile.TemporaryDirectory() as d:
+        with writable_temp_directory() as d:
             server=make_server(0,Path(d)/'db.sqlite3')
             thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
             root=f'http://127.0.0.1:{server.server_port}'
