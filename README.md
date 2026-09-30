@@ -36,6 +36,7 @@ Choose another port with `--port 8766`, or another database with
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; optional opponent node locks |
+| Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; positions and blinds; no-limit betting; short all-ins; side pots; odd-chip settlement; visible hole cards and named action history |
 
 ### A useful first session

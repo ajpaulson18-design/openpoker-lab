@@ -170,6 +170,38 @@ The stable analysis ID joins persisted calculation results, explanation payloads
 UI events, and future session review. It is not a database primary key by itself;
 the current store may continue assigning its own saved-record ID.
 
+## Deterministic explanation engine
+
+`pokerlab.explanations.explain()` accepts a `StrategyAnalysisResult` and the
+calculation layer's recommended action. Requiring the recommendation as an input
+is deliberate: the explanation layer never selects the largest EV, ranks
+actions, or otherwise makes a poker decision. It copies EVs, strategy
+frequencies, opponent assumptions, uncertainty, limitations, and the analysis ID
+without changing their numeric values.
+
+The output uses schema version 1 and supports JSON/dictionary round-trips. It
+contains the recommendation, alternatives, reference and opponent-specific
+strategies, the adjustment for the recommended action, modeled evidence,
+mathematical and plain-language reasons, confidence, uncertainty, caveats, and
+field-level provenance. This provider-neutral shape can be consumed by a future
+optional LLM adapter, but the local deterministic renderer remains complete on
+its own.
+
+Three presentation levels are available:
+
+- `short`: one compact recommendation and EV statement.
+- `normal`: reference-versus-opponent strategy, evidence, confidence, and EV.
+- `beginner`: normal detail plus deterministic definitions of expected value,
+  ranges, pot odds, action frequencies, bluff-catching, value betting, opponent
+  tendencies, and uncertainty.
+
+Low confidence is copied from the calculation result and produces cautious
+language. The explanation engine does not invent a new confidence threshold.
+When assumptions or uncertainty are absent, those fields remain empty and a
+caveat states that no tendency-based cause can be claimed. The HTTP
+`POST /api/explain` endpoint accepts a serialized analysis contract,
+`recommended_action`, and optional `level` and returns this payload.
+
 ## Guidance for parallel implementation agents
 
 1. Import contracts from `pokerlab.contracts`; do not create competing payload

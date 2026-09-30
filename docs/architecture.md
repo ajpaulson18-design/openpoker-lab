@@ -17,7 +17,8 @@ Browser (pokerlab/web)
        ├─ equity.py     sampled runouts or exact river enumeration
        ├─ models.py     opponent priors, observations, SQLite transactions
        ├─ contracts.py  immutable human-aware component boundaries
-       ├─ analysis.py   one-decision EV and explanations
+       ├─ analysis.py   one-decision EV calculation
+       ├─ explanations.py deterministic facts, prose, and JSON round-trips
        ├─ solver.py     restricted river CFR and best-response evaluation
        └─ game.py       full-hand betting mechanics and pot settlement
 ```
