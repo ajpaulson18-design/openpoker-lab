@@ -1,5 +1,9 @@
 # Architecture and mathematical conventions
 
+The contracts and layer boundaries for opponent-specific strategy are documented
+in [human-aware-strategy.md](human-aware-strategy.md). This document describes
+the currently implemented application and mathematical conventions.
+
 ## Flow
 
 The browser sends JSON to a loopback-only Python HTTP server. The server delegates
@@ -12,6 +16,7 @@ Browser (pokerlab/web)
        ├─ cards.py      parsing, range expansion, exact hand comparison
        ├─ equity.py     sampled runouts or exact river enumeration
        ├─ models.py     opponent priors, observations, SQLite transactions
+       ├─ contracts.py  immutable human-aware component boundaries
        ├─ analysis.py   one-decision EV and explanations
        ├─ solver.py     restricted river CFR and best-response evaluation
        └─ game.py       full-hand betting mechanics and pot settlement

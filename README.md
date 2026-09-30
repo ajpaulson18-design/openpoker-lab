@@ -155,10 +155,12 @@ unit suite on Python 3.11, 3.12, and 3.13.
 
 ## Reading the code
 
-Start with [`docs/architecture.md`](docs/architecture.md). The implementation uses
-Python's standard library, plain JavaScript, HTML, and CSS so the algorithms and
-assumptions stay visible. No proprietary solutions, interfaces, or poker databases
-are included.
+Start with [`docs/architecture.md`](docs/architecture.md). The human-aware layer
+boundaries and shared contracts are documented in
+[`docs/human-aware-strategy.md`](docs/human-aware-strategy.md). The implementation
+uses Python's standard library, plain JavaScript, HTML, and CSS so the algorithms
+and assumptions stay visible. No proprietary solutions, interfaces, or poker
+databases are included.
 
 ## Development direction
 

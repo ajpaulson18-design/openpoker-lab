@@ -9,6 +9,8 @@ from contextlib import contextmanager
 from pathlib import Path
 import sqlite3
 import uuid
+from .contracts import (BetaPrior, OpponentModelSnapshot,
+                        OpponentTendencyEstimate, TendencyContext, Uncertainty)
 
 METRICS = ("vpip", "pfr", "three_bet", "fold_to_bet", "aggression", "showdown_bluff")
 PROFILES = {
@@ -18,6 +20,7 @@ PROFILES = {
     "aggressive": (.42, .31, .14, .32, .68, .40),
 }
 STREETS = ("all", "preflop", "flop", "turn", "river")
+OPPONENT_MODEL_VERSION = "beta-opportunity-v1"
 
 
 def posterior(mean, successes, opportunities, strength=10):
@@ -91,6 +94,38 @@ class Store:
         with self.connect() as db:
             ids = [r[0] for r in db.execute("SELECT id FROM opponents ORDER BY name")]
         return [self.get_opponent(i) for i in ids]
+
+    def opponent_snapshot(self, opponent_id: str, street: str = "all") -> OpponentModelSnapshot:
+        """Return immutable modeled evidence for consumers such as solvers.
+
+        This is the persistence boundary: calculation code receives the snapshot
+        and does not issue its own SQLite queries for individual statistics.
+        """
+        opponent = self.get_opponent(opponent_id, street)
+        context = TendencyContext(street=None if street == "all" else street)
+        estimates = []
+        for metric, prior_mean in zip(METRICS, PROFILES[opponent["profile"]]):
+            modeled = opponent["metrics"][metric]
+            estimates.append(OpponentTendencyEstimate(
+                tendency_id=metric,
+                context=context,
+                successes=modeled["successes"],
+                opportunities=modeled["observations"],
+                prior=BetaPrior(prior_mean, modeled["prior_strength"],
+                                f"profile:{opponent['profile']}"),
+                posterior_mean=modeled["mean"],
+                uncertainty=Uncertainty(
+                    lower=modeled["interval95"][0], upper=modeled["interval95"][1],
+                    level=.95, method=modeled["interval_method"],
+                    confidence=modeled["confidence"]),
+                sample_size=modeled["observations"],
+            ))
+        return OpponentModelSnapshot(
+            opponent_id=opponent_id,
+            prior_archetype=opponent["profile"],
+            model_version=OPPONENT_MODEL_VERSION,
+            tendencies=tuple(estimates),
+        )
 
     def observe(self, opponent_id, metric, success, street="all", note="", id=None):
         self.get_opponent(opponent_id)
