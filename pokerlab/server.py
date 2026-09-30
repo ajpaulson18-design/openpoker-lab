@@ -8,6 +8,7 @@ from urllib.parse import urlparse, parse_qs
 import uuid
 from .analysis import analyze
 from .equity import simulate
+from .explanations import analysis_from_dict, explain
 from .game import Game
 from .models import Store, PROFILES
 from .solver import solve
@@ -99,6 +100,10 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return result
             if path == "/api/solve":
                 return solve(**data)
+            if path == "/api/explain":
+                analysis = analysis_from_dict(data["analysis"])
+                return explain(analysis, data["recommended_action"],
+                               data.get("level", "normal")).to_dict()
             if path == "/api/opponents":
                 return store.add_opponent(**data)
             if path == "/api/observe":
