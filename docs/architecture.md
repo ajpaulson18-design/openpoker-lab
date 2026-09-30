@@ -84,6 +84,10 @@ specified finite game, up to floating-point precision.
 
 ## Betting engine
 
+Player names are unique, user-defined labels mapped to stable clockwise seat
+numbers. Names appear in state, action history, and pot settlements; the numerical
+seat remains the source of truth for positions and odd-chip order.
+
 Chip amounts are integers. `raise` takes a street total, not a raise increment.
 The engine tracks each player's street contribution, total contribution, remaining
 stack, fold status, and last faced wager. Cumulative short all-ins reopen raising

@@ -33,15 +33,24 @@ def settle(contributions, folded, hands, board, button=0):
 
 
 class Game:
-    def __init__(self, stacks=None, button=0, small_blind=1, big_blind=2, seed=None):
+    def __init__(self, stacks=None, names=None, button=0, small_blind=1, big_blind=2, seed=None):
         stacks = [200, 200] if stacks is None else stacks
         if not isinstance(stacks, list) or not 2 <= len(stacks) <= 6 or any(type(s) is not int or not 1 <= s <= 1_000_000 for s in stacks):
             raise ValueError("Provide 2–6 positive integer stacks, at most 1 million each.")
+        if names is None:
+            names = [f"Player {i+1}" for i in range(len(stacks))]
+        if (not isinstance(names, list) or len(names) != len(stacks)
+                or any(not isinstance(name, str) or not 1 <= len(name.strip()) <= 40 for name in names)):
+            raise ValueError("Provide one player name per stack, each 1–40 characters.")
+        names = [name.strip() for name in names]
+        if len({name.casefold() for name in names}) != len(names):
+            raise ValueError("Player names must be unique.")
         if type(button) is not int or not 0 <= button < len(stacks):
             raise ValueError("Invalid button seat.")
         if type(small_blind) is not int or type(big_blind) is not int or not 0 < small_blind < big_blind:
             raise ValueError("Blinds must be positive integers, small blind less than big blind.")
         self.stacks = stacks.copy()
+        self.names = names
         self.initial = stacks.copy()
         self.button, self.big_blind = button, big_blind
         self.deck = list(DECK)
@@ -106,7 +115,8 @@ class Game:
             raise ValueError("That action is not legal here.")
         self.last_acted[i] = self.current_bet
         self.pending.discard(i)
-        self.log.append({"seat": i, "street": self.street, "action": action, "amount": amount})
+        self.log.append({"seat": i, "name": self.names[i], "street": self.street,
+                         "action": action, "amount": amount})
         self.advance()
         return self.state()
 
@@ -146,9 +156,12 @@ class Game:
         self.pending.clear()
 
     def state(self):
-        return {"stacks": self.stacks, "hands": self.hands, "board": self.board,
+        named_pots = [{**pot, "winner_names": [self.names[i] for i in pot["winners"]]}
+                      for pot in self.pots]
+        return {"stacks": self.stacks, "names": self.names, "hands": self.hands, "board": self.board,
                 "button": self.button, "actor": None if self.done else self.actor,
+                "actor_name": None if self.done else self.names[self.actor],
                 "committed": self.committed, "street_bets": self.street_bets, "folded": self.folded,
                 "pot": sum(self.committed), "street": self.street, "done": self.done,
-                "legal": self.legal(), "log": self.log, "pots": self.pots,
+                "legal": self.legal(), "log": self.log, "pots": named_pots,
                 "net": [s-i for s, i in zip(self.stacks, self.initial)] if self.done else None}

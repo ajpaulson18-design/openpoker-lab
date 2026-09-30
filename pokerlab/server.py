@@ -52,7 +52,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return self.respond(store.export())
             if url.path == "/api/health":
                 return self.respond({"ok": True, "version": "0.1.0"})
-            filename = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css"}.get(url.path)
+            filename = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css",
+                        "/names.css": "names.css"}.get(url.path)
             if filename:
                 mime = {"html": "text/html", "js": "text/javascript", "css": "text/css"}[filename.split(".")[-1]]
                 return self.respond((WEB/filename).read_bytes(), content_type=mime)

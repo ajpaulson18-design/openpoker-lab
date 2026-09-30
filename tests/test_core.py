@@ -91,6 +91,15 @@ class ModelTests(unittest.TestCase):
 
 
 class GameTests(unittest.TestCase):
+    def test_custom_names_are_used_in_state_and_history(self):
+        g=Game([100,100,100],names=['Hero','Mike','Sarah'],seed=4)
+        self.assertEqual(g.state()['names'],['Hero','Mike','Sarah'])
+        self.assertEqual(g.state()['actor_name'],'Hero')
+        g.act('call')
+        self.assertEqual(g.state()['log'][0]['name'],'Hero')
+        with self.assertRaises(ValueError):Game([100,100],names=['Mike','mike'])
+        with self.assertRaises(ValueError):Game([100,100],names=['Only one'])
+
     def test_positions_and_checkdown(self):
         for n in (2,3,6):
             g=Game([100]*n,seed=4)

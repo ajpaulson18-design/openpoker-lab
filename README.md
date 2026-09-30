@@ -36,7 +36,7 @@ Choose another port with `--port 8766`, or another database with
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; optional opponent node locks |
-| Hand sandbox | 2–6 seats; positions and blinds; no-limit betting; short all-ins; side pots; odd-chip settlement; visible hole cards and action history |
+| Hand sandbox | 2–6 named players; positions and blinds; no-limit betting; short all-ins; side pots; odd-chip settlement; visible hole cards and named action history |
 
 ### A useful first session
 
@@ -50,6 +50,8 @@ Choose another port with `--port 8766`, or another database with
    Compare actions, read the assumptions, and try different calling ranges.
 5. In **River solver**, solve the default compact game. Then lock the opponent's
    call frequency and observe how the out-of-position strategy changes.
+6. In **Hand sandbox**, enter the players' names in clockwise order. Those names
+   follow every action and pot award while seat numbers preserve table position.
 
 ## Model boundaries
 
