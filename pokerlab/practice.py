@@ -12,7 +12,7 @@ from .explanations import explain
 from .personalities import CoachPersonality, render_personality
 
 
-PRACTICE_ANALYSIS_VERSION = "practice-ev-v1"
+PRACTICE_ANALYSIS_VERSION = "practice-ev-v2"
 
 
 def visible_state(game, hero_seat: int = 0) -> dict[str, Any]:
@@ -35,27 +35,21 @@ def _legal_actions(legal: dict[str, Any]) -> list[str]:
     return [name for name in ("fold", "check", "call", "raise") if legal.get(name)]
 
 
-def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Estimate legal-action EVs without consulting any opponent hole cards."""
-    seat = game.actor
-    legal = game.legal()
-    actions = _legal_actions(legal)
-    pot = float(sum(game.committed))
-    hero = "".join(game.hands[seat])
-    board = "".join(game.board)
-    equity = simulate(hero, board, ["random"], trials=600, seed=7919 + len(game.log))
+def _calculate_analysis(inputs: dict[str, Any]) -> dict[str, Any]:
+    """Calculate from a complete, persisted, hidden-information-safe input set."""
+    legal = inputs["legal"]
+    actions = list(inputs["legal_actions"])
+    pot = float(inputs["pot"])
+    hero = "".join(inputs["known_cards"])
+    board = "".join(inputs["public_cards"])
+    equity = simulate(hero, board, [inputs["opponent_range"]],
+                      trials=inputs["equity_trials"], seed=inputs["equity_seed"])
     eq = equity["equity"]
     call = float(legal.get("call") or 0)
-    fold_model = .45
-    confidence = "illustrative"
-    model_version = "no-opponent-model"
-    opponent_id = None
-    if opponent:
-        metric = opponent["metrics"]["fold_to_bet"]
-        fold_model = metric["mean"]
-        confidence = metric["confidence"]
-        model_version = opponent.get("model_version", "beta-opportunity-v1")
-        opponent_id = opponent["id"]
+    fold_model = inputs["fold_to_bet"]
+    confidence = inputs["confidence"]
+    model_version = inputs["opponent_model_version"]
+    opponent_id = inputs["opponent_id"]
 
     baseline, modeled = {}, {}
     for action in actions:
@@ -66,32 +60,25 @@ def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, 
         elif action == "call":
             baseline[action] = modeled[action] = eq * (pot + call) - call
         else:
-            investment = max(float(legal["raise_min"] - game.street_bets[seat]), 1.0)
+            investment = max(float(legal["raise_min"] - inputs["actor_street_bet"]), 1.0)
             called_ev = eq * (pot + 2 * investment) - investment
             baseline[action] = .45 * pot + .55 * called_ev
             modeled[action] = fold_model * pot + (1 - fold_model) * called_ev
 
     recommended = max(actions, key=lambda action: modeled[action])
     baseline_recommended = max(actions, key=lambda action: baseline[action])
-    normalized = {
-        "street": game.street, "public_cards": list(game.board), "known_cards": list(game.hands[seat]),
-        "pot": pot, "stacks": list(game.stacks), "legal_actions": actions,
-        "legal": legal, "committed": list(game.committed),
-        "street_bets": list(game.street_bets),
+    warnings = ["Practice EVs are simplified estimates, not a complete no-limit Hold'em solution."]
+    protected_facts = {
+        "analysis_inputs": inputs,
         "baseline_actions": baseline, "actions": modeled, "opponent_id": opponent_id,
-        "model_version": model_version, "analysis_version": PRACTICE_ANALYSIS_VERSION,
-        "equity_seed": equity["seed"], "equity_trials": equity["trials"],
+        "recommended": recommended, "baseline_recommended": baseline_recommended,
+        "confidence": confidence, "opponent_model_snapshot": inputs["opponent_model_snapshot"],
+        "equity": equity, "warnings": warnings,
     }
-    model_snapshot = None
-    if opponent:
-        model_snapshot = {
-            "opponent_id": opponent["id"], "model_version": model_version,
-            "prior_archetype": opponent["profile"], "street": opponent["street"],
-            "metrics": opponent["metrics"],
-        }
     return {
-        "analysis_id": stable_analysis_id(normalized, PRACTICE_ANALYSIS_VERSION),
+        "analysis_id": stable_analysis_id(protected_facts, PRACTICE_ANALYSIS_VERSION),
         "analysis_version": PRACTICE_ANALYSIS_VERSION,
+        "analysis_inputs": inputs,
         "recommended": recommended,
         "baseline_recommended": baseline_recommended,
         "actions": modeled,
@@ -100,11 +87,11 @@ def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, 
         "confidence": confidence,
         "opponent_id": opponent_id,
         "opponent_model_version": model_version,
-        "opponent_model_snapshot": model_snapshot,
-        "street": game.street,
+        "opponent_model_snapshot": inputs["opponent_model_snapshot"],
+        "street": inputs["street"],
         "explanation": (f"{recommended.title()} has the highest estimated EV in this simplified "
                         "checkdown model. The estimate uses only visible board cards and the acting player's cards."),
-        "warnings": ["Practice EVs are simplified estimates, not a complete no-limit Hold'em solution."],
+        "warnings": warnings,
     }
 
 
@@ -114,17 +101,25 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
     chosen = analysis["actions"][chosen_action]
     return {
         "street": game.street,
+        "actor": game.actor,
+        "button": game.button,
         "public_cards": list(game.board),
         "known_cards": list(game.hands[game.actor]),
         "pot": sum(game.committed),
         "stacks": list(game.stacks),
         "legal_actions": _legal_actions(game.legal()),
+        "legal_action_details": dict(game.legal()),
+        "committed": list(game.committed),
+        "street_bets": list(game.street_bets),
+        "current_bet": game.current_bet,
+        "min_raise": game.min_raise,
         "chosen_action": chosen_action,
         "opponent_id": opponent["id"] if opponent else None,
         "opponent_model_snapshot": analysis.get("opponent_model_snapshot"),
         "ranges_settings": {"opponent_range": "random", "trials": analysis["equity"]["trials"],
                             "seed": analysis["equity"]["seed"]},
         "analysis_at_time": analysis,
+        "analysis_inputs": analysis["analysis_inputs"],
         "ev_loss": max(0.0, best - chosen),
         "matched_recommendation": chosen_action == analysis["recommended"],
         "successful_exploit": (chosen_action == analysis["recommended"] and
@@ -136,9 +131,66 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
     }
 
 
-def render_coach_personality(analysis: dict[str, Any],
-                             personality: CoachPersonality | str) -> dict[str, Any]:
-    """Render a voice strictly downstream of the saved practice calculation."""
+def analyze_recorded_decision(inputs: dict[str, Any]) -> dict[str, Any]:
+    """Recalculate a historical decision from its versioned saved inputs."""
+    if not isinstance(inputs, dict) or inputs.get("analysis_version") != PRACTICE_ANALYSIS_VERSION:
+        raise ValueError("Unsupported or malformed practice-analysis inputs.")
+    required = {
+        "street", "public_cards", "known_cards", "pot", "stacks", "legal_actions",
+        "legal", "committed", "street_bets", "actor", "button", "current_bet",
+        "min_raise", "actor_street_bet", "opponent_range", "equity_seed",
+        "equity_trials", "fold_to_bet", "confidence", "opponent_id",
+        "opponent_model_version", "opponent_model_snapshot",
+    }
+    if required - inputs.keys():
+        raise ValueError("Practice-analysis inputs are incomplete.")
+    return _calculate_analysis(inputs)
+
+
+def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Estimate legal-action EVs without consulting any opponent hole cards."""
+    seat = game.actor
+    legal = game.legal()
+    metric = opponent["metrics"]["fold_to_bet"] if opponent else None
+    model_version = (opponent.get("model_version", "beta-opportunity-v1")
+                     if opponent else "no-opponent-model")
+    model_snapshot = None
+    if opponent:
+        model_snapshot = {
+            "opponent_id": opponent["id"], "model_version": model_version,
+            "prior_archetype": opponent["profile"], "street": opponent["street"],
+            "metrics": opponent["metrics"],
+        }
+    inputs = {
+        "analysis_version": PRACTICE_ANALYSIS_VERSION,
+        "street": game.street,
+        "public_cards": list(game.board),
+        "known_cards": list(game.hands[seat]),
+        "pot": float(sum(game.committed)),
+        "stacks": list(game.stacks),
+        "legal_actions": _legal_actions(legal),
+        "legal": dict(legal),
+        "committed": list(game.committed),
+        "street_bets": list(game.street_bets),
+        "actor": seat,
+        "button": game.button,
+        "current_bet": game.current_bet,
+        "min_raise": game.min_raise,
+        "actor_street_bet": game.street_bets[seat],
+        "opponent_range": "random",
+        "equity_seed": 7919 + len(game.log),
+        "equity_trials": 600,
+        "fold_to_bet": metric["mean"] if metric else .45,
+        "confidence": metric["confidence"] if metric else "illustrative",
+        "opponent_id": opponent["id"] if opponent else None,
+        "opponent_model_version": model_version,
+        "opponent_model_snapshot": model_snapshot,
+    }
+    return _calculate_analysis(inputs)
+
+
+def build_coach_explanation(analysis: dict[str, Any]):
+    """Build the structured deterministic explanation used by the coach UI."""
     legal = tuple(analysis["actions"])
     baseline = analysis["baseline_recommended"]
     recommended = analysis["recommended"]
@@ -168,7 +220,13 @@ def render_coach_personality(analysis: dict[str, Any],
         model_version=analysis["opponent_model_version"],
         limitations=tuple(analysis["warnings"]),
     )
-    rendered = render_personality(explain(contract, recommended), personality)
+    return explain(contract, recommended)
+
+
+def render_coach_personality(analysis: dict[str, Any],
+                             personality: CoachPersonality | str) -> dict[str, Any]:
+    """Render a voice strictly downstream of the saved practice calculation."""
+    rendered = render_personality(build_coach_explanation(analysis), personality)
     return {"personality": rendered.personality.value,
             "analysis_id": rendered.analysis_id,
             "facts_fingerprint": rendered.facts_fingerprint,
