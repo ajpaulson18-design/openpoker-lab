@@ -19,10 +19,26 @@ records retain the calculation, model version, visible state, and sanitized mode
 snapshot used at decision time. UI visibility and personality selection are not
 calculation inputs.
 
+The release-candidate audit tightened this boundary further. Practice is now a
+single-hero flow: only seat zero is exposed to the browser, non-hero seats use a
+deterministic check/call policy, and only hero decisions are coached and stored.
+Personality values are validated before game mutation. Practice analysis schema
+`practice-ev-v2` hashes its complete calculation output and model evidence, while
+each decision retains the legal amounts and versioned inputs required for exact
+recalculation. The Explain disclosure consumes the deterministic structured
+explanation payload, and malformed persisted sessions fail with a controlled
+JSON error instead of a partial review.
+
 Shared conflicts occurred in `pokerlab/models.py`, `pokerlab/contracts.py`, the
 README, and architecture documentation. The v2 schema and model behavior were
 kept while explanation and session interfaces were composed around them. No CFR
 mathematics was rewritten during conflict resolution.
+
+The final audit fixes overlapped in `pokerlab/practice.py`, `pokerlab/server.py`,
+`pokerlab/web/app.js`, and `tests/test_practice.py`. Integration preserved both
+the private single-hero flow and the replayable analysis record: automatic
+opponent actions never enter the decision history, while every hero event retains
+the exact pre-action state and opponent snapshot.
 
 ## Verification and adversarial coverage
 
@@ -30,6 +46,9 @@ The complete unit suite covers historical behavior plus zero/one observations,
 extreme rates, contrary evidence overwhelming priors, invalid counts, card
 blocking, ties, node locks, short all-ins, side pots, hidden cards, historical
 review, repeated personality rendering, malformed data, and offline operation.
+The final combined run passed all 86 tests in 27.377 seconds. The exhaustive
+evaluator independently checked all 2,598,960 five-card hands against the known
+category totals and passed.
 On Python 3.14 for Windows, standard `TemporaryDirectory` may create unusable
 owner-only ACLs in the sandbox; the release run uses an equivalent workspace-safe
 temporary-directory fixture. This is a test-host issue, not a runtime dependency.
@@ -44,6 +63,8 @@ temporary-directory fixture. This is a test-host issue, not a runtime dependency
   beyond documented translations.
 - Showdown bluff evidence is selection-biased; uncertainty labels are heuristic.
 - Sessions are local SQLite records and in-memory hands do not survive restart.
+- Practice currently fixes the human hero at seat zero; automatic opponents use
+  a deterministic check/call policy rather than a strategic playing agent.
 - The optional conversational provider is interface-only and disabled by default.
 
 ## Suggested next phase
