@@ -12,7 +12,7 @@ from .explanations import explain
 from .personalities import CoachPersonality, render_personality
 
 
-PRACTICE_ANALYSIS_VERSION = "practice-ev-v2"
+PRACTICE_ANALYSIS_VERSION = "practice-ev-v3"
 
 
 def visible_state(game, hero_seat: int = 0) -> dict[str, Any]:
@@ -42,7 +42,7 @@ def _calculate_analysis(inputs: dict[str, Any]) -> dict[str, Any]:
     pot = float(inputs["pot"])
     hero = "".join(inputs["known_cards"])
     board = "".join(inputs["public_cards"])
-    equity = simulate(hero, board, [inputs["opponent_range"]],
+    equity = simulate(hero, board, inputs["opponent_ranges"],
                       trials=inputs["equity_trials"], seed=inputs["equity_seed"])
     eq = equity["equity"]
     call = float(legal.get("call") or 0)
@@ -67,7 +67,11 @@ def _calculate_analysis(inputs: dict[str, Any]) -> dict[str, Any]:
 
     recommended = max(actions, key=lambda action: modeled[action])
     baseline_recommended = max(actions, key=lambda action: baseline[action])
-    warnings = ["Practice EVs are simplified estimates, not a complete no-limit Hold'em solution."]
+    warnings = [
+        "Practice EVs are simplified estimates, not a complete no-limit Hold'em solution.",
+        ("Showdown equity includes every live opponent. Raise EV still uses a simplified "
+         "independent-fold, at-most-one-caller response model."),
+    ]
     protected_facts = {
         "analysis_inputs": inputs,
         "baseline_actions": baseline, "actions": modeled, "opponent_id": opponent_id,
@@ -116,7 +120,8 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
         "chosen_action": chosen_action,
         "opponent_id": opponent["id"] if opponent else None,
         "opponent_model_snapshot": analysis.get("opponent_model_snapshot"),
-        "ranges_settings": {"opponent_range": "random", "trials": analysis["equity"]["trials"],
+        "ranges_settings": {"opponent_ranges": list(analysis["analysis_inputs"]["opponent_ranges"]),
+                            "trials": analysis["equity"]["trials"],
                             "seed": analysis["equity"]["seed"]},
         "analysis_at_time": analysis,
         "analysis_inputs": analysis["analysis_inputs"],
@@ -138,7 +143,7 @@ def analyze_recorded_decision(inputs: dict[str, Any]) -> dict[str, Any]:
     required = {
         "street", "public_cards", "known_cards", "pot", "stacks", "legal_actions",
         "legal", "committed", "street_bets", "actor", "button", "current_bet",
-        "min_raise", "actor_street_bet", "opponent_range", "equity_seed",
+        "min_raise", "actor_street_bet", "opponent_ranges", "equity_seed",
         "equity_trials", "fold_to_bet", "confidence", "opponent_id",
         "opponent_model_version", "opponent_model_snapshot",
     }
@@ -177,7 +182,8 @@ def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, 
         "current_bet": game.current_bet,
         "min_raise": game.min_raise,
         "actor_street_bet": game.street_bets[seat],
-        "opponent_range": "random",
+        "opponent_ranges": ["random" for other_seat, folded in enumerate(game.folded)
+                            if other_seat != seat and not folded],
         "equity_seed": 7919 + len(game.log),
         "equity_trials": 600,
         "fold_to_bet": metric["mean"] if metric else .45,

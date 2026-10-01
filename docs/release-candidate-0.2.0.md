@@ -23,11 +23,15 @@ The release-candidate audit tightened this boundary further. Practice is now a
 single-hero flow: only seat zero is exposed to the browser, non-hero seats use a
 deterministic check/call policy, and only hero decisions are coached and stored.
 Personality values are validated before game mutation. Practice analysis schema
-`practice-ev-v2` hashes its complete calculation output and model evidence, while
+`practice-ev-v3` hashes its complete calculation output and model evidence, while
 each decision retains the legal amounts and versioned inputs required for exact
 recalculation. The Explain disclosure consumes the deterministic structured
 explanation payload, and malformed persisted sessions fail with a controlled
 JSON error instead of a partial review.
+
+A second audit found that multiway practice had retained a heads-up equity
+assumption. The v3 replay contract now stores one range per live opponent and
+the simulator includes all of them; a three-way regression guards that boundary.
 
 Shared conflicts occurred in `pokerlab/models.py`, `pokerlab/contracts.py`, the
 README, and architecture documentation. The v2 schema and model behavior were
@@ -46,7 +50,7 @@ The complete unit suite covers historical behavior plus zero/one observations,
 extreme rates, contrary evidence overwhelming priors, invalid counts, card
 blocking, ties, node locks, short all-ins, side pots, hidden cards, historical
 review, repeated personality rendering, malformed data, and offline operation.
-The final combined run passed all 86 tests in 27.377 seconds. The exhaustive
+The final combined run passed all 87 tests in 24.820 seconds. The exhaustive
 evaluator independently checked all 2,598,960 five-card hands against the known
 category totals and passed.
 On Python 3.14 for Windows, standard `TemporaryDirectory` may create unusable
@@ -58,7 +62,9 @@ temporary-directory fixture. This is a test-host issue, not a runtime dependency
 - Poker solving remains a heads-up, fixed-board river game with one bet size and
   no raises, rake, stack constraints, future streets, or multiway branches.
 - Practice EV is an illustrative visible-information checkdown estimate, not the
-  restricted river CFR exploit adapter and not full-game GTO.
+  restricted river CFR exploit adapter and not full-game GTO. Showdown equity
+  includes every live opponent; raise EV uses a documented simplified
+  independent-fold, at-most-one-caller response model.
 - Aggregated observations do not infer hidden-card ranges or conditional policies
   beyond documented translations.
 - Showdown bluff evidence is selection-biased; uncertainty labels are heuristic.

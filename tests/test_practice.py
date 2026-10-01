@@ -78,6 +78,15 @@ class PracticeUnitTests(unittest.TestCase):
         self.assertEqual(first["actions"], second["actions"])
         self.assertNotEqual(first["analysis_id"], second["analysis_id"])
 
+    def test_multiway_analysis_models_every_live_opponent(self):
+        heads_up = analyze_decision(Game([30, 30], seed=7))
+        three_way = analyze_decision(Game([30, 30, 30], seed=7))
+        self.assertEqual(heads_up["analysis_inputs"]["opponent_ranges"], ["random"])
+        self.assertEqual(three_way["analysis_inputs"]["opponent_ranges"],
+                         ["random", "random"])
+        self.assertEqual(len(three_way["equity"]["range_combos"]), 2)
+        self.assertNotEqual(heads_up["equity"]["equity"], three_way["equity"]["equity"])
+
     def test_event_persists_complete_inputs_and_recalculates_identically(self):
         game = Game([30, 30, 20], seed=9)
         analysis = analyze_decision(game)
