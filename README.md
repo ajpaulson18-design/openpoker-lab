@@ -35,9 +35,10 @@ Choose another port with `--port 8766`, or another database with
 | Decision lab | Heads-up fold/call or check/bet EV, with explicit current and calling ranges, a baseline comparison, and opponent-informed fold probabilities |
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
-| River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; optional opponent node locks |
+| River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
-| Hand sandbox | 2–6 named players; positions and blinds; no-limit betting; short all-ins; side pots; odd-chip settlement; visible hole cards and named action history |
+| Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
+| Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
 
 ### A useful first session
 
@@ -53,6 +54,12 @@ Choose another port with `--port 8766`, or another database with
    call frequency and observe how the out-of-position strategy changes.
 6. In **Hand sandbox**, enter the players' names in clockwise order. Those names
    follow every action and pot award while seat numbers preserve table position.
+   Toggle Live Coach without changing the saved calculation, and choose a coach
+   voice to change delivery without changing strategy.
+
+Version 0.2.0 is the appropriate next minor release: it adds backward-compatible
+opponent-aware analysis, coaching, review, and presentation capabilities while the
+public API remains pre-1.0.
 
 ## Model boundaries
 
@@ -160,6 +167,9 @@ Tests cover hand categories and kickers, seven-card versus best-five ranking,
 weighted ranges, exact ties and equity, seeded simulations, model persistence,
 duplicate observation handling, side pots, short raises, random legal hands,
 solver convergence and node locks, and local HTTP access controls.
+Additional tests cover zero and tiny samples, contradictory and extreme evidence,
+blocked cards, personality invariants, hidden-information safety, session
+reproducibility, coaching visibility, all-ins, and side pots.
 
 The optional exhaustive evaluator check enumerates all 2,598,960 five-card hands
 and compares category totals against the known combinatorial counts. CI runs the

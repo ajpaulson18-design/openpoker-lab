@@ -146,9 +146,20 @@ the button among tied winners.
 {"board":"Js 8d 4c 2h 2s","oop_range":"AsAh,KsKh,AsKs","ip_range":"AcAd,KcKd,AcKc","pot":100,"bet":50,"iterations":1000,"lock":{}}
 ```
 
+`POST /api/exploit` accepts the same restricted river-game inputs plus
+`hero_hand`, `opponent_id`, and optional `decision`. It loads an immutable river
+snapshot and returns the shared strategy-analysis contract. This remains a
+restricted river adapter, not a complete no-limit Hold'em solver.
+
+`POST /api/explain` deterministically converts a serialized analysis contract
+into traceable explanation facts. Practice `POST /api/act` accepts an optional
+`personality`; the server renders that voice only after the calculation and
+returns the unchanged analysis ID and a protected-facts fingerprint.
+
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,
-`POST /api/game`, `POST /api/act`, and `GET /api/export`.
+`POST /api/exploit`, `POST /api/explain`, `POST /api/game`, `POST /api/act`,
+`GET /api/session/{id}`, and `GET /api/export`.
 
 All writes accept JSON. Errors return a JSON `error` with a non-2xx status.
 The endpoint implementation is the current contract; there is no external API
