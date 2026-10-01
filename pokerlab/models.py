@@ -139,6 +139,14 @@ class Store:
                 CREATE TABLE IF NOT EXISTS analyses (
                     id TEXT PRIMARY KEY, input TEXT NOT NULL, result TEXT NOT NULL,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+                CREATE TABLE IF NOT EXISTS sessions (
+                    id TEXT PRIMARY KEY, started_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    completed_at TEXT);
+                CREATE TABLE IF NOT EXISTS decisions (
+                    id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES sessions(id),
+                    decision_order INTEGER NOT NULL, event TEXT NOT NULL,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(session_id, decision_order));
                 CREATE TABLE IF NOT EXISTS opponent_model_metadata (
                     key TEXT PRIMARY KEY, value TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS opponent_priors (
@@ -456,6 +464,44 @@ class Store:
                        (identity, json.dumps(inputs), json.dumps(result)))
         return identity
 
+    def start_session(self, identity):
+        with self.connect() as db:
+            db.execute("INSERT OR IGNORE INTO sessions(id) VALUES (?)", (identity,))
+
+    def save_decision(self, session_id, event):
+        self.start_session(session_id)
+        with self.connect() as db:
+            order = db.execute(
+                "SELECT COUNT(*) FROM decisions WHERE session_id=?", (session_id,)
+            ).fetchone()[0] + 1
+            identity = uuid.uuid4().hex
+            event = {**event, "session_id": session_id, "decision_order": order}
+            db.execute(
+                "INSERT INTO decisions(id,session_id,decision_order,event) VALUES (?,?,?,?)",
+                (identity, session_id, order, json.dumps(event, allow_nan=False)),
+            )
+        return event
+
+    def complete_session(self, identity):
+        with self.connect() as db:
+            db.execute(
+                "UPDATE sessions SET completed_at=COALESCE(completed_at,CURRENT_TIMESTAMP) WHERE id=?",
+                (identity,),
+            )
+
+    def session(self, identity):
+        from .practice import summarize
+        with self.connect() as db:
+            session = db.execute("SELECT * FROM sessions WHERE id=?", (identity,)).fetchone()
+            if session is None:
+                raise ValueError("Session not found.")
+            decisions = [json.loads(row[0]) for row in db.execute(
+                "SELECT event FROM decisions WHERE session_id=? ORDER BY decision_order",
+                (identity,),
+            )]
+        return {"session": dict(session), "decisions": decisions,
+                "review": summarize(decisions)}
+
     def export(self):
         with self.connect() as db:
             opponents = [dict(row) for row in db.execute("SELECT * FROM opponents")]
@@ -463,6 +509,8 @@ class Store:
             priors = [dict(row) for row in db.execute("SELECT * FROM opponent_priors")]
             legacy = [dict(row) for row in db.execute("SELECT * FROM observations")]
             modern = [dict(row) for row in db.execute("SELECT * FROM opponent_observations")]
+            sessions = [dict(row) for row in db.execute("SELECT * FROM sessions")]
+            decisions = [dict(row) for row in db.execute("SELECT * FROM decisions")]
         return {"schema_version": 2, "opponents": opponents,
                 "observations": legacy + modern, "opponent_priors": priors,
-                "analyses": analyses}
+                "analyses": analyses, "sessions": sessions, "decisions": decisions}
