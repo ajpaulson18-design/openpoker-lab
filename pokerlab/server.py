@@ -13,8 +13,8 @@ from .explanations import analysis_from_dict, explain
 from .exploit import solve_exploitative_river
 from .game import Game
 from .models import OPPONENT_MODEL_VERSION, Store, PROFILES
-from .practice import (analyze_decision, decision_event, render_coach_personality,
-                       advance_to_hero, visible_state)
+from .practice import (advance_to_hero, analyze_decision, build_coach_explanation,
+                       decision_event, render_coach_personality, visible_state)
 from .personalities import CoachPersonality
 from .solver import solve
 
@@ -157,6 +157,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                     response = {"id": identity, **visible_state(game), "decision_order": stored["decision_order"]}
                     if data.get("coach_visible", False):
                         response["coach"] = analysis
+                        response["coach"]["explanation_payload"] = build_coach_explanation(
+                            analysis).to_dict()
                         response["coach"]["personality"] = render_coach_personality(
                             analysis, personality)
                     return response

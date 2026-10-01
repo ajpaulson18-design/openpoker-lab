@@ -1,20 +1,41 @@
 import json
-import tempfile
+import shutil
 import threading
 import unittest
+import uuid
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from pokerlab.game import Game
 from pokerlab.models import Store
-from pokerlab.practice import (advance_to_hero, analyze_decision, decision_event,
+from pokerlab.practice import (advance_to_hero, analyze_decision,
+                               analyze_recorded_decision, decision_event,
                                render_coach_personality, summarize, visible_state)
 from pokerlab.server import make_server
 
 
 BASE = Path(__file__).resolve().parents[1] / "work"
 BASE.mkdir(exist_ok=True)
+
+
+class WorkspaceDirectory:
+    """Workspace-safe test directory for Windows sandbox ACL compatibility."""
+
+    def __init__(self):
+        self.name = str(BASE / f"test-{uuid.uuid4().hex}")
+        Path(self.name).mkdir()
+
+    def __enter__(self):
+        return self.name
+
+    def __exit__(self, *_):
+        self.cleanup()
+
+    def cleanup(self):
+        path = Path(self.name)
+        if path.exists():
+            shutil.rmtree(path)
 
 
 class PracticeUnitTests(unittest.TestCase):
@@ -38,6 +59,41 @@ class PracticeUnitTests(unittest.TestCase):
         expected = analysis["actions"][analysis["recommended"]] - analysis["actions"][chosen]
         self.assertAlmostEqual(event["ev_loss"], expected)
         self.assertEqual(event["analysis_at_time"]["analysis_id"], analysis["analysis_id"])
+
+    def test_analysis_id_covers_evidence_confidence_and_snapshot(self):
+        def opponent(observations, confidence, interval):
+            return {
+                "id": "same-opponent", "profile": "balanced", "street": "preflop",
+                "model_version": "beta-opportunity-v2",
+                "metrics": {"fold_to_bet": {
+                    "mean": .45, "confidence": confidence,
+                    "observations": observations, "successes": 0,
+                    "prior_strength": 10, "interval95": interval,
+                    "interval_method": "test interval",
+                }},
+            }
+        first = analyze_decision(Game([30, 30], seed=7), opponent(0, "low", [.1, .8]))
+        second = analyze_decision(
+            Game([30, 30], seed=7), opponent(100, "higher", [.4, .5]))
+        self.assertEqual(first["actions"], second["actions"])
+        self.assertNotEqual(first["analysis_id"], second["analysis_id"])
+
+    def test_event_persists_complete_inputs_and_recalculates_identically(self):
+        game = Game([30, 30, 20], seed=9)
+        analysis = analyze_decision(game)
+        chosen = analysis["recommended"]
+        event = decision_event(game, analysis, chosen)
+        self.assertEqual(event["actor"], game.actor)
+        self.assertEqual(event["button"], game.button)
+        self.assertEqual(event["legal_action_details"], game.legal())
+        self.assertEqual(event["committed"], game.committed)
+        self.assertEqual(event["street_bets"], game.street_bets)
+        self.assertEqual(event["current_bet"], game.current_bet)
+        self.assertEqual(event["min_raise"], game.min_raise)
+        replay = analyze_recorded_decision(event["analysis_inputs"])
+        self.assertEqual(replay["analysis_id"], analysis["analysis_id"])
+        self.assertEqual(replay["actions"], analysis["actions"])
+        self.assertEqual(replay["equity"], analysis["equity"])
 
     def test_review_uses_recorded_decisions(self):
         game = Game([30, 30], seed=4)
@@ -76,7 +132,7 @@ class PracticeUnitTests(unittest.TestCase):
             render_coach_personality(analysis, "invalid")
 
     def test_historical_record_is_not_recalculated(self):
-        with tempfile.TemporaryDirectory(dir=BASE) as directory:
+        with WorkspaceDirectory() as directory:
             store = Store(Path(directory) / "practice.sqlite3")
             game = Game([30, 30], seed=4)
             opponent = store.add_opponent("Changing model")
@@ -95,7 +151,7 @@ class PracticeUnitTests(unittest.TestCase):
 
 class PracticeBrowserFlowTests(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(dir=BASE)
+        self.temp = WorkspaceDirectory()
         self.server = make_server(0, Path(self.temp.name) / "browser.sqlite3")
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -173,6 +229,7 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         script = urlopen(self.root + "/app.js").read().decode()
         self.assertIn("coach-toggle", html)
         self.assertIn("loadReview", script)
+        self.assertIn("coachExplanation(result.explanation_payload)", script)
 
     def test_selected_offline_personality_is_returned_without_changing_analysis(self):
         game = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"],
@@ -185,6 +242,28 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertEqual(voice["personality"], "old_school_pro")
         self.assertEqual(voice["source"], "deterministic")
         self.assertEqual(voice["analysis_id"], result["coach"]["analysis_id"])
+        explanation = result["coach"]["explanation_payload"]
+        self.assertEqual(explanation["analysis_id"], result["coach"]["analysis_id"])
+        self.assertEqual(explanation["recommended_action"], result["coach"]["recommended"])
+        self.assertIn("mathematical_reason", explanation)
+        self.assertIn("alternative_actions", explanation)
+
+    def test_malformed_persisted_decision_returns_controlled_json_error(self):
+        database = Path(self.temp.name) / "browser.sqlite3"
+        store = Store(database)
+        store.start_session("corrupt-session")
+        with store.connect() as db:
+            db.execute("UPDATE sessions SET completed_at=CURRENT_TIMESTAMP WHERE id=?",
+                       ("corrupt-session",))
+            db.execute("""INSERT INTO decisions(id,session_id,decision_order,event)
+                        VALUES (?,?,?,?)""",
+                       ("bad-decision", "corrupt-session", 1, '{"not":"a decision"}'))
+        with self.assertRaises(HTTPError) as caught:
+            urlopen(self.root + "/api/session/corrupt-session")
+        self.assertEqual(caught.exception.code, 400)
+        with caught.exception as response:
+            payload = json.load(response)
+        self.assertIn("malformed decision data", payload["error"])
 
     def test_repeated_personality_switches_preserve_first_decision_facts(self):
         outputs = []

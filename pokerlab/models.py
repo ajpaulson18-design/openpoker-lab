@@ -497,12 +497,20 @@ class Store:
                 raise ValueError("Session not found.")
             if require_complete and session["completed_at"] is None:
                 raise ValueError("Session review is available after the hand is complete.")
-            decisions = [json.loads(row[0]) for row in db.execute(
+            encoded_decisions = [row[0] for row in db.execute(
                 "SELECT event FROM decisions WHERE session_id=? ORDER BY decision_order",
                 (identity,),
             )]
-        return {"session": dict(session), "decisions": decisions,
-                "review": summarize(decisions)}
+        try:
+            decisions = [json.loads(encoded) for encoded in encoded_decisions]
+            if any(not isinstance(decision, dict) for decision in decisions):
+                raise TypeError
+            review = summarize(decisions)
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+            raise OpponentDataError(
+                f"Session {identity!r} contains malformed decision data; review was not generated."
+            ) from exc
+        return {"session": dict(session), "decisions": decisions, "review": review}
 
     def export(self):
         with self.connect() as db:
