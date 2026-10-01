@@ -55,7 +55,10 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
             if url.path == "/api/health":
                 return self.respond({"ok": True, "version": "0.1.0"})
             if url.path.startswith("/api/session/"):
-                return self.respond(store.session(url.path.rsplit("/", 1)[-1]))
+                try:
+                    return self.respond(store.session(url.path.rsplit("/", 1)[-1], require_complete=True))
+                except ValueError as error:
+                    return self.respond({"error": str(error)}, 400)
             filename = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css",
                         "/names.css": "names.css", "/coach.css": "coach.css"}.get(url.path)
             if filename:

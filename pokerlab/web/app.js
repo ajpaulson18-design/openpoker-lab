@@ -3,7 +3,7 @@ const $ = (s) => document.querySelector(s);
 const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (v) => (v*100).toFixed(1)+'%';
 const chips = (v) => Number(v).toFixed(2);
-let opponents = [], game = null;
+let opponents = [], game = null, practiceOpponent = '';
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
 async function api(path,data) {
   const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
@@ -66,7 +66,7 @@ function updateButtonPlayers(){
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
-bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
+bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked)showCoach(null);});
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),coach_visible:$('#coach-toggle').checked});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
 loadOpponents().catch(e=>status(e.message,true));

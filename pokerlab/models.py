@@ -489,12 +489,14 @@ class Store:
                 (identity,),
             )
 
-    def session(self, identity):
+    def session(self, identity, require_complete=False):
         from .practice import summarize
         with self.connect() as db:
             session = db.execute("SELECT * FROM sessions WHERE id=?", (identity,)).fetchone()
             if session is None:
                 raise ValueError("Session not found.")
+            if require_complete and session["completed_at"] is None:
+                raise ValueError("Session review is available after the hand is complete.")
             decisions = [json.loads(row[0]) for row in db.execute(
                 "SELECT event FROM decisions WHERE session_id=? ORDER BY decision_order",
                 (identity,),

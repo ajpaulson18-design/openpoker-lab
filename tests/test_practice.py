@@ -45,14 +45,17 @@ class PracticeUnitTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=BASE) as directory:
             store = Store(Path(directory) / "practice.sqlite3")
             game = Game([30, 30], seed=4)
-            analysis = analyze_decision(game)
-            stored = store.save_decision("session-1", decision_event(game, analysis, "call"))
+            opponent = store.add_opponent("Changing model")
+            old_model = store.get_opponent(opponent["id"], game.street)
+            old_model["model_version"] = "beta-opportunity-v1"
+            analysis = analyze_decision(game, old_model)
+            stored = store.save_decision("session-1", decision_event(game, analysis, "call", old_model))
             before = store.session("session-1")["decisions"][0]
-            # A later calculation cannot rewrite the JSON captured at decision time.
-            game2 = Game([30, 30], seed=9)
-            analyze_decision(game2)
+            store.observe(opponent["id"], "fold_to_bet", True, game.street)
+            self.assertEqual(store.get_opponent(opponent["id"], game.street)["metrics"]["fold_to_bet"]["observations"], 1)
             after = store.session("session-1")["decisions"][0]
             self.assertEqual(before, after)
+            self.assertEqual(after["opponent_model_snapshot"]["metrics"]["fold_to_bet"]["observations"], 0)
             self.assertEqual(after["analysis_at_time"]["analysis_id"], stored["analysis_at_time"]["analysis_id"])
 
 
@@ -71,12 +74,21 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         request = Request(self.root + path, json.dumps(data).encode(), {"Content-Type": "application/json"})
         return json.load(urlopen(request))
 
+    def finish(self, game, coach_visible=False):
+        while not game["done"]:
+            legal = game["legal"]
+            action = "call" if legal["call"] else "check"
+            game = self.post("/api/act", {"id": game["id"], "action": action,
+                                           "coach_visible": coach_visible})
+        return game
+
     def test_hidden_coach_still_records_identical_analysis(self):
         hidden = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"], "seed": 12})
         self.assertIsNone(hidden["hands"][1 - hidden["actor"]])
         action = "call" if hidden["legal"]["call"] else "check"
         result = self.post("/api/act", {"id": hidden["id"], "action": action, "coach_visible": False})
         self.assertNotIn("coach", result)
+        result = self.finish(result)
         review = json.load(urlopen(self.root + "/api/session/" + hidden["id"]))
         self.assertEqual(review["review"]["analyzed_decisions"], 1)
         saved = review["decisions"][0]["analysis_at_time"]
