@@ -3,11 +3,12 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from pokerlab.game import Game
 from pokerlab.models import Store
-from pokerlab.practice import (analyze_decision, decision_event,
+from pokerlab.practice import (advance_to_hero, analyze_decision, decision_event,
                                render_coach_personality, summarize, visible_state)
 from pokerlab.server import make_server
 
@@ -20,9 +21,14 @@ class PracticeUnitTests(unittest.TestCase):
     def test_visible_state_never_leaks_other_hole_cards(self):
         game = Game([30, 30, 30], seed=3)
         state = visible_state(game)
-        self.assertIsNotNone(state["hands"][state["actor"]])
-        self.assertTrue(all(hand is None for seat, hand in enumerate(state["hands"])
-                            if seat != state["actor"]))
+        self.assertIsNotNone(state["hands"][0])
+        self.assertTrue(all(hand is None for hand in state["hands"][1:]))
+
+    def test_non_hero_actions_are_deterministic_and_not_coached(self):
+        game = Game([30, 30, 30], seed=3)
+        advance_to_hero(game)
+        self.assertTrue(game.done or game.actor == 0)
+        self.assertTrue(all(entry["seat"] != 0 for entry in game.log))
 
     def test_event_uses_actual_analysis_for_ev_loss(self):
         game = Game([30, 30], seed=7)
@@ -41,6 +47,22 @@ class PracticeUnitTests(unittest.TestCase):
         self.assertEqual(review["analyzed_decisions"], 1)
         self.assertEqual(review["matched_recommendation"], 1)
         self.assertEqual(review["total_ev_loss"], 0)
+
+    def test_review_ranks_errors_and_successful_exploits(self):
+        base = {"matched_recommendation": False, "successful_exploit": False,
+                "analysis_at_time": {"recommended": "raise", "baseline_recommended": "check"}}
+        events = [
+            {**base, "decision_order": 1, "ev_loss": 2.0, "exploit_gain": 0.0},
+            {**base, "decision_order": 2, "ev_loss": 8.0, "exploit_gain": 0.0},
+            {**base, "decision_order": 3, "ev_loss": 0.0, "exploit_gain": 3.0,
+             "matched_recommendation": True, "successful_exploit": True},
+            {**base, "decision_order": 4, "ev_loss": 0.0, "exploit_gain": 9.0,
+             "matched_recommendation": True, "successful_exploit": True},
+        ]
+        review = summarize(events)
+        self.assertEqual([item["ev_loss"] for item in review["biggest_errors"]], [8.0, 2.0])
+        self.assertEqual([item["exploit_gain"] for item in review["biggest_successful_exploits"]],
+                         [9.0, 3.0])
 
     def test_personality_changes_only_presentation(self):
         analysis = analyze_decision(Game([30, 30], seed=7))
@@ -110,6 +132,34 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertEqual(result2["coach"]["analysis_id"], saved["analysis_id"])
         self.assertEqual(result2["coach"]["actions"], saved["actions"])
 
+    def test_only_hero_decisions_are_recorded_and_villain_cards_never_serialize(self):
+        game = self.post("/api/game", {"stacks": [20, 20, 20],
+                                        "names": ["Hero", "V1", "V2"], "seed": 8})
+        hero_decisions = 0
+        while not game["done"]:
+            self.assertEqual(game["actor"], 0)
+            self.assertTrue(all(hand is None for hand in game["hands"][1:]))
+            action = "call" if game["legal"]["call"] else "check"
+            game = self.post("/api/act", {"id": game["id"], "action": action,
+                                           "coach_visible": False})
+            hero_decisions += 1
+        self.assertTrue(all(hand is None for hand in game["hands"][1:]))
+        review = json.load(urlopen(self.root + "/api/session/" + game["id"]))
+        self.assertEqual(review["review"]["analyzed_decisions"], hero_decisions)
+
+    def test_invalid_personality_cannot_advance_or_persist(self):
+        game = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"],
+                                        "seed": 22})
+        action = "call" if game["legal"]["call"] else "check"
+        with self.assertRaises(HTTPError) as caught:
+            self.post("/api/act", {"id": game["id"], "action": action,
+                                    "coach_visible": True, "personality": "invalid"})
+        self.assertEqual(caught.exception.code, 400)
+        caught.exception.close()
+        valid = self.post("/api/act", {"id": game["id"], "action": action,
+                                        "coach_visible": True, "personality": "grinder"})
+        self.assertEqual(valid["decision_order"], 1)
+
     def test_completed_session_review_and_static_ui(self):
         game = self.post("/api/game", {"stacks": [10, 10], "names": ["Hero", "Villain"], "seed": 5})
         while not game["done"]:
@@ -135,6 +185,31 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertEqual(voice["personality"], "old_school_pro")
         self.assertEqual(voice["source"], "deterministic")
         self.assertEqual(voice["analysis_id"], result["coach"]["analysis_id"])
+
+    def test_repeated_personality_switches_preserve_first_decision_facts(self):
+        outputs = []
+        for personality in ("grinder", "nit", "math_guy", "grinder"):
+            game = self.post("/api/game", {"stacks": [20, 20],
+                                            "names": ["Hero", "Villain"], "seed": 31})
+            action = "call" if game["legal"]["call"] else "check"
+            result = self.post("/api/act", {"id": game["id"], "action": action,
+                                             "coach_visible": True,
+                                             "personality": personality})
+            outputs.append(result["coach"])
+        self.assertEqual(len({item["analysis_id"] for item in outputs}), 1)
+        self.assertEqual(len({item["personality"]["facts_fingerprint"]
+                              for item in outputs}), 1)
+        self.assertGreater(len({item["personality"]["text"] for item in outputs}), 1)
+
+    def test_dom_assets_wire_selector_inside_practice_and_render_ranked_review(self):
+        html = urlopen(self.root + "/").read().decode()
+        script = urlopen(self.root + "/app.js").read().decode()
+        self.assertIn('id="coach-voice-template"', html)
+        self.assertIn("#table .coach-toolbar", script)
+        self.assertIn("cloneNode(true)", script)
+        self.assertIn("personality:$('#coach-personality').value", script)
+        self.assertIn("Biggest errors", script)
+        self.assertIn("Biggest successful exploits", script)
 
 
 if __name__ == "__main__":
