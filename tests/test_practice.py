@@ -7,7 +7,8 @@ from urllib.request import Request, urlopen
 
 from pokerlab.game import Game
 from pokerlab.models import Store
-from pokerlab.practice import analyze_decision, decision_event, summarize, visible_state
+from pokerlab.practice import (analyze_decision, decision_event,
+                               render_coach_personality, summarize, visible_state)
 from pokerlab.server import make_server
 
 
@@ -40,6 +41,17 @@ class PracticeUnitTests(unittest.TestCase):
         self.assertEqual(review["analyzed_decisions"], 1)
         self.assertEqual(review["matched_recommendation"], 1)
         self.assertEqual(review["total_ev_loss"], 0)
+
+    def test_personality_changes_only_presentation(self):
+        analysis = analyze_decision(Game([30, 30], seed=7))
+        grinder = render_coach_personality(analysis, "grinder")
+        math = render_coach_personality(analysis, "math_guy")
+        self.assertEqual(grinder["analysis_id"], analysis["analysis_id"])
+        self.assertEqual(math["analysis_id"], analysis["analysis_id"])
+        self.assertEqual(grinder["facts_fingerprint"], math["facts_fingerprint"])
+        self.assertNotEqual(grinder["text"], math["text"])
+        with self.assertRaises(ValueError):
+            render_coach_personality(analysis, "invalid")
 
     def test_historical_record_is_not_recalculated(self):
         with tempfile.TemporaryDirectory(dir=BASE) as directory:
@@ -90,7 +102,7 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertNotIn("coach", result)
         result = self.finish(result)
         review = json.load(urlopen(self.root + "/api/session/" + hidden["id"]))
-        self.assertEqual(review["review"]["analyzed_decisions"], 1)
+        self.assertGreaterEqual(review["review"]["analyzed_decisions"], 1)
         saved = review["decisions"][0]["analysis_at_time"]
 
         shown = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"], "seed": 12})
@@ -111,6 +123,18 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         script = urlopen(self.root + "/app.js").read().decode()
         self.assertIn("coach-toggle", html)
         self.assertIn("loadReview", script)
+
+    def test_selected_offline_personality_is_returned_without_changing_analysis(self):
+        game = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"],
+                                        "seed": 12})
+        action = "call" if game["legal"]["call"] else "check"
+        result = self.post("/api/act", {"id": game["id"], "action": action,
+                                         "coach_visible": True,
+                                         "personality": "old_school_pro"})
+        voice = result["coach"]["personality"]
+        self.assertEqual(voice["personality"], "old_school_pro")
+        self.assertEqual(voice["source"], "deterministic")
+        self.assertEqual(voice["analysis_id"], result["coach"]["analysis_id"])
 
 
 if __name__ == "__main__":

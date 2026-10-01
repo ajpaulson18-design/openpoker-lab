@@ -52,7 +52,8 @@ function showGame(g){
 function showCoach(result,chosen){
   if(!result){$('#coach-panel').innerHTML='<p class="hint">Blind Play is on. Analysis is still saved for review.</p>';return;}
   const loss=Math.max(0,result.actions[result.recommended]-result.actions[chosen]);
-  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>YOU CHOSE ${esc(chosen.toUpperCase())} · ESTIMATED LOSS ${chips(loss)}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p><details><summary>Explain</summary><p class="hint">${esc(result.explanation)}</p>${warnings(result.warnings)}</details>`;
+  const voice=result.personality?`<p>${esc(result.personality.text)}</p><p class="fine">${esc(result.personality.personality.replaceAll('_',' '))} · local deterministic renderer · analysis ${esc(result.personality.analysis_id)}</p>`:'';
+  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>YOU CHOSE ${esc(chosen.toUpperCase())} · ESTIMATED LOSS ${chips(loss)}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary><p class="hint">${esc(result.explanation)}</p>${warnings(result.warnings)}</details>`;
 }
 async function loadReview(){
   const data=await api('session/'+game.id),r=data.review;
@@ -68,5 +69,5 @@ function updateButtonPlayers(){
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
 bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked)showCoach(null);});
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
 loadOpponents().catch(e=>status(e.message,true));

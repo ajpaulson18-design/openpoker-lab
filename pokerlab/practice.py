@@ -4,8 +4,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from .contracts import stable_analysis_id
+from .contracts import (ActionFrequency, ActionValue, OpponentAssumption,
+                        StrategyAnalysisResult, TendencyContext, Uncertainty,
+                        stable_analysis_id)
 from .equity import simulate
+from .explanations import explain
+from .personalities import CoachPersonality, render_personality
 
 
 PRACTICE_ANALYSIS_VERSION = "practice-ev-v1"
@@ -65,9 +69,19 @@ def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, 
     normalized = {
         "street": game.street, "public_cards": list(game.board), "known_cards": list(game.hands[seat]),
         "pot": pot, "stacks": list(game.stacks), "legal_actions": actions,
+        "legal": legal, "committed": list(game.committed),
+        "street_bets": list(game.street_bets),
         "baseline_actions": baseline, "actions": modeled, "opponent_id": opponent_id,
         "model_version": model_version, "analysis_version": PRACTICE_ANALYSIS_VERSION,
+        "equity_seed": equity["seed"], "equity_trials": equity["trials"],
     }
+    model_snapshot = None
+    if opponent:
+        model_snapshot = {
+            "opponent_id": opponent["id"], "model_version": model_version,
+            "prior_archetype": opponent["profile"], "street": opponent["street"],
+            "metrics": opponent["metrics"],
+        }
     return {
         "analysis_id": stable_analysis_id(normalized, PRACTICE_ANALYSIS_VERSION),
         "analysis_version": PRACTICE_ANALYSIS_VERSION,
@@ -79,6 +93,8 @@ def analyze_decision(game, opponent: dict[str, Any] | None = None) -> dict[str, 
         "confidence": confidence,
         "opponent_id": opponent_id,
         "opponent_model_version": model_version,
+        "opponent_model_snapshot": model_snapshot,
+        "street": game.street,
         "explanation": (f"{recommended.title()} has the highest estimated EV in this simplified "
                         "checkdown model. The estimate uses only visible board cards and the acting player's cards."),
         "warnings": ["Practice EVs are simplified estimates, not a complete no-limit Hold'em solution."],
@@ -98,7 +114,7 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
         "legal_actions": _legal_actions(game.legal()),
         "chosen_action": chosen_action,
         "opponent_id": opponent["id"] if opponent else None,
-        "opponent_model_snapshot": opponent,
+        "opponent_model_snapshot": analysis.get("opponent_model_snapshot"),
         "ranges_settings": {"opponent_range": "random", "trials": analysis["equity"]["trials"],
                             "seed": analysis["equity"]["seed"]},
         "analysis_at_time": analysis,
@@ -108,6 +124,45 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
                                analysis["recommended"] != analysis["baseline_recommended"]),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def render_coach_personality(analysis: dict[str, Any],
+                             personality: CoachPersonality | str) -> dict[str, Any]:
+    """Render a voice strictly downstream of the saved practice calculation."""
+    legal = tuple(analysis["actions"])
+    baseline = analysis["baseline_recommended"]
+    recommended = analysis["recommended"]
+    best = analysis["actions"][recommended]
+    uncertainty = None
+    assumptions = ()
+    snapshot = analysis.get("opponent_model_snapshot")
+    if snapshot:
+        modeled = snapshot["metrics"]["fold_to_bet"]
+        uncertainty = Uncertainty(
+            modeled["interval95"][0], modeled["interval95"][1], .95,
+            modeled["interval_method"], modeled["confidence"])
+        assumptions = (OpponentAssumption(
+            "fold_to_bet", TendencyContext(analysis["street"]), modeled["mean"],
+            modeled["observations"], uncertainty),)
+    contract = StrategyAnalysisResult(
+        analysis_id=analysis["analysis_id"], legal_actions=legal,
+        baseline_strategy=tuple(ActionFrequency(action, float(action == baseline))
+                                for action in legal),
+        exploitative_strategy=tuple(ActionFrequency(action, float(action == recommended))
+                                    for action in legal),
+        action_evs=tuple(ActionValue(action, analysis["actions"][action]) for action in legal),
+        ev_differences=tuple(ActionValue(action, analysis["actions"][action] - best)
+                             for action in legal),
+        opponent_assumptions=assumptions, confidence=analysis["confidence"],
+        uncertainty=uncertainty, solver_version=analysis["analysis_version"],
+        model_version=analysis["opponent_model_version"],
+        limitations=tuple(analysis["warnings"]),
+    )
+    rendered = render_personality(explain(contract, recommended), personality)
+    return {"personality": rendered.personality.value,
+            "analysis_id": rendered.analysis_id,
+            "facts_fingerprint": rendered.facts_fingerprint,
+            "text": rendered.text, "source": rendered.source}
 
 
 def summarize(decisions: list[dict[str, Any]]) -> dict[str, Any]:

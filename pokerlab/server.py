@@ -6,12 +6,15 @@ from pathlib import Path
 import threading
 from urllib.parse import urlparse, parse_qs
 import uuid
+from . import __version__
 from .analysis import analyze
 from .equity import simulate
 from .explanations import analysis_from_dict, explain
+from .exploit import solve_exploitative_river
 from .game import Game
-from .models import Store, PROFILES
-from .practice import analyze_decision, decision_event, visible_state
+from .models import OPPONENT_MODEL_VERSION, Store, PROFILES
+from .practice import (analyze_decision, decision_event, render_coach_personality,
+                       visible_state)
 from .solver import solve
 
 WEB = Path(__file__).parent / "web"
@@ -53,7 +56,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
             if url.path == "/api/export":
                 return self.respond(store.export())
             if url.path == "/api/health":
-                return self.respond({"ok": True, "version": "0.1.0"})
+                return self.respond({"ok": True, "version": __version__})
             if url.path.startswith("/api/session/"):
                 try:
                     return self.respond(store.session(url.path.rsplit("/", 1)[-1], require_complete=True))
@@ -106,6 +109,11 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return result
             if path == "/api/solve":
                 return solve(**data)
+            if path == "/api/exploit":
+                inputs = dict(data)
+                opponent_id = inputs.pop("opponent_id")
+                snapshot = store.opponent_snapshot(opponent_id, "river")
+                return solve_exploitative_river(snapshot=snapshot, **inputs).to_dict()
             if path == "/api/explain":
                 analysis = analysis_from_dict(data["analysis"])
                 return explain(analysis, data["recommended_action"],
@@ -131,7 +139,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                     opponent = None
                     if data.get("opponent_id"):
                         opponent = store.get_opponent(data["opponent_id"], game.street)
-                        opponent["model_version"] = "beta-opportunity-v1"
+                        opponent["model_version"] = OPPONENT_MODEL_VERSION
                     analysis = analyze_decision(game, opponent)
                     event = decision_event(game, analysis, data["action"], opponent)
                     game.act(data["action"], data.get("amount"))
@@ -141,6 +149,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                     response = {"id": identity, **visible_state(game), "decision_order": stored["decision_order"]}
                     if data.get("coach_visible", False):
                         response["coach"] = analysis
+                        response["coach"]["personality"] = render_coach_personality(
+                            analysis, data.get("personality", "grinder"))
                     return response
             raise ValueError("Unknown endpoint.")
 
