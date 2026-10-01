@@ -19,9 +19,25 @@ Browser (pokerlab/web)
        ├─ contracts.py  immutable human-aware component boundaries
        ├─ analysis.py   one-decision EV calculation
        ├─ explanations.py deterministic facts, prose, and JSON round-trips
+       ├─ personalities.py deterministic coaching voices and optional text adapter
        ├─ solver.py     restricted river CFR and best-response evaluation
        └─ game.py       full-hand betting mechanics and pot settlement
 ```
+
+## Coaching presentation
+
+`pokerlab.personalities` sits strictly after explanation and calculation. Its
+five local voices (Grinder, Chronic Bluffer, Nit, Math Guy, and Old-School Pro)
+work offline and retain the exact immutable `DecisionExplanation`. A SHA-256
+fingerprint covers the protected recommendation, EVs, strategy frequencies,
+confidence, uncertainty, opponent evidence, and caveats; a rendering with a
+mismatched analysis ID or fingerprint is rejected.
+
+The optional `ConversationalExplanationProvider` is disabled by default and
+has no dependency or API-key requirement. If explicitly enabled, it receives a
+serialized copy of an already-completed explanation and may return non-empty
+prose only. It cannot return replacement structured result fields, and it never
+participates in poker calculation.
 
 ## Expected value
 
