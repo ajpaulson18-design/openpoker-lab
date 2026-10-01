@@ -15,13 +15,20 @@ from .personalities import CoachPersonality, render_personality
 PRACTICE_ANALYSIS_VERSION = "practice-ev-v1"
 
 
-def visible_state(game) -> dict[str, Any]:
-    """Return only information legally visible to the player currently acting."""
+def visible_state(game, hero_seat: int = 0) -> dict[str, Any]:
+    """Return a single-user view that never serializes opponents' hole cards."""
     state = game.state()
-    viewer = state["actor"]
-    state["hands"] = [list(hand) if state["done"] or seat == viewer else None
+    state["hands"] = [list(hand) if seat == hero_seat else None
                       for seat, hand in enumerate(game.hands)]
     return state
+
+
+def advance_to_hero(game, hero_seat: int = 0) -> None:
+    """Deterministically check/call non-hero seats until the hero acts or the hand ends."""
+    while not game.done and game.actor != hero_seat:
+        legal = game.legal()
+        action = "check" if legal.get("check") else "call" if legal.get("call") else "fold"
+        game.act(action)
 
 
 def _legal_actions(legal: dict[str, Any]) -> list[str]:
@@ -122,6 +129,9 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
         "matched_recommendation": chosen_action == analysis["recommended"],
         "successful_exploit": (chosen_action == analysis["recommended"] and
                                analysis["recommended"] != analysis["baseline_recommended"]),
+        "exploit_gain": max(
+            0.0, analysis["actions"][analysis["recommended"]]
+            - analysis["actions"][analysis["baseline_recommended"]]),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -179,5 +189,6 @@ def summarize(decisions: list[dict[str, Any]]) -> dict[str, Any]:
             and not item["matched_recommendation"] for item in ordered),
         "successful_exploits": len(exploits),
         "biggest_errors": sorted(losses, key=lambda item: item["ev_loss"], reverse=True)[:3],
-        "biggest_successful_exploits": exploits[:3],
+        "biggest_successful_exploits": sorted(
+            exploits, key=lambda item: item.get("exploit_gain", 0), reverse=True)[:3],
     }
