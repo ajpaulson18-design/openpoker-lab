@@ -3,7 +3,9 @@ const $ = (s) => document.querySelector(s);
 const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (v) => (v*100).toFixed(1)+'%';
 const chips = (v) => Number(v).toFixed(2);
-let opponents = [], game = null;
+let opponents = [], game = null, practiceOpponent = '';
+document.querySelector('#table .coach-toolbar').append(
+  document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
 async function api(path,data) {
   const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
@@ -47,7 +49,26 @@ bindForm('#solver-form',async form=>{
 function showGame(g){
   game=g;$('#game-controls').hidden=g.done;$('#acting-seat').textContent=g.done?'':g.actor_name+' to act · Seat '+g.actor;
   if(!g.done){document.querySelectorAll('[data-action]').forEach(b=>b.disabled=!g.legal[b.dataset.action]);$('#raise-amount').min=g.legal.raise_min;$('#raise-amount').max=g.legal.raise_max;$('#raise-amount').value=g.legal.raise_min;document.querySelector('[data-action="call"]').textContent='Call '+g.legal.call;}
-  $('#game-result').innerHTML=`<p class="eyebrow">${esc(g.street.toUpperCase())} · ${g.done?'HAND COMPLETE':'OPEN-CARD SANDBOX'}</p><h2>${g.pot} chips ${g.done?'settled':'in the pot'}</h2><div>${g.board.map(cardHtml).join('')||'<p class="hint">Community cards appear after preflop.</p>'}</div><div class="seats">${g.hands.map((h,i)=>`<div class="seat ${g.actor===i?'active-seat':''} ${g.folded[i]?'folded':''}"><h3>${esc(g.names[i])} <span class="seat-number">· Seat ${i}${g.button===i?' · Button':''}</span></h3><div>${h.map(cardHtml).join('')}</div><p>${g.stacks[i]} behind · ${g.committed[i]} committed</p><p>${g.folded[i]?'Folded':g.done?'Net: '+g.net[i]:g.stacks[i]===0?'All-in':'Street bet: '+g.street_bets[i]}</p></div>`).join('')}</div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${p.amount} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}<details><summary>Action history (${g.log.length})</summary>${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+a.amount}</p>`).join('')}</details>`;
+  $('#game-result').innerHTML=`<p class="eyebrow">${esc(g.street.toUpperCase())} · ${g.done?'HAND COMPLETE':'PRACTICE TABLE'}</p><h2>${g.pot} chips ${g.done?'settled':'in the pot'}</h2><div>${g.board.map(cardHtml).join('')||'<p class="hint">Community cards appear after preflop.</p>'}</div><div class="seats">${g.hands.map((h,i)=>`<div class="seat ${g.actor===i?'active-seat':''} ${g.folded[i]?'folded':''}"><h3>${esc(g.names[i])} <span class="seat-number">· Seat ${i}${g.button===i?' · Button':''}</span></h3><div>${h?h.map(cardHtml).join(''):'<span class="unknown-cards">PRIVATE CARDS HIDDEN</span>'}</div><p>${g.stacks[i]} behind · ${g.committed[i]} committed</p><p>${g.folded[i]?'Folded':g.done?'Net: '+g.net[i]:g.stacks[i]===0?'All-in':'Street bet: '+g.street_bets[i]}</p></div>`).join('')}</div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${p.amount} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}<details><summary>Action history (${g.log.length})</summary>${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+a.amount}</p>`).join('')}</details>`;
+}
+function coachExplanation(payload){
+  if(!payload)return '<p class="hint">Structured explanation unavailable for this historical result.</p>';
+  const evidence=(payload.evidence||[]).map(item=>`<li>${esc(item.tendency_id.replaceAll('_',' '))}: ${pct(item.value)} from ${item.evidence_count} observed opportunities</li>`).join('');
+  const alternatives=(payload.alternative_actions||[]).map(item=>`<tr><td>${esc(item.action)}</td><td>${chips(item.ev)}</td><td>${chips(item.ev_difference)}</td></tr>`).join('');
+  return `<p>${esc(payload.summary)}</p><p class="hint">${esc(payload.mathematical_reason)}</p>${evidence?`<h4>Opponent evidence</h4><ul>${evidence}</ul>`:''}${alternatives?`<h4>Alternatives</h4><table><thead><tr><th>Action</th><th>EV</th><th>Difference</th></tr></thead><tbody>${alternatives}</tbody></table>`:''}${warnings(payload.caveats||[])}`;
+}
+function showCoach(result,chosen){
+  if(!result){$('#coach-panel').innerHTML='<p class="hint">Blind Play is on. Analysis is still saved for review.</p>';return;}
+  const loss=Math.max(0,result.actions[result.recommended]-result.actions[chosen]);
+  const voice=result.personality?`<p>${esc(result.personality.text)}</p><p class="fine">${esc(result.personality.personality.replaceAll('_',' '))} · local deterministic renderer · analysis ${esc(result.personality.analysis_id)}</p>`:'';
+  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>YOU CHOSE ${esc(chosen.toUpperCase())} · ESTIMATED LOSS ${chips(loss)}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>`;
+}
+async function loadReview(){
+  const data=await api('session/'+game.id),r=data.review;
+  const errors=r.biggest_errors.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} lost ${chips(d.ev_loss)} chips versus ${esc(d.analysis_at_time.recommended)}</li>`).join('');
+  const exploits=r.biggest_successful_exploits.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} gained ${chips(d.exploit_gain||0)} chips versus the baseline action</li>`).join('');
+  $('#session-review').hidden=false;
+  $('#session-review').innerHTML=`<p class="eyebrow">SESSION REVIEW · ORIGINAL ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} analyzed decisions</h3><div class="metrics">${metric(r.matched_recommendation,'MATCHED')}${metric(r.meaningful_ev_losses,'EV MISTAKES')}${metric(chips(r.total_ev_loss),'TOTAL EV LOSS')}</div><p class="hint">Missed exploit opportunities: ${r.missed_exploitative_opportunities} · Successful exploits: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest errors</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest successful exploits</h3><ol>${exploits}</ol>`:''}`;
 }
 function updateButtonPlayers(){
   const names=$('#game-form').elements.names.value.split(',').map(s=>s.trim()).filter(Boolean);
@@ -56,6 +77,7 @@ function updateButtonPlayers(){
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
-bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);showGame(await api('game',d));},'Dealing…');
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{const g=await api('act',{id:game.id,action:b.dataset.action,amount:Number($('#raise-amount').value)});showGame(g);status();}catch(e){status(e.message,true);showGame(game);}}));
+bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
+$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked)showCoach(null);});
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
 loadOpponents().catch(e=>status(e.message,true));

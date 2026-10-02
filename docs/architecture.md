@@ -1,5 +1,9 @@
 # Architecture and mathematical conventions
 
+The contracts and layer boundaries for opponent-specific strategy are documented
+in [human-aware-strategy.md](human-aware-strategy.md). This document describes
+the currently implemented application and mathematical conventions.
+
 ## Flow
 
 The browser sends JSON to a loopback-only Python HTTP server. The server delegates
@@ -12,10 +16,28 @@ Browser (pokerlab/web)
        ├─ cards.py      parsing, range expansion, exact hand comparison
        ├─ equity.py     sampled runouts or exact river enumeration
        ├─ models.py     opponent priors, observations, SQLite transactions
-       ├─ analysis.py   one-decision EV and explanations
+       ├─ contracts.py  immutable human-aware component boundaries
+       ├─ analysis.py   one-decision EV calculation
+       ├─ explanations.py deterministic facts, prose, and JSON round-trips
+       ├─ personalities.py deterministic coaching voices and optional text adapter
        ├─ solver.py     restricted river CFR and best-response evaluation
        └─ game.py       full-hand betting mechanics and pot settlement
 ```
+
+## Coaching presentation
+
+`pokerlab.personalities` sits strictly after explanation and calculation. Its
+five local voices (Grinder, Chronic Bluffer, Nit, Math Guy, and Old-School Pro)
+work offline and retain the exact immutable `DecisionExplanation`. A SHA-256
+fingerprint covers the protected recommendation, EVs, strategy frequencies,
+confidence, uncertainty, opponent evidence, and caveats; a rendering with a
+mismatched analysis ID or fingerprint is rejected.
+
+The optional `ConversationalExplanationProvider` is disabled by default and
+has no dependency or API-key requirement. If explicitly enabled, it receives a
+serialized copy of an already-completed explanation and may return non-empty
+prose only. It cannot return replacement structured result fields, and it never
+participates in poker calculation.
 
 ## Expected value
 
@@ -55,6 +77,21 @@ The opportunity denominator is recorded explicitly. Each observation has a stabl
 identifier for idempotence at the API level. Supplying the same ID and data twice
 does not count twice; reusing the ID for different data is rejected. Separate
 submissions without a supplied ID count as separate observations.
+
+Archetypes initialize independent priors for each tendency and do not constrain
+later estimates. The v2 store persists those priors in `opponent_priors` and
+counted, contextual evidence in `opponent_observations`. Existing `opponents`
+and single-event `observations` rows remain readable and are combined with v2
+evidence. Malformed legacy evidence raises `OpponentDataError` instead of being
+used silently. Snapshot creation is deterministic and contains no timestamps.
+
+The public model boundary consists of `create_opponent()`,
+`create_opponent_from_archetype()`,
+`record_observation()`, `get_tendency_estimate()`,
+`get_tendency_evidence()`, `opponent_snapshot()`, and
+`reset_opponent_model()`/`reinitialize_opponent_model()`. The older
+`add_opponent()`, `observe()`, and
+`get_opponent()` shapes remain compatibility adapters.
 
 Metric definitions: VPIP and PFR each use dealt hands; 3-bet uses opportunities
 facing a preflop raise; fold-to-bet uses faced bets; aggression uses observed
@@ -109,9 +146,20 @@ the button among tied winners.
 {"board":"Js 8d 4c 2h 2s","oop_range":"AsAh,KsKh,AsKs","ip_range":"AcAd,KcKd,AcKc","pot":100,"bet":50,"iterations":1000,"lock":{}}
 ```
 
+`POST /api/exploit` accepts the same restricted river-game inputs plus
+`hero_hand`, `opponent_id`, and optional `decision`. It loads an immutable river
+snapshot and returns the shared strategy-analysis contract. This remains a
+restricted river adapter, not a complete no-limit Hold'em solver.
+
+`POST /api/explain` deterministically converts a serialized analysis contract
+into traceable explanation facts. Practice `POST /api/act` accepts an optional
+`personality`; the server renders that voice only after the calculation and
+returns the unchanged analysis ID and a protected-facts fingerprint.
+
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,
-`POST /api/game`, `POST /api/act`, and `GET /api/export`.
+`POST /api/exploit`, `POST /api/explain`, `POST /api/game`, `POST /api/act`,
+`GET /api/session/{id}`, and `GET /api/export`.
 
 All writes accept JSON. Errors return a JSON `error` with a non-2xx status.
 The endpoint implementation is the current contract; there is no external API

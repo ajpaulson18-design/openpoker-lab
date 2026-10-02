@@ -1,9 +1,13 @@
 import itertools
 import json
 import random
+import shutil
 import tempfile
 import threading
 import unittest
+import uuid
+from contextlib import contextmanager
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -12,9 +16,26 @@ from pokerlab.cards import cards, rank_hand, expand_range, DECK
 from pokerlab.equity import simulate
 from pokerlab.models import Store
 from pokerlab.analysis import analyze
+from pokerlab.contracts import (ActionFrequency, ActionValue, BetaPrior,
+                                ExplanationPayload, ExploitativeAdjustment,
+                                MathematicalFact, OpponentAssumption,
+                                OpponentModelProvider, OpponentTendencyEstimate,
+                                StrategyAnalysisResult, TendencyContext,
+                                Uncertainty, stable_analysis_id)
 from pokerlab.game import Game, settle
 from pokerlab.solver import solve
 from pokerlab.server import make_server
+
+
+@contextmanager
+def writable_temp_directory():
+    """Avoid Python 3.14's owner-only Windows temp-directory ACL in sandboxes."""
+    path = Path(tempfile.gettempdir()) / f"openpoker-test-{uuid.uuid4().hex}"
+    path.mkdir()
+    try:
+        yield str(path)
+    finally:
+        shutil.rmtree(path, ignore_errors=True)
 
 
 class CardsTests(unittest.TestCase):
@@ -79,7 +100,7 @@ class EquityTests(unittest.TestCase):
 
 class ModelTests(unittest.TestCase):
     def test_update_filter_and_dedup(self):
-        with tempfile.TemporaryDirectory() as d:
+        with writable_temp_directory() as d:
             s=Store(Path(d)/'db.sqlite3'); o=s.add_opponent('Test','balanced'); identity=o['id']
             old=o['metrics']['fold_to_bet']['mean']
             s.observe(identity,'fold_to_bet',True,'river',id='hand1')
@@ -88,6 +109,70 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(s.get_opponent(identity,'turn')['metrics']['fold_to_bet']['mean'],old)
             self.assertEqual(len(s.export()['observations']),1)
             with self.assertRaises(ValueError):s.observe(identity,'fold_to_bet',False,'river',id='hand1')
+
+    def test_immutable_snapshot_matches_street_filtered_model(self):
+        with writable_temp_directory() as d:
+            store=Store(Path(d)/'db.sqlite3'); opponent=store.add_opponent('Test','tight')
+            store.observe(opponent['id'],'fold_to_bet',True,'river',id='river-1')
+            store.observe(opponent['id'],'fold_to_bet',False,'turn',id='turn-1')
+            snapshot=store.opponent_snapshot(opponent['id'],'river')
+            estimate=snapshot.tendency('fold_to_bet')
+            legacy=store.get_opponent(opponent['id'],'river')['metrics']['fold_to_bet']
+            self.assertIsInstance(store,OpponentModelProvider)
+            self.assertEqual(estimate.context.street,'river')
+            self.assertEqual((estimate.successes,estimate.opportunities),(1,1))
+            self.assertEqual(estimate.posterior_mean,legacy['mean'])
+            self.assertEqual(estimate.prior.source,'profile:tight')
+            self.assertNotIn('name',snapshot.to_dict())
+            with self.assertRaises(FrozenInstanceError):estimate.sample_size=2
+
+
+class ContractTests(unittest.TestCase):
+    def fixtures(self):
+        context=TendencyContext('river','button','facing_bet',(('size','half-pot'),))
+        uncertainty=Uncertainty(.30,.55,.95,'beta interval','moderate')
+        tendency=OpponentTendencyEstimate('fold_to_bet',context,12,30,
+                                          BetaPrior(.45,10,'profile:balanced'),
+                                          .4125,uncertainty,30)
+        assumption=OpponentAssumption('fold_to_bet',context,.4125,30,uncertainty)
+        return context,uncertainty,tendency,assumption
+
+    def test_strategy_contract_keeps_baseline_and_exploit_separate(self):
+        _,uncertainty,_,assumption=self.fixtures()
+        identity=stable_analysis_id({'hand':'AsAh','board':'2c3d7h8s9c'})
+        result=StrategyAnalysisResult(
+            identity,('check','bet'),
+            (ActionFrequency('check',.6),ActionFrequency('bet',.4)),
+            (ActionFrequency('check',.3),ActionFrequency('bet',.7)),
+            (ActionValue('check',48),ActionValue('bet',55)),
+            (ActionValue('check',0),ActionValue('bet',7)),
+            (assumption,),'moderate',uncertainty,'example-solver-v1','beta-opportunity-v1',
+            ('Heads-up only.',),())
+        payload=ExplanationPayload(
+            identity,'bet',result.baseline_strategy,
+            ExploitativeAdjustment('bet',.4,.7),
+            'The modeled fold rate raises bet EV.',assumption,30,uncertainty,7,
+            (MathematicalFact('Bet EV',55,'chips'),),('Range uncertainty is additional.',))
+        encoded=json.dumps({'analysis':result.to_dict(),'explanation':payload.to_dict()})
+        decoded=json.loads(encoded)
+        self.assertNotEqual(decoded['analysis']['baseline_strategy'],
+                            decoded['analysis']['exploitative_strategy'])
+        self.assertEqual(decoded['analysis']['analysis_id'],decoded['explanation']['analysis_id'])
+        self.assertEqual(identity,stable_analysis_id({'board':'2c3d7h8s9c','hand':'AsAh'}))
+
+    def test_contracts_reject_ambiguous_or_invalid_data(self):
+        context,uncertainty,_,_=self.fixtures()
+        with self.assertRaises(ValueError):
+            OpponentTendencyEstimate('fold_to_bet',context,2,1,
+                                     BetaPrior(.45,10,'profile:balanced'),.5,uncertainty,1)
+        with self.assertRaises(ValueError):
+            StrategyAnalysisResult(
+                'id',('check','bet'),
+                (ActionFrequency('check',1),ActionFrequency('bet',0)),
+                (ActionFrequency('check',.2),ActionFrequency('bet',.2)),
+                (ActionValue('check',1),ActionValue('bet',2)),
+                (ActionValue('check',0),ActionValue('bet',1)),(),
+                'low',None,'solver-v1','model-v1')
 
 
 class GameTests(unittest.TestCase):
@@ -179,7 +264,7 @@ class SolverTests(unittest.TestCase):
 
 class ServerTests(unittest.TestCase):
     def test_api_validation_and_persistence(self):
-        with tempfile.TemporaryDirectory() as d:
+        with writable_temp_directory() as d:
             server=make_server(0,Path(d)/'db.sqlite3')
             thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
             root=f'http://127.0.0.1:{server.server_port}'

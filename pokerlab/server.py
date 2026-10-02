@@ -6,10 +6,16 @@ from pathlib import Path
 import threading
 from urllib.parse import urlparse, parse_qs
 import uuid
+from . import __version__
 from .analysis import analyze
 from .equity import simulate
+from .explanations import analysis_from_dict, explain
+from .exploit import solve_exploitative_river
 from .game import Game
-from .models import Store, PROFILES
+from .models import OPPONENT_MODEL_VERSION, Store, PROFILES
+from .practice import (advance_to_hero, analyze_decision, build_coach_explanation,
+                       decision_event, render_coach_personality, visible_state)
+from .personalities import CoachPersonality
 from .solver import solve
 
 WEB = Path(__file__).parent / "web"
@@ -51,9 +57,14 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
             if url.path == "/api/export":
                 return self.respond(store.export())
             if url.path == "/api/health":
-                return self.respond({"ok": True, "version": "0.1.0"})
+                return self.respond({"ok": True, "version": __version__})
+            if url.path.startswith("/api/session/"):
+                try:
+                    return self.respond(store.session(url.path.rsplit("/", 1)[-1], require_complete=True))
+                except ValueError as error:
+                    return self.respond({"error": str(error)}, 400)
             filename = {"/": "index.html", "/app.js": "app.js", "/style.css": "style.css",
-                        "/names.css": "names.css"}.get(url.path)
+                        "/names.css": "names.css", "/coach.css": "coach.css"}.get(url.path)
             if filename:
                 mime = {"html": "text/html", "js": "text/javascript", "css": "text/css"}[filename.split(".")[-1]]
                 return self.respond((WEB/filename).read_bytes(), content_type=mime)
@@ -99,6 +110,15 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return result
             if path == "/api/solve":
                 return solve(**data)
+            if path == "/api/exploit":
+                inputs = dict(data)
+                opponent_id = inputs.pop("opponent_id")
+                snapshot = store.opponent_snapshot(opponent_id, "river")
+                return solve_exploitative_river(snapshot=snapshot, **inputs).to_dict()
+            if path == "/api/explain":
+                analysis = analysis_from_dict(data["analysis"])
+                return explain(analysis, data["recommended_action"],
+                               data.get("level", "normal")).to_dict()
             if path == "/api/opponents":
                 return store.add_opponent(**data)
             if path == "/api/observe":
@@ -109,13 +129,39 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                         games.pop(next(iter(games)))
                     identity = uuid.uuid4().hex
                     games[identity] = Game(**data)
-                    return {"id": identity, **games[identity].state()}
+                    advance_to_hero(games[identity])
+                    store.start_session(identity)
+                    if games[identity].done:
+                        store.complete_session(identity)
+                    return {"id": identity, **visible_state(games[identity])}
             if path == "/api/act":
                 with game_lock:
                     identity = data["id"]
                     if identity not in games:
                         raise ValueError("Hand expired; deal a new hand.")
-                    return {"id": identity, **games[identity].act(data["action"], data.get("amount"))}
+                    game = games[identity]
+                    if game.done or game.actor != 0:
+                        raise ValueError("The hero is not awaiting a decision.")
+                    personality = CoachPersonality(data.get("personality", "grinder"))
+                    opponent = None
+                    if data.get("opponent_id"):
+                        opponent = store.get_opponent(data["opponent_id"], game.street)
+                        opponent["model_version"] = OPPONENT_MODEL_VERSION
+                    analysis = analyze_decision(game, opponent)
+                    event = decision_event(game, analysis, data["action"], opponent)
+                    game.act(data["action"], data.get("amount"))
+                    stored = store.save_decision(identity, event)
+                    advance_to_hero(game)
+                    if game.done:
+                        store.complete_session(identity)
+                    response = {"id": identity, **visible_state(game), "decision_order": stored["decision_order"]}
+                    if data.get("coach_visible", False):
+                        response["coach"] = analysis
+                        response["coach"]["explanation_payload"] = build_coach_explanation(
+                            analysis).to_dict()
+                        response["coach"]["personality"] = render_coach_personality(
+                            analysis, personality)
+                    return response
             raise ValueError("Unknown endpoint.")
 
     return ThreadingHTTPServer(("127.0.0.1", port), Handler)
