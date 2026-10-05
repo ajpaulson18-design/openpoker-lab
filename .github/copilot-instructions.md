@@ -8,4 +8,4 @@ Use the commands and completion standard in `AGENTS.md`. Prefer reproducible pok
 
 For code review, focus on poker-rule correctness, hidden-information leaks, solver or EV errors, persistence/replay integrity, local HTTP security, model-assumption drift, regressions, and missing tests. Ignore trivial style already covered by automation.
 
-Division of labor: Codex owns major features, architecture, hard debugging, large refactors, substantial product changes, and cross-repository decisions. Copilot agents provide focused QA, maintenance, documentation, and skeptical review. Surface ambiguous or high-impact decisions instead of making them silently.
+Division of labor: Codex owns major features, architecture, hard debugging, large refactors, substantial product changes, and cross-repository decisions. Copilot agents provide focused QA, automated remediation, documentation, and skeptical review. Surface ambiguous or high-impact decisions instead of making them silently.

@@ -29,4 +29,4 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
-Codex is the primary builder and senior engineer for features, architecture, difficult debugging, large refactors, and cross-repository decisions. Copilot specialists support testing, maintenance, documentation, and independent review; they should not compete for major implementation work.
+Codex is the primary builder and senior engineer for features, architecture, difficult debugging, large refactors, and cross-repository decisions. Copilot specialists support testing, automated remediation, documentation, and independent review; they should not compete for major implementation work.
