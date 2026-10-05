@@ -36,4 +36,4 @@ Read `AGENTS.md`, `.github/copilot-instructions.md`, and `.github/agents/qa-test
 
 Concentrate on externally meaningful defects, poker-rule correctness, hidden-information leaks, deterministic replay and serialization, persistence integrity, solver boundaries, malformed inputs, local HTTP security, regressions, and missing tests. Treat ambiguous poker or modeling behavior as a finding rather than deciding it.
 
-Do not duplicate lint feedback, repeat the general Copilot review, or comment on trivial style. If there is no material QA finding, submit no review. Otherwise submit one concise review that separates blocking problems from optional improvements and cites concrete files or functions.
+Do not duplicate lint feedback, repeat the general Copilot review, or comment on trivial style. If there is no material QA finding, invoke the safe-output `noop` tool with a concise explanation. Otherwise submit one concise review that separates blocking problems from optional improvements and cites concrete files or functions.

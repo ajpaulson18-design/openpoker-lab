@@ -37,4 +37,4 @@ Read `AGENTS.md`, `.github/copilot-instructions.md`, and `.github/agents/documen
 
 Pay special attention to setup commands, public API behavior, persistence and replay guarantees, security boundaries, solver limitations, probability meanings, and any GTO or profitability claim. Do not request documentation for internal details that users and maintainers do not need. Do not invent features, evidence, or benchmarks.
 
-If no material drift exists, submit no review. Otherwise submit one concise actionable review with exact files or sections that require correction.
+If no material drift exists, invoke the safe-output `noop` tool with a concise explanation. Otherwise submit one concise actionable review with exact files or sections that require correction.
