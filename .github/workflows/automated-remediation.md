@@ -8,14 +8,15 @@ permissions:
   actions: read
   issues: read
   pull-requests: read
-engine: copilot
-model: gpt-5-mini
+engine: pi
+model: copilot/gpt-4o
 network: defaults
 tools:
   github:
+    mode: gh-proxy
     toolsets: [default]
-  bash:
-    - "python -m unittest discover -s tests -v"
+  cli-proxy: true
+  bash: ["*"]
 safe-outputs:
   create-pull-request:
     draft: true

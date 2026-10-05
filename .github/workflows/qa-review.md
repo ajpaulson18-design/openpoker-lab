@@ -12,12 +12,14 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-engine: copilot
-model: gpt-5-mini
+engine: pi
+model: copilot/gpt-4o
 network: defaults
 tools:
   github:
+    mode: gh-proxy
     toolsets: [default]
+  cli-proxy: true
 safe-outputs:
   submit-pull-request-review:
     footer: if-body
