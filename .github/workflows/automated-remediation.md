@@ -9,6 +9,7 @@ permissions:
   issues: read
   pull-requests: read
 engine: copilot
+model: gpt-5-mini
 network: defaults
 tools:
   github:
@@ -38,4 +39,3 @@ Read `AGENTS.md`, `.github/copilot-instructions.md`, and `.github/agents/automat
 Only fix a concrete, reproducible, low-risk maintenance defect whose intended behavior is unambiguous. Prefer a failing check, broken link, obvious implementation defect, configuration inconsistency, cross-platform test failure, or stale factual documentation. Do not change poker strategy, probability meanings, solver scope, modeling assumptions, public product direction, architecture, source data, or security boundaries. Do not perform dependency upgrades with meaningful behavioral risk.
 
 Reproduce or verify the problem, inspect nearby context, make the smallest root-cause fix, and run the directly relevant checks. Create at most one focused draft pull request. If there is no worthwhile fix, produce no output. Never create a status issue or a trivial cleanup PR merely to show activity.
-
