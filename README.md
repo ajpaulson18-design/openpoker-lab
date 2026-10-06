@@ -57,9 +57,8 @@ Choose another port with `--port 8766`, or another database with
    Toggle Live Coach without changing the saved calculation, and choose a coach
    voice to change delivery without changing strategy.
 
-Version 0.2.0 is the appropriate next minor release: it adds backward-compatible
-opponent-aware analysis, coaching, review, and presentation capabilities while the
-public API remains pre-1.0.
+Version 0.2.0 adds opponent-aware analysis, coaching, review, and presentation
+capabilities. The public API remains pre-1.0.
 
 ## Model boundaries
 
