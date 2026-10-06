@@ -12,7 +12,6 @@ permissions:
   issues: read
   pull-requests: read
 engine: copilot
-model: auto
 network: defaults
 tools:
   github:
