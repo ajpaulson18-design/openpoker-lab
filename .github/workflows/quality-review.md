@@ -15,8 +15,8 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-engine: pi
-model: copilot/auto
+engine: copilot
+model: auto
 network: defaults
 tools:
   github:
@@ -50,4 +50,3 @@ Perform one integrated review covering:
 Do not duplicate lint feedback or the general Copilot review. Do not comment on trivial style, request documentation for irrelevant internals, invent evidence, or decide ambiguous poker or modeling behavior.
 
 If there is no material finding, invoke the safe-output `noop` tool with a concise explanation. Otherwise submit one concise review that separates blocking defects from optional improvements and cites exact files, functions, or documentation sections.
-
