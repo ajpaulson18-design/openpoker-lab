@@ -56,11 +56,15 @@ def _prior_source(archetype):
     return f"{prefix}:{archetype}"
 
 
-def _normalize_archetype(archetype):
+def normalize_archetype(archetype):
+    """Canonicalize an archetype name; shared with non-persistence consumers."""
     if not isinstance(archetype, str):
         raise ValueError("Unknown opponent archetype.")
     normalized = archetype.strip().lower().replace("-", "_").replace(" ", "_")
     return "unknown" if normalized == "default" else normalized
+
+
+_normalize_archetype = normalize_archetype  # Internal alias kept for existing call sites.
 
 
 class OpponentDataError(ValueError):

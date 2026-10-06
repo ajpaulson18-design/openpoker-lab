@@ -21,7 +21,9 @@ Browser (pokerlab/web)
        ├─ explanations.py deterministic facts, prose, and JSON round-trips
        ├─ personalities.py deterministic coaching voices and optional text adapter
        ├─ solver.py     restricted river CFR and best-response evaluation
-       └─ game.py       full-hand betting mechanics and pot settlement
+       ├─ game.py       full-hand betting mechanics and pot settlement
+       ├─ archetypes.py parameterized archetype decision policy (reuses models.py priors)
+       └─ batch.py      batch Monte Carlo hand simulation over full games
 ```
 
 ## Coaching presentation
@@ -146,6 +148,26 @@ the button among tied winners.
 {"board":"Js 8d 4c 2h 2s","oop_range":"AsAh,KsKh,AsKs","ip_range":"AcAd,KcKd,AcKc","pot":100,"bet":50,"iterations":1000,"lock":{}}
 ```
 
+`POST /api/simulate` runs many independent, fresh-stack hands driven entirely by
+``pokerlab.archetypes`` policies and returns aggregated per-seat win/tie/loss
+rates, EV per hand with a 95% sampling interval, observed VPIP/PFR/fold-to-bet/
+aggression, per-street action frequencies, and profit by distance from the
+button:
+
+```json
+{"stacks":[200,200,200],"archetypes":["nit","maniac","balanced"],"names":["A","B","C"],"small_blind":1,"big_blind":2,"trials":3000,"seed":42,"rotate_button":true}
+```
+
+Each archetype maps the same six priors used by the opponent model
+(`vpip`, `pfr`, `three_bet`, `fold_to_bet`, `aggression`, `showdown_bluff`) onto
+one parameterized decision policy: a published Chen-formula percentile for
+preflop strength, and the engine's own exact hand-category plus explicit draw
+detection postflop. This is a declared heuristic behavior for simulation and
+comparison, not a claim about real opponents or a solved equilibrium. Every
+simulated hand resets to the configured starting stacks, so results describe
+per-hand expected value for the archetype mix rather than a bankroll or
+tournament run.
+
 `POST /api/exploit` accepts the same restricted river-game inputs plus
 `hero_hand`, `opponent_id`, and optional `decision`. It loads an immutable river
 snapshot and returns the shared strategy-analysis contract. This remains a
@@ -159,7 +181,7 @@ returns the unchanged analysis ID and a protected-facts fingerprint.
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,
 `POST /api/exploit`, `POST /api/explain`, `POST /api/game`, `POST /api/act`,
-`GET /api/session/{id}`, and `GET /api/export`.
+`POST /api/simulate`, `GET /api/session/{id}`, and `GET /api/export`.
 
 All writes accept JSON. Errors return a JSON `error` with a non-2xx status.
 The endpoint implementation is the current contract; there is no external API

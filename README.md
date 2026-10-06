@@ -38,6 +38,7 @@ Choose another port with `--port 8766`, or another database with
 | River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
+| Batch simulation | 2–6 seats; parameterized archetype opponents play full hands against each other; up to 20,000 seeded hands; win/tie/loss rates, EV per hand with a sampling interval, observed VPIP/PFR/fold-to-bet/aggression, and profit by distance from the button |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
 
 ### A useful first session
@@ -56,6 +57,10 @@ Choose another port with `--port 8766`, or another database with
    follow every action and pot award while seat numbers preserve table position.
    Toggle Live Coach without changing the saved calculation, and choose a coach
    voice to change delivery without changing strategy.
+7. In **Batch simulation**, assign an archetype per seat (for example `nit`,
+   `maniac`, `calling_station`) and run a few thousand seeded hands. Compare win
+   rates and EV per hand, then change one archetype and re-run to see how the
+   outcome and observed tendencies shift.
 
 Version 0.2.0 is the appropriate next minor release: it adds backward-compatible
 opponent-aware analysis, coaching, review, and presentation capabilities while the
@@ -105,6 +110,34 @@ Showdown bluff observations are selection-biased. VPIP, PFR, and related summary
 statistics cannot by themselves recover an opponent's hidden-card range.
 There is no automatic poker-site hand-history parser in this release: observations
 and notes are recorded manually. Export is available; bulk import is future work.
+
+### Batch hand simulation
+
+Each simulated hand is independent: stacks reset to the configured starting
+amounts every hand, so results describe per-hand expected value for the
+supplied archetype mix, not a bankroll or tournament run. Every seat, including
+any seat you might otherwise think of as "hero," is played by a parameterized
+`pokerlab.archetypes` policy; there is no hidden human decision in this mode.
+
+A single policy implementation maps six existing opponent-model priors (VPIP,
+PFR, 3-bet, fold-to-bet, aggression, shown-hand bluff rate — the same priors
+in `pokerlab/models.py`) onto concrete actions. Preflop strength uses the
+published Chen formula, converted to an exact percentile over the real
+combinatorial population of 1,326 starting hands, so a `vpip` parameter means
+"plays roughly its own share of the strongest starting hands," the standard
+poker definition of looseness. Postflop strength uses the engine's own exact
+hand-category ranking plus explicit (not sampled) flush- and straight-draw
+detection. The behavior itself — how strength and archetype parameters become
+a fold, check, call, or raise — is a declared heuristic policy for simulation
+and comparison. It is not a claim about real human play, and it is not a
+solved equilibrium.
+
+Win/tie/loss rates and EV per hand use the same normal-approximation sampling
+interval convention as showdown equity: a quantified estimate of sampling
+error for the supplied hands, not of whether the archetype assumptions match
+a real opponent. "Profit by distance from the button" pools every seat by its
+offset from the button across the rotation, which is why it can reveal a
+positional effect that a single seat's own archetype would otherwise hide.
 
 ### Solver game
 
@@ -169,7 +202,11 @@ duplicate observation handling, side pots, short raises, random legal hands,
 solver convergence and node locks, and local HTTP access controls.
 Additional tests cover zero and tiny samples, contradictory and extreme evidence,
 blocked cards, personality invariants, hidden-information safety, session
-reproducibility, coaching visibility, all-ins, and side pots.
+reproducibility, coaching visibility, all-ins, and side pots. Batch simulation
+tests cover Chen-formula reference scores, legality of every archetype decision
+across hundreds of randomized tables, exact hand-by-hand zero-sum chip
+conservation, seed determinism, and that tighter archetypes measurably fold
+more and play fewer hands than looser ones.
 
 The optional exhaustive evaluator check enumerates all 2,598,960 five-card hands
 and compares category totals against the known combinatorial counts. CI runs the

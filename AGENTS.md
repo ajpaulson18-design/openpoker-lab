@@ -20,6 +20,7 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 - `pokerlab/solver.py` implements only the documented fixed-board, fixed-bet restricted river game. Never present it as full Hold'em GTO.
 - `pokerlab/models.py` persists local observations. Preserve explicit opportunity denominators, idempotent observation IDs, street/context filtering, transactions, and legacy-data error handling.
 - `pokerlab/practice.py` must store every live opponent range and enough decision-time state to replay a decision exactly.
+- `pokerlab/archetypes.py` holds the single parameterized archetype decision policy; it must stay the only place behavior maps opponent-model priors to actions. `pokerlab/batch.py` must reuse `game.py` rather than reimplementing betting mechanics, and must keep its per-hand cash-game-reset assumption explicit.
 - Explanation and personality layers may change prose, never recommendations, EVs, frequencies, confidence, analysis IDs, or protected facts.
 - The server remains loopback-only with Host/Origin validation, JSON mutation boundaries, concurrency limits, and a restrictive CSP unless a deliberate architecture change is approved.
 - Never commit `data/`, SQLite databases, credentials, personal opponent records, proprietary solver output, or copied commercial interfaces.

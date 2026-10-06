@@ -279,6 +279,11 @@ class ServerTests(unittest.TestCase):
                 request=Request(root+'/api/equity',b'{"hero":"AsAs"}',{'Content-Type':'application/json'})
                 with self.assertRaises(HTTPError) as context:urlopen(request)
                 self.assertEqual(context.exception.code,400)
+                payload=json.dumps({'stacks':[200,200],'archetypes':['nit','maniac'],'trials':100,'seed':1}).encode()
+                request=Request(root+'/api/simulate',payload,{'Content-Type':'application/json'})
+                result=json.load(urlopen(request))
+                self.assertEqual(len(result['seats']),2)
+                self.assertAlmostEqual(sum(s['total_net'] for s in result['seats']),0.0,places=9)
             finally:server.shutdown();server.server_close();thread.join()
 
 

@@ -8,6 +8,7 @@ from urllib.parse import urlparse, parse_qs
 import uuid
 from . import __version__
 from .analysis import analyze
+from .batch import simulate_hands
 from .equity import simulate
 from .explanations import analysis_from_dict, explain
 from .exploit import solve_exploitative_river
@@ -99,6 +100,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
         def dispatch(self, path, data):
             if path == "/api/equity":
                 return simulate(**data)
+            if path == "/api/simulate":
+                return simulate_hands(**data)
             if path == "/api/analyze":
                 opponent = None
                 if data.get("opponent_id"):

@@ -32,6 +32,20 @@ bindForm('#equity-form',async form=>{
   const r=await api('equity',data);
   $('#equity-result').innerHTML=`<p class="eyebrow">SHOWDOWN EQUITY</p>${equityStats(r)}<h3>Your final hand distribution</h3>${Object.entries(r.categories).map(([k,v])=>`<div class="bar-row"><span>${esc(k)}</span><progress value="${v}" max="1"></progress><span>${pct(v)}</span></div>`).join('')}<p class="fine">${esc(r.assumption)} Remaining combinations: ${r.range_combos.join(', ')}.</p>`;
 });
+function batchStats(r){
+  const seatRows=r.seats.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.archetype.replaceAll('_',' '))}</td><td>${pct(s.win_rate)}</td><td>${chips(s.mean_net_per_hand)}</td><td>${chips(s.interval95[0])} to ${chips(s.interval95[1])}</td><td>${s.observed_vpip==null?'—':pct(s.observed_vpip)}</td><td>${s.observed_pfr==null?'—':pct(s.observed_pfr)}</td><td>${s.observed_fold_to_bet==null?'—':pct(s.observed_fold_to_bet)}</td><td>${s.observed_postflop_aggression==null?'—':pct(s.observed_postflop_aggression)}</td></tr>`).join('');
+  const posRows=r.positional_effects.map(p=>`<tr><td>${p.seats_from_button===0?'Button':p.seats_from_button+' after button'}</td><td>${p.hands}</td><td>${chips(p.mean_net_per_hand)}</td><td>${chips(p.interval95[0])} to ${chips(p.interval95[1])}</td></tr>`).join('');
+  return `<p class="eyebrow">${r.trials.toLocaleString()} HANDS · SEED ${esc(r.seed)}</p><h3>Per-seat results</h3><div class="scroll-table"><table><thead><tr><th>Seat</th><th>Archetype</th><th>Win rate</th><th>EV / hand</th><th>95% interval</th><th>VPIP</th><th>PFR</th><th>Fold to bet</th><th>Postflop aggression</th></tr></thead><tbody>${seatRows}</tbody></table></div><h3>Profit by distance from the button</h3><div class="scroll-table"><table><thead><tr><th>Position</th><th>Hands</th><th>EV / hand</th><th>95% interval</th></tr></thead><tbody>${posRows}</tbody></table></div><p class="fine">${esc(r.assumption)}</p>`;
+}
+bindForm('#batch-form',async form=>{
+  const d=formData(form,['small_blind','big_blind','button','trials','seed']);
+  d.names=d.names.split(',').map(s=>s.trim()).filter(Boolean);
+  d.archetypes=d.archetypes.split(',').map(s=>s.trim()).filter(Boolean);
+  d.stacks=d.stacks.split(',').map(Number);
+  d.rotate_button=form.elements.rotate_button.checked;
+  const r=await api('simulate',d);
+  $('#batch-result').innerHTML=batchStats(r);
+},'Simulating thousands of hands…');
 async function loadOpponents(){
   ({opponents}=await api('opponents'));
   document.querySelectorAll('.opponent-select').forEach(select=>{const selected=select.value;const first=select.options[0].text;select.innerHTML=`<option value="">${esc(first)}</option>`+opponents.map(o=>`<option value="${esc(o.id)}">${esc(o.name)}</option>`).join('');select.value=selected;});
