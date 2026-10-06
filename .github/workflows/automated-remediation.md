@@ -9,7 +9,7 @@ permissions:
   issues: read
   pull-requests: read
 engine: pi
-model: copilot/gpt-5.4
+model: copilot/auto
 network: defaults
 tools:
   github:
