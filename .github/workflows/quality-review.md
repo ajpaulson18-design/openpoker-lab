@@ -15,9 +15,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-engine:
-  id: copilot
-  version: "0.0.422"
+engine: copilot
 network: defaults
 tools:
   github:
