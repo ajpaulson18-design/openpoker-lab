@@ -32,6 +32,7 @@ safe-outputs:
     - "!ai_credits_rate_limit_error"
 max-turns: 35
 max-ai-credits: 70
+max-daily-ai-credits: 70
 timeout-minutes: 16
 ---
 
