@@ -16,6 +16,7 @@ permissions:
   issues: read
   pull-requests: read
 engine: copilot
+model: gpt-5-mini
 network: defaults
 tools:
   github:
