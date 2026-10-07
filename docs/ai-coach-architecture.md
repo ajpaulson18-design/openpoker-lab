@@ -6,7 +6,7 @@ Architecture decision record · 2026-10-07 · architecture only
 
 Keep the working poker engine, calculators, restricted river CFR solver, opponent store, and deterministic explanation path. Add a versioned evidence boundary between calculation and coaching, then an optional asynchronous conversation service. The coach explains authoritative results; it never supplies poker calculations, selects strategy, or modifies gameplay.
 
-The best first implementation slice is **a validated, immutable `CoachDecisionAnalysis` contract and a pure adapter from existing `practice-ev-v3` results**. It needs no model, API key, new endpoint, persistence migration, or frontend change. The complete implementation prompt is in `luna-first-slice.md`. No feature implementation is included in this architecture run.
+The best first implementation slice is **a validated, immutable `CoachDecisionAnalysis` contract and a pure adapter from existing `practice-ev-v3` results**. It needs no model, API key, new endpoint, persistence migration, or frontend change. The initial implementation prompt is in `luna-first-slice.md`; the first slice is now implemented in this PR as a separate evidence contract and practice adapter.
 
 ## A. Current architecture assessment
 
