@@ -1,7 +1,11 @@
 import json
 from pathlib import Path
+import shutil
+import socket
+import subprocess
 import tempfile
 import threading
+import time
 import unittest
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -239,6 +243,170 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, 400)
         with caught.exception as response:
             self.assertTrue(json.load(response)["error"])
+
+    @unittest.skipUnless(shutil.which("chromedriver") and shutil.which("chromium"),
+                         "Chromium and ChromeDriver are required for the browser smoke test")
+    def test_chromium_submits_river_form_renders_and_handles_errors(self):
+        with socket.socket() as listener:
+            listener.bind(("127.0.0.1", 0))
+            port = listener.getsockname()[1]
+        driver_process = subprocess.Popen(
+            ["chromedriver", f"--port={port}", "--allowed-ips=127.0.0.1"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        session_id = None
+
+        def webdriver(method, path, data=None):
+            request = Request(
+                f"http://127.0.0.1:{port}{path}",
+                json.dumps(data).encode() if data is not None else None,
+                {"Content-Type": "application/json"} if data is not None else {},
+                method=method)
+            return json.load(urlopen(request, timeout=5))
+
+        def execute(script, args=()):
+            return webdriver(
+                "POST", f"/session/{session_id}/execute/sync",
+                {"script": script, "args": list(args)})["value"]
+
+        def wait_for_state(final_states, timeout=20):
+            deadline = time.monotonic() + timeout
+            while time.monotonic() < deadline:
+                state = execute(
+                    "return document.querySelector('#river-explanation-result').dataset.state")
+                if state in final_states:
+                    return state
+                time.sleep(.1)
+            self.fail(f"Browser explanation did not reach {final_states}.")
+
+        try:
+            for _ in range(100):
+                try:
+                    webdriver("GET", "/status")
+                    break
+                except Exception:
+                    if driver_process.poll() is not None:
+                        self.fail("ChromeDriver exited before becoming ready.")
+                    time.sleep(.1)
+            created = webdriver("POST", "/session", {
+                "capabilities": {"alwaysMatch": {
+                    "browserName": "chrome",
+                    "goog:chromeOptions": {
+                        "binary": shutil.which("chromium"),
+                        "args": ["--headless=new", "--no-sandbox",
+                                 "--disable-dev-shm-usage"],
+                    },
+                }},
+            })
+            session_id = created["value"]["sessionId"]
+            webdriver("POST", f"/session/{session_id}/url", {"url": self.root})
+            for _ in range(100):
+                if execute("return document.readyState") == "complete":
+                    break
+                time.sleep(.1)
+            execute("document.querySelector('.tab[data-tab=solver]').click()")
+            for _ in range(100):
+                if execute("return document.querySelector('#river-explanation-opponent').options.length > 1"):
+                    break
+                time.sleep(.1)
+
+            inputs = self.river_request()
+            expected = self.post("/api/exploit", inputs)
+            execute("""
+              for (const [name, value] of Object.entries(arguments[0])) {
+                const field = document.querySelector(`#solver-form [name="${name}"]`);
+                if (field) field.value = value;
+              }
+              document.querySelector('#river-explanation-form [name=hero_hand]').value = arguments[0].hero_hand;
+              document.querySelector('#river-explanation-opponent').value = arguments[0].opponent_id;
+              document.querySelector('#river-explanation-form [name=decision]').value = arguments[0].decision;
+              document.querySelector('#river-explanation-form [name=level]').value = 'beginner';
+              document.querySelector('#river-explanation-form').requestSubmit();
+            """, [inputs])
+            self.assertEqual(wait_for_state({"ready", "error"}), "ready")
+            rendered = execute("""
+              const report = document.querySelector('[data-testid=river-explanation-report]');
+              const rows = selector => [...report.querySelectorAll(`${selector} tbody tr`)]
+                .map(row => [...row.cells].map(cell => cell.textContent));
+              return {
+                id: report.dataset.analysisId,
+                level: report.dataset.level,
+                evs: rows('[data-testid=action-evs]'),
+                strategies: rows('[data-testid=strategy-comparison]'),
+                uncertainty: !!report.querySelector('[data-testid=explanation-uncertainty]'),
+                assumptions: report.querySelectorAll('[data-testid=model-assumptions] li').length,
+                caveats: report.querySelectorAll('.warnings li').length,
+                requests: performance.getEntriesByType('resource')
+                  .map(item => new URL(item.name).pathname)
+                  .filter(path => path === '/api/exploit' || path === '/api/explain'),
+              };
+            """)
+            self.assertEqual(rendered["id"], expected["analysis_id"])
+            self.assertEqual(rendered["level"], "beginner")
+            self.assertEqual([row[1] for row in rendered["evs"]],
+                             [str(item["value"]) for item in expected["action_evs"]])
+            self.assertEqual([row[1] for row in rendered["strategies"]],
+                             [str(item["frequency"]) for item in expected["baseline_strategy"]])
+            self.assertEqual([row[2] for row in rendered["strategies"]],
+                             [str(item["frequency"]) for item in expected["exploitative_strategy"]])
+            self.assertTrue(rendered["uncertainty"])
+            self.assertGreater(rendered["assumptions"], 0)
+            self.assertGreater(rendered["caveats"], 0)
+            self.assertEqual(rendered["requests"][-2:],
+                             ["/api/exploit", "/api/explain"])
+
+            execute("""
+              const originalFetch = window.fetch.bind(window);
+              window.fetch = async (input, init) => {
+                const response = await originalFetch(input, init);
+                if (!String(input).endsWith('/api/explain')) return response;
+                const payload = await response.json();
+                payload.summary = '<img id="xss-payload" src=x onerror="window.__xss=true">';
+                payload.caveats.push('<svg id="xss-caveat" onload="window.__xss=true">');
+                return new Response(JSON.stringify(payload), {
+                  status: response.status, headers: {'Content-Type': 'application/json'}
+                });
+              };
+              document.querySelector('#river-explanation-form').requestSubmit();
+            """)
+            self.assertEqual(wait_for_state({"ready", "error"}), "ready")
+            safe_render = execute("""
+              return {
+                image: !!document.querySelector('#xss-payload'),
+                svg: !!document.querySelector('#xss-caveat'),
+                executed: !!window.__xss,
+                escapedText: document.querySelector('[data-testid=river-explanation-report]')
+                  .textContent.includes('<img id="xss-payload"'),
+              };
+            """)
+            self.assertEqual(safe_render,
+                             {"image": False, "svg": False,
+                              "executed": False, "escapedText": True})
+
+            execute("""
+              document.querySelector('#river-explanation-form [name=hero_hand]').value = 'As As';
+              document.querySelector('#river-explanation-form').requestSubmit();
+            """)
+            self.assertEqual(wait_for_state({"ready", "error"}), "error")
+            error_state = execute("""
+              return {
+                alert: document.querySelector('#river-explanation-result [role=alert]').textContent,
+                busy: document.querySelector('#river-explanation-result').getAttribute('aria-busy'),
+              };
+            """)
+            self.assertIn("same card", error_state["alert"])
+            self.assertEqual(error_state["busy"], "false")
+        finally:
+            if session_id:
+                try:
+                    webdriver("DELETE", f"/session/{session_id}")
+                except Exception:
+                    pass
+            driver_process.terminate()
+            try:
+                driver_process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                driver_process.kill()
+                driver_process.wait()
 
 
 if __name__ == "__main__":
