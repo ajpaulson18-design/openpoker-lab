@@ -1,0 +1,216 @@
+"""HTTP and view-model tests for deterministic saved-decision study."""
+from dataclasses import fields
+import json
+from pathlib import Path
+import shutil
+import threading
+import unittest
+import uuid
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+from unittest.mock import patch
+
+from pokerlab.contracts import (CoachActionValue, CoachAnalysisQuality,
+                                CoachDecisionAnalysis)
+from pokerlab.decision_study import build_decision_study
+from pokerlab.models import Store
+from pokerlab.server import make_server
+
+
+BASE = Path(__file__).resolve().parents[1] / "work" / "decision-study-tests"
+BASE.mkdir(parents=True, exist_ok=True)
+
+
+class DecisionStudyTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = BASE / f"run-{uuid.uuid4().hex}"
+        self.directory.mkdir()
+        self.database = self.directory / "study.sqlite3"
+        self.store = Store(self.database)
+        self.server = make_server(0, self.database)
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.thread.start()
+        self.root = f"http://127.0.0.1:{self.server.server_port}"
+
+    def tearDown(self):
+        self.server.shutdown()
+        self.server.server_close()
+        self.thread.join()
+        shutil.rmtree(self.directory, ignore_errors=True)
+
+    def post(self, path, payload):
+        request = Request(self.root + path, json.dumps(payload).encode(),
+                          {"Content-Type": "application/json"})
+        return json.load(urlopen(request))
+
+    def get(self, path):
+        return json.load(urlopen(self.root + path))
+
+    def failed_get(self, path):
+        with self.assertRaises(HTTPError) as caught:
+            self.get(path)
+        with caught.exception as response:
+            return response.code, json.load(response)
+
+    def new_game(self, button=0):
+        return self.post("/api/game", {"stacks": [100, 100], "names": ["Hero", "Villain"],
+                                       "button": button, "seed": 61})
+
+    def capture(self, action="call", *, button=0, amount=None):
+        game = self.new_game(button)
+        if action == "raise" and amount is None:
+            amount = game["legal"]["raise_min"]
+        result = self.post("/api/act", {
+            "id": game["id"], "action": action, "amount": amount,
+            "coach_visible": False, "expected_revision": 0,
+            "client_action_id": uuid.uuid4().hex,
+        })
+        return game, result
+
+    def study_path(self, decision_id):
+        return f"/api/v1/decisions/{decision_id}/study"
+
+    def test_study_projects_validated_facts_without_recalculation(self):
+        game, accepted = self.capture("call")
+        decision_id = accepted["decision"]["decision_id"]
+        with (patch("pokerlab.server.analyze_decision", side_effect=AssertionError("recalculated")),
+              patch("pokerlab.server.adapt_practice_analysis", side_effect=AssertionError("adapted")),
+              patch("pokerlab.server.solve", side_effect=AssertionError("solved")),
+              patch("pokerlab.server.analyze", side_effect=AssertionError("analyzed")),
+              patch("pokerlab.server.simulate", side_effect=AssertionError("simulated"))):
+            study = self.get(self.study_path(decision_id))
+        self.assertEqual(study["schema_version"], 1)
+        self.assertEqual(study["status"], "ready")
+        self.assertEqual(study["binding"], {
+            "hand_id": game["id"], "decision_id": decision_id,
+            "evidence_id": self.get(f"/api/v1/decisions/{decision_id}/analysis")
+            ["analysis"]["evidence_id"], "state_revision": 0,
+        })
+        self.assertEqual(study["source_label"], "Practice estimate")
+        self.assertEqual([card["id"] for card in study["cards"]],
+                         ["estimate", "my_choice", "limits"])
+        self.assertIn("No opponent assumption was captured", study["cards"][2]["answer"])
+        self.assertIsNotNone(study["baseline"])
+        self.assertIn("estimated_ev_chips", study["baseline"])
+        self.assertNotIn("estimated_ev", study["baseline"])
+        self.assertTrue(all("estimated_ev_chips" in action
+                            for action in study["modeled_actions"]))
+        self.assertNotIn("Hero", json.dumps(study))
+        self.assertNotIn("Villain", json.dumps(study))
+        self.assertNotIn("hero_cards", study)
+
+    def test_unassessed_raise_is_distinct_from_modeled_minimum(self):
+        game = self.new_game()
+        amount = game["legal"]["raise_min"] + 1
+        accepted = self.post("/api/act", {
+            "id": game["id"], "action": "raise", "amount": amount,
+            "coach_visible": False, "expected_revision": 0,
+            "client_action_id": uuid.uuid4().hex,
+        })
+        study = self.get(self.study_path(accepted["decision"]["decision_id"]))
+        self.assertEqual(study["choice"]["assessment_status"], "unassessed_size")
+        self.assertIsNone(study["choice"]["ev_loss"])
+        raise_action = next(item for item in study["modeled_actions"] if item["name"] == "raise")
+        self.assertLess(raise_action["amount"], amount)
+        answer = study["cards"][1]["answer"]
+        self.assertIn("exact raise to", answer)
+        self.assertIn("separate alternative", answer)
+        self.assertIn("does not score the chosen size", answer)
+
+    def test_assessed_minimum_raise_has_saved_gap_and_action_families(self):
+        for action, button in (("raise", 0), ("fold", 0), ("check", 1)):
+            with self.subTest(action=action):
+                game, accepted = self.capture(action, button=button)
+                study = self.get(self.study_path(accepted["decision"]["decision_id"]))
+                self.assertEqual(study["choice"]["name"], action)
+                self.assertEqual(study["choice"]["assessment_status"], "assessed")
+                self.assertIsNotNone(study["choice"]["ev_loss"])
+                self.assertIn("recorded gap", study["cards"][1]["answer"])
+
+    def test_solver_quality_uses_a_distinct_source_and_basis_label(self):
+        _, accepted = self.capture("call")
+        saved = self.get(f"/api/v1/decisions/{accepted['decision']['decision_id']}/analysis")
+        analysis = CoachDecisionAnalysis.from_json(json.dumps(saved["analysis"]))
+        values = {item.name: getattr(analysis, item.name)
+                  for item in fields(CoachDecisionAnalysis) if item.name != "evidence_id"}
+        values["source_kind"] = "restricted_equilibrium"
+        values["ev_basis"] = "half_initial_pot_utility"
+        values["quality"] = CoachAnalysisQuality(
+            confidence_label="solver diagnostics", opponent_uncertainty=None,
+            equity_standard_error=None, equity_exact=None, nash_conv=0.2,
+            exploitability=0.1, iterations=50, gap_semantics="per-player best-response gap",
+        )
+        solver_analysis = CoachDecisionAnalysis.build(**values)
+        view = build_decision_study(solver_analysis, saved["choice"])
+        self.assertEqual(view["source_label"], "Restricted equilibrium result")
+        self.assertEqual(view["ev_basis"], "half_initial_pot_utility")
+        self.assertEqual(view["solver_quality"]["iterations"], 50)
+        self.assertTrue(all("estimated_ev" in action and "estimated_ev_chips" not in action
+                            for action in view["modeled_actions"]))
+
+    def test_missing_ev_stays_null_and_missing_baseline_is_omitted(self):
+        game = self.new_game()
+        amount = game["legal"]["raise_min"] + 1
+        accepted = self.post("/api/act", {
+            "id": game["id"], "action": "raise", "amount": amount,
+            "coach_visible": False, "expected_revision": 0,
+            "client_action_id": uuid.uuid4().hex,
+        })
+        saved = self.get(f"/api/v1/decisions/{accepted['decision']['decision_id']}/analysis")
+        analysis = CoachDecisionAnalysis.from_json(json.dumps(saved["analysis"]))
+        values = {item.name: getattr(analysis, item.name)
+                  for item in fields(CoachDecisionAnalysis) if item.name != "evidence_id"}
+        values["baseline_recommended_action_id"] = None
+        first_action_id = analysis.action_evs[0].action_id
+        values["action_evs"] = tuple(
+            CoachActionValue(item.action_id, None if item.action_id == first_action_id else item.value)
+            for item in analysis.action_evs
+        )
+        without_value = CoachDecisionAnalysis.build(**values)
+        view = build_decision_study(without_value, saved["choice"])
+        self.assertIsNone(view["baseline"])
+        self.assertTrue(any(item["estimated_ev_chips"] is None
+                            for item in view["modeled_actions"]))
+
+    def test_legacy_unknown_and_tampered_decisions_keep_controlled_statuses(self):
+        legacy = self.store.save_decision("legacy-study", {"chosen_action": "call"})
+        self.assertEqual(self.get(self.study_path(legacy["decision_id"]),), {
+            "status": "unavailable",
+            "reason": "Versioned coach evidence was not captured for this decision.",
+        })
+        status, payload = self.failed_get(self.study_path("unknown"))
+        self.assertEqual(status, 404)
+        self.assertEqual(payload, {"error": "Not found."})
+        _, accepted = self.capture("call")
+        decision_id = accepted["decision"]["decision_id"]
+        with self.store.connect() as db:
+            event = json.loads(db.execute("SELECT event FROM decisions WHERE id=?",
+                                          (decision_id,)).fetchone()["event"])
+            event["chosen_action_detail"]["amount"] += 1
+            db.execute("UPDATE decisions SET event=? WHERE id=?",
+                       (json.dumps(event), decision_id))
+        status, payload = self.failed_get(self.study_path(decision_id))
+        self.assertEqual(status, 500)
+        self.assertEqual(payload, {"status": "failed",
+                                   "error": "Stored decision evidence is invalid."})
+
+    def test_browser_selection_has_hand_and_generation_guards(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        self.assertIn("activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration", source)
+        self.assertIn("if(!game?.done)invalidateDecisionStudy()", source)
+        self.assertIn("showDecisionStudy(data.decisions,", source)
+        self.assertIn("${esc(active.answer)}", source)
+
+    def test_action_response_is_scoped_to_hand_and_current_blind_toggle(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        self.assertIn("const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game", source)
+        guard = "activeHandId!==actingHandId||handGeneration!==actingHandGeneration"
+        self.assertGreaterEqual(source.count(guard), 2)
+        self.assertIn("b.disabled=!game||game.done||!game.legal?.[action]", source)
+        self.assertIn("showCoach($('#coach-toggle').checked?g.coach:null,g.decision)", source)
+        self.assertIn("Live coaching was not requested for this decision.", source)
+        self.assertIn("showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy", source)
+
+
+if __name__ == "__main__":
+    unittest.main()

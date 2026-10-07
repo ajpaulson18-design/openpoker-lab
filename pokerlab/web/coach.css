@@ -4,4 +4,17 @@
 .toggle input { width:18px; min-height:18px; }
 .coach-panel, .session-review { border-top:1px solid var(--line); margin-top:22px; padding-top:20px; }
 .session-review { margin-top:20px; }
+.decision-study { margin-top:20px; }
+.decision-list { display:grid; gap:8px; margin:16px 0 22px; }
+.decision-list button { text-align:left; width:100%; }
+.decision-list button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+.study-prompts { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 18px; }
+.study-prompts button { width:auto; }
+.study-answer { border-left:3px solid var(--accent); background:#bcdf8910; padding:14px 16px; margin:14px 0 22px; }
+.study-answer h4 { margin:0 0 6px; font-size:14px; }
+.study-answer p { margin:0; }
+.study-alternatives { overflow:auto; }
+.study-alternatives th:last-child,.study-alternatives td:last-child { text-align:right; }
+.study-limits { padding-left:18px; }
+.study-retry { margin-top:12px; }
 .unknown-cards { color:var(--muted); font-size:12px; letter-spacing:1px; }
