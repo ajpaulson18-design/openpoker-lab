@@ -5,3 +5,11 @@
 .coach-panel, .session-review { border-top:1px solid var(--line); margin-top:22px; padding-top:20px; }
 .session-review { margin-top:20px; }
 .unknown-cards { color:var(--muted); font-size:12px; letter-spacing:1px; }
+.river-explanation-panel { margin-top:30px; }
+.river-explanation-panel [data-state="loading"] { opacity:.8; }
+.river-explanation-panel [data-state="error"] { border-color:#976759; }
+.river-explanation-panel [role="alert"] { color:#f0b5a7; }
+.river-explanation-panel code { overflow-wrap:anywhere; color:var(--accent); }
+.river-explanation-panel .num { text-align:right; font-variant-numeric:tabular-nums; }
+.river-explanation-panel .river-uncertainty { border-left:2px solid var(--accent); padding-left:14px; }
+@media(max-width:680px) { .river-explanation-panel .workspace { grid-template-columns:1fr; } }
