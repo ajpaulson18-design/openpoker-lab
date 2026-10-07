@@ -130,6 +130,17 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                     if ((status == "unassessed_size" and ev_loss is not None)
                             or (status == "assessed" and ev_loss is None)):
                         raise ValueError("Stored choice is malformed.")
+                    if status == "assessed":
+                        action_values = {item.action_id: item.value
+                                         for item in analysis.action_evs}
+                        recommended_id = analysis.recommended_action_id
+                        if (recommended_id is None or modeled_id not in action_values
+                                or recommended_id not in action_values):
+                            raise ValueError("Stored choice is malformed.")
+                        expected_loss = max(0.0, action_values[recommended_id]
+                                            - action_values[modeled_id])
+                        if ev_loss != expected_loss:
+                            raise ValueError("Stored choice is malformed.")
                     choice = {
                         "name": detail["name"], "amount": amount,
                         "amount_semantics": detail["amount_semantics"],

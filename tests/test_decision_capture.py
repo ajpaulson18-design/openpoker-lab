@@ -213,6 +213,23 @@ class DecisionCaptureHTTPTests(unittest.TestCase):
         self.assertEqual(payload, {"status": "failed",
                                    "error": "Stored decision evidence is invalid."})
 
+    def test_tampered_ev_loss_is_rejected(self):
+        store = Store(self.database)
+        game = self.new_game()
+        action = "call" if game["legal"]["call"] else "check"
+        result = self.post("/api/act", self.action(game, action, 0, "ev-loss-tamper", 0))
+        decision_id = result["decision"]["decision_id"]
+        with store.connect() as db:
+            row = db.execute("SELECT event FROM decisions WHERE id=?", (decision_id,)).fetchone()
+            event = json.loads(row["event"])
+            event["ev_loss"] += 0.5
+            db.execute("UPDATE decisions SET event=? WHERE id=?",
+                       (json.dumps(event), decision_id))
+        status, payload = self.failed_get(f"/api/v1/decisions/{decision_id}/analysis")
+        self.assertEqual(status, 500)
+        self.assertEqual(payload, {"status": "failed",
+                                   "error": "Stored decision evidence is invalid."})
+
     def test_review_excludes_unassessed_raise_and_old_raise_without_amount(self):
         base = {"decision_order": 1, "analysis_at_time": {
             "recommended": "raise", "baseline_recommended": "check"},
