@@ -139,7 +139,7 @@ def _raise_actions(config, contributions, player, previous_full_raise, raises_ma
         is_full = increment + _EPSILON >= previous_full_raise
         if is_full:
             _add_action(actions, "raise", target, committed, max_target, True)
-        elif requested_target + _EPSILON >= max_target:
+        elif requested_target + _EPSILON >= max_target or minimum_target > max_target:
             _add_action(actions, "all_in", max_target, committed, max_target, False)
     if config.include_all_in and max_target > call_target + _EPSILON:
         all_in_increment = max_target - call_target

@@ -88,6 +88,13 @@ class RiverConfigurationTests(unittest.TestCase):
         self.assertEqual(shove.raise_to, 120)
         self.assertFalse(shove.full_raise)
 
+    def test_min_raise_above_stack_normalizes_to_short_all_in_without_shove_flag(self):
+        root, _ = _build_tree(RiverConfig(100, 120, (.75,), (.01,), 1, False))
+        facing_bet = find_node(root, ("bet@75",))
+        shove = next(action for action in facing_bet.actions if action.name == "all_in")
+        self.assertEqual(shove.raise_to, 120)
+        self.assertFalse(shove.full_raise)
+
     def test_full_all_in_raise_is_marked_as_a_full_raise(self):
         root, _ = _build_tree(RiverConfig(100, 200, (.75,), (.75,), 2, True))
         facing_bet = find_node(root, ("bet@75",))
