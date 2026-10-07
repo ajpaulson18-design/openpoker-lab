@@ -129,7 +129,8 @@ def _raise_actions(config, contributions, player, previous_full_raise, raises_ma
     if max_target <= call_target + _EPSILON:
         return ()
     for fraction in config.raise_sizes:
-        target = call_target + fraction * pot_after_call
+        requested_target = call_target + fraction * pot_after_call
+        target = requested_target
         if target < minimum_target:
             target = minimum_target
         if target > max_target:
@@ -138,6 +139,8 @@ def _raise_actions(config, contributions, player, previous_full_raise, raises_ma
         is_full = increment + _EPSILON >= previous_full_raise
         if is_full:
             _add_action(actions, "raise", target, committed, max_target, True)
+        elif requested_target + _EPSILON >= max_target:
+            _add_action(actions, "all_in", max_target, committed, max_target, False)
     if config.include_all_in and max_target > call_target + _EPSILON:
         all_in_increment = max_target - call_target
         _add_action(actions, "all_in", max_target, committed, max_target,

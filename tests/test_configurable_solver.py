@@ -79,6 +79,15 @@ class RiverConfigurationTests(unittest.TestCase):
         response = find_node(root, ("bet@75", shove.token))
         self.assertEqual([action.name for action in response.actions], ["fold", "call"])
 
+    def test_stack_clipped_configured_short_raise_does_not_require_separate_shove(self):
+        root, _ = _build_tree(RiverConfig(100, 120, (.75,), (.75, 1), 1, False))
+        facing_bet = find_node(root, ("bet@75",))
+        shoves = [action for action in facing_bet.actions if action.name == "all_in"]
+        self.assertEqual(len(shoves), 1)
+        shove = shoves[0]
+        self.assertEqual(shove.raise_to, 120)
+        self.assertFalse(shove.full_raise)
+
     def test_full_all_in_raise_is_marked_as_a_full_raise(self):
         root, _ = _build_tree(RiverConfig(100, 200, (.75,), (.75,), 2, True))
         facing_bet = find_node(root, ("bet@75",))
