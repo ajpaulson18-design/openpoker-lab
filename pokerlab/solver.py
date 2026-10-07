@@ -155,6 +155,8 @@ def _build_tree(config):
     def build(history, player, contributions, previous_full_raise, raises_made,
               raise_reopened, checks):
         nonlocal node_count
+        if contributions[player] >= config.stacks[player] - _EPSILON:
+            return _Terminal("showdown", contributions)
         node_count += 1
         if node_count > 10_000:
             raise ValueError("Configured action tree exceeds 10,000 public nodes.")
