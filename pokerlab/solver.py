@@ -16,6 +16,18 @@ def strategy(regret):
     return [r/mass for r in positive] if mass else [.5, .5]
 
 
+def terminal_utilities(pot, bet, sign):
+    """OOP utility at every terminal line; IP receives the exact negative.
+
+    ``sign`` is +1 when OOP wins at showdown, -1 when IP wins and 0 on a tie.
+    Utilities are chips relative to half of the existing pot, so a fold or
+    showdown that nets nothing from a side bet is worth +/- pot/2.
+    """
+    half = pot/2
+    return {"check_check": sign*half, "bet_fold": half, "bet_call": sign*(half+bet),
+            "check_bet_fold": -half, "check_bet_call": sign*(half+bet)}
+
+
 def _node_locks(lock, h1):
     """Validate public lock input and map hand names to IP information sets.
 
@@ -67,7 +79,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     regrets = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     sums = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     locks, lock_report = _node_locks(lock, h1)
-    half = pot/2
+    utilities = {sign: terminal_utilities(pot, bet, sign) for sign in (-1, 0, 1)}
     for _ in range(iterations):
         s = {k: [[1-locks[k][i], locks[k][i]] if k in locks and i in locks[k]
                  else strategy(r) for i, r in enumerate(rows)]
@@ -75,12 +87,13 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
         delta = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
         for i, j, w, sign in deals:
             x, d, y, c = s["a"][i][1], s["d"][i][1], s["b"][j][1], s["c"][j][1]
-            showdown, called = sign*half, sign*(half+bet)
-            response = (1-d)*-half+d*called
-            vb = (1-c)*half+c*called
+            t = utilities[sign]
+            showdown, called = t["check_check"], t["bet_call"]
+            response = (1-d)*t["check_bet_fold"]+d*t["check_bet_call"]
+            vb = (1-c)*t["bet_fold"]+c*t["bet_call"]
             vc = (1-y)*showdown+y*response
-            values = {"a": (i, 1., [vc, vb]), "d": (i, y, [-half, called]),
-                      "b": (j, 1-x, [-showdown, -response]), "c": (j, x, [-half, -called])}
+            values = {"a": (i, 1., [vc, vb]), "d": (i, y, [t["check_bet_fold"], t["check_bet_call"]]),
+                      "b": (j, 1-x, [-showdown, -response]), "c": (j, x, [-t["bet_fold"], -called])}
             for k, (idx, reach, utility) in values.items():
                 expected = sum(p*u for p, u in zip(s[k][idx], utility))
                 own = 1-x if k == "d" else 1.
@@ -100,23 +113,27 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     value = 0.
     for i, j, w, sign in deals:
         x, d, y, c = avg["a"][i][1], avg["d"][i][1], avg["b"][j][1], avg["c"][j][1]
-        show, called = sign*half, sign*(half+bet)
-        value += w*((1-x)*((1-y)*show+y*((1-d)*-half+d*called))+x*((1-c)*half+c*called))
-        for a, u in enumerate((-half, called)):
+        t = utilities[sign]
+        show, called = t["check_check"], t["bet_call"]
+        response = (1-d)*t["check_bet_fold"]+d*t["check_bet_call"]
+        value += w*((1-x)*((1-y)*show+y*response)+x*((1-c)*t["bet_fold"]+c*called))
+        for a, u in enumerate((t["check_bet_fold"], t["check_bet_call"])):
             d_values[i][a] += w*y*u
-        for a, u in enumerate((-half, -called)):
+        for a, u in enumerate((-t["bet_fold"], -called)):
             c_values[j][a] += w*x*u
-        for a, u in enumerate((-show, -((1-d)*-half+d*called))):
+        for a, u in enumerate((-show, -response)):
             b_values[j][a] += w*(1-x)*u
     root_values = [[max(row), 0.] for row in d_values]
     for i, j, w, sign in deals:
         y, c = avg["b"][j][1], avg["c"][j][1]
-        root_values[i][0] += w*(1-y)*sign*half
-        root_values[i][1] += w*((1-c)*half+c*sign*(half+bet))
+        t = utilities[sign]
+        root_values[i][0] += w*(1-y)*t["check_check"]
+        root_values[i][1] += w*((1-c)*t["bet_fold"]+c*t["bet_call"])
     br0 = sum(max(row) for row in root_values)
     br1 = sum(max(row) for row in c_values)+sum(max(row) for row in b_values)
     gap = max(0, br0+br1)
-    return {"method": "full-traversal CFR", "iterations": iterations, "deals": len(deals),
+    return {"method": "full-traversal CFR", "cfr_variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging",
+            "info_sets": 2*(len(h0)+len(h1)), "iterations": iterations, "deals": len(deals),
             "pot": pot, "bet": bet, "value_oop": value, "value_ip": -value,
             "nash_conv": gap, "exploitability": gap/2,
             "oop_best_response_gain": max(0, br0-value),
