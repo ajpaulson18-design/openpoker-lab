@@ -79,7 +79,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     regrets = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     sums = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     locks, lock_report = _node_locks(lock, h1)
-    half = pot/2
+    utilities = {sign: terminal_utilities(pot, bet, sign) for sign in (-1, 0, 1)}
     for _ in range(iterations):
         s = {k: [[1-locks[k][i], locks[k][i]] if k in locks and i in locks[k]
                  else strategy(r) for i, r in enumerate(rows)]
@@ -87,7 +87,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
         delta = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
         for i, j, w, sign in deals:
             x, d, y, c = s["a"][i][1], s["d"][i][1], s["b"][j][1], s["c"][j][1]
-            t = terminal_utilities(pot, bet, sign)
+            t = utilities[sign]
             showdown, called = t["check_check"], t["bet_call"]
             response = (1-d)*t["check_bet_fold"]+d*t["check_bet_call"]
             vb = (1-c)*t["bet_fold"]+c*t["bet_call"]
@@ -113,7 +113,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     value = 0.
     for i, j, w, sign in deals:
         x, d, y, c = avg["a"][i][1], avg["d"][i][1], avg["b"][j][1], avg["c"][j][1]
-        t = terminal_utilities(pot, bet, sign)
+        t = utilities[sign]
         show, called = t["check_check"], t["bet_call"]
         response = (1-d)*t["check_bet_fold"]+d*t["check_bet_call"]
         value += w*((1-x)*((1-y)*show+y*response)+x*((1-c)*t["bet_fold"]+c*called))
@@ -126,7 +126,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     root_values = [[max(row), 0.] for row in d_values]
     for i, j, w, sign in deals:
         y, c = avg["b"][j][1], avg["c"][j][1]
-        t = terminal_utilities(pot, bet, sign)
+        t = utilities[sign]
         root_values[i][0] += w*(1-y)*t["check_check"]
         root_values[i][1] += w*((1-c)*t["bet_fold"]+c*t["bet_call"])
     br0 = sum(max(row) for row in root_values)
