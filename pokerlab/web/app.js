@@ -4,6 +4,9 @@ const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','
 const pct = (v) => (v*100).toFixed(1)+'%';
 const chips = (v) => Number(v).toFixed(2);
 let opponents = [], game = null, practiceOpponent = '', pendingAction = null;
+let activeHandId = null, selectedDecisionId = null, selectionGeneration = 0;
+let liveDecisions = [], studyDecisions = [], studyTitle = '', studyPayload = null;
+let selectedStudyCard = 'estimate', studyLoading = false, studyFailed = false;
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
@@ -67,12 +70,83 @@ function showCoach(result,decision){
   const choiceLabel=`YOU CHOSE ${esc(chosen.toUpperCase())}${chosen==='raise'?` TO ${esc(amount)}`:''} · ${assessed?`ESTIMATED LOSS ${loss}`:'RAISE SIZE NOT EVALUATED'}`;
   $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>`;
 }
-async function loadReview(){
-  const data=await api('session/'+game.id),r=data.review;
+function decisionLabel(decision){
+  const detail=decision.chosen_action_detail||{};
+  const action=detail.name||decision.chosen_action||'Decision';
+  const amount=detail.amount;
+  const exactRaise=action==='raise'&&Number.isFinite(amount);
+  return `${decision.street||'Decision'} · ${action}${exactRaise?` to ${amount}`:''}`;
+}
+function invalidateDecisionStudy(){
+  selectionGeneration++;selectedDecisionId=null;studyPayload=null;studyLoading=false;studyFailed=false;
+  studyDecisions=[];$('#decision-study').hidden=true;$('#decision-study').innerHTML='';
+}
+function studyActionLabel(action){
+  return action.name==='raise'&&action.amount!==null?`raise to ${action.amount}`:action.name;
+}
+function studyActionEv(action){
+  const key=Object.hasOwn(action,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
+  const value=action[key];return value===null||value===undefined?'Unavailable':`${chips(value)}${key==='estimated_ev_chips'?' chips':''}`;
+}
+function renderStudyPanel(){
+  const panel=$('#decision-study');
+  if(!studyDecisions.length){panel.hidden=true;panel.innerHTML='';return;}
+  panel.hidden=false;
+  const decisionButtons=studyDecisions.map(item=>{
+    const id=String(item.decision_id||'');
+    return `<button class="secondary" type="button" data-decision-id="${esc(id)}" aria-pressed="${id===selectedDecisionId}">${esc(decisionLabel(item))}</button>`;
+  }).join('');
+  let content='<p class="hint">Select a saved decision to open its study cards.</p>';
+  if(studyLoading)content='<p class="hint" role="status">Loading saved decision study…</p>';
+  else if(studyFailed)content=`<p class="hint">Could not load this study.</p><button class="secondary study-retry" type="button" data-retry-study>Retry</button>`;
+  else if(studyPayload?.status==='unavailable')content=`<p class="hint">${esc(studyPayload.reason||'Study evidence is unavailable for this older decision.')}</p>`;
+  else if(studyPayload?.status==='ready'){
+    const cards=studyPayload.cards||[];
+    const active=cards.find(card=>card.id===selectedStudyCard)||cards[0];
+    const prompts=cards.map(card=>`<button type="button" class="secondary" data-study-card="${esc(card.id)}" aria-pressed="${card.id===active?.id}">${esc(card.question)}</button>`).join('');
+    const rows=(studyPayload.modeled_actions||[]).map(action=>`<tr><td>${esc(studyActionLabel(action))}</td><td>${esc(studyActionEv(action))}</td></tr>`).join('');
+    const baselineValueKey=studyPayload.baseline&&Object.hasOwn(studyPayload.baseline,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
+    const baselineValue=studyPayload.baseline?.[baselineValueKey];
+    const baseline=studyPayload.baseline?`<p class="hint">${esc(studyPayload.baseline.label)} recommends ${esc(studyPayload.baseline.recommended_action||'an unavailable action')}${baselineValue===null||baselineValue===undefined?'':` · ${chips(baselineValue)}${baselineValueKey==='estimated_ev_chips'?' chips':` in ${esc(studyPayload.baseline.ev_basis)}`}`}</p>`:'';
+    const limitations=(studyPayload.limitations||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+    content=`<p class="eyebrow">${esc(studyPayload.heading)} · ${esc(studyPayload.source_label)}</p><div class="study-prompts" role="group" aria-label="Decision study prompts">${prompts}</div>${active?`<article class="study-answer" aria-live="polite"><h4>${esc(active.question)}</h4><p>${esc(active.answer)}</p></article>`:''}<h4>Modeled actions</h4><div class="study-alternatives"><table><thead><tr><th>Action</th><th>Estimated value</th></tr></thead><tbody>${rows}</tbody></table></div>${baseline}${limitations?`<h4>Limitations and caveats</h4><ul class="study-limits">${limitations}</ul>`:''}`;
+  }
+  panel.innerHTML=`<p class="eyebrow">DECISION STUDY</p><h3>${esc(studyTitle)}</h3><div class="decision-list" role="group" aria-label="Saved decisions">${decisionButtons}</div><div class="study-content">${content}</div>`;
+}
+async function selectDecisionStudy(decisionId){
+  if(!decisionId||!studyDecisions.some(item=>item.decision_id===decisionId))return;
+  selectedDecisionId=decisionId;selectedStudyCard='estimate';studyPayload=null;studyFailed=false;studyLoading=true;
+  const handId=activeHandId,generation=++selectionGeneration;
+  renderStudyPanel();
+  try{
+    const payload=await api(`v1/decisions/${encodeURIComponent(decisionId)}/study`);
+    if(activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration)return;
+    studyPayload=payload;studyLoading=false;
+    if(payload.status==='ready'&&payload.cards?.length)selectedStudyCard=payload.cards[0].id;
+  }catch(e){
+    if(activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration)return;
+    studyLoading=false;studyFailed=true;
+  }
+  renderStudyPanel();
+}
+function showDecisionStudy(decisions,title,selectId=null){
+  studyDecisions=decisions.filter(item=>typeof item.decision_id==='string'&&item.decision_id);
+  studyTitle=title;
+  const requested=selectId||selectedDecisionId;
+  const next=studyDecisions.some(item=>item.decision_id===requested)?requested:studyDecisions[studyDecisions.length-1]?.decision_id;
+  if(next&&next!==selectedDecisionId){void selectDecisionStudy(next);return;}
+  if(!next){invalidateDecisionStudy();return;}
+  renderStudyPanel();
+}
+async function loadReview(handId=activeHandId){
+  const data=await api('session/'+handId);
+  if(activeHandId!==handId)return;
+  const r=data.review;
   const errors=r.biggest_errors.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} lost ${chips(d.ev_loss)} chips versus ${esc(d.analysis_at_time.recommended)}</li>`).join('');
   const exploits=r.biggest_successful_exploits.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} gained ${chips(d.exploit_gain||0)} chips versus the baseline action</li>`).join('');
   $('#session-review').hidden=false;
   $('#session-review').innerHTML=`<p class="eyebrow">SESSION REVIEW · ORIGINAL ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} analyzed decisions</h3><p class="hint">${r.assessed_decisions} assessed · ${r.unassessed_decisions} unassessed. Raise sizes above the one modeled by practice are not scored.</p><div class="metrics">${metric(r.matched_recommendation,'MATCHED')}${metric(r.meaningful_ev_losses,'EV MISTAKES')}${metric(chips(r.total_ev_loss),'TOTAL EV LOSS')}</div><p class="hint">Missed exploit opportunities: ${r.missed_exploitative_opportunities} · Successful exploits: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest errors</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest successful exploits</h3><ol>${exploits}</ol>`:''}`;
+  showDecisionStudy(data.decisions,'Completed hand · choose a decision',data.decisions[data.decisions.length-1]?.decision_id||null);
 }
 function updateButtonPlayers(){
   const names=$('#game-form').elements.names.value.split(',').map(s=>s.trim()).filter(Boolean);
@@ -81,7 +155,14 @@ function updateButtonPlayers(){
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
-bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
-$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked)showCoach(null);});
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;const amount=Number($('#raise-amount').value);const requestKey=JSON.stringify([game.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,game.revision]);if(!pendingAction||pendingAction.key!==requestKey)pendingAction={key:requestKey,id:crypto.randomUUID()};try{const g=await api('act',{id:game.id,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:game.revision,client_action_id:pendingAction.id});pendingAction=null;showGame(g);showCoach(g.coach,g.decision);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);if(action==='raise')$('#raise-amount').value=amount;}finally{b.disabled=false;}}));
+bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;const dealt=await api('game',d);activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);},'Dealing…');
+$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach(null);if(!game?.done)invalidateDecisionStudy();}else if(game&&!game.done&&liveDecisions.length)showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);});
+$('#decision-study').addEventListener('click',e=>{
+  const decisionButton=e.target.closest('[data-decision-id]');
+  if(decisionButton){void selectDecisionStudy(decisionButton.dataset.decisionId);return;}
+  const cardButton=e.target.closest('[data-study-card]');
+  if(cardButton&&studyPayload?.status==='ready'){selectedStudyCard=cardButton.dataset.studyCard;renderStudyPanel();return;}
+  if(e.target.closest('[data-retry-study]'))void selectDecisionStudy(selectedDecisionId);
+});
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;const amount=Number($('#raise-amount').value);const actingStreet=game.street;const requestKey=JSON.stringify([game.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,game.revision]);if(!pendingAction||pendingAction.key!==requestKey)pendingAction={key:requestKey,id:crypto.randomUUID()};try{const g=await api('act',{id:game.id,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:game.revision,client_action_id:pendingAction.id});pendingAction=null;if(g.decision)liveDecisions.push({decision_id:g.decision.decision_id,street:actingStreet,chosen_action:g.decision.chosen_action_detail?.name,chosen_action_detail:g.decision.chosen_action_detail,assessment_status:g.decision.assessment_status});showGame(g);showCoach(g.coach,g.decision);if(g.done)await loadReview(activeHandId);else if($('#coach-toggle').checked&&liveDecisions.length)showDecisionStudy(liveDecisions,'Current hand · choose a decision',g.decision?.decision_id);status();}catch(e){status(e.message,true);showGame(game);if(action==='raise')$('#raise-amount').value=amount;}finally{b.disabled=false;}}));
 loadOpponents().catch(e=>status(e.message,true));

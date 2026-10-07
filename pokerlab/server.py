@@ -12,6 +12,7 @@ from . import __version__
 from .analysis import analyze
 from .coach_analysis import adapt_practice_analysis
 from .contracts import CoachAnalysisError, CoachDecisionAnalysis, CoachDecisionRef
+from .decision_study import build_decision_study
 from .equity import simulate
 from .explanations import analysis_from_dict, explain
 from .exploit import solve_exploitative_river
@@ -27,6 +28,85 @@ WEB = Path(__file__).parent / "web"
 
 class ActionConflict(ValueError):
     """A stale hand revision or reused client action ID conflicts with state."""
+
+
+def _validated_decision(store, decision_id):
+    """Load and validate a saved decision once for every read projection."""
+    record = store.decision_record(decision_id)
+    if record is None:
+        return {"status": "missing"}
+    if record["envelope"] is None:
+        return {
+            "status": "unavailable",
+            "reason": "Versioned coach evidence was not captured for this decision.",
+        }
+    try:
+        analysis = CoachDecisionAnalysis.from_json(record["envelope"])
+        event = json.loads(record["event"])
+        if (analysis.ref.hand_id != record["session_id"]
+                or analysis.ref.decision_id != record["id"]):
+            raise CoachAnalysisError("invalid_contract", "Stored evidence reference is invalid.")
+        detail = event.get("chosen_action_detail")
+        status = event.get("assessment_status")
+        if (not isinstance(detail, dict)
+                or set(detail) != {"name", "amount", "amount_semantics"}
+                or detail.get("name") not in ("fold", "check", "call", "raise")
+                or event.get("chosen_action") != detail.get("name")
+                or detail.get("amount_semantics") not in ("chips_added", "street_total")
+                or status not in ("assessed", "unassessed_size")):
+            raise ValueError("Stored choice is malformed.")
+        amount = detail["amount"]
+        if type(amount) is not int or amount < 0:
+            raise ValueError("Stored choice is malformed.")
+        action_name = detail["name"]
+        expected_semantics = "street_total" if action_name == "raise" else "chips_added"
+        modeled_id = event.get("assessed_modeled_action_id")
+        expected_modeled_id = "raise:min" if action_name == "raise" else action_name
+        legal_action = next((item for item in analysis.legal_actions
+                             if item.name == action_name), None)
+        if legal_action is None or detail["amount_semantics"] != expected_semantics:
+            raise ValueError("Stored choice is malformed.")
+        if action_name == "raise":
+            if not legal_action.minimum_total <= amount <= legal_action.maximum_total:
+                raise ValueError("Stored choice is malformed.")
+            should_be_assessed = amount == legal_action.minimum_total
+        else:
+            if amount != legal_action.amount:
+                raise ValueError("Stored choice is malformed.")
+            should_be_assessed = True
+        if (status == "assessed") != should_be_assessed:
+            raise ValueError("Stored choice is malformed.")
+        if status == "assessed" and modeled_id != expected_modeled_id:
+            raise ValueError("Stored choice is malformed.")
+        if status == "unassessed_size" and (action_name != "raise" or modeled_id is not None):
+            raise ValueError("Stored choice is malformed.")
+        ev_loss = event.get("ev_loss")
+        if ev_loss is not None and (type(ev_loss) not in (int, float)
+                                    or not math.isfinite(ev_loss) or ev_loss < 0):
+            raise ValueError("Stored choice is malformed.")
+        if ((status == "unassessed_size" and ev_loss is not None)
+                or (status == "assessed" and ev_loss is None)):
+            raise ValueError("Stored choice is malformed.")
+        if status == "assessed":
+            action_values = {item.action_id: item.value for item in analysis.action_evs}
+            recommended_id = analysis.recommended_action_id
+            if (recommended_id is None or modeled_id not in action_values
+                    or recommended_id not in action_values
+                    or action_values[modeled_id] is None
+                    or action_values[recommended_id] is None):
+                raise ValueError("Stored choice is malformed.")
+            expected_loss = max(0.0, action_values[recommended_id] - action_values[modeled_id])
+            if ev_loss != expected_loss:
+                raise ValueError("Stored choice is malformed.")
+        choice = {
+            "name": detail["name"], "amount": amount,
+            "amount_semantics": detail["amount_semantics"],
+            "assessed_modeled_action_id": modeled_id,
+            "assessment_status": status, "ev_loss": ev_loss,
+        }
+        return {"status": "ready", "analysis": analysis, "choice": choice}
+    except Exception:
+        return {"status": "failed", "error": "Stored decision evidence is invalid."}
 
 
 def make_server(port=8765, database="data/pokerlab.sqlite3"):
@@ -68,87 +148,24 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return self.respond(store.export())
             if url.path == "/api/health":
                 return self.respond({"ok": True, "version": __version__})
-            prefix, suffix = "/api/v1/decisions/", "/analysis"
-            if url.path.startswith(prefix) and url.path.endswith(suffix):
-                decision_id = url.path[len(prefix):-len(suffix)]
-                if not decision_id or "/" in decision_id:
+            decision_prefix = "/api/v1/decisions/"
+            if url.path.startswith(decision_prefix):
+                parts = url.path[len(decision_prefix):].split("/")
+                if len(parts) != 2 or not parts[0] or parts[1] not in ("analysis", "study"):
                     return self.respond({"error": "Not found."}, 404)
-                record = store.decision_record(decision_id)
-                if record is None:
+                decision_id, projection = parts
+                result = _validated_decision(store, decision_id)
+                if result["status"] == "missing":
                     return self.respond({"error": "Not found."}, 404)
-                if record["envelope"] is None:
-                    return self.respond({
-                        "status": "unavailable",
-                        "reason": "Versioned coach evidence was not captured for this decision.",
-                    })
+                if result["status"] != "ready":
+                    return self.respond(result, 500 if result["status"] == "failed" else 200)
+                if projection == "analysis":
+                    return self.respond({"status": "ready",
+                                         "analysis": result["analysis"].to_dict(),
+                                         "choice": result["choice"]})
                 try:
-                    analysis = CoachDecisionAnalysis.from_json(record["envelope"])
-                    event = json.loads(record["event"])
-                    if (analysis.ref.hand_id != record["session_id"]
-                            or analysis.ref.decision_id != record["id"]):
-                        raise CoachAnalysisError("invalid_contract", "Stored evidence reference is invalid.")
-                    detail = event.get("chosen_action_detail")
-                    status = event.get("assessment_status")
-                    if (not isinstance(detail, dict)
-                            or set(detail) != {"name", "amount", "amount_semantics"}
-                            or detail.get("name") not in ("fold", "check", "call", "raise")
-                            or event.get("chosen_action") != detail.get("name")
-                            or detail.get("amount_semantics") not in ("chips_added", "street_total")
-                            or status not in ("assessed", "unassessed_size")):
-                        raise ValueError("Stored choice is malformed.")
-                    amount = detail["amount"]
-                    if type(amount) is not int or amount < 0:
-                        raise ValueError("Stored choice is malformed.")
-                    action_name = detail["name"]
-                    expected_semantics = "street_total" if action_name == "raise" else "chips_added"
-                    modeled_id = event.get("assessed_modeled_action_id")
-                    expected_modeled_id = ("raise:min" if action_name == "raise" else action_name)
-                    legal_action = next((item for item in analysis.legal_actions
-                                         if item.name == action_name), None)
-                    if legal_action is None:
-                        raise ValueError("Stored choice is malformed.")
-                    if detail["amount_semantics"] != expected_semantics:
-                        raise ValueError("Stored choice is malformed.")
-                    if action_name == "raise":
-                        if not legal_action.minimum_total <= amount <= legal_action.maximum_total:
-                            raise ValueError("Stored choice is malformed.")
-                        should_be_assessed = amount == legal_action.minimum_total
-                    else:
-                        if amount != legal_action.amount:
-                            raise ValueError("Stored choice is malformed.")
-                        should_be_assessed = True
-                    if (status == "assessed") != should_be_assessed:
-                        raise ValueError("Stored choice is malformed.")
-                    if status == "assessed" and modeled_id != expected_modeled_id:
-                        raise ValueError("Stored choice is malformed.")
-                    if status == "unassessed_size" and (action_name != "raise" or modeled_id is not None):
-                        raise ValueError("Stored choice is malformed.")
-                    ev_loss = event.get("ev_loss")
-                    if ev_loss is not None and (type(ev_loss) not in (int, float)
-                                                or not math.isfinite(ev_loss) or ev_loss < 0):
-                        raise ValueError("Stored choice is malformed.")
-                    if ((status == "unassessed_size" and ev_loss is not None)
-                            or (status == "assessed" and ev_loss is None)):
-                        raise ValueError("Stored choice is malformed.")
-                    if status == "assessed":
-                        action_values = {item.action_id: item.value
-                                         for item in analysis.action_evs}
-                        recommended_id = analysis.recommended_action_id
-                        if (recommended_id is None or modeled_id not in action_values
-                                or recommended_id not in action_values):
-                            raise ValueError("Stored choice is malformed.")
-                        expected_loss = max(0.0, action_values[recommended_id]
-                                            - action_values[modeled_id])
-                        if ev_loss != expected_loss:
-                            raise ValueError("Stored choice is malformed.")
-                    choice = {
-                        "name": detail["name"], "amount": amount,
-                        "amount_semantics": detail["amount_semantics"],
-                        "assessed_modeled_action_id": modeled_id,
-                        "assessment_status": status, "ev_loss": ev_loss,
-                    }
-                    return self.respond({"status": "ready", "analysis": analysis.to_dict(),
-                                         "choice": choice})
+                    return self.respond(build_decision_study(
+                        result["analysis"], result["choice"]))
                 except Exception:
                     return self.respond({"status": "failed",
                                          "error": "Stored decision evidence is invalid."}, 500)
