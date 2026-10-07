@@ -8,11 +8,14 @@ let activeHandId = null, handGeneration = 0, selectedDecisionId = null, selectio
 let liveDecisions = [], studyDecisions = [], studyTitle = '', studyPayload = null;
 let latestCoachResult = null, latestCoachDecision = null;
 let selectedStudyCard = 'estimate', studyLoading = false, studyFailed = false;
+let externalAiAvailable = false, coachQuestionLoading = false, coachQuestionError = '';
+let coachQuestionReply = null, lastCoachQuestion = null;
+let coachDraft = {question:'',detail:'normal',audience:'standard',external:false};
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
-async function api(path,data) {
-  const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+async function api(path,data,extraHeaders={}) {
+  const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...extraHeaders},body:JSON.stringify(data)});
   const result=await response.json(); if(!response.ok) throw new Error(result.error||'Request failed.'); return result;
 }
 function formData(form,numeric=[]) { const d=Object.fromEntries(new FormData(form)); for(const k of numeric)d[k]=Number(d[k]); return d; }
@@ -85,6 +88,8 @@ function decisionLabel(decision){
 }
 function invalidateDecisionStudy(){
   selectionGeneration++;selectedDecisionId=null;studyPayload=null;studyLoading=false;studyFailed=false;
+  coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;
+  coachDraft={question:'',detail:'normal',audience:'standard',external:false};
   studyDecisions=[];$('#decision-study').hidden=true;$('#decision-study').innerHTML='';
 }
 function studyActionLabel(action){
@@ -93,6 +98,46 @@ function studyActionLabel(action){
 function studyActionEv(action){
   const key=Object.hasOwn(action,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
   const value=action[key];return value===null||value===undefined?'Unavailable':`${chips(value)}${key==='estimated_ev_chips'?' chips':''}`;
+}
+function coachFactLabel(kind){
+  return ({street:'Street',hero_cards:'Your cards',board:'Board',current_pot:'Current pot',
+    pot_basis:'Pot basis',source_kind:'Analysis source',ev_basis:'EV basis',
+    modeled_action:'Modeled action',action_ev:'Modeled action EV',
+    baseline_action_ev:'Baseline action EV',recommendation:'Saved recommendation',
+    baseline_recommendation:'Baseline recommendation',baseline_label:'Baseline policy',
+    choice:'Recorded choice',choice_loss:'Recorded choice loss',
+    opponent_assumption:'Saved opponent assumption',opponent_uncertainty:'Opponent uncertainty',
+    confidence_label:'Saved confidence',equity_standard_error:'Equity standard error',
+    equity_exact:'Exact equity',solver_nash_conv:'NashConv',
+    solver_exploitability:'Exploitability',solver_iterations:'Solver iterations',
+    solver_gap_semantics:'Solver gap semantics'})[kind]||kind.replaceAll('_',' ');
+}
+function coachFactValue(fact){
+  const value=fact.value;
+  if(value===null||value===undefined)return 'Unavailable';
+  if(fact.kind==='modeled_action'&&Array.isArray(value))return `${value[1]}${value[2]===null?'':` ${value[2]}`} (${value[3]})`;
+  if(['action_ev','baseline_action_ev'].includes(fact.kind)&&Array.isArray(value))return `${value[0]}: ${value[1]===null?'Unavailable':value[1]}`;
+  if(fact.kind==='choice'&&Array.isArray(value))return `${value[0]}${value[0]==='raise'?` to ${value[1]}`:''} · ${value[3].replaceAll('_',' ')}`;
+  if(fact.kind==='opponent_assumption'&&Array.isArray(value))return `${value[0].replaceAll('_',' ')} · ${value[4]} · ${value[5]} observations`;
+  if(Array.isArray(value))return value.join(' · ');
+  if(typeof value==='boolean')return value?'Yes':'No';
+  return String(value);
+}
+function coachReplyHtml(result){
+  const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
+    const facts=(block.facts||[]).map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind))}:</strong> ${esc(coachFactValue(fact))}${fact.unit?` <span class="coach-unit">${esc(fact.unit)}</span>`:''}<small>Fact ${esc(fact.fact_id)}</small></li>`).join('');
+    const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+    return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
+  }).join('');
+  const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+  const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
+  const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
+  return `<article class="ai-coach-reply" aria-live="polite"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}${result.retryable?'<button type="button" class="secondary" data-coach-retry>Retry question</button>':''}</article>`;
+}
+function coachQuestionHtml(){
+  const error=coachQuestionError?`<p class="hint error" role="alert">${esc(coachQuestionError)}</p><button type="button" class="secondary" data-coach-retry>Retry question</button>`:'';
+  const result=coachQuestionReply?coachReplyHtml(coachQuestionReply):'';
+  return `<form id="study-coach-form" class="study-coach-form"><h4>Ask about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask one question about the saved decision">${esc(coachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${coachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${coachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${coachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${coachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${coachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${coachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">When selected, your question, hero cards, board, and other allowlisted facts for this decision are sent to OpenAI. Opponent hole cards, deck, names, and notes are excluded. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local fallback.</p>':''}<button class="primary" type="submit"${coachQuestionLoading?' disabled':''}>${coachQuestionLoading?'Asking…':'Ask question'}</button>${coachQuestionLoading?'<p class="hint" role="status">Preparing a grounded answer…</p>':''}${error}</form>${result}`;
 }
 function renderStudyPanel(){
   const panel=$('#decision-study');
@@ -115,13 +160,15 @@ function renderStudyPanel(){
     const baselineValue=studyPayload.baseline?.[baselineValueKey];
     const baseline=studyPayload.baseline?`<p class="hint">${esc(studyPayload.baseline.label)} recommends ${esc(studyPayload.baseline.recommended_action||'an unavailable action')}${baselineValue===null||baselineValue===undefined?'':` · ${chips(baselineValue)}${baselineValueKey==='estimated_ev_chips'?' chips':` in ${esc(studyPayload.baseline.ev_basis)}`}`}</p>`:'';
     const limitations=(studyPayload.limitations||[]).map(item=>`<li>${esc(item)}</li>`).join('');
-    content=`<p class="eyebrow">${esc(studyPayload.heading)} · ${esc(studyPayload.source_label)}</p><div class="study-prompts" role="group" aria-label="Decision study prompts">${prompts}</div>${active?`<article class="study-answer" aria-live="polite"><h4>${esc(active.question)}</h4><p>${esc(active.answer)}</p></article>`:''}<h4>Modeled actions</h4><div class="study-alternatives"><table><thead><tr><th>Action</th><th>Estimated value</th></tr></thead><tbody>${rows}</tbody></table></div>${baseline}${limitations?`<h4>Limitations and caveats</h4><ul class="study-limits">${limitations}</ul>`:''}`;
+    content=`<p class="eyebrow">${esc(studyPayload.heading)} · ${esc(studyPayload.source_label)}</p><div class="study-prompts" role="group" aria-label="Decision study prompts">${prompts}</div>${active?`<article class="study-answer" aria-live="polite"><h4>${esc(active.question)}</h4><p>${esc(active.answer)}</p></article>`:''}<h4>Modeled actions</h4><div class="study-alternatives"><table><thead><tr><th>Action</th><th>Estimated value</th></tr></thead><tbody>${rows}</tbody></table></div>${baseline}${limitations?`<h4>Limitations and caveats</h4><ul class="study-limits">${limitations}</ul>`:''}${coachQuestionHtml()}`;
   }
   panel.innerHTML=`<p class="eyebrow">DECISION STUDY</p><h3>${esc(studyTitle)}</h3><div class="decision-list" role="group" aria-label="Saved decisions">${decisionButtons}</div><div class="study-content">${content}</div>`;
 }
 async function selectDecisionStudy(decisionId){
   if(!decisionId||!studyDecisions.some(item=>item.decision_id===decisionId))return;
   selectedDecisionId=decisionId;selectedStudyCard='estimate';studyPayload=null;studyFailed=false;studyLoading=true;
+  coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;
+  coachDraft={question:'',detail:'normal',audience:'standard',external:false};
   const handId=activeHandId,generation=++selectionGeneration;
   renderStudyPanel();
   try{
@@ -132,6 +179,48 @@ async function selectDecisionStudy(decisionId){
   }catch(e){
     if(activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration)return;
     studyLoading=false;studyFailed=true;
+  }
+  renderStudyPanel();
+}
+function coachRequestSelectionMatches(captured){
+  return activeHandId===captured.handId&&selectedDecisionId===captured.decisionId
+    &&handGeneration===captured.handGeneration&&selectionGeneration===captured.generation;
+}
+function coachRequestMatches(captured,result){
+  const binding=result?.binding;
+  return coachRequestSelectionMatches(captured)&&binding
+    &&binding.hand_id===captured.handId&&binding.decision_id===captured.decisionId
+    &&binding.evidence_id===captured.evidenceId&&binding.state_revision===captured.revision;
+}
+async function askStudyCoach(retry=false){
+  if(!studyPayload||studyPayload.status!=='ready'||!selectedDecisionId)return;
+  const binding=studyPayload.binding;
+  const request=retry&&lastCoachQuestion?lastCoachQuestion:{
+    question:coachDraft.question.trim(),detail:coachDraft.detail,audience:coachDraft.audience,
+    external:coachDraft.external,
+  };
+  if(!request.question||request.question.length>500){coachQuestionError='Enter a question from 1 to 500 characters.';renderStudyPanel();return;}
+  const captured={handId:activeHandId,decisionId:selectedDecisionId,evidenceId:binding?.evidence_id,
+    revision:binding?.state_revision,generation:selectionGeneration,handGeneration};
+  if(!captured.handId||!captured.evidenceId){coachQuestionError='This study is missing its saved evidence binding.';renderStudyPanel();return;}
+  lastCoachQuestion={...request};coachQuestionLoading=true;coachQuestionError='';coachQuestionReply=null;renderStudyPanel();
+  try{
+    const result=await api(`v1/decisions/${encodeURIComponent(captured.decisionId)}/coach`,{
+      evidence_id:captured.evidenceId,question:request.question,detail:request.detail,audience:request.audience,
+    },request.external?{'X-OpenPoker-External-AI':'1'}:{});
+    if(!coachRequestSelectionMatches(captured))return;
+    if(result.status==='failed'||result.status==='unavailable'){
+      coachQuestionError=result.reason||result.error||'This decision cannot be used for a coach request.';
+    }else{
+      if(!coachRequestMatches(captured,result)){
+        coachQuestionError='The answer did not match the selected decision. Refresh the study and try again.';
+      }else coachQuestionReply=result;
+    }
+    coachQuestionLoading=false;
+  }catch(error){
+    if(activeHandId!==captured.handId||selectedDecisionId!==captured.decisionId
+      ||handGeneration!==captured.handGeneration||selectionGeneration!==captured.generation)return;
+    coachQuestionError=error.message||'Could not complete this request.';coachQuestionLoading=false;
   }
   renderStudyPanel();
 }
@@ -166,11 +255,12 @@ $('#game-form').addEventListener('submit',async e=>{
   const form=e.target,button=form.querySelector('button[type="submit"],button.primary');
   button.disabled=true;status('Dealing…');
   const dealGeneration=++handGeneration;
+  invalidateDecisionStudy();
   try{
     const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;
     const dealt=await api('game',d);
     if(handGeneration!==dealGeneration)return;
-    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
+    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;coachDraft={question:'',detail:'normal',audience:'standard',external:false};latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
   }catch(err){
     if(handGeneration===dealGeneration){status(err.message,true);if(game)showGame(game);}
   }finally{
@@ -184,6 +274,24 @@ $('#decision-study').addEventListener('click',e=>{
   const cardButton=e.target.closest('[data-study-card]');
   if(cardButton&&studyPayload?.status==='ready'){selectedStudyCard=cardButton.dataset.studyCard;renderStudyPanel();return;}
   if(e.target.closest('[data-retry-study]'))void selectDecisionStudy(selectedDecisionId);
+  if(e.target.closest('[data-coach-retry]'))void askStudyCoach(true);
+});
+$('#decision-study').addEventListener('input',e=>{
+  if(e.target.matches('[name="question"]'))coachDraft.question=e.target.value;
+});
+$('#decision-study').addEventListener('change',e=>{
+  if(e.target.name==='detail')coachDraft.detail=e.target.value;
+  if(e.target.name==='audience')coachDraft.audience=e.target.value;
+  if(e.target.name==='external')coachDraft.external=e.target.checked;
+});
+$('#decision-study').addEventListener('submit',e=>{
+  if(e.target.id!=='study-coach-form')return;
+  e.preventDefault();
+  coachDraft.question=e.target.elements.question.value;
+  coachDraft.detail=e.target.elements.detail.value;
+  coachDraft.audience=e.target.elements.audience.value;
+  coachDraft.external=e.target.elements.external.checked;
+  void askStudyCoach(false);
 });
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{
   const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game;
@@ -211,3 +319,4 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
   }
 }));
 loadOpponents().catch(e=>status(e.message,true));
+api('health').then(info=>{externalAiAvailable=info.external_ai_coach_available===true;if(selectedDecisionId)renderStudyPanel();}).catch(()=>{});

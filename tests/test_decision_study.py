@@ -211,6 +211,49 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("Live coaching was not requested for this decision.", source)
         self.assertIn("showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy", source)
 
+    def test_external_coach_opt_in_names_included_and_excluded_facts(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "pokerlab" / "web" / "app.js").read_text()
+        setup = (root / "docs" / "ai-coach-setup.md").read_text()
+        self.assertIn("your question, hero cards, board", source)
+        self.assertIn("Opponent hole cards, deck, names, and notes are excluded", source)
+        self.assertIn("includes your hero cards, the board", setup)
+        self.assertIn("opponent hole cards, the deck, names, notes", setup)
+
+    def test_coach_reply_guard_binds_current_selection_and_response_evidence(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        start = source.index("function coachRequestSelectionMatches(")
+        end = source.index("async function askStudyCoach", start)
+        guard = source[start:end]
+        for condition in (
+            "activeHandId===captured.handId",
+            "selectedDecisionId===captured.decisionId",
+            "handGeneration===captured.handGeneration",
+            "selectionGeneration===captured.generation",
+            "binding.hand_id===captured.handId",
+            "binding.decision_id===captured.decisionId",
+            "binding.evidence_id===captured.evidenceId",
+            "binding.state_revision===captured.revision",
+        ):
+            with self.subTest(condition=condition):
+                self.assertIn(condition, guard)
+
+    def test_current_unavailable_coach_response_clears_loading_without_reply_binding(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        start = source.index("async function askStudyCoach")
+        end = source.index("function showDecisionStudy", start)
+        request = source[start:end]
+        selection_guard = request.index("if(!coachRequestSelectionMatches(captured))return;")
+        unavailable = request.index("result.status==='failed'||result.status==='unavailable'")
+        exact_binding = request.index("if(!coachRequestMatches(captured,result)){")
+        loading_clear = request.index("coachQuestionLoading=false;", unavailable)
+        self.assertLess(selection_guard, unavailable)
+        self.assertLess(unavailable, exact_binding)
+        self.assertLess(exact_binding, loading_clear)
+        self.assertIn("if(!coachRequestSelectionMatches(captured))return;", request)
+        self.assertIn("coachQuestionError=result.reason||result.error", request)
+        self.assertIn("The answer did not match the selected decision", request)
+
 
 if __name__ == "__main__":
     unittest.main()

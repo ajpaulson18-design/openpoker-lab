@@ -4,13 +4,18 @@ import copy
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import math
+import os
 from pathlib import Path
 import threading
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, unquote
 import uuid
 from . import __version__
 from .analysis import analyze
 from .coach_analysis import adapt_practice_analysis
+from .coach_grounding import (CoachGroundingError, CoachReplyPlan,
+                              build_grounding_bundle, render_coach_reply,
+                              validate_coach_reply_plan)
+from .coach_provider import CoachProviderError, OpenAIPlanSelector
 from .contracts import CoachAnalysisError, CoachDecisionAnalysis, CoachDecisionRef
 from .decision_study import build_decision_study
 from .equity import simulate
@@ -109,13 +114,102 @@ def _validated_decision(store, decision_id):
         return {"status": "failed", "error": "Stored decision evidence is invalid."}
 
 
-def make_server(port=8765, database="data/pokerlab.sqlite3"):
+def make_server(port=8765, database="data/pokerlab.sqlite3", *,
+                coach_selector=None, coach_enabled=None, coach_timeout=12.0):
     store = Store(database)
+    explicitly_enabled = (os.environ.get("OPENPOKER_AI_COACH_ENABLED") == "1"
+                          if coach_enabled is None else coach_enabled is True)
+    if coach_selector is None and explicitly_enabled:
+        api_key = os.environ.get("OPENAI_API_KEY", "")
+        model = os.environ.get("OPENAI_MODEL", "")
+        if api_key.strip() and model.strip():
+            try:
+                coach_selector = OpenAIPlanSelector(api_key, model, coach_timeout)
+            except ValueError:
+                coach_selector = None
+    coach_external_available = explicitly_enabled and coach_selector is not None
     games = {}
     hand_revisions = {}
     accepted_actions = {}
     game_lock = threading.Lock()
     work_lock = threading.BoundedSemaphore(2)
+    coach_lock = threading.BoundedSemaphore(1)
+
+    def coach_fallback(bundle, detail, audience, reason):
+        recommendation = next((fact for fact in bundle.facts
+                               if fact.kind == "recommendation"), None)
+        intent = "recommendation" if recommendation and recommendation.value is not None else "unavailable"
+        plan = CoachReplyPlan(bundle.binding, intent, (), None, detail, audience)
+        reply = render_coach_reply(bundle, plan)
+        return {
+            "status": "fallback", "source": "local_fallback", "retryable": True,
+            "fallback_reason": reason, "binding": bundle.binding.to_dict(),
+            "source_label": reply.source_label, "reply": reply.to_dict(),
+        }
+
+    def dispatch_coach(path, data, external_requested):
+        prefix = "/api/v1/decisions/"
+        parts = path[len(prefix):].split("/") if path.startswith(prefix) else []
+        if len(parts) != 2 or parts[1] != "coach" or not parts[0]:
+            return {"error": "Not found."}, 404
+        decision_id = unquote(parts[0])
+        if not decision_id or len(decision_id) > 256 or "/" in decision_id:
+            return {"error": "Not found."}, 404
+        if not isinstance(data, dict) or set(data) != {"evidence_id", "question", "detail", "audience"}:
+            return {"error": "Coach request fields are invalid."}, 400
+        evidence_id = data["evidence_id"]
+        question = data["question"]
+        detail = data["detail"]
+        audience = data["audience"]
+        if not isinstance(evidence_id, str) or not evidence_id.strip() or len(evidence_id) > 256:
+            return {"error": "Evidence ID is invalid."}, 400
+        if not isinstance(question, str) or not question.strip() or len(question) > 500:
+            return {"error": "Question must contain 1–500 characters."}, 400
+        question = question.strip()
+        if detail not in ("short", "normal", "technical"):
+            return {"error": "Detail setting is invalid."}, 400
+        if audience not in ("beginner", "standard"):
+            return {"error": "Audience setting is invalid."}, 400
+
+        saved = _validated_decision(store, decision_id)
+        if saved["status"] == "missing":
+            return {"error": "Not found."}, 404
+        if saved["status"] == "unavailable":
+            return {"status": "unavailable", "source": "local_fallback",
+                    "reason": saved["reason"], "retryable": False}, 200
+        if saved["status"] != "ready":
+            return {"status": "failed", "error": "Stored decision evidence is invalid."}, 500
+        analysis, choice = saved["analysis"], saved["choice"]
+        if evidence_id != analysis.evidence_id:
+            return {"error": "Selected decision evidence changed; reload the study and retry."}, 409
+        try:
+            bundle = build_grounding_bundle(analysis, choice)
+        except (CoachGroundingError, ValueError, TypeError):
+            return {"status": "failed", "error": "Stored decision evidence is invalid."}, 500
+
+        if not external_requested:
+            return coach_fallback(bundle, detail, audience, "external_ai_not_selected"), 200
+        if not coach_external_available:
+            return coach_fallback(bundle, detail, audience, "external_ai_not_configured"), 200
+
+        try:
+            candidate = coach_selector.select_plan(bundle, question, detail, audience)
+            plan = validate_coach_reply_plan(candidate, bundle)
+            if plan.detail != detail or plan.audience != audience:
+                raise CoachGroundingError("invalid_reply_plan", "Presentation settings changed.")
+            reply = render_coach_reply(bundle, plan)
+        except CoachProviderError as error:
+            return coach_fallback(bundle, detail, audience, error.code), 200
+        except (CoachGroundingError, ValueError, TypeError):
+            return coach_fallback(bundle, detail, audience, "invalid_plan"), 200
+        except Exception:
+            # Provider exceptions are intentionally sanitized; never log prompts or response bodies.
+            return coach_fallback(bundle, detail, audience, "provider_error"), 200
+        return {
+            "status": "ready", "source": "openai", "retryable": False,
+            "binding": bundle.binding.to_dict(), "source_label": reply.source_label,
+            "reply": reply.to_dict(),
+        }, 200
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -147,7 +241,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
             if url.path == "/api/export":
                 return self.respond(store.export())
             if url.path == "/api/health":
-                return self.respond({"ok": True, "version": __version__})
+                return self.respond({"ok": True, "version": __version__,
+                                     "external_ai_coach_available": coach_external_available})
             decision_prefix = "/api/v1/decisions/"
             if url.path.startswith(decision_prefix):
                 parts = url.path[len(decision_prefix):].split("/")
@@ -193,6 +288,24 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 data = json.loads(self.rfile.read(length))
                 if not isinstance(data, dict):
                     raise ValueError("Expected a JSON object.")
+                request_path = urlparse(self.path).path
+                if request_path.startswith("/api/v1/decisions/") and request_path.endswith("/coach"):
+                    if not coach_lock.acquire(blocking=False):
+                        return self.respond({"error": "A coach request is already running. Try again shortly."}, 429)
+                    try:
+                        try:
+                            result, status_code = dispatch_coach(
+                                request_path, data,
+                                self.headers.get("X-OpenPoker-External-AI") == "1")
+                        except ActionConflict as error:
+                            return self.respond({"error": str(error)}, 409)
+                        except (ValueError, TypeError, KeyError, OverflowError):
+                            return self.respond({"error": "Coach request is invalid."}, 400)
+                        except Exception:
+                            return self.respond({"error": "Coach request failed safely."}, 500)
+                        return self.respond(result, status_code)
+                    finally:
+                        coach_lock.release()
                 if not work_lock.acquire(blocking=False):
                     return self.respond({"error": "Two calculations are already running. Try again shortly."}, 429)
                 try:

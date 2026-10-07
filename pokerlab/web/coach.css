@@ -17,4 +17,17 @@
 .study-alternatives th:last-child,.study-alternatives td:last-child { text-align:right; }
 .study-limits { padding-left:18px; }
 .study-retry { margin-top:12px; }
+.study-coach-form { border-top:1px solid var(--line); margin-top:24px; padding-top:18px; }
+.study-coach-form textarea { width:100%; resize:vertical; font:inherit; }
+.study-coach-form .two { gap:12px; }
+.study-coach-form .coach-external-opt-in { margin-top:10px; }
+.study-coach-form .coach-external-opt-in input { width:18px; min-height:18px; }
+.ai-coach-reply { border-left:3px solid var(--accent); background:#bcdf890c; padding:14px 16px; margin:18px 0 0; overflow-wrap:anywhere; }
+.ai-coach-reply > .eyebrow { margin-top:0; }
+.ai-answer-block { margin:14px 0; }
+.ai-answer-block h5 { margin:0 0 6px; font-size:14px; }
+.ai-answer-block ul { margin:0; padding-left:18px; }
+.ai-answer-block li { margin:5px 0; }
+.ai-answer-block small { display:block; color:var(--muted); font-size:10px; }
+.coach-unit { color:var(--muted); font-size:12px; }
 .unknown-cards { color:var(--muted); font-size:12px; letter-spacing:1px; }
