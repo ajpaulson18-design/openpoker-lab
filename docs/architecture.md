@@ -156,6 +156,14 @@ into traceable explanation facts. Practice `POST /api/act` accepts an optional
 `personality`; the server renders that voice only after the calculation and
 returns the unchanged analysis ID and a protected-facts fingerprint.
 
+The River solver browser workflow replays a selected exact out-of-position hand
+with the shared board, ranges, pot, bet size, and iteration inputs. It sends the
+decision node and saved opponent ID to `/api/exploit`, then passes that returned
+contract and its server-selected best response to `/api/explain`. The browser
+renders those returned facts, including exact action EVs, distinct reference
+and opponent-adjusted frequencies, model evidence, uncertainty, limitations,
+and provenance; it does not calculate poker strategy or explanation facts.
+
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,
 `POST /api/exploit`, `POST /api/explain`, `POST /api/game`, `POST /api/act`,

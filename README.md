@@ -35,8 +35,8 @@ Choose another port with `--port 8766`, or another database with
 | Decision lab | Heads-up fold/call or check/bet EV, with explicit current and calling ranges, a baseline comparison, and opponent-informed fold probabilities |
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
-| River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks |
-| Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
+| River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks; replayable decision explanations |
+| Explanations | Browser replay of a supported river scenario through `/api/exploit` and `/api/explain`; deterministic short, normal, and beginner reports with action EVs, separate reference/opponent-adjusted strategies, uncertainty, caveats, and provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
 
@@ -50,8 +50,12 @@ Choose another port with `--port 8766`, or another database with
    non-folds matter. Never enter unobserved opportunities as “No.”
 4. In **Decision lab**, select that opponent and enter a hand on the same street.
    Compare actions, read the assumptions, and try different calling ranges.
-5. In **River solver**, solve the default compact game. Then lock the opponent's
-   call frequency and observe how the out-of-position strategy changes.
+5. In **River solver**, solve the default compact game. Then select a saved opponent,
+   choose an exact hand from the out-of-position range, and replay it at the root or
+   facing-bet decision point to inspect its deterministic explanation. The report
+   keeps the reference and opponent-adjusted strategies, action EVs, evidence,
+   uncertainty, and restricted-game caveats separate. You can also lock the
+   opponent's call frequency in the solver scenario controls.
 6. In **Hand sandbox**, enter the players' names in clockwise order. Those names
    follow every action and pot award while seat numbers preserve table position.
    Toggle Live Coach without changing the saved calculation, and choose a coach
@@ -171,7 +175,8 @@ duplicate observation handling, side pots, short raises, random legal hands,
 solver convergence and node locks, and local HTTP access controls.
 Additional tests cover zero and tiny samples, contradictory and extreme evidence,
 blocked cards, personality invariants, hidden-information safety, session
-reproducibility, coaching visibility, all-ins, and side pots.
+reproducibility, coaching visibility, all-ins, side pots, and the river
+explanation browser/API round trip including malformed requests and stable analysis IDs.
 
 The optional exhaustive evaluator check enumerates all 2,598,960 five-card hands
 and compares category totals against the known combinatorial counts. CI runs the

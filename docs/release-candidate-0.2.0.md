@@ -9,6 +9,9 @@
 4. Live Coach, Blind Play, persistent decision events, and session review.
 5. Grinder, Chronic Bluffer, Nit, Math Guy, and Old-School Pro presentation
    voices, plus a disabled-by-default provider-neutral optional AI boundary.
+6. A River solver browser flow that replays an exact supported decision through
+   `/api/exploit` and `/api/explain`, then renders the immutable analysis and
+   deterministic explanation without moving calculation logic into JavaScript.
 
 ## Integration decisions and conflicts
 
@@ -43,6 +46,13 @@ The final audit fixes overlapped in `pokerlab/practice.py`, `pokerlab/server.py`
 the private single-hero flow and the replayable analysis record: automatic
 opponent actions never enter the decision history, while every hero event retains
 the exact pre-action state and opponent snapshot.
+
+The River solver explanation flow reuses its existing restricted-game inputs and
+requires an exact out-of-position hand plus a saved opponent profile. It shows the
+best response, model-supported assumptions, exact contract EVs, separate
+reference and opponent-adjusted strategies, uncertainty, caveats, and the stable
+analysis ID. The page exposes loading and validation/API error states; unsupported
+river scenarios remain controlled JSON errors.
 
 ## Verification and adversarial coverage
 
