@@ -2,6 +2,11 @@
 
 This module projects validated saved evidence into small immutable values. It
 has no provider, persistence, solver, server, or gameplay dependencies.
+
+Fact IDs are stable provenance locators, not signatures or authenticity proofs.
+A bundle loaded from JSON must be rebound with trusted saved analysis and the
+validated choice via :func:`rebind_grounding_bundle` before its facts are treated
+as authoritative.
 """
 from __future__ import annotations
 
@@ -25,8 +30,9 @@ _FACT_KINDS = {
     "source_kind", "ev_basis", "modeled_action", "action_ev",
     "baseline_action_ev", "recommendation", "baseline_recommendation",
     "baseline_label", "choice", "choice_loss", "opponent_assumption",
-    "opponent_uncertainty", "confidence_label", "equity_quality",
-    "solver_quality",
+    "opponent_uncertainty", "confidence_label", "equity_standard_error",
+    "equity_exact", "solver_nash_conv", "solver_exploitability",
+    "solver_iterations", "solver_gap_semantics",
 }
 _AVAILABILITY = {"available", "unavailable"}
 _INTENTS = {"recommendation", "choice", "compare", "limits", "unavailable"}
@@ -131,17 +137,18 @@ def _check_fact_shape(kind: str, value: Any) -> None:
                 or any(not _probability(item) for item in value[:3])
                 or any(not isinstance(item, str) for item in value[3:]))):
             _fail("invalid_grounding", "Opponent uncertainty facts have invalid fields.")
-    elif kind == "equity_quality":
-        if (not isinstance(value, tuple) or len(value) != 2
-                or not _optional_number(value[0])
-                or (value[1] is not None and type(value[1]) is not bool)):
-            _fail("invalid_grounding", "Equity quality facts have invalid fields.")
-    elif kind == "solver_quality":
-        if (not isinstance(value, tuple) or len(value) != 4
-                or not _optional_number(value[0]) or not _optional_number(value[1])
-                or (value[2] is not None and (type(value[2]) is not int or value[2] < 0))
-                or (value[3] is not None and not isinstance(value[3], str))):
-            _fail("invalid_grounding", "Solver quality facts have invalid fields.")
+    elif kind in {"equity_standard_error", "solver_nash_conv", "solver_exploitability"}:
+        if not _optional_number(value):
+            _fail("invalid_grounding", "Quality metrics must be finite numbers or null.")
+    elif kind == "equity_exact":
+        if value is not None and type(value) is not bool:
+            _fail("invalid_grounding", "Equity exactness must be boolean or null.")
+    elif kind == "solver_iterations":
+        if value is not None and (type(value) is not int or value < 0):
+            _fail("invalid_grounding", "Solver iterations must be a non-negative integer or null.")
+    elif kind == "solver_gap_semantics":
+        if value is not None and not isinstance(value, str):
+            _fail("invalid_grounding", "Solver gap semantics must be text or null.")
 
 
 def _scalar(value: Any, code: str) -> None:
@@ -574,14 +581,15 @@ def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str,
     quality = analysis.quality
     add("confidence_label", "/analysis/quality/confidence_label",
         quality.confidence_label, "label", True)
-    equity_quality = (quality.equity_standard_error, quality.equity_exact)
-    add("equity_quality", "/analysis/quality/equity_standard_error",
-        equity_quality, "equity_quality",
-        quality.equity_standard_error is not None or quality.equity_exact is not None)
-    solver_quality = (quality.nash_conv, quality.exploitability,
-                      quality.iterations, quality.gap_semantics)
-    add("solver_quality", "/analysis/quality/nash_conv", solver_quality,
-        "solver_quality", quality.nash_conv is not None)
+    add("equity_standard_error", "/analysis/quality/equity_standard_error",
+        quality.equity_standard_error, "standard_error")
+    add("equity_exact", "/analysis/quality/equity_exact", quality.equity_exact, "boolean")
+    add("solver_nash_conv", "/analysis/quality/nash_conv", quality.nash_conv, "ev")
+    add("solver_exploitability", "/analysis/quality/exploitability",
+        quality.exploitability, "ev")
+    add("solver_iterations", "/analysis/quality/iterations", quality.iterations, "iterations")
+    add("solver_gap_semantics", "/analysis/quality/gap_semantics",
+        quality.gap_semantics, "semantics")
     opponent_uncertainty = quality.opponent_uncertainty
     uncertainty_value = ((opponent_uncertainty.lower, opponent_uncertainty.upper,
                           opponent_uncertainty.level, opponent_uncertainty.method,
@@ -607,7 +615,8 @@ def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str,
             unavailable.append(f"baseline_action_ev:{action_id}")
     if analysis.baseline_recommended_action_id is None:
         unavailable.append("baseline_recommendation")
-    if quality.nash_conv is None:
+    if (quality.nash_conv is None or quality.exploitability is None
+            or quality.iterations is None or quality.gap_semantics is None):
         unavailable.append("solver_quality")
     if not analysis.opponent_assumptions:
         unavailable.append("opponent_assumptions")
@@ -618,6 +627,22 @@ def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str,
         _fail("invalid_grounding", "Grounding bundle exceeds its bounded field limits.")
     return GroundingBundle(binding, analysis.source_kind, analysis.ev_basis,
                            tuple(facts), limitations, unavailable_fields)
+
+
+def rebind_grounding_bundle(bundle: GroundingBundle, analysis: CoachDecisionAnalysis,
+                            choice: Mapping[str, Any]) -> GroundingBundle:
+    """Rebuild a loaded bundle against trusted saved evidence before using it.
+
+    The provenance hash detects accidental ID drift; it does not authenticate a
+    serialized value. Equality with this fresh allowlisted projection is the
+    trust check callers must perform before treating loaded facts as authoritative.
+    """
+    if not isinstance(bundle, GroundingBundle):
+        _fail("invalid_grounding", "Only a validated grounding bundle can be rebound.")
+    expected = build_grounding_bundle(analysis, choice)
+    if bundle != expected:
+        _fail("invalid_grounding", "Grounding bundle does not match trusted saved evidence.")
+    return expected
 
 
 def validate_coach_reply_plan(plan: CoachReplyPlan, bundle: GroundingBundle) -> CoachReplyPlan:
@@ -740,7 +765,11 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
             if plan.detail != "short":
                 facts.append(ev(recommendation_id))
             if plan.detail == "technical":
-                facts.extend((one("confidence_label"), one("solver_quality"),
+                facts.extend((one("confidence_label"),
+                              *by_kind.get("solver_nash_conv", ()),
+                              *by_kind.get("solver_exploitability", ()),
+                              *by_kind.get("solver_iterations", ()),
+                              *by_kind.get("solver_gap_semantics", ()),
                               one("opponent_uncertainty")))
             label = ("Saved action" if plan.audience == "beginner"
                      else "Saved recommendation")
@@ -784,7 +813,11 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
                     (choice, choice_action, choice_ev, target_action, target_ev))
     elif plan.intent == "limits":
         facts = [one("source_kind"), one("confidence_label"), one("opponent_uncertainty"),
-                 one("solver_quality"), *by_kind.get("opponent_assumption", ())]
+                 *by_kind.get("solver_nash_conv", ()),
+                 *by_kind.get("solver_exploitability", ()),
+                 *by_kind.get("solver_iterations", ()),
+                 *by_kind.get("solver_gap_semantics", ()),
+                 *by_kind.get("opponent_assumption", ())]
         if plan.detail == "short":
             facts = [one("source_kind"), one("confidence_label")]
         include("limits", "Model limits and saved assumptions", facts, bundle.limitations)
@@ -794,7 +827,10 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
     # Citations support an answer but cannot select or replace its required facts.
     # An unavailable comparison intentionally omits optional EV facts so none can
     # be mistaken for a substitute estimate of an unmodeled choice.
-    if rendered_intent != "unavailable":
+    choice_fact = one("choice")
+    unassessed_choice = (choice_fact is not None and isinstance(choice_fact.value, tuple)
+                         and choice_fact.value[3] == "unassessed_size")
+    if rendered_intent != "unavailable" and not unassessed_choice:
         for fact_id in plan.fact_ids:
             fact = by_id[fact_id]
             if fact_id not in selected_ids:

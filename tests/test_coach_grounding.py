@@ -9,7 +9,7 @@ from pokerlab.coach_analysis import adapt_practice_analysis
 from pokerlab.coach_grounding import (
     CoachGroundingError, CoachReplyPlan, GroundFact, GroundingBinding,
     GroundingBundle, build_grounding_bundle, render_coach_reply,
-    validate_coach_reply_plan,
+    rebind_grounding_bundle, validate_coach_reply_plan,
 )
 from pokerlab.contracts import CoachActionValue, CoachDecisionAnalysis, CoachDecisionRef
 from pokerlab.game import Game
@@ -82,6 +82,52 @@ class CoachGroundingTests(unittest.TestCase):
         self.assertEqual(fact.source_pointer, other_street.source_pointer)
         self.assertEqual(self.analysis.evidence_id, other.evidence_id)
         self.assertNotEqual(fact.fact_id, other_street.fact_id)
+
+    def test_each_fact_value_is_supported_by_its_exact_source_pointer(self):
+        source = {"analysis": self.analysis.to_dict(), "choice": self.choice}
+
+        def resolve(pointer):
+            value = source
+            for component in pointer[1:].split("/"):
+                component = component.replace("~1", "/").replace("~0", "~")
+                value = value[component] if isinstance(value, dict) else value[int(component)]
+            return value
+
+        for fact in self.bundle.facts:
+            with self.subTest(kind=fact.kind, pointer=fact.source_pointer):
+                raw = resolve(fact.source_pointer)
+                if fact.kind in {"hero_cards", "board"}:
+                    supported = tuple(raw)
+                elif fact.kind == "modeled_action":
+                    supported = tuple(raw[key] for key in
+                                      ("action_id", "name", "amount", "amount_semantics"))
+                elif fact.kind in {"action_ev", "baseline_action_ev"}:
+                    supported = (raw["action_id"], raw["value"])
+                elif fact.kind == "choice":
+                    supported = tuple(raw[key] for key in
+                                      ("name", "amount", "amount_semantics",
+                                       "assessment_status", "ev_loss",
+                                       "assessed_modeled_action_id"))
+                elif fact.kind == "opponent_assumption":
+                    uncertainty = raw["uncertainty"] or {}
+                    supported = (raw["tendency_id"], raw["context"]["street"],
+                                 raw["context"]["position"], raw["context"]["action_context"],
+                                 raw["value"], raw["evidence_count"], raw["baseline_frequency"],
+                                 raw["posterior_mean"], raw["confidence_weight"],
+                                 uncertainty.get("lower"), uncertainty.get("upper"),
+                                 uncertainty.get("confidence"), uncertainty.get("method"))
+                elif fact.kind == "opponent_uncertainty":
+                    supported = (None if raw is None else
+                                 tuple(raw[key] for key in
+                                       ("lower", "upper", "level", "method", "confidence")))
+                else:
+                    supported = raw
+                self.assertEqual(fact.value, supported)
+
+        for fact in self.bundle.facts:
+            if fact.kind in {"equity_standard_error", "equity_exact", "solver_nash_conv",
+                             "solver_exploitability", "solver_iterations", "solver_gap_semantics"}:
+                self.assertEqual(resolve(fact.source_pointer), fact.value)
 
     def test_projection_is_allowlisted_and_does_not_include_raw_or_identity_data(self):
         encoded = self.bundle.to_json()
@@ -192,6 +238,24 @@ class CoachGroundingTests(unittest.TestCase):
         choice_facts = choice.blocks[0].facts
         self.assertTrue(any(fact.kind == "choice_loss" and fact.value is None
                             and fact.availability == "unavailable" for fact in choice_facts))
+        modeled_raise_ev = next(fact for fact in bundle.facts
+                                if fact.kind == "action_ev" and fact.value[0] == "raise:min")
+        cited_choice = render_coach_reply(
+            bundle, new_plan(bundle, "choice", fact_ids=(modeled_raise_ev.fact_id,)))
+        self.assertFalse(any(fact.kind in {"action_ev", "baseline_action_ev"}
+                             for block in cited_choice.blocks for fact in block.facts))
+
+    def test_deserialized_bundle_requires_rebinding_to_trusted_evidence(self):
+        self.assertEqual(rebind_grounding_bundle(
+            GroundingBundle.from_json(self.bundle.to_json()), self.analysis, self.choice),
+            self.bundle)
+        tampered = self.bundle.to_dict()
+        fact = next(item for item in tampered["facts"]
+                    if item["kind"] == "action_ev" and item["value"][1] is not None)
+        fact["value"][1] += 1
+        loaded = GroundingBundle.from_dict(tampered)
+        with self.assertRaises(CoachGroundingError):
+            rebind_grounding_bundle(loaded, self.analysis, self.choice)
 
     def test_plan_round_trip_binding_unknown_keys_and_duplicate_ids_fail_closed(self):
         plan = new_plan(self.bundle, "limits", fact_ids=(self.bundle.facts[0].fact_id,))
