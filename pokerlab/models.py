@@ -13,7 +13,7 @@ from pathlib import Path
 import sqlite3
 import uuid
 from .contracts import (BetaPrior, ObservationEvidence, OpponentModelSnapshot,
-                        OpponentTendencyEstimate, TendencyContext,
+                        CoachDecisionAnalysis, OpponentTendencyEstimate, TendencyContext,
                         TendencyEvidence, Uncertainty)
 
 TENDENCIES = ("vpip", "pfr", "three_bet", "fold_to_bet", "aggression",
@@ -147,6 +147,9 @@ class Store:
                     decision_order INTEGER NOT NULL, event TEXT NOT NULL,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     UNIQUE(session_id, decision_order));
+                CREATE TABLE IF NOT EXISTS coach_decision_evidence (
+                    decision_id TEXT PRIMARY KEY REFERENCES decisions(id) ON DELETE CASCADE,
+                    envelope TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS opponent_model_metadata (
                     key TEXT PRIMARY KEY, value TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS opponent_priors (
@@ -464,23 +467,61 @@ class Store:
                        (identity, json.dumps(inputs), json.dumps(result)))
         return identity
 
-    def start_session(self, identity):
+    def start_session(self, identity, complete=False):
+        if type(complete) is not bool:
+            raise ValueError("complete must be boolean.")
         with self.connect() as db:
             db.execute("INSERT OR IGNORE INTO sessions(id) VALUES (?)", (identity,))
+            if complete:
+                db.execute("UPDATE sessions SET completed_at=COALESCE(completed_at,CURRENT_TIMESTAMP) WHERE id=?",
+                           (identity,))
 
-    def save_decision(self, session_id, event):
-        self.start_session(session_id)
+    def save_decision(self, session_id, event, *, decision_id=None,
+                      coach_analysis=None, complete_hand=False):
+        """Atomically save a decision, its optional evidence, and hand completion."""
+        if not isinstance(event, dict):
+            raise ValueError("Decision event must be an object.")
+        if type(complete_hand) is not bool:
+            raise ValueError("complete_hand must be boolean.")
+        if coach_analysis is not None:
+            if not isinstance(coach_analysis, CoachDecisionAnalysis):
+                raise ValueError("Decision evidence must use the validated coach contract.")
+            if (coach_analysis.ref.hand_id != session_id
+                    or (decision_id is not None
+                        and coach_analysis.ref.decision_id != decision_id)):
+                raise ValueError("Decision evidence reference does not match the saved decision.")
+            if decision_id is None:
+                decision_id = coach_analysis.ref.decision_id
+        identity = decision_id if decision_id is not None else uuid.uuid4().hex
+        if not isinstance(identity, str) or not identity:
+            raise ValueError("Decision ID must be non-empty text.")
         with self.connect() as db:
+            db.execute("INSERT OR IGNORE INTO sessions(id) VALUES (?)", (session_id,))
             order = db.execute(
                 "SELECT COUNT(*) FROM decisions WHERE session_id=?", (session_id,)
             ).fetchone()[0] + 1
-            identity = uuid.uuid4().hex
-            event = {**event, "session_id": session_id, "decision_order": order}
+            saved_event = {**event, "session_id": session_id, "decision_order": order}
+            encoded_event = json.dumps(saved_event, allow_nan=False)
             db.execute(
                 "INSERT INTO decisions(id,session_id,decision_order,event) VALUES (?,?,?,?)",
-                (identity, session_id, order, json.dumps(event, allow_nan=False)),
+                (identity, session_id, order, encoded_event),
             )
-        return event
+            if coach_analysis is not None:
+                db.execute("INSERT INTO coach_decision_evidence(decision_id,envelope) VALUES (?,?)",
+                           (identity, coach_analysis.to_json()))
+            if complete_hand:
+                db.execute("UPDATE sessions SET completed_at=COALESCE(completed_at,CURRENT_TIMESTAMP) WHERE id=?",
+                           (session_id,))
+        return {**saved_event, "decision_id": identity}
+
+    def decision_record(self, decision_id):
+        """Return one stored decision and optional raw evidence for validation at the API edge."""
+        with self.connect() as db:
+            row = db.execute(
+                """SELECT d.id,d.session_id,d.event,e.envelope
+                   FROM decisions d LEFT JOIN coach_decision_evidence e ON e.decision_id=d.id
+                   WHERE d.id=?""", (decision_id,)).fetchone()
+        return dict(row) if row is not None else None
 
     def complete_session(self, identity):
         with self.connect() as db:
@@ -497,14 +538,18 @@ class Store:
                 raise ValueError("Session not found.")
             if require_complete and session["completed_at"] is None:
                 raise ValueError("Session review is available after the hand is complete.")
-            encoded_decisions = [row[0] for row in db.execute(
-                "SELECT event FROM decisions WHERE session_id=? ORDER BY decision_order",
+            encoded_decisions = [tuple(row) for row in db.execute(
+                "SELECT id,event FROM decisions WHERE session_id=? ORDER BY decision_order",
                 (identity,),
             )]
         try:
-            decisions = [json.loads(encoded) for encoded in encoded_decisions]
-            if any(not isinstance(decision, dict) for decision in decisions):
-                raise TypeError
+            decisions = []
+            for decision_id, encoded in encoded_decisions:
+                decision = json.loads(encoded)
+                if not isinstance(decision, dict):
+                    raise TypeError
+                decision["decision_id"] = decision_id
+                decisions.append(decision)
             review = summarize(decisions)
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             raise OpponentDataError(
@@ -521,6 +566,9 @@ class Store:
             modern = [dict(row) for row in db.execute("SELECT * FROM opponent_observations")]
             sessions = [dict(row) for row in db.execute("SELECT * FROM sessions")]
             decisions = [dict(row) for row in db.execute("SELECT * FROM decisions")]
+            coach_evidence = [dict(row) for row in db.execute(
+                "SELECT * FROM coach_decision_evidence")]
         return {"schema_version": 2, "opponents": opponents,
                 "observations": legacy + modern, "opponent_priors": priors,
-                "analyses": analyses, "sessions": sessions, "decisions": decisions}
+                "analyses": analyses, "sessions": sessions, "decisions": decisions,
+                "coach_decision_evidence": coach_evidence}

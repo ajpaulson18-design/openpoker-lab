@@ -55,7 +55,8 @@ class PracticeUnitTests(unittest.TestCase):
         game = Game([30, 30], seed=7)
         analysis = analyze_decision(game)
         chosen = min(analysis["actions"], key=analysis["actions"].get)
-        event = decision_event(game, analysis, chosen)
+        amount = game.legal()["raise_min"] if chosen == "raise" else None
+        event = decision_event(game, analysis, chosen, amount=amount)
         expected = analysis["actions"][analysis["recommended"]] - analysis["actions"][chosen]
         self.assertAlmostEqual(event["ev_loss"], expected)
         self.assertEqual(event["analysis_at_time"]["analysis_id"], analysis["analysis_id"])
@@ -91,7 +92,8 @@ class PracticeUnitTests(unittest.TestCase):
         game = Game([30, 30, 20], seed=9)
         analysis = analyze_decision(game)
         chosen = analysis["recommended"]
-        event = decision_event(game, analysis, chosen)
+        event = decision_event(game, analysis, chosen,
+                               amount=game.legal()["raise_min"] if chosen == "raise" else None)
         self.assertEqual(event["actor"], game.actor)
         self.assertEqual(event["button"], game.button)
         self.assertEqual(event["legal_action_details"], game.legal())
@@ -107,7 +109,10 @@ class PracticeUnitTests(unittest.TestCase):
     def test_review_uses_recorded_decisions(self):
         game = Game([30, 30], seed=4)
         analysis = analyze_decision(game)
-        event = {**decision_event(game, analysis, analysis["recommended"]), "decision_order": 1}
+        chosen = analysis["recommended"]
+        event = {**decision_event(game, analysis, chosen,
+                                  amount=game.legal()["raise_min"] if chosen == "raise" else None),
+                 "decision_order": 1}
         review = summarize([event])
         self.assertEqual(review["analyzed_decisions"], 1)
         self.assertEqual(review["matched_recommendation"], 1)
@@ -298,6 +303,11 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertIn("personality:$('#coach-personality').value", script)
         self.assertIn("Biggest errors", script)
         self.assertIn("Biggest successful exploits", script)
+        self.assertIn("expected_revision:game.revision", script)
+        self.assertIn("client_action_id:pendingAction.id", script)
+        self.assertIn("RAISE SIZE NOT EVALUATED", script)
+        self.assertIn("if(action==='raise')$('#raise-amount').value=amount", script)
+        self.assertNotIn("result.actions[result.recommended]-result.actions[chosen]", script)
 
 
 if __name__ == "__main__":
