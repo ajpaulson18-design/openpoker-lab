@@ -19,12 +19,18 @@ from pokerlab.explanations import (DecisionExplanation, ExplanationLevel,
 from pokerlab.models import Store
 from pokerlab.server import make_server
 
-CHROME_BINARY = next(
-    (shutil.which(name) for name in
-     ("chromium", "chromium-browser", "google-chrome", "google-chrome-stable")
-     if shutil.which(name)),
-    None)
-CHROMEDRIVER_BINARY = shutil.which("chromedriver")
+def _browser_binary(environment, candidates):
+    configured = os.environ.get(environment)
+    if configured:
+        return configured if Path(configured).is_file() else None
+    return next((path for name in candidates if (path := shutil.which(name))), None)
+
+
+CHROME_BINARY = _browser_binary(
+    "OPENPOKER_CHROME_BINARY",
+    ("chromium", "chromium-browser", "google-chrome", "google-chrome-stable", "chrome"))
+CHROMEDRIVER_BINARY = _browser_binary(
+    "OPENPOKER_CHROMEDRIVER_BINARY", ("chromedriver",))
 if (os.environ.get("OPENPOKER_REQUIRE_BROWSER_TEST") == "true"
         and not (CHROME_BINARY and CHROMEDRIVER_BINARY)):
     raise RuntimeError("The required Chromium browser smoke-test tools are unavailable.")
