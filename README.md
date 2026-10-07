@@ -36,7 +36,7 @@ Choose another port with `--port 8766`, or another database with
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks |
-| Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
+| Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance; the river workspace connects `/api/exploit` to `/api/explain` and shows reference and opponent-specific results |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
 
@@ -50,8 +50,12 @@ Choose another port with `--port 8766`, or another database with
    non-folds matter. Never enter unobserved opportunities as “No.”
 4. In **Decision lab**, select that opponent and enter a hand on the same street.
    Compare actions, read the assumptions, and try different calling ranges.
-5. In **River solver**, solve the default compact game. Then lock the opponent's
-   call frequency and observe how the out-of-position strategy changes.
+5. In **River solver**, solve the default compact game. In **Explain a river
+   decision**, select an opponent, inspect a supported river scenario, and replay
+   it to verify the stable analysis ID. The explanation shows the reference and
+   opponent-specific strategies, exact supplied action EVs, uncertainty, and
+   restricted-game caveats. You can also lock the opponent's call frequency in
+   the solver to inspect a separate scenario.
 6. In **Hand sandbox**, enter the players' names in clockwise order. Those names
    follow every action and pot award while seat numbers preserve table position.
    Toggle Live Coach without changing the saved calculation, and choose a coach

@@ -9,7 +9,7 @@ import uuid
 from . import __version__
 from .analysis import analyze
 from .equity import simulate
-from .explanations import analysis_from_dict, explain
+from .explanations import ExplanationLevel, analysis_from_dict, explain
 from .exploit import solve_exploitative_river
 from .game import Game
 from .models import OPPONENT_MODEL_VERSION, Store, PROFILES
@@ -112,13 +112,27 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                 return solve(**data)
             if path == "/api/exploit":
                 inputs = dict(data)
-                opponent_id = inputs.pop("opponent_id")
+                opponent_id = inputs.pop("opponent_id", None)
+                if not isinstance(opponent_id, str) or not opponent_id:
+                    raise ValueError("Choose an existing opponent profile for river analysis.")
                 snapshot = store.opponent_snapshot(opponent_id, "river")
                 return solve_exploitative_river(snapshot=snapshot, **inputs).to_dict()
             if path == "/api/explain":
-                analysis = analysis_from_dict(data["analysis"])
-                return explain(analysis, data["recommended_action"],
-                               data.get("level", "normal")).to_dict()
+                analysis_data = data.get("analysis")
+                if not isinstance(analysis_data, dict):
+                    raise ValueError("Provide analysis as a JSON object.")
+                recommended_action = data.get("recommended_action")
+                if not isinstance(recommended_action, str) or not recommended_action:
+                    raise ValueError("Provide a recommended_action.")
+                level = data.get("level", ExplanationLevel.NORMAL.value)
+                if not isinstance(level, str) or level not in {
+                        item.value for item in ExplanationLevel}:
+                    raise ValueError("Level must be short, normal, or beginner.")
+                try:
+                    analysis = analysis_from_dict(analysis_data)
+                except (KeyError, TypeError) as error:
+                    raise ValueError("Analysis contract is incomplete or malformed.") from error
+                return explain(analysis, recommended_action, level).to_dict()
             if path == "/api/opponents":
                 return store.add_opponent(**data)
             if path == "/api/observe":

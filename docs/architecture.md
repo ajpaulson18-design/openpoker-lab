@@ -156,6 +156,14 @@ into traceable explanation facts. Practice `POST /api/act` accepts an optional
 `personality`; the server renders that voice only after the calculation and
 returns the unchanged analysis ID and a protected-facts fingerprint.
 
+The browser's **Explain a river decision** flow calls `POST /api/exploit` with a
+supported restricted-river scenario, then passes the returned
+`StrategyAnalysisResult` and its supplied best-response action to
+`POST /api/explain`. The browser renders both strategies and copies action EVs
+from that structured response; it does not calculate poker recommendations or
+EVs. Replaying the same scenario and unchanged opponent snapshot yields the same
+stable analysis ID.
+
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,
 `POST /api/exploit`, `POST /api/explain`, `POST /api/game`, `POST /api/act`,

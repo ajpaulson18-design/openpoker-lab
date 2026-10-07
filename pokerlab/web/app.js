@@ -46,6 +46,46 @@ bindForm('#solver-form',async form=>{
   const r=await api('solve',d);const locked=Object.keys(r.lock).length>0;
   $('#solver-result').innerHTML=`<p class="eyebrow">${locked?'OPPONENT-LOCKED SCENARIO':'EQUILIBRIUM APPROXIMATION'}</p><div class="metrics">${metric(chips(r.value_oop),'OOP VALUE',true)}${metric(chips(r.nash_conv),'BEST-RESPONSE GAP',true)}${metric(r.deals,'LEGAL DEALS',true)}</div><p class="hint">${r.iterations.toLocaleString()} iterations. Values in chips, relative to half the existing pot. Smaller unlocked gap means less room for either player to improve.</p><h3>Out of position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet</th><th>Call after checking</th></tr></thead><tbody>${r.oop.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet)}</td><td>${pct(h.call_after_check)}</td></tr>`).join('')}</tbody></table></div><h3>In position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet after check</th><th>Call</th></tr></thead><tbody>${r.ip.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet_after_check)}</td><td>${pct(h.call)}</td></tr>`).join('')}</tbody></table></div>${locked?warnings([r.gap_note,'Locked frequencies apply equally across every hand. Interpret them as a scenario, not a discovered range-dependent policy.']):''}<p class="fine">${esc(r.scope)} Unreachable information sets may contain arbitrary strategies.</p>`;
 },'Solving the river game… this can take a little while.');
+let lastRiverRequest=null;
+function strategyRows(items){
+  return `<ul class="strategy-list">${items.map(item=>`<li><span>${esc(item.action)}</span><strong>${esc(item.frequency)}</strong></li>`).join('')}</ul>`;
+}
+function renderRiverExplanation(payload,request){
+  const evidence=(payload.evidence||[]).map(item=>`<li data-kind="opponent-evidence"><strong>${esc(item.tendency_id.replaceAll('_',' '))}</strong>: ${esc(item.value)} from ${esc(item.evidence_count)} recorded opportunities${item.uncertainty?` · interval ${esc(item.uncertainty.lower)}–${esc(item.uncertainty.upper)} (${esc(item.uncertainty.confidence)})`:''}</li>`).join('');
+  const differences=new Map(payload.ev_differences.map(item=>[item.action,item.value]));
+  const evRows=payload.action_evs.map(item=>`<tr><td>${esc(item.action)}</td><td>${esc(item.value)}</td><td>${esc(differences.get(item.action))}</td></tr>`).join('');
+  const uncertainty=payload.uncertainty?`<p data-kind="uncertainty">${esc(payload.uncertainty.confidence)} confidence · ${esc(payload.uncertainty.level)} interval ${esc(payload.uncertainty.lower)}–${esc(payload.uncertainty.upper)} · ${esc(payload.uncertainty.method)}</p>`:'<p data-kind="uncertainty">No opponent-tendency uncertainty interval was supplied.</p>';
+  const caveats=warnings(payload.caveats||[]);
+  $('#river-explanation-result').dataset.state='success';
+  $('#river-explanation-result').innerHTML=`<article data-testid="river-explanation" data-analysis-id="${esc(payload.analysis_id)}"><p class="eyebrow">RIVER DECISION · ${esc(payload.level.toUpperCase())} EXPLANATION</p><h3 data-kind="model-supported">Recommended within this modeled scenario: <strong>${esc(payload.recommended_action)}</strong></h3><p>${esc(payload.summary)}</p><p class="hint">${esc(payload.mathematical_reason)}</p><p class="fine">Stable analysis ID: <code data-kind="analysis-id">${esc(payload.analysis_id)}</code></p><h4>Baseline / reference strategy</h4>${strategyRows(payload.baseline_strategy)}<h4>Opponent-specific / exploitative strategy</h4>${strategyRows(payload.exploitative_strategy)}<h4>Action EVs from the calculation</h4><div class="scroll-table"><table><thead><tr><th>Action</th><th>EV (chips)</th><th>Difference vs reference (chips)</th></tr></thead><tbody>${evRows}</tbody></table></div><section data-kind="scenario-assumptions"><h4>Scenario assumptions</h4><p>River board: ${esc(request.board)} · Hero hand: ${esc(request.hero_hand)}</p><p>OOP range: ${esc(request.oop_range)} · IP range: ${esc(request.ip_range)}</p><p>Pot: ${esc(request.pot)} chips · Bet: ${esc(request.bet)} chips · ${esc(request.decision.replaceAll('_',' '))} · ${esc(request.iterations)} CFR iterations</p></section><section data-kind="model-uncertainty"><h4>Uncertainty and opponent evidence</h4><p>Calculation confidence: ${esc(payload.confidence)}</p>${uncertainty}${evidence?`<ul>${evidence}</ul>`:'<p>No supported opponent tendency was used for this scenario.</p>'}</section><section data-kind="simplifications"><h4>Simplifications and caveats</h4><p>This recommendation applies only to the supplied ranges and the restricted river game; it is not a general no-limit Hold’em strategy.</p>${caveats}</section></article>`;
+}
+async function runRiverExplanation(request){
+  const result=$('#river-explanation-result'),message=$('#river-explanation-status'),error=$('#river-explanation-error');
+  const submit=$('#river-explanation-form button[type="submit"]'),replay=$('#replay-river-decision');
+  submit.disabled=true;replay.disabled=true;error.hidden=true;error.textContent='';
+  result.dataset.state='loading';message.dataset.state='loading';message.textContent='Calculating the restricted river analysis…';
+  result.innerHTML='<p class="eyebrow">CALCULATING</p><p>Running the restricted river analysis and preparing its deterministic explanation…</p>';
+  try{
+    const {level,...scenario}=request;
+    const analysis=await api('exploit',scenario);
+    if(!analysis.best_response||typeof analysis.best_response.action!=='string')throw new Error('River analysis did not include a recommended action.');
+    const payload=await api('explain',{analysis,recommended_action:analysis.best_response.action,level});
+    renderRiverExplanation(payload,request);lastRiverRequest={...request};replay.hidden=false;
+    message.dataset.state='success';message.textContent='Explanation ready. Replay this decision to verify its analysis ID.';
+  }catch(err){
+    result.dataset.state='error';result.innerHTML='<p class="eyebrow">EXPLANATION UNAVAILABLE</p><p data-kind="error-summary">Check the decision inputs and try again.</p>';
+    error.textContent=err.message||'The river explanation request failed.';error.hidden=false;
+    message.dataset.state='error';message.textContent='The decision could not be explained.';
+  }finally{submit.disabled=false;replay.disabled=false;}
+}
+$('#river-explanation-form').addEventListener('submit',async event=>{
+  event.preventDefault();
+  const request=formData(event.target,['pot','bet','iterations']);
+  await runRiverExplanation(request);
+});
+$('#replay-river-decision').addEventListener('click',()=>{
+  if(lastRiverRequest)runRiverExplanation({...lastRiverRequest});
+});
 function showGame(g){
   game=g;$('#game-controls').hidden=g.done;$('#acting-seat').textContent=g.done?'':g.actor_name+' to act · Seat '+g.actor;
   if(!g.done){document.querySelectorAll('[data-action]').forEach(b=>b.disabled=!g.legal[b.dataset.action]);$('#raise-amount').min=g.legal.raise_min;$('#raise-amount').max=g.legal.raise_max;$('#raise-amount').value=g.legal.raise_min;document.querySelector('[data-action="call"]').textContent='Call '+g.legal.call;}

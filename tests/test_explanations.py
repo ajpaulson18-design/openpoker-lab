@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from pokerlab.contracts import (ActionFrequency, ActionValue,
@@ -11,6 +12,17 @@ from pokerlab.contracts import (ActionFrequency, ActionValue,
 from pokerlab.explanations import (DecisionExplanation, ExplanationLevel,
                                    analysis_from_dict, explain)
 from pokerlab.server import make_server
+
+
+def post_json(port, path, payload):
+    request = Request(
+        f"http://127.0.0.1:{port}{path}", json.dumps(payload).encode(),
+        {"Content-Type": "application/json"})
+    try:
+        with urlopen(request) as response:
+            return response.status, json.load(response)
+    except HTTPError as error:
+        return error.code, json.load(error)
 
 
 class ExplanationTests(unittest.TestCase):
@@ -91,16 +103,83 @@ class ExplanationTests(unittest.TestCase):
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
             try:
-                body = json.dumps({"analysis": self.analysis.to_dict(),
-                                   "recommended_action": "bet",
-                                   "level": "short"}).encode()
-                request = Request(
-                    f"http://127.0.0.1:{server.server_port}/api/explain", body,
-                    {"Content-Type": "application/json"})
-                decoded = json.load(urlopen(request))
+                request_data = {"analysis": self.analysis.to_dict(),
+                                "recommended_action": "bet", "level": "short"}
+                status, decoded = post_json(server.server_port, "/api/explain",
+                                            request_data)
+                self.assertEqual(status, 200)
                 self.assertEqual(decoded["analysis_id"], self.analysis.analysis_id)
                 self.assertEqual(decoded["recommended_action"], "bet")
                 self.assertEqual(decoded["level"], "short")
+                self.assertEqual(decoded["action_evs"],
+                                 [{"action": "check", "value": 48},
+                                  {"action": "bet", "value": 55}])
+                self.assertNotEqual(decoded["baseline_strategy"],
+                                    decoded["exploitative_strategy"])
+                self.assertEqual(decoded["uncertainty"]["lower"], .30)
+                self.assertIn("Heads-up only.", decoded["caveats"])
+                replay_status, replay = post_json(
+                    server.server_port, "/api/explain", request_data)
+                self.assertEqual(replay_status, 200)
+                self.assertEqual(replay["analysis_id"], decoded["analysis_id"])
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join()
+
+    def test_explain_endpoint_rejects_malformed_or_unsupported_requests(self):
+        with tempfile.TemporaryDirectory() as directory:
+            server = make_server(0, Path(directory) / "db.sqlite3")
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                cases = (
+                    ({"recommended_action": "bet"},
+                     "Provide analysis as a JSON object."),
+                    ({"analysis": {}, "recommended_action": "bet"},
+                     "Analysis contract is incomplete or malformed."),
+                    ({"analysis": self.analysis.to_dict(),
+                      "recommended_action": "raise"},
+                     "The calculation recommendation must be a legal action."),
+                    ({"analysis": self.analysis.to_dict(),
+                      "recommended_action": "bet", "level": "expert"},
+                     "Level must be short, normal, or beginner."),
+                    ({"analysis": self.analysis.to_dict(),
+                      "recommended_action": "bet", "level": []},
+                     "Level must be short, normal, or beginner."),
+                )
+                for request_data, message in cases:
+                    with self.subTest(request=request_data.keys()):
+                        status, response = post_json(
+                            server.server_port, "/api/explain", request_data)
+                        self.assertEqual(status, 400)
+                        self.assertEqual(response["error"], message)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join()
+
+    def test_served_browser_has_structural_explanation_controls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            server = make_server(0, Path(directory) / "db.sqlite3")
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                with urlopen(f"http://127.0.0.1:{server.server_port}/") as response:
+                    page = response.read().decode()
+                with urlopen(f"http://127.0.0.1:{server.server_port}/app.js") as response:
+                    script = response.read().decode()
+                for selector in (
+                        'id="river-explanation-form"',
+                        'data-testid="river-explanation-result"',
+                        'data-testid="river-explanation-error"',
+                        'data-testid="replay-river"'):
+                    self.assertIn(selector, page)
+                self.assertIn("api('exploit',scenario)", script)
+                self.assertIn("api('explain'", script)
+                self.assertIn("data-analysis-id", script)
+                self.assertIn("result.dataset.state='error'", script)
+                self.assertIn("error.hidden=false", script)
             finally:
                 server.shutdown()
                 server.server_close()

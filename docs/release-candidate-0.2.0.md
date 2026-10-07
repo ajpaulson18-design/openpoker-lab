@@ -9,6 +9,9 @@
 4. Live Coach, Blind Play, persistent decision events, and session review.
 5. Grinder, Chronic Bluffer, Nit, Math Guy, and Old-School Pro presentation
    voices, plus a disabled-by-default provider-neutral optional AI boundary.
+6. Browser-driven explanations for supported river decisions, including
+   reference/exploitative strategies, action EVs, uncertainty, caveats, and
+   replayable stable analysis IDs.
 
 ## Integration decisions and conflicts
 
@@ -18,6 +21,12 @@ are downstream of `StrategyAnalysisResult`; neither can choose an action. Practi
 records retain the calculation, model version, visible state, and sanitized model
 snapshot used at decision time. UI visibility and personality selection are not
 calculation inputs.
+
+The river explanation form composes `/api/exploit` with `/api/explain`; replay uses
+the same supplied scenario and unchanged opponent snapshot. The display keeps the
+reference strategy, opponent-specific strategy, returned action EVs, and model
+caveats distinct. Explanations remain scoped to the documented restricted river
+game and do not claim unrestricted Hold'em GTO.
 
 The release-candidate audit tightened this boundary further. Practice is now a
 single-hero flow: only seat zero is exposed to the browser, non-hero seats use a

@@ -5,3 +5,18 @@
 .coach-panel, .session-review { border-top:1px solid var(--line); margin-top:22px; padding-top:20px; }
 .session-review { margin-top:20px; }
 .unknown-cards { color:var(--muted); font-size:12px; letter-spacing:1px; }
+.river-explainer { margin-top:42px; }
+.river-explainer .section-heading { margin-bottom:22px; }
+.river-explainer .result-card { min-height:0; }
+.river-explainer h3 strong { color:var(--accent); }
+.river-explainer h4 { margin:24px 0 8px; font-size:13px; font-weight:600; }
+.river-explainer [data-kind="scenario-assumptions"],
+.river-explainer [data-kind="model-uncertainty"],
+.river-explainer [data-kind="simplifications"] { border-top:1px solid var(--line); margin-top:20px; padding-top:6px; }
+.river-explainer [data-kind="simplifications"] { border-left:3px solid #d8ae75; padding-left:14px; }
+.river-explainer .strategy-list { list-style:none; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; padding:0; margin:8px 0 20px; }
+.river-explainer .strategy-list li { display:flex; justify-content:space-between; gap:12px; border:1px solid var(--line); border-radius:4px; padding:8px 10px; font-size:12px; text-transform:capitalize; }
+.river-explainer .strategy-list strong { color:var(--accent); font-variant-numeric:tabular-nums; }
+.river-explainer .replay-river { width:100%; margin-top:12px; }
+.river-explainer .river-error { color:#ffc1ad; background:#412824; border:1px solid #976759; border-radius:4px; padding:10px; font-size:12px; }
+.river-explainer [data-state="loading"] { opacity:.8; }
