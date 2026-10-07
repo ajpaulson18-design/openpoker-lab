@@ -12,8 +12,9 @@ explicit. It does **not** claim to solve unrestricted no-limit Hold'em.
 
 ## Run locally
 
-Requires Python **3.11 or newer**. There are no runtime dependencies, API keys,
-subscriptions, or external AI services.
+Requires Python **3.11 or newer**. There are no runtime dependencies. The app
+works offline with external AI disabled; an API key is only needed if you
+explicitly configure the optional one-shot coach described below.
 
 ```sh
 git clone https://github.com/ajpaulson18-design/openpoker-lab.git
@@ -27,6 +28,17 @@ when the Python launcher is installed. Stop the server with Ctrl+C.
 Optional installation: `python -m pip install .`, then `openpoker`.
 Choose another port with `--port 8766`, or another database with
 `--database path/to/research.sqlite3`.
+
+## Optional one-shot AI coach
+
+External AI is disabled unless you set `OPENPOKER_AI_COACH_ENABLED=1`,
+`OPENAI_API_KEY`, and `OPENAI_MODEL` before starting the server. The saved-decision
+panel also requires you to select **Use external AI for this question** for each
+request. That sends the question, hero cards, board, and other allowlisted facts
+for the selected decision to the configured OpenAI service. Opponent hole cards,
+the deck, names, and notes are excluded. It does not send the raw hand event or
+persist a conversation. The request uses the Responses API with structured output and
+`store: false`; see [local coach setup](docs/ai-coach-setup.md) for details.
 
 ## What's included
 

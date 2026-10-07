@@ -211,6 +211,33 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("Live coaching was not requested for this decision.", source)
         self.assertIn("showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy", source)
 
+    def test_external_coach_opt_in_names_included_and_excluded_facts(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / "pokerlab" / "web" / "app.js").read_text()
+        setup = (root / "docs" / "ai-coach-setup.md").read_text()
+        self.assertIn("your question, hero cards, board", source)
+        self.assertIn("Opponent hole cards, deck, names, and notes are excluded", source)
+        self.assertIn("includes your hero cards, the board", setup)
+        self.assertIn("opponent hole cards, the deck, names, notes", setup)
+
+    def test_coach_reply_guard_binds_current_selection_and_response_evidence(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        start = source.index("function coachRequestMatches(")
+        end = source.index("async function askStudyCoach", start)
+        guard = source[start:end]
+        for condition in (
+            "activeHandId===captured.handId",
+            "selectedDecisionId===captured.decisionId",
+            "handGeneration===captured.handGeneration",
+            "selectionGeneration===captured.generation",
+            "binding.hand_id===captured.handId",
+            "binding.decision_id===captured.decisionId",
+            "binding.evidence_id===captured.evidenceId",
+            "binding.state_revision===captured.revision",
+        ):
+            with self.subTest(condition=condition):
+                self.assertIn(condition, guard)
+
 
 if __name__ == "__main__":
     unittest.main()
