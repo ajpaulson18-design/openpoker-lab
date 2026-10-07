@@ -128,6 +128,8 @@ Strategies at unreachable information sets need not be meaningful.
 
 For responsiveness, range-size product times iterations is capped at 3 million.
 Full 1,326-combination range solving and full-game GTO are outside this release.
+See `docs/solver-validation.md` for the exact scope, validation, the
+`pokerlab.equilibrium` strategy interface, and `python -m scripts.validate_solver`.
 
 ## Range notation
 
