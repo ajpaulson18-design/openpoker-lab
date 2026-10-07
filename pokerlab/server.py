@@ -130,7 +130,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3"):
                     raise ValueError("Level must be short, normal, or beginner.")
                 try:
                     analysis = analysis_from_dict(analysis_data)
-                except (KeyError, TypeError) as error:
+                except (AttributeError, KeyError, TypeError) as error:
                     raise ValueError("Analysis contract is incomplete or malformed.") from error
                 return explain(analysis, recommended_action, level).to_dict()
             if path == "/api/opponents":

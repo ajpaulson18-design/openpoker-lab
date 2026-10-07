@@ -133,10 +133,14 @@ class ExplanationTests(unittest.TestCase):
             thread = threading.Thread(target=server.serve_forever, daemon=True)
             thread.start()
             try:
+                malformed_nested = self.analysis.to_dict()
+                malformed_nested["opponent_assumptions"][0]["context"] = None
                 cases = (
                     ({"recommended_action": "bet"},
                      "Provide analysis as a JSON object."),
                     ({"analysis": {}, "recommended_action": "bet"},
+                     "Analysis contract is incomplete or malformed."),
+                    ({"analysis": malformed_nested, "recommended_action": "bet"},
                      "Analysis contract is incomplete or malformed."),
                     ({"analysis": self.analysis.to_dict(),
                       "recommended_action": "raise"},
@@ -180,6 +184,8 @@ class ExplanationTests(unittest.TestCase):
                 self.assertIn("data-analysis-id", script)
                 self.assertIn("result.dataset.state='error'", script)
                 self.assertIn("error.hidden=false", script)
+                self.assertIn("runRiverExplanation({...lastRiverRequest},lastRiverAnalysis)",
+                              script)
             finally:
                 server.shutdown()
                 server.server_close()

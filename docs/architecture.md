@@ -161,8 +161,9 @@ supported restricted-river scenario, then passes the returned
 `StrategyAnalysisResult` and its supplied best-response action to
 `POST /api/explain`. The browser renders both strategies and copies action EVs
 from that structured response; it does not calculate poker recommendations or
-EVs. Replaying the same scenario and unchanged opponent snapshot yields the same
-stable analysis ID.
+EVs. Replay reuses the last returned analysis contract so its ID and EVs remain
+fixed. Submitting the scenario again recalculates against the current opponent
+snapshot and may produce a different analysis ID.
 
 Other endpoints: `GET /api/health`, `GET /api/opponents`,
 `POST /api/opponents`, `POST /api/observe`, `POST /api/analyze`,

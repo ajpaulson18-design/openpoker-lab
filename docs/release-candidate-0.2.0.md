@@ -22,8 +22,9 @@ records retain the calculation, model version, visible state, and sanitized mode
 snapshot used at decision time. UI visibility and personality selection are not
 calculation inputs.
 
-The river explanation form composes `/api/exploit` with `/api/explain`; replay uses
-the same supplied scenario and unchanged opponent snapshot. The display keeps the
+The river explanation form composes `/api/exploit` with `/api/explain`; replay
+reuses the last returned analysis contract, while submitting the scenario again
+recalculates against the current opponent snapshot. The display keeps the
 reference strategy, opponent-specific strategy, returned action EVs, and model
 caveats distinct. Explanations remain scoped to the documented restricted river
 game and do not claim unrestricted Hold'em GTO.
