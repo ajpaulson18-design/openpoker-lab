@@ -347,6 +347,13 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
             self.assertEqual(wait_for_state({"ready", "error"}), "ready")
             rendered = execute("""
               const report = document.querySelector('[data-testid=river-explanation-report]');
+              const contract = arguments[0];
+              const differences = Object.fromEntries(
+                contract.ev_differences.map(item => [item.action, item.value]));
+              const baseline = Object.fromEntries(
+                contract.baseline_strategy.map(item => [item.action, item.frequency]));
+              const exploit = Object.fromEntries(
+                contract.exploitative_strategy.map(item => [item.action, item.frequency]));
               const rows = selector => [...report.querySelectorAll(`${selector} tbody tr`)]
                 .map(row => [...row.cells].map(cell => cell.textContent));
               return {
@@ -357,6 +364,14 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
                 confidence: report.querySelector('[data-testid=explanation-confidence]').dataset.confidence,
                 evs: rows('[data-testid=action-evs]'),
                 strategies: rows('[data-testid=strategy-comparison]'),
+                evRowCount: report.querySelectorAll('[data-testid=action-evs] tbody tr').length,
+                strategyRowCount: report.querySelectorAll('[data-testid=strategy-comparison] tbody tr').length,
+                expectedEvs: contract.action_evs.map(item => [
+                  item.action, String(item.value), String(differences[item.action])
+                ]),
+                expectedStrategies: contract.legal_actions.map(action => [
+                  action, String(baseline[action]), String(exploit[action])
+                ]),
                 uncertainty: report.querySelector('[data-testid=explanation-uncertainty]').textContent,
                 assumptions: [...report.querySelectorAll('[data-testid=model-assumptions] li')]
                   .map(item => item.textContent),
@@ -365,7 +380,7 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
                   .map(item => new URL(item.name).pathname)
                   .filter(path => path === '/api/exploit' || path === '/api/explain'),
               };
-            """)
+            """, [expected])
             self.assertEqual(rendered["id"], expected["analysis_id"])
             self.assertEqual(rendered["level"], "beginner")
             self.assertEqual(rendered["recommendation"],
@@ -373,18 +388,10 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
             self.assertEqual(rendered["summary"], expected_payload["summary"])
             self.assertEqual(rendered["confidence"], expected["confidence"])
             self.assertIn(expected["uncertainty"]["method"], rendered["uncertainty"])
-            self.assertEqual(
-                [(row[0], float(row[1]), float(row[2])) for row in rendered["evs"]],
-                [(item["action"], item["value"], difference["value"])
-                 for item, difference in zip(expected["action_evs"],
-                                             expected["ev_differences"])])
-            self.assertEqual(
-                [(row[0], float(row[1]), float(row[2]))
-                 for row in rendered["strategies"]],
-                [(action, baseline["frequency"], exploit["frequency"])
-                 for action, baseline, exploit in zip(
-                     expected["legal_actions"], expected["baseline_strategy"],
-                     expected["exploitative_strategy"])])
+            self.assertEqual(rendered["evRowCount"], len(expected["action_evs"]))
+            self.assertEqual(rendered["strategyRowCount"], len(expected["legal_actions"]))
+            self.assertEqual(rendered["evs"], rendered["expectedEvs"])
+            self.assertEqual(rendered["strategies"], rendered["expectedStrategies"])
             self.assertTrue(any(
                 item["tendency_id"].replace("_", " ") in assumption
                 and f"{item['evidence_count']} observed opportunities" in assumption
