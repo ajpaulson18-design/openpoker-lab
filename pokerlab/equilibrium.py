@@ -2,6 +2,7 @@
 from dataclasses import dataclass, field
 
 from .cards import cards
+from .river_config import RiverConfig
 from .solver import solve
 
 OOP, IP = "oop", "ip"
@@ -59,7 +60,7 @@ class EquilibriumStrategy:
 
     @property
     def config(self):
-        return dict(self._result["config"])
+        return RiverConfig.from_dict(self._result["config"]).to_dict()
 
     def _resolve_history(self, history):
         history = tuple(history)

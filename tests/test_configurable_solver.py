@@ -161,6 +161,13 @@ class ConfiguredStrategyTests(unittest.TestCase):
         self.assertEqual(equilibrium.legal_actions(InfoSet("ip", "KcKd", (token,)))[0].name,
                          "fold")
 
+    def test_config_property_returns_a_defensive_serializable_copy(self):
+        equilibrium = solve_equilibrium(BOARD, "AsAh", "KcKd", iterations=50,
+                                        config=self.config)
+        reported = equilibrium.config
+        reported["bet_sizes"].append(99)
+        self.assertEqual(equilibrium.config["bet_sizes"], [.33, 1.0])
+
     def test_best_response_and_nashconv_work_with_multi_size_raise_tree(self):
         result = solve(BOARD, "AsAh,KsKh", "AcAd,KcKd", iterations=300,
                        config=RiverConfig(100, 500, (.33, .75), (.75,), 1, False))

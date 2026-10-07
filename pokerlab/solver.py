@@ -307,7 +307,7 @@ def _lock_frequencies(lock, hands, nodes, config):
         node = nodes.get((IP, node_history))
         if node is None or len(node.actions) != 2:
             raise ValueError(f"{public_name} lock does not match a two-action IP node.")
-        locks[node_history] = values
+        locks[(IP, node_history)] = values
         report[public_name] = {hands[IP][i] and "".join(hands[IP][i]): values[i]
                                for i in sorted(values)} if isinstance(value, dict) else next(iter(values.values()))
     return locks, report
