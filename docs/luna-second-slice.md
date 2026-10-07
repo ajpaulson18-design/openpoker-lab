@@ -1,0 +1,54 @@
+# Luna handoff: trusted practice decision capture
+
+Architecture decision · 2026-10-07 · one implementation slice
+
+## Objective
+
+Connect the merged `CoachDecisionAnalysis` practice adapter to accepted hero decisions. Each new practice decision needs a server-generated ID, a non-null pre-action hand revision, a saved immutable evidence envelope, and the exact action amount chosen. Make the evidence retrievable by ID. Keep gameplay unchanged if preparation or persistence fails, and stop treating every legal raise as the evaluated minimum raise.
+
+This slice is local and deterministic. It adds no language model, provider, conversation, streaming, new solver adapter, or session-wide coaching.
+
+## Verified baseline and decision
+
+Start from GitHub `main` at `b18481fec242a5c891b188251a92a5efa9ac4a39` (merged PR #24). The first slice supplied `CoachDecisionRef`, strict `CoachDecisionAnalysis` serialization/fingerprints, and `adapt_practice_analysis(analysis, *, ref=...)`; its 18 focused tests and the full Python 3.11–3.13 CI matrix passed. The project-local `feature/exploit-solver` checkout is older; do not implement against it.
+
+Currently `/api/act` calculates, mutates `Game`, then saves an event. `Store.save_decision` creates a database UUID but does not return it. The saved event records only the action name, so both it and `web/app.js` compare any chosen raise with the minimum-raise estimate. No new evidence envelope is persisted. A checked local experiment confirmed that acting and advancing a `copy.deepcopy(game)` leaves the original game unchanged.
+
+**Decision:** prepare the next game state on a copy under the existing game lock; save the event, evidence, and optional hand completion in one SQLite transaction; then publish the copied game. Keep the practice calculation and producer version unchanged. Store the player's choice separately from pre-action evidence. A raise above the modeled minimum is legal but has no supported action EV or loss estimate. Use a hand-local revision and an in-memory accepted-action cache for live retries; no event-sourcing layer is needed.
+
+## Files and boundaries
+
+- `pokerlab/server.py`: action prepare/save/publish flow, revisions, retry cache, additive response, conflict handling, and evidence GET route.
+- `pokerlab/models.py`: additive evidence table, transactional save, decision lookup, and public decision IDs in session results.
+- `pokerlab/practice.py`: safe pre-action capture, exact chosen-size assessment, and review handling of unassessed raises.
+- `pokerlab/web/app.js`: send revision and client action ID; render unknown loss honestly; keep Blind Play.
+- Focused HTTP/storage tests in `tests/test_decision_capture.py` and small updates to existing practice tests; short schema/endpoint documentation.
+
+Do not change schema-v1 `CoachDecisionAnalysis` fields or fingerprint meaning, `practice-ev-v3` formulas, solver code, opponent-model records, or other existing APIs. Keep loopback binding, Host/Origin checks, JSON mutations, work limit, and CSP.
+
+## Required behavior
+
+1. Initialize `hand_revisions[hand_id] = 0` after a new hand advances to its first hero decision. Increase once after each saved hero action. Return `revision` from `/api/game` and `/api/act`. `CoachDecisionRef.state_revision` is the pre-action revision and is never null for a new decision. Keep revisions and retry cache under `game_lock`; clear them on hand eviction.
+2. `/api/act` accepts optional `expected_revision` and `client_action_id` for legacy compatibility. A supplied revision must be a nonnegative integer, never bool; a mismatch is HTTP 409 before calculation. A supplied client action ID is a nonempty bounded opaque string. The browser sends a fresh UUID and the current revision. Key the cache by `(hand_id, client_action_id)`. For the same ID and identical normalized action/size/opponent/personality/visibility request, return the cached original response even if its revision is now old. Ignore the irrelevant `amount` parameter for non-raise actions when normalizing, because the current browser supplies it for every action. Reusing the ID with different meaningful values returns 409. Check the cache before revision. Old clients omitting the fields retain current behavior.
+3. Generate `decision_id` on the server before adapting the already calculated practice result. Build `CoachDecisionRef(hand_id, decision_id, pre_action_revision)`. Save a pre-action history prefix as `{seat, street, action, raise_total}` entries without names, plus folded flags, in the event. Set `raise_total` only for a raise; `Game.log.amount` is an ignored request parameter for other actions and must not be presented as chips spent. These fields are separate from the schema-v1 analysis envelope; do not change its `unavailable_fields` or evidence hash.
+4. Keep the legacy `chosen_action` string. Add `chosen_action_detail = {name, amount, amount_semantics}`: fold/check are zero chips added, call is the legal chips added, raise is the exact integer street total passed to `Game.act`. Validate action and raise size on the copied game before writing. `assessed_modeled_action_id` matches a modeled fold/check/call, or `raise:min` only when the actual raise equals `legal.raise_min`; otherwise null. Set `assessment_status` to `assessed` or `unassessed_size`. For an unassessed size set `ev_loss`, `matched_recommendation`, `successful_exploit`, and `exploit_gain` to null. Preserve existing numeric meanings for assessed choices.
+5. Create `coach_decision_evidence(decision_id TEXT PRIMARY KEY REFERENCES decisions(id), envelope TEXT NOT NULL)`. Extend `Store.save_decision(session_id, event, *, decision_id=None, coach_analysis=None, complete_hand=False)` while preserving old positional callers. A supplied envelope must be a validated `CoachDecisionAnalysis` whose ref matches the session and decision IDs. Ensure the session exists, then insert the decision, evidence, and optional session-completion update in one `Store.connect()` transaction; return `decision_id`, `session_id`, and `decision_order` with the event. Session reads expose the database row ID as `decision_id` for new and legacy rows without rewriting historical JSON or export.
+6. Under `game_lock`, `/api/act` checks retry/revision, validates presentation settings, calculates the original practice analysis, prepares event/evidence, copies and acts/advances the game, prepares the response including optional deterministic coach text, saves transactionally, then replaces the live game and increments revision. Keep the response presentation on its own copy so adding explanation/personality fields cannot mutate the saved `analysis_at_time`. No poker calculation or provider work happens after the database commit and before publication. On failure, original game/revision/cache/session decision count stay unchanged. Cache the response only after successful publication. `/api/game` persists a new session before publishing the new game.
+7. Add `decision` to `/api/act`: `{decision_id, hand_id, state_revision, evidence_id, chosen_action_detail, assessed_modeled_action_id, assessment_status, ev_loss}`. Keep legacy top-level fields and optional `coach` object; `revision` at top level is post-action. Blind Play still hides coach prose/analysis body.
+8. Add `GET /api/v1/decisions/{decision_id}/analysis`. For new records return HTTP 200 `{status:"ready", analysis:<validated stored envelope>, choice:<allowlisted recorded choice/status>}`. Never recalculate or re-adapt on GET, and never echo an arbitrary saved event. A known legacy ID without an evidence row returns HTTP 200 `{status:"unavailable", reason:"Versioned coach evidence was not captured for this decision."}`. Unknown ID returns 404. Invalid saved schema, fingerprint, or ref binding returns controlled HTTP 500 `{status:"failed", error:"Stored decision evidence is invalid."}` without raw data. Keep existing local-access and no-store rules.
+9. `summarize` preserves existing keys and counts every decision in `analyzed_decisions`; add `assessed_decisions` and `unassessed_decisions`. Exclude unassessed choices from loss, match, and exploit totals/rankings. A historical `chosen_action == "raise"` with no recorded amount is unassessed even if its old event has numeric `ev_loss`; do not rewrite that event. Historical non-raise events keep their previous assessment. The browser says “raise size not evaluated” for a nonminimum raise and never computes loss from `result.actions["raise"]` or renders null as zero.
+
+## Failure and compatibility
+
+Use a dedicated conflict exception caught before `ValueError` to produce safe 409 messages. Invalid input/action/personality remains controlled 400; database failure is controlled 500 and cannot advance the hand. The in-memory retry cache exists only while the hand lives in this process; a restarted server already expires hands. Bound cache lifetime to hand eviction. The evidence ID identifies pre-action facts, not the chosen action. Keep the choice in a separate record. No stored local envelope is sent to an external provider in this slice.
+
+Existing `Store.save_decision` callers, saved sessions/exports, practice responses, and deterministic explanations remain readable. New response fields are additive, except unsupported choice-loss fields become null where the old number was misleading.
+
+## Tests and done
+
+Use synthetic hands and workspace-safe on-disk SQLite fixtures. Test exact minimum and larger legal raises, short all-in bounds, fold/check/call amounts, illegal actions, and no false live/review loss. Test evidence round-trip, ID/revision binding, hidden-card/name exclusion, visible versus hidden coach parity, GET during/after a hand, legacy unavailable/unknown IDs, and tampered evidence. Force save, adapter, and presentation failures and show that game/revision/session count do not advance; retry succeeds. Test duplicate ID with identical payload, conflicting payload, stale revision, and old clients without optional keys. Verify mixed new/legacy review and Blind Play. GET must not call simulation, solver, or provider functions.
+
+Run focused tests, existing practice/contract tests, and `python -m unittest discover -s tests -v`; CI must pass on Python 3.11–3.13. Use the existing workspace-safe test-directory pattern if Windows temporary-directory ACLs block SQLite; report the limitation without changing product code. No evaluator sweep is needed because card logic stays unchanged.
+
+Definition of done: new hero decisions have stable retrievable evidence and honest exact choice status; live retries cannot duplicate actions; failed saves cannot mutate gameplay; legacy behavior remains usable; publish the narrow tested change in a short-lived PR and merge after required checks. Stop after this slice. Design the later conversation/provider slice from the actual result.
+
