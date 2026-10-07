@@ -24,9 +24,9 @@ that size; a bet is answered by fold or call. No raises, no other bet sizes,
 no rake, no stack limits (bet is always affordable), pot fixed at the input.
 Utilities are zero-sum chips relative to half the starting pot: a fold is
 ±pot/2, a showdown with no bet is ±pot/2 (0 on ties), a called bet is
-±(pot/2 + bet). Information sets: (player, private hand, public history), four
-decision nodes per hand: OOP root, IP after check, IP facing bet, OOP facing a
-check-bet. Variant: vanilla full-traversal CFR with regret matching, simultaneous
+±(pot/2 + bet). Information sets are keyed by player, private hand, and public history. Each OOP
+hand has two decision nodes (root and facing a bet after checking); each IP hand
+also has two (after an OOP check and facing an OOP bet). Variant: vanilla full-traversal CFR with regret matching, simultaneous
 updates and reach-weighted uniform averaging (no CFR+/linear weighting).
 
 ## Exploitability
