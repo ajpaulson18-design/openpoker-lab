@@ -201,6 +201,16 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("showDecisionStudy(data.decisions,", source)
         self.assertIn("${esc(active.answer)}", source)
 
+    def test_action_response_is_scoped_to_hand_and_current_blind_toggle(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        self.assertIn("const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game", source)
+        guard = "activeHandId!==actingHandId||handGeneration!==actingHandGeneration"
+        self.assertGreaterEqual(source.count(guard), 2)
+        self.assertIn("b.disabled=!game||game.done||!game.legal?.[action]", source)
+        self.assertIn("showCoach($('#coach-toggle').checked?g.coach:null,g.decision)", source)
+        self.assertIn("Live coaching was not requested for this decision.", source)
+        self.assertIn("showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy", source)
+
 
 if __name__ == "__main__":
     unittest.main()

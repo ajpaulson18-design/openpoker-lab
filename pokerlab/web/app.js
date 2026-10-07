@@ -4,8 +4,9 @@ const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','
 const pct = (v) => (v*100).toFixed(1)+'%';
 const chips = (v) => Number(v).toFixed(2);
 let opponents = [], game = null, practiceOpponent = '', pendingAction = null;
-let activeHandId = null, selectedDecisionId = null, selectionGeneration = 0;
+let activeHandId = null, handGeneration = 0, selectedDecisionId = null, selectionGeneration = 0;
 let liveDecisions = [], studyDecisions = [], studyTitle = '', studyPayload = null;
+let latestCoachResult = null, latestCoachDecision = null;
 let selectedStudyCard = 'estimate', studyLoading = false, studyFailed = false;
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
@@ -61,7 +62,12 @@ function coachExplanation(payload){
   return `<p>${esc(payload.summary)}</p><p class="hint">${esc(payload.mathematical_reason)}</p>${evidence?`<h4>Opponent evidence</h4><ul>${evidence}</ul>`:''}${alternatives?`<h4>Alternatives</h4><table><thead><tr><th>Action</th><th>EV</th><th>Difference</th></tr></thead><tbody>${alternatives}</tbody></table>`:''}${warnings(payload.caveats||[])}`;
 }
 function showCoach(result,decision){
-  if(!result){$('#coach-panel').innerHTML='<p class="hint">Blind Play is on. Analysis is still saved for review.</p>';return;}
+  if(!result){
+    $('#coach-panel').innerHTML=$('#coach-toggle').checked
+      ?'<p class="hint">Live coaching was not requested for this decision. Its saved facts are available in the study cards.</p>'
+      :'<p class="hint">Blind Play is on. Analysis is still saved for review.</p>';
+    return;
+  }
   const chosen=decision?.chosen_action_detail?.name||result.recommended;
   const assessed=decision?.assessment_status!=='unassessed_size'&&decision?.ev_loss!==null;
   const loss=assessed?chips(decision?.ev_loss??0):'raise size not evaluated';
@@ -155,8 +161,23 @@ function updateButtonPlayers(){
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
-bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;const dealt=await api('game',d);activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);},'Dealing…');
-$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach(null);if(!game?.done)invalidateDecisionStudy();}else if(game&&!game.done&&liveDecisions.length)showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);});
+$('#game-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const form=e.target,button=form.querySelector('button[type="submit"],button.primary');
+  button.disabled=true;status('Dealing…');
+  const dealGeneration=++handGeneration;
+  try{
+    const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;
+    const dealt=await api('game',d);
+    if(handGeneration!==dealGeneration)return;
+    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
+  }catch(err){
+    if(handGeneration===dealGeneration){status(err.message,true);if(game)showGame(game);}
+  }finally{
+    if(handGeneration===dealGeneration)button.disabled=false;
+  }
+});
+$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach(null);if(!game?.done)invalidateDecisionStudy();}else if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}});
 $('#decision-study').addEventListener('click',e=>{
   const decisionButton=e.target.closest('[data-decision-id]');
   if(decisionButton){void selectDecisionStudy(decisionButton.dataset.decisionId);return;}
@@ -164,5 +185,29 @@ $('#decision-study').addEventListener('click',e=>{
   if(cardButton&&studyPayload?.status==='ready'){selectedStudyCard=cardButton.dataset.studyCard;renderStudyPanel();return;}
   if(e.target.closest('[data-retry-study]'))void selectDecisionStudy(selectedDecisionId);
 });
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;const amount=Number($('#raise-amount').value);const actingStreet=game.street;const requestKey=JSON.stringify([game.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,game.revision]);if(!pendingAction||pendingAction.key!==requestKey)pendingAction={key:requestKey,id:crypto.randomUUID()};try{const g=await api('act',{id:game.id,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:game.revision,client_action_id:pendingAction.id});pendingAction=null;if(g.decision)liveDecisions.push({decision_id:g.decision.decision_id,street:actingStreet,chosen_action:g.decision.chosen_action_detail?.name,chosen_action_detail:g.decision.chosen_action_detail,assessment_status:g.decision.assessment_status});showGame(g);showCoach(g.coach,g.decision);if(g.done)await loadReview(activeHandId);else if($('#coach-toggle').checked&&liveDecisions.length)showDecisionStudy(liveDecisions,'Current hand · choose a decision',g.decision?.decision_id);status();}catch(e){status(e.message,true);showGame(game);if(action==='raise')$('#raise-amount').value=amount;}finally{b.disabled=false;}}));
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{
+  const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game;
+  if(!actingHandId||!actingGame)return;
+  b.disabled=true;
+  const action=b.dataset.action,amount=Number($('#raise-amount').value),actingStreet=actingGame.street;
+  const requestKey=JSON.stringify([actingGame.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,actingGame.revision]);
+  if(!pendingAction||pendingAction.key!==requestKey)pendingAction={key:requestKey,id:crypto.randomUUID()};
+  const actionRequest=pendingAction;
+  try{
+    const g=await api('act',{id:actingHandId,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:actingGame.revision,client_action_id:actionRequest.id});
+    if(activeHandId!==actingHandId||handGeneration!==actingHandGeneration)return;
+    if(pendingAction===actionRequest)pendingAction=null;
+    latestCoachResult=g.coach||null;latestCoachDecision=g.decision||null;
+    if(g.decision)liveDecisions.push({decision_id:g.decision.decision_id,street:actingStreet,chosen_action:g.decision.chosen_action_detail?.name,chosen_action_detail:g.decision.chosen_action_detail,assessment_status:g.decision.assessment_status});
+    showGame(g);showCoach($('#coach-toggle').checked?g.coach:null,g.decision);
+    if(g.done)await loadReview(actingHandId);
+    else if($('#coach-toggle').checked&&liveDecisions.length)showDecisionStudy(liveDecisions,'Current hand · choose a decision',g.decision?.decision_id);
+    status();
+  }catch(e){
+    if(activeHandId!==actingHandId||handGeneration!==actingHandGeneration)return;
+    status(e.message,true);showGame(game);if(action==='raise')$('#raise-amount').value=amount;
+  }finally{
+    if(activeHandId===actingHandId&&handGeneration===actingHandGeneration)b.disabled=!game||game.done||!game.legal?.[action];
+  }
+}));
 loadOpponents().catch(e=>status(e.message,true));
