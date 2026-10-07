@@ -3,7 +3,7 @@ const $ = (s) => document.querySelector(s);
 const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (v) => (v*100).toFixed(1)+'%';
 const chips = (v) => Number(v).toFixed(2);
-let opponents = [], game = null, practiceOpponent = '';
+let opponents = [], game = null, practiceOpponent = '', pendingAction = null;
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
@@ -57,18 +57,22 @@ function coachExplanation(payload){
   const alternatives=(payload.alternative_actions||[]).map(item=>`<tr><td>${esc(item.action)}</td><td>${chips(item.ev)}</td><td>${chips(item.ev_difference)}</td></tr>`).join('');
   return `<p>${esc(payload.summary)}</p><p class="hint">${esc(payload.mathematical_reason)}</p>${evidence?`<h4>Opponent evidence</h4><ul>${evidence}</ul>`:''}${alternatives?`<h4>Alternatives</h4><table><thead><tr><th>Action</th><th>EV</th><th>Difference</th></tr></thead><tbody>${alternatives}</tbody></table>`:''}${warnings(payload.caveats||[])}`;
 }
-function showCoach(result,chosen){
+function showCoach(result,decision){
   if(!result){$('#coach-panel').innerHTML='<p class="hint">Blind Play is on. Analysis is still saved for review.</p>';return;}
-  const loss=Math.max(0,result.actions[result.recommended]-result.actions[chosen]);
+  const chosen=decision?.chosen_action_detail?.name||result.recommended;
+  const assessed=decision?.assessment_status!=='unassessed_size'&&decision?.ev_loss!==null;
+  const loss=assessed?chips(decision?.ev_loss??0):'raise size not evaluated';
   const voice=result.personality?`<p>${esc(result.personality.text)}</p><p class="fine">${esc(result.personality.personality.replaceAll('_',' '))} · local deterministic renderer · analysis ${esc(result.personality.analysis_id)}</p>`:'';
-  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>YOU CHOSE ${esc(chosen.toUpperCase())} · ESTIMATED LOSS ${chips(loss)}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>`;
+  const amount=decision?.chosen_action_detail?.amount;
+  const choiceLabel=`YOU CHOSE ${esc(chosen.toUpperCase())}${chosen==='raise'?` TO ${esc(amount)}`:''} · ${assessed?`ESTIMATED LOSS ${loss}`:'RAISE SIZE NOT EVALUATED'}`;
+  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>`;
 }
 async function loadReview(){
   const data=await api('session/'+game.id),r=data.review;
   const errors=r.biggest_errors.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} lost ${chips(d.ev_loss)} chips versus ${esc(d.analysis_at_time.recommended)}</li>`).join('');
   const exploits=r.biggest_successful_exploits.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} gained ${chips(d.exploit_gain||0)} chips versus the baseline action</li>`).join('');
   $('#session-review').hidden=false;
-  $('#session-review').innerHTML=`<p class="eyebrow">SESSION REVIEW · ORIGINAL ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} analyzed decisions</h3><div class="metrics">${metric(r.matched_recommendation,'MATCHED')}${metric(r.meaningful_ev_losses,'EV MISTAKES')}${metric(chips(r.total_ev_loss),'TOTAL EV LOSS')}</div><p class="hint">Missed exploit opportunities: ${r.missed_exploitative_opportunities} · Successful exploits: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest errors</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest successful exploits</h3><ol>${exploits}</ol>`:''}`;
+  $('#session-review').innerHTML=`<p class="eyebrow">SESSION REVIEW · ORIGINAL ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} analyzed decisions</h3><p class="hint">${r.assessed_decisions} assessed · ${r.unassessed_decisions} unassessed. Raise sizes above the one modeled by practice are not scored.</p><div class="metrics">${metric(r.matched_recommendation,'MATCHED')}${metric(r.meaningful_ev_losses,'EV MISTAKES')}${metric(chips(r.total_ev_loss),'TOTAL EV LOSS')}</div><p class="hint">Missed exploit opportunities: ${r.missed_exploitative_opportunities} · Successful exploits: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest errors</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest successful exploits</h3><ol>${exploits}</ol>`:''}`;
 }
 function updateButtonPlayers(){
   const names=$('#game-form').elements.names.value.split(',').map(s=>s.trim()).filter(Boolean);
@@ -77,7 +81,7 @@ function updateButtonPlayers(){
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
 $('#game-form').elements.names.addEventListener('input',updateButtonPlayers);
-bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
+bindForm('#game-form',async form=>{const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;$('#session-review').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(await api('game',d));},'Dealing…');
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked)showCoach(null);});
-document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;try{const g=await api('act',{id:game.id,action,amount:Number($('#raise-amount').value),opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value});showGame(g);showCoach(g.coach,action);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);}}));
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const action=b.dataset.action;const amount=Number($('#raise-amount').value);const requestKey=JSON.stringify([game.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,game.revision]);if(!pendingAction||pendingAction.key!==requestKey)pendingAction={key:requestKey,id:crypto.randomUUID()};try{const g=await api('act',{id:game.id,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:game.revision,client_action_id:pendingAction.id});pendingAction=null;showGame(g);showCoach(g.coach,g.decision);if(g.done)await loadReview();status();}catch(e){status(e.message,true);showGame(game);if(action==='raise')$('#raise-amount').value=amount;}finally{b.disabled=false;}}));
 loadOpponents().catch(e=>status(e.message,true));
