@@ -1,0 +1,32 @@
+# Luna handoff: first on-demand AI coach answer
+
+Architecture decision · 2026-10-07 · one implementation slice
+
+## Objective
+
+Make the fourth-slice grounding boundary usable for **one question about one selected saved decision**. Add an opt-in OpenAI Responses plan selector, a protected local coach endpoint, and a small question/reply area in the existing decision-study panel. The model selects only a `CoachReplyPlan`; the application renders every poker fact through `render_coach_reply`. This is the first usable AI request, not yet a multi-turn conversation, background job, or free-form strategic explanation.
+
+## Starting point and scope
+
+Start from merged [PR #29](https://github.com/ajpaulson18-design/openpoker-lab/pull/29), `7a743edeb234bcb833add96b81576734acb5f69b`. Its final head `78bfd2d` passed 164 local tests and both GitHub workflows. Preserve the `CoachDecisionAnalysis` schema, practice producer, solver, storage tables, accepted-action path, and existing deterministic study view. The new request must load the decision through `_validated_decision(store, decision_id)` and call `build_grounding_bundle(analysis, choice)` on trusted server-side data. If a serialized bundle is ever accepted internally, call `rebind_grounding_bundle` first. A fact ID is a locator, not proof of authenticity.
+
+Implement a single, bounded route such as `POST /api/v1/decisions/{decision_id}/coach` with a strict JSON body: `{evidence_id, question, detail, audience}`. Require the evidence ID to match the server-loaded decision; return `404` for missing, an explicit unavailable status for legacy evidence, and a safe failure for corrupt records. Bound the question to 1–500 characters and reject unexpected fields. The browser never supplies facts, actions, an analysis envelope, provider instructions, or a reply plan. Keep the existing Host/Origin checks, JSON content requirement, no-store responses, and escaped DOM rendering.
+
+The route runs outside the existing two-slot calculation semaphore and never holds `game_lock` or a SQLite transaction across a provider call. Use a separate one-slot or similarly bounded coach admission gate, a short finite deadline, and no automatic retry. An overloaded request returns `429`; a disabled provider or failure returns a deterministic, clearly labeled fallback built from the trusted bundle. A provider problem cannot fail or slow `/api/act`. It is acceptable for this first route to return one complete JSON reply rather than stream; cancellation/SSE and persisted conversation state belong to later slices.
+
+## Provider boundary
+
+Keep external AI **off by default**. Require explicit local enablement plus an API key and configured model; do not embed credentials, infer a model from the Codex chat, or make a network call while disabled. Place the provider code behind an injectable narrow plan-selector interface so tests use a fake. The only external payload is the bounded allowlisted grounding bundle, the user's question, presentation settings, and instructions to select an intent/known fact IDs/optional modeled target action. Never send the raw saved event, opponent names/notes, deck, hidden cards, observations, export, database, full hand history, or secrets. The user-visible control should say that enabling external AI sends the question and selected decision facts to the configured provider.
+
+For the OpenAI adapter, use the [Responses API structured output format](https://developers.openai.com/api/docs/guides/structured-outputs) with a strict JSON schema matching the allowed plan fields, `store: false` per [data controls](https://developers.openai.com/api/docs/guides/your-data?popup=false), a finite output-token cap and timeout, and no tools. Treat refusal, incomplete output, invalid JSON/schema, HTTP/network failure, and timeout as typed provider failures. Do not assume a structured output is semantically safe: parse with `CoachReplyPlan.from_dict`, call `validate_coach_reply_plan`, then `render_coach_reply`. Never return raw model text to the browser or log the key/question/provider body. The existing `ConversationalExplanationProvider.explain(...) -> str` remains untouched.
+
+The model can choose among `recommendation`, `choice`, `compare`, `limits`, and `unavailable`; it cannot write advice, EVs, probabilities, action sizes, or explanations. For `compare`, the target must be a modeled action. The renderer's unassessed-size and caveat rules still govern the result. If the request cannot be answered from the saved facts, use the `unavailable` plan. In failure fallback, use a deterministic recommendation or unavailable reply with an explicit `source: local_fallback` and retryable status; keep the producer/source label and limitations visible. Do not repair an invalid plan by trusting its fields. This slice has no provider-authored free-form teaching text.
+
+## Browser behavior
+
+In the existing saved-decision study panel, add one accessible question field, Ask button, loading/error/retry state, and structured answer area. Show the selected decision's source label, server-rendered facts, units, and mandatory caveats; mark whether the answer was AI-selected or local fallback. Render text safely and keep poker controls responsive. Match the returned hand/decision/evidence/revision against the request and current selection generation before displaying it. A new hand, different selected decision, or Blind Play hiding live study must prevent an old response from appearing in the current panel. After a completed hand, reopening that decision may ask again; no conversation history is retained in this slice.
+
+## Verification and stopping rule
+
+Test disabled-by-default behavior with zero provider calls; exact selected-decision/evidence binding; malformed/legacy/tampered records; question size and unknown fields; fake-provider valid plan, unknown fact, wrong binding, invented target, refusal/incomplete/timeout; overload and independent gameplay admission; fallback source/caveats; and stale UI delivery after decision/hand/toggle changes. Verify in a rendered browser with a fake provider and with external AI disabled. Do not require a live API key or spend money for automated verification. Run focused tests and the full unit suite; make a short-lived PR and wait for both GitHub checks. Stop after publication for Sol review. Do not add SSE, multi-turn memory, automatic after-action calls, provider-written prose, new solver work, or a database migration in this slice.
+
