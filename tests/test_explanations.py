@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import shutil
 import socket
@@ -17,6 +18,16 @@ from pokerlab.explanations import (DecisionExplanation, ExplanationLevel,
                                    analysis_from_dict, explain)
 from pokerlab.models import Store
 from pokerlab.server import make_server
+
+CHROME_BINARY = next(
+    (shutil.which(name) for name in
+     ("chromium", "chromium-browser", "google-chrome", "google-chrome-stable")
+     if shutil.which(name)),
+    None)
+CHROMEDRIVER_BINARY = shutil.which("chromedriver")
+if (os.environ.get("OPENPOKER_REQUIRE_BROWSER_TEST") == "true"
+        and not (CHROME_BINARY and CHROMEDRIVER_BINARY)):
+    raise RuntimeError("The required Chromium browser smoke-test tools are unavailable.")
 
 
 class ExplanationTests(unittest.TestCase):
@@ -244,14 +255,14 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
         with caught.exception as response:
             self.assertTrue(json.load(response)["error"])
 
-    @unittest.skipUnless(shutil.which("chromedriver") and shutil.which("chromium"),
+    @unittest.skipUnless(CHROMEDRIVER_BINARY and CHROME_BINARY,
                          "Chromium and ChromeDriver are required for the browser smoke test")
     def test_chromium_submits_river_form_renders_and_handles_errors(self):
         with socket.socket() as listener:
             listener.bind(("127.0.0.1", 0))
             port = listener.getsockname()[1]
         driver_process = subprocess.Popen(
-            ["chromedriver", f"--port={port}", "--allowed-ips=127.0.0.1"],
+            [CHROMEDRIVER_BINARY, f"--port={port}", "--allowed-ips=127.0.0.1"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         session_id = None
 
@@ -291,7 +302,7 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
                 "capabilities": {"alwaysMatch": {
                     "browserName": "chrome",
                     "goog:chromeOptions": {
-                        "binary": shutil.which("chromium"),
+                        "binary": CHROME_BINARY,
                         "args": ["--headless=new", "--no-sandbox",
                                  "--disable-dev-shm-usage"],
                     },
@@ -311,6 +322,11 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
 
             inputs = self.river_request()
             expected = self.post("/api/exploit", inputs)
+            expected_payload = self.post("/api/explain", {
+                "analysis": expected,
+                "recommended_action": expected["best_response"]["action"],
+                "level": "beginner",
+            })
             execute("""
               for (const [name, value] of Object.entries(arguments[0])) {
                 const field = document.querySelector(`#solver-form [name="${name}"]`);
@@ -330,11 +346,15 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
               return {
                 id: report.dataset.analysisId,
                 level: report.dataset.level,
+                recommendation: report.querySelector('[data-testid=explanation-recommendation] strong').textContent,
+                summary: report.querySelector('[data-testid=explanation-summary]').textContent,
+                confidence: report.querySelector('[data-testid=explanation-confidence]').dataset.confidence,
                 evs: rows('[data-testid=action-evs]'),
                 strategies: rows('[data-testid=strategy-comparison]'),
-                uncertainty: !!report.querySelector('[data-testid=explanation-uncertainty]'),
-                assumptions: report.querySelectorAll('[data-testid=model-assumptions] li').length,
-                caveats: report.querySelectorAll('.warnings li').length,
+                uncertainty: report.querySelector('[data-testid=explanation-uncertainty]').textContent,
+                assumptions: [...report.querySelectorAll('[data-testid=model-assumptions] li')]
+                  .map(item => item.textContent),
+                caveats: [...report.querySelectorAll('.warnings li')].map(item => item.textContent),
                 requests: performance.getEntriesByType('resource')
                   .map(item => new URL(item.name).pathname)
                   .filter(path => path === '/api/exploit' || path === '/api/explain'),
@@ -342,15 +362,29 @@ class RiverExplanationBrowserFlowTests(unittest.TestCase):
             """)
             self.assertEqual(rendered["id"], expected["analysis_id"])
             self.assertEqual(rendered["level"], "beginner")
-            self.assertEqual([row[1] for row in rendered["evs"]],
-                             [str(item["value"]) for item in expected["action_evs"]])
-            self.assertEqual([row[1] for row in rendered["strategies"]],
-                             [str(item["frequency"]) for item in expected["baseline_strategy"]])
-            self.assertEqual([row[2] for row in rendered["strategies"]],
-                             [str(item["frequency"]) for item in expected["exploitative_strategy"]])
-            self.assertTrue(rendered["uncertainty"])
-            self.assertGreater(rendered["assumptions"], 0)
-            self.assertGreater(rendered["caveats"], 0)
+            self.assertEqual(rendered["recommendation"],
+                             expected["best_response"]["action"])
+            self.assertEqual(rendered["summary"], expected_payload["summary"])
+            self.assertEqual(rendered["confidence"], expected["confidence"])
+            self.assertIn(expected["uncertainty"]["method"], rendered["uncertainty"])
+            self.assertEqual(
+                [(row[0], float(row[1]), float(row[2])) for row in rendered["evs"]],
+                [(item["action"], item["value"], difference["value"])
+                 for item, difference in zip(expected["action_evs"],
+                                             expected["ev_differences"])])
+            self.assertEqual(
+                [(row[0], float(row[1]), float(row[2]))
+                 for row in rendered["strategies"]],
+                [(action, baseline["frequency"], exploit["frequency"])
+                 for action, baseline, exploit in zip(
+                     expected["legal_actions"], expected["baseline_strategy"],
+                     expected["exploitative_strategy"])])
+            self.assertTrue(any(
+                item["tendency_id"].replace("_", " ") in assumption
+                and f"{item['evidence_count']} observed opportunities" in assumption
+                for item in expected["opponent_assumptions"]
+                for assumption in rendered["assumptions"]))
+            self.assertEqual(rendered["caveats"], expected_payload["caveats"])
             self.assertEqual(rendered["requests"][-2:],
                              ["/api/exploit", "/api/explain"])
 
