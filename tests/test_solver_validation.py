@@ -1,7 +1,8 @@
 """Independent validation of the restricted river CFR solver.
 
-Everything below recomputes values with code that shares nothing with
-``pokerlab.solver`` except hand ranking, so formula errors cannot cancel out.
+The value and best-response formulas below are independent of ``pokerlab.solver``.
+They intentionally reuse production card parsing, range expansion, and hand ranking;
+those components have their own focused tests.
 """
 import itertools
 import unittest
@@ -169,15 +170,16 @@ class CardRemovalTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             solve(BOARD, "AsAh", "AsAd", iterations=10)
 
-    def test_blocker_changes_deal_weights_and_value(self):
-        # IP holds the nut-blocking Ace of spades half the time. With a
-        # weighted range, the blocked OOP hand must receive less mass.
-        dl = deals(BOARD, "AsAh:1,KsKh:1", "AsAd:1")
+    def test_blocker_changes_conditional_deal_weights(self):
+        # AsAd blocks AsAh but QcQd does not; both IP hands remain compatible
+        # with KsKh. Equal input weights therefore produce 1/3 versus 2/3 mass.
+        dl = deals(BOARD, "AsAh:1,KsKh:1", "AsAd:1,QcQd:1")
         mass = {}
         for h0, _, w, _ in dl:
             mass[key(h0)] = mass.get(key(h0), 0) + w
-        self.assertEqual(set(mass), {"KhKs"})
-        self.assertAlmostEqual(mass["KhKs"], 1.0)
+        self.assertEqual(set(mass), {"AhAs", "KhKs"})
+        self.assertAlmostEqual(mass["AhAs"], 1/3)
+        self.assertAlmostEqual(mass["KhKs"], 2/3)
 
 
 class RangeNormalisationTests(unittest.TestCase):
