@@ -77,17 +77,21 @@ def _normalized_config(pot, bet, config, effective_stack, bet_sizes, raise_sizes
             return config
         return RiverConfig.from_dict(config)
 
+    uses_config_options = (effective_stack is not None or bet_sizes is not None or
+                           raise_sizes is not None or max_raises != 0)
     pot = number(pot, "Pot", .01)
     if bet_sizes is None:
         bet = number(bet, "Bet", .000000001)
         bet_sizes = (bet / pot,)
+    # The historical fixed-size entry point retains its exact two-action tree.
+    all_in_option = include_all_in if uses_config_options else False
     return RiverConfig(
         pot=pot,
-        effective_stack=effective_stack if effective_stack is not None else 1e12,
+        effective_stack=effective_stack if effective_stack is not None else 1_000_000,
         bet_sizes=bet_sizes,
         raise_sizes=raise_sizes or (),
         max_raises=max_raises,
-        include_all_in=include_all_in if effective_stack is not None or raise_sizes is not None else False,
+        include_all_in=all_in_option,
     )
 
 
@@ -156,11 +160,12 @@ def _build_tree(config):
         if abs(committed - other) <= _EPSILON:
             check = _Action("check")
             if checks == 1:
-                return _Node(history, player, (check,),
-                             (_Terminal("showdown", contributions),))
+                check_child = _Terminal("showdown", contributions)
+            else:
+                check_child = build(history + (check.token,), opponent, contributions,
+                                    previous_full_raise, raises_made, raise_reopened, checks + 1)
             actions = [check]
-            children = [build(history + (check.token,), opponent, contributions,
-                              previous_full_raise, raises_made, raise_reopened, checks + 1)]
+            children = [check_child]
             for action in _opening_actions(config, committed,
                                            config.pot + sum(contributions)):
                 next_contributions = list(contributions)
@@ -177,7 +182,8 @@ def _build_tree(config):
                                                call_contributions[player])]
             children = [_Terminal("fold", contributions, opponent),
                         _Terminal("showdown", tuple(call_contributions))]
-            if raise_reopened and raises_made < config.max_raises:
+            if raise_reopened and raises_made < config.max_raises and \
+                    other < config.effective_stack - _EPSILON:
                 for action in _raise_actions(config, contributions, player,
                                              previous_full_raise, raises_made):
                     next_contributions = list(contributions)

@@ -26,6 +26,8 @@ class RiverConfig:
         stack = number(self.effective_stack, "Effective stack", .01)
         bets = _sizes(self.bet_sizes, "Bet sizes")
         raises = _sizes(self.raise_sizes, "Raise sizes")
+        if not bets:
+            raise ValueError("At least one first-bet size is required.")
         if type(self.max_raises) is not int or self.max_raises < 0 or self.max_raises > 8:
             raise ValueError("Maximum raises must be an integer from 0 to 8.")
         if type(self.include_all_in) is not bool:
