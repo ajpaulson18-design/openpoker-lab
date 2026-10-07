@@ -106,14 +106,14 @@ def _add_action(actions, name, target, committed, stack, full_raise=False):
     actions.append(_Action(name, _clean(target - committed), target, full_raise))
 
 
-def _opening_actions(config, committed, total_pot):
+def _opening_actions(config, committed, total_pot, player):
+    stack = config.stacks[player]
     actions = []
     for fraction in config.bet_sizes:
         target = committed + fraction * total_pot
-        _add_action(actions, "bet", target, committed, config.effective_stack)
+        _add_action(actions, "bet", target, committed, stack)
     if config.include_all_in:
-        _add_action(actions, "all_in", config.effective_stack, committed,
-                    config.effective_stack)
+        _add_action(actions, "all_in", stack, committed, stack)
     return tuple(sorted(actions, key=lambda action: action.raise_to))
 
 
@@ -122,7 +122,7 @@ def _raise_actions(config, contributions, player, previous_full_raise, raises_ma
     opponent = contributions[1 - player]
     call_amount = opponent - committed
     call_target = opponent
-    max_target = config.effective_stack
+    max_target = config.stacks[player]
     minimum_target = opponent + previous_full_raise
     pot_after_call = config.pot + sum(contributions) + call_amount
     actions = []
@@ -170,7 +170,7 @@ def _build_tree(config):
             actions = [check]
             children = [check_child]
             for action in _opening_actions(config, committed,
-                                           config.pot + sum(contributions)):
+                                           config.pot + sum(contributions), player):
                 next_contributions = list(contributions)
                 next_contributions[player] = action.raise_to
                 actions.append(action)
@@ -178,7 +178,7 @@ def _build_tree(config):
                                       tuple(next_contributions), action.amount, 0, True, 0))
         else:
             call_amount = other - committed
-            actual_call = min(call_amount, config.effective_stack - committed)
+            actual_call = min(call_amount, config.stacks[player] - committed)
             call_contributions = list(contributions)
             call_contributions[player] = committed + actual_call
             actions = [_Action("fold"), _Action("call", _clean(actual_call),
@@ -186,7 +186,7 @@ def _build_tree(config):
             children = [_Terminal("fold", contributions, opponent),
                         _Terminal("showdown", tuple(call_contributions))]
             if raise_reopened and raises_made < config.max_raises and \
-                    other < config.effective_stack - _EPSILON:
+                    other < config.stacks[opponent] - _EPSILON:
                 for action in _raise_actions(config, contributions, player,
                                              previous_full_raise, raises_made):
                     next_contributions = list(contributions)
@@ -473,7 +473,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
         "iterations": iterations,
         "deals": len(deals),
         "pot": config.pot,
-        "effective_stack": config.effective_stack,
+        "effective_stack": config.to_dict()["effective_stack"],
         "bet": config.pot * config.bet_sizes[0] if len(config.bet_sizes) == 1 else None,
         "value_oop": value,
         "value_ip": -value,

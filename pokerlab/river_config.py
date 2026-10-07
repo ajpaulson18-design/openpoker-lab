@@ -15,7 +15,7 @@ class RiverConfig:
     """
 
     pot: float = 100.0
-    effective_stack: float = 500.0
+    effective_stack: float | tuple = 500.0
     bet_sizes: tuple = (0.5,)
     raise_sizes: tuple = ()
     max_raises: int = 0
@@ -23,7 +23,13 @@ class RiverConfig:
 
     def __post_init__(self):
         pot = number(self.pot, "Pot", .01)
-        stack = number(self.effective_stack, "Effective stack", .01)
+        if isinstance(self.effective_stack, (tuple, list)):
+            if len(self.effective_stack) != 2:
+                raise ValueError("Effective stack must be one number or an (OOP, IP) pair.")
+            stack = tuple(number(value, f"{player} effective stack", .01)
+                          for value, player in zip(self.effective_stack, ("OOP", "IP")))
+        else:
+            stack = number(self.effective_stack, "Effective stack", .01)
         bets = _sizes(self.bet_sizes, "Bet sizes")
         raises = _sizes(self.raise_sizes, "Raise sizes")
         if not bets:
@@ -37,9 +43,18 @@ class RiverConfig:
         object.__setattr__(self, "bet_sizes", bets)
         object.__setattr__(self, "raise_sizes", raises)
 
+    @property
+    def stacks(self):
+        """Effective stack caps ordered as (OOP, IP)."""
+        if isinstance(self.effective_stack, tuple):
+            return self.effective_stack
+        return self.effective_stack, self.effective_stack
+
     def to_dict(self):
         """Return a deterministic JSON-serializable configuration."""
         result = asdict(self)
+        if isinstance(self.effective_stack, tuple):
+            result["effective_stack"] = list(self.effective_stack)
         result["bet_sizes"] = list(self.bet_sizes)
         result["raise_sizes"] = list(self.raise_sizes)
         return result

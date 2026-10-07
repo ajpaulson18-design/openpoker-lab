@@ -25,7 +25,7 @@ def main(argv):
     previous = None
     for name, config in SCENARIOS:
         print(f"\n{name}")
-        print(f"  pot={config.pot:g}; effective_stack={config.effective_stack:g}; "
+        print(f"  pot={config.pot:g}; effective_stack={config.effective_stack}; "
               f"bet_sizes={list(config.bet_sizes)}; raise_sizes={list(config.raise_sizes)}; "
               f"max_raises={config.max_raises}; include_all_in={config.include_all_in}")
         print(f"  {'iters':>6} {'secs':>7} {'infosets':>8} {'nodes':>6} {'actions':>7} "

@@ -31,6 +31,22 @@ class RiverConfigurationTests(unittest.TestCase):
         self.assertEqual(config.bet_sizes, (.33, .75))
         self.assertEqual(json.dumps(config.to_dict()), json.dumps(normalized.to_dict()))
 
+    def test_per_player_effective_stack_caps_round_trip(self):
+        config = RiverConfig(100, (500, 120), (3,), (), 0, False)
+        self.assertEqual(config.stacks, (500, 120))
+        self.assertEqual(config.to_dict()["effective_stack"], [500, 120])
+        self.assertEqual(RiverConfig.from_dict(config.to_dict()), config)
+
+    def test_solve_exposes_per_player_stack_caps_and_short_call_amount(self):
+        result = solve(BOARD, "AsAh", "KcKd", iterations=50,
+                       config=RiverConfig(100, (500, 120), (3,), (), 0, False))
+        self.assertEqual(result["effective_stack"], [500, 120])
+        facing_bet = next(row for row in result["strategy"]
+                          if row["player"] == "ip" and row["history"] == ["bet@300"])
+        call = next(action for action in facing_bet["actions"] if action["name"] == "call")
+        self.assertEqual(call["amount"], 120)
+        self.assertAlmostEqual(sum(action["probability"] for action in facing_bet["actions"]), 1)
+
     def test_multiple_bet_sizes_are_distinct_and_change_tree(self):
         single, _ = _build_tree(RiverConfig(100, 500, (.5,), (), 0, False))
         several, _ = _build_tree(RiverConfig(100, 500, (.33, .75, 1), (), 0, False))
@@ -133,6 +149,16 @@ class RiverConfigurationTests(unittest.TestCase):
         showdown = _Terminal("showdown", (120, 300))
         self.assertEqual(_terminal_value(folded, 1, 100), -150)
         self.assertEqual(_terminal_value(showdown, 1, 100), 170)
+
+    def test_short_stack_call_returns_uncalled_bet_excess(self):
+        root, _ = _build_tree(RiverConfig(100, (500, 120), (3,), (), 0, False))
+        facing_bet = find_node(root, ("bet@300",))
+        call = next(action for action in facing_bet.actions if action.name == "call")
+        self.assertEqual(call.amount, 120)
+        terminal = facing_bet.children[1]
+        self.assertEqual(terminal.contributions, (300, 120))
+        self.assertEqual(_terminal_value(terminal, 1, 100), 170)
+        self.assertEqual(_terminal_value(terminal, -1, 100), -170)
 
     def test_invalid_raise_depth_and_empty_bet_configuration_are_rejected(self):
         with self.assertRaises(ValueError):

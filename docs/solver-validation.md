@@ -46,7 +46,8 @@ RiverConfig(
 
 - `pot`: chips already in the pot at the start of the river.
 - `effective_stack`: maximum total commitment per player, including this
-  street's bets.
+  street's bets. A scalar applies to both players; a two-item `(OOP, IP)` pair
+  configures unequal stack caps.
 - `bet_sizes`: first-bet pot fractions. Each configured fraction creates one
   action unless sizing and stack normalization make its chip action duplicate.
 - `raise_sizes`: pot-after-call fractions for raises.
@@ -103,10 +104,11 @@ this heads-up abstraction.
 - **Raise clipped to all-in:** with an effective stack of 200 in the normal
   raise example, the configured raise-to 262.5 is clipped to 200. Its increment
   is `200 - 75 = 125`, at least the 75 minimum, so it is a full all-in raise.
-- **Uncalled excess:** if commitments are 120 and 300 at showdown, only 120
-  from each player is matched; the opponent's excess 180 is returned. With a
-  100 starting pot, a winning showdown is worth `100/2 + 120 = 170` chips
-  relative to an even split of the starting pot.
+- **Uncalled excess:** with `effective_stack=(500, 120)`, OOP can bet 300 into
+  the 100 pot and IP can only call all-in for 120. At showdown, only 120 from
+  each player is matched; OOP's uncalled excess 180 is returned. If OOP wins,
+  the result is `100/2 + 120 = 170` chips relative to an even split of the
+  starting pot.
 
 These arithmetic examples may produce fractional chips: this is an analysis
 abstraction, not a chip-denomination or rounding model.
