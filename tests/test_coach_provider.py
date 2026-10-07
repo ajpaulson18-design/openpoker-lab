@@ -71,6 +71,10 @@ class CoachProviderTests(unittest.TestCase):
             self.assertNotIn(forbidden, serialized)
         self.assertNotIn("store", supplied)
 
+    def test_default_output_budget_uses_bounded_reasoning_model_headroom(self):
+        selector = OpenAIPlanSelector("test-key", "test-model")
+        self.assertEqual(selector.max_output_tokens, 1024)
+
     def test_refusal_incomplete_invalid_plan_http_timeout_and_network_failures_are_typed(self):
         selector = OpenAIPlanSelector("test-key", "test-model", timeout=0.5)
         cases = (

@@ -58,7 +58,7 @@ class OpenAIPlanSelector:
     endpoint = "https://api.openai.com/v1/responses"
 
     def __init__(self, api_key: str, model: str, timeout: float = 12.0,
-                 max_output_tokens: int = 256):
+                 max_output_tokens: int = 1024):
         if not isinstance(api_key, str) or not api_key.strip():
             raise ValueError("An API key is required.")
         if not isinstance(model, str) or not model.strip() or len(model) > 128:

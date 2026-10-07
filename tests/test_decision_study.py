@@ -222,7 +222,7 @@ class DecisionStudyTests(unittest.TestCase):
 
     def test_coach_reply_guard_binds_current_selection_and_response_evidence(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
-        start = source.index("function coachRequestMatches(")
+        start = source.index("function coachRequestSelectionMatches(")
         end = source.index("async function askStudyCoach", start)
         guard = source[start:end]
         for condition in (
@@ -237,6 +237,22 @@ class DecisionStudyTests(unittest.TestCase):
         ):
             with self.subTest(condition=condition):
                 self.assertIn(condition, guard)
+
+    def test_current_unavailable_coach_response_clears_loading_without_reply_binding(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        start = source.index("async function askStudyCoach")
+        end = source.index("function showDecisionStudy", start)
+        request = source[start:end]
+        selection_guard = request.index("if(!coachRequestSelectionMatches(captured))return;")
+        unavailable = request.index("result.status==='failed'||result.status==='unavailable'")
+        exact_binding = request.index("if(!coachRequestMatches(captured,result)){")
+        loading_clear = request.index("coachQuestionLoading=false;", unavailable)
+        self.assertLess(selection_guard, unavailable)
+        self.assertLess(unavailable, exact_binding)
+        self.assertLess(exact_binding, loading_clear)
+        self.assertIn("if(!coachRequestSelectionMatches(captured))return;", request)
+        self.assertIn("coachQuestionError=result.reason||result.error", request)
+        self.assertIn("The answer did not match the selected decision", request)
 
 
 if __name__ == "__main__":

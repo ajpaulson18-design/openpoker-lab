@@ -182,10 +182,13 @@ async function selectDecisionStudy(decisionId){
   }
   renderStudyPanel();
 }
+function coachRequestSelectionMatches(captured){
+  return activeHandId===captured.handId&&selectedDecisionId===captured.decisionId
+    &&handGeneration===captured.handGeneration&&selectionGeneration===captured.generation;
+}
 function coachRequestMatches(captured,result){
   const binding=result?.binding;
-  return activeHandId===captured.handId&&selectedDecisionId===captured.decisionId
-    &&handGeneration===captured.handGeneration&&selectionGeneration===captured.generation&&binding
+  return coachRequestSelectionMatches(captured)&&binding
     &&binding.hand_id===captured.handId&&binding.decision_id===captured.decisionId
     &&binding.evidence_id===captured.evidenceId&&binding.state_revision===captured.revision;
 }
@@ -205,10 +208,14 @@ async function askStudyCoach(retry=false){
     const result=await api(`v1/decisions/${encodeURIComponent(captured.decisionId)}/coach`,{
       evidence_id:captured.evidenceId,question:request.question,detail:request.detail,audience:request.audience,
     },request.external?{'X-OpenPoker-External-AI':'1'}:{});
-    if(!coachRequestMatches(captured,result))return;
+    if(!coachRequestSelectionMatches(captured))return;
     if(result.status==='failed'||result.status==='unavailable'){
       coachQuestionError=result.reason||result.error||'This decision cannot be used for a coach request.';
-    }else coachQuestionReply=result;
+    }else{
+      if(!coachRequestMatches(captured,result)){
+        coachQuestionError='The answer did not match the selected decision. Refresh the study and try again.';
+      }else coachQuestionReply=result;
+    }
     coachQuestionLoading=false;
   }catch(error){
     if(activeHandId!==captured.handId||selectedDecisionId!==captured.decisionId
