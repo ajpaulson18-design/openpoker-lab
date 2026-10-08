@@ -257,7 +257,8 @@ after it, both were released without cyclic collection on CPython. A known tiny
 policy remains exactly `[0.05, 0.95]`. Two regression tests verify successful
 training under both backends and partial-plan budget failure with GC disabled;
 immediate-release checks are CPython-specific. All 88 focused mathematical tests
-passed. This measures state lifetime, not a universal runtime/peak-memory gain.
+passed, followed by all 306 repository tests (138.585 seconds). This measures
+state lifetime, not a universal runtime/peak-memory gain.
 Earlier benchmark reports remain measurements of their recorded source commits.
 
 ## Next implementation milestone
