@@ -139,3 +139,4 @@ class CurrentStudyPreviewCache:
                         and evidence.ref.state_revision == state_revision):
                     return evidence
         return None
+
