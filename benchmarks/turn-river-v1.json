@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "restricted-turn-river-v1",
+  "description": "Synthetic turn-to-river chance benchmarks for a finite two-player river abstraction.",
+  "defaults": {
+    "checkpoints": [20, 100, 300],
+    "repeats": 3
+  },
+  "scenarios": [
+    {
+      "id": "full44-blocked-runouts",
+      "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+      "runout_scope": "all-compatible-runouts",
+      "board4": "Js8d4c2h",
+      "oop": "AsAh:0.5,KsKh:1",
+      "ip": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": 220,
+        "bet_sizes": [0.75],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": false
+      },
+      "river_config": {
+        "pot": 100,
+        "effective_stack": 220,
+        "bet_sizes": [0.75],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": false
+      }
+    },
+    {
+      "id": "two-conditioned-runouts-asymmetric-multisize",
+      "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+      "runout_scope": "selected-conditioned-subset",
+      "board4": "Js8d4c2h",
+      "oop": "AsAh:0.5,KsKh:1",
+      "ip": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": [220, 120],
+        "bet_sizes": [0.5, 1.0],
+        "raise_sizes": [0.5],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "river_config": {
+        "pot": 100,
+        "effective_stack": [220, 120],
+        "bet_sizes": [0.75, 1.25],
+        "raise_sizes": [0.5],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "runouts": ["3c", "5h"]
+    }
+  ]
+}
