@@ -143,9 +143,11 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
     work_lock = threading.BoundedSemaphore(2)
     coach_lock = threading.BoundedSemaphore(1)
     preview_lock = threading.BoundedSemaphore(1)
-    preview_cache = CurrentStudyPreviewCache()
+    preview_cache = CurrentStudyPreviewCache(clock=coach_clock)
     conversation_ledger = (ConversationLedger(clock=coach_clock)
                            if coach_clock is not None else ConversationLedger())
+    live_conversation_ledger = (ConversationLedger(clock=coach_clock)
+                                if coach_clock is not None else ConversationLedger())
 
     def coach_fallback(bundle, detail, audience, reason):
         recommendation = next((fact for fact in bundle.facts
@@ -365,6 +367,187 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                     "error": "The study preview expired. Refresh the preview before asking again.",
                     "refresh_required": True}, 409
         return result, 200
+
+    def current_coach_turns(path, data, external_requested):
+        match = re.fullmatch(r"/api/v1/hands/([^/]+)/current-coach/turns", path)
+        if not match:
+            return {"error": "Not found."}, 404
+        hand_id = unquote(match.group(1))
+        if not hand_id or len(hand_id) > 128:
+            return {"error": "Hand was not found."}, 404
+
+        required = {"client_turn_id", "target", "question", "detail", "audience"}
+        allowed = required | {"conversation_id"}
+        if (not isinstance(data, dict) or not required <= set(data)
+                or set(data) - allowed):
+            return {"error": "Current coach turn fields are invalid.",
+                    "code": "invalid_request"}, 400
+        client_turn_id = data["client_turn_id"]
+        conversation_id = data.get("conversation_id")
+        if not isinstance(client_turn_id, str):
+            return {"error": "Client turn ID must be a UUID v4.",
+                    "code": "invalid_request"}, 400
+        try:
+            parsed_turn_id = uuid.UUID(client_turn_id)
+        except (ValueError, TypeError, AttributeError):
+            parsed_turn_id = None
+        if (parsed_turn_id is None or parsed_turn_id.version != 4
+                or str(parsed_turn_id) != client_turn_id):
+            return {"error": "Client turn ID must be a UUID v4.",
+                    "code": "invalid_request"}, 400
+        if (conversation_id is not None
+                and (not isinstance(conversation_id, str) or not conversation_id.strip()
+                     or len(conversation_id) > 128)):
+            return {"error": "Conversation ID is invalid.",
+                    "code": "invalid_request"}, 400
+
+        target = data["target"]
+        target_fields = {"hand_id", "decision_id", "evidence_id", "state_revision"}
+        if (not isinstance(target, dict) or set(target) != target_fields
+                or any(not isinstance(target.get(name), str) or not target[name].strip()
+                       or len(target[name]) > 256
+                       for name in ("hand_id", "decision_id", "evidence_id"))
+                or type(target.get("state_revision")) is not int
+                or target["state_revision"] < 0):
+            return {"error": "Preview target is invalid.", "code": "invalid_target"}, 400
+        if target["hand_id"] != hand_id:
+            return {"error": "Preview target does not match this hand.",
+                    "code": "invalid_target"}, 400
+        question = data["question"]
+        detail, audience = data["detail"], data["audience"]
+        if not isinstance(question, str) or not question.strip() or len(question) > 500:
+            return {"error": "Question must contain 1–500 characters.",
+                    "code": "invalid_request"}, 400
+        question = question.strip()
+        if detail not in ("short", "normal", "technical"):
+            return {"error": "Detail setting is invalid.", "code": "invalid_request"}, 400
+        if audience not in ("beginner", "standard"):
+            return {"error": "Audience setting is invalid.", "code": "invalid_request"}, 400
+
+        with game_lock:
+            current = games.get(hand_id)
+            if current is None:
+                return {"error": "Hand was not found or has expired.",
+                        "code": "not_found"}, 404
+            if (hand_revisions.get(hand_id) != target["state_revision"]
+                    or current.done or current.actor != 0):
+                return {"status": "stale_context", "code": "stale_context",
+                        "error": "The hand changed. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+
+        evidence = resolve_current_study_evidence(target)
+        if evidence is None:
+            return {"status": "preview_expired", "code": "preview_expired",
+                    "error": "The study preview expired. Refresh the preview before asking again.",
+                    "refresh_required": True}, 409
+        try:
+            bundle = build_current_preview_grounding_bundle(evidence)
+        except (CoachGroundingError, ValueError, TypeError):
+            return {"status": "failed", "error": "Current preview evidence is invalid."}, 500
+
+        def still_current():
+            with game_lock:
+                live = games.get(hand_id)
+                if live is None:
+                    return "missing"
+                if (hand_revisions.get(hand_id) != target["state_revision"]
+                        or live.done or live.actor != 0):
+                    return "stale"
+            retained = resolve_current_study_evidence(target)
+            return "ready" if retained is evidence else "expired"
+
+        payload = {"question": question, "detail": detail, "audience": audience,
+                   "external_ai": external_requested}
+        try:
+            reservation = live_conversation_ledger.reserve(
+                conversation_id, client_turn_id, bundle.binding.to_dict(), payload)
+        except ConversationError as error:
+            return {"error": str(error), "code": error.code}, error.status
+        conversation_id = reservation["conversation_id"]
+
+        def current_error(state):
+            if state == "missing":
+                return {"error": "Hand was not found or has expired.",
+                        "code": "not_found"}, 404
+            if state == "expired":
+                return {"status": "preview_expired", "code": "preview_expired",
+                        "error": "The study preview expired. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+            return {"status": "stale_context", "code": "stale_context",
+                    "error": "The hand changed. Refresh the preview before asking again.",
+                    "refresh_required": True}, 409
+
+        if reservation["cached_result"] is not None:
+            state = still_current()
+            if state != "ready":
+                return current_error(state)
+            return reservation["cached_result"], 200
+
+        if not coach_lock.acquire(blocking=False):
+            live_conversation_ledger.abort(conversation_id, client_turn_id)
+            return {"error": "A coach request is already running. Try again shortly.",
+                    "code": "coach_busy"}, 429
+
+        plan_metadata = None
+        try:
+            state = still_current()
+            if state != "ready":
+                live_conversation_ledger.abort(conversation_id, client_turn_id)
+                return current_error(state)
+
+            if not external_requested:
+                result = current_coach_fallback(
+                    bundle, detail, audience, "external_ai_not_selected", question)
+            elif current_choice_question(question):
+                result = current_coach_fallback(
+                    bundle, detail, audience, "current_choice_unavailable", question)
+            elif not coach_external_available:
+                result = current_coach_fallback(
+                    bundle, detail, audience, "external_ai_not_configured", question)
+            else:
+                prior_turns = live_conversation_ledger.prior_context(
+                    conversation_id, client_turn_id)
+                try:
+                    candidate = coach_selector.select_plan(
+                        bundle, question, detail, audience, prior_turns=prior_turns,
+                        current_preview=True)
+                    plan = validate_current_coach_reply_plan(candidate, bundle)
+                    if plan.detail != detail or plan.audience != audience:
+                        raise CoachGroundingError("invalid_reply_plan", "Presentation settings changed.")
+                    reply = render_coach_reply(bundle, plan, current_preview=True)
+                    teaching_note = build_teaching_note(bundle, reply, current_preview=True)
+                    result = {
+                        "status": "ready", "source": "openai", "retryable": False,
+                        "binding": bundle.binding.to_dict(), "source_label": reply.source_label,
+                        "reply": reply.to_dict(),
+                        "teaching_note": teaching_note.to_dict() if teaching_note else None,
+                    }
+                    plan_metadata = {"intent": plan.intent,
+                                     "target_action_id": plan.target_action_id,
+                                     "detail": plan.detail, "audience": plan.audience}
+                except CoachProviderError as error:
+                    result = current_coach_fallback(bundle, detail, audience, error.code, question)
+                except (CoachGroundingError, ValueError, TypeError):
+                    result = current_coach_fallback(bundle, detail, audience, "invalid_plan", question)
+                except Exception:
+                    result = current_coach_fallback(bundle, detail, audience, "provider_error", question)
+
+            state = still_current()
+            if state != "ready":
+                live_conversation_ledger.abort(conversation_id, client_turn_id)
+                return current_error(state)
+            result.update({"conversation_id": conversation_id,
+                           "client_turn_id": client_turn_id,
+                           "turn_index": reservation["turn_index"]})
+            live_conversation_ledger.complete(
+                conversation_id, client_turn_id, plan_metadata, result)
+            return result, 200
+        except Exception:
+            live_conversation_ledger.abort(conversation_id, client_turn_id)
+            return {"error": "Current coach turn failed safely.",
+                    "code": "coach_failed"}, 500
+        finally:
+            coach_lock.release()
 
     def current_study(path, data):
         match = re.fullmatch(r"/api/v1/hands/([^/]+)/current-study", path)
@@ -699,6 +882,18 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                 if not isinstance(data, dict):
                     raise ValueError("Expected a JSON object.")
                 request_path = urlparse(self.path).path
+                if re.fullmatch(r"/api/v1/hands/[^/]+/current-coach/turns", request_path):
+                    try:
+                        result, status_code = current_coach_turns(
+                            request_path, data,
+                            self.headers.get("X-OpenPoker-External-AI") == "1")
+                    except (ValueError, TypeError, KeyError, OverflowError):
+                        return self.respond({"error": "Current coach turn request is invalid.",
+                                             "code": "invalid_request"}, 400)
+                    except Exception:
+                        return self.respond({"status": "failed",
+                                             "error": "Current coach turn failed safely."}, 500)
+                    return self.respond(result, status_code)
                 if (request_path.startswith("/api/v1/hands/")
                         and request_path.endswith("/current-coach")):
                     if not coach_lock.acquire(blocking=False):
