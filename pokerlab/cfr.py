@@ -67,7 +67,12 @@ def train(root, worlds, infos, iterations, algorithm="vanilla", terminal_value=N
                         (iteration ** 2 if algorithm == "dcfr" else 1.0)
                 return expected
 
-            traverse(root, 1.0, 1.0)
+            try:
+                traverse(root, 1.0, 1.0)
+            finally:
+                # The recursive closure captures this binding. Break its cycle
+                # before returning so final training arrays await no cyclic GC.
+                traverse = None
 
         for key, values in regrets.items():
             updated = [old + delta for old, delta in zip(values, deltas[key])]
