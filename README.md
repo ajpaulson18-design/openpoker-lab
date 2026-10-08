@@ -131,9 +131,16 @@ removal. Bet fractions multiply the current pot. A raise fraction multiplies
 the pot after calling; the resulting raise-to total includes the player's
 existing commitment and call amount. Minimum full raises, short all-ins,
 reopening, stack caps, duplicate actions, and returned uncalled excess are
-modeled explicitly. See [`docs/solver-validation.md`](docs/solver-validation.md)
+modeled explicitly. See [`configured river validation`](docs/configured-river-validation.md)
 for the exact configuration semantics and worked examples. `effective_stack`
 can be a shared scalar or an `(OOP, IP)` pair for unequal stack caps.
+
+Expanded configurations are available through the Python `solve` and
+`solve_equilibrium` APIs. The browser's fixed-bet form uses the optimized
+compatibility path. Vanilla CFR remains the default; `algorithm="dcfr"`
+selects DCFR(1.5,0,2). Both return exact best-response gaps and the versioned
+`river-strategy-v1` profile. DCFR is not uniformly faster or more accurate at
+every checkpoint; measured results are in [solver progress](docs/solver-progress.md).
 
 Average strategies are reported by information set, with different chip-size
 histories kept separate. Utilities are zero-sum chip values relative to half
