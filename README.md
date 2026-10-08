@@ -162,6 +162,17 @@ solving and unrestricted no-limit GTO are outside this release. See
 `docs/solver-validation.md` for the exact scope, validation, the
 `pokerlab.equilibrium` strategy interface, and `python -m scripts.validate_solver`.
 
+### Turn-to-river library
+
+`pokerlab.turn_solver.solve_turn_river` extends the configured action tree across
+both streets, enumerating 44 physical river cards per compatible private pair.
+It carries matched commitments and stack caps, preserves full public history,
+and reports exact information-set best responses under `postflop-strategy-v1`.
+Optional selected runouts explicitly condition the entire joint physical game.
+See [turn-to-river validation and examples](docs/turn-river-validation.md).
+This Python API is additive; the browser's solver remains its fixed river form.
+Flop, preflop and eventually multiway solving are further development goals.
+
 ## Range notation
 
 Separate tokens with spaces or commas:
