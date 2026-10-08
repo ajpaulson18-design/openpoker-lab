@@ -122,7 +122,8 @@ def build_teaching_note(bundle: GroundingBundle,
     def finish(template_id: str, text: str,
                supporting: list[GroundFact]) -> TeachingNote | None:
         ids = tuple(dict.fromkeys(fact.fact_id for fact in supporting))
-        if not ids or any(fact_id not in intent_visible for fact_id in ids):
+        if (not ids or len(ids) > 16 or len(text) > 600
+                or any(fact_id not in intent_visible for fact_id in ids)):
             return None
         return TeachingNote(template_id, bundle.binding, reply.source_label, text, ids)
 

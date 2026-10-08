@@ -3,7 +3,8 @@ from dataclasses import replace
 import unittest
 
 from pokerlab.coach_analysis import adapt_practice_analysis
-from pokerlab.coach_grounding import (CoachReplyPlan, build_grounding_bundle,
+from pokerlab.coach_grounding import (CoachReplyPlan, GroundFact, _fact_id,
+                                      build_grounding_bundle,
                                       render_coach_reply)
 from pokerlab.coach_teaching import build_teaching_note
 from pokerlab.contracts import CoachDecisionRef
@@ -172,6 +173,23 @@ class CoachTeachingTests(unittest.TestCase):
         note = build_teaching_note(bundle, reply)
         self.assertIn("Solver iteration count", note.text)
         self.assertNotIn("Solver-gap diagnostics", note.text)
+
+    def test_many_visible_opponent_assumptions_fail_closed_at_note_citation_bound(self):
+        facts = list(self.bundle.facts)
+        for index in range(17):
+            pointer = f"/analysis/opponent_assumptions/synthetic_{index}"
+            facts.append(GroundFact(
+                _fact_id(self.bundle.binding.decision_id,
+                         self.bundle.binding.evidence_id, pointer),
+                "opponent_assumption", pointer,
+                (f"assumption_{index}", "flop", None, None, 0.5, 12,
+                 0.3, 0.7, 0.95, 0.1, 0.9, "beta", "synthetic interval"),
+                "assumption", "available"))
+        bundle = replace(self.bundle, facts=tuple(facts))
+        reply = render_coach_reply(bundle, plan(bundle, "limits"))
+        self.assertGreater(
+            sum(fact.kind == "opponent_assumption" for fact in reply.blocks[0].facts), 16)
+        self.assertIsNone(build_teaching_note(bundle, reply))
 
     def test_source_scope_and_opponent_assumptions_are_not_claimed_as_truth(self):
         for source, label, expected in (
