@@ -10,6 +10,10 @@
 .current-study-view .metrics { margin:12px 0; }
 .current-study-actions { padding-left:18px; }
 .current-study-error { color:#e6a19a; }
+.current-coach-form { border-top:1px solid var(--line); margin-top:18px; padding-top:18px; }
+.current-coach-form h4 { margin:0 0 12px; }
+.current-coach-form textarea { min-height:78px; }
+.current-coach-form .ai-coach-reply { margin-top:16px; }
 .session-review { margin-top:20px; }
 .decision-study { margin-top:20px; }
 .decision-list { display:grid; gap:8px; margin:16px 0 22px; }

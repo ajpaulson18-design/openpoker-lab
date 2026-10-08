@@ -502,15 +502,18 @@ def _choice_from_input(analysis: CoachDecisionAnalysis, choice: Any) -> dict[str
     return dict(data)
 
 
-def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str, Any]) -> GroundingBundle:
-    """Project only the approved decision-local facts from validated inputs."""
+def _build_grounding_bundle(analysis: CoachDecisionAnalysis,
+                            choice: Mapping[str, Any] | None) -> GroundingBundle:
+    """Project approved facts, optionally omitting choice facts for a live preview."""
     if not isinstance(analysis, CoachDecisionAnalysis):
         _fail("invalid_grounding", "Grounding requires validated coach decision evidence.")
-    selected = _choice_from_input(analysis, choice)
+    selected = _choice_from_input(analysis, choice) if choice is not None else None
     binding = GroundingBinding(analysis.ref.hand_id, analysis.ref.decision_id,
                                analysis.evidence_id, analysis.ref.state_revision)
     facts: list[GroundFact] = []
-    pointer_source = {"analysis": analysis.to_dict(), "choice": selected}
+    pointer_source = {"analysis": analysis.to_dict()}
+    if selected is not None:
+        pointer_source["choice"] = selected
 
     def add(kind: str, pointer: str, value: Any, unit: str,
             available: bool | None = None) -> GroundFact:
@@ -556,12 +559,13 @@ def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str,
         add("baseline_label", "/analysis/reference_policy/kind",
             analysis.reference_policy.kind, "policy", True)
 
-    choice_value = (selected["name"], selected["amount"], selected["amount_semantics"],
-                    selected["assessment_status"], selected["ev_loss"],
-                    selected["assessed_modeled_action_id"])
-    add("choice", "/choice", choice_value, "choice", True)
-    add("choice_loss", "/choice/ev_loss", selected["ev_loss"], analysis.ev_basis,
-        selected["assessment_status"] == "assessed" and selected["ev_loss"] is not None)
+    if selected is not None:
+        choice_value = (selected["name"], selected["amount"], selected["amount_semantics"],
+                        selected["assessment_status"], selected["ev_loss"],
+                        selected["assessed_modeled_action_id"])
+        add("choice", "/choice", choice_value, "choice", True)
+        add("choice_loss", "/choice/ev_loss", selected["ev_loss"], analysis.ev_basis,
+            selected["assessment_status"] == "assessed" and selected["ev_loss"] is not None)
 
     for index, assumption in enumerate(analysis.opponent_assumptions):
         uncertainty = assumption.uncertainty
@@ -620,13 +624,35 @@ def build_grounding_bundle(analysis: CoachDecisionAnalysis, choice: Mapping[str,
         unavailable.append("solver_quality")
     if not analysis.opponent_assumptions:
         unavailable.append("opponent_assumptions")
-    if selected["ev_loss"] is None:
+    if selected is None:
+        unavailable.extend(("choice", "choice_loss"))
+    elif selected["ev_loss"] is None:
         unavailable.append("choice.ev_loss")
     unavailable_fields = tuple(dict.fromkeys(unavailable))
     if len(facts) > 64 or len(unavailable_fields) > 64:
         _fail("invalid_grounding", "Grounding bundle exceeds its bounded field limits.")
     return GroundingBundle(binding, analysis.source_kind, analysis.ev_basis,
                            tuple(facts), limitations, unavailable_fields)
+
+
+def build_grounding_bundle(analysis: CoachDecisionAnalysis,
+                           choice: Mapping[str, Any]) -> GroundingBundle:
+    """Project the approved saved-decision facts, including its recorded choice."""
+    if choice is None:
+        _fail("invalid_grounding", "Saved-decision grounding requires a recorded choice.")
+    return _build_grounding_bundle(analysis, choice)
+
+
+def build_current_preview_grounding_bundle(
+        analysis: CoachDecisionAnalysis) -> GroundingBundle:
+    """Project a live preview without inventing an action or choice loss."""
+    if not isinstance(analysis, CoachDecisionAnalysis) or analysis.source_kind != "practice_estimate":
+        _fail("invalid_grounding", "Current-preview grounding requires a practice estimate.")
+    bundle = _build_grounding_bundle(analysis, None)
+    if (any(fact.kind in {"choice", "choice_loss"} for fact in bundle.facts)
+            or not {"choice", "choice_loss"} <= set(bundle.unavailable_fields)):
+        _fail("invalid_grounding", "Current-preview grounding must omit unplayed choice facts.")
+    return bundle
 
 
 def rebind_grounding_bundle(bundle: GroundingBundle, analysis: CoachDecisionAnalysis,
@@ -663,6 +689,17 @@ def validate_coach_reply_plan(plan: CoachReplyPlan, bundle: GroundingBundle) -> 
                   if fact.kind == "modeled_action" and isinstance(fact.value, tuple)}
     if plan.intent == "compare" and plan.target_action_id not in action_ids:
         _fail("invalid_reply_plan", "Compare target must identify a modeled action.")
+    return plan
+
+
+def validate_current_coach_reply_plan(
+        plan: CoachReplyPlan, bundle: GroundingBundle) -> CoachReplyPlan:
+    """Restrict a live preview answer to intents that require no recorded choice."""
+    plan = validate_coach_reply_plan(plan, bundle)
+    if (plan.intent not in {"recommendation", "limits", "unavailable"}
+            or any(fact.kind in {"choice", "choice_loss"} for fact in bundle.facts)
+            or not {"choice", "choice_loss"} <= set(bundle.unavailable_fields)):
+        _fail("invalid_reply_plan", "Live preview replies cannot require a recorded choice.")
     return plan
 
 
@@ -717,9 +754,11 @@ class RenderedCoachReply:
                 "unavailable_fields": list(self.unavailable_fields)}
 
 
-def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> RenderedCoachReply:
+def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan, *,
+                       current_preview: bool = False) -> RenderedCoachReply:
     """Render structured answer blocks; never accept provider-authored strategy text."""
-    plan = validate_coach_reply_plan(plan, bundle)
+    plan = (validate_current_coach_reply_plan(plan, bundle) if current_preview
+            else validate_coach_reply_plan(plan, bundle))
     by_id = {fact.fact_id: fact for fact in bundle.facts}
     by_kind: dict[str, list[GroundFact]] = {}
     for fact in bundle.facts:
@@ -740,7 +779,8 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
         return next((item for item in by_kind.get(kind, ())
                      if item.value[0] == action_id), None)
 
-    source_label = _SOURCE_LABELS[bundle.source_kind]
+    source_label = ("Practice estimate · current decision preview" if current_preview
+                    else _SOURCE_LABELS[bundle.source_kind])
     selected_ids: set[str] = set()
     blocks: list[AnswerBlock] = []
     rendered_intent = plan.intent
@@ -771,8 +811,10 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
                               *by_kind.get("solver_iterations", ()),
                               *by_kind.get("solver_gap_semantics", ()),
                               one("opponent_uncertainty")))
-            label = ("Saved action" if plan.audience == "beginner"
-                     else "Saved recommendation")
+            label = (("Current modeled action" if plan.audience == "beginner"
+                      else "Current modeled recommendation") if current_preview else
+                     ("Saved action" if plan.audience == "beginner"
+                      else "Saved recommendation"))
             include("recommendation", label, facts)
     elif plan.intent == "choice":
         choice = one("choice")
@@ -823,9 +865,13 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
                  *by_kind.get("opponent_assumption", ())]
         if plan.detail == "short":
             facts = [one("source_kind"), one("confidence_label")]
-        include("limits", "Model limits and saved assumptions", facts, bundle.limitations)
+        label = ("Current preview assumptions and limits" if current_preview
+                 else "Model limits and saved assumptions")
+        include("limits", label, facts, bundle.limitations)
     else:
-        include("unavailable", "Unavailable facts", (one("source_kind"),))
+        label = ("Unavailable for this current decision" if current_preview
+                 else "Unavailable facts")
+        include("unavailable", label, (one("source_kind"),))
 
     # Citations support an answer but cannot select or replace its required facts.
     # An unavailable comparison intentionally omits optional EV facts so none can
@@ -844,3 +890,4 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
         bundle.source_kind, source_label, tuple(blocks), bundle.limitations,
         tuple(dict.fromkeys(unavailable)),
     )
+
