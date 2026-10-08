@@ -9,6 +9,11 @@
 .current-study-view h4 { margin:8px 0; }
 .current-study-view .metrics { margin:12px 0; }
 .current-study-actions { padding-left:18px; }
+.current-study-situation { border:1px solid var(--line); border-radius:8px; background:#bcdf8908; padding:12px 14px; margin:14px 0; }
+.current-study-situation h4,.current-study-recommendation h4 { margin:0 0 7px; }
+.current-study-situation p,.current-study-recommendation p { margin:0 0 7px; }
+.current-study-situation p:last-child,.current-study-recommendation p:last-child { margin-bottom:0; }
+.current-study-recommendation { border-left:3px solid var(--accent); padding:10px 12px; margin:14px 0; }
 .current-study-error { color:#e6a19a; }
 .current-coach-form { border-top:1px solid var(--line); margin-top:18px; padding-top:18px; }
 .current-coach-form h4 { margin:0 0 12px; }

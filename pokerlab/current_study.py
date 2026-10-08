@@ -5,6 +5,8 @@ from copy import deepcopy
 import threading
 import time
 
+from .situation_teaching import build_situation_teaching
+
 
 SCHEMA_VERSION = 1
 SOURCE_LABEL = "Practice estimate · current decision preview"
@@ -69,6 +71,7 @@ def build_current_study_view(analysis):
             "board": list(context.board),
             "pot_chips": context.pot,
         },
+        "situation": build_situation_teaching(analysis),
         "recommended_action_id": analysis.recommended_action_id,
         "modeled_actions": modeled_actions,
         "assumptions": assumptions,
@@ -139,4 +142,3 @@ class CurrentStudyPreviewCache:
                         and evidence.ref.state_revision == state_revision):
                     return evidence
         return None
-

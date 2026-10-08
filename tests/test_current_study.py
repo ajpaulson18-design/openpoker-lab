@@ -1,5 +1,6 @@
 """HTTP regressions for explicit pre-action study previews."""
 import json
+from dataclasses import fields, replace
 from pathlib import Path
 import shutil
 import threading
@@ -10,7 +11,7 @@ from urllib.request import Request, urlopen
 from unittest.mock import patch
 
 from pokerlab.coach_analysis import adapt_practice_analysis
-from pokerlab.contracts import CoachDecisionRef
+from pokerlab.contracts import CoachDecisionAnalysis, CoachDecisionRef
 from pokerlab.current_study import CurrentStudyPreviewCache, build_current_study_view
 from pokerlab.game import Game
 from pokerlab.practice import _calculate_analysis, advance_to_hero, analyze_decision
@@ -210,6 +211,46 @@ class CurrentStudyEvidenceTests(unittest.TestCase):
         return adapt_practice_analysis(
             raw, ref=CoachDecisionRef("test-hand", uuid.uuid4().hex, 0))
 
+    def situation_view(self, hero_cards, board=()):
+        evidence = self.evidence()
+        values = {item.name: getattr(evidence, item.name)
+                  for item in fields(CoachDecisionAnalysis) if item.name != "evidence_id"}
+        values["context"] = replace(
+            evidence.context,
+            street={0: "preflop", 3: "flop", 4: "turn", 5: "river"}[len(board)],
+            hero_cards=tuple(hero_cards), board=tuple(board),
+        )
+        return evidence, build_current_study_view(CoachDecisionAnalysis.build(**values))
+
+    def test_current_preview_teaches_challenging_starting_hand_before_model_recommendation(self):
+        evidence, view = self.situation_view(("7c", "2d"))
+        situation = view["situation"]
+        self.assertEqual(situation["title"], "Your situation")
+        self.assertIn("7–2 offsuit", situation["text"])
+        self.assertIn("challenging starting hand", situation["text"])
+        self.assertIn("best action still depends on this spot", situation["text"])
+        self.assertNotIn("opponent holds", situation["text"])
+        self.assertEqual(view["recommended_action_id"], evidence.recommended_action_id)
+        self.assertEqual(view["binding"]["hand_id"], evidence.ref.hand_id)
+        self.assertEqual(view["binding"]["decision_id"], evidence.ref.decision_id)
+        self.assertEqual(view["binding"]["state_revision"], evidence.ref.state_revision)
+
+    def test_current_preview_describes_bottom_pair_without_predicting_opponent_hand(self):
+        _, view = self.situation_view(("3d", "2c"), ("4c", "3h", "Th"))
+        text = view["situation"]["text"]
+        self.assertIn("bottom pair", text)
+        self.assertIn("does not tell us what an opponent holds or whether you are ahead", text)
+
+    def test_current_preview_renderer_separates_situation_from_model_recommendation(self):
+        source_path = Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js"
+        source = source_path.read_text(encoding="utf-8")
+        render = source[source.index("function renderCurrentStudy"):
+                        source.index("async function requestCurrentStudy")]
+        self.assertIn("v.situation.title", render)
+        self.assertIn("What the model recommends", render)
+        self.assertIn("v.modeled_actions.find(a=>a.action_id===v.recommended_action_id)", render)
+        self.assertLess(render.index("${situation}"), render.index("${modelSummary}"))
+
     def test_view_uses_validated_exactness_for_exact_and_sampled_equity(self):
         sampled = build_current_study_view(self.evidence())
         exact_evidence = self.evidence(exact_river=True)
@@ -251,4 +292,3 @@ class CurrentStudyEvidenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
