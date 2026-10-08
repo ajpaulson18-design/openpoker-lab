@@ -1,5 +1,10 @@
 """Safe, bounded presentation view for a pre-action practice estimate."""
 
+from collections import OrderedDict
+from copy import deepcopy
+import threading
+import time
+
 
 SCHEMA_VERSION = 1
 SOURCE_LABEL = "Practice estimate · current decision preview"
@@ -41,7 +46,12 @@ def build_current_study_view(analysis):
 
     limitations = list(analysis.limitations)
     limitations.extend(analysis.warnings)
-    limitations.append("Equity is sampled; results are estimates, not a solved strategy.")
+    if analysis.quality.equity_exact is True:
+        limitations.append("Equity is exactly enumerated for this supported state; the practice EV model is still simplified, not a solved strategy.")
+    elif analysis.quality.equity_exact is False:
+        limitations.append("Equity is sampled; results are estimates, not a solved strategy.")
+    else:
+        limitations.append("Equity exactness is unavailable; results are estimates, not a solved strategy.")
     return {
         "schema_version": SCHEMA_VERSION,
         "status": "ready",
@@ -64,3 +74,68 @@ def build_current_study_view(analysis):
         "assumptions": assumptions,
         "limitations": list(dict.fromkeys(limitations)),
     }
+
+
+class CurrentStudyPreviewCache:
+    """Small expiring cache that retains immutable evidence with its safe view."""
+
+    def __init__(self, *, max_entries=64, ttl_seconds=60, clock=None):
+        self._max_entries = max_entries
+        self._ttl_seconds = ttl_seconds
+        self._clock = clock or time.monotonic
+        self._lock = threading.Lock()
+        self._entries = OrderedDict()
+
+    def _prune(self, now):
+        for key, entry in list(self._entries.items()):
+            if now - entry["created"] >= self._ttl_seconds:
+                self._entries.pop(key, None)
+
+    def get(self, key):
+        now = self._clock()
+        with self._lock:
+            self._prune(now)
+            entry = self._entries.get(key)
+            if entry is None:
+                return None
+            self._entries.move_to_end(key)
+            return entry["evidence"], deepcopy(entry["view"])
+
+    def put(self, key, evidence, view):
+        binding = view.get("binding") if isinstance(view, dict) else None
+        if (not isinstance(binding, dict)
+                or set(binding) != {"hand_id", "decision_id", "evidence_id", "state_revision"}
+                or any(not isinstance(binding.get(name), str) or not binding[name].strip()
+                       for name in ("hand_id", "decision_id", "evidence_id"))
+                or type(binding.get("state_revision")) is not int
+                or binding != {
+                    "hand_id": evidence.ref.hand_id,
+                    "decision_id": evidence.ref.decision_id,
+                    "evidence_id": evidence.evidence_id,
+                    "state_revision": evidence.ref.state_revision,
+                }):
+            raise ValueError("Preview cache view must match its immutable evidence binding.")
+        with self._lock:
+            now = self._clock()
+            self._prune(now)
+            self._entries[key] = {
+                "created": now,
+                "evidence": evidence,
+                "view": deepcopy(view),
+            }
+            self._entries.move_to_end(key)
+            while len(self._entries) > self._max_entries:
+                self._entries.popitem(last=False)
+
+    def resolve(self, *, hand_id, decision_id, evidence_id, state_revision):
+        now = self._clock()
+        with self._lock:
+            self._prune(now)
+            for entry in self._entries.values():
+                evidence = entry["evidence"]
+                if (evidence.ref.hand_id == hand_id
+                        and evidence.ref.decision_id == decision_id
+                        and evidence.evidence_id == evidence_id
+                        and evidence.ref.state_revision == state_revision):
+                    return evidence
+        return None

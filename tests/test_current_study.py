@@ -7,8 +7,13 @@ import unittest
 import uuid
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
+from pokerlab.coach_analysis import adapt_practice_analysis
+from pokerlab.contracts import CoachDecisionRef
+from pokerlab.current_study import CurrentStudyPreviewCache, build_current_study_view
+from pokerlab.game import Game
+from pokerlab.practice import _calculate_analysis, advance_to_hero, analyze_decision
 from pokerlab.server import make_server
 
 
@@ -186,6 +191,62 @@ class CurrentStudyHTTPTests(unittest.TestCase):
             worker.join(6)
         self.assertFalse(worker.is_alive())
         self.assertEqual(first_result["response"][0], 409)
+
+
+class CurrentStudyEvidenceTests(unittest.TestCase):
+    @staticmethod
+    def evidence(*, exact_river=False):
+        game = Game(stacks=[100, 100], names=["Hero", "Villain"], seed=41)
+        advance_to_hero(game)
+        raw = analyze_decision(game)
+        if exact_river:
+            inputs = json.loads(json.dumps(raw["analysis_inputs"]))
+            hero_cards = set(inputs["known_cards"])
+            from pokerlab.cards import DECK
+            inputs["public_cards"] = [card for card in DECK if card not in hero_cards][:5]
+            inputs["street"] = "river"
+            inputs["opponent_ranges"] = ["random"]
+            raw = _calculate_analysis(inputs)
+        return adapt_practice_analysis(
+            raw, ref=CoachDecisionRef("test-hand", uuid.uuid4().hex, 0))
+
+    def test_view_uses_validated_exactness_for_exact_and_sampled_equity(self):
+        sampled = build_current_study_view(self.evidence())
+        exact_evidence = self.evidence(exact_river=True)
+        exact = build_current_study_view(exact_evidence)
+        self.assertTrue(exact_evidence.quality.equity_exact)
+        self.assertTrue(any("exactly enumerated" in item for item in exact["limitations"]))
+        self.assertFalse(any("Equity is sampled" in item for item in exact["limitations"]))
+        self.assertTrue(any("Equity is sampled" in item for item in sampled["limitations"]))
+
+    def test_preview_cache_retains_resolvable_evidence_with_its_view_until_expiry(self):
+        now = [10.0]
+        cache = CurrentStudyPreviewCache(ttl_seconds=5, clock=lambda: now[0])
+        evidence = self.evidence()
+        view = build_current_study_view(evidence)
+        key = ("test-hand", 0, "illustrative-default")
+        cache.put(key, evidence, view)
+
+        cached_evidence, cached_view = cache.get(key)
+        self.assertIs(cached_evidence, evidence)
+        self.assertEqual(cached_view, view)
+        binding = view["binding"]
+        self.assertIs(cache.resolve(**binding), evidence)
+
+        now[0] += 5
+        self.assertIsNone(cache.get(key))
+        self.assertIsNone(cache.resolve(**binding))
+
+    def test_browser_rejects_a_preview_response_with_a_wrong_or_missing_binding(self):
+        source_path = Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js"
+        source = source_path.read_text(encoding="utf-8")
+        request = source[source.index("async function requestCurrentStudy"):
+                         source.index("function coachExplanation")]
+        for required in (
+                "binding.hand_id!==handId", "binding.state_revision!==revision",
+                "typeof binding.decision_id!=='string'", "!binding.decision_id.trim()",
+                "typeof binding.evidence_id!=='string'", "!binding.evidence_id.trim()"):
+            self.assertIn(required, request)
 
 
 if __name__ == "__main__":
