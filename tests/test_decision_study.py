@@ -107,6 +107,9 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertNotIn("estimated_ev", study["baseline"])
         self.assertTrue(all("estimated_ev_chips" in action
                             for action in study["modeled_actions"]))
+        self.assertIn("estimated chips from this decision", study["cards"][0]["answer"])
+        self.assertNotIn("incremental_decision_chips", " ".join(
+            card["answer"] for card in study["cards"]))
         self.assertNotIn("Hero", json.dumps(study))
         self.assertNotIn("Villain", json.dumps(study))
         self.assertNotIn("hero_cards", study)
@@ -122,7 +125,24 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("not connected", study["situation"]["text"])
         self.assertNotIn("worst", study["situation"]["text"].lower())
         self.assertEqual(study["decision"]["title"], "Your decision")
-        self.assertIn("does not make every action wrong", study["decision"]["note"])
+        self.assertIn("quality of your cards does not by itself decide", study["decision"]["note"])
+
+    def test_ev_basis_copy_is_plain_language_while_saved_values_stay_exact(self):
+        _, accepted = self.capture("call")
+        decision_id = accepted["decision"]["decision_id"]
+        saved = self.get(f"/api/v1/decisions/{decision_id}/analysis")
+        analysis = CoachDecisionAnalysis.from_json(json.dumps(saved["analysis"]))
+        view = build_decision_study(analysis, saved["choice"])
+        source_values = {item.action_id: item.value for item in analysis.action_evs}
+        self.assertEqual(view["ev_basis"], "incremental_decision_chips")
+        self.assertIn("estimated chips from this decision", view["cards"][0]["answer"])
+        self.assertNotIn("incremental_decision_chips", " ".join(
+            card["answer"] for card in view["cards"]))
+        self.assertEqual(
+            {item["action_id"]: item["estimated_ev_chips"]
+             for item in view["modeled_actions"]},
+            source_values,
+        )
 
     def test_pocket_pair_does_not_get_suited_or_connected_labels(self):
         study = self.study_with_visible_cards(("Ac", "Ad"), ())
@@ -164,6 +184,7 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertEqual(study["choice"]["assessment_status"], "unassessed_size")
         self.assertIn("does not score the size you chose", study["decision"]["text"])
         self.assertIn("raise size was not assessed", study["decision"]["note"])
+        self.assertIn("Your cards alone do not decide", study["decision"]["note"])
         self.assertNotIn("Your action is assessed", study["decision"]["note"])
 
     def test_unassessed_raise_is_distinct_from_modeled_minimum(self):
@@ -204,13 +225,18 @@ class DecisionStudyTests(unittest.TestCase):
         values["ev_basis"] = "half_initial_pot_utility"
         values["quality"] = CoachAnalysisQuality(
             confidence_label="solver diagnostics", opponent_uncertainty=None,
-            equity_standard_error=None, equity_exact=None, nash_conv=0.2,
+            equity_standard_error=None, equity_exact=None, nash_conv=0.00001,
             exploitability=0.1, iterations=50, gap_semantics="per-player best-response gap",
         )
         solver_analysis = CoachDecisionAnalysis.build(**values)
         view = build_decision_study(solver_analysis, saved["choice"])
         self.assertEqual(view["source_label"], "Restricted equilibrium result")
         self.assertEqual(view["ev_basis"], "half_initial_pot_utility")
+        self.assertIn("solver chip utility measured relative to half the starting pot",
+                      view["cards"][0]["answer"])
+        self.assertNotIn("half_initial_pot_utility", " ".join(
+            card["answer"] for card in view["cards"]))
+        self.assertIn("NashConv less than 0.01", view["cards"][2]["answer"])
         self.assertEqual(view["solver_quality"]["iterations"], 50)
         self.assertTrue(all("estimated_ev" in action and "estimated_ev_chips" not in action
                             for action in view["modeled_actions"]))
@@ -313,6 +339,13 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("${coachTeachingNoteHtml(result)}${blocks}", source)
         self.assertIn("LOCAL TEACHING NOTE", source)
         self.assertIn("note.supporting_fact_ids", source)
+        self.assertIn('<summary>Evidence details</summary>', source)
+        self.assertIn("coachFactUnit(fact.unit,result)", source)
+        self.assertIn("AI-selected plan", source)
+        self.assertIn("Local explanation", source)
+        self.assertIn("fallbackMessages[reason]", source)
+        self.assertNotIn("external_ai_not_selected:", source)
+        self.assertNotIn("<small>Fact ${esc(fact.fact_id)}</small>", source)
 
     def test_current_unavailable_coach_response_clears_loading_without_reply_binding(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
