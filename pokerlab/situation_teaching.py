@@ -35,6 +35,9 @@ def _preflop_situation(hero_cards: tuple[str, str]) -> str:
     if max(ranks) <= 9 and distance > 2 and hero_cards[0][1] != hero_cards[1][1]:
         description += ("That is a challenging starting hand; the best action still "
                         "depends on this spot. ")
+        description += ("Because the ranks are far apart, they do not offer an easy "
+                        "straight connection. Since they are different suits, they cannot "
+                        "both help make a flush in one suit. ")
     return (description + "These are features of the cards you were dealt; "
             "they do not decide whether your action was right.")
 
@@ -65,7 +68,10 @@ def _postflop_situation(hero_cards: tuple[str, str], board: tuple[str, ...]) -> 
                              "bottom" if position == len(ordered) - 1 else "middle")
             return (f"You have {pair_position} pair: one of your cards matches the "
                     f"{pair_position} rank on this unpaired board. A pair is a made hand; "
-                    "it does not tell us what an opponent holds or whether you are ahead.")
+                    + ("Your pair ranks below a pair made with a higher rank on the "
+                       "board. " if pair_position == "bottom" else "")
+                    + "An opponent may or may not have a better hand. Whether a particular "
+                    "action fits depends on the current model and this spot.")
 
     return (f"Your visible cards make {category}. This describes your made hand only; "
             "it does not tell us what an opponent holds or whether you are ahead.")

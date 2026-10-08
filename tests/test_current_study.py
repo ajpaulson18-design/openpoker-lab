@@ -229,6 +229,8 @@ class CurrentStudyEvidenceTests(unittest.TestCase):
         self.assertIn("7–2 offsuit", situation["text"])
         self.assertIn("challenging starting hand", situation["text"])
         self.assertIn("best action still depends on this spot", situation["text"])
+        self.assertIn("do not offer an easy straight connection", situation["text"])
+        self.assertIn("cannot both help make a flush in one suit", situation["text"])
         self.assertNotIn("opponent holds", situation["text"])
         self.assertEqual(view["recommended_action_id"], evidence.recommended_action_id)
         self.assertEqual(view["binding"]["hand_id"], evidence.ref.hand_id)
@@ -239,7 +241,9 @@ class CurrentStudyEvidenceTests(unittest.TestCase):
         _, view = self.situation_view(("3d", "2c"), ("4c", "3h", "Th"))
         text = view["situation"]["text"]
         self.assertIn("bottom pair", text)
-        self.assertIn("does not tell us what an opponent holds or whether you are ahead", text)
+        self.assertIn("pair ranks below a pair made with a higher rank on the board", text)
+        self.assertIn("An opponent may or may not have a better hand", text)
+        self.assertIn("current model and this spot", text)
 
     def test_current_preview_renderer_separates_situation_from_model_recommendation(self):
         source_path = Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js"

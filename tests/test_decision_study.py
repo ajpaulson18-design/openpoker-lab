@@ -123,7 +123,10 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("both low ranks", study["situation"]["text"])
         self.assertIn("unpaired", study["situation"]["text"])
         self.assertIn("not connected", study["situation"]["text"])
+        self.assertIn("do not offer an easy straight connection", study["situation"]["text"])
+        self.assertIn("cannot both help make a flush in one suit", study["situation"]["text"])
         self.assertNotIn("worst", study["situation"]["text"].lower())
+        self.assertNotIn("worst hand", study["situation"]["text"].lower())
         self.assertEqual(study["decision"]["title"], "Your decision")
         self.assertIn("quality of your cards does not by itself decide", study["decision"]["note"])
 
@@ -161,7 +164,11 @@ class DecisionStudyTests(unittest.TestCase):
         study = self.study_with_visible_cards(("3d", "2c"), ("4c", "3h", "Th"))
         self.assertIn("bottom pair", study["situation"]["text"])
         self.assertIn("unpaired board", study["situation"]["text"])
-        self.assertIn("does not tell us what an opponent holds", study["situation"]["text"])
+        self.assertIn("pair ranks below a pair made with a higher rank on the board",
+                      study["situation"]["text"])
+        self.assertIn("An opponent may or may not have a better hand",
+                      study["situation"]["text"])
+        self.assertIn("current model and this spot", study["situation"]["text"])
         self.assertNotIn("opponent has", study["situation"]["text"].lower())
 
     def test_situation_uses_made_hand_category_without_claiming_relative_strength(self):
