@@ -113,6 +113,8 @@ class CoachRequestTests(unittest.TestCase):
         self.assertEqual(self.selector.calls, [])
         self.assertEqual(result["source_label"], "Practice estimate")
         self.assertIsInstance(result["reply"]["caveats"], list)
+        self.assertEqual(result["teaching_note"]["source_label"], "Practice estimate")
+        self.assertEqual(result["teaching_note"]["binding"], result["binding"])
 
     def test_explicit_local_enablement_is_required_even_with_a_selector(self):
         disabled_selector = FakeSelector()
@@ -143,6 +145,7 @@ class CoachRequestTests(unittest.TestCase):
             result = json.load(urlopen(request))
             self.assertEqual(result["source"], "local_fallback")
             self.assertEqual(result["fallback_reason"], "external_ai_not_configured")
+            self.assertIsNotNone(result["teaching_note"])
             self.assertEqual(disabled_selector.calls, [])
         finally:
             server.shutdown()
@@ -156,6 +159,8 @@ class CoachRequestTests(unittest.TestCase):
         self.assertEqual(result["source"], "openai")
         self.assertEqual(result["binding"]["evidence_id"], self.decision["evidence_id"])
         self.assertEqual(result["reply"]["intent"], "recommendation")
+        self.assertEqual(result["teaching_note"]["binding"], result["reply"]["binding"])
+        self.assertIn("supporting_fact_ids", result["teaching_note"])
         self.assertEqual(len(self.selector.calls), 1)
         bundle, question, detail, audience = self.selector.calls[0]
         self.assertEqual((question, detail, audience), ("Why?", "technical", "beginner"))
