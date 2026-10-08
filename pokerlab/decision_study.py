@@ -34,6 +34,20 @@ def _bounded_text(value: str, limit: int = 500) -> str:
     return value if len(value) <= limit else value[:limit - 1].rstrip() + "…"
 
 
+def _solver_diagnostic(value: float) -> str:
+    if value != 0 and abs(value) < 0.005:
+        return "less than 0.01" if value > 0 else "greater than -0.01"
+    return f"{value:.2f}"
+
+
+def _ev_basis_description(basis: str) -> str:
+    if basis == "incremental_decision_chips":
+        return "estimated chips from this decision"
+    if basis == "half_initial_pot_utility":
+        return "solver chip utility measured relative to half the starting pot"
+    raise ValueError("Unsupported decision-study EV basis.")
+
+
 def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
     """Project validated facts into a small display model; never recalculate."""
     action_values = {item.action_id: item.value for item in analysis.action_evs}
@@ -57,6 +71,7 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
     recommendation_label = (_action_label(recommendation)
                              if recommendation is not None else None)
     recommendation_ev = action_values.get(analysis.recommended_action_id)
+    ev_basis_description = _ev_basis_description(analysis.ev_basis)
     unassessed_size = choice.get("assessment_status") == "unassessed_size"
     if unassessed_size:
         decision_text = (f"You chose {_choice_label(choice)}. "
@@ -65,8 +80,8 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
                             "it does not score the size you chose."
                             if recommendation_label is not None else
                             "The saved model does not score that raise size."))
-        decision_note = ("This raise size was not assessed. A weak hand does not make every "
-                         "action wrong; the recommendation applies to the modeled size only, "
+        decision_note = ("This raise size was not assessed. Your cards alone do not decide "
+                         "whether an action was right; the recommendation applies to the modeled size only, "
                          "with the limitations below.")
     else:
         decision_text = (f"You chose {_choice_label(choice)}. "
@@ -74,8 +89,9 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
                             "That is guidance from this decision's saved model and assumptions."
                             if recommendation_label is not None else
                             f"The saved {source_label.lower()} has no recommendation for comparison."))
-        decision_note = ("A weak hand does not make every action wrong. Your action is assessed "
-                         "against the saved model for this spot, with the limitations below.")
+        decision_note = ("The quality of your cards does not by itself decide whether the action "
+                         "was right. Your action is assessed against the saved model for this spot, "
+                         "with the limitations below.")
     decision_guidance = {
         "title": "Your decision",
         "chosen_action": _choice_label(choice),
@@ -135,7 +151,7 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
             f"The saved estimate gives {_choice_label(choice)} an EV of "
             f"{ev_gap['selected_action_ev']:.2f} and its recommendation "
             f"{recommendation_label} an EV of {ev_gap['recommended_action_ev']:.2f}. "
-            f"The recorded gap is {ev_gap['loss']:.2f} in {analysis.ev_basis}."
+            f"The recorded gap is {ev_gap['loss']:.2f} in {ev_basis_description}."
         )
     else:
         choice_answer = (f"The saved analysis assessed {_choice_label(choice)}, "
@@ -145,7 +161,7 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
         estimate_answer = f"The saved {source_label.lower()} has no recommended action."
     else:
         estimate_answer = (f"The saved {source_label.lower()} recommends "
-                           f"{recommendation_label}. Values use {analysis.ev_basis}.")
+                           f"{recommendation_label}. Values use {ev_basis_description}.")
 
     assumptions = analysis.opponent_assumptions
     if assumptions:
@@ -178,8 +194,8 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
         }
         limit_parts.append(
             f"Saved solver diagnostics: {analysis.quality.iterations} iterations; "
-            f"NashConv {analysis.quality.nash_conv}; "
-            f"exploitability {analysis.quality.exploitability} "
+            f"NashConv {_solver_diagnostic(analysis.quality.nash_conv)}; "
+            f"exploitability {_solver_diagnostic(analysis.quality.exploitability)} "
             f"({analysis.quality.gap_semantics})."
         )
     limitations = list(dict.fromkeys(
