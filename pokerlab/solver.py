@@ -4,61 +4,28 @@ The solver's equilibrium claim is limited to the exact configured river tree.
 It enumerates compatible private-hand pairs and evaluates best responses at
 information-set level, without exposing either player's hidden cards.
 """
-from dataclasses import dataclass
-import math
-
 from .analysis import number
 from .cards import cards, expand_range, rank_hand
+from .cfr import best_response as _cfr_best_response
+from .cfr import evaluate as _cfr_evaluate
+from .cfr import strategy, train as _cfr_train
 from .river_config import RiverConfig
+from .river_tree import (
+    IP,
+    OOP,
+    _EPSILON,
+    _Action,
+    _Node,
+    _Terminal,
+    _add_action,
+    _amount_label,
+    _build_tree,
+    _clean,
+    _opening_actions,
+    _raise_actions,
+    _terminal_value,
+)
 from .restricted_solver import solve as _solve_restricted
-
-
-OOP, IP = 0, 1
-_EPSILON = 1e-9
-
-
-def _clean(value):
-    value = round(float(value), 9)
-    return 0.0 if value == 0 else value
-
-
-def _amount_label(value):
-    return format(_clean(value), ".9f").rstrip("0").rstrip(".")
-
-
-@dataclass(frozen=True)
-class _Action:
-    name: str
-    amount: float = 0.0
-    raise_to: float = 0.0
-    full_raise: bool = False
-
-    @property
-    def token(self):
-        if self.name in {"bet", "raise", "all_in"}:
-            return f"{self.name}@{_amount_label(self.raise_to)}"
-        return self.name
-
-
-@dataclass
-class _Node:
-    history: tuple
-    player: int
-    actions: tuple
-    children: tuple
-
-
-@dataclass(frozen=True)
-class _Terminal:
-    kind: str
-    contributions: tuple
-    winner: int | None = None
-
-
-def strategy(regret):
-    positive = [max(0.0, value) for value in regret]
-    mass = sum(positive)
-    return [value / mass for value in positive] if mass else [1.0 / len(regret)] * len(regret)
 
 
 def terminal_utilities(pot, bet, sign):
@@ -96,124 +63,6 @@ def _normalized_config(pot, bet, config, effective_stack, bet_sizes, raise_sizes
     )
 
 
-def _add_action(actions, name, target, committed, stack, full_raise=False):
-    target = _clean(min(stack, max(committed, target)))
-    if target <= committed + _EPSILON:
-        return
-    if target >= stack - _EPSILON:
-        name = "all_in"
-    if any(abs(existing.raise_to - target) <= _EPSILON for existing in actions):
-        return
-    actions.append(_Action(name, _clean(target - committed), target, full_raise))
-
-
-def _opening_actions(config, committed, total_pot, player):
-    stack = config.stacks[player]
-    actions = []
-    for fraction in config.bet_sizes:
-        target = committed + fraction * total_pot
-        _add_action(actions, "bet", target, committed, stack)
-    if config.include_all_in:
-        _add_action(actions, "all_in", stack, committed, stack)
-    return tuple(sorted(actions, key=lambda action: action.raise_to))
-
-
-def _raise_actions(config, contributions, player, previous_full_raise, raises_made):
-    committed = contributions[player]
-    opponent = contributions[1 - player]
-    call_amount = opponent - committed
-    call_target = opponent
-    max_target = config.stacks[player]
-    minimum_target = opponent + previous_full_raise
-    pot_after_call = config.pot + sum(contributions) + call_amount
-    actions = []
-    if max_target <= call_target + _EPSILON:
-        return ()
-    for fraction in config.raise_sizes:
-        requested_target = call_target + fraction * pot_after_call
-        target = requested_target
-        if target < minimum_target:
-            target = minimum_target
-        if target > max_target:
-            target = max_target
-        increment = target - call_target
-        is_full = increment + _EPSILON >= previous_full_raise
-        if is_full:
-            _add_action(actions, "raise", target, committed, max_target, True)
-        elif requested_target + _EPSILON >= max_target or minimum_target > max_target:
-            _add_action(actions, "all_in", max_target, committed, max_target, False)
-    if config.include_all_in and max_target > call_target + _EPSILON:
-        all_in_increment = max_target - call_target
-        _add_action(actions, "all_in", max_target, committed, max_target,
-                    all_in_increment + _EPSILON >= previous_full_raise)
-    return tuple(sorted(actions, key=lambda action: action.raise_to))
-
-
-def _build_tree(config):
-    """Build a finite public tree. Raise depth counts every raise action."""
-    node_count = 0
-
-    def build(history, player, contributions, previous_full_raise, raises_made,
-              raise_reopened, checks):
-        nonlocal node_count
-        if contributions[player] >= config.stacks[player] - _EPSILON:
-            return _Terminal("showdown", contributions)
-        node_count += 1
-        if node_count > 10_000:
-            raise ValueError("Configured action tree exceeds 10,000 public nodes.")
-        opponent = 1 - player
-        committed, other = contributions[player], contributions[opponent]
-        if abs(committed - other) <= _EPSILON:
-            check = _Action("check")
-            if checks == 1:
-                check_child = _Terminal("showdown", contributions)
-            else:
-                check_child = build(history + (check.token,), opponent, contributions,
-                                    previous_full_raise, raises_made, raise_reopened, checks + 1)
-            actions = [check]
-            children = [check_child]
-            for action in _opening_actions(config, committed,
-                                           config.pot + sum(contributions), player):
-                next_contributions = list(contributions)
-                next_contributions[player] = action.raise_to
-                actions.append(action)
-                children.append(build(history + (action.token,), opponent,
-                                      tuple(next_contributions), action.amount, 0, True, 0))
-        else:
-            call_amount = other - committed
-            actual_call = min(call_amount, config.stacks[player] - committed)
-            call_contributions = list(contributions)
-            call_contributions[player] = committed + actual_call
-            actions = [_Action("fold"), _Action("call", _clean(actual_call),
-                                               call_contributions[player])]
-            children = [_Terminal("fold", contributions, opponent),
-                        _Terminal("showdown", tuple(call_contributions))]
-            if raise_reopened and raises_made < config.max_raises and \
-                    other < config.stacks[opponent] - _EPSILON:
-                for action in _raise_actions(config, contributions, player,
-                                             previous_full_raise, raises_made):
-                    next_contributions = list(contributions)
-                    next_contributions[player] = action.raise_to
-                    actions.append(action)
-                    increment = action.raise_to - other
-                    full_raise = increment + _EPSILON >= previous_full_raise
-                    next_full_raise = increment if full_raise else previous_full_raise
-                    children.append(build(history + (action.token,), opponent,
-                                          tuple(next_contributions), next_full_raise,
-                                          raises_made + 1, full_raise, 0))
-        return _Node(history, player, tuple(actions), tuple(children))
-
-    return build((), OOP, (0.0, 0.0), 0.0, 0, True, 0), node_count
-
-
-def _terminal_value(terminal, sign, pot):
-    matched = min(terminal.contributions)
-    if terminal.kind == "fold":
-        winner_sign = 1 if terminal.winner == OOP else -1
-        return winner_sign * (pot / 2 + matched)
-    return sign * (pot / 2 + matched)
-
-
 def _node_key(node, hand_indexes):
     return node.player, hand_indexes[node.player], node.history
 
@@ -222,10 +71,9 @@ def _collect_nodes(root):
     nodes = {}
 
     def visit(node):
-        if not isinstance(node, _Node):
-            return
-        nodes[(node.player, node.history)] = node
-        for child in node.children:
+        if hasattr(node, "actions"):
+            nodes[(node.player, tuple(node.history))] = node
+        for child in getattr(node, "children", ()):
             visit(child)
 
     visit(root)
@@ -233,53 +81,25 @@ def _collect_nodes(root):
 
 
 def _deal_value(root, sign, pot, averages, deal, hand_indexes):
-    i, j, _, _ = deal
+    def key(node, world):
+        return _node_key(node, (world[0], world[1]))
 
-    def visit(node):
-        if isinstance(node, _Terminal):
-            return _terminal_value(node, sign, pot)
-        probs = averages[_node_key(node, (i, j))]
-        return sum(probability * visit(child)
-                   for probability, child in zip(probs, node.children))
+    def terminal(node, world):
+        return _terminal_value(node, world[3], pot)
 
-    return visit(root)
+    world = tuple(deal[:2]) + (1.0, sign) + tuple(deal[4:])
+    return _cfr_evaluate(root, [world], averages, terminal, key)
 
 
 def _best_response_value(player, root, hands, deals, averages, hand_indexes, pot):
-    """Best response with opponent hands aggregated before each private-hand max."""
-    own_index = player
-    result = 0.0
-    compatible_by_own = [[] for _ in hands[player]]
-    for deal in deals:
-        i, j, weight, sign = deal
-        own_hand = i if own_index == OOP else j
-        compatible_by_own[own_hand].append((i, j, weight, sign))
+    """Compatibility wrapper over the shared chance-aware CFR kernel."""
+    def key(node, world):
+        return _node_key(node, (world[0], world[1]))
 
-    for own_hand, own_deals in enumerate(compatible_by_own):
-        if not own_deals:
-            continue
+    def terminal(node, world):
+        return _terminal_value(node, world[3], pot)
 
-        def visit(node, weighted_deals):
-            if isinstance(node, _Terminal):
-                return sum(weight * ((1 if player == OOP else -1) *
-                                     _terminal_value(node, sign, pot))
-                           for _, _, weight, sign in weighted_deals)
-            if node.player == player:
-                return max(visit(child, weighted_deals) for child in node.children)
-            value = 0.0
-            for action_index, child in enumerate(node.children):
-                branched = []
-                for i, j, weight, sign in weighted_deals:
-                    probs = averages[_node_key(node, (i, j))]
-                    next_weight = weight * probs[action_index]
-                    if next_weight:
-                        branched.append((i, j, next_weight, sign))
-                if branched:
-                    value += visit(child, branched)
-            return value
-
-        result += visit(root, own_deals)
-    return result
+    return _cfr_best_response(player, root, deals, averages, terminal, key)
 
 
 def _lock_frequencies(lock, hands, nodes, config):
@@ -396,66 +216,22 @@ def _solve_configured(board, oop_range, ip_range, pot=100, bet=50, iterations=10
     for (player, history), node in nodes.items():
         for hand_index in range(len(hands[player])):
             infos[(player, hand_index, history)] = len(node.actions)
-    regrets = {key: [0.0] * count for key, count in infos.items()}
-    sums = {key: [0.0] * count for key, count in infos.items()}
+    def node_key(node, world):
+        return _node_key(node, (world[0], world[1]))
 
-    for iteration in range(1, iterations + 1):
-        current = {key: strategy(regret) for key, regret in regrets.items()}
-        for (player, history), locked_hands in lock_map.items():
-            node = nodes[(player, history)]
-            for hand_index, frequency in locked_hands.items():
-                key = (player, hand_index, history)
-                current[key] = [1.0 - frequency, frequency]
-        deltas = {key: [0.0] * count for key, count in infos.items()}
+    def terminal_value(node, world):
+        return _terminal_value(node, world[3], config.pot)
 
-        for i, j, deal_weight, sign in deals:
-            hand_indexes = (i, j)
-
-            def traverse(node, reach0, reach1):
-                if isinstance(node, _Terminal):
-                    return _terminal_value(node, sign, config.pot)
-                key = _node_key(node, hand_indexes)
-                probs = current[key]
-                action_values = []
-                for action_index, child in enumerate(node.children):
-                    action_values.append(traverse(
-                        child,
-                        reach0 * (probs[action_index] if node.player == OOP else 1.0),
-                        reach1 * (probs[action_index] if node.player == IP else 1.0)))
-                expected = sum(p * value for p, value in zip(probs, action_values))
-                opponent_reach = reach1 if node.player == OOP else reach0
-                own_reach = reach0 if node.player == OOP else reach1
-                sign_for_player = 1 if node.player == OOP else -1
-                for action_index, value in enumerate(action_values):
-                    deltas[key][action_index] += deal_weight * opponent_reach * \
-                        sign_for_player * (value - expected)
-                    sums[key][action_index] += deal_weight * own_reach * probs[action_index] * \
-                        (iteration**2 if algorithm == "dcfr" else 1.0)
-                return expected
-
-            traverse(root, 1.0, 1.0)
-        for key, values in regrets.items():
-            updated = [old + delta for old, delta in zip(values, deltas[key])]
-            if algorithm == "dcfr":
-                positive_discount = iteration**1.5 / (iteration**1.5 + 1)
-                updated = [value * (positive_discount if value > 0 else .5) for value in updated]
-            regrets[key] = updated
-
-    averages = {}
-    for key, values in sums.items():
-        total = sum(values)
-        averages[key] = [value / total for value in values] if total else \
-            [1.0 / len(values)] * len(values)
-    # Enforce exact locked frequencies in the reported strategy.
+    cfr_locks = {}
     for (player, history), locked_hands in lock_map.items():
         for hand_index, frequency in locked_hands.items():
-            averages[(player, hand_index, history)] = [1.0 - frequency, frequency]
+            cfr_locks[(player, hand_index, history)] = [1.0 - frequency, frequency]
+    averages = _cfr_train(root, deals, infos, iterations, algorithm,
+                          terminal_value, node_key, locks=cfr_locks)
 
-    value = sum(weight * _deal_value(root, sign, config.pot, averages, deal,
-                                     (deal[0], deal[1]))
-                for deal in deals for _, _, weight, sign in (deal,))
-    br0 = _best_response_value(OOP, root, hands, deals, averages, None, config.pot)
-    br1 = _best_response_value(IP, root, hands, deals, averages, None, config.pot)
+    value = _cfr_evaluate(root, deals, averages, terminal_value, node_key)
+    br0 = _cfr_best_response(OOP, root, deals, averages, terminal_value, node_key)
+    br1 = _cfr_best_response(IP, root, deals, averages, terminal_value, node_key)
     gap = max(0.0, br0 + br1)
     oop_rows, ip_rows = _legacy_rows(root, averages, hands)
     opening_bets = []
