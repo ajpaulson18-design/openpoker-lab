@@ -25,14 +25,53 @@ planning cost. The recursive path remains available as a comparison. Reusing an
 already-built plan in scratch timing is not the cost of a normal one-shot solve.
 Measure traced memory separately, starting before plan construction.
 
-The preliminary training-only comparison on the full 176-world fixture showed
-roughly 1.4–1.6 times faster training, including per-call planning, for 20/100/300
-iterations under both algorithms. Every strategy frequency, expected value and
-best-response value matched the recursive path exactly. Traced training peak
-rose from approximately 902 KB to 1,436 KB. These are shared-machine scratch
-measurements at ten iterations for memory, excluding the already-built public
-tree. Final whole-API reports include construction, training, exact gaps and
-serialization; their measurements supersede these preliminary timings.
+## Whole-API measurements
+
+Four versioned `benchmarks/results/turn-river-v2-*.json` reports use the same
+two-fixture configuration, 20/100/300 iterations, three timed calls per row and
+a separate traced-memory call. All 24 rows record source revision `f6f46a2` and
+six module checksums. These checksums match the committed implementation and
+are identical across reports. Uncommitted documentation/reports/scratch files
+account for the recorded dirty-worktree flag. Timings include tree construction,
+per-call planning, training, exact value/BR calculations and strategy serialization.
+Every paired numerical value/gap matched within 1e-12; tree counts matched exactly.
+
+| Fixture, 300 iterations | Algorithm | Recursive seconds | Planned seconds | Runtime ratio |
+| --- | --- | ---: | ---: | ---: |
+| Full deck, 176 worlds | Vanilla | 5.921 | 4.440 | 1.33x |
+| Full deck, 176 worlds | DCFR | 7.332 | 4.295 | 1.71x |
+| Conditioned subset, 8 worlds | Vanilla | 0.748 | 0.517 | 1.45x |
+| Conditioned subset, 8 worlds | DCFR | 0.802 | 0.877 | 0.91x |
+
+The full-deck vanilla case was also slower with planning at 20 and 100 iterations
+(0.783 vs 0.542 seconds; 2.246 vs 2.104 seconds). The conditioned DCFR case was
+slower at 300. These shared-machine measurements are noisy, particularly on tiny
+cases, and do not establish a universal speedup or production full-range speed.
+Recursive traversal therefore remains the default.
+
+Whole-API traced peaks at 300 iterations were about 2.34/2.09 MiB
+(recursive/planned) on the full fixture and 296/233 KiB on the conditioned fixture.
+A separate preliminary training-only scratch comparison measured higher planned
+peak (about 902 to 1,436 KB at ten iterations, excluding the already-built public
+tree). Retained plan storage and whole-call peak are different measures; allocation
+lifetimes and cyclic GC can affect the latter. Report the mixed, fixture-specific
+memory results rather than a general memory-reduction or increase claim.
+Tracemalloc excludes process RSS and native allocations.
+
+```text
+python -m scripts.benchmark_turn_solver --traversal recursive --algorithm vanilla
+python -m scripts.benchmark_turn_solver --traversal planned --algorithm vanilla
+python -m scripts.benchmark_turn_solver --traversal recursive --algorithm dcfr
+python -m scripts.benchmark_turn_solver --traversal planned --algorithm dcfr
+```
+
+Six additional differential tests exercise weighted blocker-conditioned worlds,
+both CFR variants at 20/100 iterations, custom chance/key callbacks, nonuniform
+locked policies, early operation-budget failure and public API parity. The exact
+recursive kernel remains validated against the original independent river and
+turn-game mathematical oracles.
+The full local suite passed 304 tests, including application/AI Coach regressions,
+in 81.433 seconds. GitHub's Python-version matrix validates the final pushed head.
 
 ## Design inspiration and subsequent work
 

@@ -171,7 +171,7 @@ and reports exact information-set best responses under `postflop-strategy-v1`.
 Optional selected runouts explicitly condition the entire joint physical game.
 See [turn-to-river validation and examples](docs/turn-river-validation.md).
 Optional `traversal="planned"` prepares static traversal operations to reduce
-repeated training work, with a measured memory cost; recursive is the default.
+repeated training work, with bounded plan storage; recursive is the default.
 See [traversal comparison](docs/planned-traversal.md).
 This Python API is additive; the browser's solver remains its fixed river form.
 Flop, preflop and eventually multiway solving are further development goals.

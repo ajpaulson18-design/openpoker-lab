@@ -1,0 +1,755 @@
+{
+  "benchmark_id": "restricted-turn-river-v1",
+  "config_schema_version": 1,
+  "config_sha256": "ffc5349068523bfbaa113d9bfdb8afc0f9d440daf1378b81bb54ab9ef4f5850d",
+  "created_at_utc": "2026-10-08T23:20:21.775753+00:00",
+  "methodology": {
+    "conditional_runouts": "Selected runout fixtures are conditional-subset experiments, not unrestricted physical turn games.",
+    "exact_gap": "Uses the solver-reported information-set best responses and NashConv.",
+    "memory": "tracemalloc peak from a separate untimed solver call",
+    "timing": "perf_counter wall time; median of independent solver calls"
+  },
+  "provenance": {
+    "git_revision": "f6f46a28ea7333f43be0cc5dd1b07eba0c04e453",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.14.7",
+    "source_sha256": {
+      "cards": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "cfr": "ac1d1b959467de0ffa77cdab95054b6a9b9359cacd1a6f8c7ede5d403b19bc43",
+      "planned_cfr": "a26a15726f2c007c3695ac1f9e0f070a64e31313e005cd2bedeec2c37f7205bf",
+      "river_config": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "river_tree": "77ec4aea8f0e5b661d8b49096c0e30c4498507aa3b71e3b48d3a087dfda47ae2",
+      "turn_solver": "fce263003848a514451381e906cc76432fbe53ae4e1cb8f499a5a3498b610be8"
+    },
+    "worktree_dirty": true
+  },
+  "results": [
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": false,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 3,
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 7.562643676734687,
+        "information_set_count": 1112,
+        "ip_best_response_value": 26.009596731317174,
+        "nash_conv": 15.125287353469375,
+        "oop_best_response_value": -10.8843093778478,
+        "plan_operation_limit": 250000,
+        "public_nodes": 580,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 19.836438318248195,
+        "value_oop": -19.836438318248195,
+        "world_count": 176,
+        "world_traversal_nodes": 16
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 20,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 2192882,
+      "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+      "repeats": 3,
+      "runout_scope": "all-compatible-runouts",
+      "runtime_seconds": {
+        "median": 0.7827322999946773,
+        "samples": [
+          0.6844633999862708,
+          0.7909930999740027,
+          0.7827322999946773
+        ]
+      },
+      "scenario_id": "full44-blocked-runouts"
+    },
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": false,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 3,
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 1.9626421294999066,
+        "information_set_count": 1112,
+        "ip_best_response_value": 20.278159814257346,
+        "nash_conv": 3.925284258999813,
+        "oop_best_response_value": -16.352875555257533,
+        "plan_operation_limit": 250000,
+        "public_nodes": 580,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 18.256635537468593,
+        "value_oop": -18.256635537468593,
+        "world_count": 176,
+        "world_traversal_nodes": 16
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 100,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 2192354,
+      "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+      "repeats": 3,
+      "runout_scope": "all-compatible-runouts",
+      "runtime_seconds": {
+        "median": 2.2458534000325017,
+        "samples": [
+          3.0614812999847345,
+          2.2458534000325017,
+          2.16627950000111
+        ]
+      },
+      "scenario_id": "full44-blocked-runouts"
+    },
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": false,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 3,
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 0.7385775609783138,
+        "information_set_count": 1112,
+        "ip_best_response_value": 18.955530667792893,
+        "nash_conv": 1.4771551219566277,
+        "oop_best_response_value": -17.478375545836265,
+        "plan_operation_limit": 250000,
+        "public_nodes": 580,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 18.23775513114427,
+        "value_oop": -18.23775513114427,
+        "world_count": 176,
+        "world_traversal_nodes": 16
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 300,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 2192506,
+      "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+      "repeats": 3,
+      "runout_scope": "all-compatible-runouts",
+      "runtime_seconds": {
+        "median": 4.439527700014878,
+        "samples": [
+          4.110012000019196,
+          4.439527700014878,
+          5.032540699990932
+        ]
+      },
+      "scenario_id": "full44-blocked-runouts"
+    },
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": true,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 12,
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 13.816662032854598,
+        "information_set_count": 138,
+        "ip_best_response_value": 34.541846279232544,
+        "nash_conv": 27.633324065709196,
+        "oop_best_response_value": -6.908522213523348,
+        "plan_operation_limit": 250000,
+        "public_nodes": 69,
+        "reachable_runouts": [
+          "3c",
+          "5h"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 23.702238298753986,
+        "value_oop": -23.702238298753986,
+        "world_count": 8,
+        "world_traversal_nodes": 41
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 20,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 238267,
+      "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+      "repeats": 3,
+      "runout_scope": "selected-conditioned-subset",
+      "runtime_seconds": {
+        "median": 0.04811800003517419,
+        "samples": [
+          0.04891650000354275,
+          0.0449809999554418,
+          0.04811800003517419
+        ]
+      },
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": true,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 12,
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 4.501285173054201,
+        "information_set_count": 138,
+        "ip_best_response_value": 21.01840350368476,
+        "nash_conv": 9.002570346108403,
+        "oop_best_response_value": -12.015833157576356,
+        "plan_operation_limit": 250000,
+        "public_nodes": 69,
+        "reachable_runouts": [
+          "3c",
+          "5h"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 17.986480668960393,
+        "value_oop": -17.986480668960393,
+        "world_count": 8,
+        "world_traversal_nodes": 41
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 100,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 238267,
+      "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+      "repeats": 3,
+      "runout_scope": "selected-conditioned-subset",
+      "runtime_seconds": {
+        "median": 0.1755865999730304,
+        "samples": [
+          0.1652985000400804,
+          0.1755865999730304,
+          0.25978100002976134
+        ]
+      },
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "board4": "Js8d4c2h",
+      "conditioned_subset_only": true,
+      "game": {
+        "algorithm": "vanilla",
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 12,
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "deal_count": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 1.6174596026038905,
+        "information_set_count": 138,
+        "ip_best_response_value": 19.92443235237102,
+        "nash_conv": 3.234919205207781,
+        "oop_best_response_value": -16.68951314716324,
+        "plan_operation_limit": 250000,
+        "public_nodes": 69,
+        "reachable_runouts": [
+          "3c",
+          "5h"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ],
+        "scope": "Approximate equilibrium of the configured heads-up turn-to-river action abstraction; no flop, preflop or rake.",
+        "solver_version": "configured-turn-river-v2",
+        "value_ip": 17.826925883015,
+        "value_oop": -17.826925883015,
+        "world_count": 8,
+        "world_traversal_nodes": 41
+      },
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 300,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 238267,
+      "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+      "repeats": 3,
+      "runout_scope": "selected-conditioned-subset",
+      "runtime_seconds": {
+        "median": 0.5170330000109971,
+        "samples": [
+          0.5170330000109971,
+          0.4997541999910027,
+          0.5272054999950342
+        ]
+      },
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize"
+    }
+  ],
+  "schema_version": 1
+}
