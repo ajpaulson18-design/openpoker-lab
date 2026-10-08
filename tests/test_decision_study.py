@@ -263,6 +263,26 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("coachQuestionError=result.reason||result.error", request)
         self.assertIn("The answer did not match the selected decision", request)
 
+    def test_follow_up_state_restores_turn_cap_and_recovers_expired_conversations(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        selection = source[source.index("async function selectDecisionStudy"):source.index("function coachRequestSelectionMatches")]
+        self.assertIn("coachConversation=coachConversations.get(key)", selection)
+        self.assertIn("coachConversationFull=coachConversation.turns.length>=4", selection)
+        self.assertIn("coachConversationExpired=false", selection)
+
+        request = source[source.index("async function askStudyCoach"):source.index("function showDecisionStudy")]
+        self.assertIn("if(coachQuestionLoading||!studyPayload", request)
+        self.assertIn("coachConversationExpired=error.code==='conversation_expired'", request)
+        self.assertIn("data-reset-expired-coach", source)
+        self.assertIn("if(e.target.closest('[data-reset-expired-coach]'))startNewCoachConversation()", source)
+        self.assertIn("coachConversation={key:coachConversation.key,target:coachConversation.target,\n    conversationId:null,turns:[]}", request)
+
+    def test_follow_up_controls_disable_during_a_request(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        turn_list = source[source.index("function coachTurnListHtml"):source.index("function coachQuestionHtml")]
+        self.assertEqual(turn_list.count("${coachQuestionLoading?' disabled':''}"), 2)
+        self.assertIn("if(coachQuestionLoading)return", source[source.index("$('#decision-study').addEventListener('click'"):])
+
 
 if __name__ == "__main__":
     unittest.main()
