@@ -242,6 +242,24 @@ memory advantage. See [traversal validation and reproducible commands](planned-t
 The broader street/range objective remains active. No AI Coach/UI/contracts code,
 third-party source, dependency, repository license or visibility changed.
 
+## Traversal temporary-state lifetime
+
+A fresh-process weak-reference diagnostic with cyclic GC disabled found both
+trainers retained a terminal callback after returning. The recursive trainer's
+`traverse` closure captured itself and final strategy/delta/sum state; the planned
+compiler's `visit` closure captured itself, callbacks, key indexes and its final
+operation array. Clearing each recursive closure binding in `finally` after its
+last use breaks those cycles on success and failure. The mathematical update
+order, profiles, interfaces and independent BR evaluation are unchanged.
+
+Before the fix, both callback weak references remained live until `gc.collect()`;
+after it, both were released without cyclic collection on CPython. A known tiny
+policy remains exactly `[0.05, 0.95]`. Two regression tests verify successful
+training under both backends and partial-plan budget failure with GC disabled;
+immediate-release checks are CPython-specific. All 88 focused mathematical tests
+passed. This measures state lifetime, not a universal runtime/peak-memory gain.
+Earlier benchmark reports remain measurements of their recorded source commits.
+
 ## Next implementation milestone
 
 Profile and reduce repeated per-world traversal work while preserving the exact

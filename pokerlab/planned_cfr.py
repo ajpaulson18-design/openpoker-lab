@@ -34,7 +34,12 @@ def _plans(root, worlds, key_indexes, terminal_value, node_key, chance_child,
             operations.append(op)
             return len(operations) - 1
 
-        root_index = visit(root)
+        try:
+            root_index = visit(root)
+        finally:
+            # The compiler's recursive closure must not retain the callback,
+            # key map and last operation array after this world is prepared.
+            visit = None
         order, pending = [], [root_index]
         while pending:
             index = pending.pop()
