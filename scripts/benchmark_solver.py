@@ -67,6 +67,10 @@ def solver_provenance(path: Path | None) -> dict:
         "source": source.name if path is not None else "pokerlab/solver.py",
         "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "restricted_solver_sha256": hashlib.sha256(restricted.read_bytes()).hexdigest(),
+        "supporting_modules_sha256": {
+            name: hashlib.sha256((ROOT / "pokerlab" / name).read_bytes()).hexdigest()
+            for name in ("cfr.py", "river_tree.py", "river_config.py", "cards.py")
+        },
         "source_note": "The selected module may import supporting modules from the checked-out pokerlab package.",
     }
 

@@ -18,6 +18,7 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 - Keep calculation, immutable contracts, opponent-model snapshots, explanations, and presentation voices separate.
 - `pokerlab/contracts.py` defines shared structured boundaries. Preserve deterministic serialization and provenance.
 - `pokerlab/solver.py` dispatches the fixed-board river solver: the optimized fixed-bet compatibility kernel in `restricted_solver.py`, or the finite configured bet/raise/stack tree. Both expose `river-strategy-v1` and vanilla CFR or optional DCFR. Never present either as unrestricted Hold'em GTO or earlier-street solving.
+- `pokerlab/turn_solver.py` adds finite heads-up turn-to-river games through the shared `cfr.py` kernel and `river_tree.py` betting builder. Preserve physical joint hand/runout weights, perfect recall, hidden future cards, cumulative stack accounting and `postflop-strategy-v1`. Selected runouts condition the entire joint game; they are not an unconditional full-deck approximation. Flop/preflop and unrestricted NLHE remain future work.
 - `pokerlab/models.py` persists local observations. Preserve explicit opportunity denominators, idempotent observation IDs, street/context filtering, transactions, and legacy-data error handling.
 - `pokerlab/practice.py` must store every live opponent range and enough decision-time state to replay a decision exactly.
 - Explanation and personality layers may change prose, never recommendations, EVs, frequencies, confidence, analysis IDs, or protected facts.

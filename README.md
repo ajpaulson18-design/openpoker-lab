@@ -4,7 +4,7 @@
 
 OpenPoker Lab is an independent, open-source research app combining Hold'em
 simulation, persistent opponent observations, transparent expected-value analysis,
-and a working counterfactual regret minimization (CFR) river solver.
+and working counterfactual regret minimization (CFR) river and turn-to-river solvers.
 
 The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
@@ -48,6 +48,7 @@ persist a conversation. The request uses the Responses API with structured outpu
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over configurable river bet/raise sizes and compatible private hands; mixed strategies; exact best-response gap; confidence-weighted legacy node locks |
+| Turn-to-river solver library | Configured betting on both streets; exact physical river chance, card blockers, full-history policies and exact best-response gaps; Python API |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
