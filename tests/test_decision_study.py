@@ -1,5 +1,5 @@
 """HTTP and view-model tests for deterministic saved-decision study."""
-from dataclasses import fields
+from dataclasses import fields, replace
 import json
 from pathlib import Path
 import shutil
@@ -70,6 +70,18 @@ class DecisionStudyTests(unittest.TestCase):
     def study_path(self, decision_id):
         return f"/api/v1/decisions/{decision_id}/study"
 
+    def study_with_visible_cards(self, hero_cards, board, *, action="call", amount=None):
+        game, accepted = self.capture(action, amount=amount)
+        saved = self.get(f"/api/v1/decisions/{accepted['decision']['decision_id']}/analysis")
+        analysis = CoachDecisionAnalysis.from_json(json.dumps(saved["analysis"]))
+        values = {item.name: getattr(analysis, item.name)
+                  for item in fields(CoachDecisionAnalysis) if item.name != "evidence_id"}
+        values["context"] = replace(
+            analysis.context, street={0: "preflop", 3: "flop", 4: "turn", 5: "river"}[len(board)],
+            hero_cards=tuple(hero_cards), board=tuple(board),
+        )
+        return build_decision_study(CoachDecisionAnalysis.build(**values), saved["choice"])
+
     def test_study_projects_validated_facts_without_recalculation(self):
         game, accepted = self.capture("call")
         decision_id = accepted["decision"]["decision_id"]
@@ -98,6 +110,61 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertNotIn("Hero", json.dumps(study))
         self.assertNotIn("Villain", json.dumps(study))
         self.assertNotIn("hero_cards", study)
+
+    def test_situation_teaches_72_offsuit_without_calling_it_the_worst_hand(self):
+        study = self.study_with_visible_cards(("7c", "2d"), ())
+        self.assertEqual(study["situation"]["title"], "Your situation")
+        self.assertIn("challenging starting hand", study["situation"]["text"])
+        self.assertIn("best action still depends on this spot", study["situation"]["text"])
+        self.assertIn("7–2 offsuit", study["situation"]["text"])
+        self.assertIn("both low ranks", study["situation"]["text"])
+        self.assertIn("unpaired", study["situation"]["text"])
+        self.assertIn("not connected", study["situation"]["text"])
+        self.assertNotIn("worst", study["situation"]["text"].lower())
+        self.assertEqual(study["decision"]["title"], "Your decision")
+        self.assertIn("does not make every action wrong", study["decision"]["note"])
+
+    def test_pocket_pair_does_not_get_suited_or_connected_labels(self):
+        study = self.study_with_visible_cards(("Ac", "Ad"), ())
+        text = study["situation"]["text"]
+        self.assertIn("pocket pair", text)
+        self.assertIn("suitedness and connectedness do not apply", text)
+        self.assertNotIn("offsuit", text)
+        self.assertNotIn("not connected", text)
+
+    def test_ace_deuce_explains_ace_low_straight_in_beginner_language(self):
+        study = self.study_with_visible_cards(("Ac", "2d"), ())
+        self.assertIn("An ace can also count low in an A-2-3-4-5 straight",
+                      study["situation"]["text"])
+
+    def test_situation_labels_bottom_pair_on_an_unpaired_flop(self):
+        study = self.study_with_visible_cards(("3d", "2c"), ("4c", "3h", "Th"))
+        self.assertIn("bottom pair", study["situation"]["text"])
+        self.assertIn("unpaired board", study["situation"]["text"])
+        self.assertIn("does not tell us what an opponent holds", study["situation"]["text"])
+        self.assertNotIn("opponent has", study["situation"]["text"].lower())
+
+    def test_situation_uses_made_hand_category_without_claiming_relative_strength(self):
+        study = self.study_with_visible_cards(("2s", "3d"), ("4c", "5h", "6s"))
+        self.assertIn("straight", study["situation"]["text"])
+        self.assertIn("does not tell us what an opponent holds or whether you are ahead",
+                      study["situation"]["text"])
+
+    def test_high_card_is_explained_without_poker_jargon_or_relative_claims(self):
+        study = self.study_with_visible_cards(("2s", "3d"), ("4c", "8h", "Ts"))
+        self.assertIn("no pair or stronger made hand (high card)",
+                      study["situation"]["text"])
+        self.assertIn("does not tell us what an opponent holds or whether you are ahead",
+                      study["situation"]["text"])
+
+    def test_unassessed_raise_guidance_does_not_claim_a_scored_comparison(self):
+        game = self.new_game()
+        amount = game["legal"]["raise_min"] + 1
+        study = self.study_with_visible_cards(("7c", "2d"), (), action="raise", amount=amount)
+        self.assertEqual(study["choice"]["assessment_status"], "unassessed_size")
+        self.assertIn("does not score the size you chose", study["decision"]["text"])
+        self.assertIn("raise size was not assessed", study["decision"]["note"])
+        self.assertNotIn("Your action is assessed", study["decision"]["note"])
 
     def test_unassessed_raise_is_distinct_from_modeled_minimum(self):
         game = self.new_game()
