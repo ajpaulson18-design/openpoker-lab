@@ -14,6 +14,9 @@ let coachConversationFull = false, coachConversationExpired = false;
 let coachDraft = {question:'',detail:'normal',audience:'standard',external:false};
 let currentStudyView = null, currentStudyRequest = null, currentStudyLoading = false, currentStudyError = '';
 let currentStudyGeneration = 0, currentStudyOpponent = '';
+let currentCoachDraft={question:'',detail:'normal',audience:'standard',external:false};
+let currentCoachResult=null,currentCoachError='',currentCoachLoading=false,currentCoachNeedsRefresh=false;
+let currentCoachRequest=null,currentCoachGeneration=0;
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
@@ -64,7 +67,8 @@ function showGame(g){
   $('#game-result').innerHTML=`<p class="eyebrow">${esc(g.street.toUpperCase())} · ${g.done?'HAND COMPLETE':'PRACTICE TABLE'}</p><h2>${g.pot} chips ${g.done?'settled':'in the pot'}</h2><div>${g.board.map(cardHtml).join('')||'<p class="hint">Community cards appear after preflop.</p>'}</div><div class="seats">${g.hands.map((h,i)=>`<div class="seat ${g.actor===i?'active-seat':''} ${g.folded[i]?'folded':''}"><h3>${esc(g.names[i])} <span class="seat-number">· Seat ${i}${g.button===i?' · Button':''}</span></h3><div>${h?h.map(cardHtml).join(''):'<span class="unknown-cards">PRIVATE CARDS HIDDEN</span>'}</div><p>${g.stacks[i]} behind · ${g.committed[i]} committed</p><p>${g.folded[i]?'Folded':g.done?'Net: '+g.net[i]:g.stacks[i]===0?'All-in':'Street bet: '+g.street_bets[i]}</p></div>`).join('')}</div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${p.amount} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}<details><summary>Action history (${g.log.length})</summary>${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+a.amount}</p>`).join('')}</details>`;
   renderCurrentStudy();
 }
-function clearCurrentStudy(){currentStudyGeneration++;currentStudyView=null;currentStudyRequest=null;currentStudyLoading=false;currentStudyError='';renderCurrentStudy();}
+function clearCurrentCoach(){currentCoachGeneration++;currentCoachResult=null;currentCoachError='';currentCoachLoading=false;currentCoachNeedsRefresh=false;currentCoachRequest=null;currentCoachDraft={question:'',detail:'normal',audience:'standard',external:false};}
+function clearCurrentStudy(){currentStudyGeneration++;currentStudyView=null;currentStudyRequest=null;currentStudyLoading=false;currentStudyError='';clearCurrentCoach();renderCurrentStudy();}
 function renderCurrentStudy(){
   const panel=$('#current-study');if(!panel)return;
   const visible=Boolean(game&&!game.done&&game.actor===0&&activeHandId===game.id&&$('#coach-toggle').checked);
@@ -74,11 +78,14 @@ function renderCurrentStudy(){
   if(!currentStudyView){panel.innerHTML='<button class="secondary" data-study-current>Study current decision</button><p class="hint">Optional local estimate. Nothing is calculated until you ask.</p>';return;}
   const v=currentStudyView,ctx=v.context;
   const actions=v.modeled_actions.map(a=>`<li><strong>${esc(a.name)}${a.amount===null?'':` ${a.amount_semantics==='street_total'?'to':'+'}${esc(a.amount)}`}</strong> · ${a.estimated_ev_chips===null?'EV unavailable':`${chips(a.estimated_ev_chips)} estimated chips`}${a.action_id===v.recommended_action_id?' · recommended':''}${a.size_note?`<br><span class="hint">${esc(a.size_note)}${a.maximum_legal_total===null?'':` Legal raise totals: ${esc(a.minimum_legal_total)}–${esc(a.maximum_legal_total)}.`}</span>`:''}</li>`).join('');
-  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}<ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>`;
+  const answer=currentCoachResult?coachReplyHtml(currentCoachResult,true):'';
+  const coachError=currentCoachError?`<p class="current-study-error" role="alert">${esc(currentCoachError)}</p>${currentCoachNeedsRefresh?'<button type="button" class="secondary" data-study-current-retry>Refresh preview</button>':'<button type="button" class="secondary" data-current-coach-retry>Retry question</button>'}`:'';
+  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}<ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button><form id="current-coach-form" class="current-coach-form"><h4>Ask one question about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask about the current unplayed decision">${esc(currentCoachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${currentCoachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${currentCoachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${currentCoachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${currentCoachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${currentCoachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${currentCoachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">Only this question and the current preview's allowlisted facts are sent when selected. No prior questions or opponent cards are sent. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local response.</p>':''}<button class="primary" type="submit"${currentCoachLoading||currentCoachNeedsRefresh?' disabled':''}>${currentCoachLoading?'Preparing answer…':'Ask one question'}</button>${currentCoachLoading?'<p class="hint" role="status">Preparing an answer tied to this preview…</p>':''}${coachError}${answer}</form>`;
 }
 async function requestCurrentStudy(){
   if(!game||game.done||game.actor!==0||!activeHandId||pendingAction||!$('#coach-toggle').checked)return;
   const handId=activeHandId,revision=game.revision,generation=++currentStudyGeneration,opponentId=practiceOpponent||null;
+  clearCurrentCoach();
   currentStudyOpponent=practiceOpponent;currentStudyRequest={hand_id:handId,revision};currentStudyView=null;currentStudyError='';currentStudyLoading=true;renderCurrentStudy();
   try{
     const view=await api(`v1/hands/${encodeURIComponent(handId)}/current-study`,{expected_revision:revision,opponent_id:opponentId});
@@ -93,6 +100,40 @@ async function requestCurrentStudy(){
     currentStudyError=error.message;
   }finally{
     if(currentStudyGeneration===generation){currentStudyRequest=null;currentStudyLoading=false;renderCurrentStudy();}
+  }
+}
+async function askCurrentCoach(){
+  if(!game||game.done||game.actor!==0||pendingAction||!activeHandId
+      ||!currentStudyView||!$('#coach-toggle').checked||currentCoachLoading||currentCoachNeedsRefresh)return;
+  const target={...currentStudyView.binding};
+  const handId=activeHandId,revision=game.revision,generation=++currentCoachGeneration;
+  const question=currentCoachDraft.question.trim(),detail=currentCoachDraft.detail;
+  const audience=currentCoachDraft.audience,external=currentCoachDraft.external;
+  if(!question)return;
+  currentCoachRequest={...target};currentCoachResult=null;currentCoachError='';currentCoachLoading=true;renderCurrentStudy();
+  try{
+    const result=await api(`v1/hands/${encodeURIComponent(handId)}/current-coach`,
+      {target,question,detail,audience},external?{'X-OpenPoker-External-AI':'1'}:{});
+    const reply=result?.reply,forbidden=(reply?.blocks||[]).flatMap(block=>block.facts||[])
+      .some(fact=>fact.kind==='choice'||fact.kind==='choice_loss');
+    if(!['ready','fallback'].includes(result?.status)
+        ||!sameCoachBinding(result.binding,target)||!sameCoachBinding(reply?.binding,target)
+        ||reply?.schema_version!==1||!['recommendation','limits','unavailable'].includes(reply?.intent)
+        ||!Array.isArray(reply?.unavailable_fields)||!reply.unavailable_fields.includes('choice')
+        ||!reply.unavailable_fields.includes('choice_loss')||forbidden)
+      throw new Error('The answer did not match this unplayed preview. Refresh the preview and ask again.');
+    if(currentCoachGeneration!==generation||activeHandId!==handId||game?.id!==handId
+        ||game?.revision!==revision||!currentStudyView
+        ||!sameCoachBinding(currentStudyView.binding,target)||!$('#coach-toggle').checked)return;
+    currentCoachResult=result;
+  }catch(error){
+    if(currentCoachGeneration!==generation||activeHandId!==handId||game?.revision!==revision
+        ||!currentStudyView||!sameCoachBinding(currentStudyView.binding,target)
+        ||!$('#coach-toggle').checked)return;
+    currentCoachError=error.message;
+    currentCoachNeedsRefresh=error.code==='preview_expired'||error.code==='stale_context';
+  }finally{
+    if(currentCoachGeneration===generation){currentCoachRequest=null;currentCoachLoading=false;renderCurrentStudy();}
   }
 }
 function coachExplanation(payload){
@@ -136,7 +177,8 @@ function studyActionEv(action){
   const key=Object.hasOwn(action,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
   const value=action[key];return value===null||value===undefined?'Unavailable':`${chips(value)}${key==='estimated_ev_chips'?' chips':''}`;
 }
-function coachFactLabel(kind){
+function coachFactLabel(kind,currentPreview=false){
+  if(currentPreview&&kind==='recommendation')return 'Current modeled recommendation';
   return ({street:'Street',hero_cards:'Your cards',board:'Board',current_pot:'Current pot',
     pot_basis:'Pot basis',source_kind:'Analysis source',ev_basis:'EV basis',
     modeled_action:'Modeled action',action_ev:'Modeled action EV',
@@ -164,25 +206,30 @@ function sameCoachBinding(a,b){
   return !!a&&!!b&&a.hand_id===b.hand_id&&a.decision_id===b.decision_id
     &&a.evidence_id===b.evidence_id&&a.state_revision===b.state_revision;
 }
-function coachTeachingNoteHtml(result){
+function coachTeachingNoteMarkup(result,currentPreview){
   const note=result.teaching_note,reply=result.reply||{};
   if(!note||note.schema_version!==1||typeof note.text!=='string'||note.text.length>600
     ||!Array.isArray(note.supporting_fact_ids)||!note.supporting_fact_ids.length
     ||!sameCoachBinding(note.binding,result.binding)
     ||!sameCoachBinding(note.binding,reply.binding))return '';
   const citations=note.supporting_fact_ids.map(id=>`<li>${esc(id)}</li>`).join('');
-  return `<aside class="coach-teaching-note" aria-label="Local teaching note"><h5>LOCAL TEACHING NOTE · ${esc(note.source_label||'Saved analysis')}</h5><p>${esc(note.text)}</p><small>Supported by saved facts</small><ul>${citations}</ul></aside>`;
+  return `<aside class="coach-teaching-note" aria-label="Local teaching note"><h5>LOCAL TEACHING NOTE · ${esc(note.source_label||(currentPreview?'Current practice preview':'Saved analysis'))}</h5><p>${esc(note.text)}</p><small>Supported by ${currentPreview?'preview':'saved'} facts</small><ul>${citations}</ul></aside>`;
 }
-function coachReplyHtml(result){
+function coachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,false);}
+function currentCoachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,true);}
+function coachReplyHtml(result,currentPreview=false){
   const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
-    const facts=(block.facts||[]).map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind))}:</strong> ${esc(coachFactValue(fact))}${fact.unit?` <span class="coach-unit">${esc(fact.unit)}</span>`:''}<small>Fact ${esc(fact.fact_id)}</small></li>`).join('');
+    const facts=(block.facts||[]).map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact))}${fact.unit?` <span class="coach-unit">${esc(fact.unit)}</span>`:''}<small>Fact ${esc(fact.fact_id)}</small></li>`).join('');
     const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
     return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
   const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
-  return `<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
+  const answer=currentPreview
+    ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${currentCoachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
+    :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
+  return answer;
 }
 function coachTurnListHtml(){
   const turns=coachConversation?.turns||[];
@@ -359,7 +406,25 @@ $('#game-form').addEventListener('submit',async e=>{
 });
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){clearCurrentStudy();showCoach(null);if(!game?.done)invalidateDecisionStudy();}else {renderCurrentStudy();if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}}});
 $('#game-form').elements.opponent_id.addEventListener('change',e=>{practiceOpponent=e.target.value;if(game&&!game.done)clearCurrentStudy();});
-$('#current-study').addEventListener('click',e=>{if(e.target.closest('[data-study-current],[data-study-current-retry]'))void requestCurrentStudy();});
+$('#current-study').addEventListener('click',e=>{
+  if(e.target.closest('[data-study-current],[data-study-current-retry]')){void requestCurrentStudy();return;}
+  if(e.target.closest('[data-current-coach-retry]'))void askCurrentCoach();
+});
+$('#current-study').addEventListener('input',e=>{if(e.target.name==='question')currentCoachDraft.question=e.target.value;});
+$('#current-study').addEventListener('change',e=>{
+  if(e.target.name==='detail')currentCoachDraft.detail=e.target.value;
+  if(e.target.name==='audience')currentCoachDraft.audience=e.target.value;
+  if(e.target.name==='external')currentCoachDraft.external=e.target.checked;
+});
+$('#current-study').addEventListener('submit',e=>{
+  if(e.target.id!=='current-coach-form')return;
+  e.preventDefault();
+  currentCoachDraft.question=e.target.elements.question.value;
+  currentCoachDraft.detail=e.target.elements.detail.value;
+  currentCoachDraft.audience=e.target.elements.audience.value;
+  currentCoachDraft.external=e.target.elements.external.checked;
+  void askCurrentCoach();
+});
 $('#decision-study').addEventListener('click',e=>{
   const followup=e.target.closest('[data-coach-followup]');
   if(followup){

@@ -18,6 +18,7 @@ _SOURCE_LABELS = {
     "restricted_equilibrium": "Restricted equilibrium result",
     "restricted_exploit": "Restricted exploit estimate",
 }
+_CURRENT_PREVIEW_LABEL = "Practice estimate · current decision preview"
 _FACT_ID = re.compile(r"^f_[0-9a-f]{64}$")
 _TEMPLATE_IDS = {
     "recommendation_scope_v1", "choice_assessed_v1", "choice_unassessed_raise_v1",
@@ -43,7 +44,7 @@ class TeachingNote:
             raise ValueError("Teaching-note template is unsupported.")
         if not isinstance(self.binding, GroundingBinding):
             raise ValueError("Teaching notes require a saved-decision binding.")
-        if self.source_label not in _SOURCE_LABELS.values():
+        if self.source_label not in (*_SOURCE_LABELS.values(), _CURRENT_PREVIEW_LABEL):
             raise ValueError("Teaching-note source is unsupported.")
         if not isinstance(self.text, str) or not self.text.strip() or len(self.text) > 600:
             raise ValueError("Teaching-note text is outside its allowed bounds.")
@@ -62,12 +63,14 @@ class TeachingNote:
 
 
 def _verified_visible_facts(bundle: GroundingBundle,
-                            reply: RenderedCoachReply) -> dict[str, GroundFact] | None:
+                            reply: RenderedCoachReply, *,
+                            current_preview: bool = False) -> dict[str, GroundFact] | None:
+    expected_label = _CURRENT_PREVIEW_LABEL if current_preview else _SOURCE_LABELS.get(bundle.source_kind)
     if (not isinstance(bundle, GroundingBundle)
             or not isinstance(reply, RenderedCoachReply)
             or bundle.binding != reply.binding
             or bundle.source_kind != reply.source_kind
-            or _SOURCE_LABELS[bundle.source_kind] != reply.source_label):
+            or expected_label != reply.source_label):
         return None
     saved = {fact.fact_id: fact for fact in bundle.facts}
     visible: dict[str, GroundFact] = {}
@@ -90,9 +93,10 @@ def _verified_visible_facts(bundle: GroundingBundle,
 
 
 def build_teaching_note(bundle: GroundingBundle,
-                        reply: RenderedCoachReply) -> TeachingNote | None:
+                        reply: RenderedCoachReply, *,
+                        current_preview: bool = False) -> TeachingNote | None:
     """Select at most one local note using only exact facts visible in ``reply``."""
-    visible = _verified_visible_facts(bundle, reply)
+    visible = _verified_visible_facts(bundle, reply, current_preview=current_preview)
     if visible is None:
         return None
     by_id = {fact.fact_id: fact for fact in bundle.facts}
@@ -136,10 +140,13 @@ def build_teaching_note(bundle: GroundingBundle,
         supporting: list[GroundFact] = []
         if not add(recommendation, supporting) or not add(action, supporting):
             return None
-        text = ("The saved recommendation is limited to this decision's modeled action set; "
+        recommendation_label = "current recommendation" if current_preview else "saved recommendation"
+        text = (f"The {recommendation_label} is limited to this decision's modeled action set; "
                 "it does not cover unmodeled actions.")
         if bundle.source_kind == "practice_estimate":
-            text += " This practice estimate is not equilibrium strategy or a guarantee of the best play."
+            text += (" This current practice estimate is not equilibrium strategy or a guarantee "
+                     "of the best play." if current_preview else
+                     " This practice estimate is not equilibrium strategy or a guarantee of the best play.")
         ev_facts = by_kind.get("action_ev", ())
         if ev_facts:
             text += " Any displayed action EV uses this analysis's saved EV basis."
@@ -191,8 +198,11 @@ def build_teaching_note(bundle: GroundingBundle,
             return None
         supporting = [source_fact]
         if bundle.source_kind == "practice_estimate":
-            text = ("This practice estimate summarizes the producer's saved actions. "
-                    "It is not equilibrium strategy or a guaranteed best play.")
+            text = (("This current practice estimate summarizes the modeled actions for the "
+                     "unplayed decision. It is not equilibrium strategy or a guaranteed best play.")
+                    if current_preview else
+                    ("This practice estimate summarizes the producer's saved actions. "
+                     "It is not equilibrium strategy or a guaranteed best play."))
         elif bundle.source_kind == "restricted_equilibrium":
             text = ("This result applies to the producer's restricted equilibrium model "
                     "for this decision; it does not describe unrestricted Hold'em strategy.")
@@ -258,8 +268,10 @@ def build_teaching_note(bundle: GroundingBundle,
         if requested == "choice" and "choice" in reply.unavailable_fields:
             if not add(source_fact, supporting):
                 return None
-            text = ("The saved choice was unavailable (marker: choice). "
-                    "No loss or comparison is inferred.")
+            text = (("No action has been taken, so a chosen action and its loss are unavailable. "
+                     "No comparison is inferred.") if current_preview else
+                    ("The saved choice was unavailable (marker: choice). "
+                     "No loss or comparison is inferred."))
             return finish("unavailable_choice_v1", text, supporting)
         if requested == "compare":
             choice = one("choice")
@@ -282,7 +294,10 @@ def build_teaching_note(bundle: GroundingBundle,
         if requested == "unavailable":
             if not add(source_fact, supporting):
                 return None
-            text = ("No recommendation or comparison was rendered for this request. "
-                    "No substitute action or EV is inferred.")
+            text = (("No action has been taken, so a chosen action and its loss are unavailable. "
+                     "No substitute action or EV is inferred.") if current_preview else
+                    ("No recommendation or comparison was rendered for this request. "
+                     "No substitute action or EV is inferred."))
             return finish("unavailable_request_v1", text, supporting)
     return None
+

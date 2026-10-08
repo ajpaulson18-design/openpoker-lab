@@ -15,8 +15,10 @@ from . import __version__
 from .analysis import analyze
 from .coach_analysis import adapt_practice_analysis
 from .coach_grounding import (CoachGroundingError, CoachReplyPlan,
+                              build_current_preview_grounding_bundle,
                               build_grounding_bundle, render_coach_reply,
-                              validate_coach_reply_plan)
+                              validate_coach_reply_plan,
+                              validate_current_coach_reply_plan)
 from .coach_conversation import ConversationError, ConversationLedger
 from .current_study import CurrentStudyPreviewCache, build_current_study_view
 from .coach_provider import CoachProviderError, OpenAIPlanSelector
@@ -172,6 +174,151 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
         return preview_cache.resolve(
             hand_id=binding["hand_id"], decision_id=binding["decision_id"],
             evidence_id=binding["evidence_id"], state_revision=binding["state_revision"])
+
+    def current_coach_fallback(bundle, detail, audience, reason):
+        plan = CoachReplyPlan(bundle.binding, "unavailable", (), None, detail, audience)
+        reply = render_coach_reply(bundle, plan, current_preview=True)
+        teaching_note = build_teaching_note(bundle, reply, current_preview=True)
+        return {
+            "status": "fallback", "source": "local_fallback", "retryable": True,
+            "fallback_reason": reason, "binding": bundle.binding.to_dict(),
+            "source_label": reply.source_label, "reply": reply.to_dict(),
+            "teaching_note": teaching_note.to_dict() if teaching_note else None,
+        }
+
+    def current_coach(path, data, external_requested):
+        match = re.fullmatch(r"/api/v1/hands/([^/]+)/current-coach", path)
+        if not match:
+            return {"error": "Not found."}, 404
+        hand_id = unquote(match.group(1))
+        if not hand_id or len(hand_id) > 128:
+            return {"error": "Hand was not found."}, 404
+        if (not isinstance(data, dict)
+                or set(data) != {"target", "question", "detail", "audience"}):
+            return {"error": "Current coach request fields are invalid.",
+                    "code": "invalid_request"}, 400
+        target = data["target"]
+        target_fields = {"hand_id", "decision_id", "evidence_id", "state_revision"}
+        if (not isinstance(target, dict) or set(target) != target_fields
+                or any(not isinstance(target.get(name), str) or not target[name].strip()
+                       or len(target[name]) > 256
+                       for name in ("hand_id", "decision_id", "evidence_id"))
+                or type(target.get("state_revision")) is not int
+                or target["state_revision"] < 0):
+            return {"error": "Preview target is invalid.", "code": "invalid_target"}, 400
+        if target["hand_id"] != hand_id:
+            return {"error": "Preview target does not match this hand.",
+                    "code": "invalid_target"}, 400
+        question = data["question"]
+        detail, audience = data["detail"], data["audience"]
+        if not isinstance(question, str) or not question.strip() or len(question) > 500:
+            return {"error": "Question must contain 1–500 characters.",
+                    "code": "invalid_request"}, 400
+        question = question.strip()
+        if detail not in ("short", "normal", "technical"):
+            return {"error": "Detail setting is invalid.", "code": "invalid_request"}, 400
+        if audience not in ("beginner", "standard"):
+            return {"error": "Audience setting is invalid.", "code": "invalid_request"}, 400
+
+        with game_lock:
+            current = games.get(hand_id)
+            if current is None:
+                return {"error": "Hand was not found or has expired.",
+                        "code": "not_found"}, 404
+            if (hand_revisions.get(hand_id) != target["state_revision"]
+                    or current.done or current.actor != 0):
+                return {"status": "stale_context", "code": "stale_context",
+                        "error": "The hand changed. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+
+        evidence = resolve_current_study_evidence(target)
+        if evidence is None:
+            return {"status": "preview_expired", "code": "preview_expired",
+                    "error": "The study preview expired. Refresh the preview before asking again.",
+                    "refresh_required": True}, 409
+        try:
+            bundle = build_current_preview_grounding_bundle(evidence)
+        except (CoachGroundingError, ValueError, TypeError):
+            return {"status": "failed", "error": "Current preview evidence is invalid."}, 500
+
+        def still_current():
+            with game_lock:
+                live = games.get(hand_id)
+                if live is None:
+                    return "missing"
+                if (hand_revisions.get(hand_id) != target["state_revision"]
+                        or live.done or live.actor != 0):
+                    return "stale"
+            retained = resolve_current_study_evidence(target)
+            return "ready" if retained is evidence else "expired"
+
+        if not external_requested:
+            result = current_coach_fallback(
+                bundle, detail, audience, "external_ai_not_selected")
+            state = still_current()
+            if state == "missing":
+                return {"error": "Hand was not found or has expired.",
+                        "code": "not_found"}, 404
+            if state == "stale":
+                return {"status": "stale_context", "code": "stale_context",
+                        "error": "The hand changed. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+            if state == "expired":
+                return {"status": "preview_expired", "code": "preview_expired",
+                        "error": "The study preview expired. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+            return result, 200
+
+        if not coach_external_available:
+            result = current_coach_fallback(
+                bundle, detail, audience, "external_ai_not_configured")
+        else:
+            state = still_current()
+            if state != "ready":
+                if state == "missing":
+                    return {"error": "Hand was not found or has expired.",
+                            "code": "not_found"}, 404
+                if state == "expired":
+                    return {"status": "preview_expired", "code": "preview_expired",
+                            "error": "The study preview expired. Refresh the preview before asking again.",
+                            "refresh_required": True}, 409
+                return {"status": "stale_context", "code": "stale_context",
+                        "error": "The hand changed. Refresh the preview before asking again.",
+                        "refresh_required": True}, 409
+            try:
+                candidate = coach_selector.select_plan(
+                    bundle, question, detail, audience, current_preview=True)
+                plan = validate_current_coach_reply_plan(candidate, bundle)
+                if plan.detail != detail or plan.audience != audience:
+                    raise CoachGroundingError("invalid_reply_plan", "Presentation settings changed.")
+                reply = render_coach_reply(bundle, plan, current_preview=True)
+                teaching_note = build_teaching_note(bundle, reply, current_preview=True)
+                result = {
+                    "status": "ready", "source": "openai", "retryable": False,
+                    "binding": bundle.binding.to_dict(), "source_label": reply.source_label,
+                    "reply": reply.to_dict(),
+                    "teaching_note": teaching_note.to_dict() if teaching_note else None,
+                }
+            except CoachProviderError as error:
+                result = current_coach_fallback(bundle, detail, audience, error.code)
+            except (CoachGroundingError, ValueError, TypeError):
+                result = current_coach_fallback(bundle, detail, audience, "invalid_plan")
+            except Exception:
+                result = current_coach_fallback(bundle, detail, audience, "provider_error")
+
+        state = still_current()
+        if state == "missing":
+            return {"error": "Hand was not found or has expired.",
+                    "code": "not_found"}, 404
+        if state == "stale":
+            return {"status": "stale_context", "code": "stale_context",
+                    "error": "The hand changed while the answer was preparing. Refresh the preview.",
+                    "refresh_required": True}, 409
+        if state == "expired":
+            return {"status": "preview_expired", "code": "preview_expired",
+                    "error": "The study preview expired. Refresh the preview before asking again.",
+                    "refresh_required": True}, 409
+        return result, 200
 
     def current_study(path, data):
         match = re.fullmatch(r"/api/v1/hands/([^/]+)/current-study", path)
@@ -506,6 +653,25 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                 if not isinstance(data, dict):
                     raise ValueError("Expected a JSON object.")
                 request_path = urlparse(self.path).path
+                if (request_path.startswith("/api/v1/hands/")
+                        and request_path.endswith("/current-coach")):
+                    if not coach_lock.acquire(blocking=False):
+                        return self.respond({"error": "A coach request is already running. Try again shortly.",
+                                             "code": "coach_busy"}, 429)
+                    try:
+                        try:
+                            result, status_code = current_coach(
+                                request_path, data,
+                                self.headers.get("X-OpenPoker-External-AI") == "1")
+                        except (ValueError, TypeError, KeyError, OverflowError):
+                            return self.respond({"error": "Current coach request is invalid.",
+                                                 "code": "invalid_request"}, 400)
+                        except Exception:
+                            return self.respond({"status": "failed",
+                                                 "error": "Current coach request failed safely."}, 500)
+                        return self.respond(result, status_code)
+                    finally:
+                        coach_lock.release()
                 if request_path.startswith("/api/v1/hands/"):
                     if not preview_lock.acquire(blocking=False):
                         return self.respond({"error": "A study preview is already running. Try again shortly."}, 429)
