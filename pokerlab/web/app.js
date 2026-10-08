@@ -211,32 +211,68 @@ function studyActionLabel(action){
 }
 function studyActionEv(action){
   const key=Object.hasOwn(action,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
-  const value=action[key];return value===null||value===undefined?'Unavailable':`${chips(value)}${key==='estimated_ev_chips'?' chips':''}`;
+  const value=action[key];return value===null||value===undefined?'Unavailable':`${chips(value)} ${key==='estimated_ev_chips'?'chips':coachEvBasisLabel(studyPayload?.ev_basis)}`;
+}
+function coachEvBasisLabel(basis){
+  return basis==='incremental_decision_chips'?'estimated chips from this decision'
+    :basis==='half_initial_pot_utility'?'solver chip utility relative to half the starting pot'
+    :String(basis||'').replaceAll('_',' ');
+}
+function coachFactUnit(unit,result){
+  if(unit==='incremental_decision_chips'||unit==='half_initial_pot_utility')return coachEvBasisLabel(unit);
+  if(unit==='basis'||unit==='source'||unit==='street'||unit==='action'||unit==='action_id'||unit==='policy'
+      ||unit==='choice'||unit==='assumption'||unit==='semantics'||unit==='label'||!unit)return '';
+  if(unit==='ev')return (result?.source_label||result?.reply?.source_label||'').startsWith('Restricted')
+    ?coachEvBasisLabel('half_initial_pot_utility'):'EV units';
+  if(unit==='standard_error')return '';
+  if(unit==='interval')return 'probability interval';
+  return String(unit).replaceAll('_',' ');
+}
+function coachFixed(value){return typeof value==='number'&&Number.isFinite(value)?value.toFixed(2):String(value);}
+function coachPercent(value){return typeof value==='number'&&Number.isFinite(value)?pct(value):String(value);}
+function coachSolverDiagnostic(value){
+  if(typeof value==='number'&&Number.isFinite(value)&&value!==0&&Math.abs(value)<0.005)
+    return value>0?'less than 0.01':'greater than -0.01';
+  return coachFixed(value);
 }
 function coachFactLabel(kind,currentPreview=false){
   if(currentPreview&&kind==='recommendation')return 'Current modeled recommendation';
   return ({street:'Street',hero_cards:'Your cards',board:'Board',current_pot:'Current pot',
-    pot_basis:'Pot basis',source_kind:'Analysis source',ev_basis:'EV basis',
+    pot_basis:'Pot basis',source_kind:'Analysis source',ev_basis:'Value basis',
     modeled_action:'Modeled action',action_ev:'Modeled action EV',
     baseline_action_ev:'Baseline action EV',recommendation:'Saved recommendation',
     baseline_recommendation:'Baseline recommendation',baseline_label:'Baseline policy',
     choice:'Recorded choice',choice_loss:'Recorded choice loss',
     opponent_assumption:'Saved opponent assumption',opponent_uncertainty:'Opponent uncertainty',
-    confidence_label:'Saved confidence',equity_standard_error:'Equity standard error',
+    confidence_label:'Saved confidence',equity_standard_error:'Equity estimate uncertainty',
     equity_exact:'Exact equity',solver_nash_conv:'NashConv',
     solver_exploitability:'Exploitability',solver_iterations:'Solver iterations',
     solver_gap_semantics:'Solver gap semantics'})[kind]||kind.replaceAll('_',' ');
 }
-function coachFactValue(fact){
+function coachFactValue(fact,actionLabels=new Map()){
   const value=fact.value;
   if(value===null||value===undefined)return 'Unavailable';
-  if(fact.kind==='modeled_action'&&Array.isArray(value))return `${value[1]}${value[2]===null?'':` ${value[2]}`} (${value[3]})`;
-  if(['action_ev','baseline_action_ev'].includes(fact.kind)&&Array.isArray(value))return `${value[0]}: ${value[1]===null?'Unavailable':value[1]}`;
-  if(fact.kind==='choice'&&Array.isArray(value))return `${value[0]}${value[0]==='raise'?` to ${value[1]}`:''} · ${value[3].replaceAll('_',' ')}`;
-  if(fact.kind==='opponent_assumption'&&Array.isArray(value))return `${value[0].replaceAll('_',' ')} · ${value[4]} · ${value[5]} observations`;
+  if(fact.kind==='modeled_action'&&Array.isArray(value))return coachActionLabel(value);
+  if(fact.kind==='source_kind')return ({practice_estimate:'Practice estimate',restricted_equilibrium:'Restricted equilibrium result',restricted_exploit:'Restricted exploit estimate'})[value]||String(value).replaceAll('_',' ');
+  if(fact.kind==='ev_basis')return coachEvBasisLabel(value);
+  if(['recommendation','baseline_recommendation'].includes(fact.kind))return actionLabels.get(value)||'Modeled action';
+  if(['action_ev','baseline_action_ev'].includes(fact.kind)&&Array.isArray(value))return `${actionLabels.get(value[0])||'Modeled action'}: ${value[1]===null?'Unavailable':coachFixed(value[1])}`;
+  if(fact.kind==='choice'&&Array.isArray(value))return `${value[0]}${value[0]==='raise'?` to ${value[1]}`:''} · ${value[3]==='unassessed_size'?'size not evaluated':'assessed'}`;
+  if(fact.kind==='choice_loss')return coachFixed(value);
+  if(fact.kind==='opponent_assumption'&&Array.isArray(value))return `${value[0].replaceAll('_',' ')} · ${coachPercent(value[4])} · ${value[5]} observations`;
+  if(fact.kind==='opponent_uncertainty'&&Array.isArray(value))return `${coachPercent(value[0])}–${coachPercent(value[1])} · ${value[4]}`;
+  if(fact.kind==='equity_standard_error')return coachPercent(value);
+  if(['solver_nash_conv','solver_exploitability'].includes(fact.kind))return coachSolverDiagnostic(value);
+  if(fact.kind==='current_pot')return coachFixed(value);
   if(Array.isArray(value))return value.join(' · ');
   if(typeof value==='boolean')return value?'Yes':'No';
+  if(typeof value==='number')return coachFixed(value);
   return String(value);
+}
+function coachActionLabel(value){
+  if(!Array.isArray(value)||typeof value[1]!=='string')return 'Modeled action';
+  if(value[1]!=='raise'||value[2]===null)return value[1];
+  return `${value[3]==='street_total'?'raise to':'raise by'} ${value[2]}`;
 }
 function sameCoachBinding(a,b){
   return !!a&&!!b&&a.hand_id===b.hand_id&&a.decision_id===b.decision_id
@@ -248,24 +284,37 @@ function coachTeachingNoteMarkup(result,currentPreview){
     ||!Array.isArray(note.supporting_fact_ids)||!note.supporting_fact_ids.length
     ||!sameCoachBinding(note.binding,result.binding)
     ||!sameCoachBinding(note.binding,reply.binding))return '';
-  const citations=note.supporting_fact_ids.map(id=>`<li>${esc(id)}</li>`).join('');
-  return `<aside class="coach-teaching-note" aria-label="Local teaching note"><h5>LOCAL TEACHING NOTE · ${esc(note.source_label||(currentPreview?'Current practice preview':'Saved analysis'))}</h5><p>${esc(note.text)}</p><small>Supported by ${currentPreview?'preview':'saved'} facts</small><ul>${citations}</ul></aside>`;
+  return `<aside class="coach-teaching-note" aria-label="Local teaching note"><h5>LOCAL TEACHING NOTE · ${esc(note.source_label||(currentPreview?'Current practice preview':'Saved analysis'))}</h5><p>${esc(note.text)}</p><small>Supported by ${currentPreview?'preview':'saved'} facts</small></aside>`;
 }
 function coachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,false);}
 function currentCoachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,true);}
 function coachReplyHtml(result,currentPreview=false){
   const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
-    const facts=(block.facts||[]).map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact))}${fact.unit?` <span class="coach-unit">${esc(fact.unit)}</span>`:''}<small>Fact ${esc(fact.fact_id)}</small></li>`).join('');
+    const blockFacts=block.facts||[];
+    const actionLabels=new Map(blockFacts.filter(fact=>fact.kind==='modeled_action'&&Array.isArray(fact.value))
+      .map(fact=>[fact.value[0],coachActionLabel(fact.value)]));
+    const facts=blockFacts.map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact,actionLabels))}${coachFactUnit(fact.unit,result)?` <span class="coach-unit">${esc(coachFactUnit(fact.unit,result))}</span>`:''}</li>`).join('');
     const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
     return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
-  const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
-  const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',current_choice_unavailable:'No action has been taken, so chosen action and loss are unavailable.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
+  const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local explanation · OpenPoker renders validated facts';
+  const reason=result.fallback_reason;
+  const fallbackMessages={external_ai_not_configured:'External AI was requested but is disabled or not configured locally.',refusal:'External AI was requested, but the provider declined this question.',incomplete:'External AI was requested, but the provider did not finish the response.',invalid_response:'External AI was requested, but the provider returned an incomplete response.',invalid_plan:'External AI was requested, but its plan did not pass validation.',http_error:'External AI was requested, but the provider request failed.',timeout:'External AI was requested, but the provider request timed out.',network_error:'External AI was requested, but the provider could not be reached.',provider_error:'External AI was requested, but the provider request failed safely.'};
+  const fallback=fallbackMessages[reason]?`<p class="hint">${esc(fallbackMessages[reason])} OpenPoker prepared this local explanation from the validated facts.</p>`:'';
+  const planScope=result.source==='openai'
+    ?'<p class="hint">OpenAI selected a plan from the allowed facts; OpenPoker renders the answer from the validated evidence.</p>'
+    :'<p class="hint">OpenPoker selected and rendered this explanation from the validated evidence.</p>';
+  const evidenceFacts=new Map((reply.blocks||[]).flatMap(block=>(block.facts||[]).map(fact=>[fact.fact_id,fact])));
+  const note=result.teaching_note;
+  if(note&&Array.isArray(note.supporting_fact_ids))for(const id of note.supporting_fact_ids)
+    if(!evidenceFacts.has(id))evidenceFacts.set(id,{fact_id:id,kind:'supporting evidence'});
+  const evidence=[...evidenceFacts.values()].map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(fact.fact_id)}</li>`).join('');
+  const evidenceDetails=evidence?`<details class="coach-evidence-details"><summary>Evidence details</summary><p>References point to facts from this ${currentPreview?'current preview':'saved decision'}, bound to its evidence version.</p><ul>${evidence}</ul></details>`:'';
   const localScope=currentPreview&&typeof result.local_scope==='string'?`<p class="hint">${esc(result.local_scope)}</p>`:'';
   const answer=currentPreview
-    ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
-    :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
+    ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
+    :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${planScope}${coachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
   return answer;
 }
 function coachTurnListHtml(){
@@ -299,7 +348,7 @@ function renderStudyPanel(){
     const rows=(studyPayload.modeled_actions||[]).map(action=>`<tr><td>${esc(studyActionLabel(action))}</td><td>${esc(studyActionEv(action))}</td></tr>`).join('');
     const baselineValueKey=studyPayload.baseline&&Object.hasOwn(studyPayload.baseline,'estimated_ev_chips')?'estimated_ev_chips':'estimated_ev';
     const baselineValue=studyPayload.baseline?.[baselineValueKey];
-    const baseline=studyPayload.baseline?`<p class="hint">${esc(studyPayload.baseline.label)} recommends ${esc(studyPayload.baseline.recommended_action||'an unavailable action')}${baselineValue===null||baselineValue===undefined?'':` · ${chips(baselineValue)}${baselineValueKey==='estimated_ev_chips'?' chips':` in ${esc(studyPayload.baseline.ev_basis)}`}`}</p>`:'';
+    const baseline=studyPayload.baseline?`<p class="hint">${esc(studyPayload.baseline.label)} recommends ${esc(studyPayload.baseline.recommended_action||'an unavailable action')}${baselineValue===null||baselineValue===undefined?'':` · ${chips(baselineValue)} ${baselineValueKey==='estimated_ev_chips'?'chips':coachEvBasisLabel(studyPayload.baseline.ev_basis)}`}</p>`:'';
     const situation=studyPayload.situation,decision=studyPayload.decision;
     const teaching=(situation&&decision)?`<div class="study-teaching-pair"><section class="study-teaching-card" aria-label="Your situation"><p class="eyebrow">Your situation</p><p>${esc(situation.text)}</p><p class="hint">${esc(situation.note)}</p></section><section class="study-teaching-card" aria-label="Your decision"><p class="eyebrow">Your decision</p><p>${esc(decision.text)}</p><p class="hint">${esc(decision.note)}</p></section></div>`:'';
     const limitations=(studyPayload.limitations||[]).map(item=>`<li>${esc(item)}</li>`).join('');
