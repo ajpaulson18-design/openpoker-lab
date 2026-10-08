@@ -12,6 +12,8 @@ let externalAiAvailable = false, coachQuestionLoading = false, coachQuestionErro
 let coachConversation = null, coachConversations = new Map(), lastCoachQuestion = null;
 let coachConversationFull = false, coachConversationExpired = false;
 let coachDraft = {question:'',detail:'normal',audience:'standard',external:false};
+let currentStudyView = null, currentStudyRequest = null, currentStudyLoading = false, currentStudyError = '';
+let currentStudyGeneration = 0, currentStudyOpponent = '';
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
@@ -55,9 +57,43 @@ bindForm('#solver-form',async form=>{
   $('#solver-result').innerHTML=`<p class="eyebrow">${locked?'OPPONENT-LOCKED SCENARIO':'EQUILIBRIUM APPROXIMATION'}</p><div class="metrics">${metric(chips(r.value_oop),'OOP VALUE',true)}${metric(chips(r.nash_conv),'BEST-RESPONSE GAP',true)}${metric(r.deals,'LEGAL DEALS',true)}</div><p class="hint">${r.iterations.toLocaleString()} iterations. Values in chips, relative to half the existing pot. Smaller unlocked gap means less room for either player to improve.</p><h3>Out of position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet</th><th>Call after checking</th></tr></thead><tbody>${r.oop.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet)}</td><td>${pct(h.call_after_check)}</td></tr>`).join('')}</tbody></table></div><h3>In position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet after check</th><th>Call</th></tr></thead><tbody>${r.ip.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet_after_check)}</td><td>${pct(h.call)}</td></tr>`).join('')}</tbody></table></div>${locked?warnings([r.gap_note,'Locked frequencies apply equally across every hand. Interpret them as a scenario, not a discovered range-dependent policy.']):''}<p class="fine">${esc(r.scope)} Unreachable information sets may contain arbitrary strategies.</p>`;
 },'Solving the river game… this can take a little while.');
 function showGame(g){
+  if((currentStudyView&&(currentStudyView.binding.hand_id!==g.id||currentStudyView.binding.state_revision!==g.revision))
+      ||(currentStudyRequest&&(currentStudyRequest.hand_id!==g.id||currentStudyRequest.revision!==g.revision)))clearCurrentStudy();
   game=g;$('#game-controls').hidden=g.done;$('#acting-seat').textContent=g.done?'':g.actor_name+' to act · Seat '+g.actor;
   if(!g.done){document.querySelectorAll('[data-action]').forEach(b=>b.disabled=!g.legal[b.dataset.action]);$('#raise-amount').min=g.legal.raise_min;$('#raise-amount').max=g.legal.raise_max;$('#raise-amount').value=g.legal.raise_min;document.querySelector('[data-action="call"]').textContent='Call '+g.legal.call;}
   $('#game-result').innerHTML=`<p class="eyebrow">${esc(g.street.toUpperCase())} · ${g.done?'HAND COMPLETE':'PRACTICE TABLE'}</p><h2>${g.pot} chips ${g.done?'settled':'in the pot'}</h2><div>${g.board.map(cardHtml).join('')||'<p class="hint">Community cards appear after preflop.</p>'}</div><div class="seats">${g.hands.map((h,i)=>`<div class="seat ${g.actor===i?'active-seat':''} ${g.folded[i]?'folded':''}"><h3>${esc(g.names[i])} <span class="seat-number">· Seat ${i}${g.button===i?' · Button':''}</span></h3><div>${h?h.map(cardHtml).join(''):'<span class="unknown-cards">PRIVATE CARDS HIDDEN</span>'}</div><p>${g.stacks[i]} behind · ${g.committed[i]} committed</p><p>${g.folded[i]?'Folded':g.done?'Net: '+g.net[i]:g.stacks[i]===0?'All-in':'Street bet: '+g.street_bets[i]}</p></div>`).join('')}</div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${p.amount} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}<details><summary>Action history (${g.log.length})</summary>${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+a.amount}</p>`).join('')}</details>`;
+  renderCurrentStudy();
+}
+function clearCurrentStudy(){currentStudyGeneration++;currentStudyView=null;currentStudyRequest=null;currentStudyLoading=false;currentStudyError='';renderCurrentStudy();}
+function renderCurrentStudy(){
+  const panel=$('#current-study');if(!panel)return;
+  const visible=Boolean(game&&!game.done&&game.actor===0&&activeHandId===game.id&&$('#coach-toggle').checked);
+  panel.hidden=!visible;if(!visible){panel.innerHTML='';return;}
+  if(currentStudyLoading){panel.innerHTML='<p class="hint" role="status">Calculating a local practice estimate…</p>';return;}
+  if(currentStudyError){panel.innerHTML=`<p class="current-study-error" role="alert">${esc(currentStudyError)}</p><button class="secondary" data-study-current-retry>Retry study preview</button>`;return;}
+  if(!currentStudyView){panel.innerHTML='<button class="secondary" data-study-current>Study current decision</button><p class="hint">Optional local estimate. Nothing is calculated until you ask.</p>';return;}
+  const v=currentStudyView,ctx=v.context;
+  const actions=v.modeled_actions.map(a=>`<li><strong>${esc(a.name)}${a.amount===null?'':` ${a.amount_semantics==='street_total'?'to':'+'}${esc(a.amount)}`}</strong> · ${a.estimated_ev_chips===null?'EV unavailable':`${chips(a.estimated_ev_chips)} estimated chips`}${a.action_id===v.recommended_action_id?' · recommended':''}${a.size_note?`<br><span class="hint">${esc(a.size_note)}${a.maximum_legal_total===null?'':` Legal raise totals: ${esc(a.minimum_legal_total)}–${esc(a.maximum_legal_total)}.`}</span>`:''}</li>`).join('');
+  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}<ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>`;
+}
+async function requestCurrentStudy(){
+  if(!game||game.done||game.actor!==0||!activeHandId||pendingAction||!$('#coach-toggle').checked)return;
+  const handId=activeHandId,revision=game.revision,generation=++currentStudyGeneration,opponentId=practiceOpponent||null;
+  currentStudyOpponent=practiceOpponent;currentStudyRequest={hand_id:handId,revision};currentStudyView=null;currentStudyError='';currentStudyLoading=true;renderCurrentStudy();
+  try{
+    const view=await api(`v1/hands/${encodeURIComponent(handId)}/current-study`,{expected_revision:revision,opponent_id:opponentId});
+    const binding=view?.binding;
+    if(view?.status!=='ready'||view?.schema_version!==1||!binding||binding.hand_id!==handId||binding.state_revision!==revision
+        ||typeof binding.decision_id!=='string'||!binding.decision_id.trim()
+        ||typeof binding.evidence_id!=='string'||!binding.evidence_id.trim())throw new Error('Study preview did not match this hand. Try again.');
+    if(currentStudyGeneration!==generation||activeHandId!==handId||game?.id!==handId||game?.revision!==revision||practiceOpponent!==currentStudyOpponent||!$('#coach-toggle').checked)return;
+    currentStudyView=view;
+  }catch(error){
+    if(currentStudyGeneration!==generation||activeHandId!==handId||game?.revision!==revision||practiceOpponent!==currentStudyOpponent||!$('#coach-toggle').checked)return;
+    currentStudyError=error.message;
+  }finally{
+    if(currentStudyGeneration===generation){currentStudyRequest=null;currentStudyLoading=false;renderCurrentStudy();}
+  }
 }
 function coachExplanation(payload){
   if(!payload)return '<p class="hint">Structured explanation unavailable for this historical result.</p>';
@@ -308,6 +344,7 @@ $('#game-form').addEventListener('submit',async e=>{
   const form=e.target,button=form.querySelector('button[type="submit"],button.primary');
   button.disabled=true;status('Dealing…');
   const dealGeneration=++handGeneration;
+  clearCurrentStudy();
   invalidateDecisionStudy();
   try{
     const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;
@@ -320,7 +357,9 @@ $('#game-form').addEventListener('submit',async e=>{
     if(handGeneration===dealGeneration)button.disabled=false;
   }
 });
-$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach(null);if(!game?.done)invalidateDecisionStudy();}else if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}});
+$('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){clearCurrentStudy();showCoach(null);if(!game?.done)invalidateDecisionStudy();}else {renderCurrentStudy();if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}}});
+$('#game-form').elements.opponent_id.addEventListener('change',e=>{practiceOpponent=e.target.value;if(game&&!game.done)clearCurrentStudy();});
+$('#current-study').addEventListener('click',e=>{if(e.target.closest('[data-study-current],[data-study-current-retry]'))void requestCurrentStudy();});
 $('#decision-study').addEventListener('click',e=>{
   const followup=e.target.closest('[data-coach-followup]');
   if(followup){
@@ -362,6 +401,7 @@ $('#decision-study').addEventListener('submit',e=>{
 document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',async()=>{
   const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game;
   if(!actingHandId||!actingGame)return;
+  clearCurrentStudy();
   b.disabled=true;
   const action=b.dataset.action,amount=Number($('#raise-amount').value),actingStreet=actingGame.street;
   const requestKey=JSON.stringify([actingGame.id,action,action==='raise'?amount:null,practiceOpponent,$('#coach-toggle').checked,$('#coach-personality').value,actingGame.revision]);
@@ -386,3 +426,4 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
 }));
 loadOpponents().catch(e=>status(e.message,true));
 api('health').then(info=>{externalAiAvailable=info.external_ai_coach_available===true;if(selectedDecisionId)renderStudyPanel();}).catch(()=>{});
+

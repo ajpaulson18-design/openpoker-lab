@@ -1,11 +1,13 @@
 """Loopback-only stdlib web app. No external services, telemetry, or API key."""
 import argparse
 import copy
+import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import math
 import os
 from pathlib import Path
+import re
 import threading
 from urllib.parse import urlparse, parse_qs, unquote
 import uuid
@@ -16,6 +18,7 @@ from .coach_grounding import (CoachGroundingError, CoachReplyPlan,
                               build_grounding_bundle, render_coach_reply,
                               validate_coach_reply_plan)
 from .coach_conversation import ConversationError, ConversationLedger
+from .current_study import CurrentStudyPreviewCache, build_current_study_view
 from .coach_provider import CoachProviderError, OpenAIPlanSelector
 from .coach_teaching import build_teaching_note
 from .contracts import CoachAnalysisError, CoachDecisionAnalysis, CoachDecisionRef
@@ -137,6 +140,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
     game_lock = threading.Lock()
     work_lock = threading.BoundedSemaphore(2)
     coach_lock = threading.BoundedSemaphore(1)
+    preview_lock = threading.BoundedSemaphore(1)
+    preview_cache = CurrentStudyPreviewCache()
     conversation_ledger = (ConversationLedger(clock=coach_clock)
                            if coach_clock is not None else ConversationLedger())
 
@@ -153,6 +158,84 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             "source_label": reply.source_label, "reply": reply.to_dict(),
             "teaching_note": teaching_note.to_dict() if teaching_note else None,
         }
+
+    def resolve_current_study_evidence(binding):
+        """Resolve a live-question binding to its retained, immutable preview."""
+        if (not isinstance(binding, dict)
+                or set(binding) != {"hand_id", "decision_id", "evidence_id", "state_revision"}):
+            return None
+        if (any(not isinstance(binding.get(name), str) or not binding[name].strip()
+                for name in ("hand_id", "decision_id", "evidence_id"))
+                or type(binding.get("state_revision")) is not int
+                or binding["state_revision"] < 0):
+            return None
+        return preview_cache.resolve(
+            hand_id=binding["hand_id"], decision_id=binding["decision_id"],
+            evidence_id=binding["evidence_id"], state_revision=binding["state_revision"])
+
+    def current_study(path, data):
+        match = re.fullmatch(r"/api/v1/hands/([^/]+)/current-study", path)
+        if not match:
+            return {"error": "Not found."}, 404
+        hand_id = unquote(match.group(1))
+        if not hand_id or len(hand_id) > 128:
+            return {"error": "Hand was not found."}, 404
+        if set(data) != {"expected_revision", "opponent_id"}:
+            return {"error": "Study request must include expected_revision and opponent_id."}, 400
+        revision = data["expected_revision"]
+        opponent_id = data["opponent_id"]
+        if type(revision) is not int or revision < 0:
+            return {"error": "Expected revision must be a non-negative integer."}, 400
+        if opponent_id is not None and (not isinstance(opponent_id, str)
+                                        or not opponent_id or len(opponent_id) > 128):
+            return {"error": "Opponent ID must be a non-empty string or null."}, 400
+
+        with game_lock:
+            game = games.get(hand_id)
+            if game is None:
+                return {"error": "Hand was not found or has expired."}, 404
+            if (hand_revisions.get(hand_id) != revision or game.done or game.actor != 0):
+                return {"error": "Hand changed before the study preview. Refresh and try again."}, 409
+            snapshot = copy.deepcopy(game)
+
+        opponent = None
+        if opponent_id is not None:
+            try:
+                opponent = store.get_opponent(opponent_id, snapshot.street)
+                opponent["model_version"] = OPPONENT_MODEL_VERSION
+            except (ValueError, KeyError):
+                return {"error": "Selected opponent model is unavailable."}, 400
+
+        if opponent is None:
+            model_identity = "illustrative-default"
+        else:
+            identity_facts = {key: opponent[key] for key in
+                              ("id", "profile", "street", "metrics", "model_version")}
+            encoded = json.dumps(identity_facts, sort_keys=True, separators=(",", ":"))
+            model_identity = hashlib.sha256(encoded.encode()).hexdigest()
+        cache_key = (hand_id, revision, model_identity)
+        cached = preview_cache.get(cache_key)
+
+        if cached is None:
+            try:
+                raw = analyze_decision(snapshot, opponent)
+                evidence = adapt_practice_analysis(
+                    raw, ref=CoachDecisionRef(hand_id, uuid.uuid4().hex, revision))
+                view = build_current_study_view(evidence)
+            except Exception:
+                return {"error": "Study preview failed safely."}, 500
+        else:
+            evidence, view = cached
+
+        with game_lock:
+            current = games.get(hand_id)
+            if (current is None or hand_revisions.get(hand_id) != revision
+                    or current.done or current.actor != 0):
+                return {"error": "Hand changed while the study preview was calculating."}, 409
+
+        if cached is None:
+            preview_cache.put(cache_key, evidence, view)
+        return view, 200
 
     def dispatch_coach(path, data, external_requested):
         prefix = "/api/v1/decisions/"
@@ -423,6 +506,14 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                 if not isinstance(data, dict):
                     raise ValueError("Expected a JSON object.")
                 request_path = urlparse(self.path).path
+                if request_path.startswith("/api/v1/hands/"):
+                    if not preview_lock.acquire(blocking=False):
+                        return self.respond({"error": "A study preview is already running. Try again shortly."}, 429)
+                    try:
+                        result, status_code = current_study(request_path, data)
+                        return self.respond(result, status_code)
+                    finally:
+                        preview_lock.release()
                 if request_path == "/api/v1/coach/turns":
                     result, status_code = dispatch_coach_turn(
                         data, self.headers.get("X-OpenPoker-External-AI") == "1")
@@ -607,3 +698,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
