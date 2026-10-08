@@ -12,6 +12,7 @@ import json
 import platform
 import statistics
 import subprocess
+import sys
 import time
 import tracemalloc
 from datetime import datetime, timezone
@@ -53,15 +54,20 @@ def load_solver(path: Path | None):
     if spec is None or spec.loader is None:
         raise ValueError(f"Could not load solver source: {path}")
     module = importlib.util.module_from_spec(spec)
+    # Dataclass decorators inspect sys.modules while the source is executing.
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module.solve
 
 
 def solver_provenance(path: Path | None) -> dict:
     source = path.resolve() if path is not None else ROOT / "pokerlab" / "solver.py"
+    restricted = ROOT / "pokerlab" / "restricted_solver.py"
     return {
         "source": source.name if path is not None else "pokerlab/solver.py",
         "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "restricted_solver_sha256": hashlib.sha256(restricted.read_bytes()).hexdigest(),
+        "source_note": "The selected module may import supporting modules from the checked-out pokerlab package.",
     }
 
 
@@ -83,6 +89,8 @@ def run_case(scenario: dict, checkpoint: int, repeats: int, pot: float, bet: flo
         board=scenario["board"], oop_range=scenario["oop_range"],
         ip_range=scenario["ip_range"], pot=pot, bet=bet, iterations=checkpoint,
     )
+    if scenario.get("config") is not None:
+        kwargs["config"] = scenario["config"]
     # Keep the vanilla baseline compatible with the pre-option solver API.
     if algorithm != "vanilla":
         kwargs["algorithm"] = algorithm
@@ -119,8 +127,14 @@ def run_case(scenario: dict, checkpoint: int, repeats: int, pot: float, bet: flo
             "scope": last["scope"],
             "pot": last["pot"],
             "bet": last["bet"],
+            "effective_stack": last.get("effective_stack"),
             "value_oop": last["value_oop"],
             "value_ip": last["value_ip"],
+            "normalized_config": last.get("config"),
+            "public_nodes": last.get("public_nodes"),
+            "tree_actions": last.get("tree_actions"),
+            "strategy_schema": last.get("strategy_schema"),
+            "backend": last.get("backend"),
         },
         "deal_count": last["deals"],
         "information_set_count": last["info_sets"],
@@ -144,7 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG,
                         help="Versioned scenario JSON (default: benchmarks/solver-v1.json).")
     parser.add_argument("--solver-source", type=Path,
-                        help="Load a solver implementation from a Python source file, useful for comparisons.")
+                        help="Load a solver module; its pokerlab support imports still come from this checkout.")
     parser.add_argument("--scenario", action="append", dest="scenario_ids",
                         help="Run only this scenario ID; repeat the option to select several.")
     parser.add_argument("--algorithm", choices=("vanilla", "dcfr"), default="vanilla",
@@ -202,6 +216,7 @@ def main(argv: list[str] | None = None) -> int:
             "timing": "perf_counter wall time; median of independent solver calls",
             "memory": "tracemalloc peak from a separate untimed solver call",
             "exact_gap": "Exact best-response NashConv and exploitability returned by the solver.",
+            "source_loading": "A selected solver source may depend on supporting modules from the checked-out pokerlab package.",
         },
         "results": results,
     }

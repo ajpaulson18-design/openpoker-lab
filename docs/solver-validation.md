@@ -1,8 +1,13 @@
 # Equilibrium baseline: scope and validation
 
+This document describes the preserved fixed-bet compatibility entry point.
+For explicit multi-size, raise and stack-cap configurations, see
+[configured river validation](configured-river-validation.md). Both paths
+share the public `solve`/`solve_equilibrium` APIs and `river-strategy-v1` schema.
+
 ## Vocabulary (do not conflate)
 
-1. **Equilibrium strategy** – produced by `pokerlab/solver.py` for the exact
+1. **Equilibrium strategy** - produced through `pokerlab/solver.py` for the exact
    restricted game below; exposed through `pokerlab/equilibrium.py`.
 2. **Heuristic strategy** – hand-designed behaviour used outside solved states
    (e.g. the illustrative comparison baselines in `exploit.py`). Not solved.

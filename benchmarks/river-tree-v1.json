@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "configured-river-tree-v1",
+  "description": "Synthetic restricted-river benchmarks spanning the optimized binary backend and serialized public action trees.",
+  "defaults": {
+    "checkpoints": [50, 200, 500],
+    "repeats": 3,
+    "pot": 100,
+    "bet": 50
+  },
+  "scenarios": [
+    {
+      "id": "legacy-optimized-weighted",
+      "purpose": "Weighted two-hand reference case using the optimized legacy binary traversal.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "config": null
+    },
+    {
+      "id": "multi-size-33-75-no-shoves",
+      "purpose": "Two configured first-bet sizes with no explicit all-in action or raises.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": 500,
+        "bet_sizes": [0.33, 0.75],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": false
+      }
+    },
+    {
+      "id": "raises-and-shoves-stack-220",
+      "purpose": "Two raise fractions, depth two, and explicit shove actions at a 220-chip stack.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": 220,
+        "bet_sizes": [0.75],
+        "raise_sizes": [0.5, 1.0],
+        "max_raises": 2,
+        "include_all_in": true
+      }
+    },
+    {
+      "id": "asymmetric-refund-oversize-3pot",
+      "purpose": "Asymmetric 500/120 stacks with 3-pot bet options and returned uncalled excess.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": [500, 120],
+        "bet_sizes": [0.75, 1.5, 3.0],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": true
+      }
+    },
+    {
+      "id": "short-stack-120-bet-75-maxraises-2",
+      "purpose": "A 75-chip opening wager against a 120-chip cap with two short-stack raise decisions.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "config": {
+        "pot": 100,
+        "effective_stack": 120,
+        "bet_sizes": [0.75],
+        "raise_sizes": [0.5, 1.0],
+        "max_raises": 2,
+        "include_all_in": true
+      }
+    }
+  ]
+}

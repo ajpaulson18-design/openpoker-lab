@@ -1,0 +1,855 @@
+{
+  "benchmark_id": "configured-river-tree-v1",
+  "config_schema_version": 1,
+  "config_sha256": "d96a9542933a6846d58d1adf95886e2f9ab6bbc55f429e8f523c6c8bd202209c",
+  "created_at_utc": "2026-10-08T21:39:36.092889+00:00",
+  "methodology": {
+    "exact_gap": "Exact best-response NashConv and exploitability returned by the solver.",
+    "memory": "tracemalloc peak from a separate untimed solver call",
+    "source_loading": "A selected solver source may depend on supporting modules from the checked-out pokerlab package.",
+    "timing": "perf_counter wall time; median of independent solver calls"
+  },
+  "provenance": {
+    "git_revision": "worktree merged23-withv2 precommit",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.12.14",
+    "solver": {
+      "restricted_solver_sha256": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+      "sha256": "1d10bdf4b853207fc5a45866ff4473cf28bcfbd749b4c4e59c1443bc1cbfe711",
+      "source": "pokerlab/solver.py",
+      "source_note": "The selected module may import supporting modules from the checked-out pokerlab package."
+    },
+    "worktree_dirty": true
+  },
+  "results": [
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "restricted-river-v2",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.21810921189011445,
+        "nash_conv": 0.4362184237802289,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.19272561853828662
+      },
+      "game": {
+        "backend": "optimized-binary-tree",
+        "bet": 50.0,
+        "effective_stack": null,
+        "normalized_config": null,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 8,
+        "value_ip": 19.087465056957143,
+        "value_oop": -19.087465056957143
+      },
+      "information_set_count": 8,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 50,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 5299,
+      "purpose": "Weighted two-hand reference case using the optimized legacy binary traversal.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.00686429999768734,
+        "samples": [
+          0.006009300006553531,
+          0.00686429999768734,
+          0.0069898999645374715
+        ]
+      },
+      "scenario_id": "legacy-optimized-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "restricted-river-v2",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.003484697926973368,
+        "nash_conv": 0.006969395853946736,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.0032067571565157493
+      },
+      "game": {
+        "backend": "optimized-binary-tree",
+        "bet": 50.0,
+        "effective_stack": null,
+        "normalized_config": null,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 8,
+        "value_ip": 19.048383270356045,
+        "value_oop": -19.048383270356045
+      },
+      "information_set_count": 8,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 200,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 5299,
+      "purpose": "Weighted two-hand reference case using the optimized legacy binary traversal.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.01382630004081875,
+        "samples": [
+          0.01375519996508956,
+          0.016608200035989285,
+          0.01382630004081875
+        ]
+      },
+      "scenario_id": "legacy-optimized-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "restricted-river-v2",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.00022402359127049465,
+        "nash_conv": 0.0004480471825409893,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.0002062800228799233
+      },
+      "game": {
+        "backend": "optimized-binary-tree",
+        "bet": 50.0,
+        "effective_stack": null,
+        "normalized_config": null,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 8,
+        "value_ip": 19.047668302458128,
+        "value_oop": -19.047668302458128
+      },
+      "information_set_count": 8,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 500,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 5331,
+      "purpose": "Weighted two-hand reference case using the optimized legacy binary traversal.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.022599499963689595,
+        "samples": [
+          0.028431200014892966,
+          0.01972450001630932,
+          0.022599499963689595
+        ]
+      },
+      "scenario_id": "legacy-optimized-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 1.2098085633530147,
+        "nash_conv": 2.4196171267060294,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 1.5469086612712672
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 500.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": 500.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 6,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 14,
+        "value_ip": 19.469250090385476,
+        "value_oop": -19.469250090385476
+      },
+      "information_set_count": 12,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 50,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27651,
+      "purpose": "Two configured first-bet sizes with no explicit all-in action or raises.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.011696200002916157,
+        "samples": [
+          0.01101570000173524,
+          0.01356699998723343,
+          0.011696200002916157
+        ]
+      },
+      "scenario_id": "multi-size-33-75-no-shoves"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.07238457634038475,
+        "nash_conv": 0.1447691526807695,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.10976723628051488
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 500.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": 500.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 6,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 14,
+        "value_ip": 19.871659015361594,
+        "value_oop": -19.871659015361594
+      },
+      "information_set_count": 12,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 200,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 25067,
+      "purpose": "Two configured first-bet sizes with no explicit all-in action or raises.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.06959650001954287,
+        "samples": [
+          0.06959650001954287,
+          0.03617749997647479,
+          0.07823849999113008
+        ]
+      },
+      "scenario_id": "multi-size-33-75-no-shoves"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.013785485113114504,
+        "nash_conv": 0.027570970226229008,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.026278520723533205
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 500.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": 500.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 6,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 14,
+        "value_ip": 19.770005238058822,
+        "value_oop": -19.770005238058822
+      },
+      "information_set_count": 12,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 500,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 24899,
+      "purpose": "Two configured first-bet sizes with no explicit all-in action or raises.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.13180400000419468,
+        "samples": [
+          0.13426759996218607,
+          0.11295189999509603,
+          0.13180400000419468
+        ]
+      },
+      "scenario_id": "multi-size-33-75-no-shoves"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.9773166825383743,
+        "nash_conv": 1.9546333650767487,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 1.0240763372053951
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 220.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 12,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 32,
+        "value_ip": 15.646902351833953,
+        "value_oop": -15.646902351833953
+      },
+      "information_set_count": 24,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 50,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 44807,
+      "purpose": "Two raise fractions, depth two, and explicit shove actions at a 220-chip stack.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.016557599999941885,
+        "samples": [
+          0.013065499952062964,
+          0.016557599999941885,
+          0.0198017000220716
+        ]
+      },
+      "scenario_id": "raises-and-shoves-stack-220"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.015614440986322364,
+        "nash_conv": 0.03122888197264473,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.017254552822143054
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 220.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 12,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 32,
+        "value_ip": 15.479810953934441,
+        "value_oop": -15.479810953934441
+      },
+      "information_set_count": 24,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 200,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 47159,
+      "purpose": "Two raise fractions, depth two, and explicit shove actions at a 220-chip stack.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.16710290004266426,
+        "samples": [
+          0.15283589996397495,
+          0.16710290004266426,
+          0.16834090003976598
+        ]
+      },
+      "scenario_id": "raises-and-shoves-stack-220"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.0010038181841656169,
+        "nash_conv": 0.0020076363683312337,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.0011101296020559204
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 220.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 12,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 32,
+        "value_ip": 15.476424100991638,
+        "value_oop": -15.476424100991638
+      },
+      "information_set_count": 24,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 500,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 44095,
+      "purpose": "Two raise fractions, depth two, and explicit shove actions at a 220-chip stack.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.23430759995244443,
+        "samples": [
+          0.3014389000018127,
+          0.18833380000432953,
+          0.23430759995244443
+        ]
+      },
+      "scenario_id": "raises-and-shoves-stack-220"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.20823398968264595,
+        "nash_conv": 0.4164679793652919,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.28964968692447535
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": [
+          500.0,
+          120.0
+        ],
+        "normalized_config": {
+          "bet_sizes": [
+            0.75,
+            1.5,
+            3.0
+          ],
+          "effective_stack": [
+            500.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 15.643777363405492,
+        "value_oop": -15.643777363405492
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 50,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27255,
+      "purpose": "Asymmetric 500/120 stacks with 3-pot bet options and returned uncalled excess.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.014228400017600507,
+        "samples": [
+          0.014228400017600507,
+          0.009055799979250878,
+          0.015037200006190687
+        ]
+      },
+      "scenario_id": "asymmetric-refund-oversize-3pot"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.0033269229936809808,
+        "nash_conv": 0.0066538459873619615,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.004594970864410186
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": [
+          500.0,
+          120.0
+        ],
+        "normalized_config": {
+          "bet_sizes": [
+            0.75,
+            1.5,
+            3.0
+          ],
+          "effective_stack": [
+            500.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 15.478835268144874,
+        "value_oop": -15.478835268144874
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 200,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27415,
+      "purpose": "Asymmetric 500/120 stacks with 3-pot bet options and returned uncalled excess.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.06985119997989386,
+        "samples": [
+          0.06985119997989386,
+          0.09497259999625385,
+          0.0631011999794282
+        ]
+      },
+      "scenario_id": "asymmetric-refund-oversize-3pot"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.00021388058665028353,
+        "nash_conv": 0.00042776117330056707,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.0002953686489455265
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": [
+          500.0,
+          120.0
+        ],
+        "normalized_config": {
+          "bet_sizes": [
+            0.75,
+            1.5,
+            3.0
+          ],
+          "effective_stack": [
+            500.0,
+            120.0
+          ],
+          "include_all_in": true,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 15.476360472112088,
+        "value_oop": -15.476360472112088
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 500,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27967,
+      "purpose": "Asymmetric 500/120 stacks with 3-pot bet options and returned uncalled excess.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.18333390000043437,
+        "samples": [
+          0.28823250002460554,
+          0.13223069999367,
+          0.18333390000043437
+        ]
+      },
+      "scenario_id": "asymmetric-refund-oversize-3pot"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 1.504567579637924,
+        "nash_conv": 3.009135159275848,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 1.409357366667093
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 120.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 120.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 14.26357869684161,
+        "value_oop": -14.26357869684161
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 50,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27529,
+      "purpose": "A 75-chip opening wager against a 120-chip cap with two short-stack raise decisions.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.0113549999659881,
+        "samples": [
+          0.010572600003797561,
+          0.0113549999659881,
+          0.01498640002682805
+        ]
+      },
+      "scenario_id": "short-stack-120-bet-75-maxraises-2"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.1593492010605333,
+        "nash_conv": 0.3186984021210666,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.1772829574242767
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 120.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 120.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 15.056872030177884,
+        "value_oop": -15.056872030177884
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 200,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27529,
+      "purpose": "A 75-chip opening wager against a 120-chip cap with two short-stack raise decisions.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.04670960002113134,
+        "samples": [
+          0.04670960002113134,
+          0.04630039999028668,
+          0.062035599956288934
+        ]
+      },
+      "scenario_id": "short-stack-120-bet-75-maxraises-2"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "dcfr",
+        "solver_version": "configured-river-v1",
+        "variant": "DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 4,
+      "exact_gap": {
+        "exploitability": 0.08734604103088373,
+        "nash_conv": 0.17469208206176745,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.1044724744035399
+      },
+      "game": {
+        "backend": "exact-public-tree",
+        "bet": null,
+        "effective_stack": 120.0,
+        "normalized_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 120.0,
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5,
+            1.0
+          ]
+        },
+        "pot": 100.0,
+        "public_nodes": 8,
+        "scope": "Approximate equilibrium of the configured heads-up river action abstraction; no earlier streets or rake.",
+        "strategy_schema": "river-strategy-v1",
+        "tree_actions": 20,
+        "value_ip": 15.108775412274777,
+        "value_oop": -15.108775412274777
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd:1,KcKd:0.75",
+      "iterations": 500,
+      "oop_range": "AsAh:0.5,KsKh:1",
+      "peak_tracemalloc_bytes": 27561,
+      "purpose": "A 75-chip opening wager against a 120-chip cap with two short-stack raise decisions.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.24517650000052527,
+        "samples": [
+          0.24517650000052527,
+          0.2726642999914475,
+          0.1425967999966815
+        ]
+      },
+      "scenario_id": "short-stack-120-bet-75-maxraises-2"
+    }
+  ],
+  "schema_version": 1
+}

@@ -47,7 +47,7 @@ persist a conversation. The request uses the Responses API with structured outpu
 | Decision lab | Heads-up fold/call or check/bet EV, with explicit current and calling ranges, a baseline comparison, and opponent-informed fold probabilities |
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
-| River solver | Full-traversal CFR over compatible private hand pairs; mixed strategies; exact best-response gap; confidence-weighted opponent node locks |
+| River solver | Full-traversal CFR over configurable river bet/raise sizes and compatible private hands; mixed strategies; exact best-response gap; confidence-weighted legacy node locks |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
@@ -121,16 +121,33 @@ and notes are recorded manually. Export is available; bulk import is future work
 ### Solver game
 
 The solver begins on a fixed five-card board with two supplied weighted ranges.
-Out of position can check or bet one fixed size. After a check, in position can
-check or bet that size. A player facing a bet can fold or call. There are **no
-raises, future streets, rake, stack constraints, or multiway solver branches**.
+The immutable `RiverConfig` supports pot-relative first-bet and raise sizes,
+effective stacks, optional all-ins, and an explicit maximum raise depth. It
+solves only the configured heads-up river action abstraction; it does not solve
+future streets or claim unrestricted river GTO.
 
 The solver enumerates compatible deals, preserving private information and card
-removal. Average strategies are reported by information set. Utilities are
-zero-sum chip values relative to half the existing pot. `nash_conv` is the sum of
-both players' improvements from exact best responses to the average strategies;
-`exploitability` is half that sum. Best responses aggregate indistinguishable
-opponent hands **before** choosing an action.
+removal. Bet fractions multiply the current pot. A raise fraction multiplies
+the pot after calling; the resulting raise-to total includes the player's
+existing commitment and call amount. Minimum full raises, short all-ins,
+reopening, stack caps, duplicate actions, and returned uncalled excess are
+modeled explicitly. See [`configured river validation`](docs/configured-river-validation.md)
+for the exact configuration semantics and worked examples. `effective_stack`
+can be a shared scalar or an `(OOP, IP)` pair for unequal stack caps.
+
+Expanded configurations are available through the Python `solve` and
+`solve_equilibrium` APIs. The browser's fixed-bet form uses the optimized
+compatibility path. Vanilla CFR remains the default; `algorithm="dcfr"`
+selects DCFR(1.5,0,2). Both return exact best-response gaps and the versioned
+`river-strategy-v1` profile. DCFR is not uniformly faster or more accurate at
+every checkpoint; measured results are in [solver progress](docs/solver-progress.md).
+
+Average strategies are reported by information set, with different chip-size
+histories kept separate. Utilities are zero-sum chip values relative to half
+the starting pot. `nash_conv` is the sum of both players' improvements from
+exact best responses to the average strategies; `exploitability` is half that
+sum. Best responses aggregate indistinguishable opponent hands **before**
+choosing an action.
 
 Node locks may be uniform or hand-specific. With opponent node locks, the
 unrestricted gap measures the exploitability of the resulting profile, not
@@ -138,9 +155,10 @@ convergence in the locked game. The separate
 `oop_best_response_gain` measures remaining improvement for the unlocked player.
 Strategies at unreachable information sets need not be meaningful.
 
-For responsiveness, range-size product times iterations is capped at 3 million.
-Full 1,326-combination range solving and full-game GTO are outside this release.
-See `docs/solver-validation.md` for the exact scope, validation, the
+For responsiveness, range-size product times iterations is capped at 3 million;
+public trees and deal-node work are also bounded. Full 1,326-combination range
+solving and unrestricted no-limit GTO are outside this release. See
+`docs/solver-validation.md` for the exact scope, validation, the
 `pokerlab.equilibrium` strategy interface, and `python -m scripts.validate_solver`.
 
 ## Range notation
