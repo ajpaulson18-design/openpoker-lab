@@ -113,6 +113,18 @@ class CoachConversationTests(unittest.TestCase):
         self.assertEqual(self.selector.calls[1][4][1]["question"],
                          "Can you explain that more simply?")
 
+    def test_after_action_prompt_explains_saved_choice_without_external_ai(self):
+        result = self.post(self.body(
+            question="Explain my recorded choice and its saved loss."))
+        self.assertEqual(result["status"], "fallback")
+        self.assertEqual(result["source"], "local_fallback")
+        self.assertEqual(result["fallback_reason"], "external_ai_not_selected")
+        self.assertEqual(result["binding"], self.target)
+        self.assertEqual(result["reply"]["intent"], "choice")
+        self.assertEqual(result["teaching_note"]["binding"], self.target)
+        self.assertEqual(result["teaching_note"]["template_id"], "choice_assessed_v1")
+        self.assertEqual(self.selector.calls, [])
+
     def test_idempotent_retry_includes_external_opt_in_and_conflicts_are_explicit(self):
         payload = self.body()
         first = self.post(payload, external=True)
