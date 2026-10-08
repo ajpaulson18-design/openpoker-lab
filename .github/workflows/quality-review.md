@@ -15,8 +15,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-engine: pi
-model: copilot/gpt-4o
+engine: copilot
 network: defaults
 tools:
   github:
