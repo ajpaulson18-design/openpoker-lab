@@ -94,7 +94,8 @@ class ConversationLedger:
                 "result": None,
             })
             return {"conversation_id": conversation_id, "cached_result": None,
-                    "created": created}
+                    "created": created,
+                    "turn_index": len(conversation["turns"])}
 
     def prior_context(self, conversation_id, client_turn_id):
         with self._lock:

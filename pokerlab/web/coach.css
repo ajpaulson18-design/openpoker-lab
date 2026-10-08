@@ -14,6 +14,12 @@
 .current-coach-form h4 { margin:0 0 12px; }
 .current-coach-form textarea { min-height:78px; }
 .current-coach-form .ai-coach-reply { margin-top:16px; }
+.current-coach-turns { border-top:1px solid var(--line); margin-top:20px; padding-top:16px; }
+.current-coach-turns > h4 { margin:0 0 12px; }
+.current-coach-turn { border-top:1px solid var(--line); padding-top:12px; margin-top:12px; }
+.current-coach-question { margin:0 0 10px; overflow-wrap:anywhere; }
+.current-coach-followups { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.current-coach-followups button { width:auto; }
 .session-review { margin-top:20px; }
 .decision-study { margin-top:20px; }
 .decision-list { display:grid; gap:8px; margin:16px 0 22px; }
@@ -54,4 +60,3 @@
 .ai-answer-block small { display:block; color:var(--muted); font-size:10px; }
 .coach-unit { color:var(--muted); font-size:12px; }
 .unknown-cards { color:var(--muted); font-size:12px; letter-spacing:1px; }
-
