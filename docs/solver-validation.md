@@ -27,7 +27,10 @@ Utilities are zero-sum chips relative to half the starting pot: a fold is
 ±(pot/2 + bet). Information sets are keyed by player, private hand, and public history. Each OOP
 hand has two decision nodes (root and facing a bet after checking); each IP hand
 also has two (after an OOP check and facing an OOP bet). Variant: vanilla full-traversal CFR with regret matching, simultaneous
-updates and reach-weighted uniform averaging (no CFR+/linear weighting).
+updates and reach-weighted uniform averaging by default. The opt-in
+`algorithm="dcfr"` uses DCFR(1.5,0,2), simultaneous updates, and own-reach
+quadratic strategy averaging. It solves the same game and reports the same
+exact information-set best-response diagnostics.
 
 ## Exploitability
 
@@ -57,3 +60,32 @@ sizing. Histories: `()`, `("check",)`, `("bet",)`, `("check", "bet")`.
 brute-force pure-strategy best responses, Kuhn poker reference CFR, a
 bluff-catcher game with known equilibrium, convergence) and
 `python -m scripts.validate_solver [iterations ...]` for diagnostics.
+
+## Algorithm and traversal improvement (restricted-river-v2)
+
+The default remains vanilla CFR. `solve(..., algorithm="dcfr")` and
+`solve_equilibrium(..., algorithm="dcfr")` select an independently implemented
+variant from [Brown and Sandholm (2019)](https://arxiv.org/abs/1809.04040).
+For iteration t, first add the complete simultaneous regret delta, then
+multiply positive totals by t^1.5/(t^1.5+1) and negative totals by 1/2.
+Do not clip negative regret or discount per deal. Average strategies use t^2
+times the player's own reach. Exact best responses evaluate that average.
+DCFR can be worse at a given checkpoint; it does not change the default or
+carry a universal performance or convergence-speed claim.
+
+The binary-action traversal derives regrets directly from each node's two
+action values. Constant per-hand chance marginals allow average accumulation
+once per hand rather than once per compatible deal. Only OOP's response node
+has a previous own action (checking). An independent recursive traversal
+checks both algorithms on weighted ranges, overlapping private cards, ties,
+and a polarized game; exhaustive pure-strategy best responses independently
+verify the reported gap. Existing utility and card-evaluator logic is reused
+without changes.
+
+Run `python -m unittest tests.test_solver_variants tests.test_solver_validation -v`
+and `python -m scripts.benchmark_solver --algorithm vanilla` (or `dcfr`).
+Versioned synthetic scenarios live in `benchmarks/solver-v1.json`. Timings are
+median wall times of independent calls; traced Python peak memory is measured
+in a separate untimed call and is not process RSS. The benchmark records exact
+gap, ranges, compatible deals, information sets, algorithm and revision
+provenance. See `docs/solver-progress.md` for measured results and scope.

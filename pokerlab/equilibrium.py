@@ -90,6 +90,8 @@ class EquilibriumStrategy:
         return node
 
 
-def solve_equilibrium(board, oop_range, ip_range, pot=100, bet=50, iterations=1000):
+def solve_equilibrium(board, oop_range, ip_range, pot=100, bet=50, iterations=1000,
+                      *, algorithm="vanilla"):
     """Solve the restricted river game (no node locks) and wrap the result."""
-    return EquilibriumStrategy(solve(board, oop_range, ip_range, pot, bet, iterations))
+    return EquilibriumStrategy(solve(board, oop_range, ip_range, pot, bet, iterations,
+                                    algorithm=algorithm))
