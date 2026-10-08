@@ -781,7 +781,7 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
         if choice is None:
             rendered_intent = "unavailable"
             unavailable.append("choice")
-            include("unavailable", "Choice unavailable", ())
+            include("unavailable", "Choice unavailable", (one("source_kind"),))
         elif choice_status == "assessed" and loss is not None and loss.availability == "available":
             include("choice", "Recorded choice", (choice, loss))
         else:

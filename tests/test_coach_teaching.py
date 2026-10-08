@@ -33,8 +33,8 @@ def fixture(seed=61):
     return analysis, choice, build_grounding_bundle(analysis, choice)
 
 
-def plan(bundle, intent, target=None, detail="normal"):
-    return CoachReplyPlan(bundle.binding, intent, (), target, detail, "standard")
+def plan(bundle, intent, target=None, detail="normal", fact_ids=()):
+    return CoachReplyPlan(bundle.binding, intent, fact_ids, target, detail, "standard")
 
 
 def replace_fact(bundle, kind, value, availability=None):
@@ -67,6 +67,31 @@ class CoachTeachingTests(unittest.TestCase):
                                   if fact.fact_id == fact_id).kind == "board"
                              for fact_id in note.supporting_fact_ids))
         self.assertEqual(note.to_dict()["schema_version"], 1)
+
+    def test_optional_supporting_facts_do_not_change_teaching_prerequisites(self):
+        short_recommendation = render_coach_reply(
+            self.bundle, plan(self.bundle, "recommendation", detail="short"))
+        baseline_note = build_teaching_note(self.bundle, short_recommendation)
+        recommendation = next(fact for fact in self.bundle.facts
+                              if fact.kind == "recommendation")
+        unrelated_ev = next(fact for fact in self.bundle.facts
+                            if fact.kind == "action_ev" and fact.value[0] != recommendation.value)
+        cited_recommendation = render_coach_reply(
+            self.bundle, plan(self.bundle, "recommendation", detail="short",
+                              fact_ids=(unrelated_ev.fact_id,)))
+        cited_note = build_teaching_note(self.bundle, cited_recommendation)
+        self.assertTrue(any(block.kind == "supporting" for block in cited_recommendation.blocks))
+        self.assertEqual(cited_note, baseline_note)
+
+        short_limits = render_coach_reply(self.bundle, plan(self.bundle, "limits", detail="short"))
+        baseline_limits = build_teaching_note(self.bundle, short_limits)
+        diagnostic = replace_fact(self.bundle, "solver_iterations", 500, "available")
+        diagnostic_fact = next(fact for fact in diagnostic.facts
+                               if fact.kind == "solver_iterations")
+        cited_limits = render_coach_reply(
+            diagnostic, plan(diagnostic, "limits", detail="short",
+                             fact_ids=(diagnostic_fact.fact_id,)))
+        self.assertEqual(build_teaching_note(diagnostic, cited_limits), baseline_limits)
 
     def test_assessed_and_unassessed_choice_notes_do_not_transfer_raise_values(self):
         assessed = render_coach_reply(self.bundle, plan(self.bundle, "choice"))
@@ -116,9 +141,37 @@ class CoachTeachingTests(unittest.TestCase):
         diagnostic = replace_fact(diagnostic, "solver_gap_semantics", "synthetic diagnostic", "available")
         diagnostic_reply = render_coach_reply(diagnostic, plan(diagnostic, "limits"))
         diagnostic_note = build_teaching_note(diagnostic, diagnostic_reply)
-        self.assertIn("Equity sampling error", diagnostic_note.text)
+        self.assertIn("reports a standard error", diagnostic_note.text)
         self.assertIn("Solver-gap diagnostics", diagnostic_note.text)
         self.assertIn("separate measures", diagnostic_note.text)
+
+        exact = replace_fact(self.bundle, "equity_exact", True, "available")
+        exact = replace_fact(exact, "equity_standard_error", None, "unavailable")
+        exact_reply = render_coach_reply(exact, plan(exact, "limits"))
+        exact_note = build_teaching_note(exact, exact_reply)
+        self.assertIn("marked exact", exact_note.text)
+        self.assertNotIn("sampling uncertainty", exact_note.text)
+        self.assertNotIn("standard error", exact_note.text)
+
+    def test_opponent_uncertainty_without_assumptions_is_not_described_as_used(self):
+        bundle = replace_fact(self.bundle, "opponent_uncertainty",
+                              (0.2, 0.8, 0.95, "synthetic interval", "synthetic method"),
+                              "available")
+        self.assertFalse(any(fact.kind == "opponent_assumption" for fact in bundle.facts))
+        reply = render_coach_reply(bundle, plan(bundle, "limits"))
+        note = build_teaching_note(bundle, reply)
+        self.assertIn("Opponent-model uncertainty", note.text)
+        self.assertNotIn("opponent assumptions are model inputs", note.text)
+
+    def test_iterations_only_diagnostic_does_not_claim_solver_gap(self):
+        bundle = self.bundle
+        for kind in ("solver_nash_conv", "solver_exploitability", "solver_gap_semantics"):
+            bundle = replace_fact(bundle, kind, None, "unavailable")
+        bundle = replace_fact(bundle, "solver_iterations", 500, "available")
+        reply = render_coach_reply(bundle, plan(bundle, "limits"))
+        note = build_teaching_note(bundle, reply)
+        self.assertIn("Solver iteration count", note.text)
+        self.assertNotIn("Solver-gap diagnostics", note.text)
 
     def test_source_scope_and_opponent_assumptions_are_not_claimed_as_truth(self):
         for source, label, expected in (
@@ -165,7 +218,22 @@ class CoachTeachingTests(unittest.TestCase):
         generic = render_coach_reply(self.bundle, plan(self.bundle, "unavailable"))
         generic_note = build_teaching_note(self.bundle, generic)
         self.assertEqual(generic_note.template_id, "unavailable_request_v1")
-        self.assertIn("marker: unavailable", generic_note.text)
+        self.assertNotIn("marker:", generic_note.text)
+
+    def test_choice_unavailability_uses_its_own_marker_not_bundle_comparison_markers(self):
+        no_choice = replace(
+            self.bundle,
+            facts=tuple(fact for fact in self.bundle.facts if fact.kind != "choice"),
+            unavailable_fields=("comparison_ev",),
+        )
+        reply = render_coach_reply(no_choice, plan(no_choice, "choice"))
+        self.assertEqual(reply.intent, "unavailable")
+        self.assertIn("choice", reply.unavailable_fields)
+        self.assertIn("comparison_ev", reply.unavailable_fields)
+        note = build_teaching_note(no_choice, reply)
+        self.assertEqual(note.template_id, "unavailable_choice_v1")
+        self.assertIn("marker: choice", note.text)
+        self.assertNotIn("requested comparison", note.text)
 
     def test_unassessed_comparison_is_cited_without_any_substitute_ev(self):
         legal_raise = next(item for item in self.analysis.legal_actions if item.name == "raise")

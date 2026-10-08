@@ -25,14 +25,6 @@ _TEMPLATE_IDS = {
     "unavailable_recommendation_v1", "unavailable_choice_v1",
     "unavailable_comparison_v1", "unavailable_request_v1",
 }
-_UNAVAILABLE_MARKERS = {
-    "recommendation": "recommendation",
-    "choice": "choice",
-    "choice_action_not_modeled": "choice_action_not_modeled",
-    "comparison_ev": "comparison_ev",
-}
-
-
 @dataclass(frozen=True, slots=True)
 class TeachingNote:
     """A short, immutable note tied to one exact saved decision."""
@@ -104,15 +96,25 @@ def build_teaching_note(bundle: GroundingBundle,
     if visible is None:
         return None
     by_id = {fact.fact_id: fact for fact in bundle.facts}
+    block_kind = {"recommendation": "recommendation", "choice": "choice",
+                  "compare": "comparison", "limits": "limits",
+                  "unavailable": "unavailable"}.get(reply.intent)
+    if block_kind is None:
+        return None
+    intent_block = next((block for block in reply.blocks if block.kind == block_kind), None)
+    if intent_block is None:
+        return None
+    intent_visible = {fact.fact_id: visible[fact.fact_id]
+                      for fact in intent_block.facts}
     by_kind: dict[str, list[GroundFact]] = {}
-    for fact in visible.values():
+    for fact in intent_visible.values():
         by_kind.setdefault(fact.kind, []).append(fact)
 
     def one(kind: str) -> GroundFact | None:
         return next(iter(by_kind.get(kind, ())), None)
 
     def add(fact: GroundFact | None, supporting: list[GroundFact]) -> bool:
-        if fact is None or fact.fact_id not in visible:
+        if fact is None or fact.fact_id not in intent_visible:
             return False
         supporting.append(fact)
         return True
@@ -120,7 +122,7 @@ def build_teaching_note(bundle: GroundingBundle,
     def finish(template_id: str, text: str,
                supporting: list[GroundFact]) -> TeachingNote | None:
         ids = tuple(dict.fromkeys(fact.fact_id for fact in supporting))
-        if not ids or any(fact_id not in visible for fact_id in ids):
+        if not ids or any(fact_id not in intent_visible for fact_id in ids):
             return None
         return TeachingNote(template_id, bundle.binding, reply.source_label, text, ids)
 
@@ -196,65 +198,90 @@ def build_teaching_note(bundle: GroundingBundle,
         else:
             text = "This is a restricted exploit estimate for the saved decision."
 
-        opponent_facts = [fact for fact in by_kind.get("opponent_assumption", ())]
+        opponent_facts = list(by_kind.get("opponent_assumption", ()))
         opponent_uncertainty = one("opponent_uncertainty")
-        if opponent_facts or (opponent_uncertainty is not None
-                              and opponent_uncertainty.value is not None):
-            text += (" It uses recorded opponent assumptions as model inputs; those "
-                     "observations are not verified facts about the opponent. "
-                     "Opponent-model uncertainty concerns the recorded behavior model, "
-                     "not hidden cards.")
+        if opponent_facts:
+            text += (" Recorded opponent assumptions are model inputs, not verified "
+                     "facts about the opponent.")
             supporting.extend(opponent_facts)
-            if opponent_uncertainty is not None and opponent_uncertainty.value is not None:
-                supporting.append(opponent_uncertainty)
+        if opponent_uncertainty is not None and opponent_uncertainty.value is not None:
+            text += (" Opponent-model uncertainty concerns the recorded behavior model, "
+                     "not hidden cards.")
+            supporting.append(opponent_uncertainty)
 
-        equity_facts = [fact for kind in ("equity_standard_error", "equity_exact")
-                        for fact in by_kind.get(kind, ()) if fact.value is not None]
-        if equity_facts:
-            text += " Equity sampling error concerns the equity calculation."
-            supporting.extend(equity_facts)
+        equity_standard_error = one("equity_standard_error")
+        if (equity_standard_error is not None
+                and equity_standard_error.availability == "available"
+                and equity_standard_error.value is not None):
+            text += " The equity calculation reports a standard error for sampling uncertainty."
+            supporting.append(equity_standard_error)
+        equity_exact = one("equity_exact")
+        if equity_exact is not None and type(equity_exact.value) is bool:
+            text += (" The equity calculation is marked exact." if equity_exact.value
+                     else " The equity calculation is marked non-exact.")
+            supporting.append(equity_exact)
 
-        solver_facts = [fact for kind in ("solver_nash_conv", "solver_exploitability",
-                                          "solver_iterations", "solver_gap_semantics")
-                        for fact in by_kind.get(kind, ()) if fact.value is not None]
-        if solver_facts:
+        solver_gap_facts = [fact for kind in ("solver_nash_conv", "solver_exploitability",
+                                              "solver_gap_semantics")
+                            for fact in by_kind.get(kind, ()) if fact.value is not None]
+        solver_iteration_facts = [fact for fact in by_kind.get("solver_iterations", ())
+                                  if fact.value is not None]
+        if solver_gap_facts:
             text += " Solver-gap diagnostics describe the configured solve."
-            supporting.extend(solver_facts)
+            supporting.extend(solver_gap_facts)
+        if solver_iteration_facts:
+            text += " Solver iteration count describes the configured solve."
+            supporting.extend(solver_iteration_facts)
 
-        categories = sum(bool(items) for items in (opponent_facts or
-                             ([opponent_uncertainty] if opponent_uncertainty is not None
-                              and opponent_uncertainty.value is not None else []),
-                             equity_facts, solver_facts))
+        categories = sum((bool(opponent_facts or (opponent_uncertainty is not None
+                                                   and opponent_uncertainty.value is not None)),
+                          bool((equity_standard_error is not None
+                                and equity_standard_error.value is not None)
+                               or (equity_exact is not None and type(equity_exact.value) is bool)),
+                          bool(solver_gap_facts or solver_iteration_facts)))
         if categories >= 2:
             text += " These are separate measures, not one combined confidence score."
         return finish("limits_scope_v1", text, supporting)
 
     if reply.intent == "unavailable":
-        marker = next((name for name in _UNAVAILABLE_MARKERS
-                       if name in reply.unavailable_fields), None)
         supporting = []
-        if marker == "recommendation":
+        source_fact = one("source_kind")
+        requested = reply.requested_intent
+        if requested == "recommendation" and "recommendation" in reply.unavailable_fields:
             if not add(one("recommendation"), supporting):
-                return None
+                if not add(source_fact, supporting):
+                    return None
             text = ("The saved recommendation was unavailable (marker: recommendation). "
                     "No substitute action or estimate is inferred.")
             return finish("unavailable_recommendation_v1", text, supporting)
-        if marker in {"choice", "choice_action_not_modeled"}:
-            if not add(one("choice"), supporting):
+        if requested == "choice" and "choice" in reply.unavailable_fields:
+            if not add(source_fact, supporting):
                 return None
-            text = (f"The requested comparison was not measured (marker: {marker}). "
-                    "No other raise size or EV is supplied as a substitute.")
+            text = ("The saved choice was unavailable (marker: choice). "
+                    "No loss or comparison is inferred.")
             return finish("unavailable_choice_v1", text, supporting)
-        if marker == "comparison_ev":
-            if not add(one("choice"), supporting):
+        if requested == "compare":
+            choice = one("choice")
+            choice_status = (choice.value[3] if choice is not None
+                             and isinstance(choice.value, tuple) and len(choice.value) == 6
+                             else None)
+            marker = ("choice_action_not_modeled" if choice_status != "assessed"
+                      else "comparison_ev")
+            if marker not in reply.unavailable_fields:
                 return None
+            if not add(choice, supporting) and not add(source_fact, supporting):
+                return None
+            if marker == "choice_action_not_modeled":
+                text = ("The recorded choice could not be compared with a modeled action "
+                        "(marker: choice_action_not_modeled). No substitute raise size or EV is inferred.")
+                return finish("unavailable_choice_v1", text, supporting)
             text = ("The requested comparison was not measured (marker: comparison_ev). "
                     "No replacement action or EV is inferred.")
             return finish("unavailable_comparison_v1", text, supporting)
-        if reply.requested_intent == "unavailable":
-            if not add(one("source_kind"), supporting):
+        if requested == "unavailable":
+            if not add(source_fact, supporting):
                 return None
-            text = ("The saved reply marks this request unavailable (marker: unavailable). "
-                    "No substitute action, comparison, or EV is inferred.")
+            text = ("No recommendation or comparison was rendered for this request. "
+                    "No substitute action or EV is inferred.")
             return finish("unavailable_request_v1", text, supporting)
     return None
