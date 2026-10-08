@@ -7,6 +7,7 @@ let opponents = [], game = null, practiceOpponent = '', pendingAction = null;
 let activeHandId = null, handGeneration = 0, selectedDecisionId = null, selectionGeneration = 0;
 let liveDecisions = [], studyDecisions = [], studyTitle = '', studyPayload = null;
 let latestCoachResult = null, latestCoachDecision = null;
+let afterActionError = '', afterActionLoading = false;
 let selectedStudyCard = 'estimate', studyLoading = false, studyFailed = false;
 let externalAiAvailable = false, coachQuestionLoading = false, coachQuestionError = '';
 let coachConversation = null, coachConversations = new Map(), lastCoachQuestion = null;
@@ -189,7 +190,8 @@ function showCoach(result,decision){
   const voice=result.personality?`<p>${esc(result.personality.text)}</p><p class="fine">${esc(result.personality.personality.replaceAll('_',' '))} · local deterministic renderer · analysis ${esc(result.personality.analysis_id)}</p>`:'';
   const amount=decision?.chosen_action_detail?.amount;
   const choiceLabel=`YOU CHOSE ${esc(chosen.toUpperCase())}${chosen==='raise'?` TO ${esc(amount)}`:''} · ${assessed?`ESTIMATED LOSS ${loss}`:'RAISE SIZE NOT EVALUATED'}`;
-  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>`;
+  const afterAction=decision?.decision_id?`<button type="button" class="secondary" data-explain-latest-action${afterActionLoading?' disabled':''}>${afterActionLoading?'Loading saved explanation…':afterActionError?'Retry explanation':'Explain my action (local)'}</button><p class="hint">Uses this decision\'s saved evidence. External AI stays off unless you select it for a separate question.</p>${afterActionError?`<p class="hint error" role="alert">${esc(afterActionError)}</p>`:''}`:'';
+  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>${afterAction}`;
 }
 function decisionLabel(decision){
   const detail=decision.chosen_action_detail||{};
@@ -404,6 +406,36 @@ function showDecisionStudy(decisions,title,selectId=null){
   if(!next){invalidateDecisionStudy();return;}
   renderStudyPanel();
 }
+async function explainLatestAction(){
+  const decisionId=latestCoachDecision?.decision_id,handId=activeHandId,generation=handGeneration;
+  if(afterActionLoading||!decisionId||!handId||!$('#coach-toggle').checked||coachQuestionLoading
+    ||!liveDecisions.some(item=>item.decision_id===decisionId))return;
+  afterActionError='';afterActionLoading=true;showCoach(latestCoachResult,latestCoachDecision);
+  await selectDecisionStudy(decisionId);
+  if(activeHandId!==handId||handGeneration!==generation
+    ||latestCoachDecision?.decision_id!==decisionId||!$('#coach-toggle').checked)return;
+  const binding=studyPayload?.binding;
+  if(studyPayload?.status!=='ready'||binding?.hand_id!==handId
+    ||binding?.decision_id!==decisionId
+    ||binding?.evidence_id!==latestCoachDecision.evidence_id
+    ||binding?.state_revision!==latestCoachDecision.state_revision){
+    afterActionError=studyFailed
+      ?'Could not load this decision’s saved study. Retry to try again.'
+      :studyPayload?.status==='unavailable'
+        ?'This decision’s saved explanation is unavailable. Retry to check again.'
+        :'The saved study no longer matches this action. Retry to refresh its evidence.';
+    afterActionLoading=false;showCoach(latestCoachResult,latestCoachDecision);return;
+  }
+  if(selectedDecisionId!==decisionId){
+    afterActionError='The saved study selection changed. Retry to reload this action’s evidence.';
+    afterActionLoading=false;showCoach(latestCoachResult,latestCoachDecision);return;
+  }
+  if(coachConversationFull||coachConversationExpired)startNewCoachConversation();
+  coachDraft={question:'Explain my recorded choice and its saved loss.',
+    detail:'normal',audience:'standard',external:false};
+  afterActionLoading=false;showCoach(latestCoachResult,latestCoachDecision);
+  await askStudyCoach();
+}
 async function loadReview(handId=activeHandId){
   const data=await api('session/'+handId);
   if(activeHandId!==handId)return;
@@ -432,7 +464,7 @@ $('#game-form').addEventListener('submit',async e=>{
     const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;
     const dealt=await api('game',d);
     if(handGeneration!==dealGeneration)return;
-    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;coachQuestionLoading=false;coachQuestionError='';coachConversation=null;coachConversationFull=false;coachConversations.clear();lastCoachQuestion=null;coachDraft={question:'',detail:'normal',audience:'standard',external:false};latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
+    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;coachQuestionLoading=false;coachQuestionError='';coachConversation=null;coachConversationFull=false;coachConversations.clear();lastCoachQuestion=null;coachDraft={question:'',detail:'normal',audience:'standard',external:false};latestCoachResult=null;latestCoachDecision=null;afterActionError='';afterActionLoading=false;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
   }catch(err){
     if(handGeneration===dealGeneration){status(err.message,true);if(game)showGame(game);}
   }finally{
@@ -440,6 +472,9 @@ $('#game-form').addEventListener('submit',async e=>{
   }
 });
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){clearCurrentStudy();showCoach(null);if(!game?.done)invalidateDecisionStudy();}else {renderCurrentStudy();if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}}});
+$('#coach-panel').addEventListener('click',e=>{
+  if(e.target.closest('[data-explain-latest-action]'))void explainLatestAction();
+});
 $('#game-form').elements.opponent_id.addEventListener('change',e=>{practiceOpponent=e.target.value;if(game&&!game.done)clearCurrentStudy();});
 $('#current-study').addEventListener('click',e=>{
   if(e.target.closest('[data-study-current],[data-study-current-retry]')){void requestCurrentStudy();return;}
@@ -537,6 +572,7 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
     const g=await api('act',{id:actingHandId,action,amount,opponent_id:practiceOpponent,coach_visible:$('#coach-toggle').checked,personality:$('#coach-personality').value,expected_revision:actingGame.revision,client_action_id:actionRequest.id});
     if(activeHandId!==actingHandId||handGeneration!==actingHandGeneration)return;
     if(pendingAction===actionRequest)pendingAction=null;
+    afterActionError='';afterActionLoading=false;
     latestCoachResult=g.coach||null;latestCoachDecision=g.decision||null;
     if(g.decision)liveDecisions.push({decision_id:g.decision.decision_id,street:actingStreet,chosen_action:g.decision.chosen_action_detail?.name,chosen_action_detail:g.decision.chosen_action_detail,assessment_status:g.decision.assessment_status});
     showGame(g);showCoach($('#coach-toggle').checked?g.coach:null,g.decision);

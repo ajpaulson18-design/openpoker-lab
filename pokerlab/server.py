@@ -149,10 +149,16 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
     live_conversation_ledger = (ConversationLedger(clock=coach_clock)
                                 if coach_clock is not None else ConversationLedger())
 
-    def coach_fallback(bundle, detail, audience, reason):
+    def coach_fallback(bundle, detail, audience, reason, question=None):
         recommendation = next((fact for fact in bundle.facts
                                if fact.kind == "recommendation"), None)
-        intent = "recommendation" if recommendation and recommendation.value is not None else "unavailable"
+        # The browser's explicit after-action prompt requests the recorded choice.
+        # Keep all other local questions on the established recommendation path.
+        choice = next((fact for fact in bundle.facts if fact.kind == "choice"), None)
+        if question == "Explain my recorded choice and its saved loss." and choice is not None:
+            intent = "choice"
+        else:
+            intent = "recommendation" if recommendation and recommendation.value is not None else "unavailable"
         plan = CoachReplyPlan(bundle.binding, intent, (), None, detail, audience)
         reply = render_coach_reply(bundle, plan)
         teaching_note = build_teaching_note(bundle, reply)
@@ -756,12 +762,12 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
         try:
             prior_turns = conversation_ledger.prior_context(conversation_id, client_turn_id)
             if not external_requested:
-                result = coach_fallback(bundle, detail, audience, "external_ai_not_selected")
+                result = coach_fallback(bundle, detail, audience, "external_ai_not_selected", question)
                 plan_metadata = {"intent": result["reply"]["intent"],
                                  "target_action_id": result["reply"].get("target_action_id"),
                                  "detail": detail, "audience": audience}
             elif not coach_external_available:
-                result = coach_fallback(bundle, detail, audience, "external_ai_not_configured")
+                result = coach_fallback(bundle, detail, audience, "external_ai_not_configured", question)
                 plan_metadata = {"intent": result["reply"]["intent"],
                                  "target_action_id": result["reply"].get("target_action_id"),
                                  "detail": detail, "audience": audience}
@@ -784,11 +790,11 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                                      "target_action_id": plan.target_action_id,
                                      "detail": plan.detail, "audience": plan.audience}
                 except CoachProviderError as error:
-                    result = coach_fallback(bundle, detail, audience, error.code)
+                    result = coach_fallback(bundle, detail, audience, error.code, question)
                 except (CoachGroundingError, ValueError, TypeError):
-                    result = coach_fallback(bundle, detail, audience, "invalid_plan")
+                    result = coach_fallback(bundle, detail, audience, "invalid_plan", question)
                 except Exception:
-                    result = coach_fallback(bundle, detail, audience, "provider_error")
+                    result = coach_fallback(bundle, detail, audience, "provider_error", question)
                 if plan_metadata is None:
                     plan_metadata = {"intent": result["reply"]["intent"],
                                      "target_action_id": result["reply"].get("target_action_id"),
