@@ -55,7 +55,8 @@ class PracticeUnitTests(unittest.TestCase):
         game = Game([30, 30], seed=7)
         analysis = analyze_decision(game)
         chosen = min(analysis["actions"], key=analysis["actions"].get)
-        event = decision_event(game, analysis, chosen)
+        amount = game.legal()["raise_min"] if chosen == "raise" else None
+        event = decision_event(game, analysis, chosen, amount=amount)
         expected = analysis["actions"][analysis["recommended"]] - analysis["actions"][chosen]
         self.assertAlmostEqual(event["ev_loss"], expected)
         self.assertEqual(event["analysis_at_time"]["analysis_id"], analysis["analysis_id"])
@@ -91,7 +92,8 @@ class PracticeUnitTests(unittest.TestCase):
         game = Game([30, 30, 20], seed=9)
         analysis = analyze_decision(game)
         chosen = analysis["recommended"]
-        event = decision_event(game, analysis, chosen)
+        event = decision_event(game, analysis, chosen,
+                               amount=game.legal()["raise_min"] if chosen == "raise" else None)
         self.assertEqual(event["actor"], game.actor)
         self.assertEqual(event["button"], game.button)
         self.assertEqual(event["legal_action_details"], game.legal())
@@ -107,7 +109,10 @@ class PracticeUnitTests(unittest.TestCase):
     def test_review_uses_recorded_decisions(self):
         game = Game([30, 30], seed=4)
         analysis = analyze_decision(game)
-        event = {**decision_event(game, analysis, analysis["recommended"]), "decision_order": 1}
+        chosen = analysis["recommended"]
+        event = {**decision_event(game, analysis, chosen,
+                                  amount=game.legal()["raise_min"] if chosen == "raise" else None),
+                 "decision_order": 1}
         review = summarize([event])
         self.assertEqual(review["analyzed_decisions"], 1)
         self.assertEqual(review["matched_recommendation"], 1)
@@ -115,17 +120,35 @@ class PracticeUnitTests(unittest.TestCase):
 
     def test_review_ranks_errors_and_successful_exploits(self):
         base = {"matched_recommendation": False, "successful_exploit": False,
+                "assessment_status": "assessed",
                 "analysis_at_time": {"recommended": "raise", "baseline_recommended": "check"}}
         events = [
-            {**base, "decision_order": 1, "ev_loss": 2.0, "exploit_gain": 0.0},
-            {**base, "decision_order": 2, "ev_loss": 8.0, "exploit_gain": 0.0},
-            {**base, "decision_order": 3, "ev_loss": 0.0, "exploit_gain": 3.0,
+            {**base, "decision_id": "decision-small", "decision_order": 1,
+             "ev_loss": 2.0, "exploit_gain": 0.0},
+            {**base, "decision_id": "decision-big", "decision_order": 2,
+             "ev_loss": 8.0, "exploit_gain": 0.0},
+            {**base, "decision_id": "decision-exploit-small", "decision_order": 3,
+             "ev_loss": 0.0, "exploit_gain": 3.0,
              "matched_recommendation": True, "successful_exploit": True},
-            {**base, "decision_order": 4, "ev_loss": 0.0, "exploit_gain": 9.0,
+            {**base, "decision_id": "decision-exploit-big", "decision_order": 4,
+             "ev_loss": 0.0, "exploit_gain": 9.0,
              "matched_recommendation": True, "successful_exploit": True},
+            {**{key: value for key, value in base.items()
+                if key != "assessment_status"},
+             "decision_id": "decision-legacy-assessed", "decision_order": 5,
+             "ev_loss": 3.0, "exploit_gain": 0.0},
+            {**base, "decision_id": "decision-unassessed-raise", "decision_order": 6,
+             "chosen_action": "raise", "assessment_status": "unassessed_size",
+             "ev_loss": None, "exploit_gain": None},
         ]
         review = summarize(events)
-        self.assertEqual([item["ev_loss"] for item in review["biggest_errors"]], [8.0, 2.0])
+        self.assertEqual([item["ev_loss"] for item in review["biggest_errors"]],
+                         [8.0, 3.0, 2.0])
+        self.assertEqual(review["biggest_errors"][0]["decision_id"], "decision-big")
+        self.assertIn("decision-legacy-assessed",
+                      [item["decision_id"] for item in review["biggest_errors"]])
+        self.assertNotIn("decision-unassessed-raise",
+                         [item["decision_id"] for item in review["biggest_errors"]])
         self.assertEqual([item["exploit_gain"] for item in review["biggest_successful_exploits"]],
                          [9.0, 3.0])
 
@@ -234,11 +257,27 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         review = json.load(urlopen(self.root + "/api/session/" + game["id"]))
         self.assertIsNotNone(review["session"]["completed_at"])
         self.assertGreater(review["review"]["analyzed_decisions"], 0)
+        decisions_by_id = {item["decision_id"]: item for item in review["decisions"]}
+        for item in review["review"]["biggest_errors"]:
+            self.assertIn(item["decision_id"], decisions_by_id)
+            self.assertNotEqual(item["assessment_status"], "unassessed_size")
         html = urlopen(self.root + "/").read().decode()
         script = urlopen(self.root + "/app.js").read().decode()
         self.assertIn("coach-toggle", html)
         self.assertIn("loadReview", script)
         self.assertIn("coachExplanation(result.explanation_payload)", script)
+        self.assertIn("ONE-HAND REVIEW", script)
+        self.assertIn("These are model-based estimates, not chips actually won or lost", script)
+        self.assertIn("One hand alone cannot establish a recurring pattern", script)
+        self.assertIn("had an estimated EV gap", script)
+        focus = script[script.index("function completedHandStudyFocus"):
+                       script.index("async function explainLatestAction")]
+        self.assertIn("item.assessment_status!=='unassessed_size'", focus)
+        self.assertIn("Number.isFinite(item.ev_loss)&&item.ev_loss>.01", focus)
+        self.assertIn("saved.decision_id===item.decision_id", focus)
+        self.assertIn("available[available.length-1]?.decision_id", focus)
+        self.assertIn("completedHandStudyFocus(r,data.decisions)", script)
+        self.assertIn("studyDecisions.some(item=>item.decision_id===requested)?requested", script)
 
     def test_selected_offline_personality_is_returned_without_changing_analysis(self):
         game = self.post("/api/game", {"stacks": [20, 20], "names": ["Hero", "Villain"],
@@ -296,8 +335,14 @@ class PracticeBrowserFlowTests(unittest.TestCase):
         self.assertIn("#table .coach-toolbar", script)
         self.assertIn("cloneNode(true)", script)
         self.assertIn("personality:$('#coach-personality').value", script)
-        self.assertIn("Biggest errors", script)
-        self.assertIn("Biggest successful exploits", script)
+        self.assertIn("Biggest modeled gaps", script)
+        self.assertIn("Biggest estimated gains over baseline", script)
+        self.assertIn("Actions above baseline in this model", script)
+        self.assertIn("expected_revision:actingGame.revision", script)
+        self.assertIn("client_action_id:actionRequest.id", script)
+        self.assertIn("RAISE SIZE NOT EVALUATED", script)
+        self.assertIn("if(action==='raise')$('#raise-amount').value=amount", script)
+        self.assertNotIn("result.actions[result.recommended]-result.actions[chosen]", script)
 
 
 if __name__ == "__main__":

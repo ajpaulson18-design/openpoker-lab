@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "restricted-river-solver-v1",
+  "description": "Deterministic synthetic workloads for the fixed-board, fixed-bet restricted river solver.",
+  "algorithm": {
+    "name": "vanilla CFR",
+    "api_mode": "default solver API; no algorithm keyword required",
+    "update_rule": "simultaneous regret-matching updates with reach-weighted uniform strategy averaging"
+  },
+  "defaults": {
+    "checkpoints": [50, 200, 500],
+    "repeats": 3,
+    "pot": 100,
+    "bet": 50
+  },
+  "scenarios": [
+    {
+      "id": "balanced-weighted",
+      "purpose": "Balanced, multi-class ranges with explicit non-uniform combo weights.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh:1,KsKh:0.8,QcQd:0.65,JcJh:0.5,AdKc:0.75",
+      "ip_range": "TsTh:0.7,9s9h:0.55,8c8d:0.4,AcKd:0.8,AsQc:0.65,KcQc:0.5"
+    },
+    {
+      "id": "blocker-sensitive",
+      "purpose": "Specific-card and suited-combo blockers on a monotone river board.",
+      "board": "Ah9h6h3c2d",
+      "oop_range": "AsKh:1,KsQh:0.8,AcAd:0.7,KcKd:0.55",
+      "ip_range": "QhTh:1,KhJh:0.8,AsKd:0.7,6s6d:0.35"
+    },
+    {
+      "id": "symmetric-reference",
+      "purpose": "Suit-symmetric reference fixture used by the independent solver validator.",
+      "board": "Js8d4c2h2s",
+      "oop_range": "AsAh,KsKh,QsQh,AsKs",
+      "ip_range": "AcAd,KcKd,QcQd,AcKc"
+    },
+    {
+      "id": "bluff-catcher",
+      "purpose": "Known river bluff-catcher reference fixture with a pot-sized bet.",
+      "board": "2c7d9hJsKd",
+      "oop_range": "AsAh,3c4c",
+      "ip_range": "QsQh",
+      "pot": 100,
+      "bet": 100
+    },
+    {
+      "id": "all-tie-board",
+      "purpose": "Every compatible deal ties because the board itself makes Broadway.",
+      "board": "AsKdQcJhTs",
+      "oop_range": "2c3c,4c5c,6c7c,8c9c",
+      "ip_range": "2d3d,4d5d,6d7d,8d9d"
+    },
+    {
+      "id": "polarized",
+      "purpose": "Separated strong and weak value classes against bluff-catcher classes.",
+      "board": "Kc9d6s3h2c",
+      "oop_range": "KdKh:1,9c9h:0.8,6c6h:0.6,As5s:0.7",
+      "ip_range": "AcAh:1,QcQh:0.8,KdQd:0.6,8s7s:0.6"
+    }
+  ]
+}

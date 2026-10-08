@@ -10,6 +10,7 @@ import math
 from .analysis import number
 from .cards import cards, expand_range, rank_hand
 from .river_config import RiverConfig
+from .restricted_solver import solve as _solve_restricted
 
 
 OOP, IP = 0, 1
@@ -359,9 +360,9 @@ def _legacy_rows(root, averages, hands):
     return oop_rows, ip_rows
 
 
-def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None,
+def _solve_configured(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None,
           config=None, effective_stack=None, bet_sizes=None, raise_sizes=None,
-          max_raises=0, include_all_in=True):
+          max_raises=0, include_all_in=True, *, algorithm="vanilla"):
     """Solve an exact configured river abstraction by vanilla full-traversal CFR.
 
     Legacy ``pot``/``bet`` calls remain supported. New trees should pass a
@@ -398,7 +399,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     regrets = {key: [0.0] * count for key, count in infos.items()}
     sums = {key: [0.0] * count for key, count in infos.items()}
 
-    for _ in range(iterations):
+    for iteration in range(1, iterations + 1):
         current = {key: strategy(regret) for key, regret in regrets.items()}
         for (player, history), locked_hands in lock_map.items():
             node = nodes[(player, history)]
@@ -428,12 +429,17 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
                 for action_index, value in enumerate(action_values):
                     deltas[key][action_index] += deal_weight * opponent_reach * \
                         sign_for_player * (value - expected)
-                    sums[key][action_index] += deal_weight * own_reach * probs[action_index]
+                    sums[key][action_index] += deal_weight * own_reach * probs[action_index] * \
+                        (iteration**2 if algorithm == "dcfr" else 1.0)
                 return expected
 
             traverse(root, 1.0, 1.0)
         for key, values in regrets.items():
-            regrets[key] = [old + delta for old, delta in zip(values, deltas[key])]
+            updated = [old + delta for old, delta in zip(values, deltas[key])]
+            if algorithm == "dcfr":
+                positive_discount = iteration**1.5 / (iteration**1.5 + 1)
+                updated = [value * (positive_discount if value > 0 else .5) for value in updated]
+            regrets[key] = updated
 
     averages = {}
     for key, values in sums.items():
@@ -477,7 +483,13 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
             })
     return {
         "method": "full-traversal CFR",
-        "cfr_variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging",
+        "cfr_variant": ("DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+                        if algorithm == "dcfr" else
+                        "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"),
+        "algorithm": algorithm,
+        "solver_version": "configured-river-v1",
+        "strategy_schema": "river-strategy-v1",
+        "backend": "exact-public-tree",
         "config": config.to_dict(),
         "info_sets": len(infos),
         "public_nodes": public_nodes,
@@ -501,3 +513,53 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
         "ip": ip_rows,
         "strategy": strategy_rows,
     }
+
+
+def _decorate_restricted(result):
+    """Expose the same versioned strategy schema for the optimized binary tree.
+
+    The historical entry point has an affordable fixed bet and no stack cap;
+    config is None instead of inventing a cap or a full-NLHE configuration.
+    """
+    bet = result["bet"]
+    token = f"bet@{_amount_label(bet)}"
+    nodes = (("oop", (), "bet", ("check", "bet")),
+             ("oop", ("check", token), "call_after_check", ("fold", "call")),
+             ("ip", ("check",), "bet_after_check", ("check", "bet")),
+             ("ip", (token,), "call", ("fold", "call")))
+    rows = []
+    for player, history, probability_key, names in nodes:
+        for hand in result[player]:
+            p = hand[probability_key]
+            actions = []
+            for name, probability in zip(names, (1-p, p)):
+                amount = bet if name in {"bet", "call"} else 0.
+                actions.append({"name": name, "amount": amount, "raise_to": amount,
+                                "history_key": token if name == "bet" else name,
+                                "probability": probability})
+            rows.append({"player": player, "hand": hand["hand"],
+                         "history": list(history), "actions": actions})
+    result.update(config=None, effective_stack=None, strategy=rows,
+                  strategy_schema="river-strategy-v1", backend="optimized-binary-tree",
+                  public_nodes=4, tree_actions=8)
+    return result
+
+
+def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None,
+          config=None, effective_stack=None, bet_sizes=None, raise_sizes=None,
+          max_raises=0, include_all_in=True, *, algorithm="vanilla"):
+    """Solve the supplied river abstraction with vanilla CFR or optional DCFR.
+
+    Existing fixed-bet calls retain the validated optimized kernel. Explicit
+    stack/sizing configurations use the finite reusable public action tree.
+    Both expose river-strategy-v1 and exact information-set best responses.
+    """
+    if algorithm not in ("vanilla", "dcfr"):
+        raise ValueError("Solver algorithm must be vanilla or dcfr.")
+    if config is None and all(value is None for value in
+                             (effective_stack, bet_sizes, raise_sizes)) and max_raises == 0:
+        return _decorate_restricted(_solve_restricted(
+            board, oop_range, ip_range, pot, bet, iterations, lock, algorithm=algorithm))
+    return _solve_configured(board, oop_range, ip_range, pot, bet, iterations, lock,
+                             config, effective_stack, bet_sizes, raise_sizes,
+                             max_raises, include_all_in, algorithm=algorithm)

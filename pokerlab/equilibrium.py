@@ -60,6 +60,8 @@ class EquilibriumStrategy:
 
     @property
     def config(self):
+        if self._result["config"] is None:
+            return None
         return RiverConfig.from_dict(self._result["config"]).to_dict()
 
     def _resolve_history(self, history):
@@ -113,10 +115,12 @@ class EquilibriumStrategy:
 
 def solve_equilibrium(board, oop_range, ip_range, pot=100, bet=50, iterations=1000,
                       config=None, effective_stack=None, bet_sizes=None,
-                      raise_sizes=None, max_raises=0, include_all_in=True):
+                      raise_sizes=None, max_raises=0, include_all_in=True,
+                      *, algorithm="vanilla"):
     """Solve and wrap the exact configured river action abstraction."""
     result = solve(board, oop_range, ip_range, pot, bet, iterations,
                    config=config, effective_stack=effective_stack,
                    bet_sizes=bet_sizes, raise_sizes=raise_sizes,
-                   max_raises=max_raises, include_all_in=include_all_in)
+                   max_raises=max_raises, include_all_in=include_all_in,
+                   algorithm=algorithm)
     return EquilibriumStrategy(result)

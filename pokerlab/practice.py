@@ -100,9 +100,39 @@ def _calculate_analysis(inputs: dict[str, Any]) -> dict[str, Any]:
 
 
 def decision_event(game, analysis: dict[str, Any], chosen_action: str,
-                   opponent: dict[str, Any] | None = None) -> dict[str, Any]:
+                   opponent: dict[str, Any] | None = None,
+                   amount: int | None = None) -> dict[str, Any]:
+    legal = game.legal()
+    if chosen_action == "raise":
+        if type(amount) is not int or not legal["raise_min"] <= amount <= legal["raise_max"]:
+            raise ValueError("Raise to a legal integer street total.")
+        choice_amount = amount
+        amount_semantics = "street_total"
+        assessed = amount == legal["raise_min"]
+        modeled_action_id = "raise:min" if assessed else None
+    elif chosen_action in ("fold", "check"):
+        choice_amount = 0
+        amount_semantics = "chips_added"
+        assessed = True
+        modeled_action_id = chosen_action
+    elif chosen_action == "call" and legal.get("call"):
+        choice_amount = legal["call"]
+        amount_semantics = "chips_added"
+        assessed = True
+        modeled_action_id = chosen_action
+    else:
+        raise ValueError("That action is not legal here.")
     best = analysis["actions"][analysis["recommended"]]
-    chosen = analysis["actions"][chosen_action]
+    chosen_name = "raise" if chosen_action == "raise" else chosen_action
+    chosen = analysis["actions"].get(chosen_name) if assessed else None
+    loss = max(0.0, best - chosen) if assessed else None
+    matched = (chosen_name == analysis["recommended"]) if assessed else None
+    successful_exploit = (matched and
+                          analysis["recommended"] != analysis["baseline_recommended"]
+                          if assessed else None)
+    exploit_gain = (max(0.0, analysis["actions"][analysis["recommended"]]
+                        - analysis["actions"][analysis["baseline_recommended"]])
+                    if assessed else None)
     return {
         "street": game.street,
         "actor": game.actor,
@@ -118,6 +148,10 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
         "current_bet": game.current_bet,
         "min_raise": game.min_raise,
         "chosen_action": chosen_action,
+        "chosen_action_detail": {"name": chosen_action, "amount": choice_amount,
+                                 "amount_semantics": amount_semantics},
+        "assessed_modeled_action_id": modeled_action_id,
+        "assessment_status": "assessed" if assessed else "unassessed_size",
         "opponent_id": opponent["id"] if opponent else None,
         "opponent_model_snapshot": analysis.get("opponent_model_snapshot"),
         "ranges_settings": {"opponent_ranges": list(analysis["analysis_inputs"]["opponent_ranges"]),
@@ -125,13 +159,17 @@ def decision_event(game, analysis: dict[str, Any], chosen_action: str,
                             "seed": analysis["equity"]["seed"]},
         "analysis_at_time": analysis,
         "analysis_inputs": analysis["analysis_inputs"],
-        "ev_loss": max(0.0, best - chosen),
-        "matched_recommendation": chosen_action == analysis["recommended"],
-        "successful_exploit": (chosen_action == analysis["recommended"] and
-                               analysis["recommended"] != analysis["baseline_recommended"]),
-        "exploit_gain": max(
-            0.0, analysis["actions"][analysis["recommended"]]
-            - analysis["actions"][analysis["baseline_recommended"]]),
+        "ev_loss": loss,
+        "matched_recommendation": matched,
+        "successful_exploit": successful_exploit,
+        "exploit_gain": exploit_gain,
+        "pre_action_history": [
+            {"seat": item["seat"], "street": item["street"],
+             "action": item["action"],
+             "raise_total": item.get("amount") if item["action"] == "raise" else None}
+            for item in game.log
+        ],
+        "folded_flags": list(game.folded),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -241,16 +279,26 @@ def render_coach_personality(analysis: dict[str, Any],
 
 def summarize(decisions: list[dict[str, Any]]) -> dict[str, Any]:
     ordered = sorted(decisions, key=lambda item: item["decision_order"])
-    losses = [item for item in ordered if item["ev_loss"] > .01]
-    exploits = [item for item in ordered if item["successful_exploit"]]
+    def unassessed(item):
+        if item.get("assessment_status") == "unassessed_size":
+            return True
+        return item.get("chosen_action") == "raise" and not isinstance(
+            item.get("chosen_action_detail"), dict)
+
+    assessed = [item for item in ordered if not unassessed(item)]
+    losses = [item for item in assessed if item.get("ev_loss") is not None
+              and item["ev_loss"] > .01]
+    exploits = [item for item in assessed if item.get("successful_exploit")]
     return {
         "analyzed_decisions": len(ordered),
-        "matched_recommendation": sum(item["matched_recommendation"] for item in ordered),
+        "assessed_decisions": len(assessed),
+        "unassessed_decisions": len(ordered) - len(assessed),
+        "matched_recommendation": sum(bool(item.get("matched_recommendation")) for item in assessed),
         "meaningful_ev_losses": len(losses),
-        "total_ev_loss": sum(item["ev_loss"] for item in ordered),
+        "total_ev_loss": sum(item["ev_loss"] or 0 for item in assessed),
         "missed_exploitative_opportunities": sum(
             item["analysis_at_time"]["recommended"] != item["analysis_at_time"]["baseline_recommended"]
-            and not item["matched_recommendation"] for item in ordered),
+            and not item.get("matched_recommendation") for item in assessed),
         "successful_exploits": len(exploits),
         "biggest_errors": sorted(losses, key=lambda item: item["ev_loss"], reverse=True)[:3],
         "biggest_successful_exploits": sorted(
