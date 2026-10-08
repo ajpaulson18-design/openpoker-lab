@@ -3,6 +3,13 @@
 .toggle { display:flex; flex-direction:row; align-items:center; gap:9px; margin:0; font-weight:650; }
 .toggle input { width:18px; min-height:18px; }
 .coach-panel, .session-review { border-top:1px solid var(--line); margin-top:22px; padding-top:20px; }
+.current-study { border-top:1px solid var(--line); margin-top:18px; padding-top:18px; }
+.current-study > .secondary { width:auto; }
+.current-study-view { border-left:3px solid var(--accent); background:#bcdf890c; padding:14px 16px; margin-top:14px; }
+.current-study-view h4 { margin:8px 0; }
+.current-study-view .metrics { margin:12px 0; }
+.current-study-actions { padding-left:18px; }
+.current-study-error { color:#e6a19a; }
 .session-review { margin-top:20px; }
 .decision-study { margin-top:20px; }
 .decision-list { display:grid; gap:8px; margin:16px 0 22px; }
