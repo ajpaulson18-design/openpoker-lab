@@ -1,5 +1,6 @@
 """Independent physical-deal and public-policy oracles for turn-to-river CFR."""
 import unittest
+from itertools import product
 from types import SimpleNamespace
 
 from pokerlab.cards import DECK, cards, expand_range
@@ -29,7 +30,7 @@ def _physical_world_oracle(board, oop_range, ip_range, runouts=None):
     return {key: mass / total for key, mass in raw.items()}
 
 
-def _strategy_oracle(result, worlds, hands, target=None):
+def _strategy_oracle(result, worlds, hands, target=None, pure_policy=None):
     """Replay serialized public rows and independently integrate/maximize policies."""
     rows = {(0 if row["player"] == "oop" else 1,
              "".join(cards(row["hand"], 2)), tuple(row["history"])): row["actions"]
@@ -77,6 +78,9 @@ def _strategy_oracle(result, worlds, hands, target=None):
                         tuple(next_contributions), mass_group, responder)
 
         if actor == responder:
+            if pure_policy is not None:
+                selected = pure_policy[(actor, own_hand, history)]
+                return after(actions[selected], group[0], group)
             return max(after(action, group[0], group) for action in actions)
         value = 0.0
         for action_index, action in enumerate(actions):
@@ -203,6 +207,27 @@ class TurnSolverPhysicalChanceTests(unittest.TestCase):
         # each hidden runout and earn 1. The legal turn response averages first.
         self.assertAlmostEqual(legal, 0.0)
         self.assertGreater(1.0, legal)
+
+    def test_reported_best_responses_match_exhaustive_pure_policies(self):
+        config = RiverConfig(pot=10, effective_stack=10, bet_sizes=(0.5,),
+                             include_all_in=False)
+        result = solve_turn_river(BOARD, "AsKd", "JsJd", config,
+                                  runouts=("9c",), iterations=10)
+        hands, worlds, _, _ = _enumerate_worlds(
+            BOARD, "AsKd", "JsJd", ("9c",))
+        for target, name in ((0, "oop"), (1, "ip")):
+            rows = [row for row in result["strategy"] if row["player"] == name]
+            keys = [(target, "".join(cards(row["hand"], 2)), tuple(row["history"]))
+                    for row in rows]
+            action_counts = [len(row["actions"]) for row in rows]
+            best = max(
+                _strategy_oracle(result, worlds, hands, target=target,
+                                 pure_policy=dict(zip(keys, choices)))
+                for choices in product(*(range(count) for count in action_counts))
+            )
+            expected = result["oop_best_response_value"] if target == 0 else \
+                result["ip_best_response_value"]
+            self.assertAlmostEqual(best, expected, places=9)
 
     def test_river_bet_uses_original_pot_plus_both_matched_turn_bets(self):
         config = RiverConfig(pot=10, effective_stack=20, bet_sizes=(0.5,),
