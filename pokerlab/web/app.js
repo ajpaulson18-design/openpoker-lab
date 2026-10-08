@@ -153,12 +153,12 @@ function coachTurnListHtml(){
   if(!turns.length)return '';
   const rows=turns.map((turn,index)=>`<article class="coach-turn"><p class="coach-turn-question"><strong>${index+1}. You asked:</strong> ${esc(turn.question)}</p>${coachReplyHtml(turn.result)}</article>`).join('');
   const latest=turns[turns.length-1];
-  const controls=coachConversationFull?'':`<div class="coach-followups"><button type="button" class="secondary" data-coach-followup="simpler"${coachQuestionLoading?' disabled':''}>Simpler</button><button type="button" class="secondary" data-coach-followup="deeper"${coachQuestionLoading?' disabled':''}>Go deeper</button></div>`;
+  const controls=coachConversationFull||coachConversationExpired?'':`<div class="coach-followups"><button type="button" class="secondary" data-coach-followup="simpler"${coachQuestionLoading?' disabled':''}>Simpler</button><button type="button" class="secondary" data-coach-followup="deeper"${coachQuestionLoading?' disabled':''}>Go deeper</button></div>`;
   return `<section class="coach-turn-list" aria-label="Follow-up questions"><h4>Questions about this decision</h4>${rows}${latest?controls:''}${coachConversationFull?'<button type="button" class="secondary" data-new-coach-conversation>Start a new conversation</button>':''}</section>`;
 }
 function coachQuestionHtml(){
   const error=coachQuestionError?`<p class="hint error" role="alert">${esc(coachQuestionError)}</p>${coachConversationExpired?'<button type="button" class="secondary" data-reset-expired-coach>Start a new conversation</button>':coachConversationFull?'':'<button type="button" class="secondary" data-coach-retry>Retry question</button>'}`:'';
-  return `<form id="study-coach-form" class="study-coach-form"><h4>Ask about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask one question about the saved decision">${esc(coachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${coachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${coachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${coachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${coachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${coachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${coachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">When selected, your question, up to two recent questions about this same decision, hero cards, board, and other allowlisted facts are sent to OpenAI. Opponent hole cards, deck, names, and notes are excluded. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local fallback.</p>':''}<button class="primary" type="submit"${coachQuestionLoading||coachConversationFull?' disabled':''}>${coachQuestionLoading?'Asking…':'Ask question'}</button>${coachQuestionLoading?'<p class="hint" role="status">Preparing a grounded answer…</p>':''}${error}</form>${coachTurnListHtml()}`;
+  return `<form id="study-coach-form" class="study-coach-form"><h4>Ask about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask one question about the saved decision">${esc(coachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${coachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${coachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${coachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${coachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${coachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${coachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">When selected, your question, up to two recent questions about this same decision, hero cards, board, and other allowlisted facts are sent to OpenAI. Opponent hole cards, deck, names, and notes are excluded. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local fallback.</p>':''}<button class="primary" type="submit"${coachQuestionLoading||coachConversationFull||coachConversationExpired?' disabled':''}>${coachQuestionLoading?'Asking…':'Ask question'}</button>${coachQuestionLoading?'<p class="hint" role="status">Preparing a grounded answer…</p>':''}${error}</form>${coachTurnListHtml()}`;
 }
 function renderStudyPanel(){
   const panel=$('#decision-study');
@@ -223,7 +223,7 @@ function coachRequestMatches(captured,result){
     &&binding.evidence_id===captured.evidenceId&&binding.state_revision===captured.revision;
 }
 async function askStudyCoach(retry=false){
-  if(coachQuestionLoading||!studyPayload||studyPayload.status!=='ready'||!selectedDecisionId)return;
+  if(coachQuestionLoading||coachConversationExpired||!studyPayload||studyPayload.status!=='ready'||!selectedDecisionId)return;
   const binding=studyPayload.binding;
   const request=retry&&lastCoachQuestion?lastCoachQuestion:{
     question:coachDraft.question.trim(),detail:coachDraft.detail,audience:coachDraft.audience,
@@ -324,7 +324,7 @@ $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach
 $('#decision-study').addEventListener('click',e=>{
   const followup=e.target.closest('[data-coach-followup]');
   if(followup){
-    if(coachQuestionLoading)return;
+    if(coachQuestionLoading||coachConversationExpired)return;
     coachDraft.question=followup.dataset.coachFollowup==='simpler'
       ?'Explain this same decision more simply.'
       :'Go deeper on this same decision.';
