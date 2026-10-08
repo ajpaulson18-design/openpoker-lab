@@ -271,17 +271,19 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("coachConversationExpired=false", selection)
 
         request = source[source.index("async function askStudyCoach"):source.index("function showDecisionStudy")]
-        self.assertIn("if(coachQuestionLoading||!studyPayload", request)
+        self.assertIn("if(coachQuestionLoading||coachConversationExpired||!studyPayload", request)
         self.assertIn("coachConversationExpired=error.code==='conversation_expired'", request)
         self.assertIn("data-reset-expired-coach", source)
         self.assertIn("if(e.target.closest('[data-reset-expired-coach]'))startNewCoachConversation()", source)
         self.assertIn("coachConversation={key:coachConversation.key,target:coachConversation.target,\n    conversationId:null,turns:[]}", request)
+        self.assertIn("coachConversationFull||coachConversationExpired?' disabled':''", source)
+        self.assertIn("const controls=coachConversationFull||coachConversationExpired?'':`<div class=\"coach-followups\"", source)
 
     def test_follow_up_controls_disable_during_a_request(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
         turn_list = source[source.index("function coachTurnListHtml"):source.index("function coachQuestionHtml")]
         self.assertEqual(turn_list.count("${coachQuestionLoading?' disabled':''}"), 2)
-        self.assertIn("if(coachQuestionLoading)return", source[source.index("$('#decision-study').addEventListener('click'"):])
+        self.assertIn("if(coachQuestionLoading||coachConversationExpired)return", source[source.index("$('#decision-study').addEventListener('click'"):])
 
 
 if __name__ == "__main__":
