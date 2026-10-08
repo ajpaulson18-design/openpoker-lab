@@ -215,7 +215,7 @@ class DecisionStudyTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         source = (root / "pokerlab" / "web" / "app.js").read_text()
         setup = (root / "docs" / "ai-coach-setup.md").read_text()
-        self.assertIn("your question, hero cards, board", source)
+        self.assertIn("your question, up to two recent questions about this same decision, hero cards, board", source)
         self.assertIn("Opponent hole cards, deck, names, and notes are excluded", source)
         self.assertIn("includes your hero cards, the board", setup)
         self.assertIn("opponent hole cards, the deck, names, notes", setup)
@@ -254,7 +254,7 @@ class DecisionStudyTests(unittest.TestCase):
         request = source[start:end]
         selection_guard = request.index("if(!coachRequestSelectionMatches(captured))return;")
         unavailable = request.index("result.status==='failed'||result.status==='unavailable'")
-        exact_binding = request.index("if(!coachRequestMatches(captured,result)){")
+        exact_binding = request.index("!coachRequestMatches(captured,result)")
         loading_clear = request.index("coachQuestionLoading=false;", unavailable)
         self.assertLess(selection_guard, unavailable)
         self.assertLess(unavailable, exact_binding)

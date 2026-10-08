@@ -15,6 +15,7 @@ from .coach_analysis import adapt_practice_analysis
 from .coach_grounding import (CoachGroundingError, CoachReplyPlan,
                               build_grounding_bundle, render_coach_reply,
                               validate_coach_reply_plan)
+from .coach_conversation import ConversationError, ConversationLedger
 from .coach_provider import CoachProviderError, OpenAIPlanSelector
 from .coach_teaching import build_teaching_note
 from .contracts import CoachAnalysisError, CoachDecisionAnalysis, CoachDecisionRef
@@ -116,7 +117,8 @@ def _validated_decision(store, decision_id):
 
 
 def make_server(port=8765, database="data/pokerlab.sqlite3", *,
-                coach_selector=None, coach_enabled=None, coach_timeout=12.0):
+                coach_selector=None, coach_enabled=None, coach_timeout=12.0,
+                coach_clock=None):
     store = Store(database)
     explicitly_enabled = (os.environ.get("OPENPOKER_AI_COACH_ENABLED") == "1"
                           if coach_enabled is None else coach_enabled is True)
@@ -135,6 +137,8 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
     game_lock = threading.Lock()
     work_lock = threading.BoundedSemaphore(2)
     coach_lock = threading.BoundedSemaphore(1)
+    conversation_ledger = (ConversationLedger(clock=coach_clock)
+                           if coach_clock is not None else ConversationLedger())
 
     def coach_fallback(bundle, detail, audience, reason):
         recommendation = next((fact for fact in bundle.facts
@@ -216,6 +220,131 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             "teaching_note": teaching_note.to_dict() if teaching_note else None,
         }, 200
 
+    def dispatch_coach_turn(data, external_requested):
+        required = {"client_turn_id", "target", "question", "detail", "audience"}
+        allowed = required | {"conversation_id"}
+        if not isinstance(data, dict) or not required <= set(data) or set(data) - allowed:
+            return {"error": "Coach turn request fields are invalid.", "code": "invalid_request"}, 400
+        client_turn_id = data["client_turn_id"]
+        conversation_id = data.get("conversation_id")
+        target = data["target"]
+        question = data["question"]
+        detail = data["detail"]
+        audience = data["audience"]
+        if (not isinstance(client_turn_id, str) or not client_turn_id.strip()
+                or len(client_turn_id) > 128):
+            return {"error": "Client turn ID is invalid.", "code": "invalid_request"}, 400
+        client_turn_id = client_turn_id.strip()
+        if (conversation_id is not None
+                and (not isinstance(conversation_id, str) or not conversation_id.strip()
+                     or len(conversation_id) > 128)):
+            return {"error": "Conversation ID is invalid.", "code": "invalid_request"}, 400
+        if (not isinstance(target, dict)
+                or set(target) != {"hand_id", "decision_id", "evidence_id", "state_revision"}):
+            return {"error": "Decision target is invalid.", "code": "invalid_target"}, 400
+        if any(not isinstance(target.get(key), str) or not target[key].strip()
+               or len(target[key]) > 256 for key in ("hand_id", "decision_id", "evidence_id")):
+            return {"error": "Decision target is invalid.", "code": "invalid_target"}, 400
+        revision = target["state_revision"]
+        if revision is not None and (type(revision) is not int or revision < 0):
+            return {"error": "Decision target is invalid.", "code": "invalid_target"}, 400
+        if not isinstance(question, str) or not question.strip() or len(question) > 500:
+            return {"error": "Question must contain 1–500 characters.", "code": "invalid_request"}, 400
+        question = question.strip()
+        if detail not in ("short", "normal", "technical"):
+            return {"error": "Detail setting is invalid.", "code": "invalid_request"}, 400
+        if audience not in ("beginner", "standard"):
+            return {"error": "Audience setting is invalid.", "code": "invalid_request"}, 400
+
+        decision_id = target["decision_id"]
+        saved = _validated_decision(store, decision_id)
+        if saved["status"] == "missing":
+            return {"error": "Not found.", "code": "not_found"}, 404
+        if saved["status"] == "unavailable":
+            return {"status": "unavailable", "source": "local_fallback",
+                    "reason": saved["reason"], "retryable": False}, 200
+        if saved["status"] != "ready":
+            return {"status": "failed", "error": "Stored decision evidence is invalid."}, 500
+        analysis, choice = saved["analysis"], saved["choice"]
+        bundle_binding = {
+            **analysis.ref.to_dict(), "evidence_id": analysis.evidence_id,
+        }
+        if target != bundle_binding:
+            return {"error": "Selected decision binding changed; reload the study and retry.",
+                    "code": "binding_mismatch"}, 409
+        try:
+            bundle = build_grounding_bundle(analysis, choice)
+        except (CoachGroundingError, ValueError, TypeError):
+            return {"status": "failed", "error": "Stored decision evidence is invalid."}, 500
+
+        payload = {"question": question, "detail": detail, "audience": audience,
+                   "external_ai": external_requested}
+        try:
+            reservation = conversation_ledger.reserve(
+                conversation_id, client_turn_id, bundle.binding.to_dict(), payload)
+        except ConversationError as error:
+            return {"error": str(error), "code": error.code}, error.status
+
+        conversation_id = reservation["conversation_id"]
+        if reservation["cached_result"] is not None:
+            return reservation["cached_result"], 200
+        if not coach_lock.acquire(blocking=False):
+            conversation_ledger.abort(conversation_id, client_turn_id)
+            return {"error": "A coach request is already running. Try again shortly.",
+                    "code": "coach_busy"}, 429
+
+        plan_metadata = None
+        try:
+            prior_turns = conversation_ledger.prior_context(conversation_id, client_turn_id)
+            if not external_requested:
+                result = coach_fallback(bundle, detail, audience, "external_ai_not_selected")
+                plan_metadata = {"intent": result["reply"]["intent"],
+                                 "target_action_id": result["reply"].get("target_action_id"),
+                                 "detail": detail, "audience": audience}
+            elif not coach_external_available:
+                result = coach_fallback(bundle, detail, audience, "external_ai_not_configured")
+                plan_metadata = {"intent": result["reply"]["intent"],
+                                 "target_action_id": result["reply"].get("target_action_id"),
+                                 "detail": detail, "audience": audience}
+            else:
+                try:
+                    candidate = coach_selector.select_plan(
+                        bundle, question, detail, audience, prior_turns=prior_turns)
+                    plan = validate_coach_reply_plan(candidate, bundle)
+                    if plan.detail != detail or plan.audience != audience:
+                        raise CoachGroundingError("invalid_reply_plan", "Presentation settings changed.")
+                    reply = render_coach_reply(bundle, plan)
+                    teaching_note = build_teaching_note(bundle, reply)
+                    result = {
+                        "status": "ready", "source": "openai", "retryable": False,
+                        "binding": bundle.binding.to_dict(), "source_label": reply.source_label,
+                        "reply": reply.to_dict(),
+                        "teaching_note": teaching_note.to_dict() if teaching_note else None,
+                    }
+                    plan_metadata = {"intent": plan.intent,
+                                     "target_action_id": plan.target_action_id,
+                                     "detail": plan.detail, "audience": plan.audience}
+                except CoachProviderError as error:
+                    result = coach_fallback(bundle, detail, audience, error.code)
+                except (CoachGroundingError, ValueError, TypeError):
+                    result = coach_fallback(bundle, detail, audience, "invalid_plan")
+                except Exception:
+                    result = coach_fallback(bundle, detail, audience, "provider_error")
+                if plan_metadata is None:
+                    plan_metadata = {"intent": result["reply"]["intent"],
+                                     "target_action_id": result["reply"].get("target_action_id"),
+                                     "detail": detail, "audience": audience}
+            result.update({"conversation_id": conversation_id,
+                           "client_turn_id": client_turn_id})
+            conversation_ledger.complete(conversation_id, client_turn_id,
+                                         plan_metadata, result)
+            return result, 200
+        except Exception:
+            conversation_ledger.abort(conversation_id, client_turn_id)
+            return {"error": "Coach turn failed safely.", "code": "coach_failed"}, 500
+        finally:
+            coach_lock.release()
+
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
             pass
@@ -294,6 +423,10 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                 if not isinstance(data, dict):
                     raise ValueError("Expected a JSON object.")
                 request_path = urlparse(self.path).path
+                if request_path == "/api/v1/coach/turns":
+                    result, status_code = dispatch_coach_turn(
+                        data, self.headers.get("X-OpenPoker-External-AI") == "1")
+                    return self.respond(result, status_code)
                 if request_path.startswith("/api/v1/decisions/") and request_path.endswith("/coach"):
                     if not coach_lock.acquire(blocking=False):
                         return self.respond({"error": "A coach request is already running. Try again shortly."}, 429)

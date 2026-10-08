@@ -22,6 +22,12 @@
 .study-coach-form .two { gap:12px; }
 .study-coach-form .coach-external-opt-in { margin-top:10px; }
 .study-coach-form .coach-external-opt-in input { width:18px; min-height:18px; }
+.coach-turn-list { border-top:1px solid var(--line); margin-top:22px; padding-top:18px; }
+.coach-turn-list > h4 { margin:0 0 12px; }
+.coach-turn { border-top:1px solid var(--line); padding-top:12px; margin-top:12px; }
+.coach-turn-question { margin:0 0 10px; overflow-wrap:anywhere; }
+.coach-followups { display:flex; gap:8px; margin-top:14px; }
+.coach-followups button { width:auto; }
 .ai-coach-reply { border-left:3px solid var(--accent); background:#bcdf890c; padding:14px 16px; margin:18px 0 0; overflow-wrap:anywhere; }
 .ai-coach-reply > .eyebrow { margin-top:0; }
 .coach-teaching-note { border:1px solid var(--line); border-radius:8px; background:#bcdf8914; padding:12px 14px; margin:12px 0 16px; }
