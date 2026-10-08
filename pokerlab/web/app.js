@@ -461,6 +461,13 @@ function showDecisionStudy(decisions,title,selectId=null){
   if(!next){invalidateDecisionStudy();return;}
   renderStudyPanel();
 }
+function completedHandStudyFocus(review,decisions){
+  const available=decisions.filter(item=>typeof item.decision_id==='string'&&item.decision_id);
+  const biggest=(review.biggest_errors||[]).find(item=>item.assessment_status!=='unassessed_size'
+    &&Number.isFinite(item.ev_loss)&&item.ev_loss>.01
+    &&available.some(saved=>saved.decision_id===item.decision_id));
+  return biggest?.decision_id||available[available.length-1]?.decision_id||null;
+}
 async function explainLatestAction(){
   const decisionId=latestCoachDecision?.decision_id,handId=activeHandId,generation=handGeneration;
   if(afterActionLoading||!decisionId||!handId||!$('#coach-toggle').checked||coachQuestionLoading
@@ -495,11 +502,11 @@ async function loadReview(handId=activeHandId){
   const data=await api('session/'+handId);
   if(activeHandId!==handId)return;
   const r=data.review;
-  const errors=r.biggest_errors.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} lost ${chips(d.ev_loss)} chips versus ${esc(d.analysis_at_time.recommended)}</li>`).join('');
-  const exploits=r.biggest_successful_exploits.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} gained ${chips(d.exploit_gain||0)} chips versus the baseline action</li>`).join('');
+  const errors=r.biggest_errors.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} had an estimated EV gap of ${chips(d.ev_loss)} chips versus ${esc(d.analysis_at_time.recommended)} in the saved model</li>`).join('');
+  const exploits=r.biggest_successful_exploits.map(d=>`<li>${esc(d.street)}: ${esc(d.chosen_action)} had an estimated ${chips(d.exploit_gain||0)}-chip advantage over the baseline action in the saved model</li>`).join('');
   $('#session-review').hidden=false;
-  $('#session-review').innerHTML=`<p class="eyebrow">SESSION REVIEW · ORIGINAL ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} analyzed decisions</h3><p class="hint">${r.assessed_decisions} assessed · ${r.unassessed_decisions} unassessed. Raise sizes above the one modeled by practice are not scored.</p><div class="metrics">${metric(r.matched_recommendation,'MATCHED')}${metric(r.meaningful_ev_losses,'EV MISTAKES')}${metric(chips(r.total_ev_loss),'TOTAL EV LOSS')}</div><p class="hint">Missed exploit opportunities: ${r.missed_exploitative_opportunities} · Successful exploits: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest errors</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest successful exploits</h3><ol>${exploits}</ol>`:''}`;
-  showDecisionStudy(data.decisions,'Completed hand · choose a decision',data.decisions[data.decisions.length-1]?.decision_id||null);
+  $('#session-review').innerHTML=`<p class="eyebrow">ONE-HAND REVIEW · SAVED ANALYSIS PRESERVED</p><h3>${r.analyzed_decisions} decisions reviewed</h3><p class="hint">${r.assessed_decisions} assessed · ${r.unassessed_decisions} unassessed. Raise sizes above the one modeled by practice are not scored.</p><div class="metrics">${metric(r.matched_recommendation,'MATCHED MODEL')}${metric(r.meaningful_ev_losses,'DECISIONS WITH GAPS')}${metric(chips(r.total_ev_loss),'TOTAL ESTIMATED GAP')}</div><p class="hint">These are model-based estimates, not chips actually won or lost. One hand alone cannot establish a recurring pattern. Missed opportunities to use the model's preferred action: ${r.missed_exploitative_opportunities} · Actions above baseline in this model: ${r.successful_exploits}. Historical records keep their original analysis and opponent-model snapshot.</p>${errors?`<h3>Biggest modeled gaps</h3><ol>${errors}</ol>`:''}${exploits?`<h3>Biggest estimated gains over baseline</h3><ol>${exploits}</ol>`:''}`;
+  showDecisionStudy(data.decisions,'Completed hand · choose a decision',completedHandStudyFocus(r,data.decisions));
 }
 function updateButtonPlayers(){
   const names=$('#game-form').elements.names.value.split(',').map(s=>s.trim()).filter(Boolean);
