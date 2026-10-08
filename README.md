@@ -4,7 +4,7 @@
 
 OpenPoker Lab is an independent, open-source research app combining Hold'em
 simulation, persistent opponent observations, transparent expected-value analysis,
-and a working counterfactual regret minimization (CFR) river solver.
+and working counterfactual regret minimization (CFR) river and turn-to-river solvers.
 
 The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
@@ -48,6 +48,7 @@ persist a conversation. The request uses the Responses API with structured outpu
 | Equity | Up to five opponents; weighted ranges; blockers; split pots; seeded Monte Carlo; exact heads-up river enumeration |
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over configurable river bet/raise sizes and compatible private hands; mixed strategies; exact best-response gap; confidence-weighted legacy node locks |
+| Turn-to-river solver library | Configured betting on both streets; exact physical river chance, card blockers, full-history policies and exact best-response gaps; Python API |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
@@ -160,6 +161,17 @@ public trees and deal-node work are also bounded. Full 1,326-combination range
 solving and unrestricted no-limit GTO are outside this release. See
 `docs/solver-validation.md` for the exact scope, validation, the
 `pokerlab.equilibrium` strategy interface, and `python -m scripts.validate_solver`.
+
+### Turn-to-river library
+
+`pokerlab.turn_solver.solve_turn_river` extends the configured action tree across
+both streets, enumerating 44 physical river cards per compatible private pair.
+It carries matched commitments and stack caps, preserves full public history,
+and reports exact information-set best responses under `postflop-strategy-v1`.
+Optional selected runouts explicitly condition the entire joint physical game.
+See [turn-to-river validation and examples](docs/turn-river-validation.md).
+This Python API is additive; the browser's solver remains its fixed river form.
+Flop, preflop and eventually multiway solving are further development goals.
 
 ## Range notation
 

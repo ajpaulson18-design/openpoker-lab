@@ -141,12 +141,75 @@ checksums. Earlier v2 benchmark files remain the original measurements of that
 version. The integrated default adds public strategy serialization, so its
 runtime/memory is represented by the configured benchmark's legacy fixture.
 
+## configured-turn-river-v1: exact public chance
+
+The additive `solve_turn_river` API now solves finite two-street heads-up games.
+The configured river solver and the new API share `cfr.py` and `river_tree.py`;
+the optimized fixed-bet compatibility kernel remains separate. Both CFR variants
+preserve the prior configured-river results: 12 weighted multi-size, raised and
+asymmetric configurations at 10/100 iterations matched the old implementation
+with maximum numerical difference exactly zero.
+
+Each compatible private pair has 44 physical river cards. Selected runouts
+explicitly condition the complete joint hand/card distribution, changing private
+priors when blockers remove different numbers of selected cards. Turn information
+sets omit the latent river; river information sets include its revealed card and
+the entire preceding turn history. Best responses aggregate hidden worlds before
+maximization and sum public chance branches. Settled turn commitments are matched,
+refunded and carried to the river; pot fractions and stack caps remain cumulative.
+Each fresh river street begins OOP. See [validation](turn-river-validation.md).
+
+Supported streets are now river and turn-to-river. The new library supports the
+same finite configured sizes, raises, stacks and all-ins, weighted private ranges,
+exact cards, vanilla CFR and DCFR(1.5,0,2). It reports `postflop-strategy-v1` and
+exact NashConv/exploitability. Browser/coaching APIs retain their previous shapes.
+The new limits are 10,000 public decision nodes, three million candidate-pair and
+chance-world iterations, and 30 million per-world decision-node iterations.
+
+Eleven new independent tests cover physical worlds, global subset conditioning,
+serialized-profile values/BRs for both algorithms, exhaustive tiny-game pure-policy
+BR maxima, a future-card-peeking adversary, OOP street restart, cumulative sizing,
+asymmetric settlement, invalid inputs and measured convergence. The 69 existing
+mathematical tests also passed. The full local suite passed 298 tests, including
+all application/AI Coach regressions, in 79.848 seconds using a writable Windows
+test directory. Card evaluation code is unchanged; its exhaustive census was
+not rerun. The GitHub Python 3.11/3.12/3.13 matrix passed for the implementation
+and test commit; final publication checks also run on the report/docs commit.
+
+`benchmarks/turn-river-v1.json` defines two synthetic fixtures at 20/100/300
+iterations, three timed repeats and a separate untimed tracemalloc call. Reports
+in `benchmarks/results/turn-river-{vanilla,dcfr}.json` identify measured source
+revision `b093c99`, five exact module checksums, configuration checksum, platform,
+Python and dirty-worktree state. Benchmark files were uncommitted at measurement;
+the recorded implementation hashes match the committed implementation. Later
+commits add tests/docs/reports, without changing the measured modules.
+
+| Fixture at 300 iterations | Worlds / deals | Public nodes / information sets | Vanilla seconds | DCFR seconds | Vanilla NashConv | DCFR NashConv |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Full physical deck, no raises | 176 / 4 | 580 / 1112 | 8.850 | 7.559 | 1.477155 | 0.021497 |
+| Two selected rivers, asymmetric stacks/sizes/raises | 8 / 4 | 69 / 138 | 0.787 | 0.834 | 3.234919 | 1.811793 |
+
+Both fixtures visit one chance branch per world: their per-world traversal
+counts are 16 and 41 decision nodes. Traced peaks are about 2.41 MiB and 288 KiB
+at 300 iterations. Tracing excludes process RSS/native memory. Wall times vary
+on the shared Windows machine; small synthetic ranges do not establish full-range
+performance. DCFR's 20-iteration gap was worse on both fixtures (16.205 vs 15.125
+and 29.649 vs 27.633); better late gaps do not justify changing the default.
+
+```text
+python -m scripts.benchmark_turn_solver --algorithm vanilla
+python -m scripts.benchmark_turn_solver --algorithm dcfr
+```
+
+No external implementation, dependency, trained values, licensing or repository
+ownership changes were incorporated. Primary research and conceptual references
+are recorded in [turn research notes](turn-research-notes.md).
+
 ## Next implementation milestone
 
-Introduce explicit public chance nodes and a small heads-up turn-to-river
-game, reusing the public action tree and information-set policy boundary.
-Condition runout probabilities on both private hands, preserve perfect recall,
-carry commitments/stacks consistently between streets, and independently
-enumerate tiny-game values and legal best responses. Then increase range and
-tree coverage before selecting a compiled backend based on profiling.
-Action-tree expansion and street support alone do not prove full NLHE accuracy.
+Profile and reduce repeated per-world traversal work while preserving the exact
+chance model and oracle results. Use measured gains before selecting a compiled
+backend. Expand the reusable chance architecture toward flop, preflop, positions,
+larger ranges and eventually multiway games, with an independent quality measure
+for each supported game. The commercial full-NLHE objective remains active;
+action-tree and street coverage alone do not prove equilibrium accuracy.
