@@ -64,8 +64,9 @@ minimum-full-raise, short-all-in, capped-call and refund rules.
 
 ## Scope and bounded work
 
-This solves finite heads-up turn-to-river action abstractions. It does not yet
-solve flop, preflop, unrestricted bet sizes, rake or multiway equilibrium. Exact
+This entry point solves finite heads-up turn-to-river action abstractions. The
+[shared postflop API](postflop-validation.md) also supports bounded flop starts;
+preflop, unrestricted bet sizes, rake and multiway equilibrium remain unsupported. Exact
 private worlds are retained; there is no card bucketing or chance sampling.
 Default iteration averaging is vanilla CFR; DCFR(1.5,0,2) remains selectable.
 `traversal="planned"` selects optional bounded Python traversal preparation;
@@ -74,7 +75,10 @@ memory to avoid repeatedly resolving static worlds, payoffs and information-set
 indexes. See [planned traversal](planned-traversal.md) for its independent checks,
 measurements and 250,000-operation storage limit. Both expose the same policy
 schema and exact best-response calculations, with the chosen execution backend
-recorded in results under solver version `configured-turn-river-v2`.
+recorded in results under solver version `configured-turn-river-v3`. Version v3
+delegates to the reusable postflop engine while retaining the turn strategy
+schema and established fields. Historical v2 benchmarks retain their original
+recorded implementation and source hashes.
 The exact average-policy deviation gap is reported in chips as NashConv, with
 exploitability equal to half that gap. Street coverage alone is not an accuracy
 certificate; inspect the measured gap for the actual configured game.

@@ -263,6 +263,17 @@ Earlier benchmark reports remain measurements of their recorded source commits.
 
 ## Next implementation milestone
 
+The shared postflop engine now includes bounded flop, turn and river starts,
+reusing the betting builder and CFR backends. It enumerates physical ordered
+turn/river worlds, preserves latent future information and cumulative accounting,
+and indexes legal private hands by public reveal prefix. The turn API delegates
+through a compatible facade. Eight added tests cover independent three-street
+policy/BR replay, nested hidden-chance adversaries, full physical flop execution,
+configured river agreement, dictionary configs and backend parity. A separate
+16-case before/after check against the actual prior turn source produced zero
+differences in policies, values, BRs, gaps and counts. See
+[postflop validation](postflop-validation.md) for scope and reproductions.
+
 Profile and reduce repeated per-world traversal work while preserving the exact
 chance model and oracle results. Use measured gains before selecting a compiled
 backend. Expand the reusable chance architecture toward flop, preflop, positions,

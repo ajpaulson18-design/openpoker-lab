@@ -9,7 +9,9 @@ preserves simultaneous vanilla/DCFR regret updates, own-reach averages and locks
 Use `solve_turn_river(..., traversal="planned")` to select this optional backend;
 `traversal="recursive"` remains the default. Results identify the selected
 `execution_backend` and retain the same `postflop-strategy-v1` policy schema.
-The API reports solver version `configured-turn-river-v2` for both backends.
+The historical comparisons below report `configured-turn-river-v2` for both
+backends. The current compatible turn facade reports v3 over the shared
+postflop engine; its generic API reports `configured-postflop-v1`.
 
 This is Python traversal preparation, not native compilation or chance sampling.
 It retains exact worlds and action branches. Terminal callbacks must return

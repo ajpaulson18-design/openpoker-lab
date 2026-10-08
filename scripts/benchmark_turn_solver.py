@@ -21,7 +21,8 @@ from pokerlab.turn_solver import solve_turn_river
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "benchmarks" / "turn-river-v1.json"
 SOURCE_MODULES = (
-    "turn_solver.py", "cfr.py", "planned_cfr.py", "river_tree.py", "river_config.py", "cards.py",
+    "turn_solver.py", "postflop_solver.py", "cfr.py", "planned_cfr.py",
+    "river_tree.py", "river_config.py", "cards.py",
 )
 
 

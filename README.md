@@ -4,7 +4,7 @@
 
 OpenPoker Lab is an independent, open-source research app combining Hold'em
 simulation, persistent opponent observations, transparent expected-value analysis,
-and working counterfactual regret minimization (CFR) river and turn-to-river solvers.
+and working counterfactual regret minimization (CFR) river and finite postflop solvers.
 
 The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
@@ -49,6 +49,7 @@ persist a conversation. The request uses the Responses API with structured outpu
 | Opponents | Named profiles; Bayesian updates from observed opportunities; street filtering; uncertainty intervals; notes and JSON export |
 | River solver | Full-traversal CFR over configurable river bet/raise sizes and compatible private hands; mixed strategies; exact best-response gap; confidence-weighted legacy node locks |
 | Turn-to-river solver library | Configured betting on both streets; exact physical river chance, card blockers, full-history policies and exact best-response gaps; Python API |
+| Shared postflop solver library | Flop, turn or river starts; ordered physical turn/river chance; per-street sizing with cumulative commitments; bounded exact best responses |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |
@@ -174,7 +175,18 @@ Optional `traversal="planned"` prepares static traversal operations to reduce
 repeated training work, with bounded plan storage; recursive is the default.
 See [traversal comparison](docs/planned-traversal.md).
 This Python API is additive; the browser's solver remains its fixed river form.
-Flop, preflop and eventually multiway solving are further development goals.
+The compatible turn entry point now delegates to the shared postflop engine.
+
+### Shared postflop library
+
+`pokerlab.postflop_solver.solve_postflop` accepts three-, four- or five-card
+boards. A flop start enumerates 45 then 44 physical future cards for each
+compatible private pair. It reuses the configured betting builder and both CFR
+backends, and hides each future card until its public reveal. Full-deck flop
+solving currently fits only small games under the resource limits; selected
+ordered runouts define a conditional study game. See [postflop examples and
+validation](docs/postflop-validation.md). Preflop, broader practical ranges and
+eventually multiway equilibrium remain development goals.
 
 ## Range notation
 
