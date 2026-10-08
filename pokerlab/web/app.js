@@ -123,6 +123,19 @@ function coachFactValue(fact){
   if(typeof value==='boolean')return value?'Yes':'No';
   return String(value);
 }
+function sameCoachBinding(a,b){
+  return !!a&&!!b&&a.hand_id===b.hand_id&&a.decision_id===b.decision_id
+    &&a.evidence_id===b.evidence_id&&a.state_revision===b.state_revision;
+}
+function coachTeachingNoteHtml(result){
+  const note=result.teaching_note,reply=result.reply||{};
+  if(!note||note.schema_version!==1||typeof note.text!=='string'||note.text.length>600
+    ||!Array.isArray(note.supporting_fact_ids)||!note.supporting_fact_ids.length
+    ||!sameCoachBinding(note.binding,result.binding)
+    ||!sameCoachBinding(note.binding,reply.binding))return '';
+  const citations=note.supporting_fact_ids.map(id=>`<li>${esc(id)}</li>`).join('');
+  return `<aside class="coach-teaching-note" aria-label="Local teaching note"><h5>LOCAL TEACHING NOTE · ${esc(note.source_label||'Saved analysis')}</h5><p>${esc(note.text)}</p><small>Supported by saved facts</small><ul>${citations}</ul></aside>`;
+}
 function coachReplyHtml(result){
   const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
     const facts=(block.facts||[]).map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind))}:</strong> ${esc(coachFactValue(fact))}${fact.unit?` <span class="coach-unit">${esc(fact.unit)}</span>`:''}<small>Fact ${esc(fact.fact_id)}</small></li>`).join('');
@@ -132,7 +145,7 @@ function coachReplyHtml(result){
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
   const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
-  return `<article class="ai-coach-reply" aria-live="polite"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}${result.retryable?'<button type="button" class="secondary" data-coach-retry>Retry question</button>':''}</article>`;
+  return `<article class="ai-coach-reply" aria-live="polite"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}${result.retryable?'<button type="button" class="secondary" data-coach-retry>Retry question</button>':''}</article>`;
 }
 function coachQuestionHtml(){
   const error=coachQuestionError?`<p class="hint error" role="alert">${esc(coachQuestionError)}</p><button type="button" class="secondary" data-coach-retry>Retry question</button>`:'';

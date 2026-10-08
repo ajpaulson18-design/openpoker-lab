@@ -238,6 +238,15 @@ class DecisionStudyTests(unittest.TestCase):
             with self.subTest(condition=condition):
                 self.assertIn(condition, guard)
 
+    def test_teaching_note_renders_before_facts_only_for_the_current_reply_binding(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        self.assertIn("function coachTeachingNoteHtml(result)", source)
+        self.assertIn("sameCoachBinding(note.binding,result.binding)", source)
+        self.assertIn("sameCoachBinding(note.binding,reply.binding)", source)
+        self.assertIn("${coachTeachingNoteHtml(result)}${blocks}", source)
+        self.assertIn("LOCAL TEACHING NOTE", source)
+        self.assertIn("note.supporting_fact_ids", source)
+
     def test_current_unavailable_coach_response_clears_loading_without_reply_binding(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
         start = source.index("async function askStudyCoach")

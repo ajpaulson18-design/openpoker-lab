@@ -807,12 +807,15 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
             marker = "choice_action_not_modeled" if choice_status != "assessed" else "comparison_ev"
             if marker not in unavailable:
                 unavailable.append(marker)
-            include("unavailable", "Comparison unavailable", ())
+            # Keep the recorded choice visible to explain why an unassessed
+            # size cannot be compared, while withholding every substitute EV.
+            include("unavailable", "Comparison unavailable", (choice,))
         else:
             include("comparison", "Saved estimates in the same EV basis",
                     (choice, choice_action, choice_ev, target_action, target_ev))
     elif plan.intent == "limits":
         facts = [one("source_kind"), one("confidence_label"), one("opponent_uncertainty"),
+                 one("equity_standard_error"), one("equity_exact"),
                  *by_kind.get("solver_nash_conv", ()),
                  *by_kind.get("solver_exploitability", ()),
                  *by_kind.get("solver_iterations", ()),
@@ -822,7 +825,7 @@ def render_coach_reply(bundle: GroundingBundle, plan: CoachReplyPlan) -> Rendere
             facts = [one("source_kind"), one("confidence_label")]
         include("limits", "Model limits and saved assumptions", facts, bundle.limitations)
     else:
-        include("unavailable", "Unavailable facts", ())
+        include("unavailable", "Unavailable facts", (one("source_kind"),))
 
     # Citations support an answer but cannot select or replace its required facts.
     # An unavailable comparison intentionally omits optional EV facts so none can

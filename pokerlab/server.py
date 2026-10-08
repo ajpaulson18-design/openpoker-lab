@@ -16,6 +16,7 @@ from .coach_grounding import (CoachGroundingError, CoachReplyPlan,
                               build_grounding_bundle, render_coach_reply,
                               validate_coach_reply_plan)
 from .coach_provider import CoachProviderError, OpenAIPlanSelector
+from .coach_teaching import build_teaching_note
 from .contracts import CoachAnalysisError, CoachDecisionAnalysis, CoachDecisionRef
 from .decision_study import build_decision_study
 from .equity import simulate
@@ -141,10 +142,12 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
         intent = "recommendation" if recommendation and recommendation.value is not None else "unavailable"
         plan = CoachReplyPlan(bundle.binding, intent, (), None, detail, audience)
         reply = render_coach_reply(bundle, plan)
+        teaching_note = build_teaching_note(bundle, reply)
         return {
             "status": "fallback", "source": "local_fallback", "retryable": True,
             "fallback_reason": reason, "binding": bundle.binding.to_dict(),
             "source_label": reply.source_label, "reply": reply.to_dict(),
+            "teaching_note": teaching_note.to_dict() if teaching_note else None,
         }
 
     def dispatch_coach(path, data, external_requested):
@@ -198,6 +201,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             if plan.detail != detail or plan.audience != audience:
                 raise CoachGroundingError("invalid_reply_plan", "Presentation settings changed.")
             reply = render_coach_reply(bundle, plan)
+            teaching_note = build_teaching_note(bundle, reply)
         except CoachProviderError as error:
             return coach_fallback(bundle, detail, audience, error.code), 200
         except (CoachGroundingError, ValueError, TypeError):
@@ -209,6 +213,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             "status": "ready", "source": "openai", "retryable": False,
             "binding": bundle.binding.to_dict(), "source_label": reply.source_label,
             "reply": reply.to_dict(),
+            "teaching_note": teaching_note.to_dict() if teaching_note else None,
         }, 200
 
     class Handler(BaseHTTPRequestHandler):
