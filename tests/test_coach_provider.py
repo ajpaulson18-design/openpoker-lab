@@ -75,6 +75,28 @@ class CoachProviderTests(unittest.TestCase):
         selector = OpenAIPlanSelector("test-key", "test-model")
         self.assertEqual(selector.max_output_tokens, 1024)
 
+    def test_prior_context_is_bounded_validated_metadata_and_optional_for_one_shot(self):
+        selector = OpenAIPlanSelector("test-key", "test-model")
+        prior = ({"question": "First question", "intent": "recommendation",
+                  "target_action_id": "call", "detail": "normal", "audience": "standard"},
+                 {"question": "Second question", "intent": "limits",
+                  "target_action_id": None, "detail": "short", "audience": "beginner"})
+        with patch("pokerlab.coach_provider.urlopen",
+                   return_value=BytesIO(json.dumps(api_response(self.plan.to_json())).encode())) as mocked:
+            selector.select_plan(self.bundle, "Follow up", "short", "beginner",
+                                 prior_turns=prior)
+        request, = mocked.call_args.args
+        supplied = json.loads(json.loads(request.data)["input"])
+        self.assertEqual(supplied["prior_turns"], list(prior))
+        with patch("pokerlab.coach_provider.urlopen",
+                   return_value=BytesIO(json.dumps(api_response(self.plan.to_json())).encode())) as mocked:
+            selector.select_plan(self.bundle, "One shot", "normal", "standard")
+        request, = mocked.call_args.args
+        self.assertNotIn("prior_turns", json.loads(json.loads(request.data)["input"]))
+        with self.assertRaises(ValueError):
+            selector.select_plan(self.bundle, "Follow up", "short", "beginner",
+                                 prior_turns=prior + prior[:1])
+
     def test_refusal_incomplete_invalid_plan_http_timeout_and_network_failures_are_typed(self):
         selector = OpenAIPlanSelector("test-key", "test-model", timeout=0.5)
         cases = (

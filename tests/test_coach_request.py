@@ -26,8 +26,8 @@ class FakeSelector:
         self.started = threading.Event()
         self.release = threading.Event()
 
-    def select_plan(self, bundle, question, detail, audience):
-        self.calls.append((bundle, question, detail, audience))
+    def select_plan(self, bundle, question, detail, audience, *, prior_turns=()):
+        self.calls.append((bundle, question, detail, audience, tuple(prior_turns)))
         self.started.set()
         if self.mode == "block":
             self.release.wait(3)
@@ -162,8 +162,9 @@ class CoachRequestTests(unittest.TestCase):
         self.assertEqual(result["teaching_note"]["binding"], result["reply"]["binding"])
         self.assertIn("supporting_fact_ids", result["teaching_note"])
         self.assertEqual(len(self.selector.calls), 1)
-        bundle, question, detail, audience = self.selector.calls[0]
+        bundle, question, detail, audience, prior_turns = self.selector.calls[0]
         self.assertEqual((question, detail, audience), ("Why?", "technical", "beginner"))
+        self.assertEqual(prior_turns, ())
         self.assertEqual(bundle.binding.hand_id, self.game["id"])
         self.assertTrue(all(f.source_pointer.startswith(("/analysis", "/choice"))
                             for f in bundle.facts))

@@ -9,14 +9,15 @@ let liveDecisions = [], studyDecisions = [], studyTitle = '', studyPayload = nul
 let latestCoachResult = null, latestCoachDecision = null;
 let selectedStudyCard = 'estimate', studyLoading = false, studyFailed = false;
 let externalAiAvailable = false, coachQuestionLoading = false, coachQuestionError = '';
-let coachQuestionReply = null, lastCoachQuestion = null;
+let coachConversation = null, coachConversations = new Map(), lastCoachQuestion = null;
+let coachConversationFull = false, coachConversationExpired = false;
 let coachDraft = {question:'',detail:'normal',audience:'standard',external:false};
 document.querySelector('#table .coach-toolbar').append(
   document.querySelector('#coach-voice-template').content.cloneNode(true));
 function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
 async function api(path,data,extraHeaders={}) {
   const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...extraHeaders},body:JSON.stringify(data)});
-  const result=await response.json(); if(!response.ok) throw new Error(result.error||'Request failed.'); return result;
+  const result=await response.json(); if(!response.ok){const error=new Error(result.error||'Request failed.');error.code=result.code;error.status=response.status;throw error;} return result;
 }
 function formData(form,numeric=[]) { const d=Object.fromEntries(new FormData(form)); for(const k of numeric)d[k]=Number(d[k]); return d; }
 function bindForm(id,work,message='Calculating…') {
@@ -88,7 +89,7 @@ function decisionLabel(decision){
 }
 function invalidateDecisionStudy(){
   selectionGeneration++;selectedDecisionId=null;studyPayload=null;studyLoading=false;studyFailed=false;
-  coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;
+  coachQuestionLoading=false;coachQuestionError='';coachConversation=null;coachConversationFull=false;coachConversationExpired=false;lastCoachQuestion=null;
   coachDraft={question:'',detail:'normal',audience:'standard',external:false};
   studyDecisions=[];$('#decision-study').hidden=true;$('#decision-study').innerHTML='';
 }
@@ -145,12 +146,19 @@ function coachReplyHtml(result){
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
   const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
-  return `<article class="ai-coach-reply" aria-live="polite"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}${result.retryable?'<button type="button" class="secondary" data-coach-retry>Retry question</button>':''}</article>`;
+  return `<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
+}
+function coachTurnListHtml(){
+  const turns=coachConversation?.turns||[];
+  if(!turns.length)return '';
+  const rows=turns.map((turn,index)=>`<article class="coach-turn"><p class="coach-turn-question"><strong>${index+1}. You asked:</strong> ${esc(turn.question)}</p>${coachReplyHtml(turn.result)}</article>`).join('');
+  const latest=turns[turns.length-1];
+  const controls=coachConversationFull?'':`<div class="coach-followups"><button type="button" class="secondary" data-coach-followup="simpler"${coachQuestionLoading?' disabled':''}>Simpler</button><button type="button" class="secondary" data-coach-followup="deeper"${coachQuestionLoading?' disabled':''}>Go deeper</button></div>`;
+  return `<section class="coach-turn-list" aria-label="Follow-up questions"><h4>Questions about this decision</h4>${rows}${latest?controls:''}${coachConversationFull?'<button type="button" class="secondary" data-new-coach-conversation>Start a new conversation</button>':''}</section>`;
 }
 function coachQuestionHtml(){
-  const error=coachQuestionError?`<p class="hint error" role="alert">${esc(coachQuestionError)}</p><button type="button" class="secondary" data-coach-retry>Retry question</button>`:'';
-  const result=coachQuestionReply?coachReplyHtml(coachQuestionReply):'';
-  return `<form id="study-coach-form" class="study-coach-form"><h4>Ask about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask one question about the saved decision">${esc(coachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${coachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${coachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${coachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${coachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${coachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${coachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">When selected, your question, hero cards, board, and other allowlisted facts for this decision are sent to OpenAI. Opponent hole cards, deck, names, and notes are excluded. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local fallback.</p>':''}<button class="primary" type="submit"${coachQuestionLoading?' disabled':''}>${coachQuestionLoading?'Asking…':'Ask question'}</button>${coachQuestionLoading?'<p class="hint" role="status">Preparing a grounded answer…</p>':''}${error}</form>${result}`;
+  const error=coachQuestionError?`<p class="hint error" role="alert">${esc(coachQuestionError)}</p>${coachConversationExpired?'<button type="button" class="secondary" data-reset-expired-coach>Start a new conversation</button>':coachConversationFull?'':'<button type="button" class="secondary" data-coach-retry>Retry question</button>'}`:'';
+  return `<form id="study-coach-form" class="study-coach-form"><h4>Ask about this decision</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask one question about the saved decision">${esc(coachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${coachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${coachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${coachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${coachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${coachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${coachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">When selected, your question, up to two recent questions about this same decision, hero cards, board, and other allowlisted facts are sent to OpenAI. Opponent hole cards, deck, names, and notes are excluded. External AI is off by default.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local fallback.</p>':''}<button class="primary" type="submit"${coachQuestionLoading||coachConversationFull?' disabled':''}>${coachQuestionLoading?'Asking…':'Ask question'}</button>${coachQuestionLoading?'<p class="hint" role="status">Preparing a grounded answer…</p>':''}${error}</form>${coachTurnListHtml()}`;
 }
 function renderStudyPanel(){
   const panel=$('#decision-study');
@@ -180,7 +188,7 @@ function renderStudyPanel(){
 async function selectDecisionStudy(decisionId){
   if(!decisionId||!studyDecisions.some(item=>item.decision_id===decisionId))return;
   selectedDecisionId=decisionId;selectedStudyCard='estimate';studyPayload=null;studyFailed=false;studyLoading=true;
-  coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;
+  coachQuestionLoading=false;coachQuestionError='';coachConversation=null;coachConversationFull=false;coachConversationExpired=false;lastCoachQuestion=null;
   coachDraft={question:'',detail:'normal',audience:'standard',external:false};
   const handId=activeHandId,generation=++selectionGeneration;
   renderStudyPanel();
@@ -189,6 +197,15 @@ async function selectDecisionStudy(decisionId){
     if(activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration)return;
     studyPayload=payload;studyLoading=false;
     if(payload.status==='ready'&&payload.cards?.length)selectedStudyCard=payload.cards[0].id;
+    if(payload.status==='ready'&&payload.binding){
+      const target={hand_id:handId,decision_id:decisionId,evidence_id:payload.binding.evidence_id,
+        state_revision:payload.binding.state_revision};
+      const key=JSON.stringify(target);
+      coachConversation=coachConversations.get(key)||{key,target,conversationId:null,turns:[]};
+      coachConversations.set(key,coachConversation);
+      coachConversationFull=coachConversation.turns.length>=4;
+      coachConversationExpired=false;
+    }
   }catch(e){
     if(activeHandId!==handId||selectedDecisionId!==decisionId||generation!==selectionGeneration)return;
     studyLoading=false;studyFailed=true;
@@ -206,35 +223,58 @@ function coachRequestMatches(captured,result){
     &&binding.evidence_id===captured.evidenceId&&binding.state_revision===captured.revision;
 }
 async function askStudyCoach(retry=false){
-  if(!studyPayload||studyPayload.status!=='ready'||!selectedDecisionId)return;
+  if(coachQuestionLoading||!studyPayload||studyPayload.status!=='ready'||!selectedDecisionId)return;
   const binding=studyPayload.binding;
   const request=retry&&lastCoachQuestion?lastCoachQuestion:{
     question:coachDraft.question.trim(),detail:coachDraft.detail,audience:coachDraft.audience,
-    external:coachDraft.external,
+    external:coachDraft.external,clientTurnId:crypto.randomUUID(),
+    conversationId:coachConversation?.conversationId||null,
   };
   if(!request.question||request.question.length>500){coachQuestionError='Enter a question from 1 to 500 characters.';renderStudyPanel();return;}
   const captured={handId:activeHandId,decisionId:selectedDecisionId,evidenceId:binding?.evidence_id,
-    revision:binding?.state_revision,generation:selectionGeneration,handGeneration};
+    revision:binding?.state_revision,generation:selectionGeneration,handGeneration,
+    conversation:coachConversation};
   if(!captured.handId||!captured.evidenceId){coachQuestionError='This study is missing its saved evidence binding.';renderStudyPanel();return;}
-  lastCoachQuestion={...request};coachQuestionLoading=true;coachQuestionError='';coachQuestionReply=null;renderStudyPanel();
+  if(!captured.conversation){coachQuestionError='This study is missing its conversation binding.';renderStudyPanel();return;}
+  lastCoachQuestion={...request};coachQuestionLoading=true;coachQuestionError='';renderStudyPanel();
   try{
-    const result=await api(`v1/decisions/${encodeURIComponent(captured.decisionId)}/coach`,{
-      evidence_id:captured.evidenceId,question:request.question,detail:request.detail,audience:request.audience,
-    },request.external?{'X-OpenPoker-External-AI':'1'}:{});
+    const payload={client_turn_id:request.clientTurnId,
+      target:{hand_id:captured.handId,decision_id:captured.decisionId,
+        evidence_id:captured.evidenceId,state_revision:captured.revision},
+      question:request.question,detail:request.detail,audience:request.audience};
+    if(request.conversationId)payload.conversation_id=request.conversationId;
+    const result=await api('v1/coach/turns',payload,request.external?{'X-OpenPoker-External-AI':'1'}:{});
     if(!coachRequestSelectionMatches(captured))return;
     if(result.status==='failed'||result.status==='unavailable'){
       coachQuestionError=result.reason||result.error||'This decision cannot be used for a coach request.';
+    }else if(!coachRequestMatches(captured,result)
+      ||(request.conversationId&&result.conversation_id!==request.conversationId)
+      ||result.client_turn_id!==request.clientTurnId){
+      coachQuestionError='The answer did not match the selected decision. Refresh the study and try again.';
     }else{
-      if(!coachRequestMatches(captured,result)){
-        coachQuestionError='The answer did not match the selected decision. Refresh the study and try again.';
-      }else coachQuestionReply=result;
+      captured.conversation.conversationId=result.conversation_id;
+      if(!captured.conversation.turns.some(turn=>turn.clientTurnId===request.clientTurnId)){
+        captured.conversation.turns.push({clientTurnId:request.clientTurnId,
+          question:request.question,result});
+      }
+      lastCoachQuestion={...request,conversationId:result.conversation_id};
+      coachConversationFull=captured.conversation.turns.length>=4;
     }
     coachQuestionLoading=false;
   }catch(error){
-    if(activeHandId!==captured.handId||selectedDecisionId!==captured.decisionId
-      ||handGeneration!==captured.handGeneration||selectionGeneration!==captured.generation)return;
-    coachQuestionError=error.message||'Could not complete this request.';coachQuestionLoading=false;
+    if(!coachRequestSelectionMatches(captured))return;
+    coachQuestionError=error.message||'Could not complete this request.';
+    coachConversationFull=error.code==='conversation_full';
+    coachConversationExpired=error.code==='conversation_expired';coachQuestionLoading=false;
   }
+  renderStudyPanel();
+}
+function startNewCoachConversation(){
+  if(!coachConversation)return;
+  coachConversation={key:coachConversation.key,target:coachConversation.target,
+    conversationId:null,turns:[]};
+  coachConversations.set(coachConversation.key,coachConversation);
+  coachConversationFull=false;coachConversationExpired=false;coachQuestionError='';lastCoachQuestion=null;
   renderStudyPanel();
 }
 function showDecisionStudy(decisions,title,selectId=null){
@@ -273,7 +313,7 @@ $('#game-form').addEventListener('submit',async e=>{
     const d=formData(form,['button','seed']);d.names=d.names.split(',').map(s=>s.trim());d.stacks=d.stacks.split(',').map(Number);practiceOpponent=d.opponent_id;delete d.opponent_id;pendingAction=null;
     const dealt=await api('game',d);
     if(handGeneration!==dealGeneration)return;
-    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;coachQuestionLoading=false;coachQuestionError='';coachQuestionReply=null;lastCoachQuestion=null;coachDraft={question:'',detail:'normal',audience:'standard',external:false};latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
+    activeHandId=dealt.id;selectionGeneration++;selectedDecisionId=null;liveDecisions=[];studyDecisions=[];studyPayload=null;studyLoading=false;studyFailed=false;coachQuestionLoading=false;coachQuestionError='';coachConversation=null;coachConversationFull=false;coachConversations.clear();lastCoachQuestion=null;coachDraft={question:'',detail:'normal',audience:'standard',external:false};latestCoachResult=null;latestCoachDecision=null;$('#session-review').hidden=true;$('#decision-study').hidden=true;$('#coach-panel').innerHTML='<p class="hint">Make a decision to receive post-action coaching.</p>';showGame(dealt);status('Done. Results are ready.');
   }catch(err){
     if(handGeneration===dealGeneration){status(err.message,true);if(game)showGame(game);}
   }finally{
@@ -282,12 +322,25 @@ $('#game-form').addEventListener('submit',async e=>{
 });
 $('#coach-toggle').addEventListener('change',e=>{if(!e.target.checked){showCoach(null);if(!game?.done)invalidateDecisionStudy();}else if(game&&!game.done&&liveDecisions.length){showCoach(latestCoachResult,latestCoachDecision);showDecisionStudy(liveDecisions,'Current hand · choose a decision',liveDecisions[liveDecisions.length-1].decision_id);}});
 $('#decision-study').addEventListener('click',e=>{
+  const followup=e.target.closest('[data-coach-followup]');
+  if(followup){
+    if(coachQuestionLoading)return;
+    coachDraft.question=followup.dataset.coachFollowup==='simpler'
+      ?'Explain this same decision more simply.'
+      :'Go deeper on this same decision.';
+    coachDraft.detail=followup.dataset.coachFollowup==='simpler'?'short':'technical';
+    coachDraft.audience=followup.dataset.coachFollowup==='simpler'?'beginner':'standard';
+    coachDraft.external=$('#study-coach-form')?.elements.external.checked||false;
+    void askStudyCoach(false);return;
+  }
+  if(e.target.closest('[data-new-coach-conversation]')){startNewCoachConversation();return;}
   const decisionButton=e.target.closest('[data-decision-id]');
   if(decisionButton){void selectDecisionStudy(decisionButton.dataset.decisionId);return;}
   const cardButton=e.target.closest('[data-study-card]');
   if(cardButton&&studyPayload?.status==='ready'){selectedStudyCard=cardButton.dataset.studyCard;renderStudyPanel();return;}
   if(e.target.closest('[data-retry-study]'))void selectDecisionStudy(selectedDecisionId);
   if(e.target.closest('[data-coach-retry]'))void askStudyCoach(true);
+  if(e.target.closest('[data-reset-expired-coach]'))startNewCoachConversation();
 });
 $('#decision-study').addEventListener('input',e=>{
   if(e.target.matches('[name="question"]'))coachDraft.question=e.target.value;
