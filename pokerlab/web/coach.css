@@ -27,6 +27,11 @@
 .decision-list button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
 .study-prompts { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 18px; }
 .study-prompts button { width:auto; }
+.study-teaching-pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:12px; margin:14px 0 20px; }
+.study-teaching-card { border:1px solid var(--line); border-radius:8px; padding:14px 16px; background:#bcdf8908; }
+.study-teaching-card > .eyebrow { margin:0 0 8px; }
+.study-teaching-card > p:not(.eyebrow) { margin:0 0 8px; }
+.study-teaching-card > p:last-child { margin-bottom:0; }
 .study-answer { border-left:3px solid var(--accent); background:#bcdf8910; padding:14px 16px; margin:14px 0 22px; }
 .study-answer h4 { margin:0 0 6px; font-size:14px; }
 .study-answer p { margin:0; }

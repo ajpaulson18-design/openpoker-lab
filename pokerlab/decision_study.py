@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .contracts import CoachDecisionAnalysis
+from .situation_teaching import build_situation_teaching
 
 
 _SOURCE_LABELS = {
@@ -56,6 +57,32 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
     recommendation_label = (_action_label(recommendation)
                              if recommendation is not None else None)
     recommendation_ev = action_values.get(analysis.recommended_action_id)
+    unassessed_size = choice.get("assessment_status") == "unassessed_size"
+    if unassessed_size:
+        decision_text = (f"You chose {_choice_label(choice)}. "
+                         + (f"The saved {source_label.lower()} recommends "
+                            f"{recommendation_label} as a separate modeled alternative; "
+                            "it does not score the size you chose."
+                            if recommendation_label is not None else
+                            "The saved model does not score that raise size."))
+        decision_note = ("This raise size was not assessed. A weak hand does not make every "
+                         "action wrong; the recommendation applies to the modeled size only, "
+                         "with the limitations below.")
+    else:
+        decision_text = (f"You chose {_choice_label(choice)}. "
+                         + (f"The saved {source_label.lower()} recommends {recommendation_label}. "
+                            "That is guidance from this decision's saved model and assumptions."
+                            if recommendation_label is not None else
+                            f"The saved {source_label.lower()} has no recommendation for comparison."))
+        decision_note = ("A weak hand does not make every action wrong. Your action is assessed "
+                         "against the saved model for this spot, with the limitations below.")
+    decision_guidance = {
+        "title": "Your decision",
+        "chosen_action": _choice_label(choice),
+        "recommended_action": recommendation_label,
+        "text": decision_text,
+        "note": decision_note,
+    }
 
     baseline = None
     baseline_id = analysis.baseline_recommended_action_id
@@ -173,6 +200,8 @@ def build_decision_study(analysis: CoachDecisionAnalysis, choice: dict) -> dict:
         "heading": f"{analysis.context.street.title()} decision",
         "source_label": source_label,
         "ev_basis": analysis.ev_basis,
+        "situation": build_situation_teaching(analysis),
+        "decision": decision_guidance,
         "solver_quality": solver_quality,
         "choice": {
             "name": choice["name"],
