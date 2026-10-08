@@ -57,7 +57,17 @@ def _node_locks(lock, h1):
     return nodes, report
 
 
-def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None):
+def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=None,
+          *, algorithm="vanilla"):
+    """Solve the restricted river game; DCFR is an opt-in algorithm variant.
+
+    DCFR uses Brown-Sandholm (2019) parameters (1.5, 0, 2): add the
+    iteration's regret delta, then discount the resulting sign-split total.
+    Direct t**2 average weights are equivalent to discounting the average
+    accumulator by (t/(t+1))**2 after adding each iteration's contribution.
+    """
+    if algorithm not in ("vanilla", "dcfr"):
+        raise ValueError("Solver algorithm must be vanilla or dcfr.")
     board = cards(board, 5)
     pot, bet = number(pot, "Pot", .01), number(bet, "Bet", .01)
     if type(iterations) is not int or not 10 <= iterations <= 10000:
@@ -80,11 +90,26 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     sums = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
     locks, lock_report = _node_locks(lock, h1)
     utilities = {sign: terminal_utilities(pot, bet, sign) for sign in (-1, 0, 1)}
-    for _ in range(iterations):
+    # Chance marginals are constant per private hand. Hoist strategy averaging
+    # out of the deal loop; only OOP's response includes a prior own action.
+    marginal0, marginal1 = [0.] * len(h0), [0.] * len(h1)
+    for i, j, w, _ in deals:
+        marginal0[i] += w
+        marginal1[j] += w
+    for iteration in range(1, iterations + 1):
         s = {k: [[1-locks[k][i], locks[k][i]] if k in locks and i in locks[k]
                  else strategy(r) for i, r in enumerate(rows)]
              for k, rows in regrets.items()}
         delta = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}
+        average_weight = iteration**2 if algorithm == "dcfr" else 1.
+        for k, rows in s.items():
+            marginals = marginal0 if k in ("a", "d") else marginal1
+            for idx, probabilities in enumerate(rows):
+                own = 1-s["a"][idx][1] if k == "d" else 1.
+                weight = average_weight * marginals[idx] * own
+                sums[k][idx][0] += weight * probabilities[0]
+                sums[k][idx][1] += weight * probabilities[1]
+        da, dd, db, dc = (delta[k] for k in ("a", "d", "b", "c"))
         for i, j, w, sign in deals:
             x, d, y, c = s["a"][i][1], s["d"][i][1], s["b"][j][1], s["c"][j][1]
             t = utilities[sign]
@@ -92,18 +117,27 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
             response = (1-d)*t["check_bet_fold"]+d*t["check_bet_call"]
             vb = (1-c)*t["bet_fold"]+c*t["bet_call"]
             vc = (1-y)*showdown+y*response
-            values = {"a": (i, 1., [vc, vb]), "d": (i, y, [t["check_bet_fold"], t["check_bet_call"]]),
-                      "b": (j, 1-x, [-showdown, -response]), "c": (j, x, [-t["bet_fold"], -called])}
-            for k, (idx, reach, utility) in values.items():
-                expected = sum(p*u for p, u in zip(s[k][idx], utility))
-                own = 1-x if k == "d" else 1.
-                for action in (0, 1):
-                    delta[k][idx][action] += w*reach*(utility[action]-expected)
-                    sums[k][idx][action] += w*own*s[k][idx][action]
+            # Binary-action regret increments from the action-value difference.
+            # Opponent reach belongs in regrets; own reach belongs in averages.
+            root_diff = vb-vc
+            response_diff = t["check_bet_call"]-t["check_bet_fold"]
+            ip_bet_diff = showdown-response
+            ip_call_diff = t["bet_fold"]-called
+            da[i][0] -= w*x*root_diff
+            da[i][1] += w*(1-x)*root_diff
+            dd[i][0] -= w*y*d*response_diff
+            dd[i][1] += w*y*(1-d)*response_diff
+            db[j][0] -= w*(1-x)*y*ip_bet_diff
+            db[j][1] += w*(1-x)*(1-y)*ip_bet_diff
+            dc[j][0] -= w*x*c*ip_call_diff
+            dc[j][1] += w*x*(1-c)*ip_call_diff
+        positive_discount = iteration**1.5 / (iteration**1.5 + 1)
         for k in regrets:
             for i in range(sizes[k]):
                 for a in (0, 1):
                     regrets[k][i][a] += delta[k][i][a]
+                    if algorithm == "dcfr":
+                        regrets[k][i][a] *= positive_discount if regrets[k][i][a] > 0 else .5
     avg = {k: [[v/sum(row) for v in row] if sum(row) else [.5, .5] for row in rows]
            for k, rows in sums.items()}
     # Best responses aggregate over indistinguishable opponent hands BEFORE max.
@@ -132,7 +166,11 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     br0 = sum(max(row) for row in root_values)
     br1 = sum(max(row) for row in c_values)+sum(max(row) for row in b_values)
     gap = max(0, br0+br1)
-    return {"method": "full-traversal CFR", "cfr_variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging",
+    variant = ("DCFR(1.5,0,2), simultaneous regret-matching updates, reach-weighted quadratic strategy averaging"
+               if algorithm == "dcfr" else
+               "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging")
+    return {"method": "full-traversal CFR", "cfr_variant": variant,
+            "algorithm": algorithm, "solver_version": "restricted-river-v2",
             "info_sets": 2*(len(h0)+len(h1)), "iterations": iterations, "deals": len(deals),
             "pot": pot, "bet": bet, "value_oop": value, "value_ip": -value,
             "nash_conv": gap, "exploitability": gap/2,

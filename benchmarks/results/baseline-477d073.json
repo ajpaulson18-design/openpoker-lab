@@ -1,0 +1,726 @@
+{
+  "benchmark_id": "restricted-river-solver-v1",
+  "config_schema_version": 1,
+  "config_sha256": "4b8750be950e3cd5d735eb69e1aee6159c2ef37b5e2a7d9c0f17c5e9dc5f24ec",
+  "created_at_utc": "2026-10-08T21:29:02.271544+00:00",
+  "methodology": {
+    "exact_gap": "Exact best-response NashConv and exploitability returned by the solver.",
+    "memory": "tracemalloc peak from a separate untimed solver call",
+    "timing": "perf_counter wall time; median of independent solver calls"
+  },
+  "provenance": {
+    "git_revision": "477d07395ae3b21e37c3c1745bee594d202b34be",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.12.14",
+    "solver": {
+      "sha256": "796f8887b2998afce5715ac2309c6835c72599c050daa1046b647973462ca0ec",
+      "source": "solver_before.py"
+    },
+    "worktree_dirty": true
+  },
+  "results": [
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 21,
+      "exact_gap": {
+        "exploitability": 0.9871918471554189,
+        "nash_conv": 1.9743836943108377,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.6355486620138038
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -51.2159147442414,
+        "value_oop": 51.2159147442414
+      },
+      "information_set_count": 20,
+      "ip_range": "TsTh:0.7,9s9h:0.55,8c8d:0.4,AcKd:0.8,AsQc:0.65,KcQc:0.5",
+      "iterations": 50,
+      "oop_range": "AsAh:1,KsKh:0.8,QcQd:0.65,JcJh:0.5,AdKc:0.75",
+      "peak_tracemalloc_bytes": 17093,
+      "purpose": "Balanced, multi-class ranges with explicit non-uniform combo weights.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.06945389998145401,
+        "samples": [
+          0.06798480002908036,
+          0.08987570001045242,
+          0.06945389998145401
+        ]
+      },
+      "scenario_id": "balanced-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 21,
+      "exact_gap": {
+        "exploitability": 0.24679796178885027,
+        "nash_conv": 0.49359592357770055,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.06276934538628609
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -50.40009650617751,
+        "value_oop": 50.40009650617751
+      },
+      "information_set_count": 20,
+      "ip_range": "TsTh:0.7,9s9h:0.55,8c8d:0.4,AcKd:0.8,AsQc:0.65,KcQc:0.5",
+      "iterations": 200,
+      "oop_range": "AsAh:1,KsKh:0.8,QcQd:0.65,JcJh:0.5,AdKc:0.75",
+      "peak_tracemalloc_bytes": 17093,
+      "purpose": "Balanced, multi-class ranges with explicit non-uniform combo weights.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.15165600000182167,
+        "samples": [
+          0.19504540000343695,
+          0.13216280000051484,
+          0.15165600000182167
+        ]
+      },
+      "scenario_id": "balanced-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 21,
+      "exact_gap": {
+        "exploitability": 0.09871918471553798,
+        "nash_conv": 0.19743836943107596,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.017418312545146364
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -50.16772802808037,
+        "value_oop": 50.16772802808037
+      },
+      "information_set_count": 20,
+      "ip_range": "TsTh:0.7,9s9h:0.55,8c8d:0.4,AcKd:0.8,AsQc:0.65,KcQc:0.5",
+      "iterations": 500,
+      "oop_range": "AsAh:1,KsKh:0.8,QcQd:0.65,JcJh:0.5,AdKc:0.75",
+      "peak_tracemalloc_bytes": 17125,
+      "purpose": "Balanced, multi-class ranges with explicit non-uniform combo weights.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.3495797000359744,
+        "samples": [
+          0.3451190000050701,
+          0.3634060000185855,
+          0.3495797000359744
+        ]
+      },
+      "scenario_id": "balanced-weighted"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Ah9h6h3c2d",
+      "deal_count": 12,
+      "exact_gap": {
+        "exploitability": 1.3332687705353443,
+        "nash_conv": 2.6665375410706886,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 2.069293665309786
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 45.906890074137394,
+        "value_oop": -45.906890074137394
+      },
+      "information_set_count": 16,
+      "ip_range": "QhTh:1,KhJh:0.8,AsKd:0.7,6s6d:0.35",
+      "iterations": 50,
+      "oop_range": "AsKh:1,KsQh:0.8,AcAd:0.7,KcKd:0.55",
+      "peak_tracemalloc_bytes": 12399,
+      "purpose": "Specific-card and suited-combo blockers on a monotone river board.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.017774100007954985,
+        "samples": [
+          0.022421699948608875,
+          0.015586800000164658,
+          0.017774100007954985
+        ]
+      },
+      "scenario_id": "blocker-sensitive"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Ah9h6h3c2d",
+      "deal_count": 12,
+      "exact_gap": {
+        "exploitability": 0.5557093695411481,
+        "nash_conv": 1.1114187390822963,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.9737527805415525
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 45.197272234907494,
+        "value_oop": -45.197272234907494
+      },
+      "information_set_count": 16,
+      "ip_range": "QhTh:1,KhJh:0.8,AsKd:0.7,6s6d:0.35",
+      "iterations": 200,
+      "oop_range": "AsKh:1,KsQh:0.8,AcAd:0.7,KcKd:0.55",
+      "peak_tracemalloc_bytes": 12399,
+      "purpose": "Specific-card and suited-combo blockers on a monotone river board.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.0699894999852404,
+        "samples": [
+          0.09170510002877563,
+          0.06433809996815398,
+          0.0699894999852404
+        ]
+      },
+      "scenario_id": "blocker-sensitive"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Ah9h6h3c2d",
+      "deal_count": 12,
+      "exact_gap": {
+        "exploitability": 0.27416895268191155,
+        "nash_conv": 0.5483379053638231,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.3927222555504244
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 44.94412475390611,
+        "value_oop": -44.94412475390611
+      },
+      "information_set_count": 16,
+      "ip_range": "QhTh:1,KhJh:0.8,AsKd:0.7,6s6d:0.35",
+      "iterations": 500,
+      "oop_range": "AsKh:1,KsQh:0.8,AcAd:0.7,KcKd:0.55",
+      "peak_tracemalloc_bytes": 12431,
+      "purpose": "Specific-card and suited-combo blockers on a monotone river board.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.15312959998846054,
+        "samples": [
+          0.15312959998846054,
+          0.09952759998850524,
+          0.3228821000084281
+        ]
+      },
+      "scenario_id": "blocker-sensitive"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 1.299039402007065,
+        "nash_conv": 2.59807880401413,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.8882909940802541
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 2.15075289230402,
+        "value_oop": -2.15075289230402
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd,KcKd,QcQd,AcKc",
+      "iterations": 50,
+      "oop_range": "AsAh,KsKh,QsQh,AsKs",
+      "peak_tracemalloc_bytes": 12303,
+      "purpose": "Suit-symmetric reference fixture used by the independent solver validator.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.019956899981480092,
+        "samples": [
+          0.019956899981480092,
+          0.02203320001717657,
+          0.00860359997022897
+        ]
+      },
+      "scenario_id": "symmetric-reference"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 0.5385509897841811,
+        "nash_conv": 1.0771019795683623,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.43015648818909336
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 2.335764848791482,
+        "value_oop": -2.335764848791482
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd,KcKd,QcQd,AcKc",
+      "iterations": 200,
+      "oop_range": "AsAh,KsKh,QsQh,AsKs",
+      "peak_tracemalloc_bytes": 12303,
+      "purpose": "Suit-symmetric reference fixture used by the independent solver validator.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.06693820003420115,
+        "samples": [
+          0.06693820003420115,
+          0.053018700040411204,
+          0.07189369999105111
+        ]
+      },
+      "scenario_id": "symmetric-reference"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Js8d4c2h2s",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 0.30740580165084896,
+        "nash_conv": 0.6148116033016979,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.3611987587729075
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": 2.329446015667644,
+        "value_oop": -2.329446015667644
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAd,KcKd,QcQd,AcKc",
+      "iterations": 500,
+      "oop_range": "AsAh,KsKh,QsQh,AsKs",
+      "peak_tracemalloc_bytes": 12335,
+      "purpose": "Suit-symmetric reference fixture used by the independent solver validator.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.16137109999544919,
+        "samples": [
+          0.16137109999544919,
+          0.16050279996125028,
+          0.17383730004075915
+        ]
+      },
+      "scenario_id": "symmetric-reference"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "2c7d9hJsKd",
+      "deal_count": 2,
+      "exact_gap": {
+        "exploitability": 4.629874111706151,
+        "nash_conv": 9.259748223412302,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 5.333320862045817
+      },
+      "game": {
+        "bet": 100.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -22.01319044805939,
+        "value_oop": 22.01319044805939
+      },
+      "information_set_count": 6,
+      "ip_range": "QsQh",
+      "iterations": 50,
+      "oop_range": "AsAh,3c4c",
+      "peak_tracemalloc_bytes": 4000,
+      "purpose": "Known river bluff-catcher reference fixture with a pot-sized bet.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.0028753000078722835,
+        "samples": [
+          0.0030340999946929514,
+          0.0028753000078722835,
+          0.0026874999748542905
+        ]
+      },
+      "scenario_id": "bluff-catcher"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "2c7d9hJsKd",
+      "deal_count": 2,
+      "exact_gap": {
+        "exploitability": 1.8342875109940344,
+        "nash_conv": 3.668575021988069,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 2.8997830824815374
+      },
+      "game": {
+        "bet": 100.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -24.269650392387693,
+        "value_oop": 24.269650392387693
+      },
+      "information_set_count": 6,
+      "ip_range": "QsQh",
+      "iterations": 200,
+      "oop_range": "AsAh,3c4c",
+      "peak_tracemalloc_bytes": 4000,
+      "purpose": "Known river bluff-catcher reference fixture with a pot-sized bet.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.013302600011229515,
+        "samples": [
+          0.013382899982389063,
+          0.007107200042810291,
+          0.013302600011229515
+        ]
+      },
+      "scenario_id": "bluff-catcher"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "2c7d9hJsKd",
+      "deal_count": 2,
+      "exact_gap": {
+        "exploitability": 1.041289569194774,
+        "nash_conv": 2.082579138389548,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.9718856459310352
+      },
+      "game": {
+        "bet": 100.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -24.70361415700828,
+        "value_oop": 24.70361415700828
+      },
+      "information_set_count": 6,
+      "ip_range": "QsQh",
+      "iterations": 500,
+      "oop_range": "AsAh,3c4c",
+      "peak_tracemalloc_bytes": 4032,
+      "purpose": "Known river bluff-catcher reference fixture with a pot-sized bet.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.046779300027992576,
+        "samples": [
+          0.04679029999533668,
+          0.046779300027992576,
+          0.04465840000193566
+        ]
+      },
+      "scenario_id": "bluff-catcher"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "AsKdQcJhTs",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 0.37500000000000033,
+        "nash_conv": 0.7500000000000007,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.2525000000000003
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -0.24750000000000016,
+        "value_oop": 0.24750000000000016
+      },
+      "information_set_count": 16,
+      "ip_range": "2d3d,4d5d,6d7d,8d9d",
+      "iterations": 50,
+      "oop_range": "2c3c,4c5c,6c7c,8c9c",
+      "peak_tracemalloc_bytes": 12303,
+      "purpose": "Every compatible deal ties because the board itself makes Broadway.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.04733319999650121,
+        "samples": [
+          0.06236659997375682,
+          0.04733319999650121,
+          0.02606430003652349
+        ]
+      },
+      "scenario_id": "all-tie-board"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "AsKdQcJhTs",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 0.093749999999998,
+        "nash_conv": 0.187499999999996,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.06265624999999864
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -0.06234374999999869,
+        "value_oop": 0.06234374999999869
+      },
+      "information_set_count": 16,
+      "ip_range": "2d3d,4d5d,6d7d,8d9d",
+      "iterations": 200,
+      "oop_range": "2c3c,4c5c,6c7c,8c9c",
+      "peak_tracemalloc_bytes": 12303,
+      "purpose": "Every compatible deal ties because the board itself makes Broadway.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.1233996000373736,
+        "samples": [
+          0.1233996000373736,
+          0.14712570002302527,
+          0.11746490001678467
+        ]
+      },
+      "scenario_id": "all-tie-board"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "AsKdQcJhTs",
+      "deal_count": 16,
+      "exact_gap": {
+        "exploitability": 0.03750000000000003,
+        "nash_conv": 0.07500000000000007,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.025025000000000023
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -0.02497500000000002,
+        "value_oop": 0.02497500000000002
+      },
+      "information_set_count": 16,
+      "ip_range": "2d3d,4d5d,6d7d,8d9d",
+      "iterations": 500,
+      "oop_range": "2c3c,4c5c,6c7c,8c9c",
+      "peak_tracemalloc_bytes": 12335,
+      "purpose": "Every compatible deal ties because the board itself makes Broadway.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.3152282999944873,
+        "samples": [
+          0.39298399997642264,
+          0.3152282999944873,
+          0.3086046000244096
+        ]
+      },
+      "scenario_id": "all-tie-board"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Kc9d6s3h2c",
+      "deal_count": 15,
+      "exact_gap": {
+        "exploitability": 1.3926285651281916,
+        "nash_conv": 2.785257130256383,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 1.8699811045075876
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -46.67404948281822,
+        "value_oop": 46.67404948281822
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAh:1,QcQh:0.8,KdQd:0.6,8s7s:0.6",
+      "iterations": 50,
+      "oop_range": "KdKh:1,9c9h:0.8,6c6h:0.6,As5s:0.7",
+      "peak_tracemalloc_bytes": 12471,
+      "purpose": "Separated strong and weak value classes against bluff-catcher classes.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.0229607000364922,
+        "samples": [
+          0.022350999992340803,
+          0.024032699991948903,
+          0.0229607000364922
+        ]
+      },
+      "scenario_id": "polarized"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Kc9d6s3h2c",
+      "deal_count": 15,
+      "exact_gap": {
+        "exploitability": 0.33780851977204307,
+        "nash_conv": 0.6756170395440861,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.45543326028679587
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -47.34953231593844,
+        "value_oop": 47.34953231593844
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAh:1,QcQh:0.8,KdQd:0.6,8s7s:0.6",
+      "iterations": 200,
+      "oop_range": "KdKh:1,9c9h:0.8,6c6h:0.6,As5s:0.7",
+      "peak_tracemalloc_bytes": 12471,
+      "purpose": "Separated strong and weak value classes against bluff-catcher classes.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.08101949997944757,
+        "samples": [
+          0.08101949997944757,
+          0.07336579996626824,
+          0.08521059999475256
+        ]
+      },
+      "scenario_id": "polarized"
+    },
+    {
+      "algorithm": {
+        "method": "full-traversal CFR",
+        "name": "vanilla",
+        "solver_version": null,
+        "variant": "vanilla CFR, simultaneous regret-matching updates, reach-weighted uniform strategy averaging"
+      },
+      "board": "Kc9d6s3h2c",
+      "deal_count": 15,
+      "exact_gap": {
+        "exploitability": 0.1351234079088215,
+        "nash_conv": 0.270246815817643,
+        "note": "Unrestricted best-response gap; with node locks, this is not a convergence certificate for the locked game.",
+        "oop_best_response_gain": 0.18251532801483705
+      },
+      "game": {
+        "bet": 50.0,
+        "pot": 100.0,
+        "scope": "River only; one fixed bet size; check/bet/fold/call; no raises or rake.",
+        "value_ip": -47.491195040406296,
+        "value_oop": 47.491195040406296
+      },
+      "information_set_count": 16,
+      "ip_range": "AcAh:1,QcQh:0.8,KdQd:0.6,8s7s:0.6",
+      "iterations": 500,
+      "oop_range": "KdKh:1,9c9h:0.8,6c6h:0.6,As5s:0.7",
+      "peak_tracemalloc_bytes": 12503,
+      "purpose": "Separated strong and weak value classes against bluff-catcher classes.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.16599369997857139,
+        "samples": [
+          0.15729850000934675,
+          0.19914199999766424,
+          0.16599369997857139
+        ]
+      },
+      "scenario_id": "polarized"
+    }
+  ],
+  "schema_version": 1
+}
