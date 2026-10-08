@@ -225,9 +225,10 @@ function coachReplyHtml(result,currentPreview=false){
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local fallback · no external AI answer';
-  const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
+  const fallback=result.fallback_reason?`<p class="hint">${esc(({external_ai_not_selected:'External AI was not selected.',external_ai_not_configured:'External AI is disabled or not configured locally.',current_choice_unavailable:'No action has been taken, so chosen action and loss are unavailable.',refusal:'The provider declined this request.',incomplete:'The provider did not finish the response.',invalid_response:'The provider returned an incomplete response.',invalid_plan:'The selected plan did not pass validation.',http_error:'The provider request failed.',timeout:'The provider request timed out.',network_error:'The provider could not be reached.',provider_error:'The provider request failed safely.'})[result.fallback_reason]||'A local fallback was used.')}</p>`:'';
+  const localScope=currentPreview&&typeof result.local_scope==='string'?`<p class="hint">${esc(result.local_scope)}</p>`:'';
   const answer=currentPreview
-    ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${currentCoachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
+    ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
     :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${coachTeachingNoteHtml(result)}${blocks}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
   return answer;
 }
@@ -491,4 +492,3 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
 }));
 loadOpponents().catch(e=>status(e.message,true));
 api('health').then(info=>{externalAiAvailable=info.external_ai_coach_available===true;if(selectedDecisionId)renderStudyPanel();}).catch(()=>{});
-

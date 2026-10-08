@@ -175,14 +175,57 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             hand_id=binding["hand_id"], decision_id=binding["decision_id"],
             evidence_id=binding["evidence_id"], state_revision=binding["state_revision"])
 
-    def current_coach_fallback(bundle, detail, audience, reason):
-        plan = CoachReplyPlan(bundle.binding, "unavailable", (), None, detail, audience)
+    def current_choice_question(question):
+        patterns = (
+            r"\b(?:what|which|why)\s+(?:did|have)\s+i\s+(?:choose|chose|do|play|take|select|call|fold|check|raise|bet)\b",
+            r"\b(?:was|is|did)\s+my\s+(?:call|check|fold|raise|bet|action|play)\s+(?:wrong|bad|a\s+mistake)\b",
+            r"\bdid\s+i\s+make\s+(?:a\s+)?(?:bad|wrong)\s+(?:call|check|fold|raise|bet|play)\b",
+            r"\bmy\s+(?:call|check|fold|raise|bet)\s+(?:wrong|bad)\b",
+            r"\b(?:my|the)\s+(?:chosen|recorded|actual)\s+(?:action|choice|move)\b",
+            r"\b(?:action|choice|move)\s+(?:that\s+)?i\s+(?:took|made|chose|selected)\b",
+            r"\b(?:how|what)\s+(?:much\s+)?(?:did|have)\s+i\s+(?:lose|lost)\b",
+            r"\b(?:ev\s+)?loss\b|\bmistake\b|\bbad\s+play\b|\bwas\s+i\s+wrong\b",
+        )
+        return any(re.search(pattern, question, re.IGNORECASE) for pattern in patterns)
+
+    def current_recommendation_question(question):
+        patterns = (
+            r"\b(?:current\s+)?(?:modeled\s+)?recommendation\b",
+            r"\brecommended\s+(?:modeled\s+)?action\b",
+            r"\bbest\s+modeled\s+action\b",
+            r"\bwhat\s+should\s+i\s+do\b",
+            r"\bwhat\s+does\s+(?:the\s+)?current\s+estimate\s+say\s+about\s+(?:the\s+)?modeled\s+actions?\b",
+        )
+        return any(re.search(pattern, question, re.IGNORECASE) for pattern in patterns)
+
+    def current_coach_fallback(bundle, detail, audience, reason, question):
+        unavailable_choice = current_choice_question(question)
+        recommendation_question = current_recommendation_question(question)
+        recommendation = next((fact for fact in bundle.facts
+                               if fact.kind == "recommendation" and fact.value is not None), None)
+        modeled = {fact.value[0] for fact in bundle.facts
+                   if fact.kind == "modeled_action" and isinstance(fact.value, tuple)}
+        can_recommend = recommendation is not None and recommendation.value in modeled
+        intent = ("recommendation" if recommendation_question and can_recommend
+                  and not unavailable_choice else "unavailable")
+        plan = CoachReplyPlan(bundle.binding, intent, (), None, detail, audience)
         reply = render_coach_reply(bundle, plan, current_preview=True)
         teaching_note = build_teaching_note(bundle, reply, current_preview=True)
+        local_scope = (
+            "No action has been taken, so a chosen action and loss are unavailable. "
+            "This local response does not infer either one."
+            if unavailable_choice else
+            "This is a local summary of the current modeled recommendation, not an interpretation of arbitrary question wording."
+            if can_recommend and recommendation_question else
+            ("No modeled recommendation is available; this local response does not infer one."
+             if not can_recommend else
+             "This local response cannot interpret that question. Ask about the current modeled recommendation for a local summary.")
+        )
         return {
             "status": "fallback", "source": "local_fallback", "retryable": True,
             "fallback_reason": reason, "binding": bundle.binding.to_dict(),
             "source_label": reply.source_label, "reply": reply.to_dict(),
+            "local_scope": local_scope,
             "teaching_note": teaching_note.to_dict() if teaching_note else None,
         }
 
@@ -252,9 +295,12 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             retained = resolve_current_study_evidence(target)
             return "ready" if retained is evidence else "expired"
 
-        if not external_requested:
+        choice_question = current_choice_question(question)
+        if not external_requested or choice_question:
+            fallback_reason = ("current_choice_unavailable" if choice_question
+                               else "external_ai_not_selected")
             result = current_coach_fallback(
-                bundle, detail, audience, "external_ai_not_selected")
+                bundle, detail, audience, fallback_reason, question)
             state = still_current()
             if state == "missing":
                 return {"error": "Hand was not found or has expired.",
@@ -271,7 +317,7 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
 
         if not coach_external_available:
             result = current_coach_fallback(
-                bundle, detail, audience, "external_ai_not_configured")
+                bundle, detail, audience, "external_ai_not_configured", question)
         else:
             state = still_current()
             if state != "ready":
@@ -300,11 +346,11 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
                     "teaching_note": teaching_note.to_dict() if teaching_note else None,
                 }
             except CoachProviderError as error:
-                result = current_coach_fallback(bundle, detail, audience, error.code)
+                result = current_coach_fallback(bundle, detail, audience, error.code, question)
             except (CoachGroundingError, ValueError, TypeError):
-                result = current_coach_fallback(bundle, detail, audience, "invalid_plan")
+                result = current_coach_fallback(bundle, detail, audience, "invalid_plan", question)
             except Exception:
-                result = current_coach_fallback(bundle, detail, audience, "provider_error")
+                result = current_coach_fallback(bundle, detail, audience, "provider_error", question)
 
         state = still_current()
         if state == "missing":
@@ -864,4 +910,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

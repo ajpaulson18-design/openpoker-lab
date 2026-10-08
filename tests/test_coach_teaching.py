@@ -4,9 +4,10 @@ import unittest
 
 from pokerlab.coach_analysis import adapt_practice_analysis
 from pokerlab.coach_grounding import (CoachReplyPlan, GroundFact, _fact_id,
+                                      build_current_preview_grounding_bundle,
                                       build_grounding_bundle,
                                       render_coach_reply)
-from pokerlab.coach_teaching import build_teaching_note
+from pokerlab.coach_teaching import _verified_visible_facts, build_teaching_note
 from pokerlab.contracts import CoachDecisionRef
 from pokerlab.game import Game
 from pokerlab.practice import analyze_decision
@@ -68,6 +69,20 @@ class CoachTeachingTests(unittest.TestCase):
                                   if fact.fact_id == fact_id).kind == "board"
                              for fact_id in note.supporting_fact_ids))
         self.assertEqual(note.to_dict()["schema_version"], 1)
+
+    def test_current_preview_note_uses_current_ev_basis_wording(self):
+        bundle = build_current_preview_grounding_bundle(self.analysis)
+        reply = render_coach_reply(
+            bundle, CoachReplyPlan(bundle.binding, "recommendation", (), None,
+                                   "normal", "standard"), current_preview=True)
+        note = build_teaching_note(bundle, reply, current_preview=True)
+        self.assertIn("current preview's EV basis", note.text)
+        self.assertNotIn("saved EV basis", note.text)
+
+    def test_visible_fact_verifier_rejects_wrong_input_types_before_reading_fields(self):
+        reply = render_coach_reply(self.bundle, plan(self.bundle, "recommendation"))
+        self.assertIsNone(_verified_visible_facts(None, reply))
+        self.assertIsNone(_verified_visible_facts(self.bundle, None))
 
     def test_optional_supporting_facts_do_not_change_teaching_prerequisites(self):
         short_recommendation = render_coach_reply(

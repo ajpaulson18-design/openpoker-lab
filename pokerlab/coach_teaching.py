@@ -65,10 +65,10 @@ class TeachingNote:
 def _verified_visible_facts(bundle: GroundingBundle,
                             reply: RenderedCoachReply, *,
                             current_preview: bool = False) -> dict[str, GroundFact] | None:
+    if not isinstance(bundle, GroundingBundle) or not isinstance(reply, RenderedCoachReply):
+        return None
     expected_label = _CURRENT_PREVIEW_LABEL if current_preview else _SOURCE_LABELS.get(bundle.source_kind)
-    if (not isinstance(bundle, GroundingBundle)
-            or not isinstance(reply, RenderedCoachReply)
-            or bundle.binding != reply.binding
+    if (bundle.binding != reply.binding
             or bundle.source_kind != reply.source_kind
             or expected_label != reply.source_label):
         return None
@@ -149,7 +149,9 @@ def build_teaching_note(bundle: GroundingBundle,
                      " This practice estimate is not equilibrium strategy or a guarantee of the best play.")
         ev_facts = by_kind.get("action_ev", ())
         if ev_facts:
-            text += " Any displayed action EV uses this analysis's saved EV basis."
+            text += (" Any displayed action EV uses this current preview's EV basis."
+                     if current_preview else
+                     " Any displayed action EV uses this analysis's saved EV basis.")
             supporting.extend(ev_facts)
         return finish("recommendation_scope_v1", text, supporting)
 
@@ -300,4 +302,3 @@ def build_teaching_note(bundle: GroundingBundle,
                      "No substitute action or EV is inferred."))
             return finish("unavailable_request_v1", text, supporting)
     return None
-

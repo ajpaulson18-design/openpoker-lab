@@ -131,14 +131,51 @@ class CurrentCoachHTTPTests(unittest.TestCase):
                          ("Why this estimate?", "normal", "standard", (), True))
         self.assertFalse(any(fact.kind in {"choice", "choice_loss"} for fact in bundle.facts))
 
-    def test_local_fallback_does_not_call_provider_and_marks_unplayed_choice_unavailable(self):
+    def test_local_fallback_summarizes_current_recommendation_without_calling_provider(self):
         result = self.post(self.current_path(), self.current_body())
         self.assertEqual(result["status"], "fallback")
         self.assertEqual(result["fallback_reason"], "external_ai_not_selected")
-        self.assertEqual(result["reply"]["intent"], "unavailable")
+        self.assertEqual(result["reply"]["intent"], "recommendation")
         self.assertEqual(result["source_label"], "Practice estimate · current decision preview")
-        self.assertIn("No action has been taken", result["teaching_note"]["text"])
+        self.assertIn("local summary", result["local_scope"])
+        self.assertIn("not an interpretation of arbitrary question wording", result["local_scope"])
+        self.assertIn("current recommendation", result["teaching_note"]["text"])
+        self.assertIn("current preview's EV basis", result["teaching_note"]["text"])
+        fact_kinds = {fact["kind"] for block in result["reply"]["blocks"]
+                      for fact in block["facts"]}
+        self.assertIn("recommendation", fact_kinds)
+        self.assertNotIn("choice", fact_kinds)
+        self.assertNotIn("choice_loss", fact_kinds)
         self.assertEqual(self.selector.calls, [])
+
+    def test_choice_and_loss_questions_stay_unavailable_without_provider_call(self):
+        for question in ("What did I choose and how much did I lose?",
+                         "Was my recorded action a mistake?", "Was my call wrong?",
+                         "Did I make a bad call?"):
+            with self.subTest(question=question):
+                result = self.post(self.current_path(), self.current_body(question=question),
+                                   external=True)
+                self.assertEqual(result["status"], "fallback")
+                self.assertEqual(result["fallback_reason"], "current_choice_unavailable")
+                self.assertEqual(result["reply"]["intent"], "unavailable")
+                self.assertIn("choice", result["reply"]["unavailable_fields"])
+                self.assertIn("choice_loss", result["reply"]["unavailable_fields"])
+                self.assertIn("No action has been taken", result["local_scope"])
+                self.assertIn("No action has been taken", result["teaching_note"]["text"])
+                fact_kinds = {fact["kind"] for block in result["reply"]["blocks"]
+                              for fact in block["facts"]}
+                self.assertNotIn("choice", fact_kinds)
+                self.assertNotIn("choice_loss", fact_kinds)
+        self.assertEqual(self.selector.calls, [])
+
+    def test_ambiguous_local_questions_fail_closed_instead_of_guessing_recommendation(self):
+        for question in ("Explain this preview.", "Why is this estimate interesting?"):
+            with self.subTest(question=question):
+                result = self.post(self.current_path(), self.current_body(question=question))
+                self.assertEqual(result["reply"]["intent"], "unavailable")
+                self.assertIn("cannot interpret that question", result["local_scope"])
+                self.assertIn("Ask about the current modeled recommendation", result["local_scope"])
+                self.assertEqual(self.selector.calls, [])
 
     def test_disabled_provider_and_provider_failure_use_local_fallback(self):
         disabled_selector = FakeSelector()
@@ -165,6 +202,8 @@ class CurrentCoachHTTPTests(unittest.TestCase):
                 "detail": "normal", "audience": "standard",
             })
             self.assertEqual(result["fallback_reason"], "external_ai_not_configured")
+            self.assertEqual(result["reply"]["intent"], "unavailable")
+            self.assertIn("cannot interpret that question", result["local_scope"])
             self.assertEqual(disabled_selector.calls, [])
         finally:
             disabled.shutdown()
@@ -175,6 +214,8 @@ class CurrentCoachHTTPTests(unittest.TestCase):
         failed = self.post(self.current_path(), self.current_body(), external=True)
         self.assertEqual(failed["status"], "fallback")
         self.assertEqual(failed["fallback_reason"], "timeout")
+        self.assertEqual(failed["reply"]["intent"], "recommendation")
+        self.assertIn("local summary", failed["local_scope"])
 
     def test_limits_and_unavailable_are_supported_live_safe_intents(self):
         for mode in ("limits", "unavailable"):
@@ -191,7 +232,8 @@ class CurrentCoachHTTPTests(unittest.TestCase):
                 result = self.post(self.current_path(), self.current_body(), external=True)
                 self.assertEqual(result["status"], "fallback")
                 self.assertEqual(result["fallback_reason"], "invalid_plan")
-                self.assertEqual(result["reply"]["intent"], "unavailable")
+                self.assertEqual(result["reply"]["intent"], "recommendation")
+                self.assertIn("local summary", result["local_scope"])
 
     def test_missing_expired_wrong_and_malformed_targets_have_controlled_results(self):
         self.assertEqual(self.request(self.current_path("unknown"), self.current_body(
@@ -296,4 +338,3 @@ class CurrentCoachGroundingTests(unittest.TestCase):
                                     "normal", "standard")
         saved = render_coach_reply(saved_bundle, saved_plan)
         self.assertEqual(saved.blocks[0].label, "Recorded choice")
-
