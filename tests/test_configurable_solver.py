@@ -1,6 +1,8 @@
 import json
+import itertools
 import unittest
 
+from pokerlab.cards import cards, expand_range, rank_hand
 from pokerlab.equilibrium import InfoSet, solve_equilibrium
 from pokerlab.river_config import RiverConfig
 from pokerlab.solver import (
@@ -21,6 +23,83 @@ def find_node(root, history):
         if found is not None:
             return found
     return None
+
+
+def public_result_oracle(result, board, oop_range, ip_range):
+    """Exhaustively evaluate legal pure policies from public strategy rows."""
+    board_cards = cards(board, 5)
+    ranges = (expand_range(oop_range, board_cards), expand_range(ip_range, board_cards))
+    hands = (list(ranges[0]), list(ranges[1]))
+    hand_names = tuple(["".join(hand) for hand in side] for side in hands)
+    ranks = tuple([rank_hand(hand + board_cards) for hand in side] for side in hands)
+    deals = []
+    for i, oop_hand in enumerate(hands[0]):
+        for j, ip_hand in enumerate(hands[1]):
+            if set(oop_hand).isdisjoint(ip_hand):
+                sign = (ranks[0][i] > ranks[1][j]) - (ranks[0][i] < ranks[1][j])
+                deals.append((i, j, ranges[0][oop_hand] * ranges[1][ip_hand], sign))
+    total_weight = sum(deal[2] for deal in deals)
+    deals = [(i, j, weight / total_weight, sign) for i, j, weight, sign in deals]
+    rows = {(row["player"], "".join(cards(row["hand"], 2)), tuple(row["history"])): row["actions"]
+            for row in result["strategy"]}
+    start_pot = result["pot"]
+    player_names = ("oop", "ip")
+
+    def payoff(kind, winner, sign, contributions, target):
+        matched = min(contributions)
+        if kind == "fold":
+            oop_value = (1 if winner == 0 else -1) * (start_pot / 2 + matched)
+        else:
+            oop_value = sign * (start_pot / 2 + matched)
+        return oop_value if target == 0 else -oop_value
+
+    def deal_value(i, j, sign, policy=None, target=0):
+        def play(history, actor, contributions):
+            actor_hand = hand_names[actor][i if actor == 0 else j]
+            actions = rows[(player_names[actor], actor_hand, history)]
+            if policy is not None and actor == target:
+                action_indexes = (policy[(actor_hand, history)],)
+            else:
+                action_indexes = range(len(actions))
+            value = 0.0
+            for action_index in action_indexes:
+                action = actions[action_index]
+                name = action["name"]
+                next_contributions = list(contributions)
+                if name in {"bet", "raise", "all_in"}:
+                    next_contributions[actor] = action["raise_to"]
+                if name == "call":
+                    next_contributions[actor] += action["amount"]
+                if name == "fold":
+                    branch = payoff("fold", 1 - actor, sign, next_contributions, target)
+                elif name == "call" or (name == "check" and history and history[-1] == "check"):
+                    branch = payoff("showdown", None, sign, next_contributions, target)
+                else:
+                    branch = play(history + (action["history_key"],), 1 - actor,
+                                  next_contributions)
+                if policy is None or actor != target:
+                    branch *= action["probability"]
+                value += branch
+            return value
+
+        return play((), 0, (0.0, 0.0))
+
+    expected_oop_value = sum(weight * deal_value(i, j, sign)
+                             for i, j, weight, sign in deals)
+    best_responses = []
+    for responder in (0, 1):
+        infos = [(hand_name, history, len(actions))
+                 for (player, hand_name, history), actions in rows.items()
+                 if player == player_names[responder]]
+        policy_values = []
+        for choices in itertools.product(*(range(action_count)
+                                           for _, _, action_count in infos)):
+            policy = {(hand_name, history): action_index
+                      for (hand_name, history, _), action_index in zip(infos, choices)}
+            policy_values.append(sum(weight * deal_value(i, j, sign, policy, responder)
+                                     for i, j, weight, sign in deals))
+        best_responses.append(max(policy_values))
+    return expected_oop_value, tuple(best_responses)
 
 
 class RiverConfigurationTests(unittest.TestCase):
@@ -228,6 +307,94 @@ class ConfiguredStrategyTests(unittest.TestCase):
                      iterations=1800, config=config)
         self.assertGreater(low["nash_conv"], 0)
         self.assertLess(high["nash_conv"], low["nash_conv"] / 2)
+
+    def test_best_response_matches_independent_oracle_on_multi_size_tree(self):
+        oop_range = "AsAh:0.5,KsKh:1"
+        ip_range = "AcAd:1,KcKd:0.75"
+        result = solve(BOARD, oop_range, ip_range, iterations=120,
+                       config=RiverConfig(100, 300, (.33, .75), (), 0, False))
+        value, (br_oop, br_ip) = public_result_oracle(result, BOARD, oop_range, ip_range)
+        self.assertAlmostEqual(value, result["value_oop"], places=8)
+        self.assertAlmostEqual(br_oop + br_ip, result["nash_conv"], places=8)
+        self.assertGreaterEqual(br_oop, value - 1e-9)
+        self.assertGreaterEqual(br_ip, -value - 1e-9)
+
+    def test_best_response_matches_independent_oracle_on_raise_enabled_tree(self):
+        oop_range = "AsAh:0.5,KsKh:1"
+        ip_range = "AcAd:1,KcKd:0.75"
+        result = solve(BOARD, oop_range, ip_range, iterations=120,
+                       config=RiverConfig(100, 300, (.75,), (.75,), 1, False))
+        value, (br_oop, br_ip) = public_result_oracle(result, BOARD, oop_range, ip_range)
+        self.assertAlmostEqual(value, result["value_oop"], places=8)
+        self.assertAlmostEqual(br_oop + br_ip, result["nash_conv"], places=8)
+        self.assertGreaterEqual(br_oop, value - 1e-9)
+        self.assertGreaterEqual(br_ip, -value - 1e-9)
+
+    def test_public_policy_oracle_preserves_card_removal_weights(self):
+        oop_range = "AsAh,KsKh"
+        ip_range = "AsKd,AcAd"
+        result = solve(BOARD, oop_range, ip_range, iterations=80,
+                       config=RiverConfig(100, 200, (.5, 1), (), 0, False))
+        self.assertEqual(result["deals"], 3)
+        value, (br_oop, br_ip) = public_result_oracle(result, BOARD, oop_range, ip_range)
+        self.assertAlmostEqual(value, result["value_oop"], places=8)
+        self.assertAlmostEqual(br_oop + br_ip, result["nash_conv"], places=8)
+
+    def test_exhaustive_pure_policy_does_not_peek_at_opponent_hand(self):
+        oop_range = "AsAh"
+        ip_range = "AcAd,JhJc"
+        tie_hand = "".join(cards("AcAd", 2))
+        result = solve(BOARD, oop_range, ip_range, iterations=20,
+                       config=RiverConfig(100, 200, (.5,), (), 0, False))
+        for row in result["strategy"]:
+            if row["player"] != "ip":
+                continue
+            if row["history"] == ["bet@50"]:
+                selected = "fold" if row["hand"] == tie_hand else "call"
+                row["actions"] = [dict(action, probability=float(action["name"] == selected))
+                                   for action in row["actions"]]
+            elif row["history"] == ["check"]:
+                row["actions"] = [dict(action, probability=float(action["name"] == "check"))
+                                   for action in row["actions"]]
+
+        _, (legal_oop_br, _) = public_result_oracle(result, BOARD, oop_range, ip_range)
+        # The tie hand folds to a bet, while the stronger hand calls it. A
+        # cheating response bets only into the tie and checks into the winner.
+        opponent_weights = expand_range(ip_range, cards(BOARD, 5))
+        deal_mass = sum(weight for weight in opponent_weights.values())
+        tie_fold_value = result["pot"] / 2
+        strong_check_value = -result["pot"] / 2
+        cheating_value = sum(
+            opponent_weights[hand] / deal_mass *
+            (tie_fold_value if "".join(hand) == tie_hand else strong_check_value)
+            for hand in opponent_weights
+        )
+        self.assertAlmostEqual(legal_oop_br, -25.0, places=8)
+        self.assertAlmostEqual(cheating_value, 0.0, places=8)
+        self.assertGreater(cheating_value, legal_oop_br)
+
+    def test_scalar_bet_metadata_requires_one_shared_actual_opening_amount(self):
+        legacy = solve(BOARD, "AsAh", "KcKd", pot=100, bet=50, iterations=20)
+        self.assertEqual(legacy["bet"], 50)
+
+        clipped = solve(BOARD, "AsAh", "KcKd", iterations=20,
+                        config=RiverConfig(100, 50, (1,), (), 0, False))
+        self.assertEqual(clipped["bet"], 50)
+        self.assertEqual(clipped["strategy"][0]["actions"][1]["raise_to"], 50)
+
+        multiple_sizes = solve(BOARD, "AsAh", "KcKd", iterations=20,
+                               config=RiverConfig(100, 300, (.5, 1), (), 0, False))
+        self.assertIsNone(multiple_sizes["bet"])
+
+        asymmetric = solve(BOARD, "AsAh", "KcKd", iterations=20,
+                           config=RiverConfig(100, (120, 50), (.75,), (.75,), 1, True))
+        self.assertIsNone(asymmetric["bet"])
+        oop_open = next(row for row in asymmetric["strategy"]
+                        if row["player"] == "oop" and row["history"] == [])
+        ip_open = next(row for row in asymmetric["strategy"]
+                       if row["player"] == "ip" and row["history"] == ["check"])
+        self.assertEqual(oop_open["actions"][1]["raise_to"], 75)
+        self.assertEqual(ip_open["actions"][1]["raise_to"], 50)
 
 
 if __name__ == "__main__":

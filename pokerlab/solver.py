@@ -452,6 +452,16 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     br1 = _best_response_value(IP, root, hands, deals, averages, None, config.pot)
     gap = max(0.0, br0 + br1)
     oop_rows, ip_rows = _legacy_rows(root, averages, hands)
+    opening_bets = []
+    for player, history in ((OOP, ()), (IP, ("check",))):
+        node = nodes.get((player, history))
+        if node is None:
+            opening_bets = []
+            break
+        opening_bets.extend(action.raise_to for action in node.actions
+                            if action.name in {"bet", "all_in"})
+    scalar_bet = opening_bets[0] if opening_bets and all(
+        abs(amount - opening_bets[0]) <= _EPSILON for amount in opening_bets) else None
     strategy_rows = []
     for (player, history), node in sorted(nodes.items(), key=lambda item: (item[0][0], item[0][1])):
         for hand_index, hand in enumerate(hands[player]):
@@ -476,7 +486,7 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
         "deals": len(deals),
         "pot": config.pot,
         "effective_stack": config.to_dict()["effective_stack"],
-        "bet": config.pot * config.bet_sizes[0] if len(config.bet_sizes) == 1 else None,
+        "bet": scalar_bet,
         "value_oop": value,
         "value_ip": -value,
         "oop_best_response_value": br0,
