@@ -21,7 +21,7 @@ from pokerlab.turn_solver import solve_turn_river
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "benchmarks" / "turn-river-v1.json"
 SOURCE_MODULES = (
-    "turn_solver.py", "cfr.py", "river_tree.py", "river_config.py", "cards.py",
+    "turn_solver.py", "cfr.py", "planned_cfr.py", "river_tree.py", "river_config.py", "cards.py",
 )
 
 
@@ -69,11 +69,13 @@ def metric(result: dict, *keys):
     return None
 
 
-def run_case(scenario: dict, iterations: int, repeats: int, algorithm: str) -> dict:
+def run_case(scenario: dict, iterations: int, repeats: int, algorithm: str,
+             traversal: str = "recursive") -> dict:
     positional = (scenario["board4"], scenario["oop"], scenario["ip"])
     kwargs = {
         "iterations": iterations,
         "algorithm": algorithm,
+        "traversal": traversal,
     }
     for name in ("config", "river_config", "runouts"):
         if name in scenario and scenario[name] is not None:
@@ -131,6 +133,8 @@ def run_case(scenario: dict, iterations: int, repeats: int, algorithm: str) -> d
             "algorithm": metric(last, "algorithm"),
             "solver_version": metric(last, "solver_version"),
             "backend": metric(last, "backend"),
+            "execution_backend": metric(last, "execution_backend"),
+            "plan_operation_limit": metric(last, "plan_operation_limit"),
             "scope": metric(last, "scope", "scope_note"),
         },
     }
@@ -143,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scenario", action="append", dest="scenario_ids",
                         help="Run only this fixture; repeat to select multiple.")
     parser.add_argument("--algorithm", choices=("vanilla", "dcfr"), default="vanilla")
+    parser.add_argument("--traversal", choices=("recursive", "planned"), default="recursive")
     parser.add_argument("--iterations", type=int, nargs="+",
                         help="Override checkpoints, for example --iterations 20 100.")
     parser.add_argument("--repeats", type=int, help="Timed repeats per checkpoint; defaults to config.")
@@ -168,7 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     if not scenarios:
         parser.error("At least one scenario must be selected.")
 
-    results = [run_case(scenario, iteration, repeats, args.algorithm)
+    results = [run_case(scenario, iteration, repeats, args.algorithm, args.traversal)
                for scenario in scenarios for iteration in checkpoints]
     report = {
         "schema_version": 1,

@@ -68,6 +68,13 @@ This solves finite heads-up turn-to-river action abstractions. It does not yet
 solve flop, preflop, unrestricted bet sizes, rake or multiway equilibrium. Exact
 private worlds are retained; there is no card bucketing or chance sampling.
 Default iteration averaging is vanilla CFR; DCFR(1.5,0,2) remains selectable.
+`traversal="planned"` selects optional bounded Python traversal preparation;
+recursive traversal remains the default. The planned path uses more retained
+memory to avoid repeatedly resolving static worlds, payoffs and information-set
+indexes. See [planned traversal](planned-traversal.md) for its independent checks,
+measurements and 250,000-operation storage limit. Both expose the same policy
+schema and exact best-response calculations, with the chosen execution backend
+recorded in results under solver version `configured-turn-river-v2`.
 The exact average-policy deviation gap is reported in chips as NashConv, with
 exploitability equal to half that gap. Street coverage alone is not an accuracy
 certificate; inspect the measured gap for the actual configured game.

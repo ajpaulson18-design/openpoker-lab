@@ -10,6 +10,8 @@ from .cards import DECK, cards, expand_range, rank_hand
 from .river_config import RiverConfig
 from .river_tree import _Node, _Terminal, _build_tree, _terminal_value
 from .cfr import train, evaluate, best_response
+from .planned_cfr import train as train_planned
+from .planned_cfr import MAX_PLAN_OPS
 
 
 @dataclass
@@ -130,17 +132,22 @@ def _tree(config, river_config, runouts):
 
 
 def solve_turn_river(board, oop_range, ip_range, config=None, *, river_config=None,
-                     runouts=None, iterations=1000, algorithm="vanilla"):
+                     runouts=None, iterations=1000, algorithm="vanilla",
+                     traversal="recursive"):
     """Solve a configured two-street game with exact public chance and responses.
 
     Config pot is the starting turn pot; stacks cap total additional commitments
     across both streets. River config may change sizing, never pot or stack caps.
     Selected runouts define a conditional study game, including altered private
     deal priors, rather than approximating an unconditional full-deck solution.
+    Optional planned traversal caches static per-world operations within a call;
+    it can improve runtime while retaining more memory. Recursive is the default.
     """
     board = cards(board, 4)
     if algorithm not in ("vanilla", "dcfr"):
         raise ValueError("Solver algorithm must be vanilla or dcfr.")
+    if traversal not in ("recursive", "planned"):
+        raise ValueError("Traversal must be recursive or planned.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Use 10–10,000 solver iterations.")
     config = RiverConfig() if config is None else config
@@ -170,8 +177,9 @@ def solve_turn_river(board, oop_range, ip_range, config=None, *, river_config=No
             infos[key] = len(node.actions)
             metadata[key] = (node, reveal)
     payoff = lambda node, world: _terminal_value(node, world[3], config.pot)
-    averages = train(root, worlds, infos, iterations, algorithm, payoff, _node_key,
-                     _chance_child)
+    trainer = train_planned if traversal == "planned" else train
+    averages = trainer(root, worlds, infos, iterations, algorithm, payoff, _node_key,
+                       _chance_child)
     value = evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
     br0 = best_response(0, root, worlds, averages, payoff, _node_key, _chance_partitions)
     br1 = best_response(1, root, worlds, averages, payoff, _node_key, _chance_partitions)
@@ -191,7 +199,9 @@ def solve_turn_river(board, oop_range, ip_range, config=None, *, river_config=No
     gap = max(0., br0 + br1)
     return {
         "method": "full-traversal CFR", "algorithm": algorithm,
-        "solver_version": "configured-turn-river-v1", "strategy_schema": "postflop-strategy-v1",
+        "solver_version": "configured-turn-river-v2", "strategy_schema": "postflop-strategy-v1",
+        "execution_backend": f"{traversal}-python",
+        "plan_operation_limit": MAX_PLAN_OPS if traversal == "planned" else None,
         "backend": "exact-public-chance-tree", "board": list(board),
         "config": config.to_dict(), "river_config": river_config.to_dict(),
         "runouts": list(selected), "reachable_runouts": list(reachable),

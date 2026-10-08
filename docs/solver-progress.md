@@ -205,6 +205,43 @@ No external implementation, dependency, trained values, licensing or repository
 ownership changes were incorporated. Primary research and conceptual references
 are recorded in [turn research notes](turn-research-notes.md).
 
+## configured-turn-river-v2: optional planned traversal
+
+`traversal="planned"` prepares per-world static Python operations and computes
+iterative value/reach passes. Recursive traversal remains the default and the
+independent reference. Both variants use the same exact physical world model,
+public action tree, `postflop-strategy-v1`, values and information-set BRs.
+The result identifies its execution backend and planned operation limit. Generic
+chance/key callbacks and nonuniform locks are preserved in the reusable backend.
+Plans remain local to one call and are limited to 250,000 retained operations.
+
+Six new differential tests cover both algorithms, weighted blocker-conditioned
+worlds, every average frequency, values/BRs, custom callbacks, locks, early caps
+and public API parity. The 22 focused planned/turn/configured tests passed.
+The full local application/AI Coach suite passed 304 tests in 81.433 seconds
+using a writable Windows test directory. Evaluation code is unchanged.
+
+Four whole-API reports compare recursive/planned traversal under vanilla/DCFR,
+using both prior fixtures at 20/100/300 iterations and three repeats. They record
+measured commit `f6f46a2`, six matching module hashes and the same configuration
+hash. Values/BRs/NashConv/exploitability matched within 1e-12 across all 24 rows;
+counts matched exactly. Prior v1 reports remain unchanged historical measurements.
+
+At 300 iterations, full-deck vanilla runtime fell 5.921 to 4.440 seconds (1.33x),
+and DCFR fell 7.332 to 4.295 seconds (1.71x). Conditioned-subset vanilla improved
+0.748 to 0.517 seconds, while DCFR worsened 0.802 to 0.877 seconds. Full-deck
+vanilla was also slower with planning at 20 and 100 iterations. Shared-machine
+timing does not establish a universal speedup; the default is unchanged.
+
+Whole-call traced peaks were about 2.34/2.09 MiB (recursive/planned) for the full
+fixture and 296/233 KiB for the subset at 300 iterations. Training-only scratch
+peak went in the opposite direction, showing a retained plan-memory cost. Memory
+scope and allocation lifetime matter; neither measurement proves a universal
+memory advantage. See [traversal validation and reproducible commands](planned-traversal.md).
+
+The broader street/range objective remains active. No AI Coach/UI/contracts code,
+third-party source, dependency, repository license or visibility changed.
+
 ## Next implementation milestone
 
 Profile and reduce repeated per-world traversal work while preserving the exact
