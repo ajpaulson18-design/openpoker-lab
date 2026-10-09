@@ -79,3 +79,33 @@ agreement remains within 1e-10. Production solver, shared kernel, turn/river,
 Coach and browser source are unchanged by this validation milestone. New test
 and benchmark code use the standard library; no outside source, dependencies
 or trained values were incorporated.
+
+## Complete chance with hidden private-hand alternatives
+
+`tests/test_preflop_full_private_chance.py` extends the fixed-flop case to
+SB `AsAd,QsQd` and BB `KsKd,JhJc`, with equal weights. Its independently spelled
+public deck excludes only the flop, giving 49×48 = 2,352 requested ordered
+future pairs. Private-card blockers remove 16 wholly unreachable outcomes;
+the remaining 2,336 public outcomes represent 4×45×44 = **7,920 physical
+private-pair/future-card worlds**. Every compatible private pair keeps probability
+1/4, because each has a complete 1,980-outcome future deck.
+
+The regression compares all learned serialized rows, both player values and
+both exact legal best responses with independent numeric-state replay. It
+checks own-hand/visible-board boundaries and each private-pair probability,
+alongside aggregate state/decision/plan limits. A 1,000-iteration request is
+rejected by the world-iteration guard before the production ranker is called.
+The learned profile uses 10 planned vanilla iterations; this is a correctness
+and information-set coverage check, not a convergence certificate. The earlier
++1/-1 equilibrium proof applies only to the single-pair AA/KK fixture.
+
+Luna saved this bounded test before its usage limit interrupted execution;
+lead review completed the focused validation and publication. The test passed
+on its original merged baseline, then was rerun after incorporating the
+parallel turn/river work on main. No turn/river or shared production source is
+modified by this extension. Prior single-pair runtime/memory measurements are
+not measurements of this larger private-range fixture.
+
+```text
+python -m unittest tests.test_preflop_full_private_chance -v
+```
