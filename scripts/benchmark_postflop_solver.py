@@ -18,6 +18,7 @@ MODULES = ("postflop_solver.py", "turn_solver.py", "cfr.py", "planned_cfr.py",
 METRICS = ("solver_version", "strategy_schema", "backend", "execution_backend",
            "plan_operation_limit", "runout_mode", "deals", "worlds", "info_sets",
            "public_nodes", "chance_nodes", "world_traversal_nodes", "tree_actions",
+           "public_states", "terminal_nodes", "public_state_limit",
            "value_oop", "value_ip", "oop_best_response_value",
            "ip_best_response_value", "nash_conv", "exploitability", "scope")
 

@@ -107,13 +107,15 @@ def _terminal_value(terminal, sign, pot):
 
 
 def _build_tree(config, *, starting_history=(), starting_contributions=(0.0, 0.0),
-                showdown_factory=None):
+                showdown_factory=None, allocation_hook=None):
     """Build one fresh-street tree; optional factory handles settled showdowns.
 
     The callback receives the settled public history and contribution tuple.
     It may return any terminal/chance subtree understood by a solver kernel.
     ``starting_history`` is a prior-street public-history prefix. Betting state
     starts fresh: OOP acts first and no checks or raises have occurred yet.
+    An optional hook reserves each decision or terminal state before expansion,
+    allowing an enclosing multi-street game to enforce a global allocation cap.
     """
     node_count = 0
     starting_history = tuple(starting_history)
@@ -121,11 +123,16 @@ def _build_tree(config, *, starting_history=(), starting_contributions=(0.0, 0.0
     if len(starting_contributions) != 2:
         raise ValueError("Starting contributions must contain OOP and IP amounts.")
 
+    def terminal(kind, contributions, winner=None):
+        if allocation_hook is not None:
+            allocation_hook("terminal")
+        return _Terminal(kind, contributions, winner)
+
     def settled(history, contributions):
         contributions = tuple(contributions)
         if showdown_factory is not None:
             return showdown_factory(tuple(history), contributions)
-        return _Terminal("showdown", contributions)
+        return terminal("showdown", contributions)
 
     def build(history, player, contributions, previous_full_raise, raises_made,
               raise_reopened, checks):
@@ -135,6 +142,8 @@ def _build_tree(config, *, starting_history=(), starting_contributions=(0.0, 0.0
         node_count += 1
         if node_count > 10_000:
             raise ValueError("Configured action tree exceeds 10,000 public nodes.")
+        if allocation_hook is not None:
+            allocation_hook("decision")
         opponent = 1 - player
         committed, other = contributions[player], contributions[opponent]
         if abs(committed - other) <= _EPSILON:
@@ -161,7 +170,7 @@ def _build_tree(config, *, starting_history=(), starting_contributions=(0.0, 0.0
             call_contributions[player] = committed + actual_call
             actions = [_Action("fold"), _Action("call", _clean(actual_call),
                                                call_contributions[player])]
-            children = [_Terminal("fold", contributions, opponent),
+            children = [terminal("fold", contributions, opponent),
                         settled(history + ("call",), call_contributions)]
             if raise_reopened and raises_made < config.max_raises and \
                     other < config.stacks[opponent] - _EPSILON:
@@ -178,4 +187,8 @@ def _build_tree(config, *, starting_history=(), starting_contributions=(0.0, 0.0
                                           raises_made + 1, full_raise, 0))
         return _Node(history, player, tuple(actions), tuple(children))
 
-    return build(starting_history, OOP, starting_contributions, 0.0, 0, True, 0), node_count
+    try:
+        root = build(starting_history, OOP, starting_contributions, 0.0, 0, True, 0)
+        return root, node_count
+    finally:
+        build = None

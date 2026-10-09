@@ -85,12 +85,20 @@ The solver accepts 10–10,000 iterations, at most three million candidate-pair
 iterations and three million world iterations, 10,000 public decision nodes,
 and 30 million world-node iterations. Chance selects one branch for each static
 world in the work bound; the public-tree bound counts all reachable reveals.
+An additional 250,000-public-state cap counts decisions, chance nodes and terminal
+leaves before their expansion/allocation. The betting builder accepts a private
+allocation hook so the initial street is charged before building its child
+continuations. Decision counts alone would miss large all-in reveal trees.
+Reported `public_states`, `terminal_nodes` and `public_state_limit` make this
+separate bound visible. Tree-walking closures are cleared after use so the tree
+does not depend on cyclic collection for release.
 Planned traversal additionally bounds retained operations at 250,000, using a
 conservative per-world maximum before compilation and the actual compiler guard.
 
 With pot 10, stack 5 and a half-pot bet, a one-pair full flop has 1,980 worlds,
 8,104 public decision nodes, 12 decision visits per world and 49,500 planned
-operations. A stack-10 half-pot/all-in full flop exceeds the public-node cap,
+operations, plus 228 chance nodes and 17,912 terminal leaves (26,244 public
+states total). A stack-10 half-pot/all-in full flop exceeds the public-node cap,
 because called partial bets leave later betting decisions. Larger practical
 flop ranges and deeper full-deck trees require further performance work.
 

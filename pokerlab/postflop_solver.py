@@ -16,6 +16,7 @@ from .river_tree import _Node, _Terminal, _build_tree, _terminal_value
 _MAX_CANDIDATE_HAND_ITERATIONS = 3_000_000
 _MAX_WORLD_ITERATIONS = 3_000_000
 _MAX_PUBLIC_NODES = 10_000
+_MAX_PUBLIC_STATES = 250_000
 _MAX_WORLD_NODE_WORK = 30_000_000
 
 
@@ -159,7 +160,7 @@ def _node_key(node, world):
 
 
 def _build_public_tree(board_length, config, *, turn_config=None, river_config=None,
-                       worlds):
+                       worlds, allocation_counts=None):
     """Build a public tree with zero, one, or two future chance layers.
 
     Configurations share the original pot and total stack caps. Contributions
@@ -178,15 +179,23 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
            for stage in later_configs):
         raise ValueError("Street configs must preserve the original pot and stack caps.")
 
-    decision_count = 0
-    chance_count = 0
+    counts = {} if allocation_counts is None else allocation_counts
+    counts.update(decision=0, chance=0, terminal=0, total=0)
+
+    def reserve(kind):
+        if counts["total"] >= _MAX_PUBLIC_STATES:
+            raise ValueError("Postflop tree exceeds 250,000 public states.")
+        if kind == "decision" and counts["decision"] >= _MAX_PUBLIC_NODES:
+            raise ValueError("Postflop solver public tree exceeds 10,000 decision nodes.")
+        counts[kind] += 1
+        counts["total"] += 1
+
+    def showdown(contributions):
+        reserve("terminal")
+        return _Terminal("showdown", contributions)
 
     def add_tree(stage_config, **kwargs):
-        nonlocal decision_count
-        root, count = _build_tree(stage_config, **kwargs)
-        decision_count += count
-        if decision_count > _MAX_PUBLIC_NODES:
-            raise ValueError("Postflop solver public tree exceeds 10,000 decision nodes.")
+        root, _ = _build_tree(stage_config, allocation_hook=reserve, **kwargs)
         return root
 
     def is_all_in(contributions):
@@ -200,19 +209,18 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
         river_cards = tuple(sorted({world[4] for world in worlds}))
 
         def settled(history, contributions):
-            nonlocal chance_count
+            reserve("chance")
             matched = min(contributions)
             carried = (matched, matched)
             branches = {}
             for river in river_cards:
                 river_history = history + (f"river@{river}",)
                 if is_all_in(carried):
-                    branches[river] = _Terminal("showdown", carried)
+                    branches[river] = showdown(carried)
                 else:
                     branches[river] = add_tree(
                         river_config, starting_history=river_history,
                         starting_contributions=carried)
-            chance_count += 1
             return _Chance(history, branches, 4, "river")
 
         root = add_tree(config, showdown_factory=settled)
@@ -225,19 +233,18 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
         }
 
         def river_chance(history, contributions, turn):
-            nonlocal chance_count
+            reserve("chance")
             matched = min(contributions)
             carried = (matched, matched)
             branches = {}
             for river in rivers_by_turn[turn]:
                 river_history = history + (f"river@{river}",)
                 if is_all_in(carried):
-                    branches[river] = _Terminal("showdown", carried)
+                    branches[river] = showdown(carried)
                 else:
                     branches[river] = add_tree(
                         river_config, starting_history=river_history,
                         starting_contributions=carried)
-            chance_count += 1
             return _Chance(history, branches, 5, "river")
 
         def after_turn_reveal(history, contributions, turn):
@@ -252,13 +259,12 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
                     river_chance(turn_history, turn_contributions, turn))
 
         def after_flop_settles(history, contributions):
-            nonlocal chance_count
+            reserve("chance")
             branches = {
                 turn: after_turn_reveal(history + (f"turn@{turn}",),
                                          contributions, turn)
                 for turn in turns
             }
-            chance_count += 1
             return _Chance(history, branches, 4, "turn")
 
         root = add_tree(config, showdown_factory=after_flop_settles)
@@ -274,7 +280,11 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
             for child in node.children:
                 collect(child)
 
-    collect(root)
+    try:
+        collect(root)
+    finally:
+        # The recursive collector otherwise retains the complete tree in a cycle.
+        collect = None
     if len(nodes) > _MAX_PUBLIC_NODES:
         raise ValueError("Postflop solver public tree exceeds 10,000 decision nodes.")
 
@@ -292,17 +302,22 @@ def _build_public_tree(board_length, config, *, turn_config=None, river_config=N
             return 1
         return 1 + sum(plan_operations(child) for child in node.children)
 
-    return root, nodes, chance_count, visited(root), plan_operations(root)
+    try:
+        return root, nodes, counts["chance"], visited(root), plan_operations(root)
+    finally:
+        visited = None
+        plan_operations = None
 
 
 def _build_postflop_tree(board, config, *, turn_config=None, river_config=None,
-                         worlds):
+                         worlds, allocation_counts=None):
     """Validate a concrete board and delegate to the card-count tree builder."""
     board = cards(board)
     if len(board) not in (3, 4, 5):
         raise ValueError("Postflop board must contain exactly three, four, or five cards.")
     return _build_public_tree(len(board), config, turn_config=turn_config,
-                              river_config=river_config, worlds=worlds)
+                              river_config=river_config, worlds=worlds,
+                              allocation_counts=allocation_counts)
 
 
 def _prefix_hand_index(worlds):
@@ -378,9 +393,11 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
 
     hands, worlds, selected, pair_count = _enumerate_worlds(
         board, oop_range, ip_range, runouts, iterations)
+    public_counts = {}
     root, nodes, chance_nodes, visited_nodes, plan_ops_per_world = \
         _build_postflop_tree(board, config, turn_config=turn_config,
-                             river_config=river_config, worlds=worlds)
+                             river_config=river_config, worlds=worlds,
+                             allocation_counts=public_counts)
     if len(worlds) * visited_nodes * iterations > _MAX_WORLD_NODE_WORK:
         raise ValueError("Postflop solver exceeds 30 million world-node iterations.")
     if traversal == "planned" and len(worlds) * plan_ops_per_world > MAX_PLAN_OPS:
@@ -459,6 +476,9 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         "iterations": iterations, "deals": pair_count,
         "compatible_pairs": pair_count, "worlds": len(worlds),
         "info_sets": len(infos), "public_nodes": len(nodes),
+        "public_states": public_counts["total"],
+        "terminal_nodes": public_counts["terminal"],
+        "public_state_limit": _MAX_PUBLIC_STATES,
         "chance_nodes": chance_nodes, "world_traversal_nodes": visited_nodes,
         "tree_actions": sum(len(node.actions) for node in nodes.values()),
         "pot": config.pot, "effective_stack": config.to_dict()["effective_stack"],
