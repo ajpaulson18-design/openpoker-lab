@@ -456,3 +456,25 @@ The next priority is measured flop/preflop efficiency and broader independent
 chance/information-set validation within explicit resource limits. The selected
 games establish complete-hand calculation in a finite abstraction; they are
 not unconditional full-deck or unrestricted NLHE equilibrium certificates.
+
+## Complete fixed-flop future deck and known Hold'em game value
+
+The next independently validated fixture enumerates all 1,980 legal ordered
+turn/river outcomes after `2c3c4d` with exact SB `AsAd` and BB `KsKd`.
+Its preflop game is conditioned on that particular flop; future cards remain
+hidden until revealed. At two-chip stacks/no preflop raises, the finite tree
+has 8,106 decisions/information sets and 26,248 public states. A constructive
+SB complete-then-shove/call policy and BB check/fold policy prove exact game
+value +1/-1. Independently enumerated wins/losses/ties give a called-flop-shove
+SB expectation of 272/165, while BB never adding chips caps SB at +1.
+
+Luna's full-world regression and the independent constructive-profile replay
+passed. At frozen source `b77a08f`, planned DCFR's learned NashConv drops from
+0.185208 at 10 iterations to 0.008309 at 30; known-value error at 30 is 0.007162.
+Both checkpoint values and exact legal BRs agree with independent replay to
+2.23e-16. The reference profile has zero legal deviation gap. Three complete
+timed calls give medians 5.896/9.562 seconds; a separate call at 10 iterations
+uses 26,226,183 traced peak Python bytes. This is complete future-deck coverage
+for one fixed flop/private pair, not all flops or full private ranges.
+See [proof, reproduction and recorded limits](fixed-flop-complete-chance.md).
+No production solver, shared kernel or Coach source changes are required.
