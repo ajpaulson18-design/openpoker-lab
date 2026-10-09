@@ -181,12 +181,18 @@ The compatible turn entry point now delegates to the shared postflop engine.
 
 `pokerlab.postflop_solver.solve_postflop` accepts three-, four- or five-card
 boards. A flop start enumerates 45 then 44 physical future cards for each
-compatible private pair. It reuses the configured betting builder and both CFR
+compatible private pair. It reuses the configured betting builder and the CFR
 backends, and hides each future card until its public reveal. Full-deck flop
 solving currently fits only small games under the resource limits; selected
 ordered runouts define a conditional study game. See [postflop examples and
 validation](docs/postflop-validation.md). Preflop, broader practical ranges and
 eventually multiway equilibrium remain development goals.
+
+Optional `traversal="public-batched"` shares exact training work across private
+hands at each public node. Recursive remains the default and reference. This
+backend retains physical chance weights and adds a 250,000 prefix/hand-edge
+storage cap; it specializes the postflop fold/showdown utilities. See
+[public-batched validation and measurements](docs/public-batched-cfr.md).
 
 ## Range notation
 

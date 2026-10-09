@@ -13,10 +13,10 @@ from pokerlab.postflop_solver import solve_postflop
 from scripts.benchmark_turn_solver import file_sha256, git_revision, worktree_dirty
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULES = ("postflop_solver.py", "turn_solver.py", "cfr.py", "planned_cfr.py",
+MODULES = ("postflop_solver.py", "turn_solver.py", "cfr.py", "planned_cfr.py", "public_cfr.py",
            "river_tree.py", "river_config.py", "cards.py")
 METRICS = ("solver_version", "strategy_schema", "backend", "execution_backend",
-           "plan_operation_limit", "runout_mode", "deals", "worlds", "info_sets",
+           "plan_operation_limit", "public_batch_edge_limit", "runout_mode", "deals", "worlds", "info_sets",
            "public_nodes", "chance_nodes", "world_traversal_nodes", "tree_actions",
            "public_states", "terminal_nodes", "public_state_limit",
            "value_oop", "value_ip", "oop_best_response_value",
@@ -54,7 +54,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=ROOT / "benchmarks/postflop-v1.json")
     parser.add_argument("--algorithm", choices=("vanilla", "dcfr"), default="vanilla")
-    parser.add_argument("--traversal", choices=("recursive", "planned"), default="recursive")
+    parser.add_argument("--traversal", choices=("recursive", "planned", "public-batched"), default="recursive")
     parser.add_argument("--iterations", type=int, nargs="+")
     parser.add_argument("--repeats", type=int)
     parser.add_argument("--scenario", action="append")

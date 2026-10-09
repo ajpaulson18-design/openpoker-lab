@@ -315,3 +315,16 @@ backend. Expand the reusable chance architecture toward flop, preflop, positions
 larger ranges and eventually multiway games, with an independent quality measure
 for each supported game. The commercial full-NLHE objective remains active;
 action-tree and street coverage alone do not prove equilibrium accuracy.
+
+## Exact public-batched candidate
+
+An optional `public-batched` backend shares each public traversal over private
+hand vectors while retaining exact physical chance enumeration and the existing
+game model. Seven added regressions passed, including independent flop policy
+and best-response replay, both algorithms, blocker-sensitive weighted worlds,
+three street starts, asymmetric stacks, sizing, raises and all-ins. A 250,000
+prefix/hand-edge cap reserves sparse aggregation entries before allocation;
+recursive visitor bindings clear on success and failure. All 330 repository
+tests passed in 166.452 seconds, including coaching regressions. Recursive
+remains the default/reference. Controlled whole-call timing and memory results
+are required before adoption claims; see [public-batched validation](public-batched-cfr.md).

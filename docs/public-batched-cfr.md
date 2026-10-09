@@ -1,0 +1,58 @@
+# Exact public-batched CFR
+
+`solve_postflop(..., traversal="public-batched")` selects a specialized training
+backend for the existing finite heads-up flop, turn or river game. The turn
+facade accepts the same option. Recursive remains the default and mathematical
+reference; the established configured river API and node-lock kernel are unchanged.
+
+The backend groups weighted physical worlds into sparse private-pair edges at
+each revealed public-card prefix. It traverses each public node once per
+iteration, carrying each player's own-hand reach vector. Fold terminals use
+joint edge mass; showdown terminals use mass multiplied by the independently
+computed rank sign. Opponent reach determines counterfactual values and regret;
+own reach and the prefix's own-hand chance marginal weight average strategies.
+Chance branches sum values, and decisions key only the acting hand and visible
+history. Vanilla CFR and DCFR use the same simultaneous update recurrence as
+the reference.
+
+This is exact enumeration of supplied chance worlds. The private-vector idea
+is informed by [Johanson et al., Public Chance Sampling CFR](https://webdocs.cs.ualberta.ca/~mbowling/papers/12aamas-pcs.pdf);
+the implementation does not sample public chance or implement that paper's
+structured terminal sweep. Terminals still scan sparse private-pair edges.
+No third-party code, runtime dependency or license change is introduced.
+
+All existing postflop world, tree and work guards remain in force. A further
+250,000 unique `(public prefix, oop hand, ip hand)` edge cap is reserved before
+aggregation allocation. Results identify `public-batched-python` and report
+`public_batch_edge_limit`; other backends report `None` for that field. Recursive
+visitor closures are cleared on success and failure. The specialized trainer
+supports the repository's static fold/showdown utilities; use the shared CFR
+kernel for generic callbacks or strategy locks.
+
+Seven added regressions compare weighted blocker-sensitive policies through
+100 iterations, vanilla/DCFR and flop/turn/river starts, asymmetric stacks,
+street sizing, raises and all-ins. An independent serialized-policy replay
+checks flop value and both information-set best responses. Further tests cover
+zero-reach fallback, input and edge limits, and CPython immediate release with
+cyclic collection disabled on success and failure. These tests establish
+backend agreement for their fixtures; they do not certify unrestricted GTO.
+The complete repository suite passed all 330 tests in 166.452 seconds,
+including the separate coaching regressions.
+
+The controlled whole-call benchmark is:
+
+```sh
+python -m scripts.benchmark_public_cfr --algorithm vanilla --output benchmarks/results/public-batched-v1-vanilla.json
+python -m scripts.benchmark_public_cfr --algorithm dcfr --output benchmarks/results/public-batched-v1-dcfr.json
+```
+
+Each run rotates backend order over independent full solves, including world
+and tree construction, training, exact evaluation/best responses, and JSON
+serialization. It separately traces complete-call allocation peaks. Explicit
+garbage collection runs before each call and is excluded from timed intervals.
+Reports record all solver, config and harness hashes and reject source changes
+or policy/value/BR differences above `1e-10`. Selected runouts condition the
+joint game; measurements apply to their recorded machine and source revision.
+
+The wider commercial objective remains active: this backend does not add
+preflop, multiway equilibrium, sampling, suit reduction or unrestricted bet sizes.
