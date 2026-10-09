@@ -37,6 +37,11 @@
 .study-teaching-card > .eyebrow { margin:0 0 8px; }
 .study-teaching-card > p:not(.eyebrow) { margin:0 0 8px; }
 .study-teaching-card > p:last-child { margin-bottom:0; }
+.decision-terms-guide { border:1px solid var(--line); border-radius:8px; padding:11px 14px; margin:12px 0 18px; }
+.decision-terms-guide summary { cursor:pointer; font-weight:650; }
+.decision-terms-guide dl { display:grid; gap:10px; margin:12px 0 2px; }
+.decision-terms-guide dt { font-size:12px; font-weight:700; color:var(--accent); }
+.decision-terms-guide dd { margin:3px 0 0; color:var(--muted); font-size:12px; }
 .study-answer { border-left:3px solid var(--accent); background:#bcdf8910; padding:14px 16px; margin:14px 0 22px; }
 .study-answer h4 { margin:0 0 6px; font-size:14px; }
 .study-answer p { margin:0; }
