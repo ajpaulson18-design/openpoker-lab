@@ -16,6 +16,7 @@ from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
 from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
+from .preflop_runout_index import RunoutBlockerIndex
 from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
 from .public_diagnostics import evaluate_profile as evaluate_public_profile
 from .river_config import RiverConfig
@@ -158,22 +159,20 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations):
     if not candidate_pairs:
         raise ValueError("Ranges contain no compatible private-card pairs.")
 
-    # Count exact compatible worlds before allocating the world or rank arrays.
-    # This bounds the pair-by-runout preflight for adversarial large inputs.
+    # Retain the original pair/runout admission charge and per-pair guard
+    # order while postings replace dense Python-level blocker scans.
+    if len(selected) > _MAX_PAIR_RUNOUT_PREFLIGHT_CHECKS:
+        raise ValueError("Preflop physical-world preflight exceeds 30 million pair/runout checks.")
+    runout_index = RunoutBlockerIndex(selected)
     preflight_checks = 0
     compatible_counts = []
     world_count = 0
     for sb_index, bb_index in candidate_pairs:
         sb_hand, bb_hand = hands[0][sb_index], hands[1][bb_index]
-        valid_count = 0
-        blocked = set(sb_hand + bb_hand)
-        for flop, turn, river in selected:
-            preflight_checks += 1
-            if preflight_checks > _MAX_PAIR_RUNOUT_PREFLIGHT_CHECKS:
-                raise ValueError("Preflop physical-world preflight exceeds 30 million pair/runout checks.")
-            if not blocked.isdisjoint(flop + (turn, river)):
-                continue
-            valid_count += 1
+        preflight_checks += len(selected)
+        if preflight_checks > _MAX_PAIR_RUNOUT_PREFLIGHT_CHECKS:
+            raise ValueError("Preflop physical-world preflight exceeds 30 million pair/runout checks.")
+        valid_count = runout_index.valid_count(sb_hand + bb_hand)
         if valid_count:
             compatible_counts.append((sb_index, bb_index, valid_count))
             world_count += valid_count
@@ -191,16 +190,15 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations):
         pair_mass = ranges[0][sb_hand] * ranges[1][bb_hand] / physical_denominator
         pair_key = (sb_index, bb_index)
         pair_masses[pair_key] = pair_mass * valid_count
-        blocked = set(sb_hand + bb_hand)
-        for flop, turn, river in selected:
-            if not blocked.isdisjoint(flop + (turn, river)):
-                continue
+        for selected_index in runout_index.iter_valid_indices(sb_hand + bb_hand):
+            flop, turn, river = selected[selected_index]
             runout = (flop, turn, river)
             sign = _rank_world(sb_hand, bb_hand, runout, rank_cache)
             flop_key = "".join(flop)
             raw_worlds.append((sb_index, bb_index, pair_mass, sign,
                                flop_key, turn, river))
 
+    runout_index = None
     normalizer = fsum(world[2] for world in raw_worlds)
     if not isfinite(normalizer) or normalizer <= 0:
         raise ValueError("Selected ranges and runouts have no positive joint mass.")

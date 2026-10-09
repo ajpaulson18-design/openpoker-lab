@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-indexed-blocker-preflight-v1",
+  "repeats": 3,
+  "complete_fixed_flop": {
+    "sb": "AsAd,QsQd",
+    "bb": "KsKd,JhJc",
+    "flop": [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    "iterations": 10,
+    "worlds": 7920
+  },
+  "blocked_preflight": {
+    "sb": "AsAd",
+    "bb_combinations": 300,
+    "selected_outcomes": 100000,
+    "iterations": 10,
+    "logical_pair_runout_checks": 30000000,
+    "expected_rejection": "Selected runouts contain no compatible physical deals."
+  },
+  "selected_game": {
+    "sb": "AsAd:1,AhAc:0.25",
+    "bb": "KsKd:1,KcKh:0.5",
+    "runouts": [
+      "2c3c4d7h8h",
+      "Kc2d3h7s8c",
+      "Ac2d3h7s8c"
+    ],
+    "config": {
+      "starting_stack": [
+        4,
+        3
+      ],
+      "max_raises": 0
+    },
+    "iterations": 20,
+    "averaging_delay": 8
+  }
+}
