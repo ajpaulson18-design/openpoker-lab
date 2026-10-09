@@ -11,6 +11,7 @@ from collections.abc import Mapping
 import math
 
 from .cfr import strategy
+from .ranked_river import RankedRiverPayoffs
 from .river_tree import _Terminal
 
 
@@ -127,7 +128,8 @@ def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
 
 
 def _cfrplus_target_deltas(root, edges, infos, current, target_player,
-                           hand_counts, half_pot, chance_type):
+                           hand_counts, half_pot, chance_type,
+                           terminal_kernel=None):
     """Return one player's regret deltas without constructing opponent values."""
     deltas = {key: [0.0] * count for key, count in infos.items()
               if key[0] == target_player}
@@ -136,6 +138,8 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
 
     def visit(node, prefix, opponent_reach):
         if isinstance(node, chance_type):
+            if terminal_kernel is not None:
+                raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
             value = [0.0] * target_count
             for card, child in node.branches.items():
                 child_value = visit(child, prefix + (card,), opponent_reach)
@@ -144,6 +148,10 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
             return value
 
         if isinstance(node, _Terminal):
+            if terminal_kernel is not None:
+                if prefix:
+                    raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+                return terminal_kernel.values(node, opponent_reach, target_player)
             value = [0.0] * target_count
             if node.kind == "fold":
                 player0_sign = 1.0 if node.winner == 0 else -1.0
@@ -203,7 +211,8 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
 
 def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                          *, pot, chance_type, checkpoint_interval=None,
-                         checkpoint_callback=None):
+                         checkpoint_callback=None,
+                         terminal_kernel: RankedRiverPayoffs | None = None):
     """Train exact vanilla CFR, DCFR, or alternating CFR+ over the supplied tree.
 
     ``worlds`` contains tuples ``(oop_index, ip_index, mass, sign, *future)``;
@@ -220,11 +229,26 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
     callback receives ``(iteration, average_policy)`` with a fresh snapshot
     whose rows do not alias trainer state; a truthy return stops training
     after that completed iteration. Without these options, training behavior
-    is unchanged.
+    is unchanged. ``terminal_kernel`` optionally replaces sparse terminal
+    accumulation with a validated fixed-board ``RankedRiverPayoffs`` kernel.
+    It accepts only the complete compatible river world set and rejects
+    future-card or otherwise correlated weighted worlds; it does not support
+    arbitrary utility callbacks.
     """
     pot, hand_counts = _validate_inputs(
         worlds, infos, iterations, algorithm, pot, chance_type,
     )
+    if terminal_kernel is not None:
+        if not isinstance(terminal_kernel, RankedRiverPayoffs):
+            raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+        terminal_kernel.validate_worlds(worlds, pot=pot)
+        context_counts = [len(terminal_kernel.hands[0]),
+                          len(terminal_kernel.hands[1])]
+        if any(key[1] >= context_counts[key[0]] for key in infos):
+            raise ValueError("An information-set hand index is outside the ranked river kernel.")
+        # Preserve the complete caller range indexing, including legal hands
+        # with no compatible opponent holding and therefore no public infos.
+        hand_counts = context_counts
     if checkpoint_callback is not None and not callable(checkpoint_callback):
         raise TypeError("checkpoint_callback must be callable.")
     if checkpoint_interval is not None and (type(checkpoint_interval) is not int or
@@ -244,6 +268,8 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
         def visit(node, prefix, reach0, reach1):
             if average_only:
                 if isinstance(node, chance_type):
+                    if terminal_kernel is not None:
+                        raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
                     for card, child in node.branches.items():
                         visit(child, prefix + (card,), reach0, reach1)
                     return
@@ -274,6 +300,8 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                         visit(child, prefix, reach0, child_reach1)
                 return
             if isinstance(node, chance_type):
+                if terminal_kernel is not None:
+                    raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
                 value0 = [0.0] * hand_counts[0]
                 value1 = [0.0] * hand_counts[1]
                 for card, child in node.branches.items():
@@ -285,6 +313,11 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                 return value0, value1
 
             if isinstance(node, _Terminal):
+                if terminal_kernel is not None:
+                    if prefix:
+                        raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+                    return (terminal_kernel.values(node, reach1, 0),
+                            terminal_kernel.values(node, reach0, 1))
                 value0 = [0.0] * hand_counts[0]
                 value1 = [0.0] * hand_counts[1]
                 if node.kind == "fold":
@@ -375,7 +408,7 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
             for player in (0, 1):
                 deltas = _cfrplus_target_deltas(
                     root, edges, infos, current, player, hand_counts,
-                    half_pot, chance_type,
+                    half_pot, chance_type, terminal_kernel=terminal_kernel,
                 )
                 for key in keys:
                     if key[0] == player:

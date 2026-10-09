@@ -4,15 +4,19 @@ import math
 from collections.abc import Mapping
 
 from . import public_cfr
+from .ranked_river import RankedRiverPayoffs
 from .river_tree import _Terminal
 
 
-def evaluate_profile(root, worlds, averages, *, pot, chance_type):
+def evaluate_profile(root, worlds, averages, *, pot, chance_type,
+                     terminal_kernel: RankedRiverPayoffs | None = None):
     """Return OOP profile value and each player's exact information-set BR value.
 
     World tuples and strategy keys have the same shape as ``train_public_batched``.
     Chance is enumerated from the supplied public tree; hidden future cards are
-    represented only by each world's prefix weight.
+    represented only by each world's prefix weight. An optional ranked river
+    kernel accepts only its validated complete compatible river deal set and
+    rejects future-card or arbitrary correlated weighted worlds.
     """
     if not isinstance(averages, Mapping):
         raise TypeError("averages must map information-set keys to policies.")
@@ -32,11 +36,24 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type):
     pot, hand_counts = public_cfr._validate_inputs(
         worlds, infos, 1, "vanilla", pot, chance_type,
     )
+    if terminal_kernel is not None:
+        if not isinstance(terminal_kernel, RankedRiverPayoffs):
+            raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+        terminal_kernel.validate_worlds(worlds, pot=pot)
+        context_counts = [len(terminal_kernel.hands[0]),
+                          len(terminal_kernel.hands[1])]
+        if any(key[1] >= context_counts[key[0]] for key in infos):
+            raise ValueError("An information-set hand index is outside the ranked river kernel.")
+        hand_counts = context_counts
     edges, marginals = public_cfr._aggregate_prefixes(worlds, hand_counts)
 
     half = pot / 2.0
 
     def terminal_vector(node, prefix, opponent_reach, responder):
+        if terminal_kernel is not None:
+            if prefix:
+                raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+            return terminal_kernel.values(node, opponent_reach, responder)
         count = hand_counts[responder]
         out = [0.0] * count
         if node.kind == "fold":
@@ -67,9 +84,16 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type):
 
     def profile(node, prefix, r0, r1):
         if isinstance(node, chance_type):
+            if terminal_kernel is not None:
+                raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
             return sum(profile(child, prefix + (card,), r0, r1)
                        for card, child in node.branches.items())
         if isinstance(node, _Terminal):
+            if terminal_kernel is not None:
+                if prefix:
+                    raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+                values = terminal_kernel.values(node, r1, 0)
+                return sum(r0[index] * value for index, value in enumerate(values))
             if node.kind == "fold":
                 unit = (1 if node.winner == 0 else -1) * (half + min(node.contributions))
                 return sum(m * r0[i] * r1[j] * unit
@@ -96,6 +120,8 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type):
         opponent = 1 - player
         def visit(node, prefix, opp_reach):
             if isinstance(node, chance_type):
+                if terminal_kernel is not None:
+                    raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
                 result = [0.0] * hand_counts[player]
                 for card, child in node.branches.items():
                     vals = visit(child, prefix + (card,), opp_reach)

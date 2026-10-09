@@ -15,6 +15,7 @@ from .cfr_plus import train as train_plus
 from .planned_cfr import train as train_planned, MAX_PLAN_OPS
 from .public_cfr import train_public_batched, MAX_PREFIX_EDGES
 from .public_diagnostics import evaluate_profile
+from .ranked_river import RankedRiverPayoffs
 from .river_config import RiverConfig
 from .river_tree import _Node, _Terminal, _build_tree, _terminal_value
 
@@ -355,7 +356,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                    river_config=None, runouts=None, iterations=1000,
                    algorithm="vanilla", traversal="recursive",
                    diagnostics="recursive", target_exploitability=None,
-                   check_interval=100):
+                   check_interval=100, terminal_backend="sparse"):
     """Solve an exact configured heads-up game from flop, turn, or river.
 
     The initial ``config`` applies to the first unresolved street. For a flop
@@ -368,6 +369,9 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     ``check_interval`` iterations and always at the final iteration; it will
     not diagnose before iteration 10. Admission guards still use the full
     requested iteration budget, even if training stops early.
+    ``terminal_backend="ranked"`` is an opt-in fixed-board river payoff kernel
+    and requires ``traversal="public-batched"``. The default ``"sparse"`` path
+    preserves the existing weighted-world terminal evaluation.
     """
     board = cards(board)
     if len(board) not in (3, 4, 5):
@@ -378,6 +382,11 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         raise ValueError("Traversal must be recursive, planned, or public-batched.")
     if diagnostics not in ("recursive", "public-batched"):
         raise ValueError("Diagnostics must be recursive or public-batched.")
+    if terminal_backend not in ("sparse", "ranked"):
+        raise ValueError("terminal_backend must be sparse or ranked.")
+    if terminal_backend == "ranked" and (len(board) != 5 or
+                                           traversal != "public-batched"):
+        raise ValueError("The ranked terminal backend requires a river start and public-batched traversal.")
     if diagnostics == "public-batched" and len(board) == 3:
         raise ValueError("Public-batched diagnostics are enabled only for turn and river starts.")
     if algorithm == "cfrplus":
@@ -433,6 +442,20 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
 
     hands, worlds, selected, pair_count = _enumerate_worlds(
         board, oop_range, ip_range, runouts, iterations)
+    terminal_kernel = None
+    if terminal_backend == "ranked":
+        expanded_ranges = (expand_range(oop_range, board),
+                           expand_range(ip_range, board))
+        if any(tuple(range_weights) != tuple(hand_list)
+               for range_weights, hand_list in zip(expanded_ranges, hands)):
+            raise RuntimeError("Expanded ranges changed ordering during ranked backend setup.")
+        terminal_kernel = RankedRiverPayoffs(
+            board, hands,
+            tuple(tuple(range_weights[hand] for hand in hand_list)
+                  for range_weights, hand_list in zip(expanded_ranges, hands)),
+            pot=config.pot,
+        )
+        terminal_kernel.validate_worlds(worlds, pot=config.pot)
     public_counts = {}
     root, nodes, chance_nodes, visited_nodes, plan_ops_per_world = \
         _build_postflop_tree(board, config, turn_config=turn_config,
@@ -462,7 +485,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     def diagnose(profile):
         if diagnostics == "public-batched":
             value, response0, response1 = evaluate_profile(
-                root, worlds, profile, pot=config.pot, chance_type=_Chance)
+                root, worlds, profile, pot=config.pot, chance_type=_Chance,
+                terminal_kernel=terminal_kernel)
         else:
             value = evaluate(root, worlds, profile, payoff, _node_key, _chance_child)
             response0 = best_response(0, root, worlds, profile, payoff, _node_key,
@@ -502,7 +526,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         averages = train_public_batched(root, worlds, infos, iterations, algorithm,
                                         pot=config.pot, chance_type=_Chance,
                                         checkpoint_interval=(check_interval if target_exploitability is not None else None),
-                                        checkpoint_callback=(checkpoint if target_exploitability is not None else None))
+                                        checkpoint_callback=(checkpoint if target_exploitability is not None else None),
+                                        terminal_kernel=terminal_kernel)
     else:
         trainer = train_plus if algorithm == "cfrplus" else (
             train_planned if traversal == "planned" else train)
@@ -514,7 +539,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         value, br0, br1, nash_conv, exploitability = last_convergence
     elif diagnostics == "public-batched":
         value, br0, br1 = evaluate_profile(root, worlds, averages,
-                                          pot=config.pot, chance_type=_Chance)
+                                          pot=config.pot, chance_type=_Chance,
+                                          terminal_kernel=terminal_kernel)
     else:
         value = evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
         br0 = best_response(0, root, worlds, averages, payoff, _node_key,
@@ -598,6 +624,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         result["training_passes_per_iteration"] = passes
     if diagnostics != "recursive":
         result["diagnostics_backend"] = "public-batched-python"
+    if terminal_backend == "ranked":
+        result["terminal_backend"] = "ranked-river-python"
     if target_exploitability is not None:
         result["convergence"] = {
             "target_exploitability": target_exploitability,
