@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "independent-preflop-monetary-replay-v1",
+  "iterations": 10,
+  "routes": [
+    ["vanilla", "recursive"], ["dcfr", "planned"],
+    ["cfrplus", "recursive"], ["vanilla", "public-batched"],
+    ["dcfr", "public-batched"], ["cfrplus", "public-batched"]
+  ],
+  "scenarios": [
+    {
+      "id": "recorded-rounding-boundary",
+      "fixture_path": "benchmarks/preflop-rounding-boundary-v1.json",
+      "global_reference_expected": "rejected"
+    },
+    {
+      "id": "full-precision-sizing-coefficients",
+      "sb": "AsAd", "bb": "KsKd",
+      "config": {"small_blind": 0.123456789, "big_blind": 0.345678901,
+                 "starting_stack": [2, 1.5], "raise_sizes": [0.50000000004],
+                 "max_raises": 1, "include_all_in": false},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"],
+      "flop_config": {"bet_sizes": [0.1234567894], "raise_sizes": [0.25000000004], "max_raises": 1, "include_all_in": false},
+      "turn_config": {"bet_sizes": [0.3333333333333], "raise_sizes": [0.12500000004], "max_raises": 1, "include_all_in": false},
+      "river_config": {"bet_sizes": [0.20000000004], "raise_sizes": [0.30000000004], "max_raises": 1, "include_all_in": false}
+    },
+    {
+      "id": "known-hidden-flop-root",
+      "sb": "AsAd", "bb": "KsKd",
+      "config": {"starting_stack": [2, 1], "max_raises": 0},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"],
+      "global_reference_expected": "accepted",
+      "known_sb_best_response_value": 0
+    }
+  ]
+}

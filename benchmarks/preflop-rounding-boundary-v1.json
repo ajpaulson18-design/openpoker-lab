@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "fixture_id": "fractional-flop-raise-rounding-boundary-v1",
-  "status": "known unresolved model precision boundary",
+  "status": "configured monetary replay corrected; historical global reference still differs",
   "observed_at_source": "d41ab5b378a7834ddaed5ae75928c36b2e488de0",
   "sb": "AsAd",
   "bb": "KsKd",
@@ -18,9 +18,11 @@
   "turn_config": {"bet_sizes": [0.333333333], "raise_sizes": [0.125], "max_raises": 1, "include_all_in": false},
   "river_config": {"bet_sizes": [0.2], "raise_sizes": [0.3], "max_raises": 1, "include_all_in": false},
   "mismatch": {
+    "reference_mode": "global-rational",
     "history_prefix": ["raise@0.691357802", "call", "flop@2c3c4d", "check", "bet@0.862063431"],
     "production_raise_to": 1.293095146,
     "independent_replay_raise_to": 1.293095147,
-    "scope": "Existing fractional betting arithmetic differs by one nanounit at an intermediate rounding threshold; this is an action/history mismatch, not an independent equilibrium certificate. The shared builder and oracle were not changed in this adapter milestone."
+    "configured_replay_raise_to": 1.293095146,
+    "scope": "Historical Fraction/global-ledger replay differs by one nanounit at an intermediate binary quantization threshold. Configured replay now independently models local postflop rounding before whole-hand translation and agrees with production. Solver/shared monetary sizing is unchanged; exact-decimal equivalence remains unproven."
   }
 }
