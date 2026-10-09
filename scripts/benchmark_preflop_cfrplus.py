@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ("pokerlab/preflop_solver.py", "pokerlab/preflop_tree.py",
            "pokerlab/postflop_solver.py", "pokerlab/river_tree.py", "pokerlab/river_config.py",
            "pokerlab/cfr.py", "pokerlab/cfr_plus.py", "pokerlab/planned_cfr.py",
-           "pokerlab/cards.py", "scripts/preflop_validation.py",
+           "pokerlab/cards.py", "pokerlab/analysis.py", "scripts/preflop_validation.py",
            "scripts/benchmark_preflop_cfrplus.py", "scripts/benchmark_turn_solver.py",
            "benchmarks/preflop-cfrplus-v1.json")
 
