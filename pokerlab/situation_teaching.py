@@ -60,6 +60,12 @@ def _postflop_situation(hero_cards: tuple[str, str], board: tuple[str, ...]) -> 
     if rank[0] == 1:
         board_ranks = [RANKS.index(card[0]) + 2 for card in board]
         hero_ranks = {RANKS.index(card[0]) + 2 for card in hero_cards}
+        if rank[1] in board_ranks and rank[1] not in hero_ranks:
+            pair_name = RANKS[rank[1] - 2]
+            return (f"The board itself pairs the {pair_name}s, so your visible made hand "
+                    f"includes a pair of {pair_name}s. Your private cards do not make "
+                    "that pair; they may affect your kickers. This describes your cards "
+                    "only and does not tell us what an opponent holds or whether you are ahead.")
         if (len(set(board_ranks)) == len(board_ranks)
                 and rank[1] in hero_ranks and rank[1] in board_ranks):
             ordered = sorted(board_ranks, reverse=True)
@@ -91,3 +97,4 @@ def build_situation_teaching(analysis: CoachDecisionAnalysis) -> dict[str, str]:
         "text": text,
         "note": "This describes the cards and board, not whether your action was right.",
     }
+
