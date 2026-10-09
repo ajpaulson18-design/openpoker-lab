@@ -157,8 +157,8 @@ class PreflopSolverTests(unittest.TestCase):
             self.solve(flop_config={**_LOWER_POSTFLOP, "effective_stack": (500, 500)})
         with self.assertRaisesRegex(TypeError, "action mappings"):
             self.solve(flop_config=object())
-        with self.assertRaisesRegex(ValueError, "recursive or planned"):
-            self.solve(traversal="public-batched")
+        with self.assertRaisesRegex(ValueError, "recursive, planned, or public-batched"):
+            self.solve(traversal="unsupported")
 
     def test_shared_flop_turn_prefix_preserves_river_dependent_hidden_outcomes(self):
         from scripts.preflop_validation import compare_result, physical_worlds, replay_policy

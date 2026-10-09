@@ -6,7 +6,7 @@ betting sizes, not an unrestricted preflop or Hold'em equilibrium solver.
 """
 from dataclasses import dataclass
 from itertools import islice
-from math import comb, fsum, isfinite
+from math import comb, frexp, fsum, isfinite, ldexp
 
 from . import cfr
 from .cfr_plus import train as train_cfrplus
@@ -14,6 +14,7 @@ from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
+from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
 from .river_config import RiverConfig
 from .postflop_solver import _Chance, _build_public_tree
 from .river_tree import _Action, _Node, _Terminal, _terminal_value
@@ -312,6 +313,61 @@ def _clone_template(root, history, matched, reserve):
         clone = None
 
 
+def _positive_pot_training_view(root):
+    """Copy a public tree with terminal contributions shifted for vector CFR.
+
+    The specialized public trainer requires a positive starting pot and adds
+    half that pot to each terminal payoff. Shifting every contribution by a
+    power-of-two anchor no larger than the minimum matched terminal amount
+    preserves each whole-hand utility without decimal cleanup. The original
+    tree remains the source for generic evaluation and best responses.
+    """
+    minimum_matched = None
+    pending = [root]
+    while pending:
+        node = pending.pop()
+        if isinstance(node, _Chance):
+            pending.extend(node.branches.values())
+        elif isinstance(node, _Node):
+            pending.extend(node.children)
+        elif isinstance(node, _Terminal):
+            matched = min(node.contributions)
+            minimum_matched = matched if minimum_matched is None else min(
+                minimum_matched, matched)
+    if minimum_matched is None or not isfinite(minimum_matched) or minimum_matched <= 0:
+        raise ValueError("Public-batched training requires positive terminal contributions.")
+
+    anchor = ldexp(1.0, frexp(minimum_matched)[1] - 1)
+    cloned_states = 0
+
+    def reserve():
+        nonlocal cloned_states
+        if cloned_states >= _MAX_PUBLIC_STATES:
+            raise ValueError("Public-batched training view exceeds 250,000 public states.")
+        cloned_states += 1
+
+    def clone(node):
+        reserve()
+        if isinstance(node, _Chance):
+            return _Chance(node.history,
+                           {card: clone(child) for card, child in node.branches.items()},
+                           node.card_index, node.street)
+        if isinstance(node, _Terminal):
+            return _Terminal(
+                node.kind,
+                tuple(value - anchor for value in node.contributions),
+                node.winner,
+            )
+        return _Node(node.history, node.player, node.actions,
+                     tuple(clone(child) for child in node.children))
+
+    try:
+        training_root = clone(root)
+    finally:
+        clone = None
+    return training_root, anchor, cloned_states
+
+
 def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
     """Graft one transient postflop template per live boundary and flop."""
     continuations = []
@@ -438,10 +494,10 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Use 10-10,000 solver iterations.")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
         raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
-    if traversal not in ("recursive", "planned"):
-        raise ValueError("Preflop traversal supports recursive or planned CFR.")
-    if algorithm == "cfrplus" and traversal != "recursive":
-        raise ValueError("CFR+ supports recursive traversal only.")
+    if traversal not in ("recursive", "planned", "public-batched"):
+        raise ValueError("Preflop traversal supports recursive, planned, or public-batched CFR.")
+    if algorithm == "cfrplus" and traversal == "planned":
+        raise ValueError("CFR+ supports recursive or public-batched traversal, not planned CFR.")
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
@@ -472,8 +528,20 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             metadata[key] = node
 
     payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
-    if algorithm == "cfrplus" and not infos:
+    training_pot_anchor = None
+    training_view_states = 0
+    if not infos and (algorithm == "cfrplus" or traversal == "public-batched"):
         averages = {}
+    elif traversal == "public-batched":
+        training_root, training_pot_anchor, training_view_states = \
+            _positive_pot_training_view(root)
+        try:
+            averages = train_public_batched(
+                training_root, worlds, infos, iterations, algorithm,
+                pot=2 * training_pot_anchor, chance_type=_Chance,
+            )
+        finally:
+            training_root = None
     elif algorithm == "cfrplus":
         averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
                                  _node_key, _chance_child)
@@ -580,6 +648,16 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             ),
             "training_passes_per_iteration": 3 if infos else 0,
             "training_passes": iterations * 3 if infos else 0,
+        })
+    if traversal == "public-batched":
+        result.update({
+            "public_batched_prefix_edge_limit": MAX_PREFIX_EDGES,
+            "public_batched_training_pot_anchor": training_pot_anchor,
+            "public_batched_training_view_states": training_view_states,
+            "public_batched_training_view": (
+                "terminal contributions shifted by minus the recorded anchor; trainer pot is twice that anchor"
+                if infos else "not-built-no-information-sets"
+            ),
         })
     return result
 
