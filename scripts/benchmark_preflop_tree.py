@@ -127,7 +127,27 @@ def audit_tree(tree):
                             target - contributions[other] if full else increment,
                             raises + 1, full, False))
         assert not expected_targets
+    assert tree.decision_node_count == counts["decision"]
+    assert tree.fold_terminal_count == counts["fold"]
+    assert tree.continuation_count == counts["continuation"]
+    assert tree.public_state_count == counts["decision"] + counts["fold"] + counts["continuation"]
     return counts
+
+
+def audit_stack_grid():
+    """Replay short-blind, short-call, and asymmetric states across a fixed grid."""
+    stacks = (.1, .25, .5, .75, 1, 1.5, 2.5, 5, 20)
+    configurations = edges = 0
+    for sb in stacks:
+        for bb in stacks:
+            for sizes in ((), (.1, .5, 1)):
+                config = PreflopConfig(starting_stack=(sb, bb), raise_sizes=sizes,
+                                       max_raises=3, include_all_in=True)
+                counts = audit_tree(build_preflop_tree(config))
+                configurations += 1
+                edges += counts["actions"]
+    return {"stack_values": list(stacks), "configurations": configurations,
+            "action_edges": edges, "result": "passed"}
 
 
 def run_case(scenario, repeats):
@@ -168,6 +188,7 @@ def main(argv=None):
         parser.error("Missing benchmark source/config.")
     revision, dirty = git_revision(None), worktree_dirty()
     results = [run_case(scenario, config["repeats"]) for scenario in config["scenarios"]]
+    grid = audit_stack_grid()
     if hashes() != before:
         raise RuntimeError("Sources changed during measurement; discard the report.")
     report = {"schema_version": 1, "benchmark_id": config["benchmark_id"],
@@ -179,7 +200,7 @@ def main(argv=None):
                               "memory": "Separate complete config/tree call; traced Python peak, not RSS",
                               "validation": "Exhaustive independent rational blind, raise, and settlement replay",
                               "scope": "Preflop betting coverage; no equity, strategy, or equilibrium claim"},
-              "results": results}
+              "results": results, "independent_stack_grid": grid}
     output = args.output if args.output.is_absolute() else ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
