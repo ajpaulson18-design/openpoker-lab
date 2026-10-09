@@ -124,3 +124,7 @@ They agree on game counts, values, exact BRs and gaps within 1e-12, but their
 different source revisions prevent a controlled backend speed/memory comparison.
 All 317 repository tests passed after the allocation guard, including the
 coaching regression suite. No evaluator or coaching source changed.
+
+After incorporating GitHub main `f32dc71` and its separate coaching/interface
+changes, all 323 integrated repository tests passed in 92.403 seconds. JavaScript
+syntax validation and all eight frontend contract checks also passed.

@@ -304,6 +304,11 @@ backend speed or memory comparison. Both retain source/config/harness hashes.
 
 ## Next implementation milestone
 
+Before merging, the branch incorporated GitHub main `f32dc71`, including the
+separate coaching and interface updates. All 323 integrated repository tests
+passed in 92.403 seconds, and all eight frontend contract checks passed. The
+solver diff preserves those independently developed application changes.
+
 Profile and reduce repeated per-world traversal work while preserving the exact
 chance model and oracle results. Use measured gains before selecting a compiled
 backend. Expand the reusable chance architecture toward flop, preflop, positions,
