@@ -231,6 +231,10 @@ The [independent monetary replay](docs/preflop-monetary-replay.md) checks the
 configured local rounding order exactly and retains a separate historical
 precision diagnostic.
 
+[Indexed selected-outcome blockers](docs/preflop-runout-index.md) reduce preflop
+physical-world setup work while retaining the existing admission ceilings and
+exact conditioned-game outputs.
+
 ## Range notation
 
 Separate tokens with spaces or commas:
