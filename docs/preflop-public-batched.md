@@ -98,17 +98,15 @@ does not establish equilibrium convergence at ten iterations.
 ## Recorded numerical limit
 
 The separate [rounding-boundary reproduction](../benchmarks/preflop-rounding-boundary-v1.json)
-is an unresolved precision limit in the existing fractional betting model. At
-the recorded flop history, production emits `raise@1.293095146`, while the
-independent rational-state replay expects `raise@1.293095147`. Binary float
-intermediates versus rational intermediates reach different sides of a
-half-nanounit rounding threshold. The independent oracle rejects the policy's
-action/history token; this fixture is not counted as passed verification.
-The vector adapter does not repair or conceal that shared betting rule issue.
-The correctness claims above cover the listed fixtures and the existing finite
-floating-point game, not universal agreement with exact decimal betting rules.
+records the old global checker expecting `raise@1.293095147` where the
+configured local rounding order produces `raise@1.293095146`. The
+[monetary replay repair](preflop-monetary-replay.md) validates that existing
+configured game with exact serialized amount/target checks while retaining
+the old global calculation as an explicit precision diagnostic. The frozen
+vector benchmark above predates that checker repair. No production monetary
+sizing was changed, and exact-decimal equivalence remains unproven.
 
-To reproduce the recorded rejection (an `AssertionError` is currently expected):
+To reproduce the historical diagnostic rejection (an `AssertionError` is expected):
 
 ```python
 import json
@@ -120,7 +118,8 @@ fixture = json.loads(Path("benchmarks/preflop-rounding-boundary-v1.json").read_t
 kwargs = {key: fixture[key] for key in
           ("config", "runouts", "flop_config", "turn_config", "river_config")}
 result = solve_preflop(fixture["sb"], fixture["bb"], iterations=10, **kwargs)
-replay_policy(result, fixture["sb"], fixture["bb"], **kwargs)
+replay_policy(result, fixture["sb"], fixture["bb"],
+              monetary_mode="global-rational", **kwargs)
 ```
 
 ## Implementation provenance

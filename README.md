@@ -216,6 +216,9 @@ defaults are retained.
 Optional [preflop private-hand vectors](docs/preflop-public-batched.md) preserve
 the configured game and exact responses, with measured range comparisons and
 explicit memory and numerical limits.
+The [independent monetary replay](docs/preflop-monetary-replay.md) checks the
+configured local rounding order exactly and retains a separate historical
+precision diagnostic.
 
 ## Range notation
 
