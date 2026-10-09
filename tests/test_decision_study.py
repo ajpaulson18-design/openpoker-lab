@@ -301,6 +301,29 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("showDecisionStudy(data.decisions,", source)
         self.assertIn("${esc(active.answer)}", source)
 
+    def test_saved_and_current_studies_share_an_escaped_collapsible_terms_guide(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        helper = source[source.index("function decisionTermsGuide"):
+                        source.index("function coachFactUnit")]
+        for term in ("EV (expected value)", "Equity", "Baseline",
+                     "Modeled action and raise size"):
+            self.assertIn(term, helper)
+        self.assertIn("Ties contribute a share", helper)
+        self.assertIn("value basis shown", helper)
+        self.assertIn("not a universal best move", helper)
+        self.assertIn("Where a value is available", helper)
+        self.assertIn("other actions and raise sizes have not been evaluated", helper)
+        self.assertIn('<details class="decision-terms-guide"><summary>', helper)
+        self.assertIn("${esc(term)}", helper)
+        self.assertIn("${esc(meaning)}", helper)
+        self.assertIn("if(restrictedSolver)terms.push(['Restricted river solver'", helper)
+        self.assertIn("decisionTermsGuide({restrictedSolver:studyPayload.ev_basis==='half_initial_pot_utility'})", source)
+        self.assertIn("${teaching}${termsGuide}", source)
+        current = source[source.index("function renderCurrentStudy"):
+                         source.index("async function requestCurrentStudy")]
+        self.assertIn("const termsGuide=decisionTermsGuide()", current)
+        self.assertIn("${situation}${modelSummary}${termsGuide}", current)
+
     def test_action_response_is_scoped_to_hand_and_current_blind_toggle(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
         self.assertIn("const actingHandId=activeHandId,actingHandGeneration=handGeneration,actingGame=game", source)
