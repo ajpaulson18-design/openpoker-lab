@@ -148,6 +148,33 @@ class CurrentCoachHTTPTests(unittest.TestCase):
         self.assertNotIn("choice_loss", fact_kinds)
         self.assertEqual(self.selector.calls, [])
 
+    def test_beginner_starter_questions_have_grounded_local_answers(self):
+        prompts = (
+            ("What is the current modeled recommendation?", "recommendation"),
+            ("What assumptions limit this estimate?", "limits"),
+        )
+        for question, expected_intent in prompts:
+            with self.subTest(question=question):
+                result = self.post(self.current_path(), self.current_body(question=question))
+                self.assertEqual(result["status"], "fallback")
+                self.assertEqual(result["fallback_reason"], "external_ai_not_selected")
+                self.assertEqual(result["reply"]["intent"], expected_intent)
+                self.assertIn("current decision preview", result["reply"]["source_label"].lower())
+                self.assertNotIn("choice", {
+                    fact["kind"] for block in result["reply"]["blocks"]
+                    for fact in block["facts"]
+                })
+        limits = self.post(self.current_path(), self.current_body(
+            question="What assumptions limit this estimate?"))
+        limit_facts = {fact["kind"] for block in limits["reply"]["blocks"]
+                       for fact in block["facts"]}
+        self.assertIn("source_kind", limit_facts)
+        self.assertTrue(limit_facts.intersection({"confidence_label", "opponent_uncertainty",
+                                                  "equity_standard_error", "equity_exact",
+                                                  "opponent_assumption"}))
+        self.assertIn("validated assumptions and limits", limits["local_scope"])
+        self.assertEqual(self.selector.calls, [])
+
     def test_choice_and_loss_questions_stay_unavailable_without_provider_call(self):
         for question in ("What did I choose and how much did I lose?",
                          "Was my recorded action a mistake?", "Was my call wrong?",
