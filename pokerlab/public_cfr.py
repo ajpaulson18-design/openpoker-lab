@@ -65,8 +65,8 @@ def _aggregate_prefixes(worlds, hand_counts):
 
 
 def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
-    if algorithm not in ("vanilla", "dcfr"):
-        raise ValueError("Algorithm must be vanilla or dcfr.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
     if type(iterations) is not int or iterations < 1:
         raise ValueError("Iterations must be a positive integer.")
     if not isinstance(infos, Mapping):
@@ -126,9 +126,84 @@ def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
     return pot, hand_counts
 
 
+def _cfrplus_target_deltas(root, edges, infos, current, target_player,
+                           hand_counts, half_pot, chance_type):
+    """Return one player's regret deltas without constructing opponent values."""
+    deltas = {key: [0.0] * count for key, count in infos.items()
+              if key[0] == target_player}
+    target_count = hand_counts[target_player]
+    opponent = 1 - target_player
+
+    def visit(node, prefix, opponent_reach):
+        if isinstance(node, chance_type):
+            value = [0.0] * target_count
+            for card, child in node.branches.items():
+                child_value = visit(child, prefix + (card,), opponent_reach)
+                for index, result in enumerate(child_value):
+                    value[index] += result
+            return value
+
+        if isinstance(node, _Terminal):
+            value = [0.0] * target_count
+            if node.kind == "fold":
+                player0_sign = 1.0 if node.winner == 0 else -1.0
+                payoff = player0_sign * (half_pot + min(node.contributions))
+                for oop_index, ip_index, mass, _signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += mass * opponent_reach[ip_index] * payoff
+                    else:
+                        value[ip_index] -= mass * opponent_reach[oop_index] * payoff
+            else:
+                scale = half_pot + min(node.contributions)
+                for oop_index, ip_index, mass, signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += signed_mass * opponent_reach[ip_index] * scale
+                    else:
+                        value[ip_index] -= signed_mass * opponent_reach[oop_index] * scale
+            return value
+
+        player = node.player
+        action_count = len(node.actions)
+        uniform = [1.0 / action_count] * action_count
+        probabilities = [current.get((player, hand_index, node.history), uniform)
+                         for hand_index in range(hand_counts[player])]
+
+        if player == target_player:
+            action_values = [visit(child, prefix, opponent_reach)
+                             for child in node.children]
+            value = [0.0] * target_count
+            for hand_index in range(target_count):
+                sigma = probabilities[hand_index]
+                expected = sum(sigma[action] * action_values[action][hand_index]
+                               for action in range(action_count))
+                value[hand_index] = expected
+                row = deltas.get((player, hand_index, node.history))
+                if row is not None:
+                    for action in range(action_count):
+                        row[action] += action_values[action][hand_index] - expected
+            return value
+
+        value = [0.0] * target_count
+        for action_index, child in enumerate(node.children):
+            child_reach = [opponent_reach[hand_index] *
+                           probabilities[hand_index][action_index]
+                           for hand_index in range(hand_counts[opponent])]
+            child_value = visit(child, prefix, child_reach)
+            for hand_index, result in enumerate(child_value):
+                value[hand_index] += result
+        return value
+
+    try:
+        visit(root, (), [1.0] * hand_counts[opponent])
+    finally:
+        # Avoid retaining recursive frames and their private-hand working arrays.
+        visit = None
+    return deltas
+
+
 def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                          *, pot, chance_type):
-    """Train exact vanilla CFR or DCFR over the supplied public tree.
+    """Train exact vanilla CFR, DCFR, or alternating CFR+ over the supplied tree.
 
     ``worlds`` contains tuples ``(oop_index, ip_index, mass, sign, *future)``;
     masses are the caller's joint range/blocker/chance weights. ``infos`` maps
@@ -150,12 +225,40 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
     sums = {key: [0.0] * infos[key] for key in keys}
     half_pot = pot / 2.0
 
-    for iteration in range(1, iterations + 1):
-        current = {key: strategy(row) for key, row in regrets.items()}
-        deltas = {key: [0.0] * infos[key] for key in keys}
-        average_factor = iteration * iteration if algorithm == "dcfr" else 1.0
-
+    def visitor(current, deltas, target_player=None, average_factor=0.0,
+                average_only=False):
         def visit(node, prefix, reach0, reach1):
+            if average_only:
+                if isinstance(node, chance_type):
+                    for card, child in node.branches.items():
+                        visit(child, prefix + (card,), reach0, reach1)
+                    return
+                if isinstance(node, _Terminal):
+                    return
+                player = node.player
+                action_count = len(node.actions)
+                uniform = [1.0 / action_count] * action_count
+                for hand_index in range(hand_counts[player]):
+                    key = (player, hand_index, node.history)
+                    if key in sums:
+                        sigma = current.get(key, uniform)
+                        own_mass = marginals[prefix][player][hand_index]
+                        own_reach = reach0[hand_index] if player == 0 else reach1[hand_index]
+                        for action in range(action_count):
+                            sums[key][action] += (own_mass * own_reach * sigma[action] *
+                                                  average_factor)
+                for action_index, child in enumerate(node.children):
+                    if player == 0:
+                        child_reach0 = [reach0[i] * current.get(
+                            (player, i, node.history), uniform)[action_index]
+                            for i in range(hand_counts[0])]
+                        visit(child, prefix, child_reach0, reach1)
+                    else:
+                        child_reach1 = [reach1[i] * current.get(
+                            (player, i, node.history), uniform)[action_index]
+                            for i in range(hand_counts[1])]
+                        visit(child, prefix, reach0, child_reach1)
+                return
             if isinstance(node, chance_type):
                 value0 = [0.0] * hand_counts[0]
                 value1 = [0.0] * hand_counts[1]
@@ -214,9 +317,11 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                                    for action in range(action_count))
                     value0[hand_index] = expected
                     key = (player, hand_index, node.history)
-                    if key in deltas:
+                    if key in deltas and (target_player is None or target_player == player):
                         for action in range(action_count):
                             deltas[key][action] += action_values0[action][hand_index] - expected
+                    if target_player is None and average_factor and key in sums:
+                        for action in range(action_count):
                             sums[key][action] += (own_mass[hand_index] * reach0[hand_index] *
                                                   sigma[action] * average_factor)
                 for hand_index in range(hand_counts[1]):
@@ -230,9 +335,11 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                                    for action in range(action_count))
                     value1[hand_index] = expected
                     key = (player, hand_index, node.history)
-                    if key in deltas:
+                    if key in deltas and (target_player is None or target_player == player):
                         for action in range(action_count):
                             deltas[key][action] += action_values1[action][hand_index] - expected
+                    if target_player is None and average_factor and key in sums:
+                        for action in range(action_count):
                             sums[key][action] += (own_mass[hand_index] * reach1[hand_index] *
                                                   sigma[action] * average_factor)
                 for hand_index in range(hand_counts[0]):
@@ -243,17 +350,34 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
         try:
             visit(root, (), [1.0] * hand_counts[0], [1.0] * hand_counts[1])
         finally:
-            # Break the self-reference even if traversal raises. Otherwise the
-            # function cycle retains this iteration's dense CFR working arrays.
             visit = None
 
-        for key in keys:
-            updated = [old + delta for old, delta in zip(regrets[key], deltas[key])]
-            if algorithm == "dcfr":
-                positive_discount = iteration ** 1.5 / (iteration ** 1.5 + 1.0)
-                updated = [value * (positive_discount if value > 0 else 0.5)
-                           for value in updated]
-            regrets[key] = updated
+    for iteration in range(1, iterations + 1):
+        current = {key: strategy(row) for key, row in regrets.items()}
+        deltas = ({} if algorithm == "cfrplus" else
+                  {key: [0.0] * infos[key] for key in keys})
+        average_factor = iteration * iteration if algorithm == "dcfr" else 1.0
+        if algorithm == "cfrplus":
+            for player in (0, 1):
+                deltas = _cfrplus_target_deltas(
+                    root, edges, infos, current, player, hand_counts,
+                    half_pot, chance_type,
+                )
+                for key in keys:
+                    if key[0] == player:
+                        regrets[key] = [max(0.0, old + delta)
+                                        for old, delta in zip(regrets[key], deltas[key])]
+                current = {key: strategy(row) for key, row in regrets.items()}
+            visitor(current, {}, average_factor=float(iteration), average_only=True)
+        else:
+            visitor(current, deltas, average_factor=average_factor)
+            for key in keys:
+                updated = [old + delta for old, delta in zip(regrets[key], deltas[key])]
+                if algorithm == "dcfr":
+                    positive_discount = iteration ** 1.5 / (iteration ** 1.5 + 1.0)
+                    updated = [value * (positive_discount if value > 0 else 0.5)
+                               for value in updated]
+                regrets[key] = updated
 
     averages = {}
     for key in keys:

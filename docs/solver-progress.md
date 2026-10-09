@@ -1,5 +1,28 @@
 # Solver progress record
 
+## 2026-10-09 isolated turn/river quality work
+
+Branch `solver/turn-river-quality-20261009`, base `65c9ba7`: optional
+alternating CFR+ with linear post-sweep own-reach averaging is enabled only
+for turn/river library starts. An independently authored callback reference,
+closed-form Kuhn equilibrium, exhaustive pure-policy BR checks and public
+backend differential tests validate the addition. Optional exact public-vector
+diagnostics retain generic best responses as the reference. Coach/UI code,
+flop tree construction, evaluator, defaults and existing result shapes remain
+unchanged; source-based vanilla/DCFR comparisons on six turn/river/flop cases
+matched the base exactly. All **352 tests passed in 70.236 seconds**.
+
+Target-only CFR+ regret vectors reduce measured complete-call runtime by
+21–28% across eight synthetic fixture/checkpoint comparisons with pre-optimization
+source `7553734`; maximum frequency/value differences are `5.42e-13`/`7.11e-14`.
+Diagnostics-only turn evaluation is 2.17x faster on a 352-world uniform-policy
+fixture with higher memory consumption. The completed 36-row algorithm report
+shows lower CFR+ gaps but higher runtime than DCFR at 300 iterations, so the
+default is unchanged. No external runtime dependency or third-party code is
+incorporated. The user explicitly authorized public push and merge on 2026-10-09;
+publishing uses the authenticated GitHub connector. See
+[quality work, exact benchmarks, research decisions and remaining priorities](turn-river-quality.md).
+
 Snapshot: 2026-10-09. Mathematical calculation only; the AI Coach workstream
 and its contracts remain separate. GitHub is the delivery source of truth.
 

@@ -9,8 +9,10 @@ from math import fsum
 
 from .cards import DECK, cards, expand_range, rank_hand
 from .cfr import train, evaluate, best_response
+from .cfr_plus import train as train_plus
 from .planned_cfr import train as train_planned, MAX_PLAN_OPS
 from .public_cfr import train_public_batched, MAX_PREFIX_EDGES
+from .public_diagnostics import evaluate_profile
 from .river_config import RiverConfig
 from .river_tree import _Node, _Terminal, _build_tree, _terminal_value
 
@@ -349,7 +351,8 @@ def _public_reveals(history):
 
 def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                    river_config=None, runouts=None, iterations=1000,
-                   algorithm="vanilla", traversal="recursive"):
+                   algorithm="vanilla", traversal="recursive",
+                   diagnostics="recursive"):
     """Solve an exact configured heads-up game from flop, turn, or river.
 
     The initial ``config`` applies to the first unresolved street. For a flop
@@ -360,10 +363,19 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     board = cards(board)
     if len(board) not in (3, 4, 5):
         raise ValueError("Postflop board must contain exactly three, four, or five cards.")
-    if algorithm not in ("vanilla", "dcfr"):
-        raise ValueError("Solver algorithm must be vanilla or dcfr.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
     if traversal not in ("recursive", "planned", "public-batched"):
         raise ValueError("Traversal must be recursive, planned, or public-batched.")
+    if diagnostics not in ("recursive", "public-batched"):
+        raise ValueError("Diagnostics must be recursive or public-batched.")
+    if diagnostics == "public-batched" and len(board) == 3:
+        raise ValueError("Public-batched diagnostics are enabled only for turn and river starts.")
+    if algorithm == "cfrplus":
+        if len(board) == 3:
+            raise ValueError("CFR+ is currently enabled only for turn and river starts.")
+        if traversal == "planned":
+            raise ValueError("CFR+ requires recursive or public-batched traversal.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
     config = RiverConfig() if config is None else config
@@ -402,7 +414,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         _build_postflop_tree(board, config, turn_config=turn_config,
                              river_config=river_config, worlds=worlds,
                              allocation_counts=public_counts)
-    if len(worlds) * visited_nodes * iterations > _MAX_WORLD_NODE_WORK:
+    passes = 3 if algorithm == "cfrplus" else 1
+    if len(worlds) * visited_nodes * iterations * passes > _MAX_WORLD_NODE_WORK:
         raise ValueError("Postflop solver exceeds 30 million world-node iterations.")
     if traversal == "planned" and len(worlds) * plan_ops_per_world > MAX_PLAN_OPS:
         raise ValueError("Planned postflop traversal exceeds 250,000 operations.")
@@ -421,14 +434,19 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         averages = train_public_batched(root, worlds, infos, iterations, algorithm,
                                         pot=config.pot, chance_type=_Chance)
     else:
-        trainer = train_planned if traversal == "planned" else train
+        trainer = train_plus if algorithm == "cfrplus" else (
+            train_planned if traversal == "planned" else train)
         averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
                            _node_key, _chance_child)
-    value = evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
-    br0 = best_response(0, root, worlds, averages, payoff, _node_key,
-                        _chance_partitions)
-    br1 = best_response(1, root, worlds, averages, payoff, _node_key,
-                        _chance_partitions)
+    if diagnostics == "public-batched":
+        value, br0, br1 = evaluate_profile(root, worlds, averages,
+                                          pot=config.pot, chance_type=_Chance)
+    else:
+        value = evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
+        br0 = best_response(0, root, worlds, averages, payoff, _node_key,
+                            _chance_partitions)
+        br1 = best_response(1, root, worlds, averages, payoff, _node_key,
+                            _chance_partitions)
 
     rows = []
     for key in sorted(infos):
@@ -468,7 +486,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     else:
         runout_mode = "none"
         chance_note = "Compatible private-pair range products normalized once; board is complete."
-    return {
+    result = {
         "method": "full-traversal CFR", "algorithm": algorithm,
         "solver_version": "configured-postflop-v1",
         "strategy_schema": "postflop-strategy-v1",
@@ -499,3 +517,10 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         "scope": "Approximate equilibrium of the configured heads-up postflop abstraction; no preflop, multiway play, or rake.",
         "strategy": rows,
     }
+    if algorithm == "cfrplus":
+        result["update_schedule"] = "alternating-oop-then-ip"
+        result["average_schedule"] = "linear-post-sweep-own-reach"
+        result["training_passes_per_iteration"] = passes
+    if diagnostics != "recursive":
+        result["diagnostics_backend"] = "public-batched-python"
+    return result
