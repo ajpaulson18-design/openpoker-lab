@@ -72,3 +72,29 @@ traced Python memory peak, counts, independent replay results and source/config
 hashes. It excludes strategy training and reports no convergence or
 exploitability. No third-party source or dependency was incorporated; the rule
 document informed semantics only. License and ownership settings are unchanged.
+
+## Recorded construction evidence
+
+[The report](../benchmarks/results/preflop-tree-v1.json) freezes the construction
+and replay sources at `b786b54c3d192a2db33a12aef5d99e2fe7fa72f2`, Python
+3.12.14 on Windows. All nine fixtures and the 162-configuration asymmetric
+stack grid passed independent rational replay. The grid checks 914 action
+edges; the wide fixture separately checks 4,233 edges, 1,412 decisions and
+4,234 total public states. Reported API counts agree with the independent walk.
+
+Complete construction medians range from about 0.05 ms for a forced all-in
+boundary to 111.12 ms for the wide five-size/four-raise fixture. The latter
+traced peak is 1,915,856 bytes; its ordinary minimum-raise fixture uses 54
+decisions, 160 states, approximately 3.27 ms and 64,384 traced bytes. These
+small, machine-dependent measurements are a first construction baseline.
+They do not measure full preflop solving, training, chance enumeration or
+best responses, and establish no speedup over an earlier implementation.
+Source/config hashes stayed unchanged during measurement. The dirty flag
+records the pre-existing untracked output report, not a change to solver source.
+
+Nine focused tests passed, including full-root recursive/planned CFR wiring
+under both algorithms, fail-closed unsolved leaves, and CPython release with
+cyclic collection disabled on success and callback failure. Luna implemented
+the bounded tree and rule fixtures; lead review supplied additional independent
+replay, precision-boundary, release and integration checks. Turn and river
+production source, application and explanation contracts are preserved.

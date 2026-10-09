@@ -1,0 +1,330 @@
+{
+  "benchmark_id": "heads-up-preflop-betting-v1",
+  "created_at_utc": "2026-10-09T04:08:42.060687+00:00",
+  "independent_stack_grid": {
+    "action_edges": 914,
+    "configurations": 162,
+    "result": "passed",
+    "stack_values": [
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1,
+      1.5,
+      2.5,
+      5,
+      20
+    ]
+  },
+  "methodology": {
+    "memory": "Separate complete config/tree call; traced Python peak, not RSS",
+    "scope": "Preflop betting coverage; no equity, strategy, or equilibrium claim",
+    "timing": "Complete config validation and tree build; replay excluded",
+    "validation": "Exhaustive independent rational blind, raise, and settlement replay"
+  },
+  "provenance": {
+    "git_revision": "b786b54c3d192a2db33a12aef5d99e2fe7fa72f2",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.12.14",
+    "source_sha256": {
+      "config": "155989c070071ecaca0eb8d235fb6821cb12b5299eaffdbcf9b7278a73980228",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "scripts/benchmark_preflop_tree.py": "a5db77c51ba2f909d61702bc6efd73a57d2b2b0728410078168f8af0de1081f8",
+      "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e"
+    },
+    "source_unchanged": true,
+    "worktree_dirty": true
+  },
+  "results": [
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": 100.0
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 4304,
+      "runtime_seconds": {
+        "median": 0.0001154000055976212,
+        "samples": [
+          0.0001900999923236668,
+          0.0001154000055976212,
+          9.059999138116837e-05
+        ]
+      },
+      "scenario_id": "limp-option",
+      "tree_counts": {
+        "actions": 3,
+        "continuation": 1,
+        "decision": 2,
+        "fold": 1
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": false,
+        "max_raises": 3,
+        "raise_sizes": [
+          0.1,
+          0.5,
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": 20.0
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 64384,
+      "runtime_seconds": {
+        "median": 0.0032653999514877796,
+        "samples": [
+          0.0032653999514877796,
+          0.004067600006237626,
+          0.0020098999957554042
+        ]
+      },
+      "scenario_id": "minimum-raises",
+      "tree_counts": {
+        "actions": 159,
+        "continuation": 53,
+        "decision": 54,
+        "fold": 53
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          0.25,
+          20.0
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 2832,
+      "runtime_seconds": {
+        "median": 5.439994856715202e-05,
+        "samples": [
+          9.099999442696571e-05,
+          5.439994856715202e-05,
+          4.579999949783087e-05
+        ]
+      },
+      "scenario_id": "short-small-blind",
+      "tree_counts": {
+        "actions": 0,
+        "continuation": 1,
+        "decision": 0,
+        "fold": 0
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          0.75,
+          20.0
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 2928,
+      "runtime_seconds": {
+        "median": 6.349995965138078e-05,
+        "samples": [
+          7.840001489967108e-05,
+          6.349995965138078e-05,
+          5.770003190264106e-05
+        ]
+      },
+      "scenario_id": "short-small-blind-call",
+      "tree_counts": {
+        "actions": 2,
+        "continuation": 1,
+        "decision": 1,
+        "fold": 1
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          1.0,
+          20.0
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 3432,
+      "runtime_seconds": {
+        "median": 6.589997792616487e-05,
+        "samples": [
+          7.799995364621282e-05,
+          6.46000262349844e-05,
+          6.589997792616487e-05
+        ]
+      },
+      "scenario_id": "small-blind-exact-call-allin",
+      "tree_counts": {
+        "actions": 2,
+        "continuation": 1,
+        "decision": 1,
+        "fold": 1
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          20.0,
+          0.25
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 2736,
+      "runtime_seconds": {
+        "median": 0.00010280002607032657,
+        "samples": [
+          0.0001208000467158854,
+          0.00010280002607032657,
+          0.00010210002074018121
+        ]
+      },
+      "scenario_id": "covered-short-big-blind",
+      "tree_counts": {
+        "actions": 0,
+        "continuation": 1,
+        "decision": 0,
+        "fold": 0
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          20.0,
+          0.75
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 3408,
+      "runtime_seconds": {
+        "median": 8.58000130392611e-05,
+        "samples": [
+          0.00010080001084133983,
+          8.58000130392611e-05,
+          8.420000085607171e-05
+        ]
+      },
+      "scenario_id": "short-big-blind-call",
+      "tree_counts": {
+        "actions": 2,
+        "continuation": 1,
+        "decision": 1,
+        "fold": 1
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 3,
+        "raise_sizes": [
+          0.5,
+          1.0
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          4.0,
+          2.5
+        ]
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 10016,
+      "runtime_seconds": {
+        "median": 0.0003597000031732023,
+        "samples": [
+          0.0003809999907389283,
+          0.0003597000031732023,
+          0.00034610001603141427
+        ]
+      },
+      "scenario_id": "asymmetric-short-raises",
+      "tree_counts": {
+        "actions": 24,
+        "continuation": 8,
+        "decision": 9,
+        "fold": 8
+      }
+    },
+    {
+      "config": {
+        "big_blind": 1.0,
+        "include_all_in": true,
+        "max_raises": 4,
+        "raise_sizes": [
+          0.25,
+          0.5,
+          0.75,
+          1.0,
+          1.5
+        ],
+        "small_blind": 0.5,
+        "starting_stack": 100.0
+      },
+      "independent_rule_replay": "passed",
+      "peak_tracemalloc_bytes": 1915856,
+      "runtime_seconds": {
+        "median": 0.11111670004902408,
+        "samples": [
+          0.1409659999771975,
+          0.10425800003577024,
+          0.11111670004902408
+        ]
+      },
+      "scenario_id": "wide-four-raise-abstraction",
+      "tree_counts": {
+        "actions": 4233,
+        "continuation": 1411,
+        "decision": 1412,
+        "fold": 1411
+      }
+    }
+  ],
+  "schema_version": 1
+}
