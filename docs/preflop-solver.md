@@ -108,6 +108,11 @@ diagnostic still differs. This does not prove exact-decimal equivalence.
 
 ## Independent validation and provenance
 
+The opt-in [vector resource model](preflop-vector-resources.md) separately bounds
+public/private-vector work and scratch dimensions before training. It replaces
+only the legacy world-decision work guard when both training and diagnostics
+use public vectors; all other existing caps and default admission rules remain.
+
 Run from the repository root:
 
 ```text

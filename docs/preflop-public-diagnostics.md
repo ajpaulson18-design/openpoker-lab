@@ -54,6 +54,10 @@ separate bounds, not an aggregate process-memory guarantee. A recursive training
 request may fit its own bounds yet fail the optional vector diagnostic edge
 guard. All original candidate/world/iteration/work guards remain enforced;
 this milestone does not admit full-deck preflop or loosen those limits.
+The later explicit [vector resource model](preflop-vector-resources.md) can
+replace only the legacy world-decision traversal estimate when both training
+and diagnostics use public vectors. Its separate workload and allocation caps
+are opt-in; the default admission rules described here remain unchanged.
 
 Optional metadata records `diagnostics_backend="public-batched-python"`, the
 view's anchor/state count, its reuse source and the prefix-edge limit. Default
