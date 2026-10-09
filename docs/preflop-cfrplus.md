@@ -1,7 +1,9 @@
 # Optional CFR+ for conditioned preflop games
 
 `solve_preflop(..., algorithm="cfrplus", traversal="recursive")` reuses the
-repository's existing generic CFR+ trainer. It supports the same selected
+repository's existing generic CFR+ trainer. Optional
+[`traversal="public-batched"`](preflop-public-batched.md) reuses its exact
+private-hand vector counterpart. Both support the same selected
 physical outcomes, blind settlement, postflop action trees, serialized average
 policy and exact legal best responses as the preflop adapter. No shared trainer,
 turn/river solver or AI Coach implementation was changed. Vanilla remains the

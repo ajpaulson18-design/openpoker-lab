@@ -76,6 +76,27 @@ class FullPrivateChanceTests(unittest.TestCase):
                       "bb_best_response_value", "nash_conv"):
             self.assertAlmostEqual(result[field], oracle[field], delta=1e-10)
 
+        vector = solve_preflop(_SB_RANGE, _BB_RANGE, config,
+                               runouts=runouts, iterations=10,
+                               traversal="public-batched")
+        self.assertEqual(len(vector["strategy"]), len(result["strategy"]))
+        for planned_row, vector_row in zip(result["strategy"], vector["strategy"]):
+            for field in ("player", "hand", "street", "revealed_board", "history"):
+                self.assertEqual(vector_row[field], planned_row[field], field)
+            self.assertEqual(len(vector_row["actions"]), len(planned_row["actions"]))
+            for planned_action, vector_action in zip(
+                    planned_row["actions"], vector_row["actions"]):
+                for field in ("name", "amount", "raise_to", "history_key"):
+                    self.assertEqual(vector_action[field], planned_action[field], field)
+                self.assertAlmostEqual(vector_action["probability"],
+                                       planned_action["probability"], delta=1e-10)
+        for field in ("value_sb", "value_bb", "sb_best_response_value",
+                      "bb_best_response_value", "nash_conv", "exploitability"):
+            self.assertAlmostEqual(vector[field], result[field], delta=1e-10, msg=field)
+        for field in ("worlds", "compatible_private_pairs", "public_states",
+                      "decisions", "info_sets", "private_pair_probabilities",
+                      "reachable_runouts"):
+            self.assertEqual(vector[field], result[field], field)
         for row in result["strategy"]:
             if row["player"] == "sb":
                 self.assertIn(row["hand"], _SB_HANDS)
