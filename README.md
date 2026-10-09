@@ -201,6 +201,12 @@ enumerated best responses and quantitative convergence gates. Run
 to reproduce it. This checks the kernels on Kuhn poker, alongside the separate
 Hold'em physical-world and betting validation.
 
+An additive [heads-up preflop betting component](docs/preflop-betting.md)
+constructs blind-aware actions and explicit flop/all-in continuation boundaries.
+It reuses the existing action and CFR interfaces, including the big blind's
+option after a limp. Continuation leaves remain unsolved; this component does
+not yet supply preflop equilibrium strategies.
+
 ## Range notation
 
 Separate tokens with spaces or commas:

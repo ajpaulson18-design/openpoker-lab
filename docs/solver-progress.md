@@ -365,3 +365,30 @@ implementation and isolate any future shared-kernel changes behind compatible
 interfaces and full regression checks. Preflop and unrestricted no-limit
 Hold'em equilibrium remain unsupported; Kuhn quality is evidence about these
 training kernels, not a Hold'em accuracy certificate.
+
+## Preflop betting foundation during the flop/preflop detour
+
+The additive `preflop_tree.py` module now constructs heads-up betting from
+capped small/big blind posts. It preserves the big blind's option after a
+limp, minimum full raises, finite sizing/reraise abstractions, short calls,
+all-ins and refunds, and passes an explicit typed boundary to future flop
+play. It shares existing action/node types, sizing and generic CFR interfaces;
+no turn/river or Coach production source was changed. This is preflop game
+construction; live flop and all-in runout boundaries remain unsolved until
+an explicit continuation is supplied.
+
+Luna implemented the bounded tree and rule tests, followed by lead review,
+independent rational edge replay and additional regression cases. Nine focused
+tests passed, including a complete synthetic root's known values and exact
+best responses under recursive/planned vanilla/DCFR. The reproducible replay
+also passed 162 asymmetric stack configurations (914 action edges) and nine
+benchmark fixtures. At source `b786b54`, the wide four-raise/five-size fixture
+has 1,412 decisions and 4,234 public states; construction took 111.12 ms median
+with 1,915,856 traced peak bytes. This measures tree construction, not strategy
+accuracy or full-range solve performance. See [scope, reproduction and report](preflop-betting.md).
+
+The next integration step is to attach independently verifiable physical flop
+chance and postflop betting continuations while preserving position, hidden
+cards, perfect recall and cumulative contributions. Avoid treating sampled
+or conditional continuation values as unrestricted preflop equilibrium.
+Keep turn/river production work isolated from their separate evaluating lane.
