@@ -4,7 +4,7 @@
 <header><a class="brand" href="/" aria-label="OpenPoker Lab home"><span class="brandmark">♠</span> OPENPOKER <span>LAB</span></a><div class="header-note"><span class="dot"></span> LOCAL WORKSPACE <span class="version">v0.2</span></div></header>
 <main>
 <div class="intro"><div><p class="eyebrow">LOCAL POKER RESEARCH</p><h1>OpenPoker <em>Lab</em></h1></div><p class="subhead">Practice hands. Inspect the evidence.</p></div>
-<nav aria-label="Workspace"><button class="tab" data-tab="analyze">Decision lab</button><button class="tab" data-tab="equity">Equity</button><button class="tab" data-tab="opponents">Opponents</button><button class="tab" data-tab="solver">River solver</button><button class="tab active" data-tab="table">Hand sandbox</button></nav>
+
 <div id="status" role="status" aria-live="polite"></div>
 <section id="analyze" class="panel" hidden>
 <div class="section-heading"><div><h2>Make the assumptions explicit.</h2><p>Compare a simple baseline with an opponent-informed EV estimate.</p></div><span class="tag">HEADS-UP · CHECKDOWN MODEL</span></div>
@@ -25,6 +25,7 @@
   <div class="table-analysis-column"><details id="lounge-analysis" class="lounge-analysis" open><summary>Analysis</summary><div class="lounge-analysis-content"><div id="lounge-strategy" class="lounge-strategy" aria-live="polite"><p class="strategy-empty">Strategy appears here when available for the current decision.</p></div><section class="ai-coach-section"><div class="ai-coach-heading"><h3><span aria-hidden="true">✦</span> AI Coach</h3><div class="coach-toolbar"><label class="toggle"><input id="coach-toggle" type="checkbox" checked> Live Coach</label><span class="hint">Visibility only.</span></div></div><div id="current-study" class="current-study" aria-live="polite"></div><div id="coach-panel" class="coach-panel"><p class="hint">Make a decision to receive post-action coaching.</p></div></section><div id="session-review" class="card session-review" hidden></div><div id="decision-study" class="card decision-study" hidden></div></div></details></div>
 </div></section>
 <template id="coach-voice-template"><label>Coach voice <select id="coach-personality"><option value="grinder">The Grinder</option><option value="chronic_bluffer">The Chronic Bluffer</option><option value="nit">The Nit</option><option value="math_guy">The Math Guy</option><option value="old_school_pro">The Old-School Pro</option></select></label><span class="hint">Voice changes presentation only—not the saved calculation.</span></template>
+<nav aria-label="Workspace"><button class="tab" data-tab="analyze">Decision lab</button><button class="tab" data-tab="equity">Equity</button><button class="tab" data-tab="opponents">Opponents</button><button class="tab" data-tab="solver">River solver</button><button class="tab active" data-tab="table">Hand sandbox</button></nav>
 <footer><span>♠ OpenPoker Lab</span><span>Independent code · Local data · Inspectable decisions</span><a href="https://github.com/ajpaulson18-design/openpoker-lab" target="_blank" rel="noreferrer">Source on GitHub ↗</a></footer>
 </main></body></html>
 
