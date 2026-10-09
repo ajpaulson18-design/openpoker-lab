@@ -181,6 +181,9 @@ class TurnRangePayoffs:
         if not math.isfinite(total_mass) or total_mass <= 0:
             raise ValueError("Selected runout joint mass is not representable.")
         self._branches = branches
+        self._selected_runouts = tuple(selected)
+        self._selected_card_ids = frozenset(_CARD_ID[river] for river in selected)
+        self._total_mass = total_mass
         self.branch_probabilities = MappingProxyType({
             river: branch["mass"] / total_mass
             for river, branch in branches.items()
@@ -290,7 +293,7 @@ class TurnRangePayoffs:
         if not prefix:
             if node.kind != "fold":
                 raise ValueError("Turn-root showdown values require a revealed river card.")
-            active = tuple(self._branches)
+            return self._root_fold_values(node, opponent_reach, player)
         else:
             river = cards(prefix, 1)[0]
             if river not in self._branches:
@@ -316,3 +319,94 @@ class TurnRangePayoffs:
         if not all(math.isfinite(value) for value in answer):
             raise ValueError("Turn range payoff values must be finite.")
         return answer
+
+    def _root_fold_values(self, node, opponent_reach, player):
+        """Integrate turn folds directly over selected river cards in O(H)."""
+        kernel = next(iter(self._branches.values()))["kernel"]
+        matched, _contributions = kernel._terminal(node)
+        scale = self.pot / 2.0 + matched
+        if not math.isfinite(scale):
+            raise ValueError("Terminal payoff scale must be finite.")
+        opponent = 1 - player
+        opponent_hands = self.hands[opponent]
+        opponent_weights = self.weights[opponent]
+        opponent_q = [weight * reach for weight, reach
+                      in zip(opponent_weights, opponent_reach)]
+        if any(not math.isfinite(value) for value in opponent_q):
+            raise ValueError("Weighted opponent reach must be finite.")
+        total_q = math.fsum(opponent_q)
+        if not math.isfinite(total_q):
+            raise ValueError("Weighted opponent reach total must be finite.")
+        if total_q == 0:
+            return [0.0] * len(self.hands[player])
+
+        selected_count = len(self._selected_runouts)
+        selected_own = []
+        for hand in self.hands[player]:
+            selected_own.append(sum(_CARD_ID[card] in self._selected_card_ids
+                                    for card in hand))
+        selected_opponent = [sum(_CARD_ID[card] in self._selected_card_ids
+                                 for card in hand)
+                             for hand in opponent_hands]
+        weighted_selected = []
+        for value, count in zip(opponent_q, selected_opponent):
+            weighted = value * count
+            if not math.isfinite(weighted):
+                raise ValueError("Selected-runout opponent reach must be finite.")
+            weighted_selected.append(weighted)
+
+        card_q_terms = [[] for _ in DECK]
+        card_selected_terms = [[] for _ in DECK]
+        for hand, q, selected_mass in zip(opponent_hands, opponent_q, weighted_selected):
+            for card in hand:
+                card_id = _CARD_ID[card]
+                card_q_terms[card_id].append(q)
+                card_selected_terms[card_id].append(selected_mass)
+        card_q = [math.fsum(terms) for terms in card_q_terms]
+        card_selected = [math.fsum(terms) for terms in card_selected_terms]
+        total_selected = math.fsum(weighted_selected)
+        opponent_index = {hand: index for index, hand in enumerate(opponent_hands)}
+
+        sign = 1.0 if node.winner == player else -1.0
+        answer = [0.0] * len(self.hands[player])
+        for own_index, own_hand in enumerate(self.hands[player]):
+            first, second = (_CARD_ID[own_hand[0]], _CARD_ID[own_hand[1]])
+            same = opponent_index.get(own_hand)
+            same_q = 0.0 if same is None else opponent_q[same]
+            same_selected = 0.0 if same is None else weighted_selected[same]
+            compatible_q = math.fsum((total_q, -card_q[first], -card_q[second], same_q))
+            compatible_selected = math.fsum((
+                total_selected, -card_selected[first],
+                -card_selected[second], same_selected,
+            ))
+            remaining_own_runouts = selected_count - selected_own[own_index]
+            approximate = math.fsum((remaining_own_runouts * compatible_q,
+                                     -compatible_selected))
+            threshold = 1e-6 * total_q * selected_count
+            if approximate <= threshold:
+                self._reserve_fallback_checks(len(opponent_hands))
+                own_set = set(own_hand)
+                approximate = math.fsum(
+                    opponent_q[index] * (selected_count - selected_own[own_index] -
+                                         selected_opponent[index])
+                    for index, hand in enumerate(opponent_hands)
+                    if own_set.isdisjoint(hand)
+                )
+            if not math.isfinite(approximate) or approximate < 0:
+                raise ArithmeticError("Turn fold compatible mass is invalid.")
+            if approximate == 0:
+                continue
+            joint_mass = self.weights[player][own_index] * approximate
+            if not math.isfinite(joint_mass):
+                raise ValueError("Turn fold joint mass is not finite.")
+            value = (joint_mass / self._total_mass) * sign * scale
+            if not math.isfinite(value):
+                raise ValueError("Turn fold payoff is not representable in binary64.")
+            answer[own_index] = value
+        return answer
+
+    def _reserve_fallback_checks(self, count):
+        proposed = self.fallback_pair_checks + count
+        if proposed > self.fallback_pair_limit:
+            raise ValueError("Turn range fallback pair-check budget exceeded.")
+        self.fallback_pair_checks = proposed

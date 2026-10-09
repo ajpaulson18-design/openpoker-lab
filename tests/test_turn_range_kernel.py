@@ -1,7 +1,9 @@
 """Independent Fraction checks for turn-to-river range payoff kernels."""
 
 from fractions import Fraction as F
+from math import isfinite
 import unittest
+from unittest.mock import patch
 
 from pokerlab.cards import DECK, rank_hand
 from pokerlab.river_tree import _Terminal
@@ -82,6 +84,67 @@ def _oracle_marginals(board, hands, weights, runouts, prefix=()):
 
 
 class TurnRangeKernelTests(unittest.TestCase):
+    def test_tiny_positive_selected_branch_preserves_conditioned_root_fold(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("As", "Ah"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        weights = ((F(1), F(1, 10**310)), (F(1),))
+        selected = ("As",)
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20, runouts=selected)
+        expected_marginals, _ = _oracle_marginals(board, hands, weights, selected)
+        root = kernel.joint_marginals()
+        prefix = kernel.joint_marginals(("As",))
+        for side in (0, 1):
+            for actual, expected in zip(root[side], expected_marginals[side]):
+                self.assertAlmostEqual(actual, float(expected), places=12)
+            self.assertEqual(root[side], prefix[side])
+        self.assertEqual(root[0], (0.0, 1.0))
+        fold = _Terminal("fold", (0.0, 0.0), 0)
+        for branch in ((), ("As",)):
+            actual = kernel.values(fold, (1.0,), 0, prefix=branch)
+            expected = _oracle(board, hands, weights, 20, selected, fold,
+                               (1,), 0, prefix=branch)
+            self.assertEqual(actual, [0.0, 10.0])
+            for got, want in zip(actual, expected):
+                self.assertTrue(isfinite(got))
+                self.assertAlmostEqual(got, float(want), places=12)
+
+    def test_unrepresentable_joint_mass_is_rejected(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("As", "Kc"), _hand("Ah", "Qh")))
+        weights = ((F(1), F(1, 10**200)), (F(1), F(1, 10**200)))
+        # Three high-mass pairings are blocked; only the doubly tiny pair is
+        # physically compatible, whose normalized joint mass underflows.
+        with self.assertRaisesRegex(ValueError, "unrepresentable"):
+            TurnRangePayoffs(board, hands, weights, pot=20)
+
+    def test_hand_slot_cap_precedes_rank_kernel_allocation(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("As", "Ah"),), (_hand("Kc", "Kd"),))
+        with patch("pokerlab.turn_range_kernel.MAX_HAND_SLOTS", 0), \
+             patch("pokerlab.turn_range_kernel.RankedRiverPayoffs") as ranked:
+            with self.assertRaisesRegex(ValueError, "filtered hand slots"):
+                TurnRangePayoffs(board, hands, ((1,), (1,)), pot=20,
+                                 runouts=("3s",))
+        ranked.assert_not_called()
+
+    def test_failed_partial_fallback_scan_is_charged_before_retry(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"),),
+                 (_hand("As", "Kc"), _hand("Ah", "Kd"), _hand("Kc", "Kd")))
+        weights = ((F(1),), (F(1), F(1), F(1, 10**9)))
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20,
+                                  runouts=("3c", "4d"), fallback_pair_limit=15)
+        self.assertEqual(kernel.fallback_pair_checks, 12)
+        with self.assertRaisesRegex(ValueError, "fallback pair-check budget"):
+            kernel.joint_marginals()
+        charged_after_failure = kernel.fallback_pair_checks
+        self.assertEqual(charged_after_failure, 15)
+        with self.assertRaisesRegex(ValueError, "fallback pair-check budget"):
+            kernel.joint_marginals()
+        self.assertEqual(kernel.fallback_pair_checks, charged_after_failure)
+
     def test_full_turn_branches_match_fraction_global_pair_runout_oracle(self):
         board = ("2c", "5d", "9h", "Jc")
         hands = (
