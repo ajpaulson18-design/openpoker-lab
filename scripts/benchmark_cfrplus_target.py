@@ -189,7 +189,7 @@ def main(argv=None):
         "schema_version": 1,
         "benchmark_id": "cfrplus-public-target-pass-v1",
         "old_revision": OLD_REVISION,
-        "git_revision": git_revision(),
+            "git_revision": git_revision(None),
         "worktree_dirty": worktree_dirty(),
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "python_version": platform.python_version(),

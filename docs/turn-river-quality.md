@@ -130,3 +130,81 @@ The initial long tracing experiment was stopped after repeated high-iteration
 memory measurements proved costly. Its raw timed observations and source
 hashes are retained in `turn-river-quality-initial-partial.json`; it is
 explicitly marked incomplete and is not used as a completed benchmark report.
+
+`python -m scripts.benchmark_cfrplus_target --skip-memory --output benchmarks/results/cfrplus-target-v1.json`
+completed eight cases (four fixtures at 100/300 iterations), with three rotating
+whole-call timed repeats each. Candidate implementation source is captured by
+hashes in the report; the old module is loaded from the verified `7553734`
+Git blob. The largest probability difference was `5.42e-13`; the largest
+value/BR/gap difference was `7.11e-14`, comfortably below `1e-10`.
+
+| Fixture | Iterations | Before | Target-only | Runtime reduction |
+| --- | ---: | ---: | ---: | ---: |
+| Full physical turn | 100 | 0.9671 s | 0.7195 s | 25.6% |
+| Full physical turn | 300 | 2.8879 s | 2.0845 s | 27.8% |
+| Conditional raised turn | 300 | 0.3589 s | 0.2697 s | 24.9% |
+| Polarised river | 300 | 0.01464 s | 0.01156 s | 21.0% |
+| Weighted raised river | 300 | 0.09622 s | 0.07148 s | 25.7% |
+
+These are measured CFR+ execution improvements on synthetic fixtures, not a
+change in its mathematical update or a general full-range speed claim. Memory
+comparison was explicitly skipped in this controlled before/after report;
+no optimization memory-reduction claim is made.
+
+## Algorithm quality report
+
+The completed `benchmarks/results/turn-river-quality-v1.json` contains all 36
+rows (four fixtures, three checkpoints, three algorithms), with three timed
+repeats per row. Separate whole-call traced peaks were measured once per
+fixture/algorithm at **20 iterations**, explicitly distinguished from the
+20/100/300-iteration quality and timing measurements.
+
+| Fixture at 300 iterations | Vanilla NashConv | DCFR NashConv | CFR+ NashConv | DCFR / CFR+ time |
+| --- | ---: | ---: | ---: | ---: |
+| Full physical turn | 1.477155 | 0.021497 | 0.016111 | 1.423 / 2.176 s |
+| Conditional raised turn | 3.234919 | 1.811793 | 0.046940 | 0.191 / 0.275 s |
+| Polarised river | 2.873615 | 2.294658 | 0.207547 | 0.00737 / 0.01140 s |
+| Weighted raised river | 2.919772 | 0.512741 | 0.042113 | 0.05087 / 0.08102 s |
+
+All initial pots are 100 chips. CFR+ gives lower measured gaps in these
+fixtures at this checkpoint but takes more time per iteration. DCFR remains
+competitive on the full-deck fixture's quality/cost; this report does not
+select a universal winner. The conditional turn is the explicitly conditioned
+two-river game, not an approximation certificate for the unconditional deck.
+Whole-call peaks at 20 iterations were approximately 2.108 MB for the full
+turn, 298–300 KB for the conditional turn, 27–28 KB for the polarised river
+and 90–91 KB for the raised river. Tracemalloc excludes RSS/native memory.
+
+## Integrated validation
+
+All **352** repository tests passed in **70.236 seconds** on this host:
+`python -m unittest discover -s tests -v`. This includes the current Coach and
+existing postflop regressions. New checks cover a closed-form Kuhn equilibrium
+with exact value `-1/18` and zero best-response gap, independent 64-policy
+enumeration per player, trained CFR+ convergence/determinism, hidden-world
+regret cancellation before clipping, generator inputs/locks, numerical guards,
+public-vector diagnostics against an independent pure-policy oracle, and
+turn/river cross-backend integration through weighted raised games.
+
+A separate source-based comparison loaded the original public trainer from
+`65c9ba7` and compared it with the final simultaneous path on turn, river and
+conditional flop starts for vanilla/DCFR (six cases, 20 iterations). All
+serialized frequencies and values/BR/gaps differed by exactly zero. There is
+no change to the hand evaluator, so its exhaustive card census was not rerun.
+
+## Remaining priorities and delivery boundary
+
+The existing exact-world/public-tree limits still constrain broad ranges;
+this is a finite heads-up action abstraction without rake, preflop or multiway
+equilibrium. The new algorithms are library options; the Coach and browser
+interfaces were not redesigned. Before selecting a new default, compare
+CFR+/DCFR against an equal wall-time budget across substantially broader
+representative ranges and require appropriately small measured NashConv.
+Prepared reusable prefix/tree contexts and convergence checkpoints are possible
+next targets, but only if whole-call profiling demonstrates their value.
+
+The isolated branch is committed locally. Automatic approval review blocked
+publication even after the GitHub connector confirmed the repository is public,
+the remote matches the user's project, and the account has push permission.
+The final rejection requires explicit approval for public disclosure of this
+new payload; no alternative publication path was used.

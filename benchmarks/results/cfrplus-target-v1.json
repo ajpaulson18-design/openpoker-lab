@@ -1,0 +1,597 @@
+{
+  "benchmark_id": "cfrplus-public-target-pass-v1",
+  "candidate_source_sha256": "9e89d2f547da67f3cc7a22e365c62f417cac41e1dcd29e8f1c25fbf4e3e8eae8",
+  "created_at_utc": "2026-10-09T04:04:14.286756+00:00",
+  "git_revision": "a02b01f3e3a39f180a4eabdcd5fc35260e1e5880",
+  "old_revision": "7553734",
+  "old_source_sha256": "b98f2cacc0162b6754d32302afdec8fbacfaca700e3a00b4a1b9eb9d247a9ab9",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "python_version": "3.12.14",
+  "results": [
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 0.0,
+        "metric_abs_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "strategy_rows": 1112
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.07202094124944658,
+          "ip_best_response_value": 18.132795349766624,
+          "nash_conv": 0.14404188249889316,
+          "oop_best_response_value": -17.98875346726773,
+          "value_ip": 18.067538497137647,
+          "value_oop": -18.067538497137647
+        },
+        "old-7553734": {
+          "exploitability": 0.07202094124944658,
+          "ip_best_response_value": 18.132795349766624,
+          "nash_conv": 0.14404188249889316,
+          "oop_best_response_value": -17.98875346726773,
+          "value_ip": 18.067538497137647,
+          "value_oop": -18.067538497137647
+        }
+      },
+      "iterations": 100,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "full44-blocked-runouts",
+      "serialized_bytes": {
+        "candidate": [
+          385687,
+          385687,
+          385687
+        ],
+        "old-7553734": [
+          385687,
+          385687,
+          385687
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.7194682909998846,
+          "samples": [
+            0.7120603160001338,
+            0.7194682909998846,
+            0.7264940300001399
+          ]
+        },
+        "old-7553734": {
+          "median": 0.9670699580001383,
+          "samples": [
+            0.9670699580001383,
+            0.9612812750001467,
+            0.9796323120003763
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 0.0,
+        "metric_abs_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "strategy_rows": 1112
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.008055498412170792,
+          "ip_best_response_value": 18.051378753387723,
+          "nash_conv": 0.016110996824341584,
+          "oop_best_response_value": -18.035267756563382,
+          "value_ip": 18.044082425155512,
+          "value_oop": -18.044082425155512
+        },
+        "old-7553734": {
+          "exploitability": 0.008055498412170792,
+          "ip_best_response_value": 18.051378753387723,
+          "nash_conv": 0.016110996824341584,
+          "oop_best_response_value": -18.035267756563382,
+          "value_ip": 18.044082425155512,
+          "value_oop": -18.044082425155512
+        }
+      },
+      "iterations": 300,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "full44-blocked-runouts",
+      "serialized_bytes": {
+        "candidate": [
+          385796,
+          385796,
+          385796
+        ],
+        "old-7553734": [
+          385796,
+          385796,
+          385796
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 2.08450828299965,
+          "samples": [
+            2.08450828299965,
+            2.208394211999803,
+            2.0271833500000866
+          ]
+        },
+        "old-7553734": {
+          "median": 2.8878585899997233,
+          "samples": [
+            3.0286073120000765,
+            2.8878585899997233,
+            2.8602312990001337
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 5.417888360170764e-13,
+        "metric_abs_differences": {
+          "exploitability": 1.0658141036401503e-14,
+          "ip_best_response_value": 7.105427357601002e-15,
+          "nash_conv": 2.1316282072803006e-14,
+          "oop_best_response_value": 1.4210854715202004e-14,
+          "value_ip": 7.105427357601002e-14,
+          "value_oop": 7.105427357601002e-14
+        },
+        "strategy_rows": 138
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.2098367747105332,
+          "ip_best_response_value": 19.202065018435047,
+          "nash_conv": 0.4196735494210664,
+          "oop_best_response_value": -18.78239146901398,
+          "value_ip": 18.92973597896479,
+          "value_oop": -18.92973597896479
+        },
+        "old-7553734": {
+          "exploitability": 0.20983677471054385,
+          "ip_best_response_value": 19.202065018435054,
+          "nash_conv": 0.4196735494210877,
+          "oop_best_response_value": -18.782391469013966,
+          "value_ip": 18.92973597896486,
+          "value_oop": -18.92973597896486
+        }
+      },
+      "iterations": 100,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize",
+      "serialized_bytes": {
+        "candidate": [
+          53976,
+          53976,
+          53976
+        ],
+        "old-7553734": [
+          53973,
+          53973,
+          53973
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.09067702799984545,
+          "samples": [
+            0.09088267200013433,
+            0.08995577099994989,
+            0.09067702799984545
+          ]
+        },
+        "old-7553734": {
+          "median": 0.12074217000008503,
+          "samples": [
+            0.12220550400024877,
+            0.12053523300028246,
+            0.12074217000008503
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 3.4772185131259903e-13,
+        "metric_abs_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_value": 3.552713678800501e-15,
+          "nash_conv": 0.0,
+          "oop_best_response_value": 3.552713678800501e-15,
+          "value_ip": 1.4210854715202004e-14,
+          "value_oop": 1.4210854715202004e-14
+        },
+        "strategy_rows": 138
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.02347011544381239,
+          "ip_best_response_value": 19.064893735384732,
+          "nash_conv": 0.04694023088762478,
+          "oop_best_response_value": -19.017953504497108,
+          "value_ip": 19.033629053878386,
+          "value_oop": -19.033629053878386
+        },
+        "old-7553734": {
+          "exploitability": 0.02347011544381239,
+          "ip_best_response_value": 19.064893735384736,
+          "nash_conv": 0.04694023088762478,
+          "oop_best_response_value": -19.01795350449711,
+          "value_ip": 19.0336290538784,
+          "value_oop": -19.0336290538784
+        }
+      },
+      "iterations": 300,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize",
+      "serialized_bytes": {
+        "candidate": [
+          54023,
+          54023,
+          54023
+        ],
+        "old-7553734": [
+          54023,
+          54023,
+          54023
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.2697034920001897,
+          "samples": [
+            0.2697034920001897,
+            0.26568226500012315,
+            0.27070401099990704
+          ]
+        },
+        "old-7553734": {
+          "median": 0.3589494740003829,
+          "samples": [
+            0.35651832799976546,
+            0.3671591150000495,
+            0.3589494740003829
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 0.0,
+        "metric_abs_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "strategy_rows": 6
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.25182402309830465,
+          "ip_best_response_value": -24.6026548311468,
+          "nash_conv": 0.5036480461966093,
+          "oop_best_response_value": 25.10630287734341,
+          "value_ip": -24.993831802531318,
+          "value_oop": 24.993831802531318
+        },
+        "old-7553734": {
+          "exploitability": 0.25182402309830465,
+          "ip_best_response_value": -24.6026548311468,
+          "nash_conv": 0.5036480461966093,
+          "oop_best_response_value": 25.10630287734341,
+          "value_ip": -24.993831802531318,
+          "value_oop": 24.993831802531318
+        }
+      },
+      "iterations": 100,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "river-polarised-bluffcatcher",
+      "serialized_bytes": {
+        "candidate": [
+          3562,
+          3562,
+          3562
+        ],
+        "old-7553734": [
+          3562,
+          3562,
+          3562
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.0040621070002089255,
+          "samples": [
+            0.0040621070002089255,
+            0.004243495000082476,
+            0.004018372000246018
+          ]
+        },
+        "old-7553734": {
+          "median": 0.005362209999930201,
+          "samples": [
+            0.005309842999849934,
+            0.0060473230000752665,
+            0.005362209999930201
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 0.0,
+        "metric_abs_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "strategy_rows": 6
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.10377349253322521,
+          "ip_best_response_value": -24.86465038462636,
+          "nash_conv": 0.20754698506645042,
+          "oop_best_response_value": 25.07219736969281,
+          "value_ip": -24.99910723908863,
+          "value_oop": 24.99910723908863
+        },
+        "old-7553734": {
+          "exploitability": 0.10377349253322521,
+          "ip_best_response_value": -24.86465038462636,
+          "nash_conv": 0.20754698506645042,
+          "oop_best_response_value": 25.07219736969281,
+          "value_ip": -24.99910723908863,
+          "value_oop": 24.99910723908863
+        }
+      },
+      "iterations": 300,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "river-polarised-bluffcatcher",
+      "serialized_bytes": {
+        "candidate": [
+          3562,
+          3562,
+          3562
+        ],
+        "old-7553734": [
+          3562,
+          3562,
+          3562
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.01155915500021365,
+          "samples": [
+            0.01155915500021365,
+            0.01102730699994936,
+            0.011793350000061764
+          ]
+        },
+        "old-7553734": {
+          "median": 0.014638128000115103,
+          "samples": [
+            0.014572310999938054,
+            0.014713409000250977,
+            0.014638128000115103
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 1.2656542480726785e-14,
+        "metric_abs_differences": {
+          "exploitability": 5.329070518200751e-15,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 1.0658141036401503e-14,
+          "oop_best_response_value": 1.0658141036401503e-14,
+          "value_ip": 7.105427357601002e-15,
+          "value_oop": 7.105427357601002e-15
+        },
+        "strategy_rows": 36
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.1854563350798184,
+          "ip_best_response_value": 20.14041065153097,
+          "nash_conv": 0.3709126701596368,
+          "oop_best_response_value": -19.769497981371334,
+          "value_ip": 19.989975941402832,
+          "value_oop": -19.989975941402832
+        },
+        "old-7553734": {
+          "exploitability": 0.18545633507982373,
+          "ip_best_response_value": 20.14041065153097,
+          "nash_conv": 0.37091267015964746,
+          "oop_best_response_value": -19.769497981371323,
+          "value_ip": 19.989975941402825,
+          "value_oop": -19.989975941402825
+        }
+      },
+      "iterations": 100,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "river-weighted-raises",
+      "serialized_bytes": {
+        "candidate": [
+          16346,
+          16346,
+          16346
+        ],
+        "old-7553734": [
+          16356,
+          16356,
+          16356
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.02519505999998728,
+          "samples": [
+            0.02519505999998728,
+            0.0259295360001488,
+            0.024663443000008556
+          ]
+        },
+        "old-7553734": {
+          "median": 0.03307746700011194,
+          "samples": [
+            0.03319916700002068,
+            0.03285375599989493,
+            0.03307746700011194
+          ]
+        }
+      }
+    },
+    {
+      "comparison_tolerance": 1e-10,
+      "comparison_vs_old": {
+        "max_probability_abs_diff": 3.608224830031759e-14,
+        "metric_abs_differences": {
+          "exploitability": 1.7763568394002505e-15,
+          "ip_best_response_value": 3.552713678800501e-15,
+          "nash_conv": 3.552713678800501e-15,
+          "oop_best_response_value": 0.0,
+          "value_ip": 1.0658141036401503e-14,
+          "value_oop": 1.0658141036401503e-14
+        },
+        "strategy_rows": 36
+      },
+      "final_measured_gaps": {
+        "candidate": {
+          "exploitability": 0.02105629230111994,
+          "ip_best_response_value": 20.048380279929592,
+          "nash_conv": 0.04211258460223988,
+          "oop_best_response_value": -20.006267695327352,
+          "value_ip": 20.03111632676239,
+          "value_oop": -20.03111632676239
+        },
+        "old-7553734": {
+          "exploitability": 0.021056292301121715,
+          "ip_best_response_value": 20.048380279929596,
+          "nash_conv": 0.04211258460224343,
+          "oop_best_response_value": -20.006267695327352,
+          "value_ip": 20.0311163267624,
+          "value_oop": -20.0311163267624
+        }
+      },
+      "iterations": 300,
+      "memory_iterations": null,
+      "memory_peak_tracemalloc_bytes": {},
+      "repeats": 3,
+      "scenario_id": "river-weighted-raises",
+      "serialized_bytes": {
+        "candidate": [
+          16366,
+          16366,
+          16366
+        ],
+        "old-7553734": [
+          16360,
+          16360,
+          16360
+        ]
+      },
+      "timing_includes_json_serialization": true,
+      "whole_call_seconds": {
+        "candidate": {
+          "median": 0.07148253200011823,
+          "samples": [
+            0.07148253200011823,
+            0.07336281199968653,
+            0.07108121800001754
+          ]
+        },
+        "old-7553734": {
+          "median": 0.096224402000189,
+          "samples": [
+            0.09743443100023796,
+            0.096224402000189,
+            0.09477724199996373
+          ]
+        }
+      }
+    }
+  ],
+  "scenario_config_sha256": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+  "schema_version": 1,
+  "source_sha256_after": {
+    "comparison_harness": "35e4e1d94c41a69bcbe25b9c1996f5aa992d91919f5185d6d607336091c0ce59",
+    "config": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+    "harness": "ae5c851277ef15192dbe4647abe97a00ec4b43bc4880a343c62c2bb5e7eb56bc",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "daa725ff978c2fde0564678f40b48b9fe83055a1889cb293437d4190f278312a",
+    "pokerlab/public_cfr.py": "9e89d2f547da67f3cc7a22e365c62f417cac41e1dcd29e8f1c25fbf4e3e8eae8",
+    "pokerlab/public_diagnostics.py": "c9a040ff4208af659231e1e930da0cf2745b906c0d9f65ddc780ee82e6883335",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/turn_solver.py": "8eb58d37bf7a05f9ddedc735cb04745dd9fface8f3850fe3af3db764a49f8b71"
+  },
+  "source_sha256_before": {
+    "comparison_harness": "35e4e1d94c41a69bcbe25b9c1996f5aa992d91919f5185d6d607336091c0ce59",
+    "config": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+    "harness": "ae5c851277ef15192dbe4647abe97a00ec4b43bc4880a343c62c2bb5e7eb56bc",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "daa725ff978c2fde0564678f40b48b9fe83055a1889cb293437d4190f278312a",
+    "pokerlab/public_cfr.py": "9e89d2f547da67f3cc7a22e365c62f417cac41e1dcd29e8f1c25fbf4e3e8eae8",
+    "pokerlab/public_diagnostics.py": "c9a040ff4208af659231e1e930da0cf2745b906c0d9f65ddc780ee82e6883335",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/turn_solver.py": "8eb58d37bf7a05f9ddedc735cb04745dd9fface8f3850fe3af3db764a49f8b71"
+  },
+  "worktree_dirty": true
+}
