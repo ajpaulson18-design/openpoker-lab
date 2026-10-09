@@ -18,21 +18,7 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type,
     kernel accepts only its validated complete compatible river deal set and
     rejects future-card or arbitrary correlated weighted worlds.
     """
-    if not isinstance(averages, Mapping):
-        raise TypeError("averages must map information-set keys to policies.")
-    policies = {}
-    for key, row in averages.items():
-        if not isinstance(row, (tuple, list)) or not row:
-            raise ValueError("Each average policy must be a nonempty probability row.")
-        try:
-            probs = tuple(float(x) for x in row)
-        except (TypeError, ValueError, OverflowError) as exc:
-            raise ValueError("Average policies must contain finite probabilities.") from exc
-        if (any(not math.isfinite(x) or x < 0 for x in probs) or
-                abs(sum(probs) - 1.0) > 1e-8):
-            raise ValueError("Average policy probabilities must sum to one.")
-        policies[key] = probs
-    infos = {key: len(row) for key, row in policies.items()}
+    policies, infos = _normalize_policies(averages)
     pot, hand_counts = public_cfr._validate_inputs(
         worlds, infos, 1, "vanilla", pot, chance_type,
     )
@@ -47,6 +33,33 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type,
         hand_counts = context_counts
     edges, marginals = public_cfr._aggregate_prefixes(worlds, hand_counts)
 
+    return _evaluate_prepared(
+        root, policies, pot=pot, chance_type=chance_type,
+        hand_counts=hand_counts, edges=edges, marginals=marginals,
+        terminal_kernel=terminal_kernel,
+    )
+
+
+def _normalize_policies(averages):
+    if not isinstance(averages, Mapping):
+        raise TypeError("averages must map information-set keys to policies.")
+    policies = {}
+    for key, row in averages.items():
+        if not isinstance(row, (tuple, list)) or not row:
+            raise ValueError("Each average policy must be a nonempty probability row.")
+        try:
+            probs = tuple(float(x) for x in row)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError("Average policies must contain finite probabilities.") from exc
+        if (any(not math.isfinite(x) or x < 0 for x in probs) or
+                abs(sum(probs) - 1.0) > 1e-8):
+            raise ValueError("Average policy probabilities must sum to one.")
+        policies[key] = probs
+    return policies, {key: len(row) for key, row in policies.items()}
+
+
+def _evaluate_prepared(root, policies, *, pot, chance_type, hand_counts,
+                       edges, marginals, terminal_kernel=None):
     half = pot / 2.0
 
     def terminal_vector(node, prefix, opponent_reach, responder):
@@ -83,6 +96,9 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type,
         return row
 
     def profile(node, prefix, r0, r1):
+        if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                not hasattr(node, "player")):
+            raise ValueError("Ranked river diagnostics do not support public chance nodes.")
         if isinstance(node, chance_type):
             if terminal_kernel is not None:
                 raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
@@ -119,6 +135,9 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type,
     def best(player):
         opponent = 1 - player
         def visit(node, prefix, opp_reach):
+            if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                    not hasattr(node, "player")):
+                raise ValueError("Ranked river diagnostics do not support public chance nodes.")
             if isinstance(node, chance_type):
                 if terminal_kernel is not None:
                     raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
@@ -149,3 +168,23 @@ def evaluate_profile(root, worlds, averages, *, pot, chance_type,
         return sum(vals)
 
     return profile_value, best(0), best(1)
+
+
+def evaluate_ranked_profile(root, averages, *, terminal_kernel: RankedRiverPayoffs):
+    """Evaluate a fixed-board river profile without enumerating joint worlds."""
+    if not isinstance(terminal_kernel, RankedRiverPayoffs):
+        raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+    policies, infos = _normalize_policies(averages)
+    hand_counts = public_cfr._validate_ranked_infos(infos, terminal_kernel)
+    joint_marginals = terminal_kernel.joint_marginals()
+    if (not isinstance(joint_marginals, (tuple, list)) or
+            len(joint_marginals) != 2 or
+            tuple(map(len, joint_marginals)) != tuple(hand_counts)):
+        raise ValueError("Ranked river joint marginals do not match the hand ranges.")
+    return _evaluate_prepared(
+        root, policies, pot=terminal_kernel.pot,
+        chance_type=public_cfr._RankedNoChance,
+        hand_counts=hand_counts, edges={},
+        marginals={(): (joint_marginals[0], joint_marginals[1])},
+        terminal_kernel=terminal_kernel,
+    )

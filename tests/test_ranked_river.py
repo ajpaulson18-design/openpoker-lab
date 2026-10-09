@@ -57,6 +57,15 @@ def _assert_vector_matches(test, actual, expected, *, places=11):
 
 
 class RankedRiverPayoffsTests(unittest.TestCase):
+    def test_positive_compatible_joint_product_underflow_is_explicitly_rejected(self):
+        # Only the two tiny hands are compatible: mathematical joint mass is
+        # positive, but its 1e-400 product cannot be represented in binary64.
+        hands = ((_hand("AsAh"), _hand("KcKd")),
+                 (_hand("AsKc"), _hand("AhKd"), _hand("KcKd")))
+        with self.assertRaisesRegex(ValueError, "unrepresentable in binary64"):
+            RankedRiverPayoffs("2c3d4h5s9c", hands,
+                              ((1e-200, 1), (1, 1, 1e-200)), pot=100)
+
     def test_deterministic_random_sparse_ranges_match_pairwise_oracle(self):
         rng = random.Random(28401)
         board = ("2c", "3d", "4h", "5s", "9c")

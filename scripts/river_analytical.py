@@ -16,14 +16,39 @@ IP_KEYS = ((1, "catcher", ("check",)), (1, "catcher", ("bet",)))
 
 
 def equilibrium(nut_mass=F(1, 2), pot=100, bet=100):
-    """One equilibrium in the unsaturated bluff region, with IP checking back."""
+    """Return an exact equilibrium profile/value for the polarized river game.
+
+    In the unsaturated region OOP bluffs at the pot-odds indifference rate.
+    Once that rate reaches one, OOP bets every hand and IP folds; at the exact
+    boundary IP mixes between fold and call. The pure endpoints are handled
+    separately because one OOP holding then has zero prior mass.
+    """
     nut_mass, pot, bet = F(nut_mass), F(pot), F(bet)
-    if not 0 < nut_mass < 1 or pot <= 0 or bet <= 0:
-        raise ValueError("Positive pot/bet and interior nut mass required.")
+    if not 0 <= nut_mass <= 1 or pot <= 0 or bet <= 0:
+        raise ValueError("Positive pot/bet and nut mass in [0, 1] required.")
+    if nut_mass == 0:
+        profile = {
+            OOP_KEYS[0]: (F(1), F(0)), OOP_KEYS[1]: (F(1), F(0)),
+            OOP_KEYS[2]: (F(0), F(1)), OOP_KEYS[3]: (F(1), F(0)),
+            IP_KEYS[0]: (F(1), F(0)), IP_KEYS[1]: (F(0), F(1)),
+        }
+        return profile, -pot / 2
+    if nut_mass == 1:
+        profile = {
+            OOP_KEYS[0]: (F(0), F(1)), OOP_KEYS[1]: (F(0), F(1)),
+            OOP_KEYS[2]: (F(0), F(1)), OOP_KEYS[3]: (F(1), F(0)),
+            IP_KEYS[0]: (F(1), F(0)), IP_KEYS[1]: (F(1), F(0)),
+        }
+        return profile, pot / 2
     bluff = nut_mass / (1 - nut_mass) * bet / (pot + bet)
-    if bluff > 1:
-        raise ValueError("Analytical anchor requires unsaturated bluffs.")
     # Rows in the independent oracle are [check,bet] or [fold,call].
+    if bluff > 1:
+        profile = {
+            OOP_KEYS[0]: (F(0), F(1)), OOP_KEYS[1]: (F(0), F(1)),
+            OOP_KEYS[2]: (F(0), F(1)), OOP_KEYS[3]: (F(1), F(0)),
+            IP_KEYS[0]: (F(1), F(0)), IP_KEYS[1]: (F(1), F(0)),
+        }
+        return profile, pot / 2
     profile = {
         OOP_KEYS[0]: (F(0), F(1)), OOP_KEYS[1]: (1 - bluff, bluff),
         OOP_KEYS[2]: (F(0), F(1)), OOP_KEYS[3]: (F(1), F(0)),

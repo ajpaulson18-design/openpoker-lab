@@ -19,6 +19,10 @@ MAX_PREFIX_EDGES = 250_000
 _MAX_PRIVATE_HANDS = 52 * 51 // 2
 
 
+class _RankedNoChance:
+    """Sentinel node class for the matrix-free fixed-board river path."""
+
+
 def _aggregate_prefixes(worlds, hand_counts):
     """Aggregate joint deal mass by public prefix and private-hand pair.
 
@@ -137,6 +141,9 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
     opponent = 1 - target_player
 
     def visit(node, prefix, opponent_reach):
+        if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                not hasattr(node, "player")):
+            raise ValueError("Ranked river training does not support public chance nodes.")
         if isinstance(node, chance_type):
             if terminal_kernel is not None:
                 raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
@@ -258,6 +265,69 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
         raise ValueError("checkpoint_interval and checkpoint_callback must be supplied together.")
     edges, marginals = _aggregate_prefixes(worlds, hand_counts)
 
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=pot, chance_type=chance_type,
+        hand_counts=hand_counts, edges=edges, marginals=marginals,
+        checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, terminal_kernel=terminal_kernel,
+    )
+
+
+def _validate_ranked_infos(infos, terminal_kernel):
+    if not isinstance(infos, Mapping):
+        raise TypeError("infos must map information-set keys to action counts.")
+    hand_counts = [len(terminal_kernel.hands[0]), len(terminal_kernel.hands[1])]
+    for key, action_count in infos.items():
+        if (not isinstance(key, tuple) or len(key) != 3 or
+                type(key[0]) is not int or key[0] not in (0, 1) or
+                type(key[1]) is not int or not 0 <= key[1] < hand_counts[key[0]] or
+                not isinstance(key[2], tuple)):
+            raise ValueError("Information-set keys must match the ranked river hand ranges.")
+        if type(action_count) is not int or action_count < 1:
+            raise ValueError("Information sets must have a positive integer action count.")
+    return hand_counts
+
+
+def _validate_checkpoint_options(checkpoint_interval, checkpoint_callback):
+    if checkpoint_callback is not None and not callable(checkpoint_callback):
+        raise TypeError("checkpoint_callback must be callable.")
+    if checkpoint_interval is not None and (type(checkpoint_interval) is not int or
+                                             checkpoint_interval < 1):
+        raise ValueError("checkpoint_interval must be a positive integer.")
+    if (checkpoint_callback is not None) != (checkpoint_interval is not None):
+        raise ValueError("checkpoint_interval and checkpoint_callback must be supplied together.")
+
+
+def train_ranked_river(root, infos, iterations, algorithm="vanilla", *,
+                       terminal_kernel: RankedRiverPayoffs,
+                       checkpoint_interval=None, checkpoint_callback=None):
+    """Train on fixed-board river ranges without constructing joint worlds."""
+    if not isinstance(terminal_kernel, RankedRiverPayoffs):
+        raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
+    if type(iterations) is not int or iterations < 1:
+        raise ValueError("Iterations must be a positive integer.")
+    hand_counts = _validate_ranked_infos(infos, terminal_kernel)
+    _validate_checkpoint_options(checkpoint_interval, checkpoint_callback)
+    joint_marginals = terminal_kernel.joint_marginals()
+    if (not isinstance(joint_marginals, (tuple, list)) or
+            len(joint_marginals) != 2 or
+            tuple(map(len, joint_marginals)) != tuple(hand_counts)):
+        raise ValueError("Ranked river joint marginals do not match the hand ranges.")
+    marginals = {(): (joint_marginals[0], joint_marginals[1])}
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=terminal_kernel.pot,
+        chance_type=_RankedNoChance, hand_counts=hand_counts, edges={},
+        marginals=marginals, checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, terminal_kernel=terminal_kernel,
+    )
+
+
+def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
+                    hand_counts, edges, marginals, checkpoint_interval=None,
+                    checkpoint_callback=None,
+                    terminal_kernel: RankedRiverPayoffs | None = None):
     keys = list(infos)
     regrets = {key: [0.0] * infos[key] for key in keys}
     sums = {key: [0.0] * infos[key] for key in keys}
@@ -266,6 +336,9 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
     def visitor(current, deltas, target_player=None, average_factor=0.0,
                 average_only=False):
         def visit(node, prefix, reach0, reach1):
+            if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                    not hasattr(node, "player")):
+                raise ValueError("Ranked river training does not support public chance nodes.")
             if average_only:
                 if isinstance(node, chance_type):
                     if terminal_kernel is not None:
