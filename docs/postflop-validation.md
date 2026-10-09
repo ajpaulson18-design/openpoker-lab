@@ -117,3 +117,10 @@ uses a separate traced call. Reports record source/config/harness hashes and
 reject source changes during measurement. Timing is shared-machine evidence,
 not a general speed guarantee. Research/provenance is tracked separately in
 [postflop research](postflop-research.md).
+
+Committed records include the initial recursive vanilla report at source
+`3a8a78a` and the current planned vanilla report at guarded source `bac5e47`.
+They agree on game counts, values, exact BRs and gaps within 1e-12, but their
+different source revisions prevent a controlled backend speed/memory comparison.
+All 317 repository tests passed after the allocation guard, including the
+coaching regression suite. No evaluator or coaching source changed.

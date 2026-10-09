@@ -1,0 +1,202 @@
+{
+  "benchmark_id": "exact-postflop-v1",
+  "config_sha256": "15c137f16d557224b10cf1384852bfd8c86463eab6dcbc8a9231d4bc3fefd9da",
+  "created_at_utc": "2026-10-09T02:16:52.409797+00:00",
+  "methodology": {
+    "conditioning": "Selected ordered runouts condition the joint physical deal distribution",
+    "memory": "Separate whole-call tracemalloc peak, including exact BR evaluation",
+    "quality": "Solver-reported exact information-set BRs for the finite configured game",
+    "timing": "perf_counter whole-call wall time; median of independent calls"
+  },
+  "provenance": {
+    "git_revision": "bac5e474b94a8e01e5b0c625a6557c6bb5f39bbb",
+    "harness_sha256": "45b227aac6b7a640addd17b312b1f7d9ad050cb81738466117aea035eb4fb2f1",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.14.7",
+    "source_sha256": {
+      "cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+      "postflop_solver.py": "2fd3b7bef66de21555e8498e1f07cd580767b07e86fdd4961d13843cd22fc8e7",
+      "river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+      "turn_solver.py": "90d2853f4a3ca716dfeaeac04c717050ac3b102de8aea1e359e4713dd5c927e3"
+    },
+    "worktree_dirty": true
+  },
+  "results": [
+    {
+      "board": "2c3d4h",
+      "game": {
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 228,
+        "deals": 1,
+        "execution_backend": "planned-python",
+        "exploitability": 0.22064393939392368,
+        "info_sets": 8104,
+        "ip_best_response_value": 2.609469696969693,
+        "nash_conv": 0.44128787878784737,
+        "oop_best_response_value": -2.1681818181818455,
+        "plan_operation_limit": 250000,
+        "public_nodes": 8104,
+        "public_state_limit": 250000,
+        "public_states": 26244,
+        "runout_mode": "full-deck",
+        "scope": "Approximate equilibrium of the configured heads-up postflop abstraction; no preflop, multiway play, or rake.",
+        "solver_version": "configured-postflop-v1",
+        "strategy_schema": "postflop-strategy-v1",
+        "terminal_nodes": 17912,
+        "tree_actions": 16208,
+        "value_ip": 2.2402059659091114,
+        "value_oop": -2.2402059659091114,
+        "world_traversal_nodes": 12,
+        "worlds": 1980
+      },
+      "ip_range": "JsJd",
+      "iterations": 10,
+      "oop_range": "AsKd",
+      "peak_tracemalloc_bytes": 25052053,
+      "purpose": "Exact ordered physical turn/river chance on a small full-deck short-stack game; one private hand per player.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 4.114992299990263,
+        "samples": [
+          3.8869167999946512,
+          4.114992299990263,
+          6.101327600015793
+        ]
+      },
+      "scenario_id": "full1980-shortstack-flop"
+    },
+    {
+      "board": "2c3d4h",
+      "game": {
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 228,
+        "deals": 1,
+        "execution_backend": "planned-python",
+        "exploitability": 0.07354797979790528,
+        "info_sets": 8104,
+        "ip_best_response_value": 2.5667929292929075,
+        "nash_conv": 0.14709595959581057,
+        "oop_best_response_value": -2.419696969697097,
+        "plan_operation_limit": 250000,
+        "public_nodes": 8104,
+        "public_state_limit": 250000,
+        "public_states": 26244,
+        "runout_mode": "full-deck",
+        "scope": "Approximate equilibrium of the configured heads-up postflop abstraction; no preflop, multiway play, or rake.",
+        "solver_version": "configured-postflop-v1",
+        "strategy_schema": "postflop-strategy-v1",
+        "terminal_nodes": 17912,
+        "tree_actions": 16208,
+        "value_ip": 2.4413360164142452,
+        "value_oop": -2.4413360164142452,
+        "world_traversal_nodes": 12,
+        "worlds": 1980
+      },
+      "ip_range": "JsJd",
+      "iterations": 30,
+      "oop_range": "AsKd",
+      "peak_tracemalloc_bytes": 24632429,
+      "purpose": "Exact ordered physical turn/river chance on a small full-deck short-stack game; one private hand per player.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 6.444039900030475,
+        "samples": [
+          8.560214199998882,
+          6.444039900030475,
+          5.296194800001103
+        ]
+      },
+      "scenario_id": "full1980-shortstack-flop"
+    },
+    {
+      "board": "2c3d4h",
+      "game": {
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 39,
+        "deals": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 5.8164811924063144,
+        "info_sets": 305,
+        "ip_best_response_value": -3.1770967446518914,
+        "nash_conv": 11.632962384812629,
+        "oop_best_response_value": 14.81005912946452,
+        "plan_operation_limit": 250000,
+        "public_nodes": 180,
+        "public_state_limit": 250000,
+        "public_states": 466,
+        "runout_mode": "conditioned-ordered-subset",
+        "scope": "Approximate equilibrium of the configured heads-up postflop abstraction; no preflop, multiway play, or rake.",
+        "solver_version": "configured-postflop-v1",
+        "strategy_schema": "postflop-strategy-v1",
+        "terminal_nodes": 247,
+        "tree_actions": 404,
+        "value_ip": -9.27777391838805,
+        "value_oop": 9.27777391838805,
+        "world_traversal_nodes": 70,
+        "worlds": 8
+      },
+      "ip_range": "JsJd:1,9s9d:0.75",
+      "iterations": 10,
+      "oop_range": "AsKd:0.5,QhQc:1",
+      "peak_tracemalloc_bytes": 552991,
+      "purpose": "Three-street decisions with weighted private uncertainty and selected ordered runouts; conditional study game only.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.07675170002039522,
+        "samples": [
+          0.06870349997188896,
+          0.08282440004404634,
+          0.07675170002039522
+        ]
+      },
+      "scenario_id": "conditioned-flop-weighted-private-ranges"
+    },
+    {
+      "board": "2c3d4h",
+      "game": {
+        "backend": "exact-public-chance-tree",
+        "chance_nodes": 39,
+        "deals": 4,
+        "execution_backend": "planned-python",
+        "exploitability": 3.4087823491816516,
+        "info_sets": 305,
+        "ip_best_response_value": -4.056052379432248,
+        "nash_conv": 6.817564698363303,
+        "oop_best_response_value": 10.87361707779555,
+        "plan_operation_limit": 250000,
+        "public_nodes": 180,
+        "public_state_limit": 250000,
+        "public_states": 466,
+        "runout_mode": "conditioned-ordered-subset",
+        "scope": "Approximate equilibrium of the configured heads-up postflop abstraction; no preflop, multiway play, or rake.",
+        "solver_version": "configured-postflop-v1",
+        "strategy_schema": "postflop-strategy-v1",
+        "terminal_nodes": 247,
+        "tree_actions": 404,
+        "value_ip": -7.549630605544116,
+        "value_oop": 7.549630605544116,
+        "world_traversal_nodes": 70,
+        "worlds": 8
+      },
+      "ip_range": "JsJd:1,9s9d:0.75",
+      "iterations": 30,
+      "oop_range": "AsKd:0.5,QhQc:1",
+      "peak_tracemalloc_bytes": 551679,
+      "purpose": "Three-street decisions with weighted private uncertainty and selected ordered runouts; conditional study game only.",
+      "repeats": 3,
+      "runtime_seconds": {
+        "median": 0.16211840003961697,
+        "samples": [
+          0.16211840003961697,
+          0.17975419998401776,
+          0.15215019998140633
+        ]
+      },
+      "scenario_id": "conditioned-flop-weighted-private-ranges"
+    }
+  ],
+  "schema_version": 1
+}
