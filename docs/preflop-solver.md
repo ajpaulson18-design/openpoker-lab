@@ -62,7 +62,18 @@ responses accompany NashConv and exploitability (NashConv/2).
 
 ## Resource and model limits
 
-Only recursive and planned vanilla CFR/DCFR are supported. Public batching is
+Recursive and planned vanilla CFR/DCFR are supported. Optional
+`algorithm="cfrplus"` uses the existing repository CFR+ trainer with recursive
+traversal only; planned CFR+ is rejected before ranking worlds. It alternates
+SB then BB regret updates and averages the completed profile with linear
+iteration weights and own-player reach, with delay zero. Each iteration uses
+three world passes, counted in the 30-million world/decision work guard and
+reported in `training_passes_per_iteration` and `training_passes`. Terminal
+games without information sets perform zero training passes. Legacy method
+defaults and result fields are retained. See the
+[CFR+ comparison and provenance](preflop-cfrplus.md).
+
+Public batching is
 not exposed through this adapter. The generic public-batched trainer assumes a
 positive initial pot, whereas this hand starts with zero chips before blinds.
 
