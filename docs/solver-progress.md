@@ -339,3 +339,29 @@ NashConv remains 6.1505 chips vanilla and 2.8662 DCFR at these short checkpoints
 neither is a high-accuracy certificate. Both reports preserve source/config/harness
 hashes; the earlier v1 report remains historical. See
 [public-batched validation](public-batched-cfr.md).
+
+## Solver handoff completion and known-game quality
+
+The takeover of the interrupted "Advance OpenPoker solver" chat verified the
+complete final heads of PRs #23, #51, #52, #53, #54, #55 and #63 as ancestors
+of GitHub main `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce`. These include
+configured river betting, DCFR, turn-to-river chance, planned traversal,
+prompt traversal-state release, the shared postflop engine and public batching.
+Their production changes and published benchmark evidence are already merged.
+
+The remaining local work was the independent known-Kuhn quality package,
+completed here with its versioned config, oracle, tests and measured report.
+All 18 checkpoints passed at source `e9d9339`; the 10,000-iteration gaps are
+0.00463557 chips vanilla and 0.00165554 DCFR across all three trainers.
+Four focused tests passed during takeover; the prior complete log records
+335 passing tests. See [quality validation](cfr-known-quality.md) and its
+linked source-frozen report for exact values, provenance and reproduction.
+No solver, Coach, server, browser, persistence or shared contract source changes
+are required by this quality milestone; no external dependency was introduced.
+
+The ongoing solver goal now takes a flop/preflop detour while a separate
+reviewing workstream evaluates turn and river. Preserve the merged turn/river
+implementation and isolate any future shared-kernel changes behind compatible
+interfaces and full regression checks. Preflop and unrestricted no-limit
+Hold'em equilibrium remain unsupported; Kuhn quality is evidence about these
+training kernels, not a Hold'em accuracy certificate.
