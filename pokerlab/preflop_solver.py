@@ -15,6 +15,7 @@ from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
+from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
 from .public_diagnostics import evaluate_profile as evaluate_public_profile
 from .river_config import RiverConfig
@@ -481,7 +482,7 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
 def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
-                  diagnostics="recursive", resource_model="world"):
+                  diagnostics="recursive", resource_model="world", averaging_delay=0):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -493,6 +494,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     ``resource_model="public-vector"`` optionally bounds vector loop work and
     scratch dimensions instead of the conservative world-decision estimate.
     It requires public-batched training and diagnostics; other limits remain.
+    Positive ``averaging_delay`` optionally applies CFR+ weights
+    ``max(iteration-delay, 0)`` after each completed alternating sweep.
     """
     if config is None:
         config = PreflopConfig()
@@ -516,6 +519,10 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Public-vector resource model requires public-batched training and diagnostics.")
     if algorithm == "cfrplus" and traversal == "planned":
         raise ValueError("CFR+ supports recursive or public-batched traversal, not planned CFR.")
+    if type(averaging_delay) is not int or not 0 <= averaging_delay < iterations:
+        raise ValueError("CFR+ averaging delay must be an integer from zero to iterations-1.")
+    if averaging_delay and algorithm != "cfrplus":
+        raise ValueError("Positive averaging delay requires CFR+ training.")
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
@@ -568,10 +575,17 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         training_root, training_pot_anchor, training_view_states = \
             _positive_pot_training_view(root)
         try:
-            averages = train_public_batched(
-                training_root, worlds, infos, iterations, algorithm,
-                pot=2 * training_pot_anchor, chance_type=_Chance,
-            )
+            if averaging_delay:
+                averages = train_delayed_public_cfrplus(
+                    training_root, worlds, infos, iterations,
+                    averaging_delay=averaging_delay,
+                    pot=2 * training_pot_anchor, chance_type=_Chance,
+                )
+            else:
+                averages = train_public_batched(
+                    training_root, worlds, infos, iterations, algorithm,
+                    pot=2 * training_pot_anchor, chance_type=_Chance,
+                )
             if diagnostics == "public-batched":
                 diagnostic_values = evaluate_public_profile(
                     training_root, worlds, averages,
@@ -583,8 +597,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         finally:
             training_root = None
     elif algorithm == "cfrplus":
-        averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
-                                 _node_key, _chance_child)
+        if averaging_delay:
+            averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
+                                     _node_key, _chance_child, delay=averaging_delay)
+        else:
+            averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
+                                     _node_key, _chance_child)
     elif traversal == "planned":
         trainer = train_planned
         averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
@@ -716,6 +734,24 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                 if infos else "not-built-no-information-sets"
             ),
         })
+    if averaging_delay:
+        average_passes = (iterations if traversal == "public-batched"
+                          else iterations - averaging_delay) if infos else 0
+        result.update({
+            "averaging_delay": averaging_delay,
+            "averaging_positive_sweeps": iterations - averaging_delay if infos else 0,
+            "training_average_passes": average_passes,
+            "training_regret_passes": iterations * 2 if infos else 0,
+            "training_passes": iterations * 2 + average_passes if infos else 0,
+            "training_schedule": (
+                "alternating-player-0-then-player-1; delayed-linear-own-reach-average-after-each-sweep"
+                if infos else None
+            ),
+        })
+        if traversal == "public-batched":
+            result["public_batched_training_kernel"] = "preflop-delayed-cfrplus-python"
+        elif infos:
+            result["training_passes_per_iteration"] = None
     if diagnostics == "public-batched":
         result.update({
             "diagnostics_backend": "public-batched-python",
