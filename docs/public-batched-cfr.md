@@ -29,21 +29,32 @@ visitor closures are cleared on success and failure. The specialized trainer
 supports the repository's static fold/showdown utilities; use the shared CFR
 kernel for generic callbacks or strategy locks.
 
-Seven added regressions compare weighted blocker-sensitive policies through
+Eight added regressions compare weighted blocker-sensitive policies through
 100 iterations, vanilla/DCFR and flop/turn/river starts, asymmetric stacks,
 street sizing, raises and all-ins. An independent serialized-policy replay
 checks flop value and both information-set best responses. Further tests cover
 zero-reach fallback, input and edge limits, and CPython immediate release with
 cyclic collection disabled on success and failure. These tests establish
 backend agreement for their fixtures; they do not certify unrestricted GTO.
-The complete repository suite passed all 330 tests in 166.452 seconds,
+The complete repository suite passed all 331 tests in 105.342 seconds,
 including the separate coaching regressions.
+
+Global joint-world normalization uses `math.fsum`. The older left-to-right
+float sum shifted four normalized fixture weights by up to `2.78e-17`, creating
+tiny positive regret at an exact tie and changing finite-iteration policies.
+A regression emulates that arithmetic through fixture construction and both
+trainers at 20/100 iterations, preserving the original policy tolerance.
+[Python's summation documentation](https://docs.python.org/3.12/library/functions.html#sum)
+records the float-sum change in 3.12; [math.fsum](https://docs.python.org/3.12/library/math.html#math.fsum)
+provides the accurate accumulation used here. This addresses the reproduced
+normalization trigger; it does not guarantee bit-identical arithmetic on every
+platform. CFR/DCFR recurrence and regret matching remain unchanged.
 
 The controlled whole-call benchmark is:
 
 ```sh
-python -m scripts.benchmark_public_cfr --algorithm vanilla --output benchmarks/results/public-batched-v1-vanilla.json
-python -m scripts.benchmark_public_cfr --algorithm dcfr --output benchmarks/results/public-batched-v1-dcfr.json
+python -m scripts.benchmark_public_cfr --algorithm vanilla --output benchmarks/results/public-batched-v2-vanilla.json
+python -m scripts.benchmark_public_cfr --algorithm dcfr --output benchmarks/results/public-batched-v2-dcfr.json
 ```
 
 Each run rotates backend order over independent full solves, including world

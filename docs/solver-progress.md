@@ -320,11 +320,13 @@ action-tree and street coverage alone do not prove equilibrium accuracy.
 
 An optional `public-batched` backend shares each public traversal over private
 hand vectors while retaining exact physical chance enumeration and the existing
-game model. Seven added regressions passed, including independent flop policy
+game model. Eight added regressions passed, including independent flop policy
 and best-response replay, both algorithms, blocker-sensitive weighted worlds,
 three street starts, asymmetric stacks, sizing, raises and all-ins. A 250,000
 prefix/hand-edge cap reserves sparse aggregation entries before allocation;
-recursive visitor bindings clear on success and failure. All 330 repository
-tests passed in 166.452 seconds, including coaching regressions. Recursive
+recursive visitor bindings clear on success and failure. Accurate global chance
+normalization fixes a reproduced Python 3.11 tie-sensitivity trigger without
+altering the update rule or policy tolerance. All 331 repository
+tests passed in 105.342 seconds, including coaching regressions. Recursive
 remains the default/reference. Controlled whole-call timing and memory results
 are required before adoption claims; see [public-batched validation](public-batched-cfr.md).

@@ -1,6 +1,7 @@
 """Differential and lifetime checks for exact public-batched CFR traversal."""
 import builtins
 import gc
+from math import fsum
 import platform
 import unittest
 import weakref
@@ -90,7 +91,9 @@ class PublicBatchedCFRTests(unittest.TestCase):
         # for float sums. Emulate that arithmetic across fixture construction
         # and both trainers so this guard is independent of the host version.
         with patch.object(builtins, "sum", side_effect=naive_float_sum):
-            actual = train_fixture(_fixture())
+            fixture = _fixture()
+            self.assertEqual(fsum(world[2] for world in fixture[1]), 1.0)
+            actual = train_fixture(fixture)
 
         self.assertEqual(expected.keys(), actual.keys())
         for key in expected:
