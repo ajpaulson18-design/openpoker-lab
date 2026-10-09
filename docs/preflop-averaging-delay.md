@@ -114,6 +114,27 @@ the 120-iteration results; it is not represented as part of the initial
 predeclared set. The 120-iteration prior stays an accuracy reference, not a
 same-iteration parity assertion or timing/memory comparison at 160.
 
+The [160-iteration report](../benchmarks/results/preflop-averaging-delay-160-v1.json)
+passed all checks at source `2075cc69139c8f8e5a7809e9cefd0fcc676276c0`, with a
+clean starting worktree and unchanged 19 source hashes, configuration and prior
+report hashes. The production implementation is identical to the first-stage
+source; only the measurement harness was generalized for a prior checkpoint
+at a different iteration count. The old harness hash was independently checked
+against its frozen Git source. Maximum scalar disagreement at 160 is `1.58e-14`.
+
+| Delay / iterations | Independent NashConv chips | Padded SB game-value interval | Observed complete seconds | Target reached |
+| --- | ---: | --- | ---: | --- |
+| 0 / 160 | 0.0015694061 | [0.5178989993, 0.5194684056] | 118.833 | No |
+| 80 / 160 | 0.0007985379 | [0.5182045061, 0.5190030442] | 109.401 | Yes |
+
+Each endpoint has `1e-10` outward padding before display rounding. Delay 80
+meets the unchanged 0.001-chip finite-game legal deviation target at 160;
+zero delay at the same iteration count does not. This certifies the measured
+profile's accuracy under this game's configured numeric model, not unrestricted
+Hold'em, other flops/ranges, universal convergence rates or exact-decimal rules.
+The repeated selected-game traced peaks were 721,125/714,453 bytes; they remain
+small-game observations, with no high-iteration full-flop memory claim.
+
 The report records one complete **uninstrumented** solve plus JSON serialization
 per full-flop delay, including resource preflight. Pre-call GC and independent
 replay are excluded. Source/configuration/prior report hashes are frozen and
