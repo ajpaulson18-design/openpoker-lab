@@ -9,6 +9,7 @@ from itertools import islice
 from math import comb, fsum, isfinite
 
 from . import cfr
+from .cfr_plus import train as train_cfrplus
 from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
@@ -435,10 +436,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise TypeError("config must be a PreflopConfig or serializable mapping.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
-    if algorithm not in ("vanilla", "dcfr"):
-        raise ValueError("Solver algorithm must be vanilla or dcfr.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
     if traversal not in ("recursive", "planned"):
         raise ValueError("Preflop traversal supports recursive or planned CFR.")
+    if algorithm == "cfrplus" and traversal != "recursive":
+        raise ValueError("CFR+ supports recursive traversal only.")
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
@@ -446,7 +449,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     preflop_tree = build_preflop_tree(config)
     (root, public_state_count, decision_count, world_decision_work, planned_ops,
      max_template_states, max_template_decisions) = \
-        _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations)
+        _merge_preflop_tree(preflop_tree, worlds, specs, traversal,
+                            iterations * 3 if algorithm == "cfrplus" else iterations)
 
     # Global hand identity is SB=0, BB=1. Each history sees only own hands that
     # remain legal after its public flop/turn/river prefix.
@@ -468,12 +472,17 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             metadata[key] = node
 
     payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
-    trainer = train_planned if traversal == "planned" else cfr.train
-    if traversal == "planned":
+    if algorithm == "cfrplus" and not infos:
+        averages = {}
+    elif algorithm == "cfrplus":
+        averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
+                                 _node_key, _chance_child)
+    elif traversal == "planned":
+        trainer = train_planned
         averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
                            _node_key, _chance_child, max_plan_ops=MAX_PLAN_OPS)
     else:
-        averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
+        averages = cfr.train(root, worlds, infos, iterations, algorithm, payoff,
                            _node_key, _chance_child)
     value_sb = cfr.evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
     br_sb = cfr.best_response(0, root, worlds, averages, payoff, _node_key,
@@ -511,7 +520,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     compatible_runouts = {world[4:7] for world in worlds}
     reachable_output = [list(flop + (turn, river)) for flop, turn, river in selected
                         if ("".join(flop), turn, river) in compatible_runouts]
-    return {
+    result = {
         "method": "full-traversal CFR",
         "solver_version": "preflop-strategy-v1",
         "strategy_schema": "preflop-strategy-v1",
@@ -563,4 +572,14 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         "scope": "Approximate equilibrium of the configured heads-up finite betting abstraction and selected physical runouts; no unrestricted preflop or Hold'em GTO claim.",
         "strategy": strategy,
     }
+    if algorithm == "cfrplus":
+        result.update({
+            "training_schedule": (
+                "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep"
+                if infos else None
+            ),
+            "training_passes_per_iteration": 3 if infos else 0,
+            "training_passes": iterations * 3 if infos else 0,
+        })
+    return result
 
