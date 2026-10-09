@@ -21,7 +21,7 @@ from pokerlab.turn_solver import solve_turn_river
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "benchmarks" / "turn-river-v1.json"
 SOURCE_MODULES = (
-    "turn_solver.py", "postflop_solver.py", "cfr.py", "planned_cfr.py",
+    "turn_solver.py", "postflop_solver.py", "cfr.py", "planned_cfr.py", "public_cfr.py",
     "river_tree.py", "river_config.py", "cards.py",
 )
 
@@ -148,7 +148,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scenario", action="append", dest="scenario_ids",
                         help="Run only this fixture; repeat to select multiple.")
     parser.add_argument("--algorithm", choices=("vanilla", "dcfr"), default="vanilla")
-    parser.add_argument("--traversal", choices=("recursive", "planned"), default="recursive")
+    parser.add_argument("--traversal", choices=("recursive", "planned", "public-batched"), default="recursive")
     parser.add_argument("--iterations", type=int, nargs="+",
                         help="Override checkpoints, for example --iterations 20 100.")
     parser.add_argument("--repeats", type=int, help="Timed repeats per checkpoint; defaults to config.")

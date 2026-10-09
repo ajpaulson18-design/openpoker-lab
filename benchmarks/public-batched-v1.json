@@ -1,0 +1,50 @@
+{
+  "benchmark_id": "public-batched-cfr-v1",
+  "schema_version": 1,
+  "traversals": [
+    "recursive",
+    "public-batched"
+  ],
+  "defaults": {
+    "iterations": [
+      20
+    ],
+    "repeats": 3
+  },
+  "scenarios": [
+    {
+      "id": "weighted-multihand-flop-3-ordered-runouts",
+      "purpose": "Bounded exact whole-call comparison on a multi-combo flop range and three selected ordered physical runouts.",
+      "board": "2c3d4h",
+      "oop": "AA,KK,QQ",
+      "ip": "JJ,TT,99",
+      "runouts": [
+        [
+          "6c",
+          "8c"
+        ],
+        [
+          "6c",
+          "9s"
+        ],
+        [
+          "As",
+          "8c"
+        ]
+      ],
+      "config": {
+        "pot": 10,
+        "effective_stack": [
+          35,
+          25
+        ],
+        "bet_sizes": [
+          0.5
+        ],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": true
+      }
+    }
+  ]
+}

@@ -5,10 +5,12 @@ public-card outcomes. Selected outcomes condition one joint physical game.
 It is a bounded action abstraction, not a full no-limit Hold'em solver.
 """
 from dataclasses import dataclass
+from math import fsum
 
 from .cards import DECK, cards, expand_range, rank_hand
 from .cfr import train, evaluate, best_response
 from .planned_cfr import train as train_planned, MAX_PLAN_OPS
+from .public_cfr import train_public_batched, MAX_PREFIX_EDGES
 from .river_config import RiverConfig
 from .river_tree import _Node, _Terminal, _build_tree, _terminal_value
 
@@ -130,7 +132,9 @@ def _enumerate_worlds(board, oop_range, ip_range, runouts=None, iterations=10):
                 if len(worlds) * iterations > _MAX_WORLD_ITERATIONS:
                     raise ValueError("Postflop solver allows 3 million world iterations.")
 
-    normalizer = sum(world[2] for world in worlds)
+    # Stable across Python's changing float-sum implementations. A one-ulp
+    # normalization shift can create spurious positive regret at exact ties.
+    normalizer = fsum(world[2] for world in worlds)
     if normalizer <= 0:
         raise ValueError("Ranges and future runouts contain no compatible physical deals.")
     normalized = [(world[0], world[1], world[2] / normalizer, *world[3:])
@@ -358,8 +362,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         raise ValueError("Postflop board must contain exactly three, four, or five cards.")
     if algorithm not in ("vanilla", "dcfr"):
         raise ValueError("Solver algorithm must be vanilla or dcfr.")
-    if traversal not in ("recursive", "planned"):
-        raise ValueError("Traversal must be recursive or planned.")
+    if traversal not in ("recursive", "planned", "public-batched"):
+        raise ValueError("Traversal must be recursive, planned, or public-batched.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
     config = RiverConfig() if config is None else config
@@ -413,9 +417,13 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
             metadata[key] = node
 
     payoff = lambda node, world: _terminal_value(node, world[3], config.pot)
-    trainer = train_planned if traversal == "planned" else train
-    averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
-                       _node_key, _chance_child)
+    if traversal == "public-batched":
+        averages = train_public_batched(root, worlds, infos, iterations, algorithm,
+                                        pot=config.pot, chance_type=_Chance)
+    else:
+        trainer = train_planned if traversal == "planned" else train
+        averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
+                           _node_key, _chance_child)
     value = evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
     br0 = best_response(0, root, worlds, averages, payoff, _node_key,
                         _chance_partitions)
@@ -466,6 +474,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         "strategy_schema": "postflop-strategy-v1",
         "execution_backend": f"{traversal}-python",
         "plan_operation_limit": MAX_PLAN_OPS if traversal == "planned" else None,
+        "public_batch_edge_limit": MAX_PREFIX_EDGES if traversal == "public-batched" else None,
         "backend": "exact-public-chance-tree", "board": list(board),
         "config": config.to_dict(), "street_configs": config_fields,
         "turn_config": None if "turn" not in stages else stages["turn"].to_dict(),
