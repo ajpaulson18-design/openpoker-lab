@@ -2,6 +2,10 @@
 
 The [approved image](design/openpoker-blueprint.png) is the visual blueprint, not inspiration for a redesign: a brown lounge shell, green oval felt and amber rail, with play on the left, strategy on the right, and an educational coach below. The existing standard-library server, APIs and calculation modules remain unchanged. This branch was isolated from `main`; concurrent postflop work in PR #55 is outside its scope.
 
+## Approved front face
+
+On October 8, 2026, the user approved the implemented front face: "I love this front face and any edits to this front face would be minor from here." Treat the current espresso shell, felt/rail, seat/card treatment, action strip, right-side strategy and compact coach as the accepted visual baseline. Future visual edits should be minor refinements unless the user explicitly requests a broader redesign. Solver/data improvements should integrate through the existing presentation contracts while preserving this layout and identity.
+
 ## Components and contracts
 
 - `index.html`: semantic shell, table setup/actions, native collapsible analysis, coach and existing research tabs. Existing IDs and form names are preserved.
