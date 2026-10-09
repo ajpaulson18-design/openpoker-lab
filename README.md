@@ -185,7 +185,7 @@ compatible private pair. It reuses the configured betting builder and the CFR
 backends, and hides each future card until its public reveal. Full-deck flop
 solving currently fits only small games under the resource limits; selected
 ordered runouts define a conditional study game. See [postflop examples and
-validation](docs/postflop-validation.md). Preflop, broader practical ranges and
+validation](docs/postflop-validation.md). Full-deck preflop, broader practical ranges and
 eventually multiway equilibrium remain development goals.
 
 Optional `traversal="public-batched"` shares exact training work across private
@@ -205,7 +205,11 @@ An additive [heads-up preflop betting component](docs/preflop-betting.md)
 constructs blind-aware actions and explicit flop/all-in continuation boundaries.
 It reuses the existing action and CFR interfaces, including the big blind's
 option after a limp. Continuation leaves remain unsolved; this component does
-not yet supply preflop equilibrium strategies.
+not itself supply preflop equilibrium strategies. The additive
+[bounded preflop solver](docs/preflop-solver.md) now connects it to physical
+flop chance and the existing postflop trees, with independent serialized-policy
+replay and exact legal best responses. Selected five-card outcomes condition
+the whole joint game; this is not an unconditional full-deck preflop solution.
 
 ## Range notation
 
