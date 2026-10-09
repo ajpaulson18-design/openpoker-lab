@@ -11,6 +11,10 @@ from .cards import DECK, cards, rank_hand
 from .river_tree import _Terminal
 
 _CARD_ID = {card: index for index, card in enumerate(DECK)}
+# Inclusion-exclusion over near-total blocked mass can lose meaningful relative
+# precision well before the result reaches machine epsilon. Rare near-zero
+# cases use direct compatible-pair summation instead.
+_CANCELLATION_FALLBACK_RATIO = 1e-6
 
 
 def _normalize_weights(values, label):
@@ -175,6 +179,12 @@ class RankedRiverPayoffs:
                 -ip_card_mass[self.card_ids[0][index][1]],
                 0.0 if same is None else self.weights[1][same],
             ))
+            if compatible <= _CANCELLATION_FALLBACK_RATIO:
+                compatible = math.fsum(
+                    self.weights[1][other_index]
+                    for other_index, other in enumerate(self.hands[1])
+                    if not (set(hand) & set(other))
+                )
             tolerance = 1e-12
             if compatible < 0:
                 if compatible >= -tolerance:
@@ -183,7 +193,7 @@ class RankedRiverPayoffs:
                     raise ArithmeticError("Compatible range mass became materially negative.")
             compatible_by_oop.append(self.weights[0][index] * compatible)
         compatible_mass = math.fsum(compatible_by_oop)
-        if compatible_mass <= 1e-12:
+        if compatible_mass <= _CANCELLATION_FALLBACK_RATIO:
             compatible_mass = math.fsum(
                 self.weights[0][i] * self.weights[1][j]
                 for i, hand0 in enumerate(self.hands[0])
@@ -196,6 +206,62 @@ class RankedRiverPayoffs:
         if not math.isfinite(self.factor):
             raise ValueError("Compatible range mass is too small to normalize safely.")
         self.compatible_pair_count = compatible_pair_count
+
+    def validate_worlds(self, worlds, *, pot):
+        """Validate that supplied worlds are this kernel's exact river deal set.
+
+        Factorized payoffs are valid only for the complete, unconditioned
+        compatible private-pair distribution used to construct this kernel.
+        This rejects arbitrary weighted-world callers instead of silently
+        replacing their joint distribution with range-factorized weights.
+        """
+        if isinstance(pot, bool) or not isinstance(pot, Real):
+            raise ValueError("Ranked river world pot must match the kernel pot.")
+        try:
+            supplied_pot = float(pot)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError("Ranked river world pot must match the kernel pot.") from exc
+        if not math.isfinite(supplied_pot) or supplied_pot != self.pot:
+            raise ValueError("Ranked river world pot must match the kernel pot.")
+        if isinstance(worlds, (str, bytes)) or not hasattr(worlds, "__len__"):
+            raise TypeError("Ranked river worlds must be a sized sequence.")
+        if len(worlds) != self.compatible_pair_count:
+            raise ValueError("Ranked river worlds do not match the complete compatible deal set.")
+        seen = set()
+        for world in worlds:
+            if not isinstance(world, (tuple, list)) or len(world) != 4:
+                raise ValueError("Ranked river worlds cannot contain future cards.")
+            oop_index, ip_index = world[:2]
+            if (type(oop_index) is not int or not 0 <= oop_index < len(self.hands[0]) or
+                    type(ip_index) is not int or not 0 <= ip_index < len(self.hands[1])):
+                raise ValueError("Ranked river world hand indices do not match the kernel.")
+            pair = (oop_index, ip_index)
+            if pair in seen:
+                raise ValueError("Ranked river worlds contain a duplicate private-hand pair.")
+            seen.add(pair)
+            if set(self.hands[0][oop_index]) & set(self.hands[1][ip_index]):
+                raise ValueError("Ranked river worlds contain a blocked private-hand pair.")
+            try:
+                mass = float(world[2])
+                sign = float(world[3])
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError("Ranked river world mass and sign must be valid numbers.") from exc
+            if (isinstance(world[2], bool) or not isinstance(world[2], Real) or
+                    not math.isfinite(mass) or mass < 0):
+                raise ValueError("Ranked river world mass must be finite and nonnegative.")
+            if isinstance(world[3], bool) or not isinstance(world[3], Real):
+                raise ValueError("Ranked river world sign must be a real number.")
+            expected_mass = (self.weights[0][oop_index] *
+                             self.weights[1][ip_index] * self.factor)
+            if not math.isclose(mass, expected_mass, rel_tol=1e-10, abs_tol=0.0):
+                raise ValueError("Ranked river world mass does not match factorized range weights.")
+            expected_sign = ((self._rank_by_index[0][oop_index] >
+                              self._rank_by_index[1][ip_index]) -
+                             (self._rank_by_index[0][oop_index] <
+                              self._rank_by_index[1][ip_index]))
+            if isinstance(world[3], bool) or not math.isfinite(sign) or sign != expected_sign:
+                raise ValueError("Ranked river world sign does not match cached hand ranks.")
+        return None
 
     @staticmethod
     def _reach(values, expected):
@@ -274,7 +340,7 @@ class RankedRiverPayoffs:
                 total_reach, -card_reach[pair[0]], -card_reach[pair[1]],
                 0.0 if same is None else weighted_reach[same],
             ))
-            if approximate <= 1e-12 * total_reach:
+            if approximate <= _CANCELLATION_FALLBACK_RATIO * total_reach:
                 # Rare cancellation path: direct physical filtering preserves
                 # tiny valid residual mass and identifies truly empty support.
                 return math.fsum(

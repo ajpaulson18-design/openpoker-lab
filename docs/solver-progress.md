@@ -1,5 +1,24 @@
 # Solver progress record
 
+## 2026-10-09 ranked river terminal work
+
+Branch `solver/ranked-river-20261009`, base merged `5c712f8`: added an optional
+fixed-board ranked payoff backend for public-batched river training and
+diagnostics. Blocker-aware rank sweeps, compensated accumulation and direct
+summation on ill-conditioned cases preserve physical range products and
+short-stack refunds. Rational pair-loop tests caught and prevented two
+cancellation defects. No earlier-street or Coach behavior is changed.
+
+Cached-sparse terminal phase comparisons show 1.22–15.19x speedups across
+64–512 hands per player, with increased working allocation. Complete-call
+results are mixed: small/preparation-heavy cases can slow down, while the
+256-hand/40-iteration probe improved median time by 1.40x DCFR / 1.72x CFR+.
+That CFR+ probe uses 96% of the existing world-node guard; no limits were
+relaxed. Default results matched the merged baseline exactly on eight
+flop/turn/river cases. Full local tests passed 453 before the final numerical
+regression; all 48 focused tests passed after it. See
+[mathematics, validation, exact measurements and architectural limits](ranked-river.md).
+
 ## 2026-10-09 turn/river accuracy-controlled follow-up
 
 Branch `solver/turn-river-accuracy-20261009`, base `b7bf525`: added optional
