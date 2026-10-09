@@ -1,0 +1,3959 @@
+{
+  "benchmark_id": "matrix-free-river-v1",
+  "configuration": {
+    "board": "2c7d9hJsKd",
+    "config": {
+      "bet_sizes": [
+        0.75
+      ],
+      "effective_stack": 200.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100.0,
+      "raise_sizes": []
+    },
+    "full_range": "Uniform random/random ranges of all 1,081 board-legal combinations per player; CFR+ only.",
+    "small_ranges": "Deterministic board-excluded combo spread, independent offsets/strides, weights cycle [1,.5,.75,.25,.125]. Exact holdings and weights are recorded in cases."
+  },
+  "created_at_utc": "2026-10-09T19:26:39.192355+00:00",
+  "full_range": {
+    "case": {
+      "board": "2c7d9hJsKd",
+      "config": {
+        "bet_sizes": [
+          0.75
+        ],
+        "effective_stack": 200.0,
+        "include_all_in": false,
+        "max_raises": 0,
+        "pot": 100.0,
+        "raise_sizes": []
+      },
+      "ip": "random",
+      "oop": "random",
+      "range_size_per_player": 1081
+    },
+    "results": [
+      {
+        "algorithm": "cfrplus",
+        "counts": {
+          "chance_nodes": 0,
+          "compatible_pairs": 1070190,
+          "deals": 1070190,
+          "info_sets": 4324,
+          "iterations": 10,
+          "public_nodes": 4,
+          "public_states": 9,
+          "resource_usage": {
+            "fallback_pair_checks": 0,
+            "hand_counts": [
+              1081,
+              1081
+            ],
+            "hand_state_pass_work": 321057,
+            "info_action_slots": 8648,
+            "limits": {
+              "fallback_pair_checks": 30000000,
+              "hand_state_pass_work": 30000000,
+              "info_action_slots": 1000000,
+              "public_states": 250000
+            }
+          },
+          "world_traversal_nodes": 4,
+          "worlds_materialized": 0
+        },
+        "gap_metrics": {
+          "exploitability": 0.8109016655553594,
+          "ip_best_response_value": 4.368480051318182,
+          "nash_conv": 1.6218033311107187,
+          "oop_best_response_value": -2.746676720207463,
+          "value_oop": -3.800529030149141
+        },
+        "iterations": 10,
+        "legacy_materialized_rejection": "Postflop solver allows 3 million candidate hand-pair iterations.",
+        "legacy_materialized_status": "rejected-by-existing-guard",
+        "peak_memory": {
+          "counts": {
+            "chance_nodes": 0,
+            "compatible_pairs": 1070190,
+            "deals": 1070190,
+            "info_sets": 4324,
+            "iterations": 10,
+            "public_nodes": 4,
+            "public_states": 9,
+            "resource_usage": {
+              "fallback_pair_checks": 0,
+              "hand_counts": [
+                1081,
+                1081
+              ],
+              "hand_state_pass_work": 321057,
+              "info_action_slots": 8648,
+              "limits": {
+                "fallback_pair_checks": 30000000,
+                "hand_state_pass_work": 30000000,
+                "info_action_slots": 1000000,
+                "public_states": 250000
+              }
+            },
+            "world_traversal_nodes": 4,
+            "worlds_materialized": 0
+          },
+          "iterations": 10,
+          "peak_tracemalloc_bytes": 6829006
+        },
+        "status": "admitted",
+        "whole_call_seconds": 0.48978854099993896
+      },
+      {
+        "algorithm": "cfrplus",
+        "counts": {
+          "chance_nodes": 0,
+          "compatible_pairs": 1070190,
+          "deals": 1070190,
+          "info_sets": 4324,
+          "iterations": 50,
+          "public_nodes": 4,
+          "public_states": 9,
+          "resource_usage": {
+            "fallback_pair_checks": 0,
+            "hand_counts": [
+              1081,
+              1081
+            ],
+            "hand_state_pass_work": 1488537,
+            "info_action_slots": 8648,
+            "limits": {
+              "fallback_pair_checks": 30000000,
+              "hand_state_pass_work": 30000000,
+              "info_action_slots": 1000000,
+              "public_states": 250000
+            }
+          },
+          "world_traversal_nodes": 4,
+          "worlds_materialized": 0
+        },
+        "gap_metrics": {
+          "exploitability": 0.10686351757177492,
+          "ip_best_response_value": 3.512604751173756,
+          "nash_conv": 0.21372703514354985,
+          "oop_best_response_value": -3.2988777160302063,
+          "value_oop": -3.451269934308109
+        },
+        "iterations": 50,
+        "peak_memory": null,
+        "status": "admitted",
+        "whole_call_seconds": 2.262531822000028
+      },
+      {
+        "algorithm": "cfrplus",
+        "counts": {
+          "chance_nodes": 0,
+          "compatible_pairs": 1070190,
+          "deals": 1070190,
+          "info_sets": 4324,
+          "iterations": 100,
+          "public_nodes": 4,
+          "public_states": 9,
+          "resource_usage": {
+            "fallback_pair_checks": 0,
+            "hand_counts": [
+              1081,
+              1081
+            ],
+            "hand_state_pass_work": 2947887,
+            "info_action_slots": 8648,
+            "limits": {
+              "fallback_pair_checks": 30000000,
+              "hand_state_pass_work": 30000000,
+              "info_action_slots": 1000000,
+              "public_states": 250000
+            }
+          },
+          "world_traversal_nodes": 4,
+          "worlds_materialized": 0
+        },
+        "gap_metrics": {
+          "exploitability": 0.040360959387301776,
+          "ip_best_response_value": 3.4144228663418112,
+          "nash_conv": 0.08072191877460355,
+          "oop_best_response_value": -3.3337009475672077,
+          "value_oop": -3.3938618310283903
+        },
+        "iterations": 100,
+        "peak_memory": null,
+        "status": "admitted",
+        "whole_call_seconds": 4.487948303999929
+      }
+    ]
+  },
+  "metadata": {
+    "algorithms": [
+      "dcfr",
+      "cfrplus"
+    ],
+    "command": "python -m scripts.benchmark_matrix_free_river",
+    "full_range_iterations": [
+      10,
+      50,
+      100
+    ],
+    "input_sha256": "4ed4106cc487de801ff87e9040604ac0d6975897f434d37ba966a562ae055c86",
+    "memory_skipped": false,
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_version": "3.12.14",
+    "repeats": 3,
+    "revision": "3ee96fb79ba9c64a44e67dfc2488b9b2a2fcdf5c",
+    "small_iterations": {
+      "128": 50,
+      "256": 40
+    },
+    "source_sha256": {
+      "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "pokerlab/matrix_free_river.py": "fd5fd29c40750413a85c93bb4dbd225847cc8e33d9702426044f606c011af709",
+      "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+      "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+      "pokerlab/public_cfr.py": "0dbefbd36f44cf867c07a99c883f3d3afee162fa08a4374cf6520f3e56aa2f10",
+      "pokerlab/public_diagnostics.py": "90455f8a668f9cd3325eaa8ea221d262795bf235a516a1c89b8a7772d396186d",
+      "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+      "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+      "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+      "scripts/benchmark_matrix_free_river.py": "6390cc5aa1624079d8e5f774436e43f22b2f521fe25331c0bc9f9f02cbef96bd",
+      "scripts/benchmark_turn_solver.py": "6b69737aa73ef6d007217f5180876dd6f112b806c07f8a2351cc366a25440b8f"
+    },
+    "worktree_dirty": true
+  },
+  "methodology": {
+    "accuracy": "Finite-iteration EV and exact best-response gaps; strategy and metric differences are reported for small comparisons. No equilibrium or commercial-solver equivalence claim.",
+    "full_range": "Matrix-free only at 10, 50, 100 iterations. Legacy solver is called once at 10 iterations, where its pair-candidate guard rejects before materializing pairs; no higher-budget legacy call is attempted.",
+    "limits": "All existing solver resource guards remain active. Full-range admission and measured resource usage are reported from matrix-free results.",
+    "memory": "Separate 10-iteration whole-call tracemalloc runs for each small case/backend; full-range trace is attempted only when its 10-iteration call takes under 15 seconds. Null means skipped.",
+    "small_case_timing": "Three interleaved complete-call timings per backend/algorithm. Legacy comparison uses traversal=public-batched, diagnostics=public-batched, terminal_backend=ranked; matrix-free calls solve_matrix_free_river."
+  },
+  "schema_version": 1,
+  "small_cases": [
+    {
+      "case": {
+        "algorithm": null,
+        "board": "2c7d9hJsKd",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 200.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "ip": "4d6c:0.75,4hTh:0.25,5c5h:0.125,5dTs:1.0,5s7h:0.5,6cKs:0.75,6hQc:0.25,7cJd:0.125,7sQc:1.0,8dKs:0.5,9cTs:0.75,TcTh:0.25,QsTs:0.125,AsQc:1.0,2d4d:0.5,2h6d:0.75,2s8s:0.25,3cJh:0.125,3dAs:1.0,3s6s:0.5,4cTs:0.75,4h4s:0.25,4s9d:0.125,5cAh:1.0,5hTh:0.5,6c7s:0.75,6dAd:0.25,6sKc:0.125,7hKc:1.0,8cAd:0.5,8sTh:0.75,9dAh:0.25,ThTs:0.125,AsJd:1.0,AcKh:0.5,2dKc:0.75,2s3d:0.25,3c5s:0.125,3d8s:1.0,3hQd:0.5,4c5c:0.75,4d9c:0.25,4hKs:0.125,5c8h:1.0,5dAc:0.5,5sTh:0.75,6d8d:0.25,6s7c:0.125,7cAh:1.0,8c8d:0.5,8hTh:0.75,9cAc:0.25,KsTc:0.125,JcQd:1.0,KcQh:0.5,2d7c:0.75,2h9d:0.25,2sQc:0.125,3cAs:1.0,3h6d:0.5,3sTc:0.75,4cAc:0.25,4h7s:0.125,4sQh:1.0,5d8c:0.5,5hKs:0.75,6cTs:0.25,6h9c:0.125,7c8h:1.0,7s9c:0.5,8dTs:0.75,8sKs:0.25,9sQh:0.125,AcTh:1.0,AsJh:0.5,AdAh:0.75,2h3s:0.25,2s6c:0.125,3c8s:1.0,3dQc:0.5,3s4d:0.75,4c8c:0.25,4dQd:0.125,4s6h:1.0,5cJh:0.5,5h7s:0.75,5sKs:0.25,6dJd:0.125,6sTd:1.0,7hTd:0.5,8cJd:0.75,8hKs:0.25,9dJh:0.125,QdTd:1.0,JdQc:0.5,AdQs:0.75,2dTd:0.25,2hQh:0.125,3c3d:1.0,3d6c:0.5,3h9d:0.75,3sKc:0.25,4d6d:0.125,4hTs:1.0,5c5s:0.5,5dJc:0.75,5s7s:0.25,6cAc:0.125,6hQd:1.0,7cJh:0.5,7sQd:0.75,8dAc:0.25,9cJc:0.125,TcTs:1.0,KcTs:0.5,QdQh:0.75,2d4h:0.25,2h6h:0.125,2s9c:1.0,3cQc:0.5,3h3s:0.75,3s7c:0.25,4cJc:0.125,4h5c:1.0,4s9s:0.5,5cAs:0.75,5hTs:0.25,6c8c:0.125",
+        "iterations": 50,
+        "oop": "4cJd:1.0,4dJc:0.5,4hJc:0.75,4sJd:0.25,5cQc:0.125,5dQs:1.0,5hAc:0.5,6c6h:0.75,6d8h:0.25,6hTs:0.125,6sKh:1.0,7h8s:0.5,7sQd:0.75,8d9d:0.25,8hKs:0.125,9cQh:1.0,9sQh:0.5,KsTd:0.75,JcQd:0.25,KhQc:0.125,AcKh:1.0,2d8h:0.5,2h6d:0.75,2s4h:0.25,2sAs:0.125,3cKc:1.0,3dJh:0.5,3hTh:0.75,3s9s:0.25,4c9c:0.125,4d8s:1.0,4h8s:0.5,4s9c:0.75,5c9s:0.25,5dTh:0.125,5hJh:1.0,5sKc:0.5,6cAs:0.75,6h8h:0.25,6sJc:0.125,7cAc:1.0,7sTc:0.5,8cKs:0.75,8hJd:0.25,9cTd:0.125,9sTd:1.0,JdTd:0.5,KsTs:0.75,AcJh:0.25,AsQs:0.125,2d6d:1.0,2h4d:0.5,2hAh:0.75,2sQh:0.25,3cTs:0.125,3d9d:1.0,3h8d:0.5,3s7h:0.75,4c6s:0.25,4d6h:0.125,4h6h:1.0,4s6s:0.5,5c7h:0.75,5d8d:0.25,5h9d:0.125,5sTs:1.0,6cQh:0.5,6dAh:0.75,6s8s:0.25,7cJh:0.125,7hAs:1.0,8cJd:0.5,8h9c:0.75,8sKs:0.25,9dKc:0.125,KsTc:1.0,JdTs:0.5,AsJd:0.75,AhQh:0.25,2d4d:0.125,2dAh:1.0,2hQd:0.5,2sTd:0.75,3c8h:0.25,3d7c:0.125,3h6c:1.0,3s5d:0.5,4c4s:0.75,4d4h:0.25,4dAs:0.125,4hAs:1.0,5c5d:0.5,5d6c:0.75,5h7c:0.25,5s8h:0.125,6cTd:1.0,6dQd:0.5,6hAh:0.75,7c9d:0.25,7hQh:0.125,8c9c:1.0,8dKc:0.5,8sJd:0.75,9dTs:0.25,JdTc:0.125,KcTh:1.0,JdQh:0.5,AhQd:0.75,AhAs:0.25,2dQd:0.125,2hTc:1.0,2s8c:0.5,3c6d:0.75,3d5c:0.25,3h4c:0.125,3hAd:1.0,3sKh:0.5,4cQs:0.75,4dQh:0.25,4hQh:0.125,4sQs:1.0,5cKh:0.5,5dAd:0.75,5s6d:0.25,6c8c:0.125,6dTc:1.0,6hQd:0.5,6sAs:0.75",
+        "range_size_per_player": 128,
+        "ranges": {
+          "ip": [
+            {
+              "hand": "4d6c",
+              "weight": 0.75
+            },
+            {
+              "hand": "4hTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "5c5h",
+              "weight": 0.125
+            },
+            {
+              "hand": "5dTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "5s7h",
+              "weight": 0.5
+            },
+            {
+              "hand": "6cKs",
+              "weight": 0.75
+            },
+            {
+              "hand": "6hQc",
+              "weight": 0.25
+            },
+            {
+              "hand": "7cJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "7sQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "8dKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "9cTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "TcTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "QsTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "AsQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d4d",
+              "weight": 0.5
+            },
+            {
+              "hand": "2h6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s8s",
+              "weight": 0.25
+            },
+            {
+              "hand": "3cJh",
+              "weight": 0.125
+            },
+            {
+              "hand": "3dAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "3s6s",
+              "weight": 0.5
+            },
+            {
+              "hand": "4cTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "4h4s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4s9d",
+              "weight": 0.125
+            },
+            {
+              "hand": "5cAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "5hTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "6c7s",
+              "weight": 0.75
+            },
+            {
+              "hand": "6dAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "6sKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7hKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "8cAd",
+              "weight": 0.5
+            },
+            {
+              "hand": "8sTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "9dAh",
+              "weight": 0.25
+            },
+            {
+              "hand": "ThTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "AsJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "AcKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "2dKc",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s3d",
+              "weight": 0.25
+            },
+            {
+              "hand": "3c5s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3d8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "3hQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "4c5c",
+              "weight": 0.75
+            },
+            {
+              "hand": "4d9c",
+              "weight": 0.25
+            },
+            {
+              "hand": "4hKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "5c8h",
+              "weight": 1.0
+            },
+            {
+              "hand": "5dAc",
+              "weight": 0.5
+            },
+            {
+              "hand": "5sTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6d8d",
+              "weight": 0.25
+            },
+            {
+              "hand": "6s7c",
+              "weight": 0.125
+            },
+            {
+              "hand": "7cAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "8c8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "8hTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "9cAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "KsTc",
+              "weight": 0.125
+            },
+            {
+              "hand": "JcQd",
+              "weight": 1.0
+            },
+            {
+              "hand": "KcQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "2d7c",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h9d",
+              "weight": 0.25
+            },
+            {
+              "hand": "2sQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "3cAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "3h6d",
+              "weight": 0.5
+            },
+            {
+              "hand": "3sTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "4cAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "4h7s",
+              "weight": 0.125
+            },
+            {
+              "hand": "4sQh",
+              "weight": 1.0
+            },
+            {
+              "hand": "5d8c",
+              "weight": 0.5
+            },
+            {
+              "hand": "5hKs",
+              "weight": 0.75
+            },
+            {
+              "hand": "6cTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "6h9c",
+              "weight": 0.125
+            },
+            {
+              "hand": "7c8h",
+              "weight": 1.0
+            },
+            {
+              "hand": "7s9c",
+              "weight": 0.5
+            },
+            {
+              "hand": "8dTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "8sKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "9sQh",
+              "weight": 0.125
+            },
+            {
+              "hand": "AcTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "AsJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AdAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h3s",
+              "weight": 0.25
+            },
+            {
+              "hand": "2s6c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "3dQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "3s4d",
+              "weight": 0.75
+            },
+            {
+              "hand": "4c8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "4dQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "4s6h",
+              "weight": 1.0
+            },
+            {
+              "hand": "5cJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "5h7s",
+              "weight": 0.75
+            },
+            {
+              "hand": "5sKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "6dJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "6sTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "7hTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "8cJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8hKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "9dJh",
+              "weight": 0.125
+            },
+            {
+              "hand": "QdTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "AdQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2dTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "2hQh",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c3d",
+              "weight": 1.0
+            },
+            {
+              "hand": "3d6c",
+              "weight": 0.5
+            },
+            {
+              "hand": "3h9d",
+              "weight": 0.75
+            },
+            {
+              "hand": "3sKc",
+              "weight": 0.25
+            },
+            {
+              "hand": "4d6d",
+              "weight": 0.125
+            },
+            {
+              "hand": "4hTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "5c5s",
+              "weight": 0.5
+            },
+            {
+              "hand": "5dJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "5s7s",
+              "weight": 0.25
+            },
+            {
+              "hand": "6cAc",
+              "weight": 0.125
+            },
+            {
+              "hand": "6hQd",
+              "weight": 1.0
+            },
+            {
+              "hand": "7cJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "7sQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8dAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "9cJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "TcTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "KcTs",
+              "weight": 0.5
+            },
+            {
+              "hand": "QdQh",
+              "weight": 0.75
+            },
+            {
+              "hand": "2d4h",
+              "weight": 0.25
+            },
+            {
+              "hand": "2h6h",
+              "weight": 0.125
+            },
+            {
+              "hand": "2s9c",
+              "weight": 1.0
+            },
+            {
+              "hand": "3cQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "3h3s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3s7c",
+              "weight": 0.25
+            },
+            {
+              "hand": "4cJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "4h5c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4s9s",
+              "weight": 0.5
+            },
+            {
+              "hand": "5cAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "5hTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "6c8c",
+              "weight": 0.125
+            }
+          ],
+          "oop": [
+            {
+              "hand": "4cJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "4dJc",
+              "weight": 0.5
+            },
+            {
+              "hand": "4hJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "4sJd",
+              "weight": 0.25
+            },
+            {
+              "hand": "5cQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "5dQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "5hAc",
+              "weight": 0.5
+            },
+            {
+              "hand": "6c6h",
+              "weight": 0.75
+            },
+            {
+              "hand": "6d8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "6hTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6sKh",
+              "weight": 1.0
+            },
+            {
+              "hand": "7h8s",
+              "weight": 0.5
+            },
+            {
+              "hand": "7sQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8d9d",
+              "weight": 0.25
+            },
+            {
+              "hand": "8hKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "9cQh",
+              "weight": 1.0
+            },
+            {
+              "hand": "9sQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "KsTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "JcQd",
+              "weight": 0.25
+            },
+            {
+              "hand": "KhQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "AcKh",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d8h",
+              "weight": 0.5
+            },
+            {
+              "hand": "2h6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s4h",
+              "weight": 0.25
+            },
+            {
+              "hand": "2sAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "3cKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "3dJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3hTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3s9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4c9c",
+              "weight": 0.125
+            },
+            {
+              "hand": "4d8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "4h8s",
+              "weight": 0.5
+            },
+            {
+              "hand": "4s9c",
+              "weight": 0.75
+            },
+            {
+              "hand": "5c9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "5dTh",
+              "weight": 0.125
+            },
+            {
+              "hand": "5hJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "5sKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "6cAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "6h8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "6sJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7cAc",
+              "weight": 1.0
+            },
+            {
+              "hand": "7sTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "8cKs",
+              "weight": 0.75
+            },
+            {
+              "hand": "8hJd",
+              "weight": 0.25
+            },
+            {
+              "hand": "9cTd",
+              "weight": 0.125
+            },
+            {
+              "hand": "9sTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "KsTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "AcJh",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "2d6d",
+              "weight": 1.0
+            },
+            {
+              "hand": "2h4d",
+              "weight": 0.5
+            },
+            {
+              "hand": "2hAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "2sQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "3cTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "3d9d",
+              "weight": 1.0
+            },
+            {
+              "hand": "3h8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "3s7h",
+              "weight": 0.75
+            },
+            {
+              "hand": "4c6s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4d6h",
+              "weight": 0.125
+            },
+            {
+              "hand": "4h6h",
+              "weight": 1.0
+            },
+            {
+              "hand": "4s6s",
+              "weight": 0.5
+            },
+            {
+              "hand": "5c7h",
+              "weight": 0.75
+            },
+            {
+              "hand": "5d8d",
+              "weight": 0.25
+            },
+            {
+              "hand": "5h9d",
+              "weight": 0.125
+            },
+            {
+              "hand": "5sTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "6cQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "6dAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6s8s",
+              "weight": 0.25
+            },
+            {
+              "hand": "7cJh",
+              "weight": 0.125
+            },
+            {
+              "hand": "7hAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "8cJd",
+              "weight": 0.5
+            },
+            {
+              "hand": "8h9c",
+              "weight": 0.75
+            },
+            {
+              "hand": "8sKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "9dKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "KsTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdTs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AsJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "AhQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "2d4d",
+              "weight": 0.125
+            },
+            {
+              "hand": "2dAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "2hQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "2sTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "3c8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "3d7c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3h6c",
+              "weight": 1.0
+            },
+            {
+              "hand": "3s5d",
+              "weight": 0.5
+            },
+            {
+              "hand": "4c4s",
+              "weight": 0.75
+            },
+            {
+              "hand": "4d4h",
+              "weight": 0.25
+            },
+            {
+              "hand": "4dAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "4hAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "5c5d",
+              "weight": 0.5
+            },
+            {
+              "hand": "5d6c",
+              "weight": 0.75
+            },
+            {
+              "hand": "5h7c",
+              "weight": 0.25
+            },
+            {
+              "hand": "5s8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "6cTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "6dQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "6hAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "7c9d",
+              "weight": 0.25
+            },
+            {
+              "hand": "7hQh",
+              "weight": 0.125
+            },
+            {
+              "hand": "8c9c",
+              "weight": 1.0
+            },
+            {
+              "hand": "8dKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "8sJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "9dTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "JdTc",
+              "weight": 0.125
+            },
+            {
+              "hand": "KcTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AhQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "AhAs",
+              "weight": 0.25
+            },
+            {
+              "hand": "2dQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "2hTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "2s8c",
+              "weight": 0.5
+            },
+            {
+              "hand": "3c6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "3d5c",
+              "weight": 0.25
+            },
+            {
+              "hand": "3h4c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3hAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "3sKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "4cQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "4dQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "4hQh",
+              "weight": 0.125
+            },
+            {
+              "hand": "4sQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "5cKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "5dAd",
+              "weight": 0.75
+            },
+            {
+              "hand": "5s6d",
+              "weight": 0.25
+            },
+            {
+              "hand": "6c8c",
+              "weight": 0.125
+            },
+            {
+              "hand": "6dTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "6hQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "6sAs",
+              "weight": 0.75
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "algorithm": "dcfr",
+          "counts": {
+            "materialized-ranked": {
+              "chance_nodes": 0,
+              "compatible_pairs": 14999,
+              "deals": 14999,
+              "info_sets": 512,
+              "iterations": 50,
+              "public_nodes": 4,
+              "public_states": 9,
+              "world_traversal_nodes": 4,
+              "worlds": 14999
+            },
+            "matrix-free": {
+              "chance_nodes": 0,
+              "compatible_pairs": 14999,
+              "deals": 14999,
+              "info_sets": 512,
+              "iterations": 50,
+              "public_nodes": 4,
+              "public_states": 9,
+              "resource_usage": {
+                "fallback_pair_checks": 768,
+                "hand_counts": [
+                  128,
+                  128
+                ],
+                "hand_state_pass_work": 118656,
+                "info_action_slots": 1024,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_states": 250000
+                }
+              },
+              "world_traversal_nodes": 4,
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized-ranked": {
+              "exploitability": 1.7914867426339156,
+              "ip_best_response_value": 9.167777279854638,
+              "nash_conv": 3.582973485267831,
+              "oop_best_response_value": -5.584803794586807,
+              "value_oop": -7.05105683683295
+            },
+            "matrix-free": {
+              "exploitability": 1.7914867426339156,
+              "ip_best_response_value": 9.167777279854638,
+              "nash_conv": 3.582973485267831,
+              "oop_best_response_value": -5.584803794586807,
+              "value_oop": -7.0510568368329505
+            }
+          },
+          "iterations": 50,
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0,
+              "ip_best_response_value": 0.0,
+              "nash_conv": 0.0,
+              "oop_best_response_value": 0.0,
+              "value_oop": 8.881784197001252e-16
+            },
+            "max_absolute_difference_chips": 8.881784197001252e-16,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": true
+          },
+          "peak_memory": {
+            "materialized-ranked": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 14999,
+                "deals": 14999,
+                "info_sets": 512,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "world_traversal_nodes": 4,
+                "worlds": 14999
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 6553340
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 14999,
+                "deals": 14999,
+                "info_sets": 512,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "resource_usage": {
+                  "fallback_pair_checks": 768,
+                  "hand_counts": [
+                    128,
+                    128
+                  ],
+                  "hand_state_pass_work": 26496,
+                  "info_action_slots": 1024,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_states": 250000
+                  }
+                },
+                "world_traversal_nodes": 4,
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 886980
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 2.7755575615628914e-16,
+            "rows": 512,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 128,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 1.5364499923875226,
+          "status": {
+            "materialized-ranked": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized-ranked": {
+              "median": 0.39079055199999857,
+              "samples": [
+                0.39079055199999857,
+                0.38361714899997423,
+                0.4267752449999307
+              ]
+            },
+            "matrix-free": {
+              "median": 0.2543464180000683,
+              "samples": [
+                0.25393334900002174,
+                0.2732596979999471,
+                0.2543464180000683
+              ]
+            }
+          }
+        },
+        {
+          "algorithm": "cfrplus",
+          "counts": {
+            "materialized-ranked": {
+              "chance_nodes": 0,
+              "compatible_pairs": 14999,
+              "deals": 14999,
+              "info_sets": 512,
+              "iterations": 50,
+              "public_nodes": 4,
+              "public_states": 9,
+              "world_traversal_nodes": 4,
+              "worlds": 14999
+            },
+            "matrix-free": {
+              "chance_nodes": 0,
+              "compatible_pairs": 14999,
+              "deals": 14999,
+              "info_sets": 512,
+              "iterations": 50,
+              "public_nodes": 4,
+              "public_states": 9,
+              "resource_usage": {
+                "fallback_pair_checks": 256,
+                "hand_counts": [
+                  128,
+                  128
+                ],
+                "hand_state_pass_work": 176256,
+                "info_action_slots": 1024,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_states": 250000
+                }
+              },
+              "world_traversal_nodes": 4,
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized-ranked": {
+              "exploitability": 0.09315346916283485,
+              "ip_best_response_value": 7.490609586330315,
+              "nash_conv": 0.1863069383256697,
+              "oop_best_response_value": -7.304302648004645,
+              "value_oop": -7.412794228821514
+            },
+            "matrix-free": {
+              "exploitability": 0.09315346916283485,
+              "ip_best_response_value": 7.490609586330315,
+              "nash_conv": 0.1863069383256697,
+              "oop_best_response_value": -7.304302648004645,
+              "value_oop": -7.412794228821514
+            }
+          },
+          "iterations": 50,
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0,
+              "ip_best_response_value": 0.0,
+              "nash_conv": 0.0,
+              "oop_best_response_value": 0.0,
+              "value_oop": 0.0
+            },
+            "max_absolute_difference_chips": 0.0,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": true
+          },
+          "peak_memory": {
+            "materialized-ranked": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 14999,
+                "deals": 14999,
+                "info_sets": 512,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "world_traversal_nodes": 4,
+                "worlds": 14999
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 6553420
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 14999,
+                "deals": 14999,
+                "info_sets": 512,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "resource_usage": {
+                  "fallback_pair_checks": 256,
+                  "hand_counts": [
+                    128,
+                    128
+                  ],
+                  "hand_state_pass_work": 38016,
+                  "info_action_slots": 1024,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_states": 250000
+                  }
+                },
+                "world_traversal_nodes": 4,
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 887924
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 3.3306690738754696e-16,
+            "rows": 512,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 128,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 1.6047112729484574,
+          "status": {
+            "materialized-ranked": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized-ranked": {
+              "median": 0.4698365310000554,
+              "samples": [
+                0.44073660000003656,
+                0.4778845990000491,
+                0.4698365310000554
+              ]
+            },
+            "matrix-free": {
+              "median": 0.29278571100007866,
+              "samples": [
+                0.2927610660000255,
+                0.2974281230000315,
+                0.29278571100007866
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "case": {
+        "algorithm": null,
+        "board": "2c7d9hJsKd",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 200.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "ip": "6hAh:0.75,7cAc:0.25,7sAh:0.125,8hTc:1.0,9cKh:0.5,KcTc:0.75,JcJh:0.25,AsQd:0.125,2d6h:1.0,2h8s:0.5,2sJd:0.75,3cAd:0.25,3h5s:0.125,3s9d:1.0,4cKh:0.5,4h7c:0.75,4sQc:0.25,5d7h:0.125,5hKc:1.0,6cTd:0.5,6h8h:0.75,7c8c:0.25,7s8h:0.125,8dTd:1.0,8sKc:0.5,9sQc:0.75,KhTh:0.25,AdJh:0.125,AcAh:1.0,2h3d:0.5,2s5h:0.75,3c8d:0.25,3dJd:0.125,3hAs:1.0,4c7h:0.5,4dJh:0.75,4s6c:0.25,5cJc:0.125,5h7c:1.0,5sKc:0.5,6dTs:0.75,6s9s:0.25,7h9s:0.125,8cTs:1.0,8hKc:0.5,9dJc:0.75,JhTd:0.25,AsJc:0.125,KsQs:1.0,2d9s:0.5,2hQc:0.75,2sAh:0.25,3d5h:0.125,3h8s:1.0,3sQh:0.5,4d5s:0.75,4hTd:0.25,5c5d:0.125,5dTh:1.0,5s7c:0.5,6cKh:0.75,6hJh:0.25,7cJc:0.125,7sJh:1.0,8dKh:0.5,9cTh:0.75,TcTd:0.25,QhTs:0.125,AhQc:1.0,2d4c:0.5,2h6c:0.75,2s8h:0.25,3cJd:0.125,3dAh:1.0,3s6h:0.5,4cTh:0.75,4dAs:0.25,4s9c:0.125,5cAd:1.0,5hTd:0.5,6c7h:0.75,6dAc:0.25,6sQs:0.125,7hQs:1.0,8cAc:0.5,8sTd:0.75,9dAd:0.25,AsTd:0.125,AhJd:1.0,KhKs:0.5,2dQs:0.75,2s3c:0.25,3c5h:0.125,3d8h:1.0,3hQc:0.5,4c4s:0.75,4d8s:0.25,4hKh:0.125,5c8d:1.0,5dKs:0.5,5sTd:0.75,6d8c:0.25,6hAs:0.125,7cAd:1.0,7sAs:0.5,8hTd:0.75,9cKs:0.25,KhTc:0.125,JcQc:1.0,QhQs:0.5,2d6s:0.75,2h9c:0.25,2sJh:0.125,3cAh:1.0,3h6c:0.5,3s9s:0.75,4cKs:0.25,4h7h:0.125,4sQd:1.0,5d7s:0.5,5hKh:0.75,6cTh:0.25,6h8s:0.125,7c8d:1.0,7s8s:0.5,8dTh:0.75,8sKh:0.25,9sQd:0.125,KsTh:1.0,AhJh:0.5,AcAs:0.75,2h3h:0.25,2s5s:0.125,3c8h:1.0,3dJh:0.5,3s4c:0.75,4c7s:0.25,4dQc:0.125,4s6d:1.0,5cJd:0.5,5h7h:0.75,5sKh:0.25,6dJc:0.125,6sTc:1.0,7hTc:0.5,8cJc:0.75,8hKh:0.25,9dJd:0.125,QcTd:1.0,JdJh:0.5,AcQs:0.75,2dTc:0.25,2hQd:0.125,2sAs:1.0,3d5s:0.5,3h9c:0.75,3sQs:0.25,4d6c:0.125,4hTh:1.0,5c5h:0.5,5dTs:0.75,5s7h:0.25,6cKs:0.125,6hQc:1.0,7cJd:0.5,7sQc:0.75,8dKs:0.25,9cTs:0.125,TcTh:1.0,QsTs:0.5,AsQc:0.75,2d4d:0.25,2h6d:0.125,2s8s:1.0,3cJh:0.5,3dAs:0.75,3s6s:0.25,4cTs:0.125,4h4s:1.0,4s9d:0.5,5cAh:0.75,5hTh:0.25,6c7s:0.125,6dAd:1.0,6sKc:0.5,7hKc:0.75,8cAd:0.25,8sTh:0.125,9dAh:1.0,ThTs:0.5,AsJd:0.75,AcKh:0.25,2dKc:0.125,2s3d:1.0,3c5s:0.5,3d8s:0.75,3hQd:0.25,4c5c:0.125,4d9c:1.0,4hKs:0.5,5c8h:0.75,5dAc:0.25,5sTh:0.125,6d8d:1.0,6s7c:0.5,7cAh:0.75,8c8d:0.25,8hTh:0.125,9cAc:1.0,KsTc:0.5,JcQd:0.75,KcQh:0.25,2d7c:0.125,2h9d:1.0,2sQc:0.5,3cAs:0.75,3h6d:0.25,3sTc:0.125,4cAc:1.0,4h7s:0.5,4sQh:0.75,5d8c:0.25,5hKs:0.125,6cTs:1.0,6h9c:0.5,7c8h:0.75,7s9c:0.25,8dTs:0.125,8sKs:1.0,9sQh:0.5,AcTh:0.75,AsJh:0.25,AdAh:0.125,2h3s:1.0,2s6c:0.5,3c8s:0.75,3dQc:0.25,3s4d:0.125,4c8c:1.0,4dQd:0.5,4s6h:0.75,5cJh:0.25,5h7s:0.125,5sKs:1.0,6dJd:0.5,6sTd:0.75,7hTd:0.25,8cJd:0.125,8hKs:1.0,9dJh:0.5,QdTd:0.75,JdQc:0.25,AdQs:0.125,2dTd:1.0,2hQh:0.5,3c3d:0.75",
+        "iterations": 40,
+        "oop": "6h9c:1.0,6sJh:0.5,7cAh:0.75,7sTh:0.25,8cAd:0.125,8hQc:1.0,9cTs:0.5,9sTs:0.75,QcTd:0.25,AdTs:0.125,AhJh:1.0,KcKs:0.5,2d6s:0.75,2h4s:0.25,2s3c:0.125,2sKc:1.0,3cJd:0.5,3dTc:0.75,3h8s:0.25,3s8c:0.125,4c7h:1.0,4d7c:0.5,4h7c:0.75,4s7h:0.25,5c8c:0.125,5d8s:1.0,5hTc:0.5,5sJd:0.75,6cKc:0.25,6h6s:0.125,6s9d:1.0,7cQd:0.5,7s8d:0.75,8cQc:0.25,8h9s:0.125,8sAd:1.0,9dKs:0.5,AdTc:0.75,QcTs:0.25,JhQd:0.125,KcQs:1.0,2d4s:0.5,2h2s:0.75,2hQs:0.25,2sTs:0.125,3c9c:1.0,3d7s:0.5,3h6h:0.75,3s5s:0.25,4c5d:0.125,4d5c:1.0,4h5c:0.5,4s5d:0.75,5c5s:0.25,5d6h:0.125,5h7s:1.0,5s9c:0.5,6cTs:0.75,6dQs:0.25,6s7c:0.125,7cTc:1.0,7hKc:0.5,8c9s:0.75,8dKs:0.25,8sQc:0.125,9dJd:1.0,QcTc:0.5,KsTh:0.75,JdKc:0.25,QhQs:0.125,2d2s:1.0,2dQs:0.5,2hTh:0.75,2s8h:0.25,3c6s:0.125,3d5h:1.0,3h4h:0.5,3hAs:0.75,3sAc:0.25,4cKh:0.125,4dKc:1.0,4hKc:0.5,4sKh:0.75,5cAc:0.25,5dAs:0.125,5s6s:1.0,6c8h:0.5,6dTh:0.75,6hQs:0.25,7c7s:0.125,7hTs:1.0,7sAd:0.5,8dJd:0.75,8s9s:0.25,9cAh:0.125,9sAh:1.0,JdTh:0.5,AdJc:0.75,QdQs:0.25,AsKs:0.125,2dTh:1.0,2h8d:0.5,2s6d:0.75,3c4s:0.25,3d3h:0.125,3dKs:1.0,3hQh:0.5,3sJh:0.75,4cJc:0.25,4dTs:0.125,4hTs:1.0,4sJc:0.5,5cJh:0.75,5dQh:0.25,5hKs:0.125,6c6d:1.0,6d8d:0.5,6hTh:0.75,6sKc:0.25,7h8h:0.125,7sQc:1.0,8d9c:0.5,8hKh:0.75,9cQd:0.25,9sQd:0.125,KhTd:1.0,JcQc:0.5,KcQc:0.75,KhKs:0.25,2d8d:0.125,2h6c:1.0,2s4d:0.5,2sAh:0.75,3cQs:0.25,3dJd:0.125,3hTd:1.0,3s9d:0.5,4c8s:0.75,4d8h:0.25,4h8h:0.125,4s8s:1.0,5c9d:0.5,5dTd:0.75,5hJd:0.25,5sQs:0.125,6cAh:1.0,6h8d:0.5,6sTs:0.75,7cKs:0.25,7s9s:0.125,8cKh:1.0,8hJc:0.5,9cTc:0.75,9sTc:0.25,JcTd:0.125,KhTs:1.0,JhKs:0.5,AhQs:0.75,2d6c:0.25,2h4c:0.125,2hAd:1.0,2sQd:0.5,3cTh:0.75,3d9c:0.25,3h8c:0.125,3s7c:1.0,4c6h:0.5,4d6d:0.75,4h6d:0.25,4s6h:0.125,5c7c:1.0,5d8c:0.5,5h9c:0.75,5sTh:0.25,6cQd:0.125,6dAd:1.0,6s8h:0.5,7cJd:0.75,7hAh:0.25,8cJc:0.125,8h8s:1.0,8sKh:0.5,9dQs:0.75,KhTc:0.25,JcTs:0.125,AhJd:1.0,AdQh:0.5,2d4c:0.75,2dAd:0.25,2hQc:0.125,2sTc:1.0,3c8d:0.5,3d6s:0.75,3h5s:0.25,3s5c:0.125,4c4h:1.0,4cAs:0.5,4dAh:0.75,4hAh:0.25,4sAs:0.125,5d5s:1.0,5h6s:0.5,5s8d:0.75,6cTc:0.25,6dQc:0.125,6hAd:1.0,7c9c:0.5,7hQd:0.75,8c8s:0.25,8dQs:0.125,8sJc:1.0,9dTh:0.5,JcTc:0.75,QsTh:0.25,JdQd:0.125,AdQd:1.0,AdAs:0.5,2dQc:0.75,2h9s:0.25,2s7s:0.125,3c6c:1.0,3d4s:0.5,3h3s:0.75,3hAc:0.25,3sKc:0.125,4cQh:1.0,4dQd:0.5,4hQd:0.75,4sQh:0.25,5cKc:0.125,5dAc:1.0,5s6c:0.5,6c7s:0.75,6d9s:0.25,6hQc:0.125,6sAh:1.0,7hTc:0.5,7sKh:0.75,8dTh:0.25,8hAs:0.125,9cKs:1.0,9sKs:0.5,AsTd:0.75,JcKh:0.25,AhQc:0.125,AcKs:1.0,2d9s:0.5,2h7h:0.75,2s5h:0.25,3c4c:0.125,3cAd:1.0,3dQs:0.5,3hJh:0.75,3sTs:0.25,4cTd:0.125,4dTc:1.0",
+        "range_size_per_player": 256,
+        "ranges": {
+          "ip": [
+            {
+              "hand": "6hAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "7cAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "7sAh",
+              "weight": 0.125
+            },
+            {
+              "hand": "8hTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "9cKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "KcTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "JcJh",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "2d6h",
+              "weight": 1.0
+            },
+            {
+              "hand": "2h8s",
+              "weight": 0.5
+            },
+            {
+              "hand": "2sJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "3cAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "3h5s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3s9d",
+              "weight": 1.0
+            },
+            {
+              "hand": "4cKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "4h7c",
+              "weight": 0.75
+            },
+            {
+              "hand": "4sQc",
+              "weight": 0.25
+            },
+            {
+              "hand": "5d7h",
+              "weight": 0.125
+            },
+            {
+              "hand": "5hKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "6cTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "6h8h",
+              "weight": 0.75
+            },
+            {
+              "hand": "7c8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "7s8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "8dTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "8sKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "9sQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "KhTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "AdJh",
+              "weight": 0.125
+            },
+            {
+              "hand": "AcAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "2h3d",
+              "weight": 0.5
+            },
+            {
+              "hand": "2s5h",
+              "weight": 0.75
+            },
+            {
+              "hand": "3c8d",
+              "weight": 0.25
+            },
+            {
+              "hand": "3dJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "3hAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "4c7h",
+              "weight": 0.5
+            },
+            {
+              "hand": "4dJh",
+              "weight": 0.75
+            },
+            {
+              "hand": "4s6c",
+              "weight": 0.25
+            },
+            {
+              "hand": "5cJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "5h7c",
+              "weight": 1.0
+            },
+            {
+              "hand": "5sKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "6dTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "6s9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "7h9s",
+              "weight": 0.125
+            },
+            {
+              "hand": "8cTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "8hKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "9dJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "JhTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "KsQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d9s",
+              "weight": 0.5
+            },
+            {
+              "hand": "2hQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "2sAh",
+              "weight": 0.25
+            },
+            {
+              "hand": "3d5h",
+              "weight": 0.125
+            },
+            {
+              "hand": "3h8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "3sQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "4d5s",
+              "weight": 0.75
+            },
+            {
+              "hand": "4hTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "5c5d",
+              "weight": 0.125
+            },
+            {
+              "hand": "5dTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "5s7c",
+              "weight": 0.5
+            },
+            {
+              "hand": "6cKh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6hJh",
+              "weight": 0.25
+            },
+            {
+              "hand": "7cJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7sJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "8dKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "9cTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "TcTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "QhTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "AhQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d4c",
+              "weight": 0.5
+            },
+            {
+              "hand": "2h6c",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "3cJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "3dAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "3s6h",
+              "weight": 0.5
+            },
+            {
+              "hand": "4cTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "4dAs",
+              "weight": 0.25
+            },
+            {
+              "hand": "4s9c",
+              "weight": 0.125
+            },
+            {
+              "hand": "5cAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "5hTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "6c7h",
+              "weight": 0.75
+            },
+            {
+              "hand": "6dAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "6sQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "7hQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "8cAc",
+              "weight": 0.5
+            },
+            {
+              "hand": "8sTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "9dAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsTd",
+              "weight": 0.125
+            },
+            {
+              "hand": "AhJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "KhKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2dQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s3c",
+              "weight": 0.25
+            },
+            {
+              "hand": "3c5h",
+              "weight": 0.125
+            },
+            {
+              "hand": "3d8h",
+              "weight": 1.0
+            },
+            {
+              "hand": "3hQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "4c4s",
+              "weight": 0.75
+            },
+            {
+              "hand": "4d8s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4hKh",
+              "weight": 0.125
+            },
+            {
+              "hand": "5c8d",
+              "weight": 1.0
+            },
+            {
+              "hand": "5dKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "5sTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "6d8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "6hAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "7cAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "7sAs",
+              "weight": 0.5
+            },
+            {
+              "hand": "8hTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "9cKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "KhTc",
+              "weight": 0.125
+            },
+            {
+              "hand": "JcQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "QhQs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2d6s",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h9c",
+              "weight": 0.25
+            },
+            {
+              "hand": "2sJh",
+              "weight": 0.125
+            },
+            {
+              "hand": "3cAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "3h6c",
+              "weight": 0.5
+            },
+            {
+              "hand": "3s9s",
+              "weight": 0.75
+            },
+            {
+              "hand": "4cKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "4h7h",
+              "weight": 0.125
+            },
+            {
+              "hand": "4sQd",
+              "weight": 1.0
+            },
+            {
+              "hand": "5d7s",
+              "weight": 0.5
+            },
+            {
+              "hand": "5hKh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6cTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "6h8s",
+              "weight": 0.125
+            },
+            {
+              "hand": "7c8d",
+              "weight": 1.0
+            },
+            {
+              "hand": "7s8s",
+              "weight": 0.5
+            },
+            {
+              "hand": "8dTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "8sKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "9sQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "KsTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "AhJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AcAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h3h",
+              "weight": 0.25
+            },
+            {
+              "hand": "2s5s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c8h",
+              "weight": 1.0
+            },
+            {
+              "hand": "3dJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3s4c",
+              "weight": 0.75
+            },
+            {
+              "hand": "4c7s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4dQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "4s6d",
+              "weight": 1.0
+            },
+            {
+              "hand": "5cJd",
+              "weight": 0.5
+            },
+            {
+              "hand": "5h7h",
+              "weight": 0.75
+            },
+            {
+              "hand": "5sKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "6dJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "6sTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "7hTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "8cJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "8hKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "9dJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "QcTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AcQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2dTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "2hQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "2sAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "3d5s",
+              "weight": 0.5
+            },
+            {
+              "hand": "3h9c",
+              "weight": 0.75
+            },
+            {
+              "hand": "3sQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "4d6c",
+              "weight": 0.125
+            },
+            {
+              "hand": "4hTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "5c5h",
+              "weight": 0.5
+            },
+            {
+              "hand": "5dTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "5s7h",
+              "weight": 0.25
+            },
+            {
+              "hand": "6cKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6hQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "7cJd",
+              "weight": 0.5
+            },
+            {
+              "hand": "7sQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "8dKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "9cTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "TcTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "QsTs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AsQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "2d4d",
+              "weight": 0.25
+            },
+            {
+              "hand": "2h6d",
+              "weight": 0.125
+            },
+            {
+              "hand": "2s8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "3cJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3dAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "3s6s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4cTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "4h4s",
+              "weight": 1.0
+            },
+            {
+              "hand": "4s9d",
+              "weight": 0.5
+            },
+            {
+              "hand": "5cAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "5hTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "6c7s",
+              "weight": 0.125
+            },
+            {
+              "hand": "6dAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "6sKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "7hKc",
+              "weight": 0.75
+            },
+            {
+              "hand": "8cAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "8sTh",
+              "weight": 0.125
+            },
+            {
+              "hand": "9dAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "ThTs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AsJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "AcKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "2dKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "2s3d",
+              "weight": 1.0
+            },
+            {
+              "hand": "3c5s",
+              "weight": 0.5
+            },
+            {
+              "hand": "3d8s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3hQd",
+              "weight": 0.25
+            },
+            {
+              "hand": "4c5c",
+              "weight": 0.125
+            },
+            {
+              "hand": "4d9c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4hKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "5c8h",
+              "weight": 0.75
+            },
+            {
+              "hand": "5dAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "5sTh",
+              "weight": 0.125
+            },
+            {
+              "hand": "6d8d",
+              "weight": 1.0
+            },
+            {
+              "hand": "6s7c",
+              "weight": 0.5
+            },
+            {
+              "hand": "7cAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "8c8d",
+              "weight": 0.25
+            },
+            {
+              "hand": "8hTh",
+              "weight": 0.125
+            },
+            {
+              "hand": "9cAc",
+              "weight": 1.0
+            },
+            {
+              "hand": "KsTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "JcQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "KcQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "2d7c",
+              "weight": 0.125
+            },
+            {
+              "hand": "2h9d",
+              "weight": 1.0
+            },
+            {
+              "hand": "2sQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "3cAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "3h6d",
+              "weight": 0.25
+            },
+            {
+              "hand": "3sTc",
+              "weight": 0.125
+            },
+            {
+              "hand": "4cAc",
+              "weight": 1.0
+            },
+            {
+              "hand": "4h7s",
+              "weight": 0.5
+            },
+            {
+              "hand": "4sQh",
+              "weight": 0.75
+            },
+            {
+              "hand": "5d8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "5hKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6cTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "6h9c",
+              "weight": 0.5
+            },
+            {
+              "hand": "7c8h",
+              "weight": 0.75
+            },
+            {
+              "hand": "7s9c",
+              "weight": 0.25
+            },
+            {
+              "hand": "8dTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "8sKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "9sQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AcTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "AsJh",
+              "weight": 0.25
+            },
+            {
+              "hand": "AdAh",
+              "weight": 0.125
+            },
+            {
+              "hand": "2h3s",
+              "weight": 1.0
+            },
+            {
+              "hand": "2s6c",
+              "weight": 0.5
+            },
+            {
+              "hand": "3c8s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3dQc",
+              "weight": 0.25
+            },
+            {
+              "hand": "3s4d",
+              "weight": 0.125
+            },
+            {
+              "hand": "4c8c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4dQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "4s6h",
+              "weight": 0.75
+            },
+            {
+              "hand": "5cJh",
+              "weight": 0.25
+            },
+            {
+              "hand": "5h7s",
+              "weight": 0.125
+            },
+            {
+              "hand": "5sKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "6dJd",
+              "weight": 0.5
+            },
+            {
+              "hand": "6sTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "7hTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "8cJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "8hKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "9dJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "QdTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "JdQc",
+              "weight": 0.25
+            },
+            {
+              "hand": "AdQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "2dTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "2hQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3c3d",
+              "weight": 0.75
+            }
+          ],
+          "oop": [
+            {
+              "hand": "6h9c",
+              "weight": 1.0
+            },
+            {
+              "hand": "6sJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "7cAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "7sTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "8cAd",
+              "weight": 0.125
+            },
+            {
+              "hand": "8hQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "9cTs",
+              "weight": 0.5
+            },
+            {
+              "hand": "9sTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "QcTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "AdTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "AhJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "KcKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2d6s",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h4s",
+              "weight": 0.25
+            },
+            {
+              "hand": "2s3c",
+              "weight": 0.125
+            },
+            {
+              "hand": "2sKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "3cJd",
+              "weight": 0.5
+            },
+            {
+              "hand": "3dTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "3h8s",
+              "weight": 0.25
+            },
+            {
+              "hand": "3s8c",
+              "weight": 0.125
+            },
+            {
+              "hand": "4c7h",
+              "weight": 1.0
+            },
+            {
+              "hand": "4d7c",
+              "weight": 0.5
+            },
+            {
+              "hand": "4h7c",
+              "weight": 0.75
+            },
+            {
+              "hand": "4s7h",
+              "weight": 0.25
+            },
+            {
+              "hand": "5c8c",
+              "weight": 0.125
+            },
+            {
+              "hand": "5d8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "5hTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "5sJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "6cKc",
+              "weight": 0.25
+            },
+            {
+              "hand": "6h6s",
+              "weight": 0.125
+            },
+            {
+              "hand": "6s9d",
+              "weight": 1.0
+            },
+            {
+              "hand": "7cQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "7s8d",
+              "weight": 0.75
+            },
+            {
+              "hand": "8cQc",
+              "weight": 0.25
+            },
+            {
+              "hand": "8h9s",
+              "weight": 0.125
+            },
+            {
+              "hand": "8sAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "9dKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AdTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "QcTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "JhQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "KcQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d4s",
+              "weight": 0.5
+            },
+            {
+              "hand": "2h2s",
+              "weight": 0.75
+            },
+            {
+              "hand": "2hQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "2sTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c9c",
+              "weight": 1.0
+            },
+            {
+              "hand": "3d7s",
+              "weight": 0.5
+            },
+            {
+              "hand": "3h6h",
+              "weight": 0.75
+            },
+            {
+              "hand": "3s5s",
+              "weight": 0.25
+            },
+            {
+              "hand": "4c5d",
+              "weight": 0.125
+            },
+            {
+              "hand": "4d5c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4h5c",
+              "weight": 0.5
+            },
+            {
+              "hand": "4s5d",
+              "weight": 0.75
+            },
+            {
+              "hand": "5c5s",
+              "weight": 0.25
+            },
+            {
+              "hand": "5d6h",
+              "weight": 0.125
+            },
+            {
+              "hand": "5h7s",
+              "weight": 1.0
+            },
+            {
+              "hand": "5s9c",
+              "weight": 0.5
+            },
+            {
+              "hand": "6cTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "6dQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "6s7c",
+              "weight": 0.125
+            },
+            {
+              "hand": "7cTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "7hKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "8c9s",
+              "weight": 0.75
+            },
+            {
+              "hand": "8dKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "8sQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "9dJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "QcTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "KsTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "JdKc",
+              "weight": 0.25
+            },
+            {
+              "hand": "QhQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "2d2s",
+              "weight": 1.0
+            },
+            {
+              "hand": "2dQs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2hTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "3c6s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3d5h",
+              "weight": 1.0
+            },
+            {
+              "hand": "3h4h",
+              "weight": 0.5
+            },
+            {
+              "hand": "3hAs",
+              "weight": 0.75
+            },
+            {
+              "hand": "3sAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "4cKh",
+              "weight": 0.125
+            },
+            {
+              "hand": "4dKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "4hKc",
+              "weight": 0.5
+            },
+            {
+              "hand": "4sKh",
+              "weight": 0.75
+            },
+            {
+              "hand": "5cAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "5dAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "5s6s",
+              "weight": 1.0
+            },
+            {
+              "hand": "6c8h",
+              "weight": 0.5
+            },
+            {
+              "hand": "6dTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6hQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "7c7s",
+              "weight": 0.125
+            },
+            {
+              "hand": "7hTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "7sAd",
+              "weight": 0.5
+            },
+            {
+              "hand": "8dJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8s9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "9cAh",
+              "weight": 0.125
+            },
+            {
+              "hand": "9sAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "JdTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "AdJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "QdQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "2dTh",
+              "weight": 1.0
+            },
+            {
+              "hand": "2h8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "2s6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "3c4s",
+              "weight": 0.25
+            },
+            {
+              "hand": "3d3h",
+              "weight": 0.125
+            },
+            {
+              "hand": "3dKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "3hQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3sJh",
+              "weight": 0.75
+            },
+            {
+              "hand": "4cJc",
+              "weight": 0.25
+            },
+            {
+              "hand": "4dTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "4hTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "4sJc",
+              "weight": 0.5
+            },
+            {
+              "hand": "5cJh",
+              "weight": 0.75
+            },
+            {
+              "hand": "5dQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "5hKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6c6d",
+              "weight": 1.0
+            },
+            {
+              "hand": "6d8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "6hTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "6sKc",
+              "weight": 0.25
+            },
+            {
+              "hand": "7h8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "7sQc",
+              "weight": 1.0
+            },
+            {
+              "hand": "8d9c",
+              "weight": 0.5
+            },
+            {
+              "hand": "8hKh",
+              "weight": 0.75
+            },
+            {
+              "hand": "9cQd",
+              "weight": 0.25
+            },
+            {
+              "hand": "9sQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "KhTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "JcQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "KcQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "KhKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "2d8d",
+              "weight": 0.125
+            },
+            {
+              "hand": "2h6c",
+              "weight": 1.0
+            },
+            {
+              "hand": "2s4d",
+              "weight": 0.5
+            },
+            {
+              "hand": "2sAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3cQs",
+              "weight": 0.25
+            },
+            {
+              "hand": "3dJd",
+              "weight": 0.125
+            },
+            {
+              "hand": "3hTd",
+              "weight": 1.0
+            },
+            {
+              "hand": "3s9d",
+              "weight": 0.5
+            },
+            {
+              "hand": "4c8s",
+              "weight": 0.75
+            },
+            {
+              "hand": "4d8h",
+              "weight": 0.25
+            },
+            {
+              "hand": "4h8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "4s8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "5c9d",
+              "weight": 0.5
+            },
+            {
+              "hand": "5dTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "5hJd",
+              "weight": 0.25
+            },
+            {
+              "hand": "5sQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6cAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "6h8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "6sTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "7cKs",
+              "weight": 0.25
+            },
+            {
+              "hand": "7s9s",
+              "weight": 0.125
+            },
+            {
+              "hand": "8cKh",
+              "weight": 1.0
+            },
+            {
+              "hand": "8hJc",
+              "weight": 0.5
+            },
+            {
+              "hand": "9cTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "9sTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "JcTd",
+              "weight": 0.125
+            },
+            {
+              "hand": "KhTs",
+              "weight": 1.0
+            },
+            {
+              "hand": "JhKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AhQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2d6c",
+              "weight": 0.25
+            },
+            {
+              "hand": "2h4c",
+              "weight": 0.125
+            },
+            {
+              "hand": "2hAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "2sQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "3cTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3d9c",
+              "weight": 0.25
+            },
+            {
+              "hand": "3h8c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3s7c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4c6h",
+              "weight": 0.5
+            },
+            {
+              "hand": "4d6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "4h6d",
+              "weight": 0.25
+            },
+            {
+              "hand": "4s6h",
+              "weight": 0.125
+            },
+            {
+              "hand": "5c7c",
+              "weight": 1.0
+            },
+            {
+              "hand": "5d8c",
+              "weight": 0.5
+            },
+            {
+              "hand": "5h9c",
+              "weight": 0.75
+            },
+            {
+              "hand": "5sTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "6cQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "6dAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "6s8h",
+              "weight": 0.5
+            },
+            {
+              "hand": "7cJd",
+              "weight": 0.75
+            },
+            {
+              "hand": "7hAh",
+              "weight": 0.25
+            },
+            {
+              "hand": "8cJc",
+              "weight": 0.125
+            },
+            {
+              "hand": "8h8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "8sKh",
+              "weight": 0.5
+            },
+            {
+              "hand": "9dQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "KhTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "JcTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "AhJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "AdQh",
+              "weight": 0.5
+            },
+            {
+              "hand": "2d4c",
+              "weight": 0.75
+            },
+            {
+              "hand": "2dAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "2hQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "2sTc",
+              "weight": 1.0
+            },
+            {
+              "hand": "3c8d",
+              "weight": 0.5
+            },
+            {
+              "hand": "3d6s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3h5s",
+              "weight": 0.25
+            },
+            {
+              "hand": "3s5c",
+              "weight": 0.125
+            },
+            {
+              "hand": "4c4h",
+              "weight": 1.0
+            },
+            {
+              "hand": "4cAs",
+              "weight": 0.5
+            },
+            {
+              "hand": "4dAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "4hAh",
+              "weight": 0.25
+            },
+            {
+              "hand": "4sAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "5d5s",
+              "weight": 1.0
+            },
+            {
+              "hand": "5h6s",
+              "weight": 0.5
+            },
+            {
+              "hand": "5s8d",
+              "weight": 0.75
+            },
+            {
+              "hand": "6cTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "6dQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "6hAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "7c9c",
+              "weight": 0.5
+            },
+            {
+              "hand": "7hQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8c8s",
+              "weight": 0.25
+            },
+            {
+              "hand": "8dQs",
+              "weight": 0.125
+            },
+            {
+              "hand": "8sJc",
+              "weight": 1.0
+            },
+            {
+              "hand": "9dTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "JcTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "QsTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "JdQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "AdQd",
+              "weight": 1.0
+            },
+            {
+              "hand": "AdAs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2dQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "2h9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "2s7s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c6c",
+              "weight": 1.0
+            },
+            {
+              "hand": "3d4s",
+              "weight": 0.5
+            },
+            {
+              "hand": "3h3s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3hAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "3sKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "4cQh",
+              "weight": 1.0
+            },
+            {
+              "hand": "4dQd",
+              "weight": 0.5
+            },
+            {
+              "hand": "4hQd",
+              "weight": 0.75
+            },
+            {
+              "hand": "4sQh",
+              "weight": 0.25
+            },
+            {
+              "hand": "5cKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "5dAc",
+              "weight": 1.0
+            },
+            {
+              "hand": "5s6c",
+              "weight": 0.5
+            },
+            {
+              "hand": "6c7s",
+              "weight": 0.75
+            },
+            {
+              "hand": "6d9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "6hQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "6sAh",
+              "weight": 1.0
+            },
+            {
+              "hand": "7hTc",
+              "weight": 0.5
+            },
+            {
+              "hand": "7sKh",
+              "weight": 0.75
+            },
+            {
+              "hand": "8dTh",
+              "weight": 0.25
+            },
+            {
+              "hand": "8hAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "9cKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "9sKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AsTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "JcKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "AhQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "AcKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d9s",
+              "weight": 0.5
+            },
+            {
+              "hand": "2h7h",
+              "weight": 0.75
+            },
+            {
+              "hand": "2s5h",
+              "weight": 0.25
+            },
+            {
+              "hand": "3c4c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3cAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "3dQs",
+              "weight": 0.5
+            },
+            {
+              "hand": "3hJh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3sTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "4cTd",
+              "weight": 0.125
+            },
+            {
+              "hand": "4dTc",
+              "weight": 1.0
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "algorithm": "dcfr",
+          "counts": {
+            "materialized-ranked": {
+              "chance_nodes": 0,
+              "compatible_pairs": 60024,
+              "deals": 60024,
+              "info_sets": 1024,
+              "iterations": 40,
+              "public_nodes": 4,
+              "public_states": 9,
+              "world_traversal_nodes": 4,
+              "worlds": 60024
+            },
+            "matrix-free": {
+              "chance_nodes": 0,
+              "compatible_pairs": 60024,
+              "deals": 60024,
+              "info_sets": 1024,
+              "iterations": 40,
+              "public_nodes": 4,
+              "public_states": 9,
+              "resource_usage": {
+                "fallback_pair_checks": 0,
+                "hand_counts": [
+                  256,
+                  256
+                ],
+                "hand_state_pass_work": 191232,
+                "info_action_slots": 2048,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_states": 250000
+                }
+              },
+              "world_traversal_nodes": 4,
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized-ranked": {
+              "exploitability": 2.0405188459165653,
+              "ip_best_response_value": 10.264884505721824,
+              "nash_conv": 4.081037691833131,
+              "oop_best_response_value": -6.183846813888693,
+              "value_oop": -7.74252288625666
+            },
+            "matrix-free": {
+              "exploitability": 2.0405188459165653,
+              "ip_best_response_value": 10.264884505721824,
+              "nash_conv": 4.081037691833131,
+              "oop_best_response_value": -6.183846813888693,
+              "value_oop": -7.742522886256659
+            }
+          },
+          "iterations": 40,
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0,
+              "ip_best_response_value": 0.0,
+              "nash_conv": 0.0,
+              "oop_best_response_value": 0.0,
+              "value_oop": 8.881784197001252e-16
+            },
+            "max_absolute_difference_chips": 8.881784197001252e-16,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": true
+          },
+          "peak_memory": {
+            "materialized-ranked": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 60024,
+                "deals": 60024,
+                "info_sets": 1024,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "world_traversal_nodes": 4,
+                "worlds": 60024
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 25586316
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 60024,
+                "deals": 60024,
+                "info_sets": 1024,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "resource_usage": {
+                  "fallback_pair_checks": 0,
+                  "hand_counts": [
+                    256,
+                    256
+                  ],
+                  "hand_state_pass_work": 52992,
+                  "info_action_slots": 2048,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_states": 250000
+                  }
+                },
+                "world_traversal_nodes": 4,
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 1749368
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 2.220446049250313e-16,
+            "rows": 1024,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 256,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 2.425338621821605,
+          "status": {
+            "materialized-ranked": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized-ranked": {
+              "median": 1.040901362999989,
+              "samples": [
+                1.040901362999989,
+                1.0401160189999246,
+                1.0673236039999665
+              ]
+            },
+            "matrix-free": {
+              "median": 0.42917774599993663,
+              "samples": [
+                0.43809995200001595,
+                0.42917774599993663,
+                0.4149276729999656
+              ]
+            }
+          }
+        },
+        {
+          "algorithm": "cfrplus",
+          "counts": {
+            "materialized-ranked": {
+              "chance_nodes": 0,
+              "compatible_pairs": 60024,
+              "deals": 60024,
+              "info_sets": 1024,
+              "iterations": 40,
+              "public_nodes": 4,
+              "public_states": 9,
+              "world_traversal_nodes": 4,
+              "worlds": 60024
+            },
+            "matrix-free": {
+              "chance_nodes": 0,
+              "compatible_pairs": 60024,
+              "deals": 60024,
+              "info_sets": 1024,
+              "iterations": 40,
+              "public_nodes": 4,
+              "public_states": 9,
+              "resource_usage": {
+                "fallback_pair_checks": 0,
+                "hand_counts": [
+                  256,
+                  256
+                ],
+                "hand_state_pass_work": 283392,
+                "info_action_slots": 2048,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_states": 250000
+                }
+              },
+              "world_traversal_nodes": 4,
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized-ranked": {
+              "exploitability": 0.13326165633369547,
+              "ip_best_response_value": 7.893724619624215,
+              "nash_conv": 0.26652331266739093,
+              "oop_best_response_value": -7.627201306956824,
+              "value_oop": -7.7975578199748
+            },
+            "matrix-free": {
+              "exploitability": 0.1332616563336959,
+              "ip_best_response_value": 7.893724619624215,
+              "nash_conv": 0.2665233126673918,
+              "oop_best_response_value": -7.627201306956823,
+              "value_oop": -7.7975578199748
+            }
+          },
+          "iterations": 40,
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 4.440892098500626e-16,
+              "ip_best_response_value": 0.0,
+              "nash_conv": 8.881784197001252e-16,
+              "oop_best_response_value": 8.881784197001252e-16,
+              "value_oop": 0.0
+            },
+            "max_absolute_difference_chips": 8.881784197001252e-16,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": true
+          },
+          "peak_memory": {
+            "materialized-ranked": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 60024,
+                "deals": 60024,
+                "info_sets": 1024,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "world_traversal_nodes": 4,
+                "worlds": 60024
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 25586316
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 0,
+                "compatible_pairs": 60024,
+                "deals": 60024,
+                "info_sets": 1024,
+                "iterations": 10,
+                "public_nodes": 4,
+                "public_states": 9,
+                "resource_usage": {
+                  "fallback_pair_checks": 0,
+                  "hand_counts": [
+                    256,
+                    256
+                  ],
+                  "hand_state_pass_work": 76032,
+                  "info_action_slots": 2048,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_states": 250000
+                  }
+                },
+                "world_traversal_nodes": 4,
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 1749568
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 2.220446049250313e-16,
+            "rows": 1024,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 256,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 2.3402488285510246,
+          "status": {
+            "materialized-ranked": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized-ranked": {
+              "median": 1.089630828000054,
+              "samples": [
+                1.067575445999978,
+                1.089630828000054,
+                1.1052095289999215
+              ]
+            },
+            "matrix-free": {
+              "median": 0.4656046889999743,
+              "samples": [
+                0.47822075599992786,
+                0.4653918959999146,
+                0.4656046889999743
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

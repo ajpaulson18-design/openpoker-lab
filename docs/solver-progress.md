@@ -1,5 +1,22 @@
 # Solver progress record
 
+## 2026-10-09 matrix-free river storage
+
+Branch `solver/matrix-free-river-20261009`, base `3ee96fb`: a separate fixed-board
+API eliminates quadratic pair-world/prefix-edge storage without changing world
+API limits or default flop/preflop/Coach behavior. Exact blocker-conditioned
+marginals, ranked terminals and prepared CFR/BR traversals retain the configured
+game. Full random ranges now admit all 1,081 holdings per player (1,070,190
+compatible deals), without materialized worlds. Independent review caught an
+extreme joint-product underflow; the backend now explicitly rejects it.
+
+Complete-call median improvements are 1.54–2.43x on 128/256-hand fixtures, with
+256-hand traced allocation reduced from 25.59 MB to 1.75 MB. Full-range CFR+
+exploitability fell to 0.0404 chips at 100 iterations on the pot-100 fixture.
+Fourteen default result dictionaries match merged base exactly; the shared
+preflop resource-envelope review found no loop expansion. See
+[model, validation, measurements and limits](matrix-free-river.md).
+
 ## 2026-10-09 ranked river terminal work
 
 Branch `solver/ranked-river-20261009`, base merged `5c712f8`: added an optional

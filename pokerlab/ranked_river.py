@@ -112,7 +112,11 @@ class RankedRiverPayoffs:
     private-hand pairs once during construction.
     """
 
-    def __init__(self, board, hands, weights, *, pot):
+    def __init__(self, board, hands, weights, *, pot, fallback_pair_limit=None):
+        if fallback_pair_limit is not None and (type(fallback_pair_limit) is not int or fallback_pair_limit < 0):
+            raise ValueError("Fallback pair limit must be a nonnegative integer.")
+        self.fallback_pair_limit = fallback_pair_limit
+        self.fallback_pair_checks = 0
         self.board = cards(board, 5)
         if isinstance(pot, bool) or not isinstance(pot, Real):
             raise ValueError("Pot must be a finite positive real number.")
@@ -180,6 +184,7 @@ class RankedRiverPayoffs:
                 0.0 if same is None else self.weights[1][same],
             ))
             if compatible <= _CANCELLATION_FALLBACK_RATIO:
+                self._reserve_fallback_work(len(self.hands[1]))
                 compatible = math.fsum(
                     self.weights[1][other_index]
                     for other_index, other in enumerate(self.hands[1])
@@ -194,6 +199,7 @@ class RankedRiverPayoffs:
             compatible_by_oop.append(self.weights[0][index] * compatible)
         compatible_mass = math.fsum(compatible_by_oop)
         if compatible_mass <= _CANCELLATION_FALLBACK_RATIO:
+            self._reserve_fallback_work(len(self.hands[0]) * len(self.hands[1]))
             compatible_mass = math.fsum(
                 self.weights[0][i] * self.weights[1][j]
                 for i, hand0 in enumerate(self.hands[0])
@@ -201,11 +207,55 @@ class RankedRiverPayoffs:
                 if not (set(hand0) & set(hand1))
             )
         if not math.isfinite(compatible_mass) or compatible_mass <= 0:
-            raise ValueError("Ranges contain no compatible positive-mass private-hand pair.")
+            raise ValueError("Compatible joint range mass is unrepresentable in binary64.")
         self.factor = 1.0 / compatible_mass
         if not math.isfinite(self.factor):
             raise ValueError("Compatible range mass is too small to normalize safely.")
         self.compatible_pair_count = compatible_pair_count
+
+    def _reserve_fallback_work(self, count):
+        """Bound rare direct scans before entering their pair loops."""
+        proposed = self.fallback_pair_checks + count
+        if self.fallback_pair_limit is not None and proposed > self.fallback_pair_limit:
+            raise ValueError("Ranked river fallback pair-check budget exceeded.")
+        self.fallback_pair_checks = proposed
+
+    def joint_marginals(self):
+        """Return blocker-conditioned private-hand chance marginals, without edges.
+
+        These are joint-deal marginals, not independently normalized ranges.
+        Inclusion-exclusion removes both blocked cards and adds back the shared
+        holding that was subtracted twice. Rare cancellation uses direct scans.
+        """
+        answer = []
+        for player in (0, 1):
+            opponent = 1 - player
+            weights = self.weights[opponent]
+            total = math.fsum(weights)
+            terms = [[] for _ in DECK]
+            for index, pair in enumerate(self.card_ids[opponent]):
+                terms[pair[0]].append(weights[index])
+                terms[pair[1]].append(weights[index])
+            card_mass = [math.fsum(values) for values in terms]
+            side = []
+            for index, hand in enumerate(self.hands[player]):
+                first, second = self.card_ids[player][index]
+                same = self.holding_index[opponent].get(hand)
+                compatible = math.fsum((total, -card_mass[first], -card_mass[second],
+                                        0.0 if same is None else weights[same]))
+                if compatible <= _CANCELLATION_FALLBACK_RATIO * total:
+                    self._reserve_fallback_work(len(weights))
+                    compatible = math.fsum(
+                        weights[j] for j, other in enumerate(self.hands[opponent])
+                        if not (set(hand) & set(other)))
+                value = self.weights[player][index] * self.factor * compatible
+                if not math.isfinite(value) or value < 0:
+                    raise ArithmeticError("Invalid blocker-conditioned hand marginal.")
+                side.append(value)
+            if not math.isclose(math.fsum(side), 1.0, rel_tol=1e-10, abs_tol=1e-12):
+                raise ArithmeticError("Blocker-conditioned hand marginals do not sum to one.")
+            answer.append(tuple(side))
+        return tuple(answer)
 
     def validate_worlds(self, worlds, *, pot):
         """Validate that supplied worlds are this kernel's exact river deal set.
@@ -341,6 +391,7 @@ class RankedRiverPayoffs:
                 0.0 if same is None else weighted_reach[same],
             ))
             if approximate <= _CANCELLATION_FALLBACK_RATIO * total_reach:
+                self._reserve_fallback_work(len(opponent_hands))
                 # Rare cancellation path: direct physical filtering preserves
                 # tiny valid residual mass and identifies truly empty support.
                 return math.fsum(
@@ -425,6 +476,7 @@ class RankedRiverPayoffs:
                                           high_total[0], high_total[1]))
                 if (non_tie_mass > 0 and
                         abs(net_mass) <= 1e-12 * max(compatible, 1e-300)):
+                    self._reserve_fallback_work(len(opponent_hands))
                     own_hand = own_hands[own_index]
                     own_rank = self._rank_by_index[player][own_index]
                     net_mass = math.fsum(
