@@ -202,7 +202,8 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
 
 
 def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
-                         *, pot, chance_type):
+                         *, pot, chance_type, checkpoint_interval=None,
+                         checkpoint_callback=None):
     """Train exact vanilla CFR, DCFR, or alternating CFR+ over the supplied tree.
 
     ``worlds`` contains tuples ``(oop_index, ip_index, mass, sign, *future)``;
@@ -213,11 +214,24 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
     The result maps each information-set key to its average action policy. This
     trainer has no lock or arbitrary callback API; use the shared CFR kernel
     when those features are required. Sparse prefix/hand edges are capped at
-    ``MAX_PREFIX_EDGES``.
+    ``MAX_PREFIX_EDGES``. When supplied together, ``checkpoint_interval`` and
+    ``checkpoint_callback`` add checkpoints after each completed interval and
+    at the final completed iteration, even when it is off-interval. The
+    callback receives ``(iteration, average_policy)`` with a fresh snapshot
+    whose rows do not alias trainer state; a truthy return stops training
+    after that completed iteration. Without these options, training behavior
+    is unchanged.
     """
     pot, hand_counts = _validate_inputs(
         worlds, infos, iterations, algorithm, pot, chance_type,
     )
+    if checkpoint_callback is not None and not callable(checkpoint_callback):
+        raise TypeError("checkpoint_callback must be callable.")
+    if checkpoint_interval is not None and (type(checkpoint_interval) is not int or
+                                             checkpoint_interval < 1):
+        raise ValueError("checkpoint_interval must be a positive integer.")
+    if (checkpoint_callback is not None) != (checkpoint_interval is not None):
+        raise ValueError("checkpoint_interval and checkpoint_callback must be supplied together.")
     edges, marginals = _aggregate_prefixes(worlds, hand_counts)
 
     keys = list(infos)
@@ -378,6 +392,16 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                     updated = [value * (positive_discount if value > 0 else 0.5)
                                for value in updated]
                 regrets[key] = updated
+
+        if checkpoint_callback is not None and (
+                iteration % checkpoint_interval == 0 or iteration == iterations):
+            snapshot = {}
+            for key in keys:
+                total = sum(sums[key])
+                snapshot[key] = ([value / total for value in sums[key]] if total else
+                                 [1.0 / infos[key]] * infos[key])
+            if checkpoint_callback(iteration, snapshot):
+                break
 
     averages = {}
     for key in keys:

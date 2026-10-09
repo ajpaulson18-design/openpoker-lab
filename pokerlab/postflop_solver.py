@@ -6,6 +6,8 @@ It is a bounded action abstraction, not a full no-limit Hold'em solver.
 """
 from dataclasses import dataclass
 from math import fsum
+import math
+from numbers import Real
 
 from .cards import DECK, cards, expand_range, rank_hand
 from .cfr import train, evaluate, best_response
@@ -352,13 +354,20 @@ def _public_reveals(history):
 def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                    river_config=None, runouts=None, iterations=1000,
                    algorithm="vanilla", traversal="recursive",
-                   diagnostics="recursive"):
+                   diagnostics="recursive", target_exploitability=None,
+                   check_interval=100):
     """Solve an exact configured heads-up game from flop, turn, or river.
 
     The initial ``config`` applies to the first unresolved street. For a flop
     start, ``turn_config`` and ``river_config`` may change street sizing. For a
     turn start, only ``river_config`` may override sizing. All configs preserve
     the starting pot and total stack caps. This excludes preflop and multiway.
+    Optional ``target_exploitability`` is an absolute chip-denominated target
+    for NashConv/2. It is supported only for turn or river starts with
+    ``traversal="public-batched"``. The solver checks at completed
+    ``check_interval`` iterations and always at the final iteration; it will
+    not diagnose before iteration 10. Admission guards still use the full
+    requested iteration budget, even if training stops early.
     """
     board = cards(board)
     if len(board) not in (3, 4, 5):
@@ -378,6 +387,21 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
             raise ValueError("CFR+ requires recursive or public-batched traversal.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
+    if type(check_interval) is not int or check_interval < 1:
+        raise ValueError("check_interval must be a positive integer.")
+    if target_exploitability is not None:
+        if isinstance(target_exploitability, bool) or not isinstance(target_exploitability, Real):
+            raise ValueError("target_exploitability must be a finite nonnegative real number.")
+        try:
+            target_exploitability = float(target_exploitability)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError("target_exploitability must be a finite nonnegative real number.") from exc
+        if not math.isfinite(target_exploitability) or target_exploitability < 0:
+            raise ValueError("target_exploitability must be a finite nonnegative real number.")
+        if len(board) not in (4, 5):
+            raise ValueError("Target exploitability is available only for turn and river starts.")
+        if traversal != "public-batched":
+            raise ValueError("Target exploitability requires public-batched traversal.")
     config = RiverConfig() if config is None else config
     if not isinstance(config, RiverConfig):
         config = RiverConfig.from_dict(config)
@@ -430,15 +454,65 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
             metadata[key] = node
 
     payoff = lambda node, world: _terminal_value(node, world[3], config.pot)
+    convergence_checkpoints = []
+    last_convergence = None
+    target_reached = False
+    actual_iterations = iterations
+
+    def diagnose(profile):
+        if diagnostics == "public-batched":
+            value, response0, response1 = evaluate_profile(
+                root, worlds, profile, pot=config.pot, chance_type=_Chance)
+        else:
+            value = evaluate(root, worlds, profile, payoff, _node_key, _chance_child)
+            response0 = best_response(0, root, worlds, profile, payoff, _node_key,
+                                      _chance_partitions)
+            response1 = best_response(1, root, worlds, profile, payoff, _node_key,
+                                      _chance_partitions)
+        return value, response0, response1
+
+    def checkpoint(iteration, profile):
+        nonlocal last_convergence, target_reached, actual_iterations
+        if iteration < 10:
+            return False
+        value, response0, response1 = diagnose(profile)
+        if not all(math.isfinite(number) for number in
+                   (value, response0, response1)):
+            raise ValueError("Target diagnostics must be finite; refusing to certify convergence.")
+        tolerance = 1e-10 * max(1.0, config.pot, abs(value),
+                                abs(response0), abs(response1))
+        if response0 < value - tolerance or response1 < -value - tolerance:
+            raise RuntimeError("Best-response diagnostics violate legal response bounds.")
+        nash_conv = max(0.0, (response0 - value) + (response1 + value))
+        exploitability = nash_conv / 2.0
+        if not math.isfinite(nash_conv) or not math.isfinite(exploitability):
+            raise ValueError("Target diagnostics must be finite; refusing to certify convergence.")
+        last_convergence = (value, response0, response1, nash_conv, exploitability)
+        convergence_checkpoints.append({
+            "iteration": iteration, "value_oop": value,
+            "oop_best_response_value": response0,
+            "ip_best_response_value": response1, "nash_conv": nash_conv,
+            "exploitability": exploitability,
+        })
+        actual_iterations = iteration
+        target_reached = exploitability <= target_exploitability
+        return target_reached
+
     if traversal == "public-batched":
         averages = train_public_batched(root, worlds, infos, iterations, algorithm,
-                                        pot=config.pot, chance_type=_Chance)
+                                        pot=config.pot, chance_type=_Chance,
+                                        checkpoint_interval=(check_interval if target_exploitability is not None else None),
+                                        checkpoint_callback=(checkpoint if target_exploitability is not None else None))
     else:
         trainer = train_plus if algorithm == "cfrplus" else (
             train_planned if traversal == "planned" else train)
         averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
                            _node_key, _chance_child)
-    if diagnostics == "public-batched":
+    if target_exploitability is not None:
+        if last_convergence is None:
+            raise RuntimeError("Target diagnostics did not produce a final checkpoint.")
+        value, br0, br1, nash_conv, exploitability = last_convergence
+    elif diagnostics == "public-batched":
         value, br0, br1 = evaluate_profile(root, worlds, averages,
                                           pot=config.pot, chance_type=_Chance)
     else:
@@ -466,7 +540,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                          "probability": probability}
                         for action, probability in zip(node.actions, averages[key])],
         })
-    nash_conv = max(0.0, br0 + br1)
+    if target_exploitability is None:
+        nash_conv = max(0.0, br0 + br1)
     config_fields = {stage: value.to_dict() for stage, value in stages.items()}
     reachable_futures = {tuple(world[4:]) for world in worlds}
     if len(board) == 3:
@@ -500,7 +575,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         "runouts": [list(item) if isinstance(item, tuple) else item for item in selected],
         "reachable_runouts": reachable_runouts,
         "runout_mode": runout_mode, "chance_note": chance_note,
-        "iterations": iterations, "deals": pair_count,
+        "iterations": actual_iterations, "deals": pair_count,
         "compatible_pairs": pair_count, "worlds": len(worlds),
         "info_sets": len(infos), "public_nodes": len(nodes),
         "public_states": public_counts["total"],
@@ -523,4 +598,12 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         result["training_passes_per_iteration"] = passes
     if diagnostics != "recursive":
         result["diagnostics_backend"] = "public-batched-python"
+    if target_exploitability is not None:
+        result["convergence"] = {
+            "target_exploitability": target_exploitability,
+            "max_iterations": iterations,
+            "achieved": exploitability,
+            "stop_reason": "target-reached" if target_reached else "iteration-limit",
+            "checkpoints": convergence_checkpoints,
+        }
     return result

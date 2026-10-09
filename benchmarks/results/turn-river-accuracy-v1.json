@@ -1,0 +1,2373 @@
+{
+  "benchmark_id": "turn-river-accuracy-v1",
+  "created_at_utc": "2026-10-09T17:19:32.257149+00:00",
+  "fixtures": {
+    "benchmark_id": "turn-river-algorithm-quality-v1",
+    "checkpoints": [
+      20,
+      100,
+      300
+    ],
+    "scenarios": [
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "full44-blocked-runouts",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "runout_scope": "all-compatible-runouts"
+      },
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "id": "two-conditioned-runouts-asymmetric-multisize",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_scope": "selected-conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ]
+      },
+      {
+        "board": "2c7d9hJsKd",
+        "config": {
+          "bet_sizes": [
+            1.0
+          ],
+          "effective_stack": 100,
+          "include_all_in": false,
+          "pot": 100
+        },
+        "id": "river-polarised-bluffcatcher",
+        "ip": "QsQh",
+        "oop": "AsAh,3c4c",
+        "purpose": "Nuts/air versus bluffcatcher, pot-size bet, finite tree"
+      },
+      {
+        "board": "Js8d4c2h2s",
+        "config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100,
+          "raise_sizes": [
+            0.5,
+            1
+          ]
+        },
+        "id": "river-weighted-raises",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Weighted river range, two opening sizes, raises and unequal stacks"
+      }
+    ],
+    "schema_version": 1
+  },
+  "metadata": {
+    "command": "python -m scripts.benchmark_turn_river_accuracy",
+    "configuration": {
+      "algorithms": [
+        "dcfr",
+        "cfrplus"
+      ],
+      "check_interval": 20,
+      "diagnostics": "public-batched",
+      "iterations": 300,
+      "repeats": 3,
+      "target_exploitability_chips": 0.1,
+      "traversal": "public-batched"
+    },
+    "input_fixture": "benchmarks/turn-river-quality-v1.json",
+    "input_sha256": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_version": "3.12.14",
+    "revision": "b7bf525012bb66240b5f743666b4f1c6ea086a63",
+    "source_sha256": {
+      "benchmarks/turn-river-quality-v1.json": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+      "pokerlab/postflop_solver.py": "4f497809deeb0441848ab6df64c466b9fefaa7998eec4a23ecd4b0691e41dd59",
+      "pokerlab/public_cfr.py": "5d20c927c29f57ae12e6f26e5bf1d02678e5e5b84bcfb8addf9a2b5c173ac248",
+      "pokerlab/public_diagnostics.py": "c9a040ff4208af659231e1e930da0cf2745b906c0d9f65ddc780ee82e6883335",
+      "scripts/benchmark_turn_river_accuracy.py": "f4091f669fe353ea80dcb4321a183d51b17be4dd718a4b48f42347e600f516c1"
+    },
+    "worktree_dirty": true
+  },
+  "methodology": {
+    "checkpoint_overhead": "target=0 forces checks every 20 iterations and ordinarily runs to cap; compared with an otherwise identical fixed 300 solve.",
+    "limitations": "Four synthetic turn/river fixtures, machine-specific timings, conditional runout subsets as specified by fixture; no claim of general equilibrium accuracy.",
+    "strategy_comparison": "Adaptive strategy compared with a fixed-budget solve at the same actual iteration count; probability absolute difference.",
+    "target_units": "Absolute exploitability in chips; fixture pot is 100, so 0.1 chips is 0.1% pot.",
+    "timing": "Complete solve_postflop call; includes exact public-batched best-response checks and result assembly, excludes JSON serialization."
+  },
+  "results": [
+    {
+      "algorithm": "dcfr",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": -0.049990956682121834,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "full44-blocked-runouts",
+      "speedup_vs_fixed_300": 1.8314061046372783,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-160",
+        "rows": 1112,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "achieved",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.010748521264732247,
+          "iterations": 300,
+          "median_seconds": 2.4851609020000183,
+          "nash_conv_chips": 0.021497042529464494,
+          "whole_call_seconds": [
+            2.4851609020000183,
+            2.6455124519999913,
+            2.3861887219999858
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.010748521264732247,
+            "checkpoints": [
+              {
+                "exploitability": 8.102608225724104,
+                "ip_best_response_value": 24.560168823270075,
+                "iteration": 20,
+                "nash_conv": 16.20521645144821,
+                "oop_best_response_value": -8.354952371821867,
+                "value_oop": -18.865947669311897
+              },
+              {
+                "exploitability": 2.3267964531867964,
+                "ip_best_response_value": 20.435133253643876,
+                "iteration": 40,
+                "nash_conv": 4.653592906373593,
+                "oop_best_response_value": -15.781540347270283,
+                "value_oop": -17.719289699247813
+              },
+              {
+                "exploitability": 1.2115658592385259,
+                "ip_best_response_value": 19.516735760929308,
+                "iteration": 60,
+                "nash_conv": 2.4231317184770518,
+                "oop_best_response_value": -17.093604042452256,
+                "value_oop": -18.168620120927145
+              },
+              {
+                "exploitability": 0.5591264795575555,
+                "ip_best_response_value": 18.762244660234266,
+                "iteration": 80,
+                "nash_conv": 1.118252959115111,
+                "oop_best_response_value": -17.643991701119155,
+                "value_oop": -18.292497812216055
+              },
+              {
+                "exploitability": 0.287338295449878,
+                "ip_best_response_value": 18.411712780465336,
+                "iteration": 100,
+                "nash_conv": 0.574676590899756,
+                "oop_best_response_value": -17.83703618956558,
+                "value_oop": -18.1700941471822
+              },
+              {
+                "exploitability": 0.16669680783488516,
+                "ip_best_response_value": 18.256118498209702,
+                "iteration": 120,
+                "nash_conv": 0.3333936156697703,
+                "oop_best_response_value": -17.92272488253993,
+                "value_oop": -18.115890692832565
+              },
+              {
+                "exploitability": 0.10516166996448284,
+                "ip_best_response_value": 18.176755123306645,
+                "iteration": 140,
+                "nash_conv": 0.21032333992896568,
+                "oop_best_response_value": -17.96643178337768,
+                "value_oop": -18.088273927437132
+              },
+              {
+                "exploitability": 0.07054399508436582,
+                "ip_best_response_value": 18.132107859891608,
+                "iteration": 160,
+                "nash_conv": 0.14108799016873164,
+                "oop_best_response_value": -17.991019869722876,
+                "value_oop": -18.072746710287277
+              },
+              {
+                "exploitability": 0.04959668623857816,
+                "ip_best_response_value": 18.10509160247069,
+                "iteration": 180,
+                "nash_conv": 0.09919337247715632,
+                "oop_best_response_value": -18.005898229993534,
+                "value_oop": -18.063354297407006
+              },
+              {
+                "exploitability": 0.03618599481350948,
+                "ip_best_response_value": 18.08779550518205,
+                "iteration": 200,
+                "nash_conv": 0.07237198962701896,
+                "oop_best_response_value": -18.01542351555503,
+                "value_oop": -18.057342431062107
+              },
+              {
+                "exploitability": 0.027205542990756726,
+                "ip_best_response_value": 18.076213196447995,
+                "iteration": 220,
+                "nash_conv": 0.05441108598151345,
+                "oop_best_response_value": -18.02180211046648,
+                "value_oop": -18.053317141242786
+              },
+              {
+                "exploitability": 0.020967062108118384,
+                "ip_best_response_value": 18.06816727481281,
+                "iteration": 240,
+                "nash_conv": 0.04193412421623677,
+                "oop_best_response_value": -18.026233150596575,
+                "value_oop": -18.05052113853338
+              },
+              {
+                "exploitability": 0.01649906614762031,
+                "ip_best_response_value": 18.06240479095807,
+                "iteration": 260,
+                "nash_conv": 0.03299813229524062,
+                "oop_best_response_value": -18.02940665866283,
+                "value_oop": -18.04851877370376
+              },
+              {
+                "exploitability": 0.013215503979493448,
+                "ip_best_response_value": 18.058169900383614,
+                "iteration": 280,
+                "nash_conv": 0.026431007958986896,
+                "oop_best_response_value": -18.031738892424627,
+                "value_oop": -18.047047290912207
+              },
+              {
+                "exploitability": 0.010748521264732247,
+                "ip_best_response_value": 18.054988172336056,
+                "iteration": 300,
+                "nash_conv": 0.021497042529464494,
+                "oop_best_response_value": -18.033491129806592,
+                "value_oop": -18.0459417855644
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.010748521264732247,
+          "iterations": 300,
+          "median_seconds": 2.3609253310000327,
+          "nash_conv_chips": 0.021497042529464494,
+          "whole_call_seconds": [
+            2.3609253310000327,
+            2.355089190000001,
+            2.5511535750000007
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.07054399508436582,
+            "checkpoints": [
+              {
+                "exploitability": 8.102608225724104,
+                "ip_best_response_value": 24.560168823270075,
+                "iteration": 20,
+                "nash_conv": 16.20521645144821,
+                "oop_best_response_value": -8.354952371821867,
+                "value_oop": -18.865947669311897
+              },
+              {
+                "exploitability": 2.3267964531867964,
+                "ip_best_response_value": 20.435133253643876,
+                "iteration": 40,
+                "nash_conv": 4.653592906373593,
+                "oop_best_response_value": -15.781540347270283,
+                "value_oop": -17.719289699247813
+              },
+              {
+                "exploitability": 1.2115658592385259,
+                "ip_best_response_value": 19.516735760929308,
+                "iteration": 60,
+                "nash_conv": 2.4231317184770518,
+                "oop_best_response_value": -17.093604042452256,
+                "value_oop": -18.168620120927145
+              },
+              {
+                "exploitability": 0.5591264795575555,
+                "ip_best_response_value": 18.762244660234266,
+                "iteration": 80,
+                "nash_conv": 1.118252959115111,
+                "oop_best_response_value": -17.643991701119155,
+                "value_oop": -18.292497812216055
+              },
+              {
+                "exploitability": 0.287338295449878,
+                "ip_best_response_value": 18.411712780465336,
+                "iteration": 100,
+                "nash_conv": 0.574676590899756,
+                "oop_best_response_value": -17.83703618956558,
+                "value_oop": -18.1700941471822
+              },
+              {
+                "exploitability": 0.16669680783488516,
+                "ip_best_response_value": 18.256118498209702,
+                "iteration": 120,
+                "nash_conv": 0.3333936156697703,
+                "oop_best_response_value": -17.92272488253993,
+                "value_oop": -18.115890692832565
+              },
+              {
+                "exploitability": 0.10516166996448284,
+                "ip_best_response_value": 18.176755123306645,
+                "iteration": 140,
+                "nash_conv": 0.21032333992896568,
+                "oop_best_response_value": -17.96643178337768,
+                "value_oop": -18.088273927437132
+              },
+              {
+                "exploitability": 0.07054399508436582,
+                "ip_best_response_value": 18.132107859891608,
+                "iteration": 160,
+                "nash_conv": 0.14108799016873164,
+                "oop_best_response_value": -17.991019869722876,
+                "value_oop": -18.072746710287277
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "target-reached",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.07054399508436582,
+          "iterations": 160,
+          "median_seconds": 1.35696877700002,
+          "nash_conv_chips": 0.14108799016873164,
+          "whole_call_seconds": [
+            1.4211821650000047,
+            1.2722530390000202,
+            1.35696877700002
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "cfrplus",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": -0.008817437576385645,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "full44-blocked-runouts",
+      "speedup_vs_fixed_300": 3.091801214130545,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-100",
+        "rows": 1112,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "achieved",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.008055498412169015,
+          "iterations": 300,
+          "median_seconds": 3.8370702040000424,
+          "nash_conv_chips": 0.01611099682433803,
+          "whole_call_seconds": [
+            3.8370702040000424,
+            3.8459384639999143,
+            2.981207198999982
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.008055498412169015,
+            "checkpoints": [
+              {
+                "exploitability": 1.730424598402859,
+                "ip_best_response_value": 20.242551057064837,
+                "iteration": 20,
+                "nash_conv": 3.460849196805718,
+                "oop_best_response_value": -16.78170186025912,
+                "value_oop": -18.66101486823055
+              },
+              {
+                "exploitability": 0.44354360159722006,
+                "ip_best_response_value": 18.605677411415165,
+                "iteration": 40,
+                "nash_conv": 0.8870872031944401,
+                "oop_best_response_value": -17.718590208220725,
+                "value_oop": -18.202955692939067
+              },
+              {
+                "exploitability": 0.19874631328400838,
+                "ip_best_response_value": 18.294094138741656,
+                "iteration": 60,
+                "nash_conv": 0.39749262656801676,
+                "oop_best_response_value": -17.89660151217364,
+                "value_oop": -18.113886129867012
+              },
+              {
+                "exploitability": 0.11225486213263025,
+                "ip_best_response_value": 18.184005952742027,
+                "iteration": 80,
+                "nash_conv": 0.2245097242652605,
+                "oop_best_response_value": -17.959496228476766,
+                "value_oop": -18.082270997341823
+              },
+              {
+                "exploitability": 0.07202094124944303,
+                "ip_best_response_value": 18.13279534976663,
+                "iteration": 100,
+                "nash_conv": 0.14404188249888605,
+                "oop_best_response_value": -17.988753467267745,
+                "value_oop": -18.067538497137644
+              },
+              {
+                "exploitability": 0.050097211199675584,
+                "ip_best_response_value": 18.104890352921323,
+                "iteration": 120,
+                "nash_conv": 0.10019442239935117,
+                "oop_best_response_value": -18.004695930521972,
+                "value_oop": -18.05950375497334
+              },
+              {
+                "exploitability": 0.03684962039611683,
+                "ip_best_response_value": 18.088028533388705,
+                "iteration": 140,
+                "nash_conv": 0.07369924079223367,
+                "oop_best_response_value": -18.01432929259647,
+                "value_oop": -18.054646336200037
+              },
+              {
+                "exploitability": 0.028238024325290212,
+                "ip_best_response_value": 18.07706750802287,
+                "iteration": 160,
+                "nash_conv": 0.056476048650580424,
+                "oop_best_response_value": -18.02059145937229,
+                "value_oop": -18.05148781738782
+              },
+              {
+                "exploitability": 0.02232693390483398,
+                "ip_best_response_value": 18.06954374454098,
+                "iteration": 180,
+                "nash_conv": 0.04465386780966796,
+                "oop_best_response_value": -18.02488987673131,
+                "value_oop": -18.049319341751236
+              },
+              {
+                "exploitability": 0.018094813597512527,
+                "ip_best_response_value": 18.064157010460757,
+                "iteration": 200,
+                "nash_conv": 0.036189627195025054,
+                "oop_best_response_value": -18.027967383265732,
+                "value_oop": -18.047766576540653
+              },
+              {
+                "exploitability": 0.014961158095850635,
+                "ip_best_response_value": 18.060168426096247,
+                "iteration": 220,
+                "nash_conv": 0.02992231619170127,
+                "oop_best_response_value": -18.030246109904546,
+                "value_oop": -18.04661672117745
+              },
+              {
+                "exploitability": 0.012576270861329064,
+                "ip_best_response_value": 18.05713289014481,
+                "iteration": 240,
+                "nash_conv": 0.025152541722658128,
+                "oop_best_response_value": -18.031980348422152,
+                "value_oop": -18.045741550196304
+              },
+              {
+                "exploitability": 0.010719297179768716,
+                "ip_best_response_value": 18.054769293958934,
+                "iteration": 260,
+                "nash_conv": 0.021438594359537433,
+                "oop_best_response_value": -18.033330699599396,
+                "value_oop": -18.045060065283057
+              },
+              {
+                "exploitability": 0.009245189458802372,
+                "ip_best_response_value": 18.05289301783212,
+                "iteration": 280,
+                "nash_conv": 0.018490378917604744,
+                "oop_best_response_value": -18.034402638914514,
+                "value_oop": -18.04451906225909
+              },
+              {
+                "exploitability": 0.008055498412169015,
+                "ip_best_response_value": 18.051378753387723,
+                "iteration": 300,
+                "nash_conv": 0.01611099682433803,
+                "oop_best_response_value": -18.035267756563385,
+                "value_oop": -18.044082425155516
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.008055498412169015,
+          "iterations": 300,
+          "median_seconds": 3.8032370770000625,
+          "nash_conv_chips": 0.01611099682433803,
+          "whole_call_seconds": [
+            3.307054117000007,
+            3.945771645000036,
+            3.8032370770000625
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.07202094124944303,
+            "checkpoints": [
+              {
+                "exploitability": 1.730424598402859,
+                "ip_best_response_value": 20.242551057064837,
+                "iteration": 20,
+                "nash_conv": 3.460849196805718,
+                "oop_best_response_value": -16.78170186025912,
+                "value_oop": -18.66101486823055
+              },
+              {
+                "exploitability": 0.44354360159722006,
+                "ip_best_response_value": 18.605677411415165,
+                "iteration": 40,
+                "nash_conv": 0.8870872031944401,
+                "oop_best_response_value": -17.718590208220725,
+                "value_oop": -18.202955692939067
+              },
+              {
+                "exploitability": 0.19874631328400838,
+                "ip_best_response_value": 18.294094138741656,
+                "iteration": 60,
+                "nash_conv": 0.39749262656801676,
+                "oop_best_response_value": -17.89660151217364,
+                "value_oop": -18.113886129867012
+              },
+              {
+                "exploitability": 0.11225486213263025,
+                "ip_best_response_value": 18.184005952742027,
+                "iteration": 80,
+                "nash_conv": 0.2245097242652605,
+                "oop_best_response_value": -17.959496228476766,
+                "value_oop": -18.082270997341823
+              },
+              {
+                "exploitability": 0.07202094124944303,
+                "ip_best_response_value": 18.13279534976663,
+                "iteration": 100,
+                "nash_conv": 0.14404188249888605,
+                "oop_best_response_value": -17.988753467267745,
+                "value_oop": -18.067538497137644
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "target-reached",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.07202094124944303,
+          "iterations": 100,
+          "median_seconds": 1.241046865000044,
+          "nash_conv_chips": 0.14404188249888605,
+          "whole_call_seconds": [
+            1.27867250099996,
+            1.241046865000044,
+            1.0658421580000095
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "dcfr",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.007526850709736799,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize",
+      "speedup_vs_fixed_300": 0.9977227410141394,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-300",
+        "rows": 138,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "budget-miss",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.9058966387041067,
+          "iterations": 300,
+          "median_seconds": 0.2533244079999122,
+          "nash_conv_chips": 1.8117932774082135,
+          "whole_call_seconds": [
+            0.25628286899996056,
+            0.23932145799994942,
+            0.2533244079999122
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.9058966387041067,
+            "checkpoints": [
+              {
+                "exploitability": 14.824483569039474,
+                "ip_best_response_value": 39.505540398603486,
+                "iteration": 20,
+                "nash_conv": 29.648967138078948,
+                "oop_best_response_value": -9.856573260524538,
+                "value_oop": -25.965642708351535
+              },
+              {
+                "exploitability": 6.750616695448537,
+                "ip_best_response_value": 25.0576295526253,
+                "iteration": 40,
+                "nash_conv": 13.501233390897074,
+                "oop_best_response_value": -11.556396161728227,
+                "value_oop": -18.906070690985995
+              },
+              {
+                "exploitability": 3.7008574723857155,
+                "ip_best_response_value": 20.513889017121738,
+                "iteration": 60,
+                "nash_conv": 7.401714944771431,
+                "oop_best_response_value": -13.112174072350307,
+                "value_oop": -17.46505504339473
+              },
+              {
+                "exploitability": 2.5770001561079887,
+                "ip_best_response_value": 19.817020915240597,
+                "iteration": 80,
+                "nash_conv": 5.154000312215977,
+                "oop_best_response_value": -14.66302060302462,
+                "value_oop": -17.473958478625114
+              },
+              {
+                "exploitability": 2.0517775599422405,
+                "ip_best_response_value": 19.69230501100505,
+                "iteration": 100,
+                "nash_conv": 4.103555119884481,
+                "oop_best_response_value": -15.58874989112057,
+                "value_oop": -17.83743279377705
+              },
+              {
+                "exploitability": 1.9497810957596098,
+                "ip_best_response_value": 20.135011043205107,
+                "iteration": 120,
+                "nash_conv": 3.8995621915192196,
+                "oop_best_response_value": -16.235448851685888,
+                "value_oop": -18.274413083228126
+              },
+              {
+                "exploitability": 1.7316457046796483,
+                "ip_best_response_value": 19.673331403610664,
+                "iteration": 140,
+                "nash_conv": 3.4632914093592966,
+                "oop_best_response_value": -16.210039994251368,
+                "value_oop": -18.415888743596927
+              },
+              {
+                "exploitability": 1.5021072221881955,
+                "ip_best_response_value": 19.6393450881058,
+                "iteration": 160,
+                "nash_conv": 3.004214444376391,
+                "oop_best_response_value": -16.635130643729408,
+                "value_oop": -18.510861813255534
+              },
+              {
+                "exploitability": 1.4599836296308926,
+                "ip_best_response_value": 19.635903702847703,
+                "iteration": 180,
+                "nash_conv": 2.919967259261785,
+                "oop_best_response_value": -16.715936443585917,
+                "value_oop": -18.58146137294953
+              },
+              {
+                "exploitability": 1.2829435158102243,
+                "ip_best_response_value": 19.6193611858383,
+                "iteration": 200,
+                "nash_conv": 2.5658870316204485,
+                "oop_best_response_value": -17.053474154217852,
+                "value_oop": -18.65794179683346
+              },
+              {
+                "exploitability": 1.2677445000422356,
+                "ip_best_response_value": 19.624254896465423,
+                "iteration": 220,
+                "nash_conv": 2.535489000084471,
+                "oop_best_response_value": -17.088765896380952,
+                "value_oop": -18.699442214412105
+              },
+              {
+                "exploitability": 1.175639027301612,
+                "ip_best_response_value": 19.5911022238638,
+                "iteration": 240,
+                "nash_conv": 2.351278054603224,
+                "oop_best_response_value": -17.239824169260576,
+                "value_oop": -18.736784377005584
+              },
+              {
+                "exploitability": 1.1332920190450544,
+                "ip_best_response_value": 19.59733308898751,
+                "iteration": 260,
+                "nash_conv": 2.2665840380901088,
+                "oop_best_response_value": -17.330749050897403,
+                "value_oop": -18.743561949967123
+              },
+              {
+                "exploitability": 1.0046452304747486,
+                "ip_best_response_value": 19.555759544317258,
+                "iteration": 280,
+                "nash_conv": 2.0092904609494973,
+                "oop_best_response_value": -17.54646908336776,
+                "value_oop": -18.77744613442768
+              },
+              {
+                "exploitability": 0.9058966387041067,
+                "ip_best_response_value": 19.54975149857855,
+                "iteration": 300,
+                "nash_conv": 1.8117932774082135,
+                "oop_best_response_value": -17.737958221170338,
+                "value_oop": -18.80904867486748
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.9058966387041067,
+          "iterations": 300,
+          "median_seconds": 0.25523114300006,
+          "nash_conv_chips": 1.8117932774082135,
+          "whole_call_seconds": [
+            0.2535645340000201,
+            0.2679553629999418,
+            0.25523114300006
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.9058966387041067,
+            "checkpoints": [
+              {
+                "exploitability": 14.824483569039474,
+                "ip_best_response_value": 39.505540398603486,
+                "iteration": 20,
+                "nash_conv": 29.648967138078948,
+                "oop_best_response_value": -9.856573260524538,
+                "value_oop": -25.965642708351535
+              },
+              {
+                "exploitability": 6.750616695448537,
+                "ip_best_response_value": 25.0576295526253,
+                "iteration": 40,
+                "nash_conv": 13.501233390897074,
+                "oop_best_response_value": -11.556396161728227,
+                "value_oop": -18.906070690985995
+              },
+              {
+                "exploitability": 3.7008574723857155,
+                "ip_best_response_value": 20.513889017121738,
+                "iteration": 60,
+                "nash_conv": 7.401714944771431,
+                "oop_best_response_value": -13.112174072350307,
+                "value_oop": -17.46505504339473
+              },
+              {
+                "exploitability": 2.5770001561079887,
+                "ip_best_response_value": 19.817020915240597,
+                "iteration": 80,
+                "nash_conv": 5.154000312215977,
+                "oop_best_response_value": -14.66302060302462,
+                "value_oop": -17.473958478625114
+              },
+              {
+                "exploitability": 2.0517775599422405,
+                "ip_best_response_value": 19.69230501100505,
+                "iteration": 100,
+                "nash_conv": 4.103555119884481,
+                "oop_best_response_value": -15.58874989112057,
+                "value_oop": -17.83743279377705
+              },
+              {
+                "exploitability": 1.9497810957596098,
+                "ip_best_response_value": 20.135011043205107,
+                "iteration": 120,
+                "nash_conv": 3.8995621915192196,
+                "oop_best_response_value": -16.235448851685888,
+                "value_oop": -18.274413083228126
+              },
+              {
+                "exploitability": 1.7316457046796483,
+                "ip_best_response_value": 19.673331403610664,
+                "iteration": 140,
+                "nash_conv": 3.4632914093592966,
+                "oop_best_response_value": -16.210039994251368,
+                "value_oop": -18.415888743596927
+              },
+              {
+                "exploitability": 1.5021072221881955,
+                "ip_best_response_value": 19.6393450881058,
+                "iteration": 160,
+                "nash_conv": 3.004214444376391,
+                "oop_best_response_value": -16.635130643729408,
+                "value_oop": -18.510861813255534
+              },
+              {
+                "exploitability": 1.4599836296308926,
+                "ip_best_response_value": 19.635903702847703,
+                "iteration": 180,
+                "nash_conv": 2.919967259261785,
+                "oop_best_response_value": -16.715936443585917,
+                "value_oop": -18.58146137294953
+              },
+              {
+                "exploitability": 1.2829435158102243,
+                "ip_best_response_value": 19.6193611858383,
+                "iteration": 200,
+                "nash_conv": 2.5658870316204485,
+                "oop_best_response_value": -17.053474154217852,
+                "value_oop": -18.65794179683346
+              },
+              {
+                "exploitability": 1.2677445000422356,
+                "ip_best_response_value": 19.624254896465423,
+                "iteration": 220,
+                "nash_conv": 2.535489000084471,
+                "oop_best_response_value": -17.088765896380952,
+                "value_oop": -18.699442214412105
+              },
+              {
+                "exploitability": 1.175639027301612,
+                "ip_best_response_value": 19.5911022238638,
+                "iteration": 240,
+                "nash_conv": 2.351278054603224,
+                "oop_best_response_value": -17.239824169260576,
+                "value_oop": -18.736784377005584
+              },
+              {
+                "exploitability": 1.1332920190450544,
+                "ip_best_response_value": 19.59733308898751,
+                "iteration": 260,
+                "nash_conv": 2.2665840380901088,
+                "oop_best_response_value": -17.330749050897403,
+                "value_oop": -18.743561949967123
+              },
+              {
+                "exploitability": 1.0046452304747486,
+                "ip_best_response_value": 19.555759544317258,
+                "iteration": 280,
+                "nash_conv": 2.0092904609494973,
+                "oop_best_response_value": -17.54646908336776,
+                "value_oop": -18.77744613442768
+              },
+              {
+                "exploitability": 0.9058966387041067,
+                "ip_best_response_value": 19.54975149857855,
+                "iteration": 300,
+                "nash_conv": 1.8117932774082135,
+                "oop_best_response_value": -17.737958221170338,
+                "value_oop": -18.80904867486748
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.9058966387041067,
+          "iterations": 300,
+          "median_seconds": 0.2539026100000683,
+          "nash_conv_chips": 1.8117932774082135,
+          "whole_call_seconds": [
+            0.2539026100000683,
+            0.2506494560000192,
+            0.25682422599993515
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "cfrplus",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.03252105844497488,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "two-conditioned-runouts-asymmetric-multisize",
+      "speedup_vs_fixed_300": 1.8384245729192912,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-160",
+        "rows": 138,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "achieved",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.02347011544381239,
+          "iterations": 300,
+          "median_seconds": 0.38273077799999555,
+          "nash_conv_chips": 0.04694023088762478,
+          "whole_call_seconds": [
+            0.38273077799999555,
+            0.41509532099996704,
+            0.3717675740000459
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.02347011544381239,
+            "checkpoints": [
+              {
+                "exploitability": 4.242885945628309,
+                "ip_best_response_value": 22.567036007827056,
+                "iteration": 20,
+                "nash_conv": 8.485771891256618,
+                "oop_best_response_value": -14.081264116570438,
+                "value_oop": -18.946053205847747
+              },
+              {
+                "exploitability": 1.2922874540100011,
+                "ip_best_response_value": 19.9987802093517,
+                "iteration": 40,
+                "nash_conv": 2.5845749080200022,
+                "oop_best_response_value": -17.414205301331698,
+                "value_oop": -18.579024232247615
+              },
+              {
+                "exploitability": 0.5790577662777086,
+                "ip_best_response_value": 19.4738224097069,
+                "iteration": 60,
+                "nash_conv": 1.158115532555417,
+                "oop_best_response_value": -18.315706877151484,
+                "value_oop": -18.761653524812367
+              },
+              {
+                "exploitability": 0.3270604050272201,
+                "ip_best_response_value": 19.28834502065015,
+                "iteration": 80,
+                "nash_conv": 0.6541208100544402,
+                "oop_best_response_value": -18.63422421059571,
+                "value_oop": -18.870936135255537
+              },
+              {
+                "exploitability": 0.2098367747105332,
+                "ip_best_response_value": 19.202065018435047,
+                "iteration": 100,
+                "nash_conv": 0.4196735494210664,
+                "oop_best_response_value": -18.78239146901398,
+                "value_oop": -18.92973597896478
+              },
+              {
+                "exploitability": 0.1459608419129772,
+                "ip_best_response_value": 19.15505047359987,
+                "iteration": 120,
+                "nash_conv": 0.2919216838259544,
+                "oop_best_response_value": -18.863128789773917,
+                "value_oop": -18.96390494961588
+              },
+              {
+                "exploitability": 0.10736329405148659,
+                "ip_best_response_value": 19.126641555483356,
+                "iteration": 140,
+                "nash_conv": 0.21472658810297318,
+                "oop_best_response_value": -18.911914967380383,
+                "value_oop": -18.985279605063422
+              },
+              {
+                "exploitability": 0.08227295902858955,
+                "ip_best_response_value": 19.1081743389716,
+                "iteration": 160,
+                "nash_conv": 0.1645459180571791,
+                "oop_best_response_value": -18.943628420914422,
+                "value_oop": -18.999468229344835
+              },
+              {
+                "exploitability": 0.0650506882927111,
+                "ip_best_response_value": 19.09549824667496,
+                "iteration": 180,
+                "nash_conv": 0.1301013765854222,
+                "oop_best_response_value": -18.96539687008954,
+                "value_oop": -19.009341538382685
+              },
+              {
+                "exploitability": 0.05272018469095663,
+                "ip_best_response_value": 19.08642263730167,
+                "iteration": 200,
+                "nash_conv": 0.10544036938191326,
+                "oop_best_response_value": -18.980982267919757,
+                "value_oop": -19.01647751080952
+              },
+              {
+                "exploitability": 0.04359011568442028,
+                "ip_best_response_value": 19.079702640898386,
+                "iteration": 220,
+                "nash_conv": 0.08718023136884057,
+                "oop_best_response_value": -18.992522409529546,
+                "value_oop": -19.021797364474637
+              },
+              {
+                "exploitability": 0.036641622139983454,
+                "ip_best_response_value": 19.074588347502203,
+                "iteration": 240,
+                "nash_conv": 0.07328324427996691,
+                "oop_best_response_value": -19.001305103222236,
+                "value_oop": -19.02586662818919
+              },
+              {
+                "exploitability": 0.03123123231029723,
+                "ip_best_response_value": 19.070606143187007,
+                "iteration": 260,
+                "nash_conv": 0.06246246462059446,
+                "oop_best_response_value": -19.008143678566412,
+                "value_oop": -19.029047432078684
+              },
+              {
+                "exploitability": 0.026936342457762663,
+                "ip_best_response_value": 19.067444979307425,
+                "iteration": 280,
+                "nash_conv": 0.053872684915525326,
+                "oop_best_response_value": -19.0135722943919,
+                "value_oop": -19.031580096048415
+              },
+              {
+                "exploitability": 0.02347011544381239,
+                "ip_best_response_value": 19.064893735384732,
+                "iteration": 300,
+                "nash_conv": 0.04694023088762478,
+                "oop_best_response_value": -19.017953504497108,
+                "value_oop": -19.03362905387839
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.02347011544381239,
+          "iterations": 300,
+          "median_seconds": 0.3951775880000241,
+          "nash_conv_chips": 0.04694023088762478,
+          "whole_call_seconds": [
+            0.3951775880000241,
+            0.3773927619999995,
+            0.493898339999987
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.08227295902858955,
+            "checkpoints": [
+              {
+                "exploitability": 4.242885945628309,
+                "ip_best_response_value": 22.567036007827056,
+                "iteration": 20,
+                "nash_conv": 8.485771891256618,
+                "oop_best_response_value": -14.081264116570438,
+                "value_oop": -18.946053205847747
+              },
+              {
+                "exploitability": 1.2922874540100011,
+                "ip_best_response_value": 19.9987802093517,
+                "iteration": 40,
+                "nash_conv": 2.5845749080200022,
+                "oop_best_response_value": -17.414205301331698,
+                "value_oop": -18.579024232247615
+              },
+              {
+                "exploitability": 0.5790577662777086,
+                "ip_best_response_value": 19.4738224097069,
+                "iteration": 60,
+                "nash_conv": 1.158115532555417,
+                "oop_best_response_value": -18.315706877151484,
+                "value_oop": -18.761653524812367
+              },
+              {
+                "exploitability": 0.3270604050272201,
+                "ip_best_response_value": 19.28834502065015,
+                "iteration": 80,
+                "nash_conv": 0.6541208100544402,
+                "oop_best_response_value": -18.63422421059571,
+                "value_oop": -18.870936135255537
+              },
+              {
+                "exploitability": 0.2098367747105332,
+                "ip_best_response_value": 19.202065018435047,
+                "iteration": 100,
+                "nash_conv": 0.4196735494210664,
+                "oop_best_response_value": -18.78239146901398,
+                "value_oop": -18.92973597896478
+              },
+              {
+                "exploitability": 0.1459608419129772,
+                "ip_best_response_value": 19.15505047359987,
+                "iteration": 120,
+                "nash_conv": 0.2919216838259544,
+                "oop_best_response_value": -18.863128789773917,
+                "value_oop": -18.96390494961588
+              },
+              {
+                "exploitability": 0.10736329405148659,
+                "ip_best_response_value": 19.126641555483356,
+                "iteration": 140,
+                "nash_conv": 0.21472658810297318,
+                "oop_best_response_value": -18.911914967380383,
+                "value_oop": -18.985279605063422
+              },
+              {
+                "exploitability": 0.08227295902858955,
+                "ip_best_response_value": 19.1081743389716,
+                "iteration": 160,
+                "nash_conv": 0.1645459180571791,
+                "oop_best_response_value": -18.943628420914422,
+                "value_oop": -18.999468229344835
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "target-reached",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.08227295902858955,
+          "iterations": 160,
+          "median_seconds": 0.20818410699996548,
+          "nash_conv_chips": 0.1645459180571791,
+          "whole_call_seconds": [
+            0.20432105999998385,
+            0.20818410699996548,
+            0.21310848500002066
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "dcfr",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.05482174542167195,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "river-polarised-bluffcatcher",
+      "speedup_vs_fixed_300": 0.8803531473254176,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-300",
+        "rows": 6,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "budget-miss",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 1.14732916019652,
+          "iterations": 300,
+          "median_seconds": 0.010754673999940678,
+          "nash_conv_chips": 2.29465832039304,
+          "whole_call_seconds": [
+            0.010754673999940678,
+            0.008938575000001947,
+            0.011679898000011235
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 1.14732916019652,
+            "checkpoints": [
+              {
+                "exploitability": 7.477165120025994,
+                "ip_best_response_value": -15.5955005507439,
+                "iteration": 20,
+                "nash_conv": 14.954330240051988,
+                "oop_best_response_value": 30.549830790795887,
+                "value_oop": 25.50194711857906
+              },
+              {
+                "exploitability": 3.50356249504679,
+                "ip_best_response_value": -18.25043657940021,
+                "iteration": 40,
+                "nash_conv": 7.00712499009358,
+                "oop_best_response_value": 25.257561569493788,
+                "value_oop": 24.89489396733041
+              },
+              {
+                "exploitability": 3.5926765063535164,
+                "ip_best_response_value": -22.223702624957504,
+                "iteration": 60,
+                "nash_conv": 7.185353012707033,
+                "oop_best_response_value": 29.409055637664537,
+                "value_oop": 25.42841159427886
+              },
+              {
+                "exploitability": 2.789083845870115,
+                "ip_best_response_value": -20.725182667724525,
+                "iteration": 80,
+                "nash_conv": 5.57816769174023,
+                "oop_best_response_value": 26.303350359464755,
+                "value_oop": 24.756183672217617
+              },
+              {
+                "exploitability": 2.7277238730866173,
+                "ip_best_response_value": -23.114150063130083,
+                "iteration": 100,
+                "nash_conv": 5.455447746173235,
+                "oop_best_response_value": 28.569597809303318,
+                "value_oop": 24.720990086278576
+              },
+              {
+                "exploitability": 1.8379470779500071,
+                "ip_best_response_value": -24.861876571220844,
+                "iteration": 120,
+                "nash_conv": 3.6758941559000142,
+                "oop_best_response_value": 28.537770727120858,
+                "value_oop": 24.974793646342743
+              },
+              {
+                "exploitability": 1.780501896194048,
+                "ip_best_response_value": -24.69736645496327,
+                "iteration": 140,
+                "nash_conv": 3.561003792388096,
+                "oop_best_response_value": 28.258370247351365,
+                "value_oop": 25.0347415056011
+              },
+              {
+                "exploitability": 1.547963464655858,
+                "ip_best_response_value": -24.955420328771766,
+                "iteration": 160,
+                "nash_conv": 3.095926929311716,
+                "oop_best_response_value": 28.05134725808348,
+                "value_oop": 24.992108861946086
+              },
+              {
+                "exploitability": 1.8525813166156695,
+                "ip_best_response_value": -24.073213422034804,
+                "iteration": 180,
+                "nash_conv": 3.705162633231339,
+                "oop_best_response_value": 27.778376055266143,
+                "value_oop": 24.89525755413527
+              },
+              {
+                "exploitability": 2.0172057289153607,
+                "ip_best_response_value": -23.02095408070327,
+                "iteration": 200,
+                "nash_conv": 4.034411457830721,
+                "oop_best_response_value": 27.05536553853399,
+                "value_oop": 24.835979647364603
+              },
+              {
+                "exploitability": 1.594647818425397,
+                "ip_best_response_value": -22.43579524721884,
+                "iteration": 220,
+                "nash_conv": 3.189295636850794,
+                "oop_best_response_value": 25.625090884069635,
+                "value_oop": 24.93483619238208
+              },
+              {
+                "exploitability": 1.747879195231425,
+                "ip_best_response_value": -22.706849226287147,
+                "iteration": 240,
+                "nash_conv": 3.49575839046285,
+                "oop_best_response_value": 26.202607616749997,
+                "value_oop": 25.1094410367407
+              },
+              {
+                "exploitability": 1.534329744761779,
+                "ip_best_response_value": -24.212428901497248,
+                "iteration": 260,
+                "nash_conv": 3.068659489523558,
+                "oop_best_response_value": 27.281088391020806,
+                "value_oop": 25.071148485618828
+              },
+              {
+                "exploitability": 1.6595522185630482,
+                "ip_best_response_value": -23.65846118331254,
+                "iteration": 280,
+                "nash_conv": 3.3191044371260965,
+                "oop_best_response_value": 26.977565620438636,
+                "value_oop": 24.893399288902465
+              },
+              {
+                "exploitability": 1.14732916019652,
+                "ip_best_response_value": -22.763553213171264,
+                "iteration": 300,
+                "nash_conv": 2.29465832039304,
+                "oop_best_response_value": 25.058211533564304,
+                "value_oop": 24.994368279923968
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 1.14732916019652,
+          "iterations": 300,
+          "median_seconds": 0.011344264000058502,
+          "nash_conv_chips": 2.29465832039304,
+          "whole_call_seconds": [
+            0.011344264000058502,
+            0.013483719999953792,
+            0.010427478999986306
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 1.14732916019652,
+            "checkpoints": [
+              {
+                "exploitability": 7.477165120025994,
+                "ip_best_response_value": -15.5955005507439,
+                "iteration": 20,
+                "nash_conv": 14.954330240051988,
+                "oop_best_response_value": 30.549830790795887,
+                "value_oop": 25.50194711857906
+              },
+              {
+                "exploitability": 3.50356249504679,
+                "ip_best_response_value": -18.25043657940021,
+                "iteration": 40,
+                "nash_conv": 7.00712499009358,
+                "oop_best_response_value": 25.257561569493788,
+                "value_oop": 24.89489396733041
+              },
+              {
+                "exploitability": 3.5926765063535164,
+                "ip_best_response_value": -22.223702624957504,
+                "iteration": 60,
+                "nash_conv": 7.185353012707033,
+                "oop_best_response_value": 29.409055637664537,
+                "value_oop": 25.42841159427886
+              },
+              {
+                "exploitability": 2.789083845870115,
+                "ip_best_response_value": -20.725182667724525,
+                "iteration": 80,
+                "nash_conv": 5.57816769174023,
+                "oop_best_response_value": 26.303350359464755,
+                "value_oop": 24.756183672217617
+              },
+              {
+                "exploitability": 2.7277238730866173,
+                "ip_best_response_value": -23.114150063130083,
+                "iteration": 100,
+                "nash_conv": 5.455447746173235,
+                "oop_best_response_value": 28.569597809303318,
+                "value_oop": 24.720990086278576
+              },
+              {
+                "exploitability": 1.8379470779500071,
+                "ip_best_response_value": -24.861876571220844,
+                "iteration": 120,
+                "nash_conv": 3.6758941559000142,
+                "oop_best_response_value": 28.537770727120858,
+                "value_oop": 24.974793646342743
+              },
+              {
+                "exploitability": 1.780501896194048,
+                "ip_best_response_value": -24.69736645496327,
+                "iteration": 140,
+                "nash_conv": 3.561003792388096,
+                "oop_best_response_value": 28.258370247351365,
+                "value_oop": 25.0347415056011
+              },
+              {
+                "exploitability": 1.547963464655858,
+                "ip_best_response_value": -24.955420328771766,
+                "iteration": 160,
+                "nash_conv": 3.095926929311716,
+                "oop_best_response_value": 28.05134725808348,
+                "value_oop": 24.992108861946086
+              },
+              {
+                "exploitability": 1.8525813166156695,
+                "ip_best_response_value": -24.073213422034804,
+                "iteration": 180,
+                "nash_conv": 3.705162633231339,
+                "oop_best_response_value": 27.778376055266143,
+                "value_oop": 24.89525755413527
+              },
+              {
+                "exploitability": 2.0172057289153607,
+                "ip_best_response_value": -23.02095408070327,
+                "iteration": 200,
+                "nash_conv": 4.034411457830721,
+                "oop_best_response_value": 27.05536553853399,
+                "value_oop": 24.835979647364603
+              },
+              {
+                "exploitability": 1.594647818425397,
+                "ip_best_response_value": -22.43579524721884,
+                "iteration": 220,
+                "nash_conv": 3.189295636850794,
+                "oop_best_response_value": 25.625090884069635,
+                "value_oop": 24.93483619238208
+              },
+              {
+                "exploitability": 1.747879195231425,
+                "ip_best_response_value": -22.706849226287147,
+                "iteration": 240,
+                "nash_conv": 3.49575839046285,
+                "oop_best_response_value": 26.202607616749997,
+                "value_oop": 25.1094410367407
+              },
+              {
+                "exploitability": 1.534329744761779,
+                "ip_best_response_value": -24.212428901497248,
+                "iteration": 260,
+                "nash_conv": 3.068659489523558,
+                "oop_best_response_value": 27.281088391020806,
+                "value_oop": 25.071148485618828
+              },
+              {
+                "exploitability": 1.6595522185630482,
+                "ip_best_response_value": -23.65846118331254,
+                "iteration": 280,
+                "nash_conv": 3.3191044371260965,
+                "oop_best_response_value": 26.977565620438636,
+                "value_oop": 24.893399288902465
+              },
+              {
+                "exploitability": 1.14732916019652,
+                "ip_best_response_value": -22.763553213171264,
+                "iteration": 300,
+                "nash_conv": 2.29465832039304,
+                "oop_best_response_value": 25.058211533564304,
+                "value_oop": 24.994368279923968
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 1.14732916019652,
+          "iterations": 300,
+          "median_seconds": 0.012216317999900639,
+          "nash_conv_chips": 2.29465832039304,
+          "whole_call_seconds": [
+            0.011339579000036792,
+            0.01940768199995091,
+            0.012216317999900639
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "cfrplus",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.2111767472237689,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "river-polarised-bluffcatcher",
+      "speedup_vs_fixed_300": 1.1174308060529217,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-240",
+        "rows": 6,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "achieved",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.10377349253322521,
+          "iterations": 300,
+          "median_seconds": 0.014329679000070428,
+          "nash_conv_chips": 0.20754698506645042,
+          "whole_call_seconds": [
+            0.014329679000070428,
+            0.015122358999974495,
+            0.01408961200002068
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.10377349253322521,
+            "checkpoints": [
+              {
+                "exploitability": 1.512732350216453,
+                "ip_best_response_value": -23.56445897217788,
+                "iteration": 20,
+                "nash_conv": 3.025464700432906,
+                "oop_best_response_value": 26.589923672610787,
+                "value_oop": 24.80890772468552
+              },
+              {
+                "exploitability": 0.6248441887947287,
+                "ip_best_response_value": -24.75058990421615,
+                "iteration": 40,
+                "nash_conv": 1.2496883775894574,
+                "oop_best_response_value": 26.000278281805606,
+                "value_oop": 24.963514990312135
+              },
+              {
+                "exploitability": 0.5102954154937027,
+                "ip_best_response_value": -24.417817336657226,
+                "iteration": 60,
+                "nash_conv": 1.0205908309874054,
+                "oop_best_response_value": 25.43840816764463,
+                "value_oop": 24.977609527824395
+              },
+              {
+                "exploitability": 0.31616872686388753,
+                "ip_best_response_value": -24.73986145297725,
+                "iteration": 80,
+                "nash_conv": 0.6323374537277751,
+                "oop_best_response_value": 25.372198906705027,
+                "value_oop": 24.996760403040543
+              },
+              {
+                "exploitability": 0.25182402309830465,
+                "ip_best_response_value": -24.6026548311468,
+                "iteration": 100,
+                "nash_conv": 0.5036480461966093,
+                "oop_best_response_value": 25.10630287734341,
+                "value_oop": 24.993831802531325
+              },
+              {
+                "exploitability": 0.2646465039350616,
+                "ip_best_response_value": -24.754603687741835,
+                "iteration": 120,
+                "nash_conv": 0.5292930078701232,
+                "oop_best_response_value": 25.283896695611958,
+                "value_oop": 24.994119676460606
+              },
+              {
+                "exploitability": 0.20943741476008526,
+                "ip_best_response_value": -24.874895120643025,
+                "iteration": 140,
+                "nash_conv": 0.4188748295201705,
+                "oop_best_response_value": 25.293769950163195,
+                "value_oop": 24.996255013967748
+              },
+              {
+                "exploitability": 0.17419495229201587,
+                "ip_best_response_value": -24.91692758302309,
+                "iteration": 160,
+                "nash_conv": 0.34838990458403174,
+                "oop_best_response_value": 25.26531748760712,
+                "value_oop": 24.997372975119564
+              },
+              {
+                "exploitability": 0.16440935963877656,
+                "ip_best_response_value": -24.902978260742085,
+                "iteration": 180,
+                "nash_conv": 0.32881871927755313,
+                "oop_best_response_value": 25.231796980019638,
+                "value_oop": 24.997718451770783
+              },
+              {
+                "exploitability": 0.16149770668929975,
+                "ip_best_response_value": -24.860625872158856,
+                "iteration": 200,
+                "nash_conv": 0.3229954133785995,
+                "oop_best_response_value": 25.183621285537455,
+                "value_oop": 24.997854081313335
+              },
+              {
+                "exploitability": 0.14009530841319418,
+                "ip_best_response_value": -24.822122927324443,
+                "iteration": 220,
+                "nash_conv": 0.28019061682638835,
+                "oop_best_response_value": 25.10231354415083,
+                "value_oop": 24.998341078132032
+              },
+              {
+                "exploitability": 0.09327387407550702,
+                "ip_best_response_value": -24.826708073159544,
+                "iteration": 240,
+                "nash_conv": 0.18654774815101405,
+                "oop_best_response_value": 25.01325582131056,
+                "value_oop": 24.999305682933212
+              },
+              {
+                "exploitability": 0.10973689445349599,
+                "ip_best_response_value": -24.90390317293562,
+                "iteration": 260,
+                "nash_conv": 0.21947378890699198,
+                "oop_best_response_value": 25.123376961842613,
+                "value_oop": 24.999801170696024
+              },
+              {
+                "exploitability": 0.09722697414627923,
+                "ip_best_response_value": -24.96292181061934,
+                "iteration": 280,
+                "nash_conv": 0.19445394829255847,
+                "oop_best_response_value": 25.157375758911897,
+                "value_oop": 24.99919255835472
+              },
+              {
+                "exploitability": 0.10377349253322521,
+                "ip_best_response_value": -24.86465038462636,
+                "iteration": 300,
+                "nash_conv": 0.20754698506645042,
+                "oop_best_response_value": 25.07219736969281,
+                "value_oop": 24.99910723908863
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.10377349253322521,
+          "iterations": 300,
+          "median_seconds": 0.01735577400006605,
+          "nash_conv_chips": 0.20754698506645042,
+          "whole_call_seconds": [
+            0.014944980999985091,
+            0.019014649000041572,
+            0.01735577400006605
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.09327387407550702,
+            "checkpoints": [
+              {
+                "exploitability": 1.512732350216453,
+                "ip_best_response_value": -23.56445897217788,
+                "iteration": 20,
+                "nash_conv": 3.025464700432906,
+                "oop_best_response_value": 26.589923672610787,
+                "value_oop": 24.80890772468552
+              },
+              {
+                "exploitability": 0.6248441887947287,
+                "ip_best_response_value": -24.75058990421615,
+                "iteration": 40,
+                "nash_conv": 1.2496883775894574,
+                "oop_best_response_value": 26.000278281805606,
+                "value_oop": 24.963514990312135
+              },
+              {
+                "exploitability": 0.5102954154937027,
+                "ip_best_response_value": -24.417817336657226,
+                "iteration": 60,
+                "nash_conv": 1.0205908309874054,
+                "oop_best_response_value": 25.43840816764463,
+                "value_oop": 24.977609527824395
+              },
+              {
+                "exploitability": 0.31616872686388753,
+                "ip_best_response_value": -24.73986145297725,
+                "iteration": 80,
+                "nash_conv": 0.6323374537277751,
+                "oop_best_response_value": 25.372198906705027,
+                "value_oop": 24.996760403040543
+              },
+              {
+                "exploitability": 0.25182402309830465,
+                "ip_best_response_value": -24.6026548311468,
+                "iteration": 100,
+                "nash_conv": 0.5036480461966093,
+                "oop_best_response_value": 25.10630287734341,
+                "value_oop": 24.993831802531325
+              },
+              {
+                "exploitability": 0.2646465039350616,
+                "ip_best_response_value": -24.754603687741835,
+                "iteration": 120,
+                "nash_conv": 0.5292930078701232,
+                "oop_best_response_value": 25.283896695611958,
+                "value_oop": 24.994119676460606
+              },
+              {
+                "exploitability": 0.20943741476008526,
+                "ip_best_response_value": -24.874895120643025,
+                "iteration": 140,
+                "nash_conv": 0.4188748295201705,
+                "oop_best_response_value": 25.293769950163195,
+                "value_oop": 24.996255013967748
+              },
+              {
+                "exploitability": 0.17419495229201587,
+                "ip_best_response_value": -24.91692758302309,
+                "iteration": 160,
+                "nash_conv": 0.34838990458403174,
+                "oop_best_response_value": 25.26531748760712,
+                "value_oop": 24.997372975119564
+              },
+              {
+                "exploitability": 0.16440935963877656,
+                "ip_best_response_value": -24.902978260742085,
+                "iteration": 180,
+                "nash_conv": 0.32881871927755313,
+                "oop_best_response_value": 25.231796980019638,
+                "value_oop": 24.997718451770783
+              },
+              {
+                "exploitability": 0.16149770668929975,
+                "ip_best_response_value": -24.860625872158856,
+                "iteration": 200,
+                "nash_conv": 0.3229954133785995,
+                "oop_best_response_value": 25.183621285537455,
+                "value_oop": 24.997854081313335
+              },
+              {
+                "exploitability": 0.14009530841319418,
+                "ip_best_response_value": -24.822122927324443,
+                "iteration": 220,
+                "nash_conv": 0.28019061682638835,
+                "oop_best_response_value": 25.10231354415083,
+                "value_oop": 24.998341078132032
+              },
+              {
+                "exploitability": 0.09327387407550702,
+                "ip_best_response_value": -24.826708073159544,
+                "iteration": 240,
+                "nash_conv": 0.18654774815101405,
+                "oop_best_response_value": 25.01325582131056,
+                "value_oop": 24.999305682933212
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "target-reached",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.09327387407550702,
+          "iterations": 240,
+          "median_seconds": 0.012823773000036454,
+          "nash_conv_chips": 0.18654774815101405,
+          "whole_call_seconds": [
+            0.012173055999937787,
+            0.01333388599994123,
+            0.012823773000036454
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "dcfr",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.06625099001120449,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "river-weighted-raises",
+      "speedup_vs_fixed_300": 0.955852383723176,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-300",
+        "rows": 36,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "budget-miss",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.2563704626176442,
+          "iterations": 300,
+          "median_seconds": 0.06555111099999067,
+          "nash_conv_chips": 0.5127409252352884,
+          "whole_call_seconds": [
+            0.06778513599999769,
+            0.06555111099999067,
+            0.06431993399996827
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.2563704626176442,
+            "checkpoints": [
+              {
+                "exploitability": 11.444484034121867,
+                "ip_best_response_value": 34.26298895700749,
+                "iteration": 20,
+                "nash_conv": 22.888968068243734,
+                "oop_best_response_value": -11.374020888763752,
+                "value_oop": -23.731187556377183
+              },
+              {
+                "exploitability": 5.101533399869863,
+                "ip_best_response_value": 23.62307285031303,
+                "iteration": 40,
+                "nash_conv": 10.203066799739727,
+                "oop_best_response_value": -13.420006050573303,
+                "value_oop": -19.53136421642678
+              },
+              {
+                "exploitability": 3.5478115746953804,
+                "ip_best_response_value": 22.490164510242913,
+                "iteration": 60,
+                "nash_conv": 7.095623149390761,
+                "oop_best_response_value": -15.394541360852152,
+                "value_oop": -19.755288462373848
+              },
+              {
+                "exploitability": 2.5395852318705145,
+                "ip_best_response_value": 21.896000250725937,
+                "iteration": 80,
+                "nash_conv": 5.079170463741029,
+                "oop_best_response_value": -16.816829786984908,
+                "value_oop": -19.806741874280455
+              },
+              {
+                "exploitability": 1.9951419772132404,
+                "ip_best_response_value": 21.416703416376656,
+                "iteration": 100,
+                "nash_conv": 3.9902839544264808,
+                "oop_best_response_value": -17.426419461950175,
+                "value_oop": -19.841748524287592
+              },
+              {
+                "exploitability": 1.3768868999245996,
+                "ip_best_response_value": 20.98872274688737,
+                "iteration": 120,
+                "nash_conv": 2.753773799849199,
+                "oop_best_response_value": -18.23494894703817,
+                "value_oop": -19.85764243707235
+              },
+              {
+                "exploitability": 1.1564420259121935,
+                "ip_best_response_value": 20.72851916856942,
+                "iteration": 140,
+                "nash_conv": 2.312884051824387,
+                "oop_best_response_value": -18.415635116745033,
+                "value_oop": -19.796592566100845
+              },
+              {
+                "exploitability": 0.9832454762084684,
+                "ip_best_response_value": 20.547164792606555,
+                "iteration": 160,
+                "nash_conv": 1.9664909524169367,
+                "oop_best_response_value": -18.58067384018962,
+                "value_oop": -19.75612267396279
+              },
+              {
+                "exploitability": 0.8070214602528516,
+                "ip_best_response_value": 20.42207573956174,
+                "iteration": 180,
+                "nash_conv": 1.6140429205057032,
+                "oop_best_response_value": -18.808032819056038,
+                "value_oop": -19.750592069637392
+              },
+              {
+                "exploitability": 0.6668012869934863,
+                "ip_best_response_value": 20.3357210357142,
+                "iteration": 200,
+                "nash_conv": 1.3336025739869726,
+                "oop_best_response_value": -19.00211846172723,
+                "value_oop": -19.745997059482416
+              },
+              {
+                "exploitability": 0.587476992113146,
+                "ip_best_response_value": 20.291800142114905,
+                "iteration": 220,
+                "nash_conv": 1.174953984226292,
+                "oop_best_response_value": -19.116846157888613,
+                "value_oop": -19.73419484118921
+              },
+              {
+                "exploitability": 0.4878280798796446,
+                "ip_best_response_value": 20.262321385971603,
+                "iteration": 240,
+                "nash_conv": 0.9756561597592892,
+                "oop_best_response_value": -19.286665226212314,
+                "value_oop": -19.762836589243765
+              },
+              {
+                "exploitability": 0.37885804959020675,
+                "ip_best_response_value": 20.23397339535847,
+                "iteration": 260,
+                "nash_conv": 0.7577160991804135,
+                "oop_best_response_value": -19.476257296178055,
+                "value_oop": -19.8321211265601
+              },
+              {
+                "exploitability": 0.30265570979293877,
+                "ip_best_response_value": 20.204433517974607,
+                "iteration": 280,
+                "nash_conv": 0.6053114195858775,
+                "oop_best_response_value": -19.59912209838873,
+                "value_oop": -19.893033304483136
+              },
+              {
+                "exploitability": 0.2563704626176442,
+                "ip_best_response_value": 20.184612542839336,
+                "iteration": 300,
+                "nash_conv": 0.5127409252352884,
+                "oop_best_response_value": -19.671871617604047,
+                "value_oop": -19.933514082013073
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.2563704626176442,
+          "iterations": 300,
+          "median_seconds": 0.0698939370000744,
+          "nash_conv_chips": 0.5127409252352884,
+          "whole_call_seconds": [
+            0.0698939370000744,
+            0.07341262299996743,
+            0.06603934700001446
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.2563704626176442,
+            "checkpoints": [
+              {
+                "exploitability": 11.444484034121867,
+                "ip_best_response_value": 34.26298895700749,
+                "iteration": 20,
+                "nash_conv": 22.888968068243734,
+                "oop_best_response_value": -11.374020888763752,
+                "value_oop": -23.731187556377183
+              },
+              {
+                "exploitability": 5.101533399869863,
+                "ip_best_response_value": 23.62307285031303,
+                "iteration": 40,
+                "nash_conv": 10.203066799739727,
+                "oop_best_response_value": -13.420006050573303,
+                "value_oop": -19.53136421642678
+              },
+              {
+                "exploitability": 3.5478115746953804,
+                "ip_best_response_value": 22.490164510242913,
+                "iteration": 60,
+                "nash_conv": 7.095623149390761,
+                "oop_best_response_value": -15.394541360852152,
+                "value_oop": -19.755288462373848
+              },
+              {
+                "exploitability": 2.5395852318705145,
+                "ip_best_response_value": 21.896000250725937,
+                "iteration": 80,
+                "nash_conv": 5.079170463741029,
+                "oop_best_response_value": -16.816829786984908,
+                "value_oop": -19.806741874280455
+              },
+              {
+                "exploitability": 1.9951419772132404,
+                "ip_best_response_value": 21.416703416376656,
+                "iteration": 100,
+                "nash_conv": 3.9902839544264808,
+                "oop_best_response_value": -17.426419461950175,
+                "value_oop": -19.841748524287592
+              },
+              {
+                "exploitability": 1.3768868999245996,
+                "ip_best_response_value": 20.98872274688737,
+                "iteration": 120,
+                "nash_conv": 2.753773799849199,
+                "oop_best_response_value": -18.23494894703817,
+                "value_oop": -19.85764243707235
+              },
+              {
+                "exploitability": 1.1564420259121935,
+                "ip_best_response_value": 20.72851916856942,
+                "iteration": 140,
+                "nash_conv": 2.312884051824387,
+                "oop_best_response_value": -18.415635116745033,
+                "value_oop": -19.796592566100845
+              },
+              {
+                "exploitability": 0.9832454762084684,
+                "ip_best_response_value": 20.547164792606555,
+                "iteration": 160,
+                "nash_conv": 1.9664909524169367,
+                "oop_best_response_value": -18.58067384018962,
+                "value_oop": -19.75612267396279
+              },
+              {
+                "exploitability": 0.8070214602528516,
+                "ip_best_response_value": 20.42207573956174,
+                "iteration": 180,
+                "nash_conv": 1.6140429205057032,
+                "oop_best_response_value": -18.808032819056038,
+                "value_oop": -19.750592069637392
+              },
+              {
+                "exploitability": 0.6668012869934863,
+                "ip_best_response_value": 20.3357210357142,
+                "iteration": 200,
+                "nash_conv": 1.3336025739869726,
+                "oop_best_response_value": -19.00211846172723,
+                "value_oop": -19.745997059482416
+              },
+              {
+                "exploitability": 0.587476992113146,
+                "ip_best_response_value": 20.291800142114905,
+                "iteration": 220,
+                "nash_conv": 1.174953984226292,
+                "oop_best_response_value": -19.116846157888613,
+                "value_oop": -19.73419484118921
+              },
+              {
+                "exploitability": 0.4878280798796446,
+                "ip_best_response_value": 20.262321385971603,
+                "iteration": 240,
+                "nash_conv": 0.9756561597592892,
+                "oop_best_response_value": -19.286665226212314,
+                "value_oop": -19.762836589243765
+              },
+              {
+                "exploitability": 0.37885804959020675,
+                "ip_best_response_value": 20.23397339535847,
+                "iteration": 260,
+                "nash_conv": 0.7577160991804135,
+                "oop_best_response_value": -19.476257296178055,
+                "value_oop": -19.8321211265601
+              },
+              {
+                "exploitability": 0.30265570979293877,
+                "ip_best_response_value": 20.204433517974607,
+                "iteration": 280,
+                "nash_conv": 0.6053114195858775,
+                "oop_best_response_value": -19.59912209838873,
+                "value_oop": -19.893033304483136
+              },
+              {
+                "exploitability": 0.2563704626176442,
+                "ip_best_response_value": 20.184612542839336,
+                "iteration": 300,
+                "nash_conv": 0.5127409252352884,
+                "oop_best_response_value": -19.671871617604047,
+                "value_oop": -19.933514082013073
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.2563704626176442,
+          "iterations": 300,
+          "median_seconds": 0.06857869699990715,
+          "nash_conv_chips": 0.5127409252352884,
+          "whole_call_seconds": [
+            0.06857869699990715,
+            0.06729516000007152,
+            0.07282975899988742
+          ]
+        }
+      }
+    },
+    {
+      "algorithm": "cfrplus",
+      "check_interval": 20,
+      "checkpoint_overhead_vs_fixed_300": 0.15916971383398315,
+      "max_iterations": 300,
+      "pot_chips": 100,
+      "repeats": 3,
+      "scenario_id": "river-weighted-raises",
+      "speedup_vs_fixed_300": 1.9424105417898045,
+      "strategy_comparison_to_same_iteration_fixed_run": {
+        "max_probability_abs_difference": 0.0,
+        "reference": "fixed-140",
+        "rows": 36,
+        "same_rows": true
+      },
+      "target_chips": 0.1,
+      "target_percent_of_pot": 0.1,
+      "target_result": "achieved",
+      "variants": {
+        "fixed-300": {
+          "convergence": null,
+          "exploitability_chips": 0.021056292301118162,
+          "iterations": 300,
+          "median_seconds": 0.09776349799994932,
+          "nash_conv_chips": 0.042112584602236325,
+          "whole_call_seconds": [
+            0.09776349799994932,
+            0.11434027399991464,
+            0.09653962700008378
+          ]
+        },
+        "target-0-checkpoint-overhead": {
+          "convergence": {
+            "achieved": 0.021056292301118162,
+            "checkpoints": [
+              {
+                "exploitability": 2.8335860628144918,
+                "ip_best_response_value": 21.83374483124179,
+                "iteration": 20,
+                "nash_conv": 5.6671721256289835,
+                "oop_best_response_value": -16.166572705612808,
+                "value_oop": -18.904979245025082
+              },
+              {
+                "exploitability": 1.0146872215518172,
+                "ip_best_response_value": 20.613754967546278,
+                "iteration": 40,
+                "nash_conv": 2.0293744431036345,
+                "oop_best_response_value": -18.584380524442643,
+                "value_oop": -19.667508858359795
+              },
+              {
+                "exploitability": 0.4895508702237503,
+                "ip_best_response_value": 20.315794919450454,
+                "iteration": 60,
+                "nash_conv": 0.9791017404475006,
+                "oop_best_response_value": -19.336693179002953,
+                "value_oop": -19.89520433859112
+              },
+              {
+                "exploitability": 0.2863644385324058,
+                "ip_best_response_value": 20.199092694586554,
+                "iteration": 80,
+                "nash_conv": 0.5727288770648116,
+                "oop_best_response_value": -19.626363817521742,
+                "value_oop": -19.967307739658363
+              },
+              {
+                "exploitability": 0.18545633507981485,
+                "ip_best_response_value": 20.140410651530964,
+                "iteration": 100,
+                "nash_conv": 0.3709126701596297,
+                "oop_best_response_value": -19.769497981371334,
+                "value_oop": -19.98997594140283
+              },
+              {
+                "exploitability": 0.12630646506207555,
+                "ip_best_response_value": 20.107841756112066,
+                "iteration": 120,
+                "nash_conv": 0.2526129301241511,
+                "oop_best_response_value": -19.855228825987915,
+                "value_oop": -20.003352837330112
+              },
+              {
+                "exploitability": 0.09088865185040618,
+                "ip_best_response_value": 20.088320792780053,
+                "iteration": 140,
+                "nash_conv": 0.18177730370081235,
+                "oop_best_response_value": -19.90654348907924,
+                "value_oop": -20.01174209494888
+              },
+              {
+                "exploitability": 0.06990452131910274,
+                "ip_best_response_value": 20.075963683776706,
+                "iteration": 160,
+                "nash_conv": 0.13980904263820548,
+                "oop_best_response_value": -19.9361546411385,
+                "value_oop": -20.0175577580883
+              },
+              {
+                "exploitability": 0.0559467193033214,
+                "ip_best_response_value": 20.067476392970512,
+                "iteration": 180,
+                "nash_conv": 0.1118934386066428,
+                "oop_best_response_value": -19.95558295436387,
+                "value_oop": -20.021567199445588
+              },
+              {
+                "exploitability": 0.04461605013147718,
+                "ip_best_response_value": 20.061653383779586,
+                "iteration": 200,
+                "nash_conv": 0.08923210026295436,
+                "oop_best_response_value": -19.97242128351663,
+                "value_oop": -20.02437068200559
+              },
+              {
+                "exploitability": 0.03736423199757333,
+                "ip_best_response_value": 20.057398405706476,
+                "iteration": 220,
+                "nash_conv": 0.07472846399514665,
+                "oop_best_response_value": -19.98266994171133,
+                "value_oop": -20.02651507456703
+              },
+              {
+                "exploitability": 0.032423965000083044,
+                "ip_best_response_value": 20.054261421000664,
+                "iteration": 240,
+                "nash_conv": 0.06484793000016609,
+                "oop_best_response_value": -19.989413491000498,
+                "value_oop": -20.028116102319498
+              },
+              {
+                "exploitability": 0.02765765680618415,
+                "ip_best_response_value": 20.051868183805396,
+                "iteration": 260,
+                "nash_conv": 0.0553153136123683,
+                "oop_best_response_value": -19.996552870193028,
+                "value_oop": -20.02933769253051
+              },
+              {
+                "exploitability": 0.02452007953881008,
+                "ip_best_response_value": 20.04997933124298,
+                "iteration": 280,
+                "nash_conv": 0.04904015907762016,
+                "oop_best_response_value": -20.00093917216536,
+                "value_oop": -20.030345385741075
+              },
+              {
+                "exploitability": 0.021056292301118162,
+                "ip_best_response_value": 20.04838027992959,
+                "iteration": 300,
+                "nash_conv": 0.042112584602236325,
+                "oop_best_response_value": -20.006267695327352,
+                "value_oop": -20.031116326762398
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "iteration-limit",
+            "target_exploitability": 0.0
+          },
+          "exploitability_chips": 0.021056292301118162,
+          "iterations": 300,
+          "median_seconds": 0.11332448600001044,
+          "nash_conv_chips": 0.042112584602236325,
+          "whole_call_seconds": [
+            0.10486736399991514,
+            0.11332448600001044,
+            0.11372048500004439
+          ]
+        },
+        "target-0.1": {
+          "convergence": {
+            "achieved": 0.09088865185040618,
+            "checkpoints": [
+              {
+                "exploitability": 2.8335860628144918,
+                "ip_best_response_value": 21.83374483124179,
+                "iteration": 20,
+                "nash_conv": 5.6671721256289835,
+                "oop_best_response_value": -16.166572705612808,
+                "value_oop": -18.904979245025082
+              },
+              {
+                "exploitability": 1.0146872215518172,
+                "ip_best_response_value": 20.613754967546278,
+                "iteration": 40,
+                "nash_conv": 2.0293744431036345,
+                "oop_best_response_value": -18.584380524442643,
+                "value_oop": -19.667508858359795
+              },
+              {
+                "exploitability": 0.4895508702237503,
+                "ip_best_response_value": 20.315794919450454,
+                "iteration": 60,
+                "nash_conv": 0.9791017404475006,
+                "oop_best_response_value": -19.336693179002953,
+                "value_oop": -19.89520433859112
+              },
+              {
+                "exploitability": 0.2863644385324058,
+                "ip_best_response_value": 20.199092694586554,
+                "iteration": 80,
+                "nash_conv": 0.5727288770648116,
+                "oop_best_response_value": -19.626363817521742,
+                "value_oop": -19.967307739658363
+              },
+              {
+                "exploitability": 0.18545633507981485,
+                "ip_best_response_value": 20.140410651530964,
+                "iteration": 100,
+                "nash_conv": 0.3709126701596297,
+                "oop_best_response_value": -19.769497981371334,
+                "value_oop": -19.98997594140283
+              },
+              {
+                "exploitability": 0.12630646506207555,
+                "ip_best_response_value": 20.107841756112066,
+                "iteration": 120,
+                "nash_conv": 0.2526129301241511,
+                "oop_best_response_value": -19.855228825987915,
+                "value_oop": -20.003352837330112
+              },
+              {
+                "exploitability": 0.09088865185040618,
+                "ip_best_response_value": 20.088320792780053,
+                "iteration": 140,
+                "nash_conv": 0.18177730370081235,
+                "oop_best_response_value": -19.90654348907924,
+                "value_oop": -20.01174209494888
+              }
+            ],
+            "max_iterations": 300,
+            "stop_reason": "target-reached",
+            "target_exploitability": 0.1
+          },
+          "exploitability_chips": 0.09088865185040618,
+          "iterations": 140,
+          "median_seconds": 0.05033101700007592,
+          "nash_conv_chips": 0.18177730370081235,
+          "whole_call_seconds": [
+            0.04628134400002182,
+            0.05129425400002674,
+            0.05033101700007592
+          ]
+        }
+      }
+    }
+  ],
+  "schema_version": 1
+}
