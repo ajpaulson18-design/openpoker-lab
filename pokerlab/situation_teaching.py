@@ -97,4 +97,3 @@ def build_situation_teaching(analysis: CoachDecisionAnalysis) -> dict[str, str]:
         "text": text,
         "note": "This describes the cards and board, not whether your action was right.",
     }
-
