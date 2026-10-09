@@ -63,8 +63,8 @@ responses accompany NashConv and exploitability (NashConv/2).
 ## Resource and model limits
 
 Recursive and planned vanilla CFR/DCFR are supported. Optional
-`algorithm="cfrplus"` uses the existing repository CFR+ trainer with recursive
-traversal only; planned CFR+ is rejected before ranking worlds. It alternates
+`algorithm="cfrplus"` uses the existing repository CFR+ implementations with
+recursive or public-batched traversal; planned CFR+ is rejected before ranking worlds. It alternates
 SB then BB regret updates and averages the completed profile with linear
 iteration weights and own-player reach, with delay zero. Each iteration uses
 three world passes, counted in the 30-million world/decision work guard and
@@ -73,9 +73,11 @@ games without information sets perform zero training passes. Legacy method
 defaults and result fields are retained. See the
 [CFR+ comparison and provenance](preflop-cfrplus.md).
 
-Public batching is
-not exposed through this adapter. The generic public-batched trainer assumes a
-positive initial pot, whereas this hand starts with zero chips before blinds.
+Optional `traversal="public-batched"` reuses the existing private-hand vector
+trainer for vanilla/DCFR/CFR+. A bounded training-only tree view translates
+terminal contributions to a positive-pot coordinate system without changing
+whole-hand payoffs. Evaluation and exact responses retain the original tree.
+See [vector comparison and memory limits](preflop-public-batched.md).
 
 Requests are limited to 10–10,000 iterations, 300,000 selected outcomes,
 three million candidate-pair iterations and three million world iterations.
@@ -94,6 +96,9 @@ This remains a finite fractional betting abstraction: no full-deck preflop,
 multiway equilibrium, rake, range inference, card abstraction or chance sampling.
 The reused postflop builder has no blind-sized minimum opening bet. Convergence
 and runtime evidence for tiny selected games does not certify broader games.
+The independently replayed
+[fractional rounding boundary](preflop-public-batched.md#recorded-numerical-limit)
+is a recorded unresolved action/history discrepancy, not a passed fixture.
 
 ## Independent validation and provenance
 

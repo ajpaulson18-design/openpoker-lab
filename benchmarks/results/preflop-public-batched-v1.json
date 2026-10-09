@@ -1,0 +1,3028 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-preflop-private-vector-v1",
+  "generated_at": "2026-10-09T13:58:08.412868+00:00",
+  "source_revision": "d41ab5b378a7834ddaed5ae75928c36b2e488de0",
+  "worktree_dirty": false,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "b70e7e60489b07683757fd32433cd22986ee74e603e36bd152ebabe365647005",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "d2a8a0ad6d64a9b04a08dd3970b095dc36b0934990961339457b1bb5fb1ad174",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/public_cfr.py": "72b6fc73485b9bd425ec7b3f83b3306528a97e0c035b040e23b9f65514eef41a",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "scripts/preflop_validation.py": "83ca07b5a766d645dfc1b33132dea3d01deef1be12a78f370a4f1b41fc29fb97",
+    "scripts/benchmark_preflop_public_batched.py": "d46680abc1eae0131b44a8fbadf7136cab435b09b98f6c5c8e22ceaf0a883c3f",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "benchmarks/preflop-public-batched-v1.json": "a53bd7f9d41834cb4d04dd49c5187a1861cb7ec9c6d6f8109ec98a7ef79b4a09"
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "repeats": 3,
+  "memory_iterations": 10,
+  "timing_scope": "Three complete calls including construction, training view, training, exact responses and serialization. Phase timers add fixed wrapper overhead; oracle excluded.",
+  "phase_scope": "Median inclusive calls for enumeration/ranking, preflop building, grafting, training, evaluation and both responses. Remaining time includes info sets, training view and serialization. Phase medians need not sum to the total median.",
+  "memory_scope": "Separate uninstrumented complete 10-iteration calls under tracemalloc; Python allocations, not RSS, no 100-iteration memory measurement.",
+  "scope": "Exact backend comparison for tiny conditioned selected-outcome games, including all six AA and all six KK combinations. Not full ranges/full-deck preflop; CFR+ parity tested separately, not timed here.",
+  "records": [
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.18436389998532832,
+        0.16029480000725016,
+        0.13964500004658476
+      ],
+      "median_seconds": 0.16029480000725016,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0024292999878525734,
+          "preflop_tree": 0.00034169998252764344,
+          "postflop_templates_and_grafting": 0.016977199993561953,
+          "training": 0.12237680004909635,
+          "evaluation": 0.004293199977837503,
+          "both_best_responses": 0.020943199924658984,
+          "other_including_serialization_and_training_view": 0.017002500069793314
+        },
+        {
+          "enumeration_and_ranking": 0.0010908000404015183,
+          "preflop_tree": 0.0003152000135742128,
+          "postflop_templates_and_grafting": 0.017718899995088577,
+          "training": 0.11102150002261624,
+          "evaluation": 0.007183399982750416,
+          "both_best_responses": 0.011353200010489672,
+          "other_including_serialization_and_training_view": 0.011611799942329526
+        },
+        {
+          "enumeration_and_ranking": 0.0010053999722003937,
+          "preflop_tree": 0.00024510000366717577,
+          "postflop_templates_and_grafting": 0.02032780001172796,
+          "training": 0.08052569994470105,
+          "evaluation": 0.0035741000319831073,
+          "both_best_responses": 0.01157420000527054,
+          "other_including_serialization_and_training_view": 0.022392700077034533
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0010908000404015183,
+        "preflop_tree": 0.0003152000135742128,
+        "postflop_templates_and_grafting": 0.017718899995088577,
+        "training": 0.11102150002261624,
+        "evaluation": 0.004293199977837503,
+        "both_best_responses": 0.01157420000527054,
+        "other_including_serialization_and_training_view": 0.017002500069793314
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 689058
+      },
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.8010490033894148,
+      "nash_conv": 1.1847586054522208,
+      "sb_best_response_value": 1.3737833302890612,
+      "bb_best_response_value": -0.18902472483684044,
+      "independent_replay": {
+        "value_sb": 0.8010490033894149,
+        "value_bb": -0.8010490033894149,
+        "sb_best_response_value": 1.3737833302890612,
+        "bb_best_response_value": -0.18902472483684044,
+        "nash_conv": 1.1847586054522208,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "seconds": [
+        0.19437179999658838,
+        0.1774666999699548,
+        0.18283160001737997
+      ],
+      "median_seconds": 0.18283160001737997,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0018179999897256494,
+          "preflop_tree": 0.0003245000261813402,
+          "postflop_templates_and_grafting": 0.020788100024219602,
+          "training": 0.13470100000267848,
+          "evaluation": 0.004684399988036603,
+          "both_best_responses": 0.011892499984242022,
+          "other_including_serialization_and_training_view": 0.02016329998150468
+        },
+        {
+          "enumeration_and_ranking": 0.0015218000044114888,
+          "preflop_tree": 0.0003619000199250877,
+          "postflop_templates_and_grafting": 0.02113090001512319,
+          "training": 0.11838780000107363,
+          "evaluation": 0.0032934999908320606,
+          "both_best_responses": 0.015095699985977262,
+          "other_including_serialization_and_training_view": 0.017675099952612072
+        },
+        {
+          "enumeration_and_ranking": 0.0015301000094041228,
+          "preflop_tree": 0.0003671000013127923,
+          "postflop_templates_and_grafting": 0.022657000052277,
+          "training": 0.12898660002974793,
+          "evaluation": 0.003783099993597716,
+          "both_best_responses": 0.007893699978012592,
+          "other_including_serialization_and_training_view": 0.017613999953027815
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0015301000094041228,
+        "preflop_tree": 0.0003619000199250877,
+        "postflop_templates_and_grafting": 0.02113090001512319,
+        "training": 0.12898660002974793,
+        "evaluation": 0.003783099993597716,
+        "both_best_responses": 0.011892499984242022,
+        "other_including_serialization_and_training_view": 0.017675099952612072
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 661239
+      },
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.8010490033894151,
+      "nash_conv": 1.1847586054522206,
+      "sb_best_response_value": 1.3737833302890612,
+      "bb_best_response_value": -0.18902472483684069,
+      "independent_replay": {
+        "value_sb": 0.8010490033894152,
+        "value_bb": -0.8010490033894152,
+        "sb_best_response_value": 1.3737833302890612,
+        "bb_best_response_value": -0.18902472483684069,
+        "nash_conv": 1.1847586054522206,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.9735147999599576,
+        0.901765099959448,
+        1.0119673000299372
+      ],
+      "median_seconds": 0.9735147999599576,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0012188000255264342,
+          "preflop_tree": 0.0002962000435218215,
+          "postflop_templates_and_grafting": 0.019962500024121255,
+          "training": 0.9307076999684796,
+          "evaluation": 0.0019107999978587031,
+          "both_best_responses": 0.010365499998442829,
+          "other_including_serialization_and_training_view": 0.009053299902006984
+        },
+        {
+          "enumeration_and_ranking": 0.0005377000197768211,
+          "preflop_tree": 0.00015000003622844815,
+          "postflop_templates_and_grafting": 0.012358699983451515,
+          "training": 0.8693537000217475,
+          "evaluation": 0.004093500028830022,
+          "both_best_responses": 0.008099400089122355,
+          "other_including_serialization_and_training_view": 0.007172099780291319
+        },
+        {
+          "enumeration_and_ranking": 0.0006700999801978469,
+          "preflop_tree": 0.0001621000119484961,
+          "postflop_templates_and_grafting": 0.009375699970405549,
+          "training": 0.9812715000007302,
+          "evaluation": 0.003555700008291751,
+          "both_best_responses": 0.010005699936300516,
+          "other_including_serialization_and_training_view": 0.006926500122062862
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0006700999801978469,
+        "preflop_tree": 0.0001621000119484961,
+        "postflop_templates_and_grafting": 0.012358699983451515,
+        "training": 0.9307076999684796,
+        "evaluation": 0.003555700008291751,
+        "both_best_responses": 0.010005699936300516,
+        "other_including_serialization_and_training_view": 0.007172099780291319
+      },
+      "memory": null,
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6712171899356312,
+      "nash_conv": 0.09700261562630885,
+      "sb_best_response_value": 0.7204489887089847,
+      "bb_best_response_value": -0.6234463730826758,
+      "independent_replay": {
+        "value_sb": 0.6712171899356315,
+        "value_bb": -0.6712171899356315,
+        "sb_best_response_value": 0.7204489887089847,
+        "bb_best_response_value": -0.6234463730826758,
+        "nash_conv": 0.09700261562630885,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "value_bb": 3.3306690738754696e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "seconds": [
+        1.0023471999447793,
+        1.4019947999622673,
+        1.1295774999889545
+      ],
+      "median_seconds": 1.1295774999889545,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0012580000329762697,
+          "preflop_tree": 0.0002628000220283866,
+          "postflop_templates_and_grafting": 0.013044799969065934,
+          "training": 0.9460457999957725,
+          "evaluation": 0.006983800034504384,
+          "both_best_responses": 0.01566619996447116,
+          "other_including_serialization_and_training_view": 0.0190857999259606
+        },
+        {
+          "enumeration_and_ranking": 0.0013874000287614763,
+          "preflop_tree": 0.0003667999990284443,
+          "postflop_templates_and_grafting": 0.016124800022225827,
+          "training": 1.3523100999882445,
+          "evaluation": 0.004476900037843734,
+          "both_best_responses": 0.010800099989864975,
+          "other_including_serialization_and_training_view": 0.01652869989629835
+        },
+        {
+          "enumeration_and_ranking": 0.0014918000088073313,
+          "preflop_tree": 0.00030519999563694,
+          "postflop_templates_and_grafting": 0.017866000009234995,
+          "training": 1.0760846000048332,
+          "evaluation": 0.002545700001064688,
+          "both_best_responses": 0.006371999974362552,
+          "other_including_serialization_and_training_view": 0.024912199995014817
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0013874000287614763,
+        "preflop_tree": 0.00030519999563694,
+        "postflop_templates_and_grafting": 0.016124800022225827,
+        "training": 1.0760846000048332,
+        "evaluation": 0.004476900037843734,
+        "both_best_responses": 0.010800099989864975,
+        "other_including_serialization_and_training_view": 0.0190857999259606
+      },
+      "memory": null,
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6712171899356315,
+      "nash_conv": 0.09700261562630863,
+      "sb_best_response_value": 0.7204489887089847,
+      "bb_best_response_value": -0.623446373082676,
+      "independent_replay": {
+        "value_sb": 0.6712171899356317,
+        "value_bb": -0.6712171899356317,
+        "sb_best_response_value": 0.7204489887089847,
+        "bb_best_response_value": -0.623446373082676,
+        "nash_conv": 0.09700261562630863,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.1228285999968648,
+        0.1556554000126198,
+        0.15498459996888414
+      ],
+      "median_seconds": 0.15498459996888414,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0006888000061735511,
+          "preflop_tree": 0.0001917000045068562,
+          "postflop_templates_and_grafting": 0.01096389995655045,
+          "training": 0.09017109998967499,
+          "evaluation": 0.004406800027936697,
+          "both_best_responses": 0.007026599952951074,
+          "other_including_serialization_and_training_view": 0.009379700059071183
+        },
+        {
+          "enumeration_and_ranking": 0.0012189000262878835,
+          "preflop_tree": 0.0002902999985963106,
+          "postflop_templates_and_grafting": 0.014603000017814338,
+          "training": 0.11459150002337992,
+          "evaluation": 0.004632900003343821,
+          "both_best_responses": 0.010069299954921007,
+          "other_including_serialization_and_training_view": 0.010249499988276511
+        },
+        {
+          "enumeration_and_ranking": 0.000853800040204078,
+          "preflop_tree": 0.00023850001161918044,
+          "postflop_templates_and_grafting": 0.015719200018793344,
+          "training": 0.11334739997982979,
+          "evaluation": 0.002917399979196489,
+          "both_best_responses": 0.009312099951785058,
+          "other_including_serialization_and_training_view": 0.012596199987456203
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.000853800040204078,
+        "preflop_tree": 0.00023850001161918044,
+        "postflop_templates_and_grafting": 0.014603000017814338,
+        "training": 0.11334739997982979,
+        "evaluation": 0.004406800027936697,
+        "both_best_responses": 0.009312099951785058,
+        "other_including_serialization_and_training_view": 0.010249499988276511
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 637706
+      },
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6712489313565994,
+      "nash_conv": 0.664794872564862,
+      "sb_best_response_value": 0.9988692639452152,
+      "bb_best_response_value": -0.3340743913803532,
+      "independent_replay": {
+        "value_sb": 0.6712489313565992,
+        "value_bb": -0.6712489313565992,
+        "sb_best_response_value": 0.9988692639452152,
+        "bb_best_response_value": -0.33407439138035316,
+        "nash_conv": 0.664794872564862,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "seconds": [
+        0.12028139998437837,
+        0.10172189999138936,
+        0.09815320000052452
+      ],
+      "median_seconds": 0.10172189999138936,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0012529999949038029,
+          "preflop_tree": 0.0002834000042639673,
+          "postflop_templates_and_grafting": 0.018024299992248416,
+          "training": 0.08001480001257733,
+          "evaluation": 0.001438500010408461,
+          "both_best_responses": 0.005986700009088963,
+          "other_including_serialization_and_training_view": 0.013280699960887432
+        },
+        {
+          "enumeration_and_ranking": 0.0010842999909073114,
+          "preflop_tree": 0.00025969999842345715,
+          "postflop_templates_and_grafting": 0.01008519995957613,
+          "training": 0.0686623000074178,
+          "evaluation": 0.0038619000115431845,
+          "both_best_responses": 0.008335700025781989,
+          "other_including_serialization_and_training_view": 0.009432799997739494
+        },
+        {
+          "enumeration_and_ranking": 0.0007925999816507101,
+          "preflop_tree": 0.00025320000713691115,
+          "postflop_templates_and_grafting": 0.009102100040763617,
+          "training": 0.06808200001250952,
+          "evaluation": 0.0018727999995462596,
+          "both_best_responses": 0.00523449998581782,
+          "other_including_serialization_and_training_view": 0.012815999973099679
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0010842999909073114,
+        "preflop_tree": 0.00025969999842345715,
+        "postflop_templates_and_grafting": 0.01008519995957613,
+        "training": 0.0686623000074178,
+        "evaluation": 0.0018727999995462596,
+        "both_best_responses": 0.005986700009088963,
+        "other_including_serialization_and_training_view": 0.012815999973099679
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 661455
+      },
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6712489313565994,
+      "nash_conv": 0.6647948725648625,
+      "sb_best_response_value": 0.9988692639452155,
+      "bb_best_response_value": -0.334074391380353,
+      "independent_replay": {
+        "value_sb": 0.6712489313565991,
+        "value_bb": -0.6712489313565991,
+        "sb_best_response_value": 0.9988692639452155,
+        "bb_best_response_value": -0.3340743913803529,
+        "nash_conv": 0.6647948725648626,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.9200846999883652,
+        1.1575952999992296,
+        1.1834721000050195
+      ],
+      "median_seconds": 1.1575952999992296,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0009728000150062144,
+          "preflop_tree": 0.00023850001161918044,
+          "postflop_templates_and_grafting": 0.01606340002035722,
+          "training": 0.8801872999756597,
+          "evaluation": 0.002524100011214614,
+          "both_best_responses": 0.010431600036099553,
+          "other_including_serialization_and_training_view": 0.009666999918408692
+        },
+        {
+          "enumeration_and_ranking": 0.0007441999623551965,
+          "preflop_tree": 0.00024989998200908303,
+          "postflop_templates_and_grafting": 0.01598080003168434,
+          "training": 1.1097615999751724,
+          "evaluation": 0.003000499971676618,
+          "both_best_responses": 0.014046699972823262,
+          "other_including_serialization_and_training_view": 0.013811600103508681
+        },
+        {
+          "enumeration_and_ranking": 0.0009840000420808792,
+          "preflop_tree": 0.0002756000030785799,
+          "postflop_templates_and_grafting": 0.01848600001540035,
+          "training": 1.1372985999914818,
+          "evaluation": 0.0055673999595455825,
+          "both_best_responses": 0.00818450003862381,
+          "other_including_serialization_and_training_view": 0.012675999954808503
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0009728000150062144,
+        "preflop_tree": 0.00024989998200908303,
+        "postflop_templates_and_grafting": 0.01606340002035722,
+        "training": 1.1097615999751724,
+        "evaluation": 0.003000499971676618,
+        "both_best_responses": 0.010431600036099553,
+        "other_including_serialization_and_training_view": 0.012675999954808503
+      },
+      "memory": null,
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6754160732322787,
+      "nash_conv": 0.0007454960962789414,
+      "sb_best_response_value": 0.6759250170398903,
+      "bb_best_response_value": -0.6751795209436113,
+      "independent_replay": {
+        "value_sb": 0.6754160732322788,
+        "value_bb": -0.6754160732322788,
+        "sb_best_response_value": 0.6759250170398903,
+        "bb_best_response_value": -0.6751795209436113,
+        "nash_conv": 0.0007454960962789414,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "seconds": [
+        0.9308919999748468,
+        1.0485060999635607,
+        0.7555742999538779
+      ],
+      "median_seconds": 0.9308919999748468,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0026257000281475484,
+          "preflop_tree": 0.00040530000114813447,
+          "postflop_templates_and_grafting": 0.02076330001000315,
+          "training": 0.8757404000498354,
+          "evaluation": 0.004439899988938123,
+          "both_best_responses": 0.013788899930659682,
+          "other_including_serialization_and_training_view": 0.01312849996611476
+        },
+        {
+          "enumeration_and_ranking": 0.0012152999988757074,
+          "preflop_tree": 0.0005491999909281731,
+          "postflop_templates_and_grafting": 0.019948699977248907,
+          "training": 0.9993356000049971,
+          "evaluation": 0.003369299985934049,
+          "both_best_responses": 0.007172599958721548,
+          "other_including_serialization_and_training_view": 0.01691540004685521
+        },
+        {
+          "enumeration_and_ranking": 0.0008568000048398972,
+          "preflop_tree": 0.0002384000108577311,
+          "postflop_templates_and_grafting": 0.014555700006894767,
+          "training": 0.718289399985224,
+          "evaluation": 0.0035151999909430742,
+          "both_best_responses": 0.005046699952799827,
+          "other_including_serialization_and_training_view": 0.01307210000231862
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0012152999988757074,
+        "preflop_tree": 0.00040530000114813447,
+        "postflop_templates_and_grafting": 0.019948699977248907,
+        "training": 0.8757404000498354,
+        "evaluation": 0.0035151999909430742,
+        "both_best_responses": 0.007172599958721548,
+        "other_including_serialization_and_training_view": 0.01312849996611476
+      },
+      "memory": null,
+      "worlds": 8,
+      "compatible_private_pairs": 4,
+      "information_sets": 338,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6754160732322787,
+      "nash_conv": 0.0007454960962789414,
+      "sb_best_response_value": 0.6759250170398903,
+      "bb_best_response_value": -0.6751795209436113,
+      "independent_replay": {
+        "value_sb": 0.6754160732322788,
+        "value_bb": -0.6754160732322788,
+        "sb_best_response_value": 0.6759250170398903,
+        "bb_best_response_value": -0.6751795209436113,
+        "nash_conv": 0.0007454960962789414,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.8090951000340283,
+        0.8944689999916591,
+        0.7370323999784887
+      ],
+      "median_seconds": 0.8090951000340283,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.004173400055151433,
+          "preflop_tree": 0.00026300002355128527,
+          "postflop_templates_and_grafting": 0.015883800049778074,
+          "training": 0.6737592999706976,
+          "evaluation": 0.03351390000898391,
+          "both_best_responses": 0.05384000000776723,
+          "other_including_serialization_and_training_view": 0.027661699918098748
+        },
+        {
+          "enumeration_and_ranking": 0.0047827999806031585,
+          "preflop_tree": 0.0002691000117920339,
+          "postflop_templates_and_grafting": 0.029229899984784424,
+          "training": 0.7694363000337034,
+          "evaluation": 0.026377799978945404,
+          "both_best_responses": 0.0476929999422282,
+          "other_including_serialization_and_training_view": 0.01668010005960241
+        },
+        {
+          "enumeration_and_ranking": 0.003194199991412461,
+          "preflop_tree": 0.0001810999820008874,
+          "postflop_templates_and_grafting": 0.009651899978052825,
+          "training": 0.6238144999952056,
+          "evaluation": 0.03373779996763915,
+          "both_best_responses": 0.044043000030796975,
+          "other_including_serialization_and_training_view": 0.022409900033380836
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.004173400055151433,
+        "preflop_tree": 0.00026300002355128527,
+        "postflop_templates_and_grafting": 0.015883800049778074,
+        "training": 0.6737592999706976,
+        "evaluation": 0.03351390000898391,
+        "both_best_responses": 0.0476929999422282,
+        "other_including_serialization_and_training_view": 0.022409900033380836
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 1778133
+      },
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.865070085515948,
+      "nash_conv": 1.2890564158548834,
+      "sb_best_response_value": 1.449382870450051,
+      "bb_best_response_value": -0.1603264545951676,
+      "independent_replay": {
+        "value_sb": 0.865070085515948,
+        "value_bb": -0.865070085515948,
+        "sb_best_response_value": 1.4493828704500513,
+        "bb_best_response_value": -0.16032645459516742,
+        "nash_conv": 1.2890564158548838,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 1.6653345369377348e-16,
+        "nash_conv": 4.440892098500626e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "seconds": [
+        0.40307219995884225,
+        0.34911800001282245,
+        0.4520413000136614
+      ],
+      "median_seconds": 0.40307219995884225,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.004861699999310076,
+          "preflop_tree": 0.0003646999830380082,
+          "postflop_templates_and_grafting": 0.02185690001351759,
+          "training": 0.29778099997201934,
+          "evaluation": 0.01565180002944544,
+          "both_best_responses": 0.03754059999482706,
+          "other_including_serialization_and_training_view": 0.02501549996668473
+        },
+        {
+          "enumeration_and_ranking": 0.0018546999781392515,
+          "preflop_tree": 0.00018400000408291817,
+          "postflop_templates_and_grafting": 0.011698400019668043,
+          "training": 0.20074639999074861,
+          "evaluation": 0.039986399991903454,
+          "both_best_responses": 0.05738369998289272,
+          "other_including_serialization_and_training_view": 0.03726440004538745
+        },
+        {
+          "enumeration_and_ranking": 0.005493899981956929,
+          "preflop_tree": 0.0003024999750778079,
+          "postflop_templates_and_grafting": 0.021759099967312068,
+          "training": 0.28944129997398704,
+          "evaluation": 0.038691500027198344,
+          "both_best_responses": 0.0586209999746643,
+          "other_including_serialization_and_training_view": 0.03773200011346489
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.004861699999310076,
+        "preflop_tree": 0.0003024999750778079,
+        "postflop_templates_and_grafting": 0.021759099967312068,
+        "training": 0.28944129997398704,
+        "evaluation": 0.038691500027198344,
+        "both_best_responses": 0.05738369998289272,
+        "other_including_serialization_and_training_view": 0.03726440004538745
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 1808589
+      },
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.8650700855159482,
+      "nash_conv": 1.2890564158548834,
+      "sb_best_response_value": 1.449382870450051,
+      "bb_best_response_value": -0.16032645459516753,
+      "independent_replay": {
+        "value_sb": 0.865070085515948,
+        "value_bb": -0.865070085515948,
+        "sb_best_response_value": 1.4493828704500513,
+        "bb_best_response_value": -0.16032645459516753,
+        "nash_conv": 1.2890564158548838,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 4.440892098500626e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        8.377903899992816,
+        7.2087833999539725,
+        7.953516600013245
+      ],
+      "median_seconds": 7.953516600013245,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.006176199996843934,
+          "preflop_tree": 0.000588800001423806,
+          "postflop_templates_and_grafting": 0.02468039997620508,
+          "training": 8.092331899970304,
+          "evaluation": 0.06693299999460578,
+          "both_best_responses": 0.12492749997181818,
+          "other_including_serialization_and_training_view": 0.06226610008161515
+        },
+        {
+          "enumeration_and_ranking": 0.0028783000307157636,
+          "preflop_tree": 0.00029719999292865396,
+          "postflop_templates_and_grafting": 0.024060499970801175,
+          "training": 7.066657499992289,
+          "evaluation": 0.04177060001529753,
+          "both_best_responses": 0.04917650006245822,
+          "other_including_serialization_and_training_view": 0.023942799889482558
+        },
+        {
+          "enumeration_and_ranking": 0.0024289999855682254,
+          "preflop_tree": 0.00020070001482963562,
+          "postflop_templates_and_grafting": 0.009321299963630736,
+          "training": 7.7866386999958195,
+          "evaluation": 0.05098379997070879,
+          "both_best_responses": 0.07187099999282509,
+          "other_including_serialization_and_training_view": 0.03207210008986294
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0028783000307157636,
+        "preflop_tree": 0.00029719999292865396,
+        "postflop_templates_and_grafting": 0.024060499970801175,
+        "training": 7.7866386999958195,
+        "evaluation": 0.05098379997070879,
+        "both_best_responses": 0.07187099999282509,
+        "other_including_serialization_and_training_view": 0.03207210008986294
+      },
+      "memory": null,
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6301087111676779,
+      "nash_conv": 0.10825381170115422,
+      "sb_best_response_value": 0.6825505246449264,
+      "bb_best_response_value": -0.5742967129437722,
+      "independent_replay": {
+        "value_sb": 0.6301087111676775,
+        "value_bb": -0.6301087111676775,
+        "sb_best_response_value": 0.6825505246449264,
+        "bb_best_response_value": -0.5742967129437722,
+        "nash_conv": 0.10825381170115422,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "value_bb": 3.3306690738754696e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "seconds": [
+        2.8660748000256717,
+        2.866496999980882,
+        3.0987612000317313
+      ],
+      "median_seconds": 2.866496999980882,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.004256199987139553,
+          "preflop_tree": 0.00045689998660236597,
+          "postflop_templates_and_grafting": 0.020270599983632565,
+          "training": 2.6907598999678157,
+          "evaluation": 0.039612799999304116,
+          "both_best_responses": 0.0707230000407435,
+          "other_including_serialization_and_training_view": 0.039995400060433894
+        },
+        {
+          "enumeration_and_ranking": 0.00408179999794811,
+          "preflop_tree": 0.0003389000194147229,
+          "postflop_templates_and_grafting": 0.019013000011909753,
+          "training": 2.707512699998915,
+          "evaluation": 0.029748099972493947,
+          "both_best_responses": 0.06549040001118556,
+          "other_including_serialization_and_training_view": 0.040312099969014525
+        },
+        {
+          "enumeration_and_ranking": 0.0031451000249944627,
+          "preflop_tree": 0.00028229999588802457,
+          "postflop_templates_and_grafting": 0.015508499986026436,
+          "training": 2.9084097999730147,
+          "evaluation": 0.04748720000497997,
+          "both_best_responses": 0.0853797000600025,
+          "other_including_serialization_and_training_view": 0.03854859998682514
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.00408179999794811,
+        "preflop_tree": 0.0003389000194147229,
+        "postflop_templates_and_grafting": 0.019013000011909753,
+        "training": 2.707512699998915,
+        "evaluation": 0.039612799999304116,
+        "both_best_responses": 0.0707230000407435,
+        "other_including_serialization_and_training_view": 0.039995400060433894
+      },
+      "memory": null,
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6301087111676777,
+      "nash_conv": 0.10825381170115544,
+      "sb_best_response_value": 0.682550524644927,
+      "bb_best_response_value": -0.5742967129437716,
+      "independent_replay": {
+        "value_sb": 0.6301087111676775,
+        "value_bb": -0.6301087111676775,
+        "sb_best_response_value": 0.682550524644927,
+        "bb_best_response_value": -0.5742967129437715,
+        "nash_conv": 0.10825381170115556,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        1.0811795000336133,
+        1.0325108999968506,
+        1.099005699972622
+      ],
+      "median_seconds": 1.0811795000336133,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.0025050999829545617,
+          "preflop_tree": 0.0002508999896235764,
+          "postflop_templates_and_grafting": 0.013283899985253811,
+          "training": 0.8893813999602571,
+          "evaluation": 0.05692899995483458,
+          "both_best_responses": 0.07783419999759644,
+          "other_including_serialization_and_training_view": 0.04099500016309321
+        },
+        {
+          "enumeration_and_ranking": 0.0035391999990679324,
+          "preflop_tree": 0.0002905000001192093,
+          "postflop_templates_and_grafting": 0.013616899959743023,
+          "training": 0.8688197000301443,
+          "evaluation": 0.03569019999122247,
+          "both_best_responses": 0.07704210001975298,
+          "other_including_serialization_and_training_view": 0.03351229999680072
+        },
+        {
+          "enumeration_and_ranking": 0.0035120000247843564,
+          "preflop_tree": 0.00030479999259114265,
+          "postflop_templates_and_grafting": 0.020242800004780293,
+          "training": 0.9108565999777056,
+          "evaluation": 0.05329040001379326,
+          "both_best_responses": 0.07395549991633743,
+          "other_including_serialization_and_training_view": 0.03684360004262999
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0035120000247843564,
+        "preflop_tree": 0.0002905000001192093,
+        "postflop_templates_and_grafting": 0.013616899959743023,
+        "training": 0.8893813999602571,
+        "evaluation": 0.05329040001379326,
+        "both_best_responses": 0.07704210001975298,
+        "other_including_serialization_and_training_view": 0.03684360004262999
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 1775717
+      },
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.742948316823814,
+      "nash_conv": 0.8500659577619495,
+      "sb_best_response_value": 1.1346643669323653,
+      "bb_best_response_value": -0.2845984091704158,
+      "independent_replay": {
+        "value_sb": 0.742948316823814,
+        "value_bb": -0.742948316823814,
+        "sb_best_response_value": 1.1346643669323653,
+        "bb_best_response_value": -0.28459840917041573,
+        "nash_conv": 0.8500659577619496,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "seconds": [
+        0.5158122000284493,
+        0.488174700003583,
+        0.31377180002164096
+      ],
+      "median_seconds": 0.488174700003583,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.005684099975042045,
+          "preflop_tree": 0.0003918000147677958,
+          "postflop_templates_and_grafting": 0.025514099979773164,
+          "training": 0.3313977000070736,
+          "evaluation": 0.03945849998854101,
+          "both_best_responses": 0.08044159994460642,
+          "other_including_serialization_and_training_view": 0.03292440011864528
+        },
+        {
+          "enumeration_and_ranking": 0.004667999979574233,
+          "preflop_tree": 0.000477599969599396,
+          "postflop_templates_and_grafting": 0.02484799997182563,
+          "training": 0.3138353000395,
+          "evaluation": 0.027193700021598488,
+          "both_best_responses": 0.08050560002448037,
+          "other_including_serialization_and_training_view": 0.03664649999700487
+        },
+        {
+          "enumeration_and_ranking": 0.0023057000362314284,
+          "preflop_tree": 0.00024319998919963837,
+          "postflop_templates_and_grafting": 0.0160842000041157,
+          "training": 0.17383579997112975,
+          "evaluation": 0.0347804999910295,
+          "both_best_responses": 0.05737839994253591,
+          "other_including_serialization_and_training_view": 0.029144000087399036
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.004667999979574233,
+        "preflop_tree": 0.0003918000147677958,
+        "postflop_templates_and_grafting": 0.02484799997182563,
+        "training": 0.3138353000395,
+        "evaluation": 0.0347804999910295,
+        "both_best_responses": 0.08044159994460642,
+        "other_including_serialization_and_training_view": 0.03292440011864528
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 1720869
+      },
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.7429483168238138,
+      "nash_conv": 0.8500659577619495,
+      "sb_best_response_value": 1.1346643669323653,
+      "bb_best_response_value": -0.2845984091704158,
+      "independent_replay": {
+        "value_sb": 0.7429483168238139,
+        "value_bb": -0.7429483168238139,
+        "sb_best_response_value": 1.1346643669323653,
+        "bb_best_response_value": -0.28459840917041573,
+        "nash_conv": 0.8500659577619496,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        8.965642699971795,
+        9.056835299998056,
+        8.474050900025759
+      ],
+      "median_seconds": 8.965642699971795,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.004675799980759621,
+          "preflop_tree": 0.0003724999842233956,
+          "postflop_templates_and_grafting": 0.023635200050193816,
+          "training": 8.82729390001623,
+          "evaluation": 0.03665320004802197,
+          "both_best_responses": 0.04846880002878606,
+          "other_including_serialization_and_training_view": 0.024543299863580614
+        },
+        {
+          "enumeration_and_ranking": 0.003518700017593801,
+          "preflop_tree": 0.000292200013063848,
+          "postflop_templates_and_grafting": 0.01838959997985512,
+          "training": 8.904075799975544,
+          "evaluation": 0.03706719999900088,
+          "both_best_responses": 0.06240260001504794,
+          "other_including_serialization_and_training_view": 0.031089199997950345
+        },
+        {
+          "enumeration_and_ranking": 0.0035590000334195793,
+          "preflop_tree": 0.0002941000275313854,
+          "postflop_templates_and_grafting": 0.014084199967328459,
+          "training": 8.326778899994679,
+          "evaluation": 0.03188730002148077,
+          "both_best_responses": 0.06292379996739328,
+          "other_including_serialization_and_training_view": 0.034523600013926625
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.0035590000334195793,
+        "preflop_tree": 0.0002941000275313854,
+        "postflop_templates_and_grafting": 0.01838959997985512,
+        "training": 8.82729390001623,
+        "evaluation": 0.03665320004802197,
+        "both_best_responses": 0.06240260001504794,
+        "other_including_serialization_and_training_view": 0.031089199997950345
+      },
+      "memory": null,
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6247437030175302,
+      "nash_conv": 0.0009863743948287373,
+      "sb_best_response_value": 0.6253833119527665,
+      "bb_best_response_value": -0.6243969375579378,
+      "independent_replay": {
+        "value_sb": 0.62474370301753,
+        "value_bb": -0.62474370301753,
+        "sb_best_response_value": 0.6253833119527665,
+        "bb_best_response_value": -0.6243969375579377,
+        "nash_conv": 0.0009863743948288484,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "seconds": [
+        3.2006524999742396,
+        3.3679296000045724,
+        3.0240750999655575
+      ],
+      "median_seconds": 3.2006524999742396,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.004470599989872426,
+          "preflop_tree": 0.0003589999978430569,
+          "postflop_templates_and_grafting": 0.022038600000087172,
+          "training": 3.0294394999509677,
+          "evaluation": 0.03528050001477823,
+          "both_best_responses": 0.06930720002856106,
+          "other_including_serialization_and_training_view": 0.03975709999212995
+        },
+        {
+          "enumeration_and_ranking": 0.00495600001886487,
+          "preflop_tree": 0.00040329998591914773,
+          "postflop_templates_and_grafting": 0.026792799995746464,
+          "training": 3.1820825999602675,
+          "evaluation": 0.04407890001311898,
+          "both_best_responses": 0.06266650004545227,
+          "other_including_serialization_and_training_view": 0.04694949998520315
+        },
+        {
+          "enumeration_and_ranking": 0.004282600013539195,
+          "preflop_tree": 0.000421399949118495,
+          "postflop_templates_and_grafting": 0.02153530000941828,
+          "training": 2.877242100017611,
+          "evaluation": 0.034578400023747236,
+          "both_best_responses": 0.05917090002913028,
+          "other_including_serialization_and_training_view": 0.026844399922993034
+        }
+      ],
+      "phase_median_seconds": {
+        "enumeration_and_ranking": 0.004470599989872426,
+        "preflop_tree": 0.00040329998591914773,
+        "postflop_templates_and_grafting": 0.022038600000087172,
+        "training": 3.0294394999509677,
+        "evaluation": 0.03528050001477823,
+        "both_best_responses": 0.06266650004545227,
+        "other_including_serialization_and_training_view": 0.03975709999212995
+      },
+      "memory": null,
+      "worlds": 72,
+      "compatible_private_pairs": 36,
+      "information_sets": 1014,
+      "public_states": 535,
+      "decisions": 202,
+      "value_sb": 0.6247437030175301,
+      "nash_conv": 0.0009863743948288484,
+      "sb_best_response_value": 0.6253833119527665,
+      "bb_best_response_value": -0.6243969375579377,
+      "independent_replay": {
+        "value_sb": 0.6247437030175301,
+        "value_bb": -0.6247437030175301,
+        "sb_best_response_value": 0.6253833119527665,
+        "bb_best_response_value": -0.6243969375579377,
+        "nash_conv": 0.0009863743948288484,
+        "worlds": 72,
+        "checked_information_sets": 1014,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAd",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKd",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKh",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KcKs",
+            "probability": 0.013888888888888888
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KdKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AcAs",
+            "bb": "KhKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAh",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKd",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKh",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KcKs",
+            "probability": 0.027777777777777776
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKh",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KdKs",
+            "probability": 0.041666666666666664
+          },
+          {
+            "sb": "AhAs",
+            "bb": "KhKs",
+            "probability": 0.041666666666666664
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    }
+  ],
+  "comparisons": [
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "algorithm": "vanilla",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "nash_conv": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 2.498001805406602e-16
+      },
+      "maximum_policy_probability_gap": 1.1102230246251565e-15,
+      "recursive_over_vector_time_ratio": 0.8767346563286245
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "scalar_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "nash_conv": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 2.220446049250313e-16
+      },
+      "maximum_policy_probability_gap": 2.3314683517128287e-15,
+      "recursive_over_vector_time_ratio": 0.8618397586438089
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "algorithm": "dcfr",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 0.0,
+        "nash_conv": 4.440892098500626e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 2.220446049250313e-16
+      },
+      "maximum_policy_probability_gap": 7.771561172376096e-16,
+      "recursive_over_vector_time_ratio": 1.5236109429926437
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "scalar_absolute_gaps": {
+        "value_sb": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0
+      },
+      "maximum_policy_probability_gap": 6.661338147750939e-16,
+      "recursive_over_vector_time_ratio": 1.2435334067007864
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "algorithm": "vanilla",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17
+      },
+      "maximum_policy_probability_gap": 1.27675647831893e-15,
+      "recursive_over_vector_time_ratio": 2.007320524999355
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "scalar_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "nash_conv": 1.2212453270876722e-15,
+        "sb_best_response_value": 6.661338147750939e-16,
+        "bb_best_response_value": 5.551115123125783e-16
+      },
+      "maximum_policy_probability_gap": 9.825473767932635e-15,
+      "recursive_over_vector_time_ratio": 2.774646755278757
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "algorithm": "dcfr",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0
+      },
+      "maximum_policy_probability_gap": 7.771561172376096e-16,
+      "recursive_over_vector_time_ratio": 2.2147389039736756
+    },
+    {
+      "scenario": "all-aa-versus-all-kk-combinations",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "scalar_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "nash_conv": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.1102230246251565e-16
+      },
+      "maximum_policy_probability_gap": 4.884981308350689e-15,
+      "recursive_over_vector_time_ratio": 2.8011921631742136
+    }
+  ]
+}

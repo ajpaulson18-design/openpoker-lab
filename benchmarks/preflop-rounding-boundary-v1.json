@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "fixture_id": "fractional-flop-raise-rounding-boundary-v1",
+  "status": "known unresolved model precision boundary",
+  "observed_at_source": "d41ab5b378a7834ddaed5ae75928c36b2e488de0",
+  "sb": "AsAd",
+  "bb": "KsKd",
+  "config": {
+    "small_blind": 0.123456789,
+    "big_blind": 0.345678901,
+    "starting_stack": [2, 1.5],
+    "raise_sizes": [0.5],
+    "max_raises": 1,
+    "include_all_in": false
+  },
+  "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"],
+  "flop_config": {"bet_sizes": [0.123456789], "raise_sizes": [0.25], "max_raises": 1, "include_all_in": false},
+  "turn_config": {"bet_sizes": [0.333333333], "raise_sizes": [0.125], "max_raises": 1, "include_all_in": false},
+  "river_config": {"bet_sizes": [0.2], "raise_sizes": [0.3], "max_raises": 1, "include_all_in": false},
+  "mismatch": {
+    "history_prefix": ["raise@0.691357802", "call", "flop@2c3c4d", "check", "bet@0.862063431"],
+    "production_raise_to": 1.293095146,
+    "independent_replay_raise_to": 1.293095147,
+    "scope": "Existing fractional betting arithmetic differs by one nanounit at an intermediate rounding threshold; this is an action/history mismatch, not an independent equilibrium certificate. The shared builder and oracle were not changed in this adapter milestone."
+  }
+}
