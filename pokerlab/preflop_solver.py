@@ -14,6 +14,7 @@ from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
+from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
 from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
 from .public_diagnostics import evaluate_profile as evaluate_public_profile
 from .river_config import RiverConfig
@@ -370,7 +371,8 @@ def _positive_pot_training_view(root):
     return training_root, anchor, cloned_states
 
 
-def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
+def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
+                        *, enforce_world_work=True):
     """Graft one transient postflop template per live boundary and flop."""
     continuations = []
 
@@ -405,7 +407,7 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
     max_template_states = max_template_decisions = 0
     preflop_plan_ops = preflop_tree.public_state_count - preflop_tree.continuation_count
     world_decision_work = (len(worlds) * preflop_tree.decision_node_count * iterations)
-    if world_decision_work > _MAX_WORLD_NODE_WORK:
+    if enforce_world_work and world_decision_work > _MAX_WORLD_NODE_WORK:
         raise ValueError("Combined preflop/postflop traversal exceeds 30 million world-decision iterations.")
     planned_operations = (len(worlds) * (preflop_plan_ops + len(continuations))
                           if traversal == "planned" else None)
@@ -446,7 +448,7 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
                 if decision_count + template_decisions > _MAX_PUBLIC_NODES:
                     raise ValueError("Combined preflop/postflop tree exceeds 10,000 decisions.")
                 added_work = flop_world_counts[flop_key] * visited_nodes * iterations
-                if world_decision_work + added_work > _MAX_WORLD_NODE_WORK:
+                if enforce_world_work and world_decision_work + added_work > _MAX_WORLD_NODE_WORK:
                     raise ValueError("Combined preflop/postflop traversal exceeds 30 million world-decision iterations.")
                 added_plan_ops = flop_world_counts[flop_key] * plan_ops
                 if (planned_operations is not None and
@@ -479,7 +481,7 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
 def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
-                  diagnostics="recursive"):
+                  diagnostics="recursive", resource_model="world"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -488,6 +490,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     can change private-pair probabilities through blockers.
     ``diagnostics="public-batched"`` optionally evaluates the policy and both
     legal best responses with private-hand vectors; recursive is the default.
+    ``resource_model="public-vector"`` optionally bounds vector loop work and
+    scratch dimensions instead of the conservative world-decision estimate.
+    It requires public-batched training and diagnostics; other limits remain.
     """
     if config is None:
         config = PreflopConfig()
@@ -503,6 +508,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Preflop traversal supports recursive, planned, or public-batched CFR.")
     if diagnostics not in ("recursive", "public-batched"):
         raise ValueError("Preflop diagnostics must be recursive or public-batched.")
+    if resource_model not in ("world", "public-vector"):
+        raise ValueError("Preflop resource model must be world or public-vector.")
+    vector_budget_enabled = resource_model == "public-vector"
+    if vector_budget_enabled and (traversal != "public-batched" or
+                                  diagnostics != "public-batched"):
+        raise ValueError("Public-vector resource model requires public-batched training and diagnostics.")
     if algorithm == "cfrplus" and traversal == "planned":
         raise ValueError("CFR+ supports recursive or public-batched traversal, not planned CFR.")
     specs = _stage_configs(flop_config, turn_config, river_config)
@@ -513,7 +524,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     (root, public_state_count, decision_count, world_decision_work, planned_ops,
      max_template_states, max_template_decisions) = \
         _merge_preflop_tree(preflop_tree, worlds, specs, traversal,
-                            iterations * 3 if algorithm == "cfrplus" else iterations)
+                            iterations * 3 if algorithm == "cfrplus" else iterations,
+                            enforce_world_work=not vector_budget_enabled)
 
     # Global hand identity is SB=0, BB=1. Each history sees only own hands that
     # remain legal after its public flop/turn/river prefix.
@@ -527,12 +539,20 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
 
     nodes = _all_nodes(root)
     infos, metadata = {}, {}
+    info_action_slots = 0
     for node in nodes:
         prefix = _revealed_board(node.history)
         for hand_index in sorted(legal.get((node.player, prefix), ())):
+            if vector_budget_enabled and info_action_slots + len(node.actions) > MAX_INFO_ACTION_SLOTS:
+                raise ValueError("Public-vector information-set action slots exceed 1,000,000.")
             key = (node.player, hand_index, node.history)
             infos[key] = len(node.actions)
             metadata[key] = node
+            info_action_slots += len(node.actions)
+
+    vector_budget = (estimate_vector_budget(
+        root, worlds, infos, iterations, algorithm, chance_type=_Chance)
+        if vector_budget_enabled else None)
 
     payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
     training_pot_anchor = None
@@ -704,5 +724,15 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             "public_diagnostics_view_states": diagnostic_view_states,
             "public_diagnostics_view_source": diagnostic_view_source,
         })
+    if vector_budget_enabled:
+        result.update({
+            "resource_model": "public-vector",
+            "vector_work_budget": vector_budget,
+            "world_decision_work_enforced": False,
+        })
+        # The legacy estimate is retained as reference evidence, not a second
+        # enforced admission ceiling for this explicitly selected model.
+        result["limits"]["reference_world_decision_work"] = _MAX_WORLD_NODE_WORK
+        result["limits"]["world_decision_work"] = None
     return result
 

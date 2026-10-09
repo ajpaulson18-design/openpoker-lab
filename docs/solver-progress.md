@@ -479,6 +479,25 @@ for one fixed flop/private pair, not all flops or full private ranges.
 See [proof, reproduction and recorded limits](fixed-flop-complete-chance.md).
 No production solver, shared kernel or Coach source changes are required.
 
+## Bounded deeper complete fixed-flop convergence
+
+Optional preflop `resource_model="public-vector"` uses an independent structural
+vector-work census with prefix, dense-slot, information-set action and modeled
+loop caps before vector view/training allocation. It requires public-vector
+training and diagnostics; default admission and every other existing cap remain.
+It admits DCFR350 and CFR+120 on the complete four-private-pair fixed-flop game,
+which the conservative world-decision guard rejects. Shared kernels, postflop,
+turn/river and Coach source remain unchanged.
+
+At frozen `b8fe302`, independent replay checks all 17,620 policy rows, all 7,920
+worlds, private-pair probabilities and both legal best responses. DCFR100/350
+NashConv is 0.0254528/0.00790802 chips; CFR+120 reaches 0.00247911. Maximum scalar
+disagreement is 1.67e-14. Every endpoint misses the predefined 0.001-chip target.
+One observed complete call per checkpoint takes 78.348/283.792/135.961 seconds,
+including estimator-only allocation tracing. Its approximately 2.02 MB traced
+peak covers only resource preflight, not the complete solve or RSS. See
+[scope, modeled ceilings, value intervals and provenance](preflop-vector-resources.md).
+
 ## Complete fixed-flop chance with private-hand uncertainty
 
 The full-chance regression now also covers two SB combinations and two BB

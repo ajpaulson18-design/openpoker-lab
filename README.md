@@ -220,6 +220,10 @@ Optional [vector value and best-response diagnostics](docs/preflop-public-diagno
 reuse that utility-preserving view to compute the configured game's legal
 responses, with independent replay validation. Recursive diagnostics remain
 the default.
+An opt-in [vector workload model](docs/preflop-vector-resources.md) bounds
+shared public traversal and scratch dimensions before admitting deeper
+complete fixed-flop solves. Legacy resource admission remains the default;
+independent legal best responses measure each checkpoint's actual accuracy.
 The [independent monetary replay](docs/preflop-monetary-replay.md) checks the
 configured local rounding order exactly and retains a separate historical
 precision diagnostic.
