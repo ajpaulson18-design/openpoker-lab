@@ -1,0 +1,121 @@
+{
+  "baseline_git_revision": "95f09288b08e61057b88ed07fc7f029a71948bbe",
+  "baseline_source_sha256": "fce263003848a514451381e906cc76432fbe53ae4e1cb8f499a5a3498b610be8",
+  "baseline_river_tree_sha256": "af4e4b55ec82c8a246b1713416a3208959b9474c793494e1a16d6c63835faf83",
+  "new_river_tree_sha256": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+  "new_source_sha256": "2fd3b7bef66de21555e8498e1f07cd580767b07e86fdd4961d13843cd22fc8e7",
+  "comparisons": [
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "full44-blocked-runouts",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "iterations": 30,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 10,
+      "max_difference": 0.0
+    },
+    {
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 30,
+      "max_difference": 0.0
+    }
+  ]
+}

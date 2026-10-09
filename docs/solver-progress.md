@@ -261,7 +261,53 @@ passed, followed by all 306 repository tests (138.585 seconds). This measures
 state lifetime, not a universal runtime/peak-memory gain.
 Earlier benchmark reports remain measurements of their recorded source commits.
 
+## Shared flop, turn and river engine
+
+The shared postflop engine now includes bounded flop, turn and river starts,
+reusing the betting builder and CFR backends. It enumerates physical ordered
+turn/river worlds, preserves latent future information and cumulative accounting,
+and indexes legal private hands by public reveal prefix. The turn API delegates
+through a compatible facade. Eight added tests cover independent three-street
+policy/BR replay, nested hidden-chance adversaries, full physical flop execution,
+configured river agreement, dictionary configs and backend parity. Three further
+tests cover the total-public-state cap, independently counted tree states and
+tree release with cyclic GC disabled. All 317 repository tests passed in
+259.519 seconds, including the coaching regressions. A separate
+16-case before/after check against the actual prior turn source produced zero
+differences in policies, values, BRs, gaps and counts. See
+[postflop validation](postflop-validation.md) for scope and reproductions.
+
+The initial recursive vanilla report records source `3a8a78a`, before the
+allocation guard and tree-closure cleanup. In its full-deck single-pair fixture,
+10/30 iterations took 7.367/22.095 seconds median and NashConv fell
+0.441288 to 0.147096 chips; traced peaks were about 21 MiB. In the weighted
+conditional 8-world fixture, gaps fell 11.632962 to 6.817565 chips, with medians
+0.251/1.152 seconds and about 530 KiB traced peaks. The latter gap remains large;
+these checkpoints demonstrate measured coverage and convergence, not a high
+accuracy certificate. Historical timings/memory apply to their recorded source.
+
+An independent structural audit found that decision counts alone omit all-in
+runout allocations: 8,104 decisions plus 228 chance nodes and 17,912 leaves in
+the short-stack full fixture. The shared engine now reserves every public state
+before expansion, bounded at 250,000; the 10,000-decision cap is also charged
+before continuations. Returned counters expose both bounds. Recursive tree
+builders/collectors clear their closure cycles on exit. Original algorithms,
+game probabilities, contracts and zero-sum accounting are unchanged.
+
+The current planned-vanilla report records guarded source `bac5e47` with the
+same four fixtures/checkpoints. Full-deck medians at 10/30 iterations are
+4.115/6.444 seconds; traced peaks are about 23.9/23.5 MiB. Conditional medians
+are 0.077/0.162 seconds with about 540/539 KiB peaks. All values, exact BRs,
+gaps and game counts match the historical recursive report within 1e-12.
+The source revisions differ, so these reports do not establish a controlled
+backend speed or memory comparison. Both retain source/config/harness hashes.
+
 ## Next implementation milestone
+
+Before merging, the branch incorporated GitHub main `f32dc71`, including the
+separate coaching and interface updates. All 323 integrated repository tests
+passed in 92.403 seconds, and all eight frontend contract checks passed. The
+solver diff preserves those independently developed application changes.
 
 Profile and reduce repeated per-world traversal work while preserving the exact
 chance model and oracle results. Use measured gains before selecting a compiled

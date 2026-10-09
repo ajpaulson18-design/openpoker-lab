@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "exact-postflop-v1",
+  "defaults": {"checkpoints": [10, 30], "repeats": 3},
+  "scenarios": [
+    {
+      "id": "full1980-shortstack-flop",
+      "purpose": "Exact ordered physical turn/river chance on a small full-deck short-stack game; one private hand per player.",
+      "board": "2c3d4h", "oop": "AsKd", "ip": "JsJd",
+      "config": {"pot": 10, "effective_stack": 5, "bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": false}
+    },
+    {
+      "id": "conditioned-flop-weighted-private-ranges",
+      "purpose": "Three-street decisions with weighted private uncertainty and selected ordered runouts; conditional study game only.",
+      "board": "2c3d4h", "oop": "AsKd:0.5,QhQc:1", "ip": "JsJd:1,9s9d:0.75",
+      "config": {"pot": 10, "effective_stack": [35, 25], "bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": true},
+      "runouts": [["As", "8c"], ["6c", "9s"], ["6c", "8c"]]
+    }
+  ]
+}
