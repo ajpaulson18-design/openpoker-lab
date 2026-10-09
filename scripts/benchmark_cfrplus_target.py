@@ -52,14 +52,11 @@ def _source_fingerprints():
 
 
 def _load_old_trainer():
-    blob = subprocess.check_output(
-        ["git", "rev-parse", f"{OLD_REVISION}:pokerlab/public_cfr.py"],
-        cwd=ROOT, text=True,
-    ).strip()
-    if blob != OLD_BLOB:
-        raise RuntimeError(f"Expected old trainer blob {OLD_BLOB}, found {blob}.")
+    # The connected API preserves trees/blobs but assigns commit identities.
+    # Address the verified historical blob directly so a fresh clone can
+    # reproduce this comparison without the original local commit identifier.
     source = subprocess.check_output(
-        ["git", "show", f"{OLD_REVISION}:pokerlab/public_cfr.py"], cwd=ROOT,
+        ["git", "cat-file", "blob", OLD_BLOB], cwd=ROOT,
     )
     spec = importlib.util.spec_from_loader(
         "pokerlab._public_cfr_old", loader=None,

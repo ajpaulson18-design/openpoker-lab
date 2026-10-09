@@ -19,8 +19,8 @@ Diagnostics-only turn evaluation is 2.17x faster on a 352-world uniform-policy
 fixture with higher memory consumption. The completed 36-row algorithm report
 shows lower CFR+ gaps but higher runtime than DCFR at 300 iterations, so the
 default is unchanged. No external runtime dependency or third-party code is
-incorporated. The branch is locally committed; public push awaits explicit
-approval after automatic review rejected publication. See
+incorporated. The user explicitly authorized public push and merge on 2026-10-09;
+publishing uses the authenticated GitHub connector. See
 [quality work, exact benchmarks, research decisions and remaining priorities](turn-river-quality.md).
 
 Snapshot: 2026-10-09. Mathematical calculation only; the AI Coach workstream

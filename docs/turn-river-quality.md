@@ -208,3 +208,15 @@ publication even after the GitHub connector confirmed the repository is public,
 the remote matches the user's project, and the account has push permission.
 The final rejection requires explicit approval for public disclosure of this
 new payload; no alternative publication path was used.
+
+## Authorized integration
+
+On 2026-10-09 the user explicitly authorized pushing and merging all this work.
+Current main `fe73f69` is incorporated without solver-code conflicts, preserving
+the parallel preflop changes. The only conflict was the progress-note date/header,
+and both workstreams are retained. Shell Git lacks credentials, so publication
+uses the connected GitHub Git-data API. It preserves exact trees and blobs while
+assigning new commit identities; historical local measurement revisions remain
+recorded unchanged. The target-pass reproduction harness addresses its verified
+baseline blob `90e9e8155f64d73a2850f22bf0bd2ebd82ded937` directly so fresh clones
+can reproduce the experiment.
