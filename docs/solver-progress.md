@@ -328,5 +328,14 @@ recursive visitor bindings clear on success and failure. Accurate global chance
 normalization fixes a reproduced Python 3.11 tie-sensitivity trigger without
 altering the update rule or policy tolerance. All 331 repository
 tests passed in 105.342 seconds, including coaching regressions. Recursive
-remains the default/reference. Controlled whole-call timing and memory results
-are required before adoption claims; see [public-batched validation](public-batched-cfr.md).
+remains the default/reference. Controlled whole-call reports at source `b6085fc`
+compare the same 864-world conditional game at 20 iterations on Python 3.14.7.
+Three interleaved calls including construction, training, exact values/BRs and
+JSON serialization give vanilla medians 9.225/1.580 seconds and DCFR medians
+10.965/1.668 seconds (recursive/public-batched). Traced Python peaks rise slightly,
+6.47/6.66 MB and 6.50/6.70 MB. All policy/value/BR differences stay below
+`5.4e-15`. These are fixture-specific efficiency gains, not universal gains.
+NashConv remains 6.1505 chips vanilla and 2.8662 DCFR at these short checkpoints;
+neither is a high-accuracy certificate. Both reports preserve source/config/harness
+hashes; the earlier v1 report remains historical. See
+[public-batched validation](public-batched-cfr.md).

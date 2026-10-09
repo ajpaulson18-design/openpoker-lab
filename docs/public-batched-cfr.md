@@ -65,5 +65,32 @@ Reports record all solver, config and harness hashes and reject source changes
 or policy/value/BR differences above `1e-10`. Selected runouts condition the
 joint game; measurements apply to their recorded machine and source revision.
 
+## Recorded whole-call comparison
+
+The v2 vanilla and DCFR reports use frozen source `b6085fc`, Python 3.14.7
+(`C:\Users\pauls\AppData\Local\Python\pythoncore-3.14-64\python.exe`) and
+the same versioned config. Each player has 18 combinations; 324 compatible
+pairs and three selected ordered runouts produce 864 physical worlds, 3,075
+information sets and 466 public states. Three interleaved timed calls per
+backend include JSON serialization; memory uses separate traced calls.
+
+| Algorithm, 20 iterations | Recursive median | Public-batched median | Paired ratio | Recursive traced peak | Public traced peak | NashConv, chips |
+|---|---:|---:|---:|---:|---:|---:|
+| Vanilla | 9.225 s | 1.580 s | 5.84x | 6.47 MB | 6.66 MB | 6.1505 |
+| DCFR | 10.965 s | 1.668 s | 6.57x | 6.50 MB | 6.70 MB | 2.8662 |
+
+MB is decimal; these are traced Python allocation peaks, not process RSS.
+Maximum serialized-policy/value/BR differences are `5.33e-15` for vanilla and
+`4.66e-15` for DCFR. Both reports independently match all eight solver module
+hashes, config and harness. This supports selecting the optional backend for
+this game; it does not establish universal gains or a near-equilibrium
+solution. The default remains recursive. Local full-suite validation used
+Python 3.12.14, with GitHub validation on 3.11, 3.12 and 3.13.
+
+The v1 vanilla report retains its original `9d2d66f` source and machine
+measurement. It predates the normalization fix and is historical evidence;
+its timing is not a controlled comparison against v2. The v2 reports are the
+adoption measurements for the fixed source.
+
 The wider commercial objective remains active: this backend does not add
 preflop, multiway equilibrium, sampling, suit reduction or unrestricted bet sizes.
