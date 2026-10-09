@@ -478,3 +478,22 @@ uses 26,226,183 traced peak Python bytes. This is complete future-deck coverage
 for one fixed flop/private pair, not all flops or full private ranges.
 See [proof, reproduction and recorded limits](fixed-flop-complete-chance.md).
 No production solver, shared kernel or Coach source changes are required.
+
+## Complete fixed-flop chance with private-hand uncertainty
+
+The full-chance regression now also covers two SB combinations and two BB
+combinations (`AsAd,QsQd` versus `KsKd,JhJc`) with equal prior weights. After
+`2c3c4d`, 2,352 requested public turn/river pairs yield 2,336 reachable public
+outcomes and 7,920 compatible private-pair/future worlds. All four private-pair
+probabilities and all learned information sets, values and exact legal best
+responses are checked independently. This adds hidden opponent-hand uncertainty
+to the earlier single-pair full-chance fixture, without invoking its +1/-1
+known-value claim for a different game.
+
+Luna's saved bounded test was recovered after its usage limit stopped the
+agent. Lead review ran the focused test successfully and incorporated the
+parallel turn/river publication on main before final validation. Requests
+exceeding the world-iteration limit are checked to fail before ranking. This
+10-iteration planned-vanilla check establishes exact policy replay and chance
+coverage; it does not establish high-accuracy equilibrium convergence or new
+runtime/memory performance. See the [expanded fixture scope](fixed-flop-complete-chance.md).
