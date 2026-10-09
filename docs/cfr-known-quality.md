@@ -49,3 +49,23 @@ does not certify configured Hold'em solutions, unrestricted bet sizes,
 preflop or multiway equilibrium. Independent physical-world, hidden-chance and
 betting-accounting checks remain necessary for those paths. No external source
 code or dependency is integrated.
+
+## Published measurements
+
+The [versioned report](../benchmarks/results/cfr-quality-v1.json) records 18
+checkpoints at source commit `e9d9339831966cc573094d0e25f1cc79be48bdb0` on
+Python 3.12.14. All gates passed. At 10,000 iterations every backend measured
+NashConv approximately 0.00463557 chips for vanilla CFR and 0.00165554 for
+DCFR; value errors were approximately 0.00000915973 and 0.00000116705 chips.
+Production value and best-response metrics differed from the independent
+oracle by at most floating-point rounding. Exact rational anchors had zero
+deviation gains. The source/config hashes were unchanged throughout the run.
+
+The report truthfully marks the checkout dirty because it contained untracked
+scratch work. All validation sources and configuration were committed before
+measurement; no production solver source was modified for this milestone.
+Four focused quality tests passed again during takeover. The recovered prior
+full-suite log records 335 passing tests in 280.180 seconds on these sources;
+the publication's GitHub matrix separately checks Python 3.11, 3.12 and 3.13.
+Luna independently reviewed the oracle, anchors, comparisons and provenance
+without finding a blocking defect.
