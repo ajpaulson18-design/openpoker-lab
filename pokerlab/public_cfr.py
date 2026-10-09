@@ -126,6 +126,81 @@ def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
     return pot, hand_counts
 
 
+def _cfrplus_target_deltas(root, edges, infos, current, target_player,
+                           hand_counts, half_pot, chance_type):
+    """Return one player's regret deltas without constructing opponent values."""
+    deltas = {key: [0.0] * count for key, count in infos.items()
+              if key[0] == target_player}
+    target_count = hand_counts[target_player]
+    opponent = 1 - target_player
+
+    def visit(node, prefix, opponent_reach):
+        if isinstance(node, chance_type):
+            value = [0.0] * target_count
+            for card, child in node.branches.items():
+                child_value = visit(child, prefix + (card,), opponent_reach)
+                for index, result in enumerate(child_value):
+                    value[index] += result
+            return value
+
+        if isinstance(node, _Terminal):
+            value = [0.0] * target_count
+            if node.kind == "fold":
+                player0_sign = 1.0 if node.winner == 0 else -1.0
+                payoff = player0_sign * (half_pot + min(node.contributions))
+                for oop_index, ip_index, mass, _signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += mass * opponent_reach[ip_index] * payoff
+                    else:
+                        value[ip_index] -= mass * opponent_reach[oop_index] * payoff
+            else:
+                scale = half_pot + min(node.contributions)
+                for oop_index, ip_index, mass, signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += signed_mass * opponent_reach[ip_index] * scale
+                    else:
+                        value[ip_index] -= signed_mass * opponent_reach[oop_index] * scale
+            return value
+
+        player = node.player
+        action_count = len(node.actions)
+        uniform = [1.0 / action_count] * action_count
+        probabilities = [current.get((player, hand_index, node.history), uniform)
+                         for hand_index in range(hand_counts[player])]
+
+        if player == target_player:
+            action_values = [visit(child, prefix, opponent_reach)
+                             for child in node.children]
+            value = [0.0] * target_count
+            for hand_index in range(target_count):
+                sigma = probabilities[hand_index]
+                expected = sum(sigma[action] * action_values[action][hand_index]
+                               for action in range(action_count))
+                value[hand_index] = expected
+                row = deltas.get((player, hand_index, node.history))
+                if row is not None:
+                    for action in range(action_count):
+                        row[action] += action_values[action][hand_index] - expected
+            return value
+
+        value = [0.0] * target_count
+        for action_index, child in enumerate(node.children):
+            child_reach = [opponent_reach[hand_index] *
+                           probabilities[hand_index][action_index]
+                           for hand_index in range(hand_counts[opponent])]
+            child_value = visit(child, prefix, child_reach)
+            for hand_index, result in enumerate(child_value):
+                value[hand_index] += result
+        return value
+
+    try:
+        visit(root, (), [1.0] * hand_counts[opponent])
+    finally:
+        # Avoid retaining recursive frames and their private-hand working arrays.
+        visit = None
+    return deltas
+
+
 def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                          *, pot, chance_type):
     """Train exact vanilla CFR, DCFR, or alternating CFR+ over the supplied tree.
@@ -279,18 +354,21 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
 
     for iteration in range(1, iterations + 1):
         current = {key: strategy(row) for key, row in regrets.items()}
-        deltas = {key: [0.0] * infos[key] for key in keys}
+        deltas = ({} if algorithm == "cfrplus" else
+                  {key: [0.0] * infos[key] for key in keys})
         average_factor = iteration * iteration if algorithm == "dcfr" else 1.0
         if algorithm == "cfrplus":
             for player in (0, 1):
-                visitor(current, deltas, target_player=player)
+                deltas = _cfrplus_target_deltas(
+                    root, edges, infos, current, player, hand_counts,
+                    half_pot, chance_type,
+                )
                 for key in keys:
                     if key[0] == player:
                         regrets[key] = [max(0.0, old + delta)
                                         for old, delta in zip(regrets[key], deltas[key])]
                 current = {key: strategy(row) for key, row in regrets.items()}
-                deltas = {key: [0.0] * infos[key] for key in keys}
-            visitor(current, deltas, average_factor=float(iteration), average_only=True)
+            visitor(current, {}, average_factor=float(iteration), average_only=True)
         else:
             visitor(current, deltas, average_factor=average_factor)
             for key in keys:

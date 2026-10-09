@@ -81,7 +81,8 @@ the main scaling target.
 with unequal stacks and raises, polarised river and weighted raised-river
 fixtures. `scripts/benchmark_turn_river_quality.py` rotates algorithm call order,
 times complete solves plus JSON serialization, traces separate untimed memory
-calls and records source/config/harness hashes. Changed source during measurement
+calls once per fixture/algorithm at explicitly reported `memory_iterations`
+(20 by default) and records source/config/harness hashes. Changed source during measurement
 invalidates the run. It reports exact NashConv and pot-normalized gaps, rather
 than treating a visible frequency match as proof of equilibrium accuracy.
 
@@ -93,3 +94,39 @@ Results, final validation and follow-up priorities are appended after controlled
 measurement. Small synthetic ranges do not establish full-range performance or
 commercial-solver parity. Each reported gap applies only to its finite action
 tree and its explicit full-deck or conditional runout game.
+
+## Diagnostics phase measurements
+
+`python -m scripts.benchmark_public_diagnostics --output benchmarks/results/public-diagnostics-v1.json`
+completed against the source hashes in that report. Twenty interleaved calls
+per backend evaluated the exact same fixed uniform policy; setup/training are
+outside these intervals. Separate traced calls include diagnostic allocations.
+
+| Fixture | Worlds | Generic median | Vector median | Generic/vector peak |
+| --- | ---: | ---: | ---: | ---: |
+| Weighted raised river | 4 | 0.0946 ms | 0.0736 ms | 3,920 / 5,216 bytes |
+| Full physical turn, two by four combos | 352 | 17.005 ms | 7.839 ms | 16,176 / 312,896 bytes |
+
+Profile and both BR values differed by at most `3.6e-15`. These phase speedups
+(1.29x and 2.17x) trade increased memory for speed, especially on the turn.
+They do not establish complete-solve speedups, and fixed uniform profiles are
+not equilibrium results. Sparse joint edges are rebuilt for each diagnostic
+call; sharing a bounded immutable prefix context with training remains a
+possible follow-up if full-call profiling justifies it.
+
+## Target-only CFR+ regret passes
+
+The first CFR+ implementation computed utility vectors for both players in
+each alternating pass. The optimized variant computes only the updating
+player's vector, carrying only opponent reach. At own nodes use the current
+policy's expected child value and action deviations; at opponent nodes sum
+branches after multiplying opponent reach by that opponent's policy. The
+separate average pass still tracks own reach. The simultaneous backend's
+traversal remains intact. Comparison against actual pre-optimization source
+`7553734` checks all serialized frequencies and exact value/BR metrics, not
+only the final gap.
+
+The initial long tracing experiment was stopped after repeated high-iteration
+memory measurements proved costly. Its raw timed observations and source
+hashes are retained in `turn-river-quality-initial-partial.json`; it is
+explicitly marked incomplete and is not used as a completed benchmark report.

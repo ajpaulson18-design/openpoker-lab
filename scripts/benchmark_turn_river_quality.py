@@ -49,12 +49,18 @@ def main(argv=None):
                         default=ROOT / "benchmarks" / "turn-river-quality-v1.json")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--iterations", type=int, nargs="+")
+    parser.add_argument("--memory-iterations", type=int, default=20,
+                        help="Iterations for one memory run per scenario and algorithm.")
+    parser.add_argument("--skip-memory", action="store_true",
+                        help="Skip separate traced calls and report null memory peaks.")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--diagnostics", choices=("recursive", "public-batched"),
                         default="recursive")
     args = parser.parse_args(argv)
     if not 1 <= args.repeats <= 25:
         parser.error("Use 1-25 repeats.")
+    if type(args.memory_iterations) is not int or not 10 <= args.memory_iterations <= 10000:
+        parser.error("Use 10-10000 memory iterations.")
     config = json.loads(args.config.read_text())
     checkpoints = args.iterations or config["checkpoints"]
     if any(type(value) is not int or not 10 <= value <= 10000 for value in checkpoints):
@@ -63,6 +69,27 @@ def main(argv=None):
     before = hashes(args.config)
     revision = git_revision(None)
     rows = []
+    memory_peaks = {}
+
+    def persist_report():
+        if hashes(args.config) != before:
+            raise RuntimeError("Source/config changed during measurement; discard this run.")
+        report = {"schema_version": 1, "benchmark_id": config["benchmark_id"],
+                  "created_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "provenance": {"revision": revision, "dirty": worktree_dirty(),
+                                 "python": platform.python_version(), "platform": platform.platform(),
+                                 "source_sha256": before},
+                  "methodology": {"timing": "Rotating interleaved whole solves plus JSON serialization",
+                                  "memory": ("Skipped; peak is null." if args.skip_memory else
+                                             "Separate untimed whole-call tracemalloc peak at the recorded memory_iterations; excludes RSS"),
+                                  "memory_iterations": None if args.skip_memory else args.memory_iterations,
+                                  "diagnostics": args.diagnostics,
+                                  "comparison": "Exact NashConv in each finite game; alternating CFR+ has two regret passes and one averaging pass per iteration, simultaneous methods have one pass.",
+                                  "limitations": "Synthetic ranges, conditional subsets where specified, machine-specific timings; no commercial solver equivalence."},
+                  "fixtures": config, "results": rows}
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+
     for scenario in config["scenarios"]:
         for checkpoint in checkpoints:
             samples = {algorithm: [] for algorithm in algorithms}
@@ -79,13 +106,19 @@ def main(argv=None):
                           f"{samples[algorithm][-1]:.4f}s gap={result['nash_conv']:.8g}",
                           flush=True)
             for algorithm in algorithms:
-                gc.collect()
-                tracemalloc.start()
-                try:
-                    solve(scenario, checkpoint, algorithm, args.diagnostics)
-                    peak = tracemalloc.get_traced_memory()[1]
-                finally:
-                    tracemalloc.stop()
+                memory_key = (scenario["id"], algorithm)
+                if args.skip_memory:
+                    peak, memory_iterations = None, None
+                else:
+                    if memory_key not in memory_peaks:
+                        gc.collect()
+                        tracemalloc.start()
+                        try:
+                            solve(scenario, args.memory_iterations, algorithm, args.diagnostics)
+                            memory_peaks[memory_key] = tracemalloc.get_traced_memory()[1]
+                        finally:
+                            tracemalloc.stop()
+                    peak, memory_iterations = memory_peaks[memory_key], args.memory_iterations
                 result = results[algorithm]
                 for key in ("nash_conv", "value_oop", "oop_best_response_value",
                             "ip_best_response_value"):
@@ -95,26 +128,13 @@ def main(argv=None):
                              "iterations": checkpoint, "runtime_samples": samples[algorithm],
                              "runtime_median": statistics.median(samples[algorithm]),
                              "peak_tracemalloc_bytes": peak,
+                             "memory_iterations": memory_iterations,
                              "nash_conv_pot_fraction": result["nash_conv"] / result["pot"],
                              "game": {key: result[key] for key in (
                                  "nash_conv", "exploitability", "value_oop", "pot",
                                  "oop_best_response_value", "ip_best_response_value",
                                  "worlds", "info_sets", "public_nodes", "execution_backend")}})
-    if hashes(args.config) != before:
-        raise RuntimeError("Source/config changed during measurement; discard this run.")
-    report = {"schema_version": 1, "benchmark_id": config["benchmark_id"],
-              "created_at_utc": datetime.now(timezone.utc).isoformat(),
-              "provenance": {"revision": revision, "dirty": worktree_dirty(),
-                             "python": platform.python_version(), "platform": platform.platform(),
-                             "source_sha256": before},
-              "methodology": {"timing": "Rotating interleaved whole solves plus JSON serialization",
-                              "memory": "Separate untimed whole-call tracemalloc peak; excludes RSS",
-                              "diagnostics": args.diagnostics,
-                              "comparison": "Exact NashConv in each finite game; alternating CFR+ has two regret passes and one averaging pass per iteration, simultaneous methods have one pass.",
-                              "limitations": "Synthetic ranges, conditional subsets where specified, machine-specific timings; no commercial solver equivalence."},
-              "fixtures": config, "results": rows}
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+            persist_report()
     return 0
 
 
