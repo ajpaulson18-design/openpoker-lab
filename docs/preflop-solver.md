@@ -131,6 +131,11 @@ case where illegal future-flop peeking earns 0.25 chips versus the legal best
 response's 0. Independent category anchors check the new oracle ranker; this
 is not a new exhaustive certification of the unchanged production evaluator.
 
+The separate [complete fixed-flop chance fixture](fixed-flop-complete-chance.md)
+extends coverage to every one of the 1,980 legal ordered future-card outcomes
+for one exact private pair. A constructive equilibrium supplies an independent
+known value of SB +1 / BB -1 in that specific conditioned game.
+
 Luna implemented the bounded solver and focused tests; lead review supplied
 the independent checker, benchmark and publication gates. New implementation
 and checker code were written in this repository using the standard library.
