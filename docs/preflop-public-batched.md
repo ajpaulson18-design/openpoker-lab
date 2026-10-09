@@ -9,6 +9,11 @@ serialization and exact legal best responses retain their original meanings.
 Recursive remains the default; no shared trainer, postflop/turn/river or AI
 Coach implementation was changed.
 
+The optional [vector diagnostic adapter](preflop-public-diagnostics.md) can
+reuse the same view for exact profile value and both legal responses before
+release. Generic diagnostics remain the default. The frozen comparisons below
+used generic diagnostics and retain their original measured scope.
+
 ## Blinds, utility identity and memory tradeoff
 
 The hand starts with zero chips before blinds, while the specialized vector

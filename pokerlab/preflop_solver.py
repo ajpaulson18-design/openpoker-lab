@@ -15,6 +15,7 @@ from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
+from .public_diagnostics import evaluate_profile as evaluate_public_profile
 from .river_config import RiverConfig
 from .postflop_solver import _Chance, _build_public_tree
 from .river_tree import _Action, _Node, _Terminal, _terminal_value
@@ -314,13 +315,14 @@ def _clone_template(root, history, matched, reserve):
 
 
 def _positive_pot_training_view(root):
-    """Copy a public tree with terminal contributions shifted for vector CFR.
+    """Copy a public tree with terminal contributions shifted for vector math.
 
     The specialized public trainer requires a positive starting pot and adds
     half that pot to each terminal payoff. Shifting every contribution by a
     power-of-two anchor no larger than the minimum matched terminal amount
     preserves each whole-hand utility without decimal cleanup. The original
-    tree remains the source for generic evaluation and best responses.
+    tree remains the source for default generic evaluation and best responses;
+    optional vector diagnostics reuse this utility-preserving view.
     """
     minimum_matched = None
     pending = [root]
@@ -476,13 +478,16 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations):
 
 def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
-                  iterations=1000, algorithm="vanilla", traversal="recursive"):
+                  iterations=1000, algorithm="vanilla", traversal="recursive",
+                  diagnostics="recursive"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
     three cards are a canonical unordered flop; turn and river remain ordered.
     Selected outcomes condition the joint private-hand/runout mass once, which
     can change private-pair probabilities through blockers.
+    ``diagnostics="public-batched"`` optionally evaluates the policy and both
+    legal best responses with private-hand vectors; recursive is the default.
     """
     if config is None:
         config = PreflopConfig()
@@ -496,6 +501,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
     if traversal not in ("recursive", "planned", "public-batched"):
         raise ValueError("Preflop traversal supports recursive, planned, or public-batched CFR.")
+    if diagnostics not in ("recursive", "public-batched"):
+        raise ValueError("Preflop diagnostics must be recursive or public-batched.")
     if algorithm == "cfrplus" and traversal == "planned":
         raise ValueError("CFR+ supports recursive or public-batched traversal, not planned CFR.")
     specs = _stage_configs(flop_config, turn_config, river_config)
@@ -530,7 +537,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
     training_pot_anchor = None
     training_view_states = 0
-    if not infos and (algorithm == "cfrplus" or traversal == "public-batched"):
+    diagnostic_values = None
+    diagnostic_view_anchor = None
+    diagnostic_view_states = 0
+    diagnostic_view_source = None
+    if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
+                      diagnostics == "public-batched"):
         averages = {}
     elif traversal == "public-batched":
         training_root, training_pot_anchor, training_view_states = \
@@ -540,6 +552,14 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                 training_root, worlds, infos, iterations, algorithm,
                 pot=2 * training_pot_anchor, chance_type=_Chance,
             )
+            if diagnostics == "public-batched":
+                diagnostic_values = evaluate_public_profile(
+                    training_root, worlds, averages,
+                    pot=2 * training_pot_anchor, chance_type=_Chance,
+                )
+                diagnostic_view_anchor = training_pot_anchor
+                diagnostic_view_states = training_view_states
+                diagnostic_view_source = "training-view-reused"
         finally:
             training_root = None
     elif algorithm == "cfrplus":
@@ -552,11 +572,28 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     else:
         averages = cfr.train(root, worlds, infos, iterations, algorithm, payoff,
                            _node_key, _chance_child)
-    value_sb = cfr.evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
-    br_sb = cfr.best_response(0, root, worlds, averages, payoff, _node_key,
-                              _chance_partitions)
-    br_bb = cfr.best_response(1, root, worlds, averages, payoff, _node_key,
-                              _chance_partitions)
+    if diagnostics == "public-batched" and diagnostic_values is None:
+        diagnostic_root, diagnostic_view_anchor, diagnostic_view_states = \
+            _positive_pot_training_view(root)
+        try:
+            diagnostic_values = evaluate_public_profile(
+                diagnostic_root, worlds, averages,
+                pot=2 * diagnostic_view_anchor, chance_type=_Chance,
+            )
+            diagnostic_view_source = (
+                "no-information-set-evaluation-view" if not infos
+                else "separate-evaluation-view"
+            )
+        finally:
+            diagnostic_root = None
+    if diagnostic_values is None:
+        value_sb = cfr.evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
+        br_sb = cfr.best_response(0, root, worlds, averages, payoff, _node_key,
+                                  _chance_partitions)
+        br_bb = cfr.best_response(1, root, worlds, averages, payoff, _node_key,
+                                  _chance_partitions)
+    else:
+        value_sb, br_sb, br_bb = diagnostic_values
     gain_sb = max(0.0, br_sb - value_sb)
     gain_bb = max(0.0, br_bb + value_sb)
     nash_conv = gain_sb + gain_bb
@@ -658,6 +695,14 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                 "terminal contributions shifted by minus the recorded anchor; trainer pot is twice that anchor"
                 if infos else "not-built-no-information-sets"
             ),
+        })
+    if diagnostics == "public-batched":
+        result.update({
+            "diagnostics_backend": "public-batched-python",
+            "public_diagnostics_prefix_edge_limit": MAX_PREFIX_EDGES,
+            "public_diagnostics_view_pot_anchor": diagnostic_view_anchor,
+            "public_diagnostics_view_states": diagnostic_view_states,
+            "public_diagnostics_view_source": diagnostic_view_source,
         })
     return result
 
