@@ -10,6 +10,10 @@ The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
 explicit. It does **not** claim to solve unrestricted no-limit Hold'em.
 
+## Project knowledge
+
+New contributors and AI agents: start with [docs/START_HERE.md](docs/START_HERE.md) for product intent, implementation status, architecture, decision history and safe handoffs. Detailed existing specifications remain canonical.
+
 ## Run locally
 
 Requires Python **3.11 or newer**. There are no runtime dependencies. The app
@@ -71,9 +75,9 @@ persist a conversation. The request uses the Responses API with structured outpu
    Toggle Live Coach without changing the saved calculation, and choose a coach
    voice to change delivery without changing strategy.
 
-Version 0.2.0 is the appropriate next minor release: it adds backward-compatible
-opponent-aware analysis, coaching, review, and presentation capabilities while the
-public API remains pre-1.0.
+The package declares version 0.2.0, including opponent-aware analysis, coaching,
+review, and presentation capabilities. The public API remains pre-1.0; the package
+version alone does not establish a published distribution release.
 
 ## Model boundaries
 

@@ -1,8 +1,12 @@
 # Repository agent instructions
 
+## Required onboarding
+
+Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifications before changes. Preserve owner intent in [the decision register](docs/decisions/DECISION_LOG.md); keep plans, implementation evidence and unknowns distinct. Follow [the contribution and handoff protocol](docs/agents/TASK_PROTOCOL.md). Run `python -m scripts.validate_docs` for documentation changes.
+
 ## Project
 
-OpenPoker Lab is a standard-library Python research application with a plain JavaScript browser UI. It combines poker simulation, persistent opponent observations, transparent EV analysis, deterministic explanations, practice/review flows, and a deliberately restricted river CFR solver. It does not solve unrestricted no-limit Hold'em and makes no profitability claims.
+OpenPoker Lab is a standard-library Python research application with a plain JavaScript browser UI. It combines poker simulation, persistent opponent observations, transparent EV analysis, deterministic explanations, practice/review flows, and bounded heads-up river and flop/turn/river CFR solvers. It does not solve unrestricted no-limit Hold'em and makes no profitability claims.
 
 ## Setup and validation
 
@@ -32,4 +36,4 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
-Codex is the primary builder and senior engineer for features, architecture, difficult debugging, large refactors, and cross-repository decisions. Copilot specialists support testing, automated remediation, documentation, and independent review; they should not compete for major implementation work.
+The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded extraction, inventories, documentation and validation to lower-cost workers when available, following the owner's Sol/Luna preference in the task protocol. Existing Copilot configuration is legacy support tooling, not a required or assumed available development layer. All agents follow the same model-neutral knowledge and safety boundaries.
