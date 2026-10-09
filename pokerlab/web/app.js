@@ -79,7 +79,13 @@ function renderCurrentStudy(){
   if(currentStudyError){panel.innerHTML=`<p class="current-study-error" role="alert">${esc(currentStudyError)}</p><button class="secondary" data-study-current-retry>Retry study preview</button>`;return;}
   if(!currentStudyView){panel.innerHTML='<button class="secondary" data-study-current>Study current decision</button><p class="hint">Optional local estimate. Nothing is calculated until you ask.</p>';return;}
   const v=currentStudyView,ctx=v.context;
-  const actionLabel=a=>`${a.name[0].toUpperCase()+a.name.slice(1)}${a.amount===null?'':` ${a.amount_semantics==='street_total'?'to':'by'} ${a.amount}`}`;
+  const actionLabel=a=>{
+    if(a.name==='raise')return a.amount===null?'Raise':`Raise ${a.amount_semantics==='street_total'?'to':'by'} ${a.amount}`;
+    if(a.name==='call')return a.amount===null?'Call':`Call ${a.amount}`;
+    if(a.name==='fold')return 'Fold';
+    if(a.name==='check')return 'Check';
+    return a.name[0].toUpperCase()+a.name.slice(1);
+  };
   const recommended=v.modeled_actions.find(a=>a.action_id===v.recommended_action_id);
   const actions=v.modeled_actions.map(a=>`<li><strong>${esc(actionLabel(a))}</strong> · ${a.estimated_ev_chips===null?'EV unavailable':`${chips(a.estimated_ev_chips)} estimated chips`}${a.size_note?`<br><span class="hint">${esc(a.size_note)}${a.maximum_legal_total===null?'':` Legal raise totals: ${esc(a.minimum_legal_total)}–${esc(a.maximum_legal_total)}.`}</span>`:''}</li>`).join('');
   const turns=currentCoachConversation?.turns||[];
