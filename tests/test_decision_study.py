@@ -10,9 +10,10 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from unittest.mock import patch
 
-from pokerlab.contracts import (CoachActionValue, CoachAnalysisQuality,
+from pokerlab.contracts import (CoachAction, CoachActionValue, CoachAnalysisQuality,
                                 CoachDecisionAnalysis)
-from pokerlab.decision_study import build_decision_study
+from pokerlab.decision_study import (_action_label, _choice_label,
+                                     build_decision_study)
 from pokerlab.models import Store
 from pokerlab.server import make_server
 
@@ -81,6 +82,29 @@ class DecisionStudyTests(unittest.TestCase):
             hero_cards=tuple(hero_cards), board=tuple(board),
         )
         return build_decision_study(CoachDecisionAnalysis.build(**values), saved["choice"])
+
+    def test_saved_action_labels_follow_explicit_raise_amount_semantics(self):
+        street_raise = CoachAction("raise:street", "raise", 12, "street_total")
+        added_raise = CoachAction("raise:added", "raise", 12, "chips_added")
+        fold = CoachAction("fold", "fold", 0, "chips_added")
+        check = CoachAction("check", "check", 0, "chips_added")
+        call = CoachAction("call", "call", 2, "chips_added")
+
+        self.assertEqual(_action_label(street_raise), "raise to 12")
+        self.assertEqual(_action_label(added_raise), "raise by 12")
+        self.assertEqual(_choice_label({
+            "name": "raise", "amount": 12, "amount_semantics": "street_total",
+        }), "raise to 12")
+        self.assertEqual(_choice_label({
+            "name": "raise", "amount": 12, "amount_semantics": "chips_added",
+        }), "raise by 12")
+        self.assertEqual(_choice_label({"name": "raise", "amount": 12}), "raise")
+        self.assertEqual(_action_label(fold), "fold")
+        self.assertEqual(_action_label(check), "check")
+        self.assertEqual(_action_label(call), "call")
+        self.assertEqual(_choice_label({"name": "fold", "amount": 0}), "fold")
+        self.assertEqual(_choice_label({"name": "check", "amount": 0}), "check")
+        self.assertEqual(_choice_label({"name": "call", "amount": 2}), "call")
 
     def test_study_projects_validated_facts_without_recalculation(self):
         game, accepted = self.capture("call")
@@ -300,6 +324,29 @@ class DecisionStudyTests(unittest.TestCase):
         self.assertIn("if(!game?.done)invalidateDecisionStudy()", source)
         self.assertIn("showDecisionStudy(data.decisions,", source)
         self.assertIn("${esc(active.answer)}", source)
+
+    def test_saved_and_current_studies_share_an_escaped_collapsible_terms_guide(self):
+        source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()
+        helper = source[source.index("function decisionTermsGuide"):
+                        source.index("function coachFactUnit")]
+        for term in ("EV (expected value)", "Equity", "Baseline",
+                     "Modeled action and raise size"):
+            self.assertIn(term, helper)
+        self.assertIn("Ties contribute a share", helper)
+        self.assertIn("value basis shown", helper)
+        self.assertIn("not a universal best move", helper)
+        self.assertIn("Where a value is available", helper)
+        self.assertIn("other actions and raise sizes have not been evaluated", helper)
+        self.assertIn('<details class="decision-terms-guide"><summary>', helper)
+        self.assertIn("${esc(term)}", helper)
+        self.assertIn("${esc(meaning)}", helper)
+        self.assertIn("if(restrictedSolver)terms.push(['Restricted river solver'", helper)
+        self.assertIn("decisionTermsGuide({restrictedSolver:studyPayload.ev_basis==='half_initial_pot_utility'})", source)
+        self.assertIn("${teaching}${termsGuide}", source)
+        current = source[source.index("function renderCurrentStudy"):
+                         source.index("async function requestCurrentStudy")]
+        self.assertIn("const termsGuide=decisionTermsGuide()", current)
+        self.assertIn("${situation}${modelSummary}${termsGuide}", current)
 
     def test_action_response_is_scoped_to_hand_and_current_blind_toggle(self):
         source = (Path(__file__).resolve().parents[1] / "pokerlab" / "web" / "app.js").read_text()

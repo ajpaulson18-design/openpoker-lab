@@ -206,15 +206,35 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
         )
         return any(re.search(pattern, question, re.IGNORECASE) for pattern in patterns)
 
+    def current_limits_question(question):
+        # Keep local limits answers on a narrow path backed by the preview's
+        # validated source, confidence, assumptions, and limitation facts.
+        patterns = (
+            r"\bwhat\s+assumptions\s+limit\s+this\s+(?:estimate|preview|model)\b",
+            r"\bwhat\s+(?:are\s+)?(?:the\s+)?(?:assumptions|limits|limitations)\s+(?:of|for|in)\s+this\s+(?:estimate|preview|model)\b",
+            r"\bwhat\s+limits\s+apply\s+to\s+this\s+(?:estimate|preview|model)\b",
+        )
+        return any(re.search(pattern, question, re.IGNORECASE) for pattern in patterns)
+
     def current_coach_fallback(bundle, detail, audience, reason, question):
         unavailable_choice = current_choice_question(question)
         recommendation_question = current_recommendation_question(question)
+        limits_question = current_limits_question(question)
         recommendation = next((fact for fact in bundle.facts
                                if fact.kind == "recommendation" and fact.value is not None), None)
+        source_kind = next((fact for fact in bundle.facts
+                            if fact.kind == "source_kind" and fact.value is not None), None)
         modeled = {fact.value[0] for fact in bundle.facts
                    if fact.kind == "modeled_action" and isinstance(fact.value, tuple)}
         can_recommend = recommendation is not None and recommendation.value in modeled
+        can_explain_limits = (source_kind is not None and bool(bundle.limitations)
+                              and any(fact.kind in {"confidence_label", "opponent_uncertainty",
+                                                    "equity_standard_error", "equity_exact",
+                                                    "opponent_assumption"}
+                                      for fact in bundle.facts))
         intent = ("recommendation" if recommendation_question and can_recommend
+                  and not unavailable_choice else
+                  "limits" if limits_question and can_explain_limits
                   and not unavailable_choice else "unavailable")
         plan = CoachReplyPlan(bundle.binding, intent, (), None, detail, audience)
         reply = render_coach_reply(bundle, plan, current_preview=True)
@@ -225,9 +245,11 @@ def make_server(port=8765, database="data/pokerlab.sqlite3", *,
             if unavailable_choice else
             "This is a local summary of the current modeled recommendation, not an interpretation of arbitrary question wording."
             if can_recommend and recommendation_question else
+            "This local response summarizes only the current preview's validated assumptions and limits."
+            if can_explain_limits and limits_question else
             ("No modeled recommendation is available; this local response does not infer one."
              if not can_recommend else
-             "This local response cannot interpret that question. Ask about the current modeled recommendation for a local summary.")
+             "This local response cannot interpret that question. Ask about the current modeled recommendation or the assumptions that limit this estimate.")
         )
         return {
             "status": "fallback", "source": "local_fallback", "retryable": True,

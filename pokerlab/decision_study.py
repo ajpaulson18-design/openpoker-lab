@@ -20,13 +20,21 @@ def _amount(value: int | float | None) -> str:
 
 def _action_label(action) -> str:
     if action.name == "raise" and action.amount is not None:
-        return f"raise to {_amount(action.amount)}"
+        if action.amount_semantics == "street_total":
+            return f"raise to {_amount(action.amount)}"
+        if action.amount_semantics == "chips_added":
+            return f"raise by {_amount(action.amount)}"
+        return "raise"
     return action.name
 
 
 def _choice_label(choice: dict) -> str:
-    if choice["name"] == "raise":
-        return f"raise to {_amount(choice['amount'])}"
+    if choice["name"] == "raise" and choice.get("amount") is not None:
+        if choice.get("amount_semantics") == "street_total":
+            return f"raise to {_amount(choice['amount'])}"
+        if choice.get("amount_semantics") == "chips_added":
+            return f"raise by {_amount(choice['amount'])}"
+        return "raise"
     return choice["name"]
 
 

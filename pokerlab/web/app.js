@@ -1,4 +1,51 @@
 "use strict";
+// BEGIN PRESENTATION ADAPTERS: pure response projections, no poker calculations.
+const loungeRanks = 'AKQJT98765432';
+const loungeNodes = {
+  oop_open: {label:'OOP · opening decision',side:'oop',field:'bet',actions:['Bet','Check'],colors:['#c99b52','#7cb9d4']},
+  oop_response: {label:'OOP · facing a bet after checking',side:'oop',field:'call_after_check',actions:['Call','Fold'],colors:['#7cb9d4','#90728d']},
+  ip_open: {label:'IP · after OOP checks',side:'ip',field:'bet_after_check',actions:['Bet','Check'],colors:['#c99b52','#7cb9d4']},
+  ip_response: {label:'IP · facing OOP bet',side:'ip',field:'call',actions:['Call','Fold'],colors:['#7cb9d4','#90728d']}
+};
+function loungeHandClass(hand){
+  if(typeof hand!=='string'||!/^([AKQJT2-9][shdc]){2}$/.test(hand)||hand.slice(0,2)===hand.slice(2))return null;
+  const a=hand[0],b=hand[2];
+  if(a===b)return a+b;
+  const high=loungeRanks.indexOf(a)<loungeRanks.indexOf(b)?a:b;
+  const low=high===a?b:a;
+  return high+low+(hand[1]===hand[3]?'s':'o');
+}
+function loungeMatrixModel(response,nodeId){
+  const node=loungeNodes[nodeId];
+  if(!node)return null;
+  const classes=new Map();
+  // This adapter supports the established fixed-bet API only. Never guess another schema.
+  if(response&&(!response.strategy_schema||(response.strategy_schema==='river-strategy-v1'&&response.backend==='optimized-binary-tree'))&&Array.isArray(response[node.side])){
+    for(const row of response[node.side]){
+      const label=loungeHandClass(row.hand),p=row[node.field];
+      if(!label||typeof p!=='number'||!Number.isFinite(p)||p<0||p>1)continue;
+      const group=classes.get(label)||[];
+      group.push({hand:row.hand,probability:p});classes.set(label,group);
+    }
+  }
+  const cells=[...loungeRanks].flatMap((a,i)=>[...loungeRanks].map((b,j)=>{
+    const label=i===j?a+b:i<j?a+b+'s':b+a+'o';
+    const combinations=classes.get(label)||[];
+    return {label,combinations,probability:combinations.length?combinations.reduce((sum,c)=>sum+c.probability,0)/combinations.length:null};
+  }));
+  return {node,cells};
+}
+function loungeBlend(probability,colors){
+  if(probability===null)return '';
+  const rgb=colors.map(color=>[1,3,5].map(offset=>parseInt(color.slice(offset,offset+2),16)));
+  const mixed=rgb[0].map((c,i)=>Math.round(c*probability+rgb[1][i]*(1-probability)));
+  const color=`rgb(${mixed.join(',')})`;
+  return `linear-gradient(135deg, ${color}, ${color})`;
+}
+function loungeSeatSlots(count){
+  return ({2:[0,3],3:[0,2,4],4:[0,1,3,5],5:[0,1,2,4,5],6:[0,1,2,3,4,5]})[count]||Array.from({length:count},(_,i)=>i);
+}
+// END PRESENTATION ADAPTERS
 const $ = (s) => document.querySelector(s);
 const esc = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pct = (v) => (v*100).toFixed(1)+'%';
@@ -19,16 +66,20 @@ let currentCoachDraft={question:'',detail:'normal',audience:'standard',external:
 let currentCoachResult=null,currentCoachError='',currentCoachLoading=false,currentCoachNeedsRefresh=false;
 let currentCoachConversation=null,currentCoachFull=false,currentCoachStartNew=false,currentCoachRetry=null;
 let currentCoachRequest=null,currentCoachGeneration=0;
-document.querySelector('#table .coach-toolbar').append(
-  document.querySelector('#coach-voice-template').content.cloneNode(true));
-function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error); }
+let loungeSolverResponse=null,loungeSolverBoard='',loungeNode='oop_open',loungeSelected=null;
+const loungeCoachSettings=document.createElement('details');
+loungeCoachSettings.className='coach-settings';
+loungeCoachSettings.innerHTML='<summary>Coach settings</summary>';
+loungeCoachSettings.append(document.querySelector('#coach-voice-template').content.cloneNode(true));
+document.querySelector('#table .coach-toolbar').append(loungeCoachSettings);
+function status(message='', error=false) { $('#status').textContent=message; $('#status').classList.toggle('error',error);$('#status').classList.toggle('quiet-status',message==='Done. Results are ready.'); }
 async function api(path,data,extraHeaders={}) {
   const response=await fetch('/api/'+path,data===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json',...extraHeaders},body:JSON.stringify(data)});
   const result=await response.json(); if(!response.ok){const error=new Error(result.error||'Request failed.');error.code=result.code;error.status=response.status;throw error;} return result;
 }
 function formData(form,numeric=[]) { const d=Object.fromEntries(new FormData(form)); for(const k of numeric)d[k]=Number(d[k]); return d; }
 function bindForm(id,work,message='Calculating…') {
-  $(id).addEventListener('submit',async e=>{e.preventDefault();const button=e.target.querySelector('button[type="submit"],button.primary');button.disabled=true;status(message);try{await work(e.target);status('Done. Results are ready.');}catch(err){status(err.message,true);}finally{button.disabled=false;}});
+  $(id).addEventListener('submit',async e=>{e.preventDefault();const button=e.submitter||e.target.querySelector('button[type="submit"],button.primary')||document.querySelector(`[form="${e.target.id}"]`);if(button)button.disabled=true;status(message);try{await work(e.target);status('Done. Results are ready.');}catch(err){status(err.message,true);}finally{if(button)button.disabled=false;}});
 }
 function warnings(items){return '<ul class="warnings">'+items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';}
 function metric(value,label,small=false){return `<div class="metric"><strong${small?' class="smaller"':''}>${esc(value)}</strong><span>${esc(label)}</span></div>`;}
@@ -59,14 +110,47 @@ $('#solver-profile').addEventListener('change',e=>{const o=opponents.find(o=>o.i
 bindForm('#solver-form',async form=>{
   const d=formData(form,['pot','bet','iterations']);d.lock={};for(const k of ['ip_bet','ip_call']){if(d[k]!=='')d.lock[k]=Number(d[k]);delete d[k];}
   const r=await api('solve',d);const locked=Object.keys(r.lock).length>0;
+  loungeSolverResponse=r;loungeSolverBoard=d.board;loungeSelected=null;renderLoungeStrategy();
   $('#solver-result').innerHTML=`<p class="eyebrow">${locked?'OPPONENT-LOCKED SCENARIO':'EQUILIBRIUM APPROXIMATION'}</p><div class="metrics">${metric(chips(r.value_oop),'OOP VALUE',true)}${metric(chips(r.nash_conv),'BEST-RESPONSE GAP',true)}${metric(r.deals,'LEGAL DEALS',true)}</div><p class="hint">${r.iterations.toLocaleString()} iterations. Values in chips, relative to half the existing pot. Smaller unlocked gap means less room for either player to improve.</p><h3>Out of position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet</th><th>Call after checking</th></tr></thead><tbody>${r.oop.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet)}</td><td>${pct(h.call_after_check)}</td></tr>`).join('')}</tbody></table></div><h3>In position</h3><div class="scroll-table"><table><thead><tr><th>Hand</th><th>Bet after check</th><th>Call</th></tr></thead><tbody>${r.ip.map(h=>`<tr><td>${esc(h.hand)}</td><td>${pct(h.bet_after_check)}</td><td>${pct(h.call)}</td></tr>`).join('')}</tbody></table></div>${locked?warnings([r.gap_note,'Locked frequencies apply equally across every hand. Interpret them as a scenario, not a discovered range-dependent policy.']):''}<p class="fine">${esc(r.scope)} Unreachable information sets may contain arbitrary strategies.</p>`;
 },'Solving the river game… this can take a little while.');
+function loungeCardHtml(c){return `<span class="small-card ${/[dh]/.test(c[1])?'red':''}" aria-label="${esc(c)}"><span class="card-rank">${esc(c[0])}</span><span class="card-suit">${{s:'♠',h:'♥',d:'♦',c:'♣'}[c[1]]||''}</span></span>`;}
+function renderLoungeTable(g){
+  $('#game-result').classList.toggle('completed-hand',g.done);
+  const slots=loungeSeatSlots(g.names.length);
+  const board=g.board.map(loungeCardHtml).join('')+Array.from({length:5-g.board.length},()=>'<span class="board-placeholder" aria-hidden="true"></span>').join('');
+  $('#game-result').innerHTML=`<div class="table-state"><span>${esc(g.street)} · ${g.done?'Hand complete':'Practice hand'}</span><span>${g.names.length} seats · chips</span></div><div class="poker-felt"><div class="table-center"><div class="table-pot"><span>Pot${g.done?' · settled':''}</span><strong>${esc(g.pot)} chips</strong></div><div class="community-cards" aria-label="Community cards">${board}</div></div><div class="table-seats" data-count="${g.names.length}">${g.hands.map((h,i)=>`<div class="seat seat-slot-${slots[i]} ${g.actor===i&&!g.done?'active-seat':''} ${g.folded[i]?'folded':''}" aria-label="${esc(g.names[i])}, seat ${i}${g.folded[i]?', folded':''}">${i===0&&h?`<div class="hero-cards" aria-label="Your cards">${h.map(loungeCardHtml).join('')}</div>`:''}<span class="seat-avatar" aria-hidden="true"></span><div class="seat-info"><h3>${esc(g.names[i])}${g.button===i?' <span class="dealer-button" title="Dealer button">D</span>':''}</h3><p>${esc(g.stacks[i])} chips</p></div><span class="seat-number">Seat ${i}</span></div>`).join('')}</div></div><details class="table-history"><summary>Hand details &amp; history (${g.log.length})</summary><div class="scroll-table"><table><thead><tr><th>Seat</th><th>Cards</th><th>Committed</th><th>Status</th></tr></thead><tbody>${g.hands.map((h,i)=>`<tr><td>${esc(g.names[i])}</td><td>${h?h.map(cardHtml).join(''):'Private cards hidden'}</td><td>${esc(g.committed[i])} chips</td><td>${g.folded[i]?'Folded':g.done?'Net: '+esc(g.net[i]):g.stacks[i]===0?'All-in':'Street bet: '+esc(g.street_bets[i])}</td></tr>`).join('')}</tbody></table></div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${esc(p.amount)} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+esc(a.amount)}</p>`).join('')}</details>`;
+}
+function loungeExactProbability(value){return `${(value*100).toFixed(6)}%`;}
+function renderLoungeStrategy(){
+  const panel=$('#lounge-strategy');if(!panel)return;
+  const model=loungeMatrixModel(loungeSolverResponse,loungeNode),node=model.node;
+  const available=model.cells.filter(c=>c.probability!==null);
+  if(!available.some(c=>c.label===loungeSelected))loungeSelected=available[0]?.label||null;
+  const selected=model.cells.find(c=>c.label===loungeSelected);
+  panel.innerHTML=`<div class="strategy-context"><label>Decision node<select id="lounge-node">${Object.entries(loungeNodes).map(([id,n])=>`<option value="${id}"${id===loungeNode?' selected':''}>${esc(n.label)}</option>`).join('')}</select></label><p class="hint">${loungeSolverResponse?`Independent river research · Board ${esc(loungeSolverBoard)} · ${esc(loungeSolverResponse.iterations)} iterations`:'No solved range yet · independent of the practice hand'}</p></div><div class="strategy-layout"><div class="strategy-grid-area"><div class="strategy-rank-header" aria-hidden="true">${[...loungeRanks].map(r=>`<span>${r}</span>`).join('')}</div><div class="strategy-matrix" aria-label="Returned hand classes for ${esc(node.label)}">${model.cells.map(c=>`<button type="button" class="strategy-cell${c.probability===null?' no-strategy':''}" data-hand-class="${c.label}"${c.probability===null?' disabled':''} aria-pressed="${c.label===loungeSelected}" aria-label="${c.label}: ${c.probability===null?'No returned strategy':`${node.actions[0]} ${loungeExactProbability(c.probability)}, ${node.actions[1]} ${loungeExactProbability(1-c.probability)}; equal mean of ${c.combinations.length} returned combinations`}">${c.label}</button>`).join('')}</div><div class="strategy-legend"><span class="legend-gold">Bet / Raise</span><span class="legend-blue">Check / Call</span><span class="legend-plum">Fold</span></div></div><div class="strategy-detail" aria-live="polite">${selected?`<h3>Hand: ${esc(selected.label)}</h3><p class="hint">${selected.combinations.length} returned combination${selected.combinations.length===1?'':'s'} · equal visual mean</p><div class="strategy-frequency"><span>${node.actions[0]}</span><strong>${loungeExactProbability(selected.probability)}</strong></div><div class="strategy-frequency"><span>${node.actions[1]}</span><strong>${loungeExactProbability(1-selected.probability)}</strong></div><div class="strategy-proportion" aria-hidden="true"><span></span><span></span></div><h4>Actions (chips)</h4><p class="hint">Per-hand EV unavailable in this solver response.</p><details class="exact-combinations"><summary>Exact combination frequencies</summary>${selected.combinations.map(c=>`<p><strong>${esc(c.hand)}</strong><br>${node.actions[0]}: ${esc(c.probability)}<br>${node.actions[1]}: ${esc(1-c.probability)}</p>`).join('')}</details>`:'<h3>Hand strategy</h3><p class="hint">Run the River solver to inspect genuine frequencies. Unreturned hands stay neutral.</p><button type="button" class="secondary" data-open-solver>Set up a river solve</button>'}</div></div><details class="strategy-notes"><summary>Strategy scope &amp; precision</summary><p class="hint">These colors show only this decision node. Cell colors blend an equal mean of returned physical combinations, not a range-weighted total. Exact numeric frequencies remain available per combination. Missing cells are not folds.</p>${loungeSolverResponse?`<p class="hint">${esc(loungeSolverResponse.scope)} Unreachable information sets may contain arbitrary strategies. ${Object.keys(loungeSolverResponse.lock||{}).length?'Opponent-locked scenario; the gap is not a convergence certificate.':''}</p><p class="hint">OOP value: ${esc(loungeSolverResponse.value_oop)} chips · best-response gap: ${esc(loungeSolverResponse.nash_conv)} chips. See the original River solver report for full diagnostics.</p>`:''}</details>`;
+  for(const cell of model.cells){
+    const button=panel.querySelector(`[data-hand-class="${cell.label}"]`);
+    if(cell.probability!==null){button.style.background=loungeBlend(cell.probability,node.colors);button.style.color='#160e09';}
+  }
+  const bands=panel.querySelectorAll('.strategy-proportion span');
+  if(selected&&bands.length===2){bands[0].style.width=`${selected.probability*100}%`;bands[0].style.background=node.colors[0];bands[1].style.width=`${(1-selected.probability)*100}%`;bands[1].style.background=node.colors[1];}
+}
+document.addEventListener('change',e=>{if(e.target.id==='lounge-node'){loungeNode=e.target.value;renderLoungeStrategy();}});
+document.addEventListener('click',e=>{
+  const cell=e.target.closest('[data-hand-class]');
+  if(cell&&!cell.disabled){loungeSelected=cell.dataset.handClass;renderLoungeStrategy();$('#lounge-strategy').querySelector(`[data-hand-class="${loungeSelected}"]`).focus();}
+  if(e.target.closest('[data-open-solver]'))document.querySelector('[data-tab="solver"]').click();
+});
 function showGame(g){
   if((currentStudyView&&(currentStudyView.binding.hand_id!==g.id||currentStudyView.binding.state_revision!==g.revision))
       ||(currentStudyRequest&&(currentStudyRequest.hand_id!==g.id||currentStudyRequest.revision!==g.revision)))clearCurrentStudy();
   game=g;$('#game-controls').hidden=g.done;$('#acting-seat').textContent=g.done?'':g.actor_name+' to act · Seat '+g.actor;
   if(!g.done){document.querySelectorAll('[data-action]').forEach(b=>b.disabled=!g.legal[b.dataset.action]);$('#raise-amount').min=g.legal.raise_min;$('#raise-amount').max=g.legal.raise_max;$('#raise-amount').value=g.legal.raise_min;document.querySelector('[data-action="call"]').textContent='Call '+g.legal.call;}
-  $('#game-result').innerHTML=`<p class="eyebrow">${esc(g.street.toUpperCase())} · ${g.done?'HAND COMPLETE':'PRACTICE TABLE'}</p><h2>${g.pot} chips ${g.done?'settled':'in the pot'}</h2><div>${g.board.map(cardHtml).join('')||'<p class="hint">Community cards appear after preflop.</p>'}</div><div class="seats">${g.hands.map((h,i)=>`<div class="seat ${g.actor===i?'active-seat':''} ${g.folded[i]?'folded':''}"><h3>${esc(g.names[i])} <span class="seat-number">· Seat ${i}${g.button===i?' · Button':''}</span></h3><div>${h?h.map(cardHtml).join(''):'<span class="unknown-cards">PRIVATE CARDS HIDDEN</span>'}</div><p>${g.stacks[i]} behind · ${g.committed[i]} committed</p><p>${g.folded[i]?'Folded':g.done?'Net: '+g.net[i]:g.stacks[i]===0?'All-in':'Street bet: '+g.street_bets[i]}</p></div>`).join('')}</div>${g.done?`<h3>Pot settlement</h3>${g.pots.map(p=>`<p class="hint">${p.amount} chips → ${p.winner_names.map(esc).join(', ')}</p>`).join('')}`:''}<details><summary>Action history (${g.log.length})</summary>${g.log.map(a=>`<p class="hint">${esc(a.street)} · ${esc(a.name)} (Seat ${a.seat}): ${esc(a.action)}${a.amount===null?'':' to '+a.amount}</p>`).join('')}</details>`;
+  renderLoungeTable(g);
+  if(!g.done){
+    for(const action of ['check','call'])document.querySelector(`[data-action="${action}"]`).hidden=!g.legal[action];
+    const slider=$('#raise-slider');if(slider){slider.min=g.legal.raise_min;slider.max=g.legal.raise_max;slider.value=$('#raise-amount').value;slider.disabled=!g.legal.raise;}
+  }
   renderCurrentStudy();
 }
 function clearCurrentCoach(){currentCoachGeneration++;currentCoachResult=null;currentCoachError='';currentCoachLoading=false;currentCoachNeedsRefresh=false;currentCoachRequest=null;currentCoachConversation=null;currentCoachFull=false;currentCoachStartNew=false;currentCoachRetry=null;currentCoachDraft={question:'',detail:'normal',audience:'standard',external:false};}
@@ -79,7 +163,13 @@ function renderCurrentStudy(){
   if(currentStudyError){panel.innerHTML=`<p class="current-study-error" role="alert">${esc(currentStudyError)}</p><button class="secondary" data-study-current-retry>Retry study preview</button>`;return;}
   if(!currentStudyView){panel.innerHTML='<button class="secondary" data-study-current>Study current decision</button><p class="hint">Optional local estimate. Nothing is calculated until you ask.</p>';return;}
   const v=currentStudyView,ctx=v.context;
-  const actionLabel=a=>`${a.name[0].toUpperCase()+a.name.slice(1)}${a.amount===null?'':` ${a.amount_semantics==='street_total'?'to':'by'} ${a.amount}`}`;
+  const actionLabel=a=>{
+    if(a.name==='raise')return a.amount===null?'Raise':`Raise ${a.amount_semantics==='street_total'?'to':'by'} ${a.amount}`;
+    if(a.name==='call')return a.amount===null?'Call':`Call ${a.amount}`;
+    if(a.name==='fold')return 'Fold';
+    if(a.name==='check')return 'Check';
+    return a.name[0].toUpperCase()+a.name.slice(1);
+  };
   const recommended=v.modeled_actions.find(a=>a.action_id===v.recommended_action_id);
   const actions=v.modeled_actions.map(a=>`<li><strong>${esc(actionLabel(a))}</strong> · ${a.estimated_ev_chips===null?'EV unavailable':`${chips(a.estimated_ev_chips)} estimated chips`}${a.size_note?`<br><span class="hint">${esc(a.size_note)}${a.maximum_legal_total===null?'':` Legal raise totals: ${esc(a.minimum_legal_total)}–${esc(a.maximum_legal_total)}.`}</span>`:''}</li>`).join('');
   const turns=currentCoachConversation?.turns||[];
@@ -88,7 +178,10 @@ function renderCurrentStudy(){
   const fullNotice=currentCoachFull&&!turns.length?'<p class="hint">This conversation has four turns.</p><button type="button" class="secondary" data-current-coach-new>Start new conversation</button>':'';
   const situation=v.situation?`<section class="current-study-situation" aria-label="${esc(v.situation.title)}"><h4>${esc(v.situation.title)}</h4><p>${esc(v.situation.text)}</p><p class="hint">${esc(v.situation.note)}</p></section>`:'';
   const modelSummary=`<section class="current-study-recommendation" aria-label="Model recommendation"><h4>What the model recommends</h4><p>${recommended?`${esc(actionLabel(recommended))} · ${recommended.estimated_ev_chips===null?'EV unavailable':`${chips(recommended.estimated_ev_chips)} estimated chips`}`:'No recommendation available'}</p><p class="hint">A local practice estimate from the visible cards and listed assumptions; it is not a solved strategy.</p></section>`;
-  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}${situation}${modelSummary}<h4>All modeled actions</h4><ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>${turnList}<form id="current-coach-form" class="current-coach-form"><h4>${turns.length?'Ask a follow-up about this decision':'Ask one question about this decision'}</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask about this current unplayed decision">${esc(currentCoachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${currentCoachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${currentCoachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${currentCoachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${currentCoachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${currentCoachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${currentCoachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">External AI is off by default for every turn. When selected, this question, the current preview's allowlisted facts, and up to two recent questions for this same preview may be sent. Opponent cards are never sent.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local response.</p>':''}<button class="primary" type="submit"${currentCoachLoading||currentCoachNeedsRefresh||currentCoachFull||currentCoachStartNew?' disabled':''}>${currentCoachLoading?'Preparing answer…':'Ask question'}</button>${currentCoachLoading?'<p class="hint" role="status">Preparing an answer tied to this preview…</p>':''}${coachError}${fullNotice}</form>`;
+  const termsGuide=decisionTermsGuide();
+  const starterQuestions=[['recommendation','What is the current modeled recommendation?'],['limits','What assumptions limit this estimate?']];
+  const starterButtons=starterQuestions.map(([id,label])=>`<button type="button" class="secondary" data-current-coach-prompt="${id}"${currentCoachLoading||currentCoachNeedsRefresh?' disabled':''}>${label}</button>`).join('');
+  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}${situation}${modelSummary}${termsGuide}<h4>All modeled actions</h4><ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>${turnList}<form id="current-coach-form" class="current-coach-form"><h4>${turns.length?'Ask a follow-up about this decision':'Ask one question about this decision'}</h4><div class="current-coach-starters" role="group" aria-label="Starter questions">${starterButtons}</div><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask about this current unplayed decision">${esc(currentCoachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${currentCoachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${currentCoachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${currentCoachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${currentCoachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${currentCoachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${currentCoachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">External AI is off by default for every turn. When selected, this question, the current preview's allowlisted facts, and up to two recent questions for this same preview may be sent. Opponent cards are never sent.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local response.</p>':''}<button class="primary" type="submit"${currentCoachLoading||currentCoachNeedsRefresh||currentCoachFull||currentCoachStartNew?' disabled':''}>${currentCoachLoading?'Preparing answer…':'Ask question'}</button>${currentCoachLoading?'<p class="hint" role="status">Preparing an answer tied to this preview…</p>':''}${coachError}${fullNotice}</form>`;
 }
 async function requestCurrentStudy(){
   if(!game||game.done||game.actor!==0||!activeHandId||pendingAction||!$('#coach-toggle').checked)return;
@@ -195,7 +288,7 @@ function showCoach(result,decision){
   const amount=decision?.chosen_action_detail?.amount;
   const choiceLabel=`YOU CHOSE ${esc(chosen.toUpperCase())}${chosen==='raise'?` TO ${esc(amount)}`:''} · ${assessed?`ESTIMATED LOSS ${loss}`:'RAISE SIZE NOT EVALUATED'}`;
   const afterAction=decision?.decision_id?`<button type="button" class="secondary" data-explain-latest-action${afterActionLoading?' disabled':''}>${afterActionLoading?'Loading saved explanation…':afterActionError?'Retry explanation':'Explain my action (local)'}</button><p class="hint">Uses this decision\'s saved evidence. External AI stays off unless you select it for a separate question.</p>${afterActionError?`<p class="hint error" role="alert">${esc(afterActionError)}</p>`:''}`:'';
-  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>${afterAction}`;
+  $('#coach-panel').innerHTML=`<p class="hint">Explore the situation and the assumptions behind this saved estimate.</p>${afterAction}<details class="post-action-details"><summary>Recorded decision and model evidence</summary><p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details></details>`;
 }
 function decisionLabel(decision){
   const detail=decision.chosen_action_detail||{};
@@ -221,6 +314,16 @@ function coachEvBasisLabel(basis){
   return basis==='incremental_decision_chips'?'estimated chips from this decision'
     :basis==='half_initial_pot_utility'?'solver chip utility relative to half the starting pot'
     :String(basis||'').replaceAll('_',' ');
+}
+function decisionTermsGuide({restrictedSolver=false}={}){
+  const terms=[
+    ['EV (expected value)',"A model's average value for an action across repeated versions of the modeled spot, on the value basis shown. It is not this hand's actual result."],
+    ['Equity',"An estimate of your share of the pot at showdown under the listed ranges and assumptions. Ties contribute a share, so equity is not the same as the chance of winning outright."],
+    ['Baseline',"The comparison policy used as a reference. It is not a universal best move; the model's preferred action depends on this spot and its assumptions."],
+    ['Modeled action and raise size',"Only listed actions are candidates for assessment. Where a value is available, it applies to the size shown; other actions and raise sizes have not been evaluated."],
+  ];
+  if(restrictedSolver)terms.push(['Restricted river solver',"This study covers only the fixed river bet size and action set described in its scope and limitations."]);
+  return `<details class="decision-terms-guide"><summary>Understand the terms in this study</summary><dl>${terms.map(([term,meaning])=>`<div><dt>${esc(term)}</dt><dd>${esc(meaning)}</dd></div>`).join('')}</dl></details>`;
 }
 function coachFactUnit(unit,result){
   if(unit==='incremental_decision_chips'||unit==='half_initial_pot_utility')return coachEvBasisLabel(unit);
@@ -293,15 +396,18 @@ function coachTeachingNoteMarkup(result,currentPreview){
 function coachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,false);}
 function currentCoachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,true);}
 function coachReplyHtml(result,currentPreview=false){
-  const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
+  const reply=result.reply||{},isCurrentLimits=currentPreview&&reply.intent==='limits';
+  const blocks=(reply.blocks||[]).map(block=>{
     const blockFacts=block.facts||[];
     const actionLabels=new Map(blockFacts.filter(fact=>fact.kind==='modeled_action'&&Array.isArray(fact.value))
       .map(fact=>[fact.value[0],coachActionLabel(fact.value)]));
     const facts=blockFacts.map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact,actionLabels))}${coachFactUnit(fact.unit,result)?` <span class="coach-unit">${esc(coachFactUnit(fact.unit,result))}</span>`:''}</li>`).join('');
-    const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+    const caveats=isCurrentLimits?'':(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
     return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+  const currentLimitCaveats=[...new Set([...(reply.caveats||[]),...(reply.blocks||[]).flatMap(block=>block.caveats||[])])]
+    .filter(item=>typeof item==='string'&&item.trim());
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local explanation · OpenPoker renders validated facts';
   const reason=result.fallback_reason;
   const fallbackMessages={external_ai_not_configured:'External AI was requested but is disabled or not configured locally.',refusal:'External AI was requested, but the provider declined this question.',incomplete:'External AI was requested, but the provider did not finish the response.',invalid_response:'External AI was requested, but the provider returned an incomplete response.',invalid_plan:'External AI was requested, but its plan did not pass validation.',http_error:'External AI was requested, but the provider request failed.',timeout:'External AI was requested, but the provider request timed out.',network_error:'External AI was requested, but the provider could not be reached.',provider_error:'External AI was requested, but the provider request failed safely.'};
@@ -316,6 +422,11 @@ function coachReplyHtml(result,currentPreview=false){
   const evidence=[...evidenceFacts.values()].map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(fact.fact_id)}</li>`).join('');
   const evidenceDetails=evidence?`<details class="coach-evidence-details"><summary>Evidence details</summary><p>References point to facts from this ${currentPreview?'current preview':'saved decision'}, bound to its evidence version.</p><ul>${evidence}</ul></details>`:'';
   const localScope=currentPreview&&typeof result.local_scope==='string'?`<p class="hint">${esc(result.local_scope)}</p>`:'';
+  if(isCurrentLimits){
+    const limitationList=currentLimitCaveats.map(item=>`<li>${esc(item)}</li>`).join('');
+    const technicalEvidence=`<details class="coach-technical-evidence"><summary>Technical evidence</summary>${blocks}${evidenceDetails}</details>`;
+    return `<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${limitationList?`<section class="current-coach-limitations"><h5>Assumptions and limitations</h5><ul class="study-limits">${limitationList}</ul></section>`:''}${technicalEvidence}</article>`;
+  }
   const answer=currentPreview
     ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
     :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${planScope}${coachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
@@ -355,8 +466,9 @@ function renderStudyPanel(){
     const baseline=studyPayload.baseline?`<p class="hint">${esc(studyPayload.baseline.label)} recommends ${esc(studyPayload.baseline.recommended_action||'an unavailable action')}${baselineValue===null||baselineValue===undefined?'':` · ${chips(baselineValue)} ${baselineValueKey==='estimated_ev_chips'?'chips':coachEvBasisLabel(studyPayload.baseline.ev_basis)}`}</p>`:'';
     const situation=studyPayload.situation,decision=studyPayload.decision;
     const teaching=(situation&&decision)?`<div class="study-teaching-pair"><section class="study-teaching-card" aria-label="Your situation"><p class="eyebrow">Your situation</p><p>${esc(situation.text)}</p><p class="hint">${esc(situation.note)}</p></section><section class="study-teaching-card" aria-label="Your decision"><p class="eyebrow">Your decision</p><p>${esc(decision.text)}</p><p class="hint">${esc(decision.note)}</p></section></div>`:'';
+    const termsGuide=decisionTermsGuide({restrictedSolver:studyPayload.ev_basis==='half_initial_pot_utility'});
     const limitations=(studyPayload.limitations||[]).map(item=>`<li>${esc(item)}</li>`).join('');
-    content=`<p class="eyebrow">${esc(studyPayload.heading)} · ${esc(studyPayload.source_label)}</p>${teaching}<div class="study-prompts" role="group" aria-label="Decision study prompts">${prompts}</div>${active?`<article class="study-answer" aria-live="polite"><h4>${esc(active.question)}</h4><p>${esc(active.answer)}</p></article>`:''}<h4>Modeled actions</h4><div class="study-alternatives"><table><thead><tr><th>Action</th><th>Estimated value</th></tr></thead><tbody>${rows}</tbody></table></div>${baseline}${limitations?`<h4>Limitations and caveats</h4><ul class="study-limits">${limitations}</ul>`:''}${coachQuestionHtml()}`;
+    content=`<p class="eyebrow">${esc(studyPayload.heading)} · ${esc(studyPayload.source_label)}</p>${teaching}${termsGuide}<div class="study-prompts" role="group" aria-label="Decision study prompts">${prompts}</div>${active?`<article class="study-answer" aria-live="polite"><h4>${esc(active.question)}</h4><p>${esc(active.answer)}</p></article>`:''}<h4>Modeled actions</h4><div class="study-alternatives"><table><thead><tr><th>Action</th><th>Estimated value</th></tr></thead><tbody>${rows}</tbody></table></div>${baseline}${limitations?`<h4>Limitations and caveats</h4><ul class="study-limits">${limitations}</ul>`:''}${coachQuestionHtml()}`;
   }
   panel.innerHTML=`<p class="eyebrow">DECISION STUDY</p><h3>${esc(studyTitle)}</h3><div class="decision-list" role="group" aria-label="Saved decisions">${decisionButtons}</div><div class="study-content">${content}</div>`;
 }
@@ -469,6 +581,7 @@ function completedHandStudyFocus(review,decisions){
   return biggest?.decision_id||available[available.length-1]?.decision_id||null;
 }
 async function explainLatestAction(){
+  const disclosure=$('#decision-study-disclosure');if(disclosure)disclosure.open=true;
   const decisionId=latestCoachDecision?.decision_id,handId=activeHandId,generation=handGeneration;
   if(afterActionLoading||!decisionId||!handId||!$('#coach-toggle').checked||coachQuestionLoading
     ||!liveDecisions.some(item=>item.decision_id===decisionId))return;
@@ -541,6 +654,19 @@ $('#game-form').elements.opponent_id.addEventListener('change',e=>{practiceOppon
 $('#current-study').addEventListener('click',e=>{
   if(e.target.closest('[data-study-current],[data-study-current-retry]')){void requestCurrentStudy();return;}
   if(e.target.closest('[data-current-coach-retry]')){void askCurrentCoach();return;}
+  const starter=e.target.closest('[data-current-coach-prompt]');
+  if(starter){
+    const binding=currentStudyView?.binding;
+    if(!binding||currentStudyView.status!=='ready'||!game||game.done||game.actor!==0
+        ||activeHandId!==binding.hand_id||game.id!==binding.hand_id
+        ||game.revision!==binding.state_revision||currentCoachLoading||currentCoachNeedsRefresh)return;
+    const questions={recommendation:'What is the current modeled recommendation?',limits:'What assumptions limit this estimate?'};
+    const question=questions[starter.dataset.currentCoachPrompt];if(!question)return;
+    currentCoachDraft.question=question;
+    if(currentCoachRetry&&currentCoachRetry.payload.question!==question)currentCoachRetry=null;
+    if(!currentCoachNeedsRefresh&&!currentCoachStartNew)currentCoachError='';
+    renderCurrentStudy();$('#current-coach-form')?.elements.question.focus();return;
+  }
   if(e.target.closest('[data-current-coach-new]')){
     currentCoachGeneration++;currentCoachConversation=null;currentCoachRetry=null;
     currentCoachFull=false;currentCoachStartNew=false;currentCoachError='';
@@ -650,3 +776,6 @@ document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click'
 }));
 loadOpponents().catch(e=>status(e.message,true));
 api('health').then(info=>{externalAiAvailable=info.external_ai_coach_available===true;if(selectedDecisionId)renderStudyPanel();}).catch(()=>{});
+renderLoungeStrategy();
+$('#raise-slider')?.addEventListener('input',e=>{$('#raise-amount').value=e.target.value;});
+$('#raise-amount').addEventListener('input',e=>{if($('#raise-slider'))$('#raise-slider').value=e.target.value;});
