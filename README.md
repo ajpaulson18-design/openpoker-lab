@@ -210,6 +210,9 @@ not itself supply preflop equilibrium strategies. The additive
 flop chance and the existing postflop trees, with independent serialized-policy
 replay and exact legal best responses. Selected five-card outcomes condition
 the whole joint game; this is not an unconditional full-deck preflop solution.
+Optional recursive [preflop CFR+](docs/preflop-cfrplus.md) has independently
+replayed best responses and measured comparisons with vanilla/DCFR; existing
+defaults are retained.
 
 ## Range notation
 
