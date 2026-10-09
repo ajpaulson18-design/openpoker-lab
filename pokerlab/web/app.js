@@ -288,7 +288,7 @@ function showCoach(result,decision){
   const amount=decision?.chosen_action_detail?.amount;
   const choiceLabel=`YOU CHOSE ${esc(chosen.toUpperCase())}${chosen==='raise'?` TO ${esc(amount)}`:''} · ${assessed?`ESTIMATED LOSS ${loss}`:'RAISE SIZE NOT EVALUATED'}`;
   const afterAction=decision?.decision_id?`<button type="button" class="secondary" data-explain-latest-action${afterActionLoading?' disabled':''}>${afterActionLoading?'Loading saved explanation…':afterActionError?'Retry explanation':'Explain my action (local)'}</button><p class="hint">Uses this decision\'s saved evidence. External AI stays off unless you select it for a separate question.</p>${afterActionError?`<p class="hint error" role="alert">${esc(afterActionError)}</p>`:''}`:'';
-  $('#coach-panel').innerHTML=`<p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details>${afterAction}`;
+  $('#coach-panel').innerHTML=`<p class="hint">Explore the situation and the assumptions behind this saved estimate.</p>${afterAction}<details class="post-action-details"><summary>Recorded decision and model evidence</summary><p class="eyebrow">LIVE COACH · AFTER THE DECISION</p><div class="recommend"><span>${choiceLabel}</span><strong>${esc(result.recommended)}</strong></div><p>Baseline: <strong>${esc(result.baseline_recommended)}</strong> · Exploit: <strong>${esc(result.recommended)}</strong> · Confidence: ${esc(result.confidence)}</p>${voice}<details><summary>Explain</summary>${coachExplanation(result.explanation_payload)}</details></details>`;
 }
 function decisionLabel(decision){
   const detail=decision.chosen_action_detail||{};
@@ -581,6 +581,7 @@ function completedHandStudyFocus(review,decisions){
   return biggest?.decision_id||available[available.length-1]?.decision_id||null;
 }
 async function explainLatestAction(){
+  const disclosure=$('#decision-study-disclosure');if(disclosure)disclosure.open=true;
   const decisionId=latestCoachDecision?.decision_id,handId=activeHandId,generation=handGeneration;
   if(afterActionLoading||!decisionId||!handId||!$('#coach-toggle').checked||coachQuestionLoading
     ||!liveDecisions.some(item=>item.decision_id===decisionId))return;

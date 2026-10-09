@@ -294,4 +294,9 @@ body:has(#table:not([hidden])) nav { margin-top:12px; }
 .ai-coach-section .coach-panel:not(:empty) { max-height:190px; overflow:auto; }
 .ai-coach-section .current-study:has(.current-study-view) { max-height:320px; overflow:auto; }
 .poker-felt::before { background-image:repeating-linear-gradient(45deg,#ffffff03 0 1px,transparent 1px 3px),repeating-linear-gradient(-45deg,#00000003 0 1px,transparent 1px 2px),radial-gradient(ellipse at center,#0c6b2d 0,#075623 55%,#06401f 78%,#052f1a 100%); }
+.saved-study-disclosure { margin:8px 0 0; padding:5px 8px; }
+.saved-study-disclosure:has(>div[hidden]) { display:none; }
+.saved-study-disclosure>summary,.post-action-details>summary { margin:0; min-height:28px; }
+.saved-study-disclosure .card { margin-top:8px; max-height:420px; overflow:auto; }
+.post-action-details { margin:5px 0 0; padding-top:5px; }
 @media(max-width:680px) { .card-rank { font-size:18px; } .card-suit { font-size:26px; } }
