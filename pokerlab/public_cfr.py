@@ -13,6 +13,7 @@ import math
 from .cfr import strategy
 from .ranked_river import RankedRiverPayoffs
 from .river_tree import _Terminal
+from .turn_range_kernel import TurnRangePayoffs
 
 
 MAX_PREFIX_EDGES = 250_000
@@ -133,7 +134,7 @@ def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
 
 def _cfrplus_target_deltas(root, edges, infos, current, target_player,
                            hand_counts, half_pot, chance_type,
-                           terminal_kernel=None):
+                           terminal_kernel=None, prefix_kernel=None):
     """Return one player's regret deltas without constructing opponent values."""
     deltas = {key: [0.0] * count for key, count in infos.items()
               if key[0] == target_player}
@@ -155,6 +156,8 @@ def _cfrplus_target_deltas(root, edges, infos, current, target_player,
             return value
 
         if isinstance(node, _Terminal):
+            if prefix_kernel is not None:
+                return prefix_kernel.values(node, opponent_reach, target_player, prefix)
             if terminal_kernel is not None:
                 if prefix:
                     raise ValueError("Ranked river payoffs require an empty public-card prefix.")
@@ -327,7 +330,8 @@ def train_ranked_river(root, infos, iterations, algorithm="vanilla", *,
 def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
                     hand_counts, edges, marginals, checkpoint_interval=None,
                     checkpoint_callback=None,
-                    terminal_kernel: RankedRiverPayoffs | None = None):
+                    terminal_kernel: RankedRiverPayoffs | None = None,
+                    prefix_kernel: TurnRangePayoffs | None = None):
     keys = list(infos)
     regrets = {key: [0.0] * infos[key] for key in keys}
     sums = {key: [0.0] * infos[key] for key in keys}
@@ -386,6 +390,9 @@ def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
                 return value0, value1
 
             if isinstance(node, _Terminal):
+                if prefix_kernel is not None:
+                    return (prefix_kernel.values(node, reach1, 0, prefix),
+                            prefix_kernel.values(node, reach0, 1, prefix))
                 if terminal_kernel is not None:
                     if prefix:
                         raise ValueError("Ranked river payoffs require an empty public-card prefix.")
@@ -482,6 +489,7 @@ def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
                 deltas = _cfrplus_target_deltas(
                     root, edges, infos, current, player, hand_counts,
                     half_pot, chance_type, terminal_kernel=terminal_kernel,
+                    prefix_kernel=prefix_kernel,
                 )
                 for key in keys:
                     if key[0] == player:
@@ -515,3 +523,28 @@ def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
         averages[key] = ([value / total for value in sums[key]] if total else
                          [1.0 / infos[key]] * infos[key])
     return averages
+
+
+def train_ranked_turn(root, infos, iterations, algorithm="vanilla", *,
+                      terminal_kernel: TurnRangePayoffs, chance_type,
+                      checkpoint_interval=None, checkpoint_callback=None):
+    """Train over a physical turn chance tree using prefix-aware river kernels."""
+    if not isinstance(terminal_kernel, TurnRangePayoffs):
+        raise TypeError("terminal_kernel must be a TurnRangePayoffs instance.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
+    if type(iterations) is not int or iterations < 1:
+        raise ValueError("Iterations must be a positive integer.")
+    if not isinstance(chance_type, type):
+        raise TypeError("chance_type must be a chance-node class.")
+    hand_counts = _validate_ranked_infos(infos, terminal_kernel)
+    _validate_checkpoint_options(checkpoint_interval, checkpoint_callback)
+    marginals = {(): terminal_kernel.joint_marginals()}
+    for river in terminal_kernel.branch_probabilities:
+        marginals[(river,)] = terminal_kernel.joint_marginals((river,))
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=terminal_kernel.pot,
+        chance_type=chance_type, hand_counts=hand_counts, edges={},
+        marginals=marginals, checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, prefix_kernel=terminal_kernel,
+    )

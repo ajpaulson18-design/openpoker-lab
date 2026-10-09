@@ -1,5 +1,24 @@
 # Solver progress record
 
+## 2026-10-09 matrix-free turn continuation
+
+Branch `solver/matrix-free-turn-20261009` follows merged river PR80. New isolated
+turn API preserves global pair/runout conditioning, 48 possible rivers versus
+44 per private pair, original hand indices and exact visible-information BR
+ordering. A direct selected-card multiplicity operator accelerates turn folds.
+Nine independent kernel test methods, integration replay/guard/no-peek tests and
+all **488 full-suite tests** pass. No flop/preflop/Coach modules are edited;
+shared defaults retain their previous arithmetic.
+
+Small complete calls are slower, not a claimed speedup. Full two-river random
+ranges now admit 2,140,380 compatible outcomes without world lists (4.48s,
+45.12 MB traced at ten iterations); the 12.158-chip gap explicitly shows this
+probe is not converged. Prepared fold calls improve 17–22x. Investigation of
+finite-iteration differences traced them to exact-tie regret roundoff; all
+candidate policy metrics pass materialized replay. A bounded small-pair phase
+experiment found a narrow crossover, insufficient for broad dispatch. See
+[mathematics, evidence and remaining constraints](matrix-free-turn.md).
+
 ## 2026-10-09 matrix-free river storage
 
 Branch `solver/matrix-free-river-20261009`, base `3ee96fb`: a separate fixed-board

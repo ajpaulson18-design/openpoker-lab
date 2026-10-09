@@ -7,6 +7,24 @@ information best responses. It introduces no hand buckets, sampling, rake,
 third-party implementation, or runtime dependency. It does not certify
 commercial solver parity or unrestricted no-limit Hold'em accuracy.
 
+## Library use
+
+```python
+from pokerlab.matrix_free_river import solve_matrix_free_river
+from pokerlab.river_config import RiverConfig
+
+result = solve_matrix_free_river(
+    "2c7d9hJsKd", "random", "random",
+    RiverConfig(100, 200, (0.75,), (), 0, False),
+    iterations=500, target_exploitability=0.01, check_interval=50,
+)
+```
+
+The action tree in this example matches the benchmark abstraction; it has no
+raises. Inspect `convergence.stop_reason` rather than assuming the requested
+target was achieved. Larger trees and iteration caps can be refused by the
+separate admission model.
+
 ## Mathematical boundary
 
 For compatible holdings i,j, the joint chance weight is

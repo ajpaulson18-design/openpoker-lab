@@ -6,6 +6,7 @@ from collections.abc import Mapping
 from . import public_cfr
 from .ranked_river import RankedRiverPayoffs
 from .river_tree import _Terminal
+from .turn_range_kernel import TurnRangePayoffs
 
 
 def evaluate_profile(root, worlds, averages, *, pot, chance_type,
@@ -59,10 +60,13 @@ def _normalize_policies(averages):
 
 
 def _evaluate_prepared(root, policies, *, pot, chance_type, hand_counts,
-                       edges, marginals, terminal_kernel=None):
+                       edges, marginals, terminal_kernel=None,
+                       prefix_kernel: TurnRangePayoffs | None = None):
     half = pot / 2.0
 
     def terminal_vector(node, prefix, opponent_reach, responder):
+        if prefix_kernel is not None:
+            return prefix_kernel.values(node, opponent_reach, responder, prefix)
         if terminal_kernel is not None:
             if prefix:
                 raise ValueError("Ranked river payoffs require an empty public-card prefix.")
@@ -105,6 +109,9 @@ def _evaluate_prepared(root, policies, *, pot, chance_type, hand_counts,
             return sum(profile(child, prefix + (card,), r0, r1)
                        for card, child in node.branches.items())
         if isinstance(node, _Terminal):
+            if prefix_kernel is not None:
+                values = prefix_kernel.values(node, r1, 0, prefix)
+                return sum(r0[index] * value for index, value in enumerate(values))
             if terminal_kernel is not None:
                 if prefix:
                     raise ValueError("Ranked river payoffs require an empty public-card prefix.")
@@ -187,4 +194,23 @@ def evaluate_ranked_profile(root, averages, *, terminal_kernel: RankedRiverPayof
         hand_counts=hand_counts, edges={},
         marginals={(): (joint_marginals[0], joint_marginals[1])},
         terminal_kernel=terminal_kernel,
+    )
+
+
+def evaluate_ranked_turn_profile(root, averages, *, terminal_kernel: TurnRangePayoffs,
+                                 chance_type):
+    """Evaluate profile and exact best responses over prefix-aware turn payoffs."""
+    if not isinstance(terminal_kernel, TurnRangePayoffs):
+        raise TypeError("terminal_kernel must be a TurnRangePayoffs instance.")
+    if not isinstance(chance_type, type):
+        raise TypeError("chance_type must be a chance-node class.")
+    policies, infos = _normalize_policies(averages)
+    hand_counts = public_cfr._validate_ranked_infos(infos, terminal_kernel)
+    marginals = {(): terminal_kernel.joint_marginals()}
+    for river in terminal_kernel.branch_probabilities:
+        marginals[(river,)] = terminal_kernel.joint_marginals((river,))
+    return _evaluate_prepared(
+        root, policies, pot=terminal_kernel.pot, chance_type=chance_type,
+        hand_counts=hand_counts, edges={}, marginals=marginals,
+        prefix_kernel=terminal_kernel,
     )
