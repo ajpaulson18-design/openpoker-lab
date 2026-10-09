@@ -52,8 +52,9 @@ def main():
     prior_path = ROOT / spec["prior_report"]
     prior_hash = file_sha256(prior_path)
     prior = json.loads(prior_path.read_text(encoding="utf-8"))
+    prior_iterations = spec.get("prior_baseline_iterations", spec["full_flop"]["iterations"])
     matching = [row for row in prior["records"] if row["algorithm"] == "cfrplus"
-                and row["iterations"] == spec["full_flop"]["iterations"]]
+                and row["iterations"] == prior_iterations]
     assert len(matching) == 1
     prior_baseline = matching[0]
     full = spec["full_flop"]
@@ -95,7 +96,8 @@ def main():
         assert lower <= oracle["value_sb"] <= upper
         if delay == 0:
             baseline = oracle["nash_conv"]
-            assert abs(baseline - prior_baseline["configured_replay"]["nash_conv"]) <= 1e-10
+            if full["iterations"] == prior_iterations:
+                assert abs(baseline - prior_baseline["configured_replay"]["nash_conv"]) <= 1e-10
         record = {"scenario": "complete-four-private-pair-fixed-flop", "iterations": full["iterations"],
                   "averaging_delay": delay, "positive_average_sweeps": full["iterations"] - delay,
                   "complete_uninstrumented_seconds": seconds,
@@ -146,10 +148,11 @@ def main():
               "method_scope": "Published max(t-delay,0) weights with the repository's established completed-alternating-sweep own-reach averaging; not a verbatim Algorithm 1 reproduction.",
               "prior_baseline": {"path": spec["prior_report"], "sha256": prior_hash,
                                  "source_revision": prior["source_revision"],
+                                 "iterations": prior_iterations,
                                  "nash_conv": prior_baseline["configured_replay"]["nash_conv"],
                                  "scope": "Historical independently replayed accuracy only; timing/memory not compared."},
               "timing_scope": "One complete uninstrumented solve plus JSON serialization per full-flop delay, including resource preflight. Pre-call garbage collection and independent replay excluded. Single observed calls on a shared host, not medians, equal-time trials, statistical speedup or universal delay superiority.",
-              "memory_scope": "Separate complete calls plus JSON serialization under tracemalloc only on the small weighted selected-outcome game at 20 iterations. Python allocation peaks, not RSS; no complete-fixed-flop 120-iteration memory claim.",
+              "memory_scope": f"Separate complete calls plus JSON serialization under tracemalloc only on the small weighted selected-outcome game at 20 iterations. Python allocation peaks, not RSS; no complete-fixed-flop {full['iterations']}-iteration memory claim.",
               "accuracy_scope": "Independent configured binary64 numeric policy replay, all legal visible-information best responses and physical private-pair probabilities. Target flags report misses without changing the target; finite conditioned game only.",
               "records": records, "memory_records": memory_records}
     args.output.parent.mkdir(parents=True, exist_ok=True)

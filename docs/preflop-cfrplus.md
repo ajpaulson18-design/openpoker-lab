@@ -8,6 +8,9 @@ physical outcomes, blind settlement, postflop action trees, serialized average
 policy and exact legal best responses as the preflop adapter. No shared trainer,
 turn/river solver or AI Coach implementation was changed. Vanilla remains the
 default; vanilla/DCFR retain their original result fields and trainer paths.
+The later optional [averaging delay](preflop-averaging-delay.md) exposes the
+published `max(t-d,0)` weighting sequence through preflop-only orchestration.
+Delay zero preserves the paths and output documented here.
 
 This remains a bounded conditioned game, not a full-deck preflop solver. The
 [preflop model limits](preflop-solver.md) still apply. Planned CFR+ is unsupported
