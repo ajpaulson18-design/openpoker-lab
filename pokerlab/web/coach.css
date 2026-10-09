@@ -18,6 +18,8 @@
 .current-coach-form { border-top:1px solid var(--line); margin-top:18px; padding-top:18px; }
 .current-coach-form h4 { margin:0 0 12px; }
 .current-coach-form textarea { min-height:78px; }
+.current-coach-starters { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+.current-coach-starters button { width:auto; }
 .current-coach-form .ai-coach-reply { margin-top:16px; }
 .current-coach-turns { border-top:1px solid var(--line); margin-top:20px; padding-top:16px; }
 .current-coach-turns > h4 { margin:0 0 12px; }
