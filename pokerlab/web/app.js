@@ -312,15 +312,18 @@ function coachTeachingNoteMarkup(result,currentPreview){
 function coachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,false);}
 function currentCoachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,true);}
 function coachReplyHtml(result,currentPreview=false){
-  const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
+  const reply=result.reply||{},isCurrentLimits=currentPreview&&reply.intent==='limits';
+  const blocks=(reply.blocks||[]).map(block=>{
     const blockFacts=block.facts||[];
     const actionLabels=new Map(blockFacts.filter(fact=>fact.kind==='modeled_action'&&Array.isArray(fact.value))
       .map(fact=>[fact.value[0],coachActionLabel(fact.value)]));
     const facts=blockFacts.map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact,actionLabels))}${coachFactUnit(fact.unit,result)?` <span class="coach-unit">${esc(coachFactUnit(fact.unit,result))}</span>`:''}</li>`).join('');
-    const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+    const caveats=isCurrentLimits?'':(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
     return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+  const currentLimitCaveats=[...new Set([...(reply.caveats||[]),...(reply.blocks||[]).flatMap(block=>block.caveats||[])])]
+    .filter(item=>typeof item==='string'&&item.trim());
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local explanation · OpenPoker renders validated facts';
   const reason=result.fallback_reason;
   const fallbackMessages={external_ai_not_configured:'External AI was requested but is disabled or not configured locally.',refusal:'External AI was requested, but the provider declined this question.',incomplete:'External AI was requested, but the provider did not finish the response.',invalid_response:'External AI was requested, but the provider returned an incomplete response.',invalid_plan:'External AI was requested, but its plan did not pass validation.',http_error:'External AI was requested, but the provider request failed.',timeout:'External AI was requested, but the provider request timed out.',network_error:'External AI was requested, but the provider could not be reached.',provider_error:'External AI was requested, but the provider request failed safely.'};
@@ -335,6 +338,11 @@ function coachReplyHtml(result,currentPreview=false){
   const evidence=[...evidenceFacts.values()].map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(fact.fact_id)}</li>`).join('');
   const evidenceDetails=evidence?`<details class="coach-evidence-details"><summary>Evidence details</summary><p>References point to facts from this ${currentPreview?'current preview':'saved decision'}, bound to its evidence version.</p><ul>${evidence}</ul></details>`:'';
   const localScope=currentPreview&&typeof result.local_scope==='string'?`<p class="hint">${esc(result.local_scope)}</p>`:'';
+  if(isCurrentLimits){
+    const limitationList=currentLimitCaveats.map(item=>`<li>${esc(item)}</li>`).join('');
+    const technicalEvidence=`<details class="coach-technical-evidence"><summary>Technical evidence</summary>${blocks}${evidenceDetails}</details>`;
+    return `<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${limitationList?`<section class="current-coach-limitations"><h5>Assumptions and limitations</h5><ul class="study-limits">${limitationList}</ul></section>`:''}${technicalEvidence}</article>`;
+  }
   const answer=currentPreview
     ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
     :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${planScope}${coachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
