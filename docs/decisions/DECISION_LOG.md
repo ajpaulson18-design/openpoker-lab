@@ -16,6 +16,8 @@ are explicit. Historical alternatives without evidence remain unknown.
 | D009 | Preserve approved espresso front face; minor visual changes thereafter | Repository-recorded owner decision; original chat unavailable | [visual interface](../visual-interface.md), commit `8e36324`, PR #61 |
 | D010 | Lead owns architectural/product judgment; bounded Luna workers extract/draft/validate | Confirmed owner decision, current | Mission §2; [task protocol](../agents/TASK_PROTOCOL.md) |
 | D011 | Knowledge mission is additive and protects active development | Confirmed owner decision, current | Mission §11 |
+| D012 | Use the “generative imagine prototyping phase” while preserving system integrity and approved visual targets | Owner direction recovered from supplied dated excerpt and saved-memory summary | [Recovered context](../context/RECOVERED_CHAT_KNOWLEDGE.md), C008; [vision](../product/VISION.md) |
+| D013 | Personal preference for OpenPoker Lab over other apps/videos is the coaching quality benchmark | Saved owner-memory summary, also explicit current mission; aspirational acceptance direction | Recovered context C004; mission §4 |
 
 ## Superseded and unresolved context
 

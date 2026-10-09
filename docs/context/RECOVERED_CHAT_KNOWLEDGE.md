@@ -36,6 +36,37 @@ memories to be accessible on GitHub for other artificial intelligence platforms.
 | C011 | Oct 1, GitHub authorization workflow | Ordinary repository work, implementation choices, research and routine repository cleanup are delegated without repeated permission requests; preserve genuine blockers/platform controls | Supplied memory summary. Scope is repository development; it does not authorize unrelated account or document modifications |
 | C012 | Oct 8, current session clarification | Transfer important “poker simulation” project chats/memories into GitHub for other AI platforms | Direct current owner message. Primary mission outcome; current repository audit alone cannot satisfy full historical recovery |
 
+## Saved-memory transfer: preserved meaning
+
+The owner explicitly reaffirmed in this session that saved memories can transfer
+the essence of the project even without the original chats. Treat the available
+project-specific summaries as usable intent evidence; transcripts are not a
+prerequisite for preserving that meaning. These summaries do not prove execution,
+and the available set is not a verified inventory of every saved project memory.
+
+The following mapping ensures that memories are usable constraints in canonical
+project guidance, rather than isolated archival notes.
+
+| Available memory | Meaning future AI agents should preserve | Canonical destination |
+| --- | --- | --- |
+| C001: separate poker products | Do not turn the solver into an entertainment-game feature or assume integration | [Vision](../product/VISION.md), D005 in [decisions](../decisions/DECISION_LOG.md) |
+| C002: commercial meaning | Prioritize customer value, differentiation, retention and sustainable revenue; technical interest alone is insufficient | Vision, D006, [roadmap/commercial direction](../product/ROADMAP.md) |
+| C003: golden coaching principle | Explain the situation, why the choice is difficult and how to reason; an optimal action alone is insufficient | Vision, D002 |
+| C004: personal default-use benchmark | If the owner prefers another app or YouTube to understand a spot, investigate the remaining product gap | Vision, D013 |
+| C005: contextual explanation engine | Ground comprehensive scenario-specific explanations in game state and solver facts, using structured rules/logic/templates; no requirement to build a new LLM | Vision, D004, [system overview](../architecture/SYSTEM_OVERVIEW.md) |
+| C006: parallel workstreams | Improve solver and coach without interfering with each other; preserve explicit evidence interfaces | Vision, D003, [task protocol](../agents/TASK_PROTOCOL.md) |
+| C007: research and legitimate reuse | Study established solvers and audit reusable solutions; preserve commercial compatibility and mandatory notices | Vision, D006, [licensing/reuse](../research/LICENSING.md) |
+| C008: visual prototype philosophy | Preserve the exact phrase “generative imagine prototyping phase”; approve visual targets and implement toward them without compromising system integrity | Vision, D012, [approved visual baseline](../visual-interface.md) |
+| C009: workflow experiment and lesson | Copilot was tried and replaced with Luna; integration/coordination cost matters when adding platforms | D010 and supersession notes, task protocol |
+| C010: model preferences | Prefer GPT-6.1 Sol and GPT-6 Luna where available; flag likely accidental GPT-5.6 choices | Task protocol optional provider adapter |
+| C011: delegated repository work | Continue ordinary authorized development/research/cleanup without repeated permission requests; stop at real blockers | Task protocol |
+| C012 and current reaffirmation | GitHub must carry important project intent and reasoning for other AI platforms; use available saved memories now | [Onboarding](../START_HERE.md), this source record |
+
+Full original conversations would add provenance, nuance and missing decisions.
+They are additional evidence, not a reason to withhold the relevant saved memories
+already available. Future updates should integrate newly available memories using
+this same authority/status distinction, without requiring a raw transcript first.
+
 ## Conflicts and interpretation
 
 The commercial goal does not turn future solver ambitions into shipped capability.
@@ -54,9 +85,10 @@ spending and migration of existing automation are separate tasks.
 Full project conversation retrieval was attempted through available personal
 context search in this run; conversation search returned an error, and only the
 mission artifact surfaced. No full “poker simulation” project listing, transcripts,
-original message identifiers or chat export was retrieved. This document is a
-partial transfer of available context, not certification that all necessary
-project-chat memories are now in GitHub.
+original message identifiers or chat export was retrieved. The relevant project memories supplied in this session are transferred and mapped
+above. This does not certify that every saved memory or historical decision has
+been retrieved; no complete memory inventory was exposed. Missing full-chat
+coverage is distinct from the completed transfer of the available memory summaries.
 
 ## Importing additional project chats
 

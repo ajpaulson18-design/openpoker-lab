@@ -47,3 +47,8 @@ A completion handoff records baseline and final commit/PR, files changed, exact
 checks/results, documentation status, unresolved questions and next bounded task.
 Never imply historical tests were rerun or that a plan has shipped. Read task-relevant
 current files again before later edits; the audit snapshot is not permanently fresh.
+
+Preserve the owner's repository autonomy preference from recovered context C011:
+continue ordinary authorized implementation, research and routine repository cleanup
+without repeated permission requests. Report genuine blockers and respect platform
+controls; this preference does not authorize unrelated account or file changes.

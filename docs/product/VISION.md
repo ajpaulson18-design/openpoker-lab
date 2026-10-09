@@ -37,6 +37,16 @@ and acceptance direction, not evidence of measured competitive superiority.
 - Preserve the existing project and parallel development goals. This knowledge
   mission does not approve solver rewrites or coach feature expansion.
 
+## Visual prototyping philosophy recovered from saved context
+
+The owner calls this the **“generative imagine prototyping phase”**: use generated
+images to envision and iteratively refine the desired final experience, approve
+visual targets, and direct engineering toward realizing them without sacrificing
+system integrity. Source: [recovered chat/memory record](../context/RECOVERED_CHAT_KNOWLEDGE.md),
+C008. This cross-project philosophy applies alongside OpenPoker Lab's accepted
+visual baseline; it does not approve a broader redesign or import the separate
+entertainment game's character/engine choices.
+
 ## Visual decision already recorded in the repository
 
 [Visual interface](../visual-interface.md), supported by commit `8e36324` and

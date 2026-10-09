@@ -18,6 +18,11 @@ update the decision register. Do not infer approval from a proposed feature.
 
 ## Available sources and limits
 
+Relevant saved-memory summaries supplied in the session have been transferred
+and mapped to canonical guidance in [recovered knowledge](RECOVERED_CHAT_KNOWLEDGE.md).
+Full chats are not required to use these memories. A complete saved-memory inventory
+was not exposed, so additional unseen memories remain an unknown coverage gap.
+
 Inspected supplied mission, repository files/full local commit history and GitHub
 issue/PR collections accessible during this run. Personal-context conversation retrieval was attempted and returned a conversation-search
 error; it surfaced only the mission artifact. No full project conversation
