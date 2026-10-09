@@ -213,6 +213,9 @@ the whole joint game; this is not an unconditional full-deck preflop solution.
 Optional recursive [preflop CFR+](docs/preflop-cfrplus.md) has independently
 replayed best responses and measured comparisons with vanilla/DCFR; existing
 defaults are retained.
+Optional [delayed CFR+ averaging](docs/preflop-averaging-delay.md) exposes the
+published weight schedule through isolated preflop adapters, with independent
+reference/replay checks. Delay zero remains the default.
 Optional [preflop private-hand vectors](docs/preflop-public-batched.md) preserve
 the configured game and exact responses, with measured range comparisons and
 explicit memory and numerical limits.

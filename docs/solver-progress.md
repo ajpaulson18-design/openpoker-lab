@@ -570,6 +570,32 @@ including estimator-only allocation tracing. Its approximately 2.02 MB traced
 peak covers only resource preflight, not the complete solve or RSS. See
 [scope, modeled ceilings, value intervals and provenance](preflop-vector-resources.md).
 
+## Delayed preflop CFR+ meets the fixed-flop accuracy target
+
+An isolated preflop adapter exposes published `max(t-delay,0)` CFR+ averaging
+weights, retaining the existing completed-alternating-sweep own-reach convention.
+Default delay zero and all resource ceilings remain unchanged. Recursive
+requests reuse the existing generic delay implementation; a preflop-local
+vector average pass reuses unchanged repository regret/aggregation helpers.
+Shared CFR, postflop, turn/river, diagnostics and Coach source remain unchanged.
+
+At frozen `1240dd0`, complete four-private-pair fixed-flop CFR+120 with delays
+0/20/60 has NashConv 0.00247911/0.00137144/0.00118598 chips; every target misses.
+An explicitly evidence-guided extension freezes 160 iterations with delays 0/80
+at `2075cc6`. Independent replay verifies all 17,620 rows, all 7,920 worlds,
+private-pair probabilities and both legal best responses. Delay zero has gap
+0.00156941; delay 80 has **0.000798538**, meeting the unchanged 0.001 target under
+the unchanged 490,881,772-entry workload estimate. Maximum scalar disagreement
+is 1.58e-14. The padded SB game-value interval is [0.5182045061, 0.5190030442].
+
+The observed uninstrumented full calls at 160 take 118.833/109.401 seconds,
+including serialization; single shared-host samples establish no speedup.
+Separate 20-iteration selected-game traced peaks are approximately 721/714 KB,
+not full-fixed-flop memory or RSS evidence. Thirteen new tests include generic
+parity, independent replay, known Kuhn/exhaustive legal BR accuracy and prompt
+lifetime cleanup. Longer delays worsen the Kuhn gap, so the method stays opt-in.
+See [measured scope, source hashes and provenance](preflop-averaging-delay.md).
+
 ## Complete fixed-flop chance with private-hand uncertainty
 
 The full-chance regression now also covers two SB combinations and two BB

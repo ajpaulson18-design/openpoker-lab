@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-delayed-cfrplus-complete-fixed-flop-160-v1",
+  "selection_scope": "Evidence-guided extension after all predeclared 120-iteration delays missed 0.001; the half-run delay improved the gap. Freeze 160 iterations with delays 0/80 before this extension. Target, poker game and all resource ceilings stay unchanged; no universal delay claim.",
+  "full_flop": {
+    "sb": "AsAd,QsQd", "bb": "KsKd,JhJc",
+    "flop": ["2c", "3c", "4d"],
+    "config": {"starting_stack": 2, "max_raises": 0, "include_all_in": false},
+    "iterations": 160, "delays": [0, 80],
+    "target_nash_conv": 0.001,
+    "worlds": 7920, "private_pairs": 4, "information_sets": 17620
+  },
+  "selected_game": {
+    "sb": "AsAd:1,AhAc:0.25", "bb": "KsKd:1,KcKh:0.5",
+    "config": {"starting_stack": [4, 3], "raise_sizes": [0.5], "max_raises": 1, "include_all_in": false},
+    "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c", "Ac2d3h7s8c"],
+    "flop_config": {"bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": false},
+    "iterations": 20, "delays": [0, 8]
+  },
+  "prior_report": "benchmarks/results/preflop-vector-resources-v1.json",
+  "prior_baseline_iterations": 120
+}
