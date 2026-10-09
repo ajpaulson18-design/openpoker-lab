@@ -1,4 +1,5 @@
 """Differential and lifetime checks for exact public-batched CFR traversal."""
+import builtins
 import gc
 import platform
 import unittest
@@ -56,6 +57,47 @@ def _assert_profiles_equal(test, expected, actual):
 
 
 class PublicBatchedCFRTests(unittest.TestCase):
+    def test_weighted_tie_is_stable_under_python311_sum_order(self):
+        """Older left-to-right float summation must not perturb normalization."""
+        checkpoints = (20, 100)
+        algorithms = ("vanilla", "dcfr")
+
+        def train_fixture(fixture):
+            _, worlds, root, infos, payoff, config, _ = fixture
+            profiles = {}
+            for algorithm in algorithms:
+                for iterations in checkpoints:
+                    profiles[("recursive", algorithm, iterations)] = train_recursive(
+                        root, worlds, infos, iterations, algorithm, payoff,
+                        _node_key, _chance_child,
+                    )
+                    profiles[("public-batched", algorithm, iterations)] = \
+                        public_cfr.train_public_batched(
+                            root, worlds, infos, iterations, algorithm,
+                            pot=config.pot, chance_type=_Chance,
+                        )
+            return profiles
+
+        expected = train_fixture(_fixture())
+
+        def naive_float_sum(values, start=0):
+            total = start
+            for value in values:
+                total = total + value
+            return total
+
+        # Python 3.11 and earlier use straightforward left-to-right addition
+        # for float sums. Emulate that arithmetic across fixture construction
+        # and both trainers so this guard is independent of the host version.
+        with patch.object(builtins, "sum", side_effect=naive_float_sum):
+            actual = train_fixture(_fixture())
+
+        self.assertEqual(expected.keys(), actual.keys())
+        for key in expected:
+            with self.subTest(backend=key[0], algorithm=key[1],
+                              iterations=key[2]):
+                _assert_profiles_equal(self, expected[key], actual[key])
+
     def test_weighted_blocker_flop_profiles_match_recursive_reference(self):
         _, worlds, root, infos, payoff, config, _ = _fixture()
         zero_reach_key = (0, 0, ("unreachable-public-history",))

@@ -5,6 +5,7 @@ public-card outcomes. Selected outcomes condition one joint physical game.
 It is a bounded action abstraction, not a full no-limit Hold'em solver.
 """
 from dataclasses import dataclass
+from math import fsum
 
 from .cards import DECK, cards, expand_range, rank_hand
 from .cfr import train, evaluate, best_response
@@ -131,7 +132,9 @@ def _enumerate_worlds(board, oop_range, ip_range, runouts=None, iterations=10):
                 if len(worlds) * iterations > _MAX_WORLD_ITERATIONS:
                     raise ValueError("Postflop solver allows 3 million world iterations.")
 
-    normalizer = sum(world[2] for world in worlds)
+    # Stable across Python's changing float-sum implementations. A one-ulp
+    # normalization shift can create spurious positive regret at exact ties.
+    normalizer = fsum(world[2] for world in worlds)
     if normalizer <= 0:
         raise ValueError("Ranges and future runouts contain no compatible physical deals.")
     normalized = [(world[0], world[1], world[2] / normalizer, *world[3:])
