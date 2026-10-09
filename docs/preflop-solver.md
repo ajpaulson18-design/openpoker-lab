@@ -96,9 +96,10 @@ This remains a finite fractional betting abstraction: no full-deck preflop,
 multiway equilibrium, rake, range inference, card abstraction or chance sampling.
 The reused postflop builder has no blind-sized minimum opening bet. Convergence
 and runtime evidence for tiny selected games does not certify broader games.
-The independently replayed
-[fractional rounding boundary](preflop-public-batched.md#recorded-numerical-limit)
-is a recorded unresolved action/history discrepancy, not a passed fixture.
+The [monetary verifier](preflop-monetary-replay.md) independently models the
+configured binary64/local-ledger rounding order. The stored fractional
+boundary now passes that configured replay; the historical global-rational
+diagnostic still differs. This does not prove exact-decimal equivalence.
 
 ## Independent validation and provenance
 

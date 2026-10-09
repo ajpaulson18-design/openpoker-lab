@@ -1,0 +1,800 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "independent-preflop-monetary-replay-v1",
+  "generated_at": "2026-10-09T14:28:03.055535+00:00",
+  "source_revision": "450e78e51362cecfe59a3f147526cf6d56b25b17",
+  "worktree_dirty": false,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "b70e7e60489b07683757fd32433cd22986ee74e603e36bd152ebabe365647005",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "d2a8a0ad6d64a9b04a08dd3970b095dc36b0934990961339457b1bb5fb1ad174",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/public_cfr.py": "72b6fc73485b9bd425ec7b3f83b3306528a97e0c035b040e23b9f65514eef41a",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "scripts/preflop_monetary_validation.py": "6e9cc70d1867f4fd4670faadc4451f47ede5979e9c94a91df4e52ac722f37e17",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "benchmarks/preflop-monetary-replay-v1.json": "9e595713d16b93a06dc30d9d933ed86a49d55376e6e259cac4fa68a94d417bcc",
+    "benchmarks/preflop-rounding-boundary-v1.json": "20de73f288212271cf497848b40b81c60ed6e9189ed1361029190f2ebba20251"
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "scope": "Independent configured binary64/local-ledger replay, all serialized rows, values and legal best responses in three conditioned finite games. No exact-decimal equivalence or universal rounding proof.",
+  "diagnostic_scope": "Historical Fraction/global-ledger replay retains its conversion to binary64 at nine-decimal quantization. It is a separate model diagnostic, not an exact-decimal oracle.",
+  "performance_scope": "Correctness evidence only; no runtime or memory comparison was measured.",
+  "midpoint_anchor": {
+    "origin": "0.691357802",
+    "initial_postflop_pot": "1.382715604",
+    "local_bet": "0.170705629",
+    "exact_local_midpoint": "0.60173734450",
+    "local_binary_value": "0.60173734449999993767477235451224260032176971435546875",
+    "rounded_local_target": 0.601737344,
+    "configured_whole_hand_target": 1.293095146,
+    "exact_global_midpoint": "1.29309514650",
+    "historical_global_binary_quantization": 1.293095147,
+    "scope": "This trace explains the quantization order, not a claim that either binary rounding path is an exact-decimal specification."
+  },
+  "records": [
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.020647713726438248,
+        "value_bb": 0.020647713726438248,
+        "sb_best_response_value": 0.346226140457479,
+        "bb_best_response_value": 0.42815558254026,
+        "nash_conv": 0.774381722997739,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 6.938893903907228e-18,
+        "value_bb": 6.938893903907228e-18,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.04957875200928856,
+        "value_bb": 0.04957875200928856,
+        "sb_best_response_value": 0.2855450394763123,
+        "bb_best_response_value": 0.3976647000128807,
+        "nash_conv": 0.683209739489193,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.163336342344337e-17,
+        "value_bb": 4.163336342344337e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.047913187573693124,
+        "value_bb": 0.047913187573693124,
+        "sb_best_response_value": 0.03801650146533009,
+        "bb_best_response_value": 0.13713553777528908,
+        "nash_conv": 0.17515203924061917,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 6.938893903907228e-18,
+        "value_bb": 6.938893903907228e-18,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 5.551115123125783e-17
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.020647713726438244,
+        "value_bb": 0.020647713726438244,
+        "sb_best_response_value": 0.34622614045747896,
+        "bb_best_response_value": 0.42815558254026,
+        "nash_conv": 0.774381722997739,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.214306433183765e-16,
+        "value_bb": 1.214306433183765e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.04957875200928992,
+        "value_bb": 0.04957875200928992,
+        "sb_best_response_value": 0.2855450394763123,
+        "bb_best_response_value": 0.3976647000128816,
+        "nash_conv": 0.683209739489194,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.163336342344337e-17,
+        "value_bb": 4.163336342344337e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "recorded-rounding-boundary",
+      "algorithm": "cfrplus",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.047913187573693075,
+        "value_bb": 0.047913187573693075,
+        "sb_best_response_value": 0.03801650146533003,
+        "bb_best_response_value": 0.1371355377752891,
+        "nash_conv": 0.17515203924061915,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 9.71445146547012e-17,
+        "value_bb": 9.71445146547012e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'raise@0.691357802', 'call', 'flop@2c3c4d', 'check', 'bet@0.862063431')), 'raise@1.293095146', 'raise@1.293095147')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.02064771362637517,
+        "value_bb": 0.02064771362637517,
+        "sb_best_response_value": 0.34622614079398006,
+        "bb_best_response_value": 0.4281555823416068,
+        "nash_conv": 0.7743817231355868,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 7.28583859910259e-17,
+        "value_bb": 7.28583859910259e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.04957875199665893,
+        "value_bb": 0.04957875199665893,
+        "sb_best_response_value": 0.2855450395239106,
+        "bb_best_response_value": 0.39766470049279673,
+        "nash_conv": 0.6832097400167073,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.469446951953614e-17,
+        "value_bb": 3.469446951953614e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.04791318760027785,
+        "value_bb": 0.04791318760027785,
+        "sb_best_response_value": 0.038016501470108724,
+        "bb_best_response_value": 0.13713553771334894,
+        "nash_conv": 0.17515203918345768,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6653345369377348e-16,
+        "value_bb": 1.6653345369377348e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.020647713626375273,
+        "value_bb": 0.020647713626375273,
+        "sb_best_response_value": 0.34622614079398023,
+        "bb_best_response_value": 0.4281555823416066,
+        "nash_conv": 0.7743817231355868,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.122502256758253e-17,
+        "value_bb": 3.122502256758253e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.04957875199665888,
+        "value_bb": 0.04957875199665888,
+        "sb_best_response_value": 0.2855450395239106,
+        "bb_best_response_value": 0.39766470049279673,
+        "nash_conv": 0.6832097400167073,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 7.632783294297951e-17,
+        "value_bb": 7.632783294297951e-17,
+        "sb_best_response_value": 5.551115123125783e-17,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "full-precision-sizing-coefficients",
+      "algorithm": "cfrplus",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 640,
+      "configured_replay": {
+        "value_sb": -0.047913187600277726,
+        "value_bb": 0.047913187600277726,
+        "sb_best_response_value": 0.03801650147010878,
+        "bb_best_response_value": 0.13713553771334888,
+        "nash_conv": 0.17515203918345768,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 640,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.163336342344337e-17,
+        "value_bb": 4.163336342344337e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "rejected",
+        "exception": "AssertionError",
+        "detail": "(('bb', 'KdKs', ('call', 'check', 'flop@2c3c4d')), 'bet@0.431031716', 'bet@0.431031715')"
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": -0.025,
+        "value_bb": 0.025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.025,
+        "nash_conv": 0.025,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.0816681711721685e-17,
+        "value_bb": 2.0816681711721685e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.0816681711721685e-17
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": -0.025,
+          "value_bb": 0.025,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.025,
+          "nash_conv": 0.025,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": -0.0006493506493506494,
+        "value_bb": 0.0006493506493506494,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0006493506493506494,
+        "nash_conv": 0.0006493506493506494,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7972416050126014e-17,
+        "value_bb": 2.7972416050126014e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.7972416050126014e-17
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": -0.0006493506493506494,
+          "value_bb": 0.0006493506493506494,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0006493506493506494,
+          "nash_conv": 0.0006493506493506494,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": 0.0,
+        "value_bb": -0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": -0.0,
+        "nash_conv": 0.0,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": 0.0,
+          "value_bb": -0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": -0.0,
+          "nash_conv": 0.0,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "vanilla",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": -0.025,
+        "value_bb": 0.025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.025,
+        "nash_conv": 0.025,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.0816681711721685e-17,
+        "value_bb": 2.0816681711721685e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.0816681711721685e-17
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": -0.025,
+          "value_bb": 0.025,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.025,
+          "nash_conv": 0.025,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "dcfr",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": -0.0006493506493506494,
+        "value_bb": 0.0006493506493506494,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0006493506493506494,
+        "nash_conv": 0.0006493506493506494,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7972416050126014e-17,
+        "value_bb": 2.7972416050126014e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.7972416050126014e-17
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": -0.0006493506493506494,
+          "value_bb": 0.0006493506493506494,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0006493506493506494,
+          "nash_conv": 0.0006493506493506494,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario": "known-hidden-flop-root",
+      "algorithm": "cfrplus",
+      "traversal": "public-batched",
+      "iterations": 10,
+      "worlds": 2,
+      "information_sets": 1,
+      "configured_replay": {
+        "value_sb": 0.0,
+        "value_bb": -0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": -0.0,
+        "nash_conv": 0.0,
+        "worlds": 2,
+        "monetary_mode": "configured",
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "historical_global_reference": {
+        "outcome": "accepted",
+        "replay": {
+          "value_sb": 0.0,
+          "value_bb": -0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": -0.0,
+          "nash_conv": 0.0,
+          "worlds": 2,
+          "monetary_mode": "global-rational",
+          "checked_information_sets": 1,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 1.0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
