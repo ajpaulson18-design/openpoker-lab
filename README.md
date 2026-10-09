@@ -194,6 +194,13 @@ backend retains physical chance weights and adds a 250,000 prefix/hand-edge
 storage cap; it specializes the postflop fold/showdown utilities. See
 [public-batched validation and measurements](docs/public-batched-cfr.md).
 
+The three production training kernels also have a
+[known small-game accuracy check](docs/cfr-known-quality.md), with independently
+enumerated best responses and quantitative convergence gates. Run
+`python -m scripts.validate_cfr_quality --output benchmarks/results/cfr-quality-v1.json`
+to reproduce it. This checks the kernels on Kuhn poker, alongside the separate
+Hold'em physical-world and betting validation.
+
 ## Range notation
 
 Separate tokens with spaces or commas:

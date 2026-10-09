@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "known-kuhn-cfr-quality-v1",
+  "game": {
+    "name": "two-player three-card Kuhn poker",
+    "ranks": ["J", "Q", "K"],
+    "ante_per_player": 1,
+    "bet": 1,
+    "ordered_distinct_deals": 6,
+    "public_decision_nodes": 4,
+    "information_sets": 12,
+    "known_value_first_player": "-1/18",
+    "source": "https://webdocs.cs.ualberta.ca/~holte/Publications/aaai2005poker.pdf",
+    "scope": "Known small-game validation of production training kernels and the Kuhn-sized betting adapter; this is not a Hold'em equilibrium certificate."
+  },
+  "iterations": [100, 1000, 10000],
+  "algorithms": ["vanilla", "dcfr"],
+  "backends": ["recursive", "planned", "public-batched"],
+  "gates": {
+    "final_iterations": 10000,
+    "max_nash_conv": {"vanilla": 0.01, "dcfr": 0.003},
+    "max_value_error": 0.001,
+    "max_shared_oracle_metric_difference": 1e-12,
+    "max_rational_replay_difference": 1e-12,
+    "max_final_to_initial_gap_ratio": 0.2
+  }
+}
