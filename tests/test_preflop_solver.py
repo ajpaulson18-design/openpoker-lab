@@ -160,6 +160,40 @@ class PreflopSolverTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "recursive or planned"):
             self.solve(traversal="public-batched")
 
+    def test_shared_flop_turn_prefix_preserves_river_dependent_hidden_outcomes(self):
+        from scripts.preflop_validation import compare_result, physical_worlds, replay_policy
+
+        runouts = (
+            "2c3c4d7h8h",  # SB wins with a pair of aces.
+            "2c3c4d7hKc",  # Same public prefix; BB wins with three kings.
+            "2c3c4dKc8h",  # Same flop, but the ordered turn is different.
+        )
+        worlds = physical_worlds("AsAd", "KsKd", runouts)
+        self.assertEqual({world[3] for world in worlds}, {-1, 1})
+        self.assertTrue(all(world[4][:4] == tuple(cards("2c3c4d7h", 4))
+                            for world in worlds[:2]))
+
+        kwargs = {
+            "config": {"starting_stack": 4, "max_raises": 0,
+                       "raise_sizes": [], "include_all_in": False},
+            "runouts": runouts,
+            "flop_config": {"bet_sizes": [.5], "raise_sizes": [],
+                            "max_raises": 0, "include_all_in": False},
+        }
+        for traversal in ("recursive", "planned"):
+            with self.subTest(traversal=traversal):
+                result = solve_preflop(
+                    "AsAd", "KsKd", iterations=20, traversal=traversal, **kwargs)
+                oracle = replay_policy(result, "AsAd", "KsKd", **kwargs)
+                compare_result(result, oracle)
+                flop_rows = [row for row in result["strategy"]
+                             if row["player"] == "bb" and row["street"] == "flop"
+                             and row["history"][-1] == "flop@2c3c4d"]
+                self.assertEqual(len(flop_rows), 1)
+                self.assertEqual(flop_rows[0]["revealed_board"], ["2c", "3c", "4d"])
+                self.assertEqual(oracle["checked_information_sets"],
+                                 len(result["strategy"]))
+
     def test_runout_iterables_are_bounded_before_materialization(self):
         from pokerlab import preflop_solver
 

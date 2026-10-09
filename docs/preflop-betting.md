@@ -4,6 +4,9 @@
 It reuses the existing action/node types, raise sizing helper and CFR-compatible
 tree interface. Existing flop, turn, river and Coach source remains unchanged.
 This is a game-construction component, not a preflop equilibrium solver.
+The separate [bounded preflop solver](preflop-solver.md) now supplies physical
+flop chance and postflop continuations; the tree-builder's default boundaries
+remain explicit and unsolved.
 
 Player 0 is the small blind/button; player 1 is the big blind. Starting stacks
 include forced blinds. A small-blind completion leaves the big blind its

@@ -1,6 +1,6 @@
 # Solver progress record
 
-Snapshot: 2026-10-08. Mathematical calculation only; the AI Coach workstream
+Snapshot: 2026-10-09. Mathematical calculation only; the AI Coach workstream
 and its contracts remain separate. GitHub is the delivery source of truth.
 
 ## restricted-river-v2
@@ -362,7 +362,7 @@ are required by this quality milestone; no external dependency was introduced.
 The ongoing solver goal now takes a flop/preflop detour while a separate
 reviewing workstream evaluates turn and river. Preserve the merged turn/river
 implementation and isolate any future shared-kernel changes behind compatible
-interfaces and full regression checks. Preflop and unrestricted no-limit
+interfaces and full regression checks. Full-deck preflop and unrestricted no-limit
 Hold'em equilibrium remain unsupported; Kuhn quality is evidence about these
 training kernels, not a Hold'em accuracy certificate.
 
@@ -392,3 +392,44 @@ chance and postflop betting continuations while preserving position, hidden
 cards, perfect recall and cumulative contributions. Avoid treating sampled
 or conditional continuation values as unrestricted preflop equilibrium.
 Keep turn/river production work isolated from their separate evaluating lane.
+
+## Bounded preflop solving with physical flop chance
+
+The additive `preflop_solver.py` now connects the merged blind-aware betting
+component to physical flop chance and existing postflop templates. Global
+SB/button and BB identities, BB-first postflop action, refunds and cumulative
+whole-hand contributions survive the boundary. Flop order is canonical;
+turn/river order remains physical. Selected outcomes condition one joint
+hand/runout distribution, with blocker-induced private-prior shifts serialized
+for external review. Full-deck preflop requests fail before rank/world allocation.
+
+Luna implemented the bounded solver; lead review added an independently
+implemented physical-world/ranking/numeric-state policy replay and exact legal
+best responses. The oracle shares card/range grammar only. Its hidden-flop
+anchor distinguishes a legal best response worth zero from an illegal
+clairvoyant response worth 0.25 chips. Weighted asymmetric four-street histories,
+minimum raises, stage overrides, short-blind refunds, action legality and
+recursive/planned vanilla/DCFR are checked independently.
+
+Seventeen focused tests passed locally. GitHub's initial complete 360-test suite passed
+on Python 3.11, 3.12 and 3.13, including the Coach regressions; frontend checks
+also passed. Existing turn/river, shared training-kernel and Coach production
+source is unchanged. No external code, dependencies or solver outputs were
+imported. See [model limits, provenance and reproduction](preflop-solver.md).
+
+Source-frozen convergence checks at `7b5694f` compare recursive and planned
+vanilla/DCFR at 100 and 1,000 iterations. At 1,000, NashConv is
+0.00025/7.48876e-10 chips for the hidden-flop anchor,
+0.0147832/5.99550e-7 for the live four-street fixture, and
+0.00970026/7.55582e-7 for the weighted asymmetric fixture (vanilla/DCFR).
+Each checkpoint's values and both legal BRs must agree with independent replay
+within 1e-10, private-pair probabilities within 1e-12, and both traversals must
+agree within 1e-10. All final gaps must be below 0.02 chips vanilla and
+0.001 DCFR and improve from 100 iterations. Complete-call timing and separate
+Python allocation measurements are in the linked versioned report; they do
+not establish full-deck performance or a process-memory ceiling.
+
+The next priority is measured flop/preflop efficiency and broader independent
+chance/information-set validation within explicit resource limits. The selected
+games establish complete-hand calculation in a finite abstraction; they are
+not unconditional full-deck or unrestricted NLHE equilibrium certificates.
