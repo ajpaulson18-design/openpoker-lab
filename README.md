@@ -216,6 +216,10 @@ defaults are retained.
 Optional [preflop private-hand vectors](docs/preflop-public-batched.md) preserve
 the configured game and exact responses, with measured range comparisons and
 explicit memory and numerical limits.
+Optional [vector value and best-response diagnostics](docs/preflop-public-diagnostics.md)
+reuse that utility-preserving view to compute the configured game's legal
+responses, with independent replay validation. Recursive diagnostics remain
+the default.
 The [independent monetary replay](docs/preflop-monetary-replay.md) checks the
 configured local rounding order exactly and retains a separate historical
 precision diagnostic.

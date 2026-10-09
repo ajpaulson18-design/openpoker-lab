@@ -19,6 +19,11 @@ result = solve_preflop(
 print(result["value_sb"], result["nash_conv"])
 ```
 
+Optional `diagnostics="public-batched"` uses the shared private-hand-vector
+evaluator for the profile value and both exact legal responses, independently
+of the training backend. Its [measured scope and utility view](preflop-public-diagnostics.md)
+are documented separately. Generic recursive diagnostics remain the default.
+
 ## Game and probability meanings
 
 Global player 0 is the small blind/button and acts first preflop; player 1 is

@@ -1,0 +1,7102 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-preflop-vector-exact-diagnostics-v1",
+  "generated_at": "2026-10-09T15:06:48.666276+00:00",
+  "source_revision": "f9f7bdad5ec4fa9d45a27d149a3b42dbef849b7e",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "79a19cb82453029a287dac9b4c8aae6565c6a8b2d8b6ba1d03bf495ba027aea8",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "d2a8a0ad6d64a9b04a08dd3970b095dc36b0934990961339457b1bb5fb1ad174",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/public_cfr.py": "72b6fc73485b9bd425ec7b3f83b3306528a97e0c035b040e23b9f65514eef41a",
+    "pokerlab/public_diagnostics.py": "7fc0bd427edc947896b071de1e8f503a5c04c22133ccec30511b4aca0db3d8d7",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "scripts/benchmark_preflop_public_batched.py": "d46680abc1eae0131b44a8fbadf7136cab435b09b98f6c5c8e22ceaf0a883c3f",
+    "scripts/benchmark_preflop_public_diagnostics.py": "782ca814ea3877d4873708fa32a4a6cd190bfb8a98fae7c58cec6ec9914ae2bf",
+    "benchmarks/preflop-public-diagnostics-v1.json": "76ac8841290d606146722246d2ddccb8a3a5fe7d3b6ad657ca405c79718759f8"
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "repeats": 3,
+  "timing_scope": "Rotating-order complete solves plus JSON serialization, with phase wrapper overhead. Independent replay and explicit pre-call garbage collection excluded. Same public-batched DCFR training for both diagnostic choices.",
+  "memory_scope": "Separate complete solves plus JSON serialization at ten iterations only, using tracemalloc after pre-call garbage collection. Python allocations, not RSS; no hundred-iteration memory measurement.",
+  "scope": "Exact finite-game value and legal information-set BR comparisons for 18 vs 18 private combinations on selected outcomes, and four private pairs with every fixed-flop future deal. Not unrestricted/full-deck preflop or an equilibrium accuracy certificate.",
+  "records": [
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "recursive",
+      "seconds": [
+        2.54708920000121,
+        2.5891646000090986,
+        2.5755954000051133
+      ],
+      "median_seconds": 2.5755954000051133,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.02353219996439293,
+          "preflop_tree": 0.00046150002162903547,
+          "templates_and_grafting": 0.02715199999511242,
+          "training": 1.1973090000101365,
+          "exact_diagnostics": 1.1101534000481479,
+          "other_including_view_and_serialization": 0.1884810999617912
+        },
+        {
+          "enumeration_and_ranking": 0.013908100023400038,
+          "preflop_tree": 0.0002734000445343554,
+          "templates_and_grafting": 0.019864500034600496,
+          "training": 1.2539942999719642,
+          "exact_diagnostics": 1.1039244999992661,
+          "other_including_view_and_serialization": 0.19719979993533343
+        },
+        {
+          "enumeration_and_ranking": 0.013123599987011403,
+          "preflop_tree": 0.00034900003811344504,
+          "templates_and_grafting": 0.009703700023237616,
+          "training": 1.2342205999884754,
+          "exact_diagnostics": 1.1246074000373483,
+          "other_including_view_and_serialization": 0.19359109993092716
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 1.1101534000481479,
+        "other_including_view_and_serialization": 0.19359109993092716,
+        "preflop_tree": 0.00034900003811344504,
+        "templates_and_grafting": 0.019864500034600496,
+        "enumeration_and_ranking": 0.013908100023400038,
+        "training": 1.2342205999884754
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 7027963
+      },
+      "json_payload_bytes": 1490407,
+      "worlds": 864,
+      "info_sets": 3438,
+      "compatible_private_pairs": 324,
+      "public_states": 535,
+      "decisions": 202,
+      "metrics": {
+        "value_sb": 1.4710840788187374,
+        "value_bb": -1.4710840788187374,
+        "sb_best_response_value": 1.5454746255179515,
+        "bb_best_response_value": -0.9985088985088982,
+        "nash_conv": 0.5469657270090532,
+        "exploitability": 0.2734828635045266
+      },
+      "independent_replay": {
+        "value_sb": 1.471084078818737,
+        "value_bb": -1.471084078818737,
+        "sb_best_response_value": 1.5454746255179515,
+        "bb_best_response_value": -0.9985088985088983,
+        "nash_conv": 0.5469657270090531,
+        "worlds": 864,
+        "monetary_mode": "configured",
+        "checked_information_sets": 3438,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.440892098500626e-16,
+        "value_bb": 4.440892098500626e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 1.1102230246251565e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "public-batched",
+      "seconds": [
+        1.6238959999755025,
+        1.6197057000244968,
+        1.418163700029254
+      ],
+      "median_seconds": 1.6197057000244968,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.018803399987518787,
+          "preflop_tree": 0.0003233999595977366,
+          "templates_and_grafting": 0.01865039998665452,
+          "training": 1.1965270999935456,
+          "exact_diagnostics": 0.20882200001506135,
+          "other_including_view_and_serialization": 0.18076970003312454
+        },
+        {
+          "enumeration_and_ranking": 0.016252300003543496,
+          "preflop_tree": 0.0003003999590873718,
+          "templates_and_grafting": 0.02407470002071932,
+          "training": 1.1884609999833629,
+          "exact_diagnostics": 0.20605719997547567,
+          "other_including_view_and_serialization": 0.18456010008230805
+        },
+        {
+          "enumeration_and_ranking": 0.017602099978830665,
+          "preflop_tree": 0.0003142000059597194,
+          "templates_and_grafting": 0.02529820002382621,
+          "training": 0.9843943999730982,
+          "exact_diagnostics": 0.21426030003931373,
+          "other_including_view_and_serialization": 0.17629450000822544
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 0.20882200001506135,
+        "other_including_view_and_serialization": 0.18076970003312454,
+        "preflop_tree": 0.0003142000059597194,
+        "templates_and_grafting": 0.02407470002071932,
+        "enumeration_and_ranking": 0.017602099978830665,
+        "training": 1.1884609999833629
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 7028649
+      },
+      "json_payload_bytes": 1490642,
+      "worlds": 864,
+      "info_sets": 3438,
+      "compatible_private_pairs": 324,
+      "public_states": 535,
+      "decisions": 202,
+      "metrics": {
+        "value_sb": 1.4710840788187374,
+        "value_bb": -1.4710840788187374,
+        "sb_best_response_value": 1.5454746255179521,
+        "bb_best_response_value": -0.9985088985088987,
+        "nash_conv": 0.5469657270090534,
+        "exploitability": 0.2734828635045267
+      },
+      "independent_replay": {
+        "value_sb": 1.471084078818737,
+        "value_bb": -1.471084078818737,
+        "sb_best_response_value": 1.5454746255179515,
+        "bb_best_response_value": -0.9985088985088983,
+        "nash_conv": 0.5469657270090531,
+        "worlds": 864,
+        "monetary_mode": "configured",
+        "checked_information_sets": 3438,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.440892098500626e-16,
+        "value_bb": 4.440892098500626e-16,
+        "sb_best_response_value": 6.661338147750939e-16,
+        "bb_best_response_value": 3.3306690738754696e-16,
+        "nash_conv": 3.3306690738754696e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "recursive",
+      "seconds": [
+        15.107402099994943,
+        15.10966489999555,
+        13.731314899981953
+      ],
+      "median_seconds": 15.107402099994943,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.009737899992614985,
+          "preflop_tree": 0.0001542000100016594,
+          "templates_and_grafting": 0.009781500033568591,
+          "training": 13.689885100000538,
+          "exact_diagnostics": 1.2254343999666162,
+          "other_including_view_and_serialization": 0.1724089999916032
+        },
+        {
+          "enumeration_and_ranking": 0.015166600001975894,
+          "preflop_tree": 0.00026350002735853195,
+          "templates_and_grafting": 0.022598399955313653,
+          "training": 13.86943700001575,
+          "exact_diagnostics": 1.014934600039851,
+          "other_including_view_and_serialization": 0.187264799955301
+        },
+        {
+          "enumeration_and_ranking": 0.018273299967404455,
+          "preflop_tree": 0.00030499999411404133,
+          "templates_and_grafting": 0.022958499961532652,
+          "training": 12.42526839999482,
+          "exact_diagnostics": 1.0844724000198767,
+          "other_including_view_and_serialization": 0.18003730004420504
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 1.0844724000198767,
+        "other_including_view_and_serialization": 0.18003730004420504,
+        "preflop_tree": 0.00026350002735853195,
+        "templates_and_grafting": 0.022598399955313653,
+        "enumeration_and_ranking": 0.015166600001975894,
+        "training": 13.689885100000538
+      },
+      "memory": null,
+      "json_payload_bytes": 1491050,
+      "worlds": 864,
+      "info_sets": 3438,
+      "compatible_private_pairs": 324,
+      "public_states": 535,
+      "decisions": 202,
+      "metrics": {
+        "value_sb": 1.0006162522386401,
+        "value_bb": -1.0006162522386401,
+        "sb_best_response_value": 1.0006206819294352,
+        "bb_best_response_value": -0.9999983033129181,
+        "nash_conv": 0.0006223786165171497,
+        "exploitability": 0.0003111893082585748
+      },
+      "independent_replay": {
+        "value_sb": 1.0006162522386397,
+        "value_bb": -1.0006162522386397,
+        "sb_best_response_value": 1.0006206819294352,
+        "bb_best_response_value": -0.9999983033129183,
+        "nash_conv": 0.0006223786165169276,
+        "worlds": 864,
+        "monetary_mode": "configured",
+        "checked_information_sets": 3438,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.440892098500626e-16,
+        "value_bb": 4.440892098500626e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 2.220446049250313e-16,
+        "nash_conv": 2.220446049250313e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "public-batched",
+      "seconds": [
+        14.13190029998077,
+        16.190649900003336,
+        12.700000200013164
+      ],
+      "median_seconds": 14.13190029998077,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.015998699993360788,
+          "preflop_tree": 0.00032110000029206276,
+          "templates_and_grafting": 0.024447500007227063,
+          "training": 13.673070699966047,
+          "exact_diagnostics": 0.22987799998372793,
+          "other_including_view_and_serialization": 0.188184300030116
+        },
+        {
+          "enumeration_and_ranking": 0.025840000016614795,
+          "preflop_tree": 0.0005828000139445066,
+          "templates_and_grafting": 0.023366200039163232,
+          "training": 15.612026300048456,
+          "exact_diagnostics": 0.29955779999727383,
+          "other_including_view_and_serialization": 0.2292767998878844
+        },
+        {
+          "enumeration_and_ranking": 0.017501300026196986,
+          "preflop_tree": 0.0005887000006623566,
+          "templates_and_grafting": 0.026616199989803135,
+          "training": 12.242291400034446,
+          "exact_diagnostics": 0.21942860004492104,
+          "other_including_view_and_serialization": 0.19357399991713464
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 0.22987799998372793,
+        "other_including_view_and_serialization": 0.19357399991713464,
+        "preflop_tree": 0.0005828000139445066,
+        "templates_and_grafting": 0.024447500007227063,
+        "enumeration_and_ranking": 0.017501300026196986,
+        "training": 13.673070699966047
+      },
+      "memory": null,
+      "json_payload_bytes": 1491284,
+      "worlds": 864,
+      "info_sets": 3438,
+      "compatible_private_pairs": 324,
+      "public_states": 535,
+      "decisions": 202,
+      "metrics": {
+        "value_sb": 1.0006162522386395,
+        "value_bb": -1.0006162522386395,
+        "sb_best_response_value": 1.0006206819294354,
+        "bb_best_response_value": -0.9999983033129183,
+        "nash_conv": 0.0006223786165171497,
+        "exploitability": 0.0003111893082585748
+      },
+      "independent_replay": {
+        "value_sb": 1.0006162522386397,
+        "value_bb": -1.0006162522386397,
+        "sb_best_response_value": 1.0006206819294352,
+        "bb_best_response_value": -0.9999983033129183,
+        "nash_conv": 0.0006223786165169276,
+        "worlds": 864,
+        "monetary_mode": "configured",
+        "checked_information_sets": 3438,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AcAs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AdAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "AhAs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKd",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKh",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9d",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9c9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9h",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9d9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "9h9s",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JcJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JdJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "JhJs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTd",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TcTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTh",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "TdTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KcKs",
+            "bb": "ThTs",
+            "probability": 0.0023148148148148147
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KdKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "KhKs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQd",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QcQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQh",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QdQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9d",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9c9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9h",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9d9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "9h9s",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JcJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JdJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "JhJs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTd",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TcTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTh",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "TdTs",
+            "probability": 0.003472222222222222
+          },
+          {
+            "sb": "QhQs",
+            "bb": "ThTs",
+            "probability": 0.003472222222222222
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.220446049250313e-16
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "four-private-pairs-complete-fixed-flop-future-deck",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "recursive",
+      "seconds": [
+        16.55549769999925,
+        14.178691099979915,
+        13.755842000013217
+      ],
+      "median_seconds": 14.178691099979915,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.4248141000280157,
+          "preflop_tree": 0.00015760003589093685,
+          "templates_and_grafting": 1.1243044000002556,
+          "training": 11.153802799992263,
+          "exact_diagnostics": 2.193983000004664,
+          "other_including_view_and_serialization": 1.658435799938161
+        },
+        {
+          "enumeration_and_ranking": 0.4273346999543719,
+          "preflop_tree": 0.00016979995416477323,
+          "templates_and_grafting": 1.2746920000063255,
+          "training": 7.997135799960233,
+          "exact_diagnostics": 2.827670599974226,
+          "other_including_view_and_serialization": 1.651688200130593
+        },
+        {
+          "enumeration_and_ranking": 0.4765174000058323,
+          "preflop_tree": 0.00019180000526830554,
+          "templates_and_grafting": 1.3414344000048004,
+          "training": 7.767238900007214,
+          "exact_diagnostics": 2.329561200051103,
+          "other_including_view_and_serialization": 1.8408982999389991
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 2.329561200051103,
+        "other_including_view_and_serialization": 1.658435799938161,
+        "preflop_tree": 0.00016979995416477323,
+        "templates_and_grafting": 1.2746920000063255,
+        "enumeration_and_ranking": 0.4273346999543719,
+        "training": 7.997135799960233
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 42883204
+      },
+      "json_payload_bytes": 8021217,
+      "worlds": 7920,
+      "info_sets": 17620,
+      "compatible_private_pairs": 4,
+      "public_states": 30920,
+      "decisions": 9546,
+      "metrics": {
+        "value_sb": 0.5104324820878557,
+        "value_bb": -0.5104324820878557,
+        "sb_best_response_value": 0.7890360650037924,
+        "bb_best_response_value": -0.3215836172793023,
+        "nash_conv": 0.4674524477244901,
+        "exploitability": 0.23372622386224506
+      },
+      "independent_replay": {
+        "value_sb": 0.5104324820878557,
+        "value_bb": -0.5104324820878557,
+        "sb_best_response_value": 0.7890360650037924,
+        "bb_best_response_value": -0.3215836172793023,
+        "nash_conv": 0.4674524477244901,
+        "worlds": 7920,
+        "monetary_mode": "configured",
+        "checked_information_sets": 17620,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "QdQs",
+            "bb": "KdKs",
+            "probability": 0.24999999999998782
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 1.2184697695261093e-14
+    },
+    {
+      "scenario": "four-private-pairs-complete-fixed-flop-future-deck",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "training": "public-batched",
+      "diagnostics": "public-batched",
+      "seconds": [
+        11.115118999965489,
+        12.03602120000869,
+        12.409130199986976
+      ],
+      "median_seconds": 12.03602120000869,
+      "phase_seconds": [
+        {
+          "enumeration_and_ranking": 0.4187458999804221,
+          "preflop_tree": 0.00014450005255639553,
+          "templates_and_grafting": 1.0874341999879107,
+          "training": 7.041276400035713,
+          "exact_diagnostics": 0.9239922999986447,
+          "other_including_view_and_serialization": 1.643525699910242
+        },
+        {
+          "enumeration_and_ranking": 0.4138914999784902,
+          "preflop_tree": 0.0001400999608449638,
+          "templates_and_grafting": 1.2446767999790609,
+          "training": 7.670951700012665,
+          "exact_diagnostics": 0.9597559000249021,
+          "other_including_view_and_serialization": 1.746605200052727
+        },
+        {
+          "enumeration_and_ranking": 0.5579869999783114,
+          "preflop_tree": 0.0001664000446908176,
+          "templates_and_grafting": 1.192302400013432,
+          "training": 7.8263633999740705,
+          "exact_diagnostics": 1.1409202999784611,
+          "other_including_view_and_serialization": 1.69139069999801
+        }
+      ],
+      "phase_median_seconds": {
+        "exact_diagnostics": 0.9597559000249021,
+        "other_including_view_and_serialization": 1.69139069999801,
+        "preflop_tree": 0.00014450005255639553,
+        "templates_and_grafting": 1.192302400013432,
+        "enumeration_and_ranking": 0.4187458999804221,
+        "training": 7.670951700012665
+      },
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 42883964
+      },
+      "json_payload_bytes": 8021455,
+      "worlds": 7920,
+      "info_sets": 17620,
+      "compatible_private_pairs": 4,
+      "public_states": 30920,
+      "decisions": 9546,
+      "metrics": {
+        "value_sb": 0.5104324820878585,
+        "value_bb": -0.5104324820878585,
+        "sb_best_response_value": 0.7890360650037851,
+        "bb_best_response_value": -0.3215836172792966,
+        "nash_conv": 0.4674524477244885,
+        "exploitability": 0.23372622386224426
+      },
+      "independent_replay": {
+        "value_sb": 0.5104324820878557,
+        "value_bb": -0.5104324820878557,
+        "sb_best_response_value": 0.7890360650037924,
+        "bb_best_response_value": -0.3215836172793023,
+        "nash_conv": 0.4674524477244901,
+        "worlds": 7920,
+        "monetary_mode": "configured",
+        "checked_information_sets": 17620,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "JcJh",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "QdQs",
+            "bb": "JcJh",
+            "probability": 0.24999999999998782
+          },
+          {
+            "sb": "QdQs",
+            "bb": "KdKs",
+            "probability": 0.24999999999998782
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7755575615628914e-15,
+        "value_bb": 2.7755575615628914e-15,
+        "sb_best_response_value": 7.327471962526033e-15,
+        "bb_best_response_value": 5.717648576819556e-15,
+        "nash_conv": 1.609823385706477e-15
+      },
+      "private_pair_max_probability_gap": 1.2184697695261093e-14
+    }
+  ],
+  "comparisons": [
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 6.661338147750939e-16,
+        "bb_best_response_value": 4.440892098500626e-16,
+        "nash_conv": 2.220446049250313e-16,
+        "exploitability": 1.1102230246251565e-16
+      },
+      "maximum_policy_probability_gap": 0.0,
+      "recursive_over_vector_time_ratio": 1.590162583218766
+    },
+    {
+      "scenario": "eighteen-versus-eighteen-private-combinations",
+      "iterations": 100,
+      "scalar_absolute_gaps": {
+        "value_sb": 6.661338147750939e-16,
+        "value_bb": 6.661338147750939e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 2.220446049250313e-16,
+        "nash_conv": 0.0,
+        "exploitability": 0.0
+      },
+      "maximum_policy_probability_gap": 0.0,
+      "recursive_over_vector_time_ratio": 1.069028352826371
+    },
+    {
+      "scenario": "four-private-pairs-complete-fixed-flop-future-deck",
+      "iterations": 10,
+      "scalar_absolute_gaps": {
+        "value_sb": 2.7755575615628914e-15,
+        "value_bb": 2.7755575615628914e-15,
+        "sb_best_response_value": 7.327471962526033e-15,
+        "bb_best_response_value": 5.717648576819556e-15,
+        "nash_conv": 1.609823385706477e-15,
+        "exploitability": 8.049116928532385e-16
+      },
+      "maximum_policy_probability_gap": 0.0,
+      "recursive_over_vector_time_ratio": 1.178021446154455
+    }
+  ]
+}
