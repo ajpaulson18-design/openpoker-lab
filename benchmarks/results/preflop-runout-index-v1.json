@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-indexed-blocker-preflight-v1",
+  "generated_at": "2026-10-09T23:44:59.176912+00:00",
+  "source_revision": "2eb9f6276e7d0ebe36076d2d8af9e24ff6a46548",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "1aad74dfd29aee404bf022cd7c6d7a5afa6c89c1636eefb99455ec43866380d9",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_delayed_cfrplus.py": "19ec3fca6e48bf819ef4424b661feee6aad7bc5449c3bbf215994ccbdaef922b",
+    "pokerlab/preflop_vector_budget.py": "81822126a811940c6e98fa46ded099c3ebfa567ae5b6a445c8d563a0e8d8cc41",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "scripts/benchmark_preflop_runout_index.py": "c7425530ff06b88f2a2b57bdfe0129aa6e0830fe8df3311bc1ffd9740b865157",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "tests/test_preflop_runout_index.py": "209d5d75674789da80b9507aab9a2464f8e028e9829a5dac0fd73fc5e1ceaf6d",
+    "tests/test_preflop_indexed_worlds.py": "a69cbf33d958b1853fb011bfc48968ae3b7f1652efcf2c1e8ebd3df30d76a465"
+  },
+  "configuration_sha256": "08b01c3b8d9b5c33e0b508098ec3a35e4e61618a181bfcccba3166084efdc3d8",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-indexed-blocker-preflight-v1",
+    "repeats": 3,
+    "complete_fixed_flop": {
+      "sb": "AsAd,QsQd",
+      "bb": "KsKd,JhJc",
+      "flop": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "iterations": 10,
+      "worlds": 7920
+    },
+    "blocked_preflight": {
+      "sb": "AsAd",
+      "bb_combinations": 300,
+      "selected_outcomes": 100000,
+      "iterations": 10,
+      "logical_pair_runout_checks": 30000000,
+      "expected_rejection": "Selected runouts contain no compatible physical deals."
+    },
+    "selected_game": {
+      "sb": "AsAd:1,AhAc:0.25",
+      "bb": "KsKd:1,KcKh:0.5",
+      "runouts": [
+        "2c3c4d7h8h",
+        "Kc2d3h7s8c",
+        "Ac2d3h7s8c"
+      ],
+      "config": {
+        "starting_stack": [
+          4,
+          3
+        ],
+        "max_raises": 0
+      },
+      "iterations": 20,
+      "averaging_delay": 8
+    }
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "timing_scope": "Three complete alternating paired calls per scenario including normalization, ranking when applicable, and JSON serialization; pre-call GC and independent replay excluded. Scalar reference preserves both disjoint-set blocker scans in the same new integration; it is not the complete historical source. Shared-host medians are fixture-specific, not universal speedup claims.",
+  "memory_scope": "Separate index construction plus one blocked count under tracemalloc with 100,000 canonical selected outcomes already allocated. Includes helper normalization/duplicate validation, posting construction, conversion and query; excludes solver input normalization, worlds, ranks, tree, training, diagnostics and RSS. Packed payload estimates exclude object headers/int limb padding and normalization copies; traced peak is measured separately.",
+  "admission_scope": "All existing caps unchanged. pair_runout_preflight_checks is the original conservative logical admission charge, not the optimized Python disjoint-test count. The 30-million scenario is wholly blocked and rejects before ranking; it is preflight scalability, not a solved game.",
+  "complete_fixed_flop_enumeration": {
+    "seconds": {
+      "scalar": [
+        0.43616019998444244,
+        0.4594043000251986,
+        0.43518039997434244
+      ],
+      "indexed": [
+        0.41232509998371825,
+        0.3049141999799758,
+        0.37246019998565316
+      ]
+    },
+    "median_seconds": {
+      "scalar": 0.43616019998444244,
+      "indexed": 0.37246019998565316
+    },
+    "identical_result_sha256": "f31df02593cd6fb626443f6381165e98662fbc462366c212827594aa62f6f565"
+  },
+  "blocked_preflight": {
+    "seconds": {
+      "scalar": [
+        20.823535699979402,
+        21.060540799982846,
+        21.922249600000214
+      ],
+      "indexed": [
+        3.0899449000135064,
+        3.215739500010386,
+        2.9687118000001647
+      ]
+    },
+    "median_seconds": {
+      "scalar": 21.060540799982846,
+      "indexed": 3.0899449000135064
+    },
+    "identical_result_sha256": "6928940f799dbdda9d8ddb646567acae17124c4484dcf7c77f65a1f699e74211"
+  },
+  "index_construction_memory": {
+    "selected_outcomes": 100000,
+    "peak_traced_python_bytes": 13923944,
+    "logical_posting_payload_bytes": 650000,
+    "logical_conversion_overlap_payload_bytes": 1300000
+  },
+  "weighted_complete_solve": {
+    "seconds": {
+      "scalar": [
+        0.17406440002378076,
+        0.2001890999963507,
+        0.2269304000074044
+      ],
+      "indexed": [
+        0.14577750000171363,
+        0.16081069997744635,
+        0.22656010003993288
+      ]
+    },
+    "median_seconds": {
+      "scalar": 0.2001890999963507,
+      "indexed": 0.16081069997744635
+    },
+    "identical_result_sha256": "c5fd94ca5bdb5b18349a3bc27410fc1ef041729dbb4e1d81b0704e793b65e4f4"
+  },
+  "configured_replay": {
+    "value_sb": 0.45945945945945943,
+    "value_bb": -0.45945945945945943,
+    "sb_best_response_value": 0.4594594594594594,
+    "bb_best_response_value": -0.45945945945945954,
+    "nash_conv": 0.0,
+    "worlds": 8,
+    "monetary_mode": "configured",
+    "checked_information_sets": 214,
+    "private_pair_probabilities": [
+      {
+        "sb": "AcAh",
+        "bb": "KcKh",
+        "probability": 0.027027027027027025
+      },
+      {
+        "sb": "AcAh",
+        "bb": "KdKs",
+        "probability": 0.1081081081081081
+      },
+      {
+        "sb": "AdAs",
+        "bb": "KcKh",
+        "probability": 0.2162162162162162
+      },
+      {
+        "sb": "AdAs",
+        "bb": "KdKs",
+        "probability": 0.6486486486486486
+      }
+    ]
+  },
+  "metric_absolute_gaps": {
+    "value_sb": 0.0,
+    "value_bb": 0.0,
+    "sb_best_response_value": 0.0,
+    "bb_best_response_value": 0.0,
+    "nash_conv": 0.0
+  }
+}

@@ -614,3 +614,25 @@ exceeding the world-iteration limit are checked to fail before ranking. This
 10-iteration planned-vanilla check establishes exact policy replay and chance
 coverage; it does not establish high-accuracy equilibrium convergence or new
 runtime/memory performance. See the [expanded fixture scope](fixed-flop-complete-chance.md).
+
+## Indexed preflop blocker filtering
+
+A bounded per-card selected-runout index replaces both dense Python private-pair
+blocker scans while preserving canonical outcome/world order and exact weights.
+Candidate, selected-outcome, world-iteration and 30-million logical preflight
+admission caps remain unchanged. No shared CFR, postflop, turn/river, public
+diagnostic or AI Coach production source changes are required.
+
+At frozen `2eb9f62`, three alternating paired calls preserve exact serialized
+results for all 7,920 fixed-flop worlds and a weighted complete solve. The
+all-blocked 300-pair/100,000-outcome fixture charges exactly 30 million admission
+checks and rejects before ranking on both paths; median preflight time falls
+from 21.061 to 3.090 seconds. This is setup scalability, not larger solved-game
+coverage. Full fixed-flop enumeration medians are 0.436/0.372 seconds. The small
+complete-solve raw timings overlap, so no general solver speedup is claimed.
+
+The separate index-construction trace peaks at 13,923,944 Python bytes for
+100,000 already-canonical outcomes, including helper validation/posting scratch;
+this is not whole-solve memory or RSS. Eleven new helper/integration tests include
+randomized brute-force comparison, exact world/policy parity, independent legal
+BR replay and guard ordering. See [scope, provenance and reproduction](preflop-runout-index.md).
