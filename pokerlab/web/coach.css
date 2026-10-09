@@ -18,7 +18,15 @@
 .current-coach-form { border-top:1px solid var(--line); margin-top:18px; padding-top:18px; }
 .current-coach-form h4 { margin:0 0 12px; }
 .current-coach-form textarea { min-height:78px; }
+.current-coach-starters { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+.current-coach-starters button { width:auto; }
 .current-coach-form .ai-coach-reply { margin-top:16px; }
+.current-coach-limitations { margin:12px 0 16px; }
+.current-coach-limitations h5 { margin:0 0 6px; font-size:13px; }
+.current-coach-limitations ul { margin:0; padding-left:18px; }
+.coach-technical-evidence { border-top:1px solid var(--line); margin-top:14px; padding-top:10px; }
+.coach-technical-evidence > summary { cursor:pointer; font-weight:650; }
+.coach-technical-evidence .ai-answer-block:first-child { margin-top:12px; }
 .current-coach-turns { border-top:1px solid var(--line); margin-top:20px; padding-top:16px; }
 .current-coach-turns > h4 { margin:0 0 12px; }
 .current-coach-turn { border-top:1px solid var(--line); padding-top:12px; margin-top:12px; }

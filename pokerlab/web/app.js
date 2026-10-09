@@ -95,7 +95,9 @@ function renderCurrentStudy(){
   const situation=v.situation?`<section class="current-study-situation" aria-label="${esc(v.situation.title)}"><h4>${esc(v.situation.title)}</h4><p>${esc(v.situation.text)}</p><p class="hint">${esc(v.situation.note)}</p></section>`:'';
   const modelSummary=`<section class="current-study-recommendation" aria-label="Model recommendation"><h4>What the model recommends</h4><p>${recommended?`${esc(actionLabel(recommended))} · ${recommended.estimated_ev_chips===null?'EV unavailable':`${chips(recommended.estimated_ev_chips)} estimated chips`}`:'No recommendation available'}</p><p class="hint">A local practice estimate from the visible cards and listed assumptions; it is not a solved strategy.</p></section>`;
   const termsGuide=decisionTermsGuide();
-  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}${situation}${modelSummary}${termsGuide}<h4>All modeled actions</h4><ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>${turnList}<form id="current-coach-form" class="current-coach-form"><h4>${turns.length?'Ask a follow-up about this decision':'Ask one question about this decision'}</h4><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask about this current unplayed decision">${esc(currentCoachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${currentCoachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${currentCoachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${currentCoachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${currentCoachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${currentCoachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${currentCoachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">External AI is off by default for every turn. When selected, this question, the current preview's allowlisted facts, and up to two recent questions for this same preview may be sent. Opponent cards are never sent.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local response.</p>':''}<button class="primary" type="submit"${currentCoachLoading||currentCoachNeedsRefresh||currentCoachFull||currentCoachStartNew?' disabled':''}>${currentCoachLoading?'Preparing answer…':'Ask question'}</button>${currentCoachLoading?'<p class="hint" role="status">Preparing an answer tied to this preview…</p>':''}${coachError}${fullNotice}</form>`;
+  const starterQuestions=[['recommendation','What is the current modeled recommendation?'],['limits','What assumptions limit this estimate?']];
+  const starterButtons=starterQuestions.map(([id,label])=>`<button type="button" class="secondary" data-current-coach-prompt="${id}"${currentCoachLoading||currentCoachNeedsRefresh?' disabled':''}>${label}</button>`).join('');
+  panel.innerHTML=`<div class="current-study-view"><p class="eyebrow">${esc(v.source_label)}</p><h4>${esc(v.heading)}</h4><p>${esc(ctx.street)} · Your cards ${ctx.hero_cards.map(cardHtml).join(' ')} · Pot ${esc(ctx.pot_chips)} chips</p>${ctx.board.length?`<p>Board ${ctx.board.map(cardHtml).join(' ')}</p>`:''}${situation}${modelSummary}${termsGuide}<h4>All modeled actions</h4><ul class="current-study-actions">${actions}</ul><h4>Assumptions</h4>${warnings(v.assumptions)}<h4>Limits</h4>${warnings(v.limitations)}<p class="fine">Preview only · revision ${esc(v.binding.state_revision)}</p></div><button class="secondary" data-study-current-retry>Refresh preview</button>${turnList}<form id="current-coach-form" class="current-coach-form"><h4>${turns.length?'Ask a follow-up about this decision':'Ask one question about this decision'}</h4><div class="current-coach-starters" role="group" aria-label="Starter questions">${starterButtons}</div><label>Question<textarea name="question" maxlength="500" required rows="3" placeholder="Ask about this current unplayed decision">${esc(currentCoachDraft.question)}</textarea></label><div class="two"><label>Detail<select name="detail"><option value="short"${currentCoachDraft.detail==='short'?' selected':''}>Short</option><option value="normal"${currentCoachDraft.detail==='normal'?' selected':''}>Normal</option><option value="technical"${currentCoachDraft.detail==='technical'?' selected':''}>Technical</option></select></label><label>Audience<select name="audience"><option value="beginner"${currentCoachDraft.audience==='beginner'?' selected':''}>Beginner</option><option value="standard"${currentCoachDraft.audience==='standard'?' selected':''}>Standard</option></select></label></div><label class="toggle coach-external-opt-in"><input name="external" type="checkbox"${currentCoachDraft.external?' checked':''}${externalAiAvailable?'':' disabled'}> Use external AI for this question</label><p class="hint">External AI is off by default for every turn. When selected, this question, the current preview's allowlisted facts, and up to two recent questions for this same preview may be sent. Opponent cards are never sent.</p>${!externalAiAvailable?'<p class="hint">External AI is disabled in local settings. You can still request a local response.</p>':''}<button class="primary" type="submit"${currentCoachLoading||currentCoachNeedsRefresh||currentCoachFull||currentCoachStartNew?' disabled':''}>${currentCoachLoading?'Preparing answer…':'Ask question'}</button>${currentCoachLoading?'<p class="hint" role="status">Preparing an answer tied to this preview…</p>':''}${coachError}${fullNotice}</form>`;
 }
 async function requestCurrentStudy(){
   if(!game||game.done||game.actor!==0||!activeHandId||pendingAction||!$('#coach-toggle').checked)return;
@@ -310,15 +312,18 @@ function coachTeachingNoteMarkup(result,currentPreview){
 function coachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,false);}
 function currentCoachTeachingNoteHtml(result){return coachTeachingNoteMarkup(result,true);}
 function coachReplyHtml(result,currentPreview=false){
-  const reply=result.reply||{},blocks=(reply.blocks||[]).map(block=>{
+  const reply=result.reply||{},isCurrentLimits=currentPreview&&reply.intent==='limits';
+  const blocks=(reply.blocks||[]).map(block=>{
     const blockFacts=block.facts||[];
     const actionLabels=new Map(blockFacts.filter(fact=>fact.kind==='modeled_action'&&Array.isArray(fact.value))
       .map(fact=>[fact.value[0],coachActionLabel(fact.value)]));
     const facts=blockFacts.map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(coachFactValue(fact,actionLabels))}${coachFactUnit(fact.unit,result)?` <span class="coach-unit">${esc(coachFactUnit(fact.unit,result))}</span>`:''}</li>`).join('');
-    const caveats=(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+    const caveats=isCurrentLimits?'':(block.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
     return `<section class="ai-answer-block"><h5>${esc(block.label)}</h5>${facts?`<ul>${facts}</ul>`:''}${caveats?`<ul class="study-limits">${caveats}</ul>`:''}</section>`;
   }).join('');
   const caveats=(reply.caveats||[]).map(item=>`<li>${esc(item)}</li>`).join('');
+  const currentLimitCaveats=[...new Set([...(reply.caveats||[]),...(reply.blocks||[]).flatMap(block=>block.caveats||[])])]
+    .filter(item=>typeof item==='string'&&item.trim());
   const origin=result.source==='openai'?'AI-selected plan · OpenAI':'Local explanation · OpenPoker renders validated facts';
   const reason=result.fallback_reason;
   const fallbackMessages={external_ai_not_configured:'External AI was requested but is disabled or not configured locally.',refusal:'External AI was requested, but the provider declined this question.',incomplete:'External AI was requested, but the provider did not finish the response.',invalid_response:'External AI was requested, but the provider returned an incomplete response.',invalid_plan:'External AI was requested, but its plan did not pass validation.',http_error:'External AI was requested, but the provider request failed.',timeout:'External AI was requested, but the provider request timed out.',network_error:'External AI was requested, but the provider could not be reached.',provider_error:'External AI was requested, but the provider request failed safely.'};
@@ -333,6 +338,11 @@ function coachReplyHtml(result,currentPreview=false){
   const evidence=[...evidenceFacts.values()].map(fact=>`<li><strong>${esc(coachFactLabel(fact.kind,currentPreview))}:</strong> ${esc(fact.fact_id)}</li>`).join('');
   const evidenceDetails=evidence?`<details class="coach-evidence-details"><summary>Evidence details</summary><p>References point to facts from this ${currentPreview?'current preview':'saved decision'}, bound to its evidence version.</p><ul>${evidence}</ul></details>`:'';
   const localScope=currentPreview&&typeof result.local_scope==='string'?`<p class="hint">${esc(result.local_scope)}</p>`:'';
+  if(isCurrentLimits){
+    const limitationList=currentLimitCaveats.map(item=>`<li>${esc(item)}</li>`).join('');
+    const technicalEvidence=`<details class="coach-technical-evidence"><summary>Technical evidence</summary>${blocks}${evidenceDetails}</details>`;
+    return `<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${limitationList?`<section class="current-coach-limitations"><h5>Assumptions and limitations</h5><ul class="study-limits">${limitationList}</ul></section>`:''}${technicalEvidence}</article>`;
+  }
   const answer=currentPreview
     ?`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Current practice preview')}</p>${fallback}${planScope}${localScope}${currentCoachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`
     :`<article class="ai-coach-reply"><p class="eyebrow">${esc(origin)} · ${esc(result.source_label||reply.source_label||'Saved analysis')}</p>${fallback}${planScope}${coachTeachingNoteHtml(result)}${blocks}${evidenceDetails}${caveats?`<h5>Limitations and caveats</h5><ul class="study-limits">${caveats}</ul>`:''}</article>`;
@@ -559,6 +569,19 @@ $('#game-form').elements.opponent_id.addEventListener('change',e=>{practiceOppon
 $('#current-study').addEventListener('click',e=>{
   if(e.target.closest('[data-study-current],[data-study-current-retry]')){void requestCurrentStudy();return;}
   if(e.target.closest('[data-current-coach-retry]')){void askCurrentCoach();return;}
+  const starter=e.target.closest('[data-current-coach-prompt]');
+  if(starter){
+    const binding=currentStudyView?.binding;
+    if(!binding||currentStudyView.status!=='ready'||!game||game.done||game.actor!==0
+        ||activeHandId!==binding.hand_id||game.id!==binding.hand_id
+        ||game.revision!==binding.state_revision||currentCoachLoading||currentCoachNeedsRefresh)return;
+    const questions={recommendation:'What is the current modeled recommendation?',limits:'What assumptions limit this estimate?'};
+    const question=questions[starter.dataset.currentCoachPrompt];if(!question)return;
+    currentCoachDraft.question=question;
+    if(currentCoachRetry&&currentCoachRetry.payload.question!==question)currentCoachRetry=null;
+    if(!currentCoachNeedsRefresh&&!currentCoachStartNew)currentCoachError='';
+    renderCurrentStudy();$('#current-coach-form')?.elements.question.focus();return;
+  }
   if(e.target.closest('[data-current-coach-new]')){
     currentCoachGeneration++;currentCoachConversation=null;currentCoachRetry=null;
     currentCoachFull=false;currentCoachStartNew=false;currentCoachError='';
