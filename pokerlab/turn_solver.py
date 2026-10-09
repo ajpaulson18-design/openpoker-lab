@@ -19,7 +19,8 @@ def _tree(config, river_config, runouts):
 
 def solve_turn_river(board, oop_range, ip_range, config=None, *, river_config=None,
                      runouts=None, iterations=1000, algorithm="vanilla",
-                     traversal="recursive", diagnostics="recursive"):
+                     traversal="recursive", diagnostics="recursive",
+                     target_exploitability=None, check_interval=100):
     """Solve the same finite turn game using the reusable postflop architecture.
 
     Pot and stacks describe the beginning of the turn. Subsequent sizing may
@@ -30,7 +31,9 @@ def solve_turn_river(board, oop_range, ip_range, config=None, *, river_config=No
     result = solve_postflop(cards(board, 4), oop_range, ip_range, config,
                            river_config=river_config, runouts=runouts,
                            iterations=iterations, algorithm=algorithm,
-                           traversal=traversal, diagnostics=diagnostics)
+                           traversal=traversal, diagnostics=diagnostics,
+                           target_exploitability=target_exploitability,
+                           check_interval=check_interval)
     result["solver_version"] = "configured-turn-river-v3"
     result["scope"] = ("Approximate equilibrium of the configured heads-up "
                        "turn-to-river action abstraction; no flop, preflop or rake.")

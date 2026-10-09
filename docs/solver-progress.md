@@ -1,5 +1,22 @@
 # Solver progress record
 
+## 2026-10-09 turn/river accuracy-controlled follow-up
+
+Branch `solver/turn-river-accuracy-20261009`, base `b7bf525`: added optional
+absolute-chip exploitability targets with exact completed-iteration checkpoints
+and explicit budget misses. Existing training schedules and default results
+remain unchanged; target mode rejects earlier streets and unsupported backends.
+All four CFR+ benchmark fixtures reached 0.1 chips in 100–240 iterations;
+same-iteration policy comparisons were identical. DCFR missed three targets.
+Six rational poker equilibria and independent pure-policy best responses extend
+validation beyond Kuhn. The full suite passed **436 tests in 114.951 seconds**.
+
+Larger synthetic ranges (up to 128 hands per player on river, 16 on full-deck
+turn) expose pair-world memory growth; all twelve scaling cases were admitted.
+Their single-call timings ran alongside unit tests and are descriptive, not
+controlled optimization comparisons. Commercial parity remains unproven.
+See [accuracy semantics, research, measurements and limits](turn-river-accuracy.md).
+
 ## 2026-10-09 isolated turn/river quality work
 
 Branch `solver/turn-river-quality-20261009`, base `65c9ba7`: optional
