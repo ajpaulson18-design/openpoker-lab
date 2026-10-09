@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-heads-up-preflop-v1",
+  "iterations": [100, 1000],
+  "repeats": 3,
+  "scenarios": [
+    {
+      "id": "hidden-flop-forced-big-blind",
+      "sb": "AsAd", "bb": "KsKd",
+      "config": {"starting_stack": [2, 1], "max_raises": 0},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"]
+    },
+    {
+      "id": "live-four-street-game",
+      "sb": "AsAd", "bb": "KsKd",
+      "config": {"starting_stack": 4, "max_raises": 0},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"]
+    },
+    {
+      "id": "weighted-blocker-asymmetric-raises",
+      "sb": "AsAd:1,AhAc:0.25", "bb": "KsKd:1,KcKh:0.5",
+      "config": {"starting_stack": [4, 3], "raise_sizes": [0.5], "max_raises": 1, "include_all_in": false},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c", "Ac2d3h7s8c"]
+    }
+  ]
+}
