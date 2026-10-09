@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "heads-up-preflop-betting-v1",
+  "repeats": 3,
+  "scenarios": [
+    {"id": "limp-option", "config": {"max_raises": 0, "include_all_in": false}},
+    {"id": "minimum-raises", "config": {"starting_stack": 20, "raise_sizes": [0.1, 0.5, 1], "max_raises": 3, "include_all_in": false}},
+    {"id": "short-small-blind", "config": {"starting_stack": [0.25, 20]}},
+    {"id": "short-small-blind-call", "config": {"starting_stack": [0.75, 20]}},
+    {"id": "small-blind-exact-call-allin", "config": {"starting_stack": [1, 20]}},
+    {"id": "covered-short-big-blind", "config": {"starting_stack": [20, 0.25]}},
+    {"id": "short-big-blind-call", "config": {"starting_stack": [20, 0.75]}},
+    {"id": "asymmetric-short-raises", "config": {"starting_stack": [4, 2.5], "raise_sizes": [0.5, 1], "max_raises": 3}},
+    {"id": "wide-four-raise-abstraction", "config": {"starting_stack": 100, "raise_sizes": [0.25, 0.5, 0.75, 1, 1.5], "max_raises": 4}}
+  ]
+}
