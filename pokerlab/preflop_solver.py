@@ -269,6 +269,34 @@ def _all_nodes(root):
     return nodes
 
 
+def _legal_private_hands(worlds, postflop_scope="all-streets"):
+    """Build each public node's legal own-hand set from physical worlds."""
+    legal = {(player, ()): set() for player in (0, 1)}
+    if postflop_scope == "all-streets":
+        # Keep the established all-streets enumeration and ordering unchanged.
+        for world in worlds:
+            future = cards(world[4], 3) + (world[5], world[6])
+            for player in (0, 1):
+                legal[(player, ())].add(world[player])
+                for length in (3, 4, 5):
+                    legal.setdefault((player, future[:length]), set()).add(world[player])
+        return legal
+    if postflop_scope != "flop-checkdown":
+        raise ValueError("postflop_scope must be all-streets or flop-checkdown.")
+
+    flop_cards = {}
+    for world in worlds:
+        flop_key = world[4]
+        flop = flop_cards.get(flop_key)
+        if flop is None:
+            flop = cards(flop_key, 3)
+            flop_cards[flop_key] = flop
+        for player in (0, 1):
+            legal[(player, ())].add(world[player])
+            legal.setdefault((player, flop), set()).add(world[player])
+    return legal
+
+
 def _template_config(specs, boundary):
     pot = boundary.pot
     # Shared postflop APIs index OOP=BB and IP=SB.
@@ -626,15 +654,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                             enforce_world_work=not (vector_budget_enabled or sampled),
                             **({"decision_limit": _MAX_PUBLIC_STATES} if expanded_tree else {}))
 
-    # Global hand identity is SB=0, BB=1. Each history sees only own hands that
-    # remain legal after its public flop/turn/river prefix.
-    legal = {(player, ()): set() for player in (0, 1)}
-    for world in worlds:
-        future = cards(world[4], 3) + (world[5], world[6])
-        for player in (0, 1):
-            legal[(player, ())].add(world[player])
-            for length in (3, 4, 5):
-                legal.setdefault((player, future[:length]), set()).add(world[player])
+    # Global hand identity is SB=0, BB=1. Histories see only own hands
+    # compatible with the public prefix represented by this tree scope.
+    legal = _legal_private_hands(worlds, postflop_scope)
 
     nodes = _all_nodes(root)
     infos, metadata = {}, {}
