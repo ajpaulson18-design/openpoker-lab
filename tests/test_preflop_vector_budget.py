@@ -166,6 +166,110 @@ class PreflopVectorBudgetTests(unittest.TestCase):
         self.assertGreater(observed, 0)
         self.assertGreaterEqual(budget["total_loop_entries_upper_bound"], observed)
 
+    def test_convergence_budget_counts_snapshots_checks_and_final_reserve(self):
+        root, worlds, infos = _instrumentation_game()
+        total, delay, interval = 7, 3, 2
+        estimate = estimate_vector_budget(
+            root, worlds, infos, total, "cfrplus", chance_type=_Chance,
+            averaging_delay=delay, checkpoint_interval=interval,
+        )
+        checkpoints = (total + interval - 1) // interval
+        exact_checks = checkpoints - delay // interval
+        self.assertEqual(checkpoints, 4)  # 2, 4, 6, and final 7
+        self.assertEqual(exact_checks, 3)  # only positive-average snapshots
+        self.assertEqual(estimate["checkpoint_count_upper_bound"], checkpoints)
+        self.assertEqual(estimate["checkpoint_diagnostics_upper_bound"], exact_checks)
+        self.assertEqual(estimate["diagnostic_evaluations_upper_bound"], exact_checks + 1)
+        # One training aggregation plus each checkpoint evaluation and the
+        # separately reserved final evaluation.
+        self.assertEqual(estimate["aggregation_count"], 1 + exact_checks + 1)
+
+        terminal = _Terminal("showdown", (0.5, 1.0))
+        no_info = estimate_vector_budget(
+            terminal, ((0, 0, 1.0, 1),), {}, total, "cfrplus",
+            chance_type=_Chance, averaging_delay=delay,
+            checkpoint_interval=interval,
+        )
+        self.assertEqual(no_info["checkpoint_count_upper_bound"], 0)
+        self.assertEqual(no_info["checkpoint_diagnostics_upper_bound"], 0)
+        self.assertEqual(no_info["diagnostic_evaluations_upper_bound"], 1)
+        self.assertEqual(no_info["aggregation_count"], 1)
+        self.assertEqual(no_info["training_loop_entries_upper_bound"], 0)
+
+    def test_convergence_budget_options_fail_before_tree_census(self):
+        # Invalid options must be rejected before even inspecting these
+        # deliberately unusable census inputs.
+        for interval in (True, 0, -1, 1.5):
+            with self.subTest(interval=interval):
+                with self.assertRaises(ValueError):
+                    estimate_vector_budget(
+                        object(), object(), object(), 7, "cfrplus", chance_type=_Chance,
+                        averaging_delay=3, checkpoint_interval=interval,
+                    )
+        for algorithm, delay, interval in (
+            ("vanilla", 3, 2), ("cfrplus", 0, 2),
+        ):
+            with self.subTest(algorithm=algorithm, delay=delay):
+                with self.assertRaises(ValueError):
+                    estimate_vector_budget(
+                        object(), object(), object(), 7, algorithm, chance_type=_Chance,
+                        averaging_delay=delay, checkpoint_interval=interval,
+                    )
+
+    def test_convergence_loop_envelope_covers_checkpoint_normalization_and_checks(self):
+        monitoring = getattr(sys, "monitoring", None)
+        if monitoring is None:
+            self.skipTest("sys.monitoring instruction events require Python 3.12+")
+        from pokerlab.public_diagnostics import evaluate_profile
+
+        root, worlds, infos = _instrumentation_game()
+        total, delay, interval = 7, 3, 2
+        budget = estimate_vector_budget(
+            root, worlds, infos, total, "cfrplus", chance_type=_Chance,
+            averaging_delay=delay, checkpoint_interval=interval,
+        )
+        observed = 0
+        allowed = {"preflop_delayed_cfrplus.py", "public_cfr.py",
+                   "public_diagnostics.py", "cfr.py"}
+        tool_id = next((index for index in range(6)
+                        if monitoring.get_tool(index) is None), None)
+        if tool_id is None:
+            self.skipTest("no sys.monitoring tool ID is available")
+
+        def instruction(code, offset):
+            nonlocal observed
+            filename = code.co_filename.replace("\\", "/").rsplit("/", 1)[-1]
+            if filename in allowed and code.co_code[offset] == dis.opmap["FOR_ITER"]:
+                observed += 1
+
+        def checkpoint(iteration, snapshot):
+            if iteration > delay:
+                evaluate_profile(root, worlds, snapshot, pot=1.0, chance_type=_Chance)
+            return False
+
+        allocated = False
+        try:
+            monitoring.use_tool_id(tool_id, "preflop-convergence-budget-test")
+            allocated = True
+            monitoring.register_callback(tool_id, monitoring.events.INSTRUCTION,
+                                         instruction)
+            monitoring.set_events(tool_id, monitoring.events.INSTRUCTION)
+            train_delayed_public_cfrplus(
+                root, worlds, infos, total, averaging_delay=delay,
+                pot=1.0, chance_type=_Chance, checkpoint_interval=interval,
+                checkpoint_callback=checkpoint,
+            )
+        finally:
+            if allocated:
+                try:
+                    monitoring.set_events(tool_id, 0)
+                    monitoring.register_callback(tool_id,
+                                                 monitoring.events.INSTRUCTION, None)
+                finally:
+                    monitoring.free_tool_id(tool_id)
+        self.assertGreater(observed, 0)
+        self.assertGreaterEqual(budget["total_loop_entries_upper_bound"], observed)
+
     def test_terminal_no_info_skips_training_but_keeps_diagnostic_work(self):
         root = _Terminal("showdown", (0.5, 1.0))
         worlds = ((0, 1, 1.0, 1),)

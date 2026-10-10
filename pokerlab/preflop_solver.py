@@ -488,7 +488,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
-                  sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count"):
+                  sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
+                  target_nash_conv=None, convergence_check_interval=None):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -507,6 +508,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     ``tree_admission="vector"`` explicitly replaces the aggregate 10,000
     decision guard with public-state, action-slot and vector-work admission;
     it requires ``resource_model="public-vector"``. Templates remain bounded.
+    Optional paired ``target_nash_conv`` / ``convergence_check_interval`` stop
+    positive-delay public-vector CFR+ after a complete sweep whose exact legal
+    best-response gap plus 1e-10 meets the target. The requested iteration cap
+    and all possible checks must be admitted before training. ``iterations``
+    remains the requested ceiling; ``completed_iterations`` records actual work.
     Positive ``averaging_delay`` optionally applies CFR+ weights
     ``max(iteration-delay, 0)`` after each completed alternating sweep.
     """
@@ -550,6 +556,21 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("CFR+ averaging delay must be an integer from zero to iterations-1.")
     if averaging_delay and algorithm != "cfrplus":
         raise ValueError("Positive averaging delay requires CFR+ training.")
+    convergence_enabled = target_nash_conv is not None or convergence_check_interval is not None
+    if convergence_enabled:
+        if (isinstance(target_nash_conv, bool) or
+                not isinstance(target_nash_conv, (int, float))):
+            raise ValueError("Convergence target must be a finite positive number.")
+        try:
+            target_nash_conv = float(target_nash_conv)
+        except (OverflowError, ValueError):
+            raise ValueError("Convergence target must be a finite positive number.") from None
+        if not isfinite(target_nash_conv) or target_nash_conv <= 0:
+            raise ValueError("Convergence target must be a finite positive number.")
+        if type(convergence_check_interval) is not int or convergence_check_interval < 1:
+            raise ValueError("Convergence check interval must be a positive integer.")
+        if (algorithm != "cfrplus" or not averaging_delay or not vector_budget_enabled):
+            raise ValueError("Convergence stopping requires positive-delay public-vector CFR+.")
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
@@ -590,7 +611,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
 
     vector_budget = (estimate_vector_budget(
         root, worlds, infos, iterations, algorithm, chance_type=_Chance,
-        **({"averaging_delay": averaging_delay} if averaging_delay else {}))
+        **({"averaging_delay": averaging_delay} if averaging_delay else {}),
+        **({"checkpoint_interval": convergence_check_interval} if convergence_enabled else {}))
         if vector_budget_enabled else None)
 
     sampled_storage = estimate_sampler_storage(worlds) if sampled else None
@@ -611,6 +633,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     diagnostic_view_anchor = None
     diagnostic_view_states = 0
     diagnostic_view_source = None
+    completed_iterations = iterations if infos else 0
+    convergence_checkpoints = []
+    convergence_reached = False
     if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
                       diagnostics == "public-batched"):
         averages = {}
@@ -623,12 +648,38 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     elif traversal == "public-batched":
         training_root, training_pot_anchor, training_view_states = \
             _positive_pot_training_view(root)
+        def check_convergence(iteration, policy):
+            nonlocal diagnostic_values, completed_iterations, convergence_reached
+            # A delayed policy has no contributing average before this point.
+            # Do not certify an untrained uniform fallback as a delayed result.
+            if iteration <= averaging_delay:
+                return False
+            values = evaluate_public_profile(
+                training_root, worlds, policy,
+                pot=2 * training_pot_anchor, chance_type=_Chance)
+            if not all(isfinite(value) for value in values):
+                raise ValueError("Convergence diagnostic returned nonfinite values.")
+            value, response_sb, response_bb = values
+            gap = max(0.0, response_sb - value) + max(0.0, response_bb + value)
+            reached = gap + 1e-10 <= target_nash_conv
+            convergence_checkpoints.append({
+                "completed_iterations": iteration, "nash_conv": gap,
+                "value_sb": value, "sb_best_response_value": response_sb,
+                "bb_best_response_value": response_bb, "target_reached": reached,
+            })
+            completed_iterations = iteration
+            diagnostic_values = values
+            convergence_reached = reached
+            return reached
+
         try:
             if averaging_delay:
                 averages = train_delayed_public_cfrplus(
                     training_root, worlds, infos, iterations,
                     averaging_delay=averaging_delay,
                     pot=2 * training_pot_anchor, chance_type=_Chance,
+                    **({"checkpoint_interval": convergence_check_interval,
+                        "checkpoint_callback": check_convergence} if convergence_enabled else {}),
                 )
             else:
                 averages = train_public_batched(
@@ -636,10 +687,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                     pot=2 * training_pot_anchor, chance_type=_Chance,
                 )
             if diagnostics == "public-batched":
-                diagnostic_values = evaluate_public_profile(
-                    training_root, worlds, averages,
-                    pot=2 * training_pot_anchor, chance_type=_Chance,
-                )
+                if not convergence_enabled or diagnostic_values is None:
+                    diagnostic_values = evaluate_public_profile(
+                        training_root, worlds, averages,
+                        pot=2 * training_pot_anchor, chance_type=_Chance,
+                    )
                 diagnostic_view_anchor = training_pot_anchor
                 diagnostic_view_states = training_view_states
                 diagnostic_view_source = "training-view-reused"
@@ -685,6 +737,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     gain_bb = max(0.0, br_bb + value_sb)
     nash_conv = gain_sb + gain_bb
 
+    if convergence_enabled and not all(isfinite(value) for value in
+                                       (value_sb, br_sb, br_bb, nash_conv)):
+        raise ValueError("Convergence diagnostic returned nonfinite values.")
     strategy = []
     for key in sorted(infos):
         player, hand_index, history = key
@@ -784,13 +839,13 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             ),
         })
     if averaging_delay:
-        average_passes = iterations - averaging_delay if infos else 0
+        average_passes = max(completed_iterations - averaging_delay, 0) if infos else 0
         result.update({
             "averaging_delay": averaging_delay,
-            "averaging_positive_sweeps": iterations - averaging_delay if infos else 0,
+            "averaging_positive_sweeps": max(completed_iterations - averaging_delay, 0) if infos else 0,
             "training_average_passes": average_passes,
-            "training_regret_passes": iterations * 2 if infos else 0,
-            "training_passes": iterations * 2 + average_passes if infos else 0,
+            "training_regret_passes": completed_iterations * 2 if infos else 0,
+            "training_passes": completed_iterations * 2 + average_passes if infos else 0,
             "training_schedule": (
                 "alternating-player-0-then-player-1; delayed-linear-own-reach-average-after-each-sweep"
                 if infos else None
@@ -807,6 +862,26 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             "public_diagnostics_view_pot_anchor": diagnostic_view_anchor,
             "public_diagnostics_view_states": diagnostic_view_states,
             "public_diagnostics_view_source": diagnostic_view_source,
+        })
+    if convergence_enabled:
+        if not infos:
+            convergence_reached = nash_conv + 1e-10 <= target_nash_conv
+            convergence_checkpoints.append({
+                "completed_iterations": 0, "nash_conv": nash_conv,
+                "value_sb": value_sb, "sb_best_response_value": br_sb,
+                "bb_best_response_value": br_bb, "target_reached": convergence_reached,
+            })
+        result.update({
+            "completed_iterations": completed_iterations,
+            "target_nash_conv": target_nash_conv,
+            "convergence_check_interval": convergence_check_interval,
+            "convergence_numerical_padding": 1e-10,
+            "convergence_target_reached": convergence_reached,
+            "stopped_early": bool(infos) and completed_iterations < iterations,
+            "convergence_stop_reason": ("no-information-sets" if not infos else
+                                        "target-met" if convergence_reached else "iteration-limit"),
+            "convergence_checkpoints": convergence_checkpoints,
+            "convergence_scope": "Exact configured-game visible-information best responses to completed-sweep delayed average policies; checks start after positive averaging. iterations and vector budget retain the admitted requested ceiling; training pass counts record completed work. This is not a universal convergence or unrestricted-game certificate.",
         })
     if expanded_tree:
         result.update({
