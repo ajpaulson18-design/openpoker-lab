@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-private-compaction-v1",
+  "base_revision": "f3a44154a3d596e0410716f4850cdf57df686122",
+  "sb": "As2s,As3s,As4s,As5s,As6s,As7s,As8s,As9s,AsTs,AsJs,AsQs,AsKs,QsQd,JcJd",
+  "bb": "AsAd,As2d",
+  "config": {
+    "starting_stack": 2,
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "paired_timing": {
+    "iterations": 20,
+    "delay": 10,
+    "pairs": 3
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "accuracy": {
+    "iterations": 90,
+    "delay": 45
+  },
+  "minimum_median_time_reduction": 0.05,
+  "target_nash_conv": 0.005,
+  "adoption_gate": "Exact serialized policy and row-order, diagnostic and physical-prior parity in every pair; independent configured numeric replay and exact legal best responses; at least5% lower median complete-call time in three alternating pairs; bounded pre-copy versioned work/reference admission; separate complete-call Python memory measurement. Preserve all accuracy-target misses.",
+  "selection_evidence": "Twelve leading SB hands contain As and are physically incompatible with every BB hand; globally active indices12/13 remain with original dense dimension14. BB AsAd and As2d provide different showdown strengths. Two selected flops include Jc, removing JcJd and conditioning private-pair masses. All ordered future deals are included for each selected flop.",
+  "selection_scope": "Freeze before timing. Fixed same iterations/delay and original/compact production orchestration; no post-hoc target or workload adjustment. Improvement is shape-specific, with inactive global indices; no broad-range or hole-free speed claim."
+}
