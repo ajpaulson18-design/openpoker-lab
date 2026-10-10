@@ -21,7 +21,7 @@ MAX_TOTAL_LOOP_ENTRIES = 500_000_000
 _MAX_HAND_INDEX = 1326
 
 
-def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0):
+def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0, checkpoint_interval=None):
     """Return JSON-safe conservative loop/allocation bounds for vector work.
 
     Bounds include one aggregation for training and one for requested vector
@@ -37,6 +37,11 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         raise ValueError("averaging_delay must be an integer in [0, iterations)")
     if averaging_delay and algorithm != "cfrplus":
         raise ValueError("positive averaging_delay requires cfrplus")
+    if checkpoint_interval is not None:
+        if type(checkpoint_interval) is not int or checkpoint_interval < 1:
+            raise ValueError("checkpoint interval must be a positive integer")
+        if algorithm != "cfrplus" or not averaging_delay:
+            raise ValueError("checkpoint admission requires positive-delay CFR+")
     if not isinstance(chance_type, type):
         raise TypeError("chance_type must be a node class")
     if not isinstance(worlds, (tuple, list)) or not worlds:
@@ -243,10 +248,25 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
     diagnostics_loop_entries = (3 * visitor_bound + diagnostics_fallback_slots +
                                 counts["diagnostic_uniform_fallback_slots"] +
                                 2 * missing_policy_lookups + diagnostics_setup_entries)
+    checkpoint_count = ((iterations + checkpoint_interval - 1) // checkpoint_interval
+                        if checkpoint_interval is not None and infos else 0)
+    # Every callback may normalize a fresh policy, including zero-weight
+    # epochs. The solver evaluates only completed positive-average epochs.
+    # Count those scheduled diagnostics independently, plus one conservative
+    # final evaluation even when its checkpoint will actually be reused.
+    checkpoint_diagnostics = (checkpoint_count - averaging_delay // checkpoint_interval
+                              if checkpoint_count else 0)
+    snapshot_bound = checkpoint_count * (2 * len(infos) + 4 * infos_action_slots)
+    checkpoint_orchestration_bound = 16 * checkpoint_count
+    training_loop_entries += snapshot_bound + checkpoint_orchestration_bound
+    diagnostic_evaluations = checkpoint_diagnostics + 1
+    diagnostics_loop_entries *= diagnostic_evaluations
+    diagnostics_setup_entries *= diagnostic_evaluations
+    diagnostics_fallback_slots *= diagnostic_evaluations
     # Prefix aggregation repeats for diagnostics. It validates worlds/infos,
     # reserves sparse edges, finalizes every edge, and allocates dense marginal
     # entries once for each public prefix.
-    aggregation_count = trainer_aggregation_count + 1
+    aggregation_count = trainer_aggregation_count + diagnostic_evaluations
     aggregation_loop_entries = aggregation_count * (
         aggregation_entries + prefix_edges * 2 + dense_prefix_slots +
         4 * len(worlds) + len(infos)
@@ -257,7 +277,9 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         raise ValueError("Vector budget estimated loop entries exceed 500,000,000")
 
     result = {
-        "budget_version": ("preflop-public-vector-delayed-budget-v2"
+        "budget_version": ("preflop-public-vector-convergence-budget-v3"
+                           if checkpoint_interval is not None else
+                           "preflop-public-vector-delayed-budget-v2"
                            if averaging_delay else VECTOR_BUDGET_VERSION),
         "world_count": len(worlds),
         "iterations": iterations,
@@ -287,7 +309,7 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         "diagnostics_loop_entries_upper_bound": diagnostics_loop_entries,
         "diagnostics_setup_loop_entries_upper_bound": diagnostics_setup_entries,
         "diagnostics_dense_fallback_slot_upper_bound": diagnostics_fallback_slots,
-        "diagnostics_uniform_fallback_slot_upper_bound": counts["diagnostic_uniform_fallback_slots"],
+        "diagnostics_uniform_fallback_slot_upper_bound": counts["diagnostic_uniform_fallback_slots"] * diagnostic_evaluations,
         "total_loop_entries_upper_bound": total_loop_entries,
         "total_loop_entry_limit": MAX_TOTAL_LOOP_ENTRIES,
         "loop_entry_scope": (
@@ -302,5 +324,15 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
             "training_regret_passes": 2 * iterations if infos else 0,
             "training_average_passes": iterations - averaging_delay if infos else 0,
             "training_policy_match_rows": (iterations + 1) * len(infos) if infos else 0,
+        })
+    if checkpoint_interval is not None:
+        result.update({
+            "checkpoint_interval": checkpoint_interval,
+            "checkpoint_count_upper_bound": checkpoint_count,
+            "checkpoint_snapshot_loop_entries_upper_bound": snapshot_bound,
+            "checkpoint_orchestration_loop_entries_upper_bound": checkpoint_orchestration_bound,
+            "checkpoint_diagnostics_upper_bound": checkpoint_diagnostics,
+            "diagnostic_evaluations_upper_bound": diagnostic_evaluations,
+            "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission.",
         })
     return result

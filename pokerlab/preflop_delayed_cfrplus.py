@@ -13,7 +13,9 @@ from .river_tree import _Terminal
 
 
 def train_delayed_public_cfrplus(root, worlds, infos, iterations, *,
-                                 averaging_delay=0, pot, chance_type):
+                                 averaging_delay=0, pot, chance_type,
+                                 checkpoint_interval=None,
+                                 checkpoint_callback=None):
     """Train alternating public-vector CFR+ with a delayed average policy.
 
     Regret updates are the repository's public-vector CFR+ updates. After each
@@ -24,11 +26,29 @@ def train_delayed_public_cfrplus(root, worlds, infos, iterations, *,
         raise ValueError("Iterations must be a positive integer.")
     if type(averaging_delay) is not int or not 0 <= averaging_delay < iterations:
         raise ValueError("CFR+ averaging delay must be an integer in [0, iterations).")
+    if checkpoint_callback is not None and not callable(checkpoint_callback):
+        raise TypeError("checkpoint_callback must be callable.")
+    if (checkpoint_interval is not None and
+            (type(checkpoint_interval) is not int or checkpoint_interval < 1)):
+        raise ValueError("checkpoint_interval must be a positive integer.")
+    if (checkpoint_callback is not None) != (checkpoint_interval is not None):
+        raise ValueError(
+            "checkpoint_interval and checkpoint_callback must be supplied together."
+        )
 
     pot, hand_counts = public_cfr._validate_inputs(
         worlds, infos, iterations, "cfrplus", pot, chance_type,
     )
     if not infos:
+        if checkpoint_callback is not None:
+            last_checkpoint = 0
+            for iteration in range(checkpoint_interval, iterations + 1,
+                                   checkpoint_interval):
+                if checkpoint_callback(iteration, {}):
+                    return {}
+                last_checkpoint = iteration
+            if last_checkpoint != iterations:
+                checkpoint_callback(iterations, {})
         return {}
     edges, marginals = public_cfr._aggregate_prefixes(worlds, hand_counts)
     # Preserve the caller's original row order in returned mappings, while
@@ -97,6 +117,22 @@ def train_delayed_public_cfrplus(root, worlds, infos, iterations, *,
         weight = float(max(iteration - averaging_delay, 0))
         if weight > 0.0:
             accumulate_average(current, weight)
+
+        if checkpoint_callback is not None and (
+                iteration % checkpoint_interval == 0 or iteration == iterations):
+            snapshot = {}
+            for key in keys:
+                total = sum(sums[key])
+                snapshot[key] = ([value / total for value in sums[key]] if total else
+                                 [1.0 / infos[key]] * infos[key])
+            try:
+                should_stop = bool(checkpoint_callback(iteration, snapshot))
+            finally:
+                # Do not retain the last normalized policy alongside the
+                # regret and average tables after the callback returns.
+                snapshot = None
+            if should_stop:
+                break
 
     averages = {}
     for key in keys:

@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-exact-convergence-stop-v1",
+  "historical_reference": "benchmarks/results/preflop-two-complete-flops-v1.json",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "config": {
+    "starting_stack": 2,
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "full_game": {
+    "iterations": 90,
+    "delay": 45,
+    "interval": 10,
+    "target_nash_conv": 0.005
+  },
+  "paired_fixed_flop": {
+    "iterations": 40,
+    "delay": 10,
+    "interval": 5,
+    "target_nash_conv": 0.05,
+    "pairs": 3
+  },
+  "unmet_selected": {
+    "sb": "AsAd:1,AhAc:0.25",
+    "bb": "KsKd:1,KcKh:0.5",
+    "config": {
+      "starting_stack": [
+        4,
+        3
+      ],
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": false
+    },
+    "runouts": [
+      "2c3c4d7h8h",
+      "Kc2d3h7s8c",
+      "Ac2d3h7s8c"
+    ],
+    "flop_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "raise_sizes": [],
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "iterations": 35,
+    "delay": 5,
+    "interval": 10,
+    "target_nash_conv": 1e-12
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5,
+    "interval": 5,
+    "target_nash_conv": 0.005
+  },
+  "selection_scope": "Freeze before measurements. Core two-flop0.005 target and90/45 ceiling from prior independently verified report; adaptive full-game final policy must independently meet the same target or explicitly report a miss. Paired runtime measures a separate complete-fixed-first-flop40/10 workload with predeclared0.05 requested accuracy, not an improvement to historical accuracy targets. Tight selected-game target is intentionally below the1e-10 numerical guard, exercising explicit unmet-target reporting. No universal convergence or runtime claim.",
+  "selection_evidence": {
+    "source_revision": "4fb6342df56f5424e7879bc5006d14b2e2ad3133",
+    "profile_game": "complete two-flop10iterations/delay5",
+    "profile_scope": "cProfile instrumented solve including runout-argument creation; not a timing comparison",
+    "profile_cumulative_seconds": {
+      "solve_preflop": 32.826,
+      "averaging": 2.372,
+      "target_delta_passes": 13.393
+    },
+    "decision": "Averaging is only about7.2% of the profiled whole call. Prioritize requested-accuracy stopping instead of a new average traversal plan and its memory footprint."
+  }
+}

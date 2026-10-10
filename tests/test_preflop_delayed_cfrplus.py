@@ -136,6 +136,106 @@ def _assert_rows_equal(test, expected, actual, tolerance=1e-12):
 
 
 class PreflopDelayedCFRPlusTests(unittest.TestCase):
+    def test_checkpoint_schedule_includes_final_off_interval_snapshot(self):
+        root, worlds, infos = _weighted_game(shifted=True)
+        snapshots = []
+        train_delayed_public_cfrplus(
+            root, worlds, infos, 7, averaging_delay=2, pot=1.0,
+            chance_type=_Chance, checkpoint_interval=3,
+            checkpoint_callback=lambda iteration, profile: snapshots.append(
+                (iteration, profile)) or False,
+        )
+        self.assertEqual([iteration for iteration, _ in snapshots], [3, 6, 7])
+        for iteration, snapshot in snapshots:
+            expected = _frozen_original_adapter(
+                root, worlds, infos, iteration, 2, pot=1.0,
+                chance_type=_Chance,
+            )
+            self.assertEqual(snapshot, expected)
+
+        empty_snapshots = []
+        terminal = _Terminal("showdown", (1.0, 1.0))
+        self.assertEqual(train_delayed_public_cfrplus(
+            terminal, ((0, 0, 1.0, 0),), {}, 7, averaging_delay=2,
+            pot=2.0, chance_type=_Chance, checkpoint_interval=3,
+            checkpoint_callback=lambda iteration, profile: empty_snapshots.append(
+                (iteration, profile)) or False,
+        ), {})
+        self.assertEqual([iteration for iteration, _ in empty_snapshots], [3, 6, 7])
+        self.assertIsNot(empty_snapshots[0][1], empty_snapshots[1][1])
+
+    def test_truthy_checkpoint_stops_after_completed_sweep(self):
+        root, worlds, infos = _weighted_game(shifted=True)
+        calls = []
+
+        def stop_at_four(iteration, snapshot):
+            calls.append(iteration)
+            return iteration == 4
+
+        stopped = train_delayed_public_cfrplus(
+            root, worlds, infos, 9, averaging_delay=1, pot=1.0,
+            chance_type=_Chance, checkpoint_interval=2,
+            checkpoint_callback=stop_at_four,
+        )
+        expected = _frozen_original_adapter(
+            root, worlds, infos, 4, 1, pot=1.0, chance_type=_Chance,
+        )
+        self.assertEqual(calls, [2, 4])
+        self.assertEqual(stopped, expected)
+
+    def test_snapshot_mutation_cannot_change_training_or_later_snapshots(self):
+        root, worlds, infos = _weighted_game(shifted=True)
+        seen = []
+
+        def mutate_then_stop(iteration, snapshot):
+            seen.append(snapshot)
+            if iteration == 2:
+                for row in snapshot.values():
+                    row[:] = [123.0] * len(row)
+                return False
+            return True
+
+        stopped = train_delayed_public_cfrplus(
+            root, worlds, infos, 8, averaging_delay=1, pot=1.0,
+            chance_type=_Chance, checkpoint_interval=2,
+            checkpoint_callback=mutate_then_stop,
+        )
+        expected = _frozen_original_adapter(
+            root, worlds, infos, 4, 1, pot=1.0, chance_type=_Chance,
+        )
+        self.assertEqual(len(seen), 2)
+        self.assertIsNot(seen[0], seen[1])
+        for key in infos:
+            self.assertIsNot(seen[0][key], seen[1][key])
+        self.assertEqual(seen[1], expected)
+        self.assertEqual(stopped, expected)
+
+    def test_checkpoint_arguments_validate_before_input_validation_or_aggregation(self):
+        root, worlds, infos = _weighted_game()
+        invalid = (
+            ({"checkpoint_interval": 2}, "supplied together"),
+            ({"checkpoint_callback": lambda *_: False}, "supplied together"),
+            ({"checkpoint_interval": 0, "checkpoint_callback": lambda *_: False},
+             "positive integer"),
+            ({"checkpoint_interval": True, "checkpoint_callback": lambda *_: False},
+             "positive integer"),
+            ({"checkpoint_interval": 2.5, "checkpoint_callback": lambda *_: False},
+             "positive integer"),
+            ({"checkpoint_interval": 1, "checkpoint_callback": object()},
+             "must be callable"),
+        )
+        for options, message in invalid:
+            with self.subTest(options=options):
+                with patch.object(public_cfr, "_validate_inputs",
+                                  side_effect=AssertionError("validation started")):
+                    with patch.object(public_cfr, "_aggregate_prefixes",
+                                      side_effect=AssertionError("aggregation started")):
+                        with self.assertRaisesRegex((TypeError, ValueError), message):
+                            train_delayed_public_cfrplus(
+                                root, worlds, infos, 12, averaging_delay=1,
+                                pot=1.0, chance_type=_Chance, **options,
+                            )
+
     def test_optimized_adapter_is_bitwise_equal_to_frozen_original(self):
         root, worlds, infos = _weighted_game(shifted=True)
         # Use sparse hand indices so the vector hand dimensions contain holes.
