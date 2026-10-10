@@ -14,13 +14,18 @@ The [frozen specification](../benchmarks/preflop-private-compaction-v1.json) com
 
 Three alternating 20-iteration/delay10 timing pairs require exact serialized policies, row order, diagnostics and physical priors, plus independent configured-model numeric replay and complete legal visible-information best responses for every final policy. The predeclared runtime gate is at least 5% lower median complete-call time, including both censuses, copies, exact diagnostics, restoration and JSON serialization. Preallocated runout arguments, pre-call garbage collection and independent replay are excluded. A separate compact90/delay45 checkpoint records accuracy against the unchanged 0.005-chip NashConv target. It provides no runtime comparison to original90.
 
-Separate original/compact10/delay5 calls measure new Python allocation peaks under tracemalloc. The original result retained for parity predates the compact trace; those allocations are excluded. Native allocations, RSS, all live process memory and higher-iteration guarantees are outside that measurement. Report all target misses. A benefit on this deliberately hole-heavy shape does not imply improvement on hole-free ranges, broad ranges or other configurations.
+Separate original/compact10/delay5 calls measure new Python allocation peaks under tracemalloc. Each arm runs without retaining the other result. An exact serialized-policy/diagnostic/physical-prior digest, computed after tracing, verifies equality across separate memory phases. Native allocations, RSS, all live process memory and higher-iteration guarantees are outside that measurement. Report all target misses. A benefit on this deliberately hole-heavy shape does not imply improvement on hole-free ranges, broad ranges or other configurations.
+
+The harness saves six completed phases atomically outside the worktree: three timing pairs, accuracy, and each memory arm. `--resume` validates the exact frozen commit, source/specification hashes, Python/platform identity and phase payload checksum before reusing work. It refuses a dirty or unverifiable source state and writes the final report only when every required phase is complete. Each phase rechecks provenance before and after measurement and records its execution timestamps. A new source revision requires a fresh state directory or checkout of the original frozen revision.
+
+An [initial interrupted attempt](../benchmarks/results/preflop-private-compaction-interrupted-attempt.json) reached three timing pairs but lost its process before accuracy/memory completion and final hash rechecks. Its rounded console observations are explicitly incomplete and excluded from the adoption decision. The resumable harness preserves completed evidence if a later process is interrupted.
 
 Tests cover weighted chance with holes in both players, independent monetary replay, physical pair conditioning, exact fixed/checkpoint policy parity, no-information-set refund diagnostics, invalid modes, cap rejection before copying/view allocation and cleanup without forced collection. Instruction monitoring checks helper copy/restoration loop entries against the modeled allowance where Python supports it. Exact best responses are within the configured finite binary64 model and numerical tolerances; they are not a formal floating-point certificate.
 
 ```text
 python -m unittest tests.test_preflop_private_indices tests.test_preflop_private_index_budget tests.test_preflop_private_index_integration -v
-python -m scripts.benchmark_preflop_private_compaction
+python -m scripts.benchmark_preflop_private_compaction --phase pair1
+python -m scripts.benchmark_preflop_private_compaction --resume
 ```
 
 Full-deck preflop, unrestricted no-limit Hold'em, multiway and commercial solver parity remain future work.
