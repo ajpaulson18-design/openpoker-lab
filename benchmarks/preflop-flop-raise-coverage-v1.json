@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-flop-raise-coverage-v1",
+  "game_spec": "benchmarks/preflop-flop-checkdown-v1.json",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "physical_outcomes": {
+    "flops": [["2c", "3c", "4d"], ["5h", "6s", "Jc"]],
+    "ordered_future_candidates": 4704,
+    "compatible_physical_worlds": 11880
+  },
+  "preflop_config": {"raise_sizes": [0.5], "max_raises": 1, "include_all_in": false},
+  "flop_config": {"bet_sizes": [0.5, 1.0], "raise_sizes": [0.5], "max_raises": 1, "include_all_in": true},
+  "postflop_scope": "flop-checkdown",
+  "future_indexing": "flop-sign",
+  "algorithm": "cfrplus",
+  "traversal": "public-batched",
+  "diagnostics": "public-batched",
+  "resource_model": "public-vector",
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "matrix": {
+    "starting_stacks": [3, 4, 6],
+    "checkpoints": [{"iterations": 20, "delay": 10}, {"iterations": 90, "delay": 45}, {"iterations": 250, "delay": 125}],
+    "cases": 9
+  },
+  "selection_scope": "Freeze the complete 3x3 matrix before execution. Preflight every case before training any case. Report all admissions, rejections, and quality misses; do not simplify or retry rejected cases. No cap changes or speedup/memory comparison.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with two narrow ranges, two selected flops, complete ordered future outcomes, and forced checkdown after flop betting. No all-streets, full-deck/broad-range, multiway, unrestricted NLHE, or universal accuracy claim."
+}
