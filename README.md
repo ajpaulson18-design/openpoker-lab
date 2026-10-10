@@ -232,6 +232,7 @@ configured local rounding order exactly and retains a separate historical
 precision diagnostic.
 
 [Indexed selected-outcome blockers](docs/preflop-runout-index.md) reduce preflop
+- [Preflop chance-sampled CFR: exact final diagnostics, resource limits and multi-seed evidence](docs/preflop-chance-sampled.md).
 physical-world setup work while retaining the existing admission ceilings and
 exact conditioned-game outputs.
 

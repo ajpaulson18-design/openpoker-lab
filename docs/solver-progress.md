@@ -636,3 +636,27 @@ The separate index-construction trace peaks at 13,923,944 Python bytes for
 this is not whole-solve memory or RSS. Eleven new helper/integration tests include
 randomized brute-force comparison, exact world/policy parity, independent legal
 BR replay and guard ordering. See [scope, provenance and reproduction](preflop-runout-index.md).
+
+## Experimental preflop chance-sampled training with exact diagnostics
+
+An opt-in isolated vanilla CFR trainer samples the conditioned joint physical
+world law with exact-integer CDF support, frozen minibatches and own-reach
+averaging. It retains full-game exact values and legal best responses. New
+sampled node/action and sampler-entry/bit bounds explicitly replace full-world
+iterative charges; construction/tree and exact-diagnostic guards remain.
+Shared CFR, postflop, turn/river and Coach source are unchanged.
+
+At frozen `b9ea214`, all three full-fixed-flop seeds improve from gaps
+0.224-0.242 at 1,000 iterations to 0.0370-0.0387 at 10,000 with batch 32.
+Every 0.001-chip target misses. Weighted selected-flop gaps 0.0115-0.0134
+also miss their 0.01 target. Independent replay verifies every policy row,
+posterior, value and legal BR with maximum scalar disagreement 2.13e-14.
+The 10,000-iteration complete calls take 152-156 seconds; no controlled
+speedup claim follows. A separate 100-iteration full-call trace peaks at
+42,325,089 Python bytes, excluding process RSS and preallocated caller inputs.
+
+Luna implemented/reviewed bounded core and storage slices; 28 new tests cover
+exact weighted update expectations, hidden information, sampler support,
+known-game legal BRs and admission/cleanup. This path remains experimental;
+previous delayed exact CFR+ remains the strongest fixed-flop accuracy result.
+See [method, all seeds, resource scope and provenance](preflop-chance-sampled.md).
