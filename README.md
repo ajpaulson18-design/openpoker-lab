@@ -315,3 +315,5 @@ MIT licensed. Research software; no performance or profitability claims.
 Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
 
 An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
+
+Measured exact-payload setup improvement for flop-checkdown solves: [active legal prefixes](docs/preflop-active-prefixes.md).
