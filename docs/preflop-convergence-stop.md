@@ -43,7 +43,7 @@ The three fixed-ceiling timing calls took 24.237/24.378/26.477 seconds, versus 1
 
 The separate complete ten-iteration two-flop peak was **80,467,842 traced Python bytes** (about 76.7 MiB). That short run missed the accuracy target, as expected; memory evidence is not evidence of convergence. No controlled memory improvement is claimed.
 
-The local full suite passed 561 tests in 406.306 seconds; the final additional admission test passed in the six-test focused convergence suite. GitHub's frozen-source matrix passed 562 tests on Python 3.11/3.12/3.13, with the three established instrumentation skips on 3.11. Luna reviewed the frozen implementation and the measurement methodology.
+The local full suite passed 561 tests in 406.306 seconds; the final additional admission test passed in the six-test focused convergence suite. GitHub's frozen-source matrix passed 562 tests on Python 3.11/3.12/3.13, with four instrumentation skips on 3.11 (the new checkpoint-bound monitor adds one); 3.12/3.13 exercise all tests. Luna reviewed the frozen implementation and the measurement methodology.
 
 Runtime includes complete solving and JSON serialization; pre-call garbage collection, independent replay and extra policy-parity calls are excluded. Allocation measurement includes complete solving and JSON, with runout arguments preallocated; independent replay, native allocations and RSS are excluded. Timing pairs share one host and establish no universal speedup. The ten-iteration memory trace supplies no high-iteration guarantee or controlled historical memory comparison.
 
