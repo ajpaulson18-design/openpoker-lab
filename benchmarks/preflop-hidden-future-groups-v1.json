@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-hidden-future-groups-v1",
+  "game_spec": "benchmarks/preflop-flop-checkdown-v1.json",
+  "paired_timing": {
+    "iterations": 90,
+    "delay": 45,
+    "pairs": 3
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "minimum_median_time_reduction": 0.05,
+  "policy_absolute_tolerance": 1e-09,
+  "scalar_absolute_tolerance": 1e-09,
+  "selection_scope": "Frozen before measurement. Same conditioned finite preflop/flop/checkdown model, fixed 90/delay45, three alternating complete-call plus JSON pairs. Require identical strategy identities/action structure and physical outputs; policy and scalar differences <=1e-9; each arm independently replays all original physical worlds and exact legal best responses. Both timed arms must meet unchanged 0.005 quality target. At least 5% observed median reduction required for adoption. Separate complete10/delay5 allocation traces keep misses; no assumed memory saving, RSS claim or bitwise parity. Keep original-world vector envelope and all prior guards plus new grouping charges."
+}
