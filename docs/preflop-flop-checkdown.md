@@ -34,7 +34,19 @@ The [specification](../benchmarks/preflop-flop-checkdown-v1.json) fixes three-ch
 
 Before training, checkpoints were fixed at 20/delay10, 90/delay45 and 250/delay125 with a 0.005-chip NashConv target plus 1e-10 padding. The 250-iteration ceiling charges 2,970,000 world iterations, below the unchanged three-million guard. All checkpoints and target misses are retained. Three complete 90/delay45 calls plus serialization measure observed runtime on one host; a separate 10/delay5 call measures traced Python allocations. Input runouts are preallocated; pre-call GC and independent replay are excluded from timing. Native allocations/RSS and higher-iteration memory guarantees are excluded. No speed comparison to the rejected all-streets game is made.
 
-The [harness](../scripts/benchmark_preflop_flop_checkdown.py) requires a clean frozen revision and rechecks source/spec hashes before publishing its report. Measurement results will be recorded after the frozen run.
+The [frozen report](../benchmarks/results/preflop-flop-checkdown-v1.json) started clean at source `d0fee0277569a2606240fc29f33130ce6e8c68d2`. The [harness](../scripts/benchmark_preflop_flop_checkdown.py) rechecked all 52 source hashes and the specification hash unchanged. The game has 76 public states, 32 decisions and 57 information sets. Every unique accuracy/memory policy was independently replayed; maximum scalar discrepancy was 2.34e-14.
+
+| Iterations / delay | Independent NashConv chips | 0.005 target met | Complete-call seconds |
+| --- | ---: | --- | ---: |
+| 20 / 10 | 0.0305124842686 | No | 0.836370 |
+| 90 / 45 | 0.00123906973909 | Yes | 0.881667 |
+| 250 / 125 | 0.000171726323754 | Yes | 1.111549 |
+
+The three complete 90/delay45 calls took 0.881667, 1.433973, 1.000152 seconds; the median was **1.000152 seconds** and serialized policies were exactly equal. This is a single-host measurement, not a universal speed or statistical claim.
+
+The separate 10/delay5 call peaked at **13,873,072 traced Python bytes**. Its independent NashConv was 0.175182033386, missing the quality target; memory measurement is not accuracy evidence for the higher-iteration policies. The largest requested vector envelope (250/delay125) was 2,100,587 modeled loop entries below the unchanged 500-million limit, with all original physical-world guards retained.
+
+Local validation passed 23 focused tests, then the full **592-test** suite in 217.449 seconds with a verified writable isolated SQLite temporary directory. Eight new tests cover the scope, hidden outcomes, independent value/BR checks, cross-model profile value, weighted refunds, early guards, default parity and compact/convergence interactions.
 
 ## Provenance and limits
 
