@@ -84,7 +84,7 @@ def main():
         assert candidate["compatible_private_pairs"] == full["private_pairs"]
         assert candidate["info_sets"] == full["information_sets"]
         assert len(candidate["reachable_runouts"]) == 2336
-        assert candidate["training_passes"] == 3 * full["iterations"]
+        assert candidate["training_passes"] == 3 * full["iterations"] - delay
         if delay:
             assert candidate["averaging_delay"] == delay
             assert candidate["averaging_positive_sweeps"] == full["iterations"] - delay

@@ -5,11 +5,14 @@ import weakref
 from unittest.mock import patch
 
 from pokerlab import cfr_plus, public_cfr
+from pokerlab import preflop_delayed_cfrplus as delayed_module
+from pokerlab.cfr import strategy
 from pokerlab.postflop_solver import _Chance
 from pokerlab.preflop_solver import _Action
 from pokerlab.preflop_vector_budget import estimate_vector_budget
 from pokerlab.preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from pokerlab.river_tree import _Node, _Terminal, _terminal_value
+from scripts.cfr_quality import build_kuhn_adapter, check_metrics
 
 
 def _weighted_game(*, shifted=False):
@@ -50,6 +53,80 @@ def _generic_cfrplus(root, worlds, infos, iterations, delay):
     )
 
 
+def _frozen_original_adapter(root, worlds, infos, iterations, delay, *, pot,
+                             chance_type):
+    """Pre-optimization adapter, preserved as a same-repository regression oracle."""
+    pot, hand_counts = public_cfr._validate_inputs(
+        worlds, infos, iterations, "cfrplus", pot, chance_type,
+    )
+    if not infos:
+        return {}
+    edges, marginals = public_cfr._aggregate_prefixes(worlds, hand_counts)
+    keys = list(infos)
+    regrets = {key: [0.0] * infos[key] for key in keys}
+    sums = {key: [0.0] * infos[key] for key in keys}
+    half_pot = pot / 2.0
+
+    def accumulate_average(current, iteration_weight):
+        def visit(node, prefix, reach0, reach1):
+            if isinstance(node, chance_type):
+                for card, child in node.branches.items():
+                    visit(child, prefix + (card,), reach0, reach1)
+                return
+            if isinstance(node, _Terminal):
+                return
+            player = node.player
+            action_count = len(node.actions)
+            uniform = [1.0 / action_count] * action_count
+            for hand_index in range(hand_counts[player]):
+                key = (player, hand_index, node.history)
+                if key in sums:
+                    sigma = current.get(key, uniform)
+                    own_mass = marginals[prefix][player][hand_index]
+                    own_reach = reach0[hand_index] if player == 0 else reach1[hand_index]
+                    for action in range(action_count):
+                        sums[key][action] += (own_mass * own_reach * sigma[action] *
+                                              iteration_weight)
+            for action_index, child in enumerate(node.children):
+                if player == 0:
+                    child_reach0 = [reach0[index] * current.get(
+                        (player, index, node.history), uniform)[action_index]
+                        for index in range(hand_counts[0])]
+                    visit(child, prefix, child_reach0, reach1)
+                else:
+                    child_reach1 = [reach1[index] * current.get(
+                        (player, index, node.history), uniform)[action_index]
+                        for index in range(hand_counts[1])]
+                    visit(child, prefix, reach0, child_reach1)
+
+        try:
+            visit(root, (), [1.0] * hand_counts[0], [1.0] * hand_counts[1])
+        finally:
+            visit = None
+
+    for iteration in range(1, iterations + 1):
+        current = {key: strategy(row) for key, row in regrets.items()}
+        for player in (0, 1):
+            deltas = public_cfr._cfrplus_target_deltas(
+                root, edges, infos, current, player, hand_counts,
+                half_pot, chance_type,
+            )
+            for key in keys:
+                if key[0] == player:
+                    regrets[key] = [max(0.0, old + delta)
+                                    for old, delta in zip(regrets[key], deltas[key])]
+            current = {key: strategy(row) for key, row in regrets.items()}
+        weight = float(max(iteration - delay, 0))
+        accumulate_average(current, weight)
+
+    averages = {}
+    for key in keys:
+        total = sum(sums[key])
+        averages[key] = ([value / total for value in sums[key]] if total else
+                         [1.0 / infos[key]] * infos[key])
+    return averages
+
+
 def _assert_rows_equal(test, expected, actual, tolerance=1e-12):
     test.assertEqual(set(expected), set(actual))
     for key in expected:
@@ -59,6 +136,71 @@ def _assert_rows_equal(test, expected, actual, tolerance=1e-12):
 
 
 class PreflopDelayedCFRPlusTests(unittest.TestCase):
+    def test_optimized_adapter_is_bitwise_equal_to_frozen_original(self):
+        root, worlds, infos = _weighted_game(shifted=True)
+        # Use sparse hand indices so the vector hand dimensions contain holes.
+        hand_remap = {0: 0, 1: 2}
+        worlds = tuple((hand_remap[w[0]], hand_remap[w[1]], *w[2:]) for w in worlds)
+        infos = {(player, hand_remap[hand], history): count
+                 for (player, hand, history), count in infos.items()}
+        # Interleave players so returned dictionary order is not equivalent
+        # to the per-player update traversal order.
+        infos = dict(reversed(list(infos.items())))
+        expected_key_order = list(infos)
+        for iterations, delays in ((12, (0, 1, 11)),):
+            for delay in delays:
+                with self.subTest(game="weighted-holes", delay=delay):
+                    original = _frozen_original_adapter(
+                        root, worlds, infos, iterations, delay,
+                        pot=1.0, chance_type=_Chance,
+                    )
+                    optimized = train_delayed_public_cfrplus(
+                        root, worlds, infos, iterations, averaging_delay=delay,
+                        pot=1.0, chance_type=_Chance,
+                    )
+                    self.assertEqual(original, optimized)
+                    self.assertEqual(list(original), expected_key_order)
+                    self.assertEqual(list(optimized), expected_key_order)
+
+        kuhn = build_kuhn_adapter()
+        for delay in (0, 1, 4):
+            with self.subTest(game="kuhn", delay=delay):
+                original = _frozen_original_adapter(
+                    kuhn["root"], kuhn["worlds"], kuhn["infos"], 5, delay,
+                    pot=2.0, chance_type=_Chance,
+                )
+                optimized = train_delayed_public_cfrplus(
+                    kuhn["root"], kuhn["worlds"], kuhn["infos"], 5,
+                    averaging_delay=delay, pot=2.0, chance_type=_Chance,
+                )
+                self.assertEqual(original, optimized)
+        # The optimized implementation still produces a profile accepted by
+        # the independent exhaustive Kuhn value and legal-response oracle.
+        quality = train_delayed_public_cfrplus(
+            kuhn["root"], kuhn["worlds"], kuhn["infos"], 2000,
+            averaging_delay=500, pot=2.0, chance_type=_Chance,
+        )
+        metrics = check_metrics(quality, layout=kuhn["layout"])
+        self.assertLess(metrics["value_error"], 1e-5)
+        self.assertLess(metrics["nash_conv"], 0.001)
+
+    def test_strategy_rematching_cost_is_one_initial_plus_one_per_player_sweep(self):
+        root, worlds, infos = _weighted_game()
+        iterations = 7
+        calls = 0
+        original_strategy = delayed_module.strategy
+
+        def counted_strategy(row):
+            nonlocal calls
+            calls += 1
+            return original_strategy(row)
+
+        with patch.object(delayed_module, "strategy", new=counted_strategy):
+            train_delayed_public_cfrplus(
+                root, worlds, infos, iterations, averaging_delay=iterations - 1,
+                pot=1.0, chance_type=_Chance,
+            )
+        self.assertEqual(calls, len(infos) * (iterations + 1))
     def test_delay_zero_matches_existing_vector_and_generic_paths(self):
         root, worlds, infos = _weighted_game(shifted=True)
         vector = public_cfr.train_public_batched(

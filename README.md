@@ -232,9 +232,10 @@ configured local rounding order exactly and retains a separate historical
 precision diagnostic.
 
 [Indexed selected-outcome blockers](docs/preflop-runout-index.md) reduce preflop
-- [Preflop chance-sampled CFR: exact final diagnostics, resource limits and multi-seed evidence](docs/preflop-chance-sampled.md).
 physical-world setup work while retaining the existing admission ceilings and
-exact conditioned-game outputs.
+exact conditioned-game outputs. Optional [chance-sampled CFR](docs/preflop-chance-sampled.md) records exact final diagnostics, resource limits and multi-seed accuracy misses.
+
+Explicit [two-flop structural admission](docs/preflop-two-complete-flops.md) covers two selected flops with every legal ordered future deal, independently replayed policies and exact legal responses. Its preflop-local delayed CFR+ optimization preserves policy numbers while removing redundant work; full-deck preflop remains outside scope.
 
 ## Range notation
 
