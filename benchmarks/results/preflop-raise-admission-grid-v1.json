@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "probe_id": "preflop-raise-admission-grid-v1",
-  "source_revision": "14f295975b86def007b1c853b0515f43ef849696",
+  "source_revision": "dddc5605a02b7b7b465ef99382316ff92c5c7754",
   "worktree_dirty_at_start": false,
   "source_hashes": {
     "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
@@ -53,12 +53,12 @@
     "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
     "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
     "tests/test_preflop_delayed_cfrplus.py": "c7127cea4e991eaa2ad83b538057255ceb67d59d4b8c3084f1ab03d73cea6af9",
-    "scripts/probe_preflop_raise_admission.py": "a09db15060de41df54dc2d5e8bd8290aff0a71bada04c7b49a7c10c57ec38049",
+    "scripts/probe_preflop_raise_admission.py": "2863341068701754d58747c4a34c03eedf076cb9db8ea30269f977c81442f448",
     "scripts/probe_preflop_raise_grid.py": "cad79e4330d609f84d555a003a4ebcd2aaab7ce17776a8a192dded741199aae1",
     "benchmarks/preflop-raise-admission-grid-v1.json": "a9be28a947131044c32dfe5427ea7936af01be184bf1dc091ea7aac3eedcc037"
   },
   "configuration_sha256": "a9be28a947131044c32dfe5427ea7936af01be184bf1dc091ea7aac3eedcc037",
-  "generated_at_utc": "2026-10-10T14:21:24.212904+00:00",
+  "generated_at_utc": "2026-10-10T14:24:52.873711+00:00",
   "python": "3.12.14",
   "platform": "Windows-10-10.0.19045-SP0",
   "specification": {

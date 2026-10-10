@@ -6,7 +6,7 @@ Postflop retains the solver defaults: half-pot bets, no raises, explicit all-in 
 
 **All eight configurations are rejected** by the unchanged per-flop 10,000-decision template limit, before independent vector admission, vector-view allocation or training. Reducing stacks across this grid does not remove the bottleneck. No policy, convergence, runtime or memory result follows from these probes. The predeclared 0.005-chip quality target was not tested or relaxed. No production guard or shared kernel changed.
 
-The authoritative [grid report](../benchmarks/results/preflop-raise-admission-grid-v1.json) started clean at source `14f2959`, with source/specification hashes checked before and after all eight cases. Its [runner](../scripts/probe_preflop_raise_grid.py) retains every failure and forbids training/view allocation. The separate [original three-chip report](../benchmarks/results/preflop-raise-admission-probe-v1.json) records base `9071038` and distinguishes its later dirty-worktree reproduction from that base. It is supporting history, not the clean frozen grid.
+The authoritative [grid report](../benchmarks/results/preflop-raise-admission-grid-v1.json) started clean at source `dddc5605a02b7b7b465ef99382316ff92c5c7754`, with source/specification hashes checked before and after all eight cases. Its [runner](../scripts/probe_preflop_raise_grid.py) retains every failure and forbids training/view allocation. The separate [original three-chip report](../benchmarks/results/preflop-raise-admission-probe-v1.json) records base `9071038` and distinguishes its later dirty-worktree reproduction from that base. It is supporting history, not the clean frozen grid.
 
 ```text
 python -m scripts.probe_preflop_raise_grid
