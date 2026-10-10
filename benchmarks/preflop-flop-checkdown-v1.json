@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-flop-checkdown-v1",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "config": {
+    "starting_stack": 3,
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "flop_config": {
+    "bet_sizes": [
+      0.5
+    ],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": true
+  },
+  "postflop_scope": "flop-checkdown",
+  "checkpoints": [
+    {
+      "iterations": 20,
+      "delay": 10
+    },
+    {
+      "iterations": 90,
+      "delay": 45
+    },
+    {
+      "iterations": 250,
+      "delay": 125
+    }
+  ],
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "timing": {
+    "iterations": 90,
+    "delay": 45,
+    "repeats": 3
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "expected_worlds": 11880,
+  "expected_selected_outcomes": 4704,
+  "selection_scope": "Chosen before training: two selected flops with complete ordered future candidates, three-chip stacks, live open/limp-raise-to-two, default flop actions, forced checkdown afterward. Keep every checkpoint and every target miss. T250 is below unchanged 3-million world-iteration admission (11880*250=2970000). No equivalence or performance comparison to the rejected all-streets game.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with narrow ranges and no turn/river choices. No all-streets equilibrium, full-deck preflop, unrestricted NLHE or general performance claim."
+}

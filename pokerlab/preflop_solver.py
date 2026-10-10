@@ -378,6 +378,7 @@ def _positive_pot_training_view(root):
 
 
 def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
+                        postflop_scope="all-streets",
                         *, enforce_world_work=True, decision_limit=None):
     """Graft one transient postflop template per live boundary and flop."""
     decision_limit = _MAX_PUBLIC_NODES if decision_limit is None else decision_limit
@@ -434,19 +435,28 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
             reserve("chance")
             branches = {}
             for flop_key in flop_world_counts:
-                boundary_configs = _template_config(specs, node)
+                boundary_specs = ({"flop": specs["flop"]}
+                                  if postflop_scope == "flop-checkdown" else specs)
+                boundary_configs = _template_config(boundary_specs, node)
                 local_worlds = [
                     (world[1], world[0], world[2], -world[3], world[5], world[6])
                     for world in worlds if world[4] == flop_key
                 ]
                 allocation = {}
-                template, template_nodes, _chance_count, visited_nodes, plan_ops = \
-                    _build_public_tree(
-                        3, boundary_configs["flop"],
-                        turn_config=boundary_configs["turn"],
-                        river_config=boundary_configs["river"],
-                        worlds=local_worlds, allocation_counts=allocation,
-                    )
+                if postflop_scope == "flop-checkdown":
+                    template, template_nodes, _chance_count, visited_nodes, plan_ops = \
+                        _build_public_tree(
+                            5, boundary_configs["flop"], worlds=local_worlds,
+                            allocation_counts=allocation,
+                        )
+                else:
+                    template, template_nodes, _chance_count, visited_nodes, plan_ops = \
+                        _build_public_tree(
+                            3, boundary_configs["flop"],
+                            turn_config=boundary_configs["turn"],
+                            river_config=boundary_configs["river"],
+                            worlds=local_worlds, allocation_counts=allocation,
+                        )
                 template_decisions = allocation["decision"]
                 max_template_states = max(max_template_states, allocation["total"])
                 max_template_decisions = max(max_template_decisions, template_decisions)
@@ -487,6 +497,7 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
 
 def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
+                  postflop_scope="all-streets",
                   iterations=1000, algorithm="vanilla", traversal="recursive",
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
@@ -510,6 +521,13 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     ``tree_admission="vector"`` explicitly replaces the aggregate 10,000
     decision guard with public-state, action-slot and vector-work admission;
     it requires ``resource_model="public-vector"``. Templates remain bounded.
+    Optional ``postflop_scope="flop-checkdown"`` builds only preflop and flop
+    betting. It requires positive-delay CFR+ with public-batched training and
+    diagnostics under the public-vector resource model. The selected complete
+    future-board worlds stay hidden and are integrated at terminal utility;
+    turn and river betting are not modeled. Turn/river action configs are
+    rejected in this scope. The default ``all-streets`` path is unchanged.
+
     Optional paired ``target_nash_conv`` / ``convergence_check_interval`` stop
     positive-delay public-vector CFR+ after a complete sweep whose exact legal
     best-response gap plus 1e-10 meets the target. The requested iteration cap
@@ -538,6 +556,10 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Preflop resource model must be world, public-vector, or chance-sampled.")
     if tree_admission not in ("decision-count", "vector"):
         raise ValueError("Tree admission must be decision-count or vector.")
+    if postflop_scope not in ("all-streets", "flop-checkdown"):
+        raise ValueError("postflop_scope must be all-streets or flop-checkdown.")
+    if postflop_scope == "flop-checkdown" and (turn_config is not None or river_config is not None):
+        raise ValueError("flop-checkdown does not accept turn_config or river_config.")
     expanded_tree = tree_admission == "vector"
     if expanded_tree and resource_model != "public-vector":
         raise ValueError("Vector tree admission requires the public-vector resource model.")
@@ -560,6 +582,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("CFR+ averaging delay must be an integer from zero to iterations-1.")
     if averaging_delay and algorithm != "cfrplus":
         raise ValueError("Positive averaging delay requires CFR+ training.")
+    if postflop_scope == "flop-checkdown" and not (
+            algorithm == "cfrplus" and averaging_delay > 0 and
+            resource_model == "public-vector" and traversal == "public-batched" and
+            diagnostics == "public-batched"):
+        raise ValueError(
+            "flop-checkdown requires positive-delay CFR+ with public-vector public-batched training and diagnostics.")
     if private_indexing == "compact" and not (
             algorithm == "cfrplus" and averaging_delay > 0 and
             resource_model == "public-vector" and traversal == "public-batched" and
@@ -594,6 +622,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
      max_template_states, max_template_decisions) = \
         _merge_preflop_tree(preflop_tree, worlds, specs, traversal,
                             iterations * 3 if algorithm == "cfrplus" else iterations,
+                            postflop_scope,
                             enforce_world_work=not (vector_budget_enabled or sampled),
                             **({"decision_limit": _MAX_PUBLIC_STATES} if expanded_tree else {}))
 
@@ -806,7 +835,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                         if ("".join(flop), turn, river) in compatible_runouts]
     result = {
         "method": "full-traversal CFR",
-        "solver_version": "preflop-strategy-v1",
+        "solver_version": ("preflop-flop-checkdown-v1"
+                            if postflop_scope == "flop-checkdown"
+                            else "preflop-strategy-v1"),
         "strategy_schema": "preflop-strategy-v1",
         "algorithm": algorithm,
         "execution_backend": f"{traversal}-python",
@@ -815,6 +846,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             stage: {key: list(value) if isinstance(value, tuple) else value
                     for key, value in spec.actions}
             for stage, spec in specs.items()
+            if postflop_scope == "all-streets" or stage == "flop"
         },
         "runout_mode": "conditioned-ordered-selected-runouts",
         "runout_scope": "Selected physical outcomes condition the joint private-pair/runout distribution once; flop order is canonical and turn-river order is preserved.",
@@ -856,6 +888,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         "scope": "Approximate equilibrium of the configured heads-up finite betting abstraction and selected physical runouts; no unrestricted preflop or Hold'em GTO claim.",
         "strategy": strategy,
     }
+    if postflop_scope == "flop-checkdown":
+        result["postflop_scope"] = "flop-checkdown"
+        result["scope"] = (
+            "Approximate equilibrium of the conditioned finite game with preflop and flop betting, followed by forced checkdown over the selected complete future-board outcomes. Turn and river remain hidden; no turn or river decisions are modeled. This is not an all-streets Hold'em equilibrium claim."
+        )
     if private_indexing == "compact":
         result["private_indexing"] = "compact"
         result["private_indexing_metadata"] = private_indexing_metadata
