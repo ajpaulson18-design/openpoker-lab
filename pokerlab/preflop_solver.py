@@ -17,6 +17,9 @@ from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
 from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from .preflop_runout_index import RunoutBlockerIndex
+from .preflop_sampled_budget import estimate_sampled_budget
+from .preflop_sampled_storage import MAX_SAMPLER_ENTRIES, estimate_sampler_storage
+from .preflop_sampled_cfr import train_chance_sampled, validate_sampling_options
 from .public_cfr import MAX_PREFIX_EDGES, train_public_batched
 from .public_diagnostics import evaluate_profile as evaluate_public_profile
 from .river_config import RiverConfig
@@ -129,7 +132,8 @@ def _rank_world(sb_hand, bb_hand, runout, cache):
     return (cache[key_sb] > cache[key_bb]) - (cache[key_sb] < cache[key_bb])
 
 
-def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations):
+def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
+                               materialized_world_limit=None):
     """Preflight and build normalized joint SB/BB/five-card worlds."""
     ranges = (expand_range(sb_range), expand_range(bb_range))
     hands = (list(ranges[0]), list(ranges[1]))
@@ -176,6 +180,8 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations):
         if valid_count:
             compatible_counts.append((sb_index, bb_index, valid_count))
             world_count += valid_count
+            if materialized_world_limit is not None and world_count > materialized_world_limit:
+                raise ValueError("Sampled solver exceeds its materialized sampler-world entry limit.")
             if world_count * iterations > _MAX_WORLD_ITERATIONS:
                 raise ValueError("Preflop solver exceeds 3 million world iterations.")
     if not world_count:
@@ -480,7 +486,8 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
 def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
-                  diagnostics="recursive", resource_model="world", averaging_delay=0):
+                  diagnostics="recursive", resource_model="world", averaging_delay=0,
+                  sampling_seed=0, samples_per_iteration=1):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -492,6 +499,10 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     ``resource_model="public-vector"`` optionally bounds vector loop work and
     scratch dimensions instead of the conservative world-decision estimate.
     It requires public-batched training and diagnostics; other limits remain.
+    Opt-in ``traversal=resource_model="chance-sampled"`` requires vanilla CFR
+    and exact public-batched diagnostics. It replaces full-world training work
+    charges with bounded sampled-node/action work, retaining construction caps.
+    ``sampling_seed`` and ``samples_per_iteration`` control reproducible batches.
     Positive ``averaging_delay`` optionally applies CFR+ weights
     ``max(iteration-delay, 0)`` after each completed alternating sweep.
     """
@@ -505,12 +516,21 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Use 10-10,000 solver iterations.")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
         raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
-    if traversal not in ("recursive", "planned", "public-batched"):
-        raise ValueError("Preflop traversal supports recursive, planned, or public-batched CFR.")
+    if traversal not in ("recursive", "planned", "public-batched", "chance-sampled"):
+        raise ValueError("Preflop traversal supports recursive, planned, public-batched, or chance-sampled CFR.")
     if diagnostics not in ("recursive", "public-batched"):
         raise ValueError("Preflop diagnostics must be recursive or public-batched.")
-    if resource_model not in ("world", "public-vector"):
-        raise ValueError("Preflop resource model must be world or public-vector.")
+    if resource_model not in ("world", "public-vector", "chance-sampled"):
+        raise ValueError("Preflop resource model must be world, public-vector, or chance-sampled.")
+    sampled = traversal == "chance-sampled"
+    validate_sampling_options(sampling_seed, samples_per_iteration)
+    if sampled:
+        if (resource_model != "chance-sampled" or diagnostics != "public-batched"
+                or algorithm != "vanilla"):
+            raise ValueError("Chance-sampled training requires vanilla CFR, chance-sampled resource model and public-batched exact diagnostics.")
+    elif (resource_model == "chance-sampled" or sampling_seed != 0
+          or samples_per_iteration != 1):
+        raise ValueError("Sampling options require chance-sampled traversal.")
     vector_budget_enabled = resource_model == "public-vector"
     if vector_budget_enabled and (traversal != "public-batched" or
                                   diagnostics != "public-batched"):
@@ -524,13 +544,16 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
-        _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations)
+        _enumerate_physical_worlds(sb_range, bb_range, runouts,
+                                   1 if sampled else iterations,
+                                   **({"materialized_world_limit": MAX_SAMPLER_ENTRIES}
+                                      if sampled else {}))
     preflop_tree = build_preflop_tree(config)
     (root, public_state_count, decision_count, world_decision_work, planned_ops,
      max_template_states, max_template_decisions) = \
         _merge_preflop_tree(preflop_tree, worlds, specs, traversal,
                             iterations * 3 if algorithm == "cfrplus" else iterations,
-                            enforce_world_work=not vector_budget_enabled)
+                            enforce_world_work=not (vector_budget_enabled or sampled))
 
     # Global hand identity is SB=0, BB=1. Each history sees only own hands that
     # remain legal after its public flop/turn/river prefix.
@@ -548,7 +571,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     for node in nodes:
         prefix = _revealed_board(node.history)
         for hand_index in sorted(legal.get((node.player, prefix), ())):
-            if vector_budget_enabled and info_action_slots + len(node.actions) > MAX_INFO_ACTION_SLOTS:
+            if (vector_budget_enabled or sampled) and info_action_slots + len(node.actions) > MAX_INFO_ACTION_SLOTS:
                 raise ValueError("Public-vector information-set action slots exceed 1,000,000.")
             key = (node.player, hand_index, node.history)
             infos[key] = len(node.actions)
@@ -558,6 +581,17 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     vector_budget = (estimate_vector_budget(
         root, worlds, infos, iterations, algorithm, chance_type=_Chance)
         if vector_budget_enabled else None)
+
+    sampled_storage = estimate_sampler_storage(worlds) if sampled else None
+    sampled_budget = (estimate_sampled_budget(
+        root, infos, iterations, samples_per_iteration, chance_type=_Chance)
+        if sampled else None)
+    # This reference overcharges one unused vector training iteration. It
+    # bounds complete exact diagnostics; no sampled gap estimates are used.
+    sampled_diagnostic_budget = (estimate_vector_budget(
+        root, worlds, infos, 1, "vanilla", chance_type=_Chance)
+        if sampled else None)
+    sampling_stats = None
 
     payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
     training_pot_anchor = None
@@ -569,6 +603,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
                       diagnostics == "public-batched"):
         averages = {}
+    elif sampled:
+        averages, sampling_stats = train_chance_sampled(
+            root, worlds, infos, iterations, payoff, _node_key, _chance_child,
+            seed=sampling_seed, batch_size=samples_per_iteration)
+        if sampling_stats["actual_node_visits"] > sampled_budget["total_node_visits_upper_bound"]:
+            raise RuntimeError("Sampled trainer exceeded its structural visit bound.")
     elif traversal == "public-batched":
         training_root, training_pot_anchor, training_view_states = \
             _positive_pot_training_view(root)
@@ -758,6 +798,31 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             "public_diagnostics_view_states": diagnostic_view_states,
             "public_diagnostics_view_source": diagnostic_view_source,
         })
+    if sampled:
+        result.update({
+            "method": "chance-sampled Monte Carlo CFR",
+            "resource_model": "chance-sampled",
+            "sampling_seed": sampling_seed,
+            "samples_per_iteration": samples_per_iteration,
+            "sampled_work_budget": sampled_budget,
+            "sampler_storage_budget": sampled_storage,
+            "exact_diagnostics_admission_reference": sampled_diagnostic_budget,
+            "sampling_statistics": sampling_stats if sampling_stats is not None else {
+                "world_draws": 0, "actual_node_visits": 0,
+                "visited_information_sets": 0},
+            "world_decision_work_enforced": False,
+            "world_construction_admission_iterations": 1,
+            "training_schedule": "simultaneous vanilla regret updates after each frozen sampled batch; sampled own-reach average",
+            "sampling_scope": "Samples the complete stored joint conditioned world law with replacement; all betting actions are traversed. Final profile values and legal best responses enumerate the whole configured game. Full-deck preflop remains unsupported.",
+        })
+        result["limits"]["reference_candidate_pair_iterations"] = _MAX_CANDIDATE_HAND_ITERATIONS
+        result["limits"]["reference_world_iterations"] = _MAX_WORLD_ITERATIONS
+        result["limits"]["reference_world_decision_work"] = _MAX_WORLD_NODE_WORK
+        result["limits"]["candidate_pair_iterations"] = None
+        result["limits"]["world_iterations"] = None
+        result["limits"]["world_decision_work"] = None
+        result["limits"]["constructed_candidate_pairs"] = _MAX_CANDIDATE_HAND_ITERATIONS
+        result["limits"]["constructed_worlds"] = min(_MAX_WORLD_ITERATIONS, MAX_SAMPLER_ENTRIES)
     if vector_budget_enabled:
         result.update({
             "resource_model": "public-vector",

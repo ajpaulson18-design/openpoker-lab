@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-chance-sampled-v1",
+  "selection_scope": "Freeze checkpoints and three seeds before measurement; report every endpoint including failed targets. No sampled CFR+ or universal speed claim.",
+  "seeds": [
+    2,
+    17,
+    53
+  ],
+  "full_flop": {
+    "sb": "AsAd,QsQd",
+    "bb": "KsKd,JhJc",
+    "flop": [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    "config": {
+      "starting_stack": 2,
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "iterations": [
+      1000,
+      10000
+    ],
+    "samples_per_iteration": 32,
+    "target_nash_conv": 0.001,
+    "worlds": 7920,
+    "information_sets": 17620,
+    "memory_iterations": 100
+  },
+  "selected_game": {
+    "sb": "AsAd:1,AhAc:0.25",
+    "bb": "KsKd:1,KcKh:0.5",
+    "config": {
+      "starting_stack": [
+        4,
+        3
+      ],
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": false
+    },
+    "runouts": [
+      "2c3c4d7h8h",
+      "Kc2d3h7s8c",
+      "Ac2d3h7s8c"
+    ],
+    "flop_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "raise_sizes": [],
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "iterations": [
+      1000
+    ],
+    "samples_per_iteration": 8,
+    "target_nash_conv": 0.01
+  },
+  "kuhn": {
+    "iterations": [
+      3000,
+      30000
+    ],
+    "samples_per_iteration": 1,
+    "target_nash_conv": 0.08,
+    "target_value_error": 0.04
+  },
+  "historical_reference": "benchmarks/results/preflop-averaging-delay-160-v1.json"
+}
