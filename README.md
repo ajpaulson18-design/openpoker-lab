@@ -237,6 +237,8 @@ exact conditioned-game outputs. Optional [chance-sampled CFR](docs/preflop-chanc
 
 Explicit [two-flop structural admission](docs/preflop-two-complete-flops.md) covers two selected flops with every legal ordered future deal, independently replayed policies and exact legal responses. Its preflop-local delayed CFR+ optimization preserves policy numbers while removing redundant work; full-deck preflop remains outside scope.
 
+Optional [exact requested-accuracy stopping](docs/preflop-convergence-stop.md) checks legal best responses to completed delayed-CFR+ average policies and reports actual completed iterations, checkpoint history and target misses. Admission still reserves the full requested ceiling and all possible checks before training; default fixed-iteration behavior is unchanged.
+
 ## Range notation
 
 Separate tokens with spaces or commas:
