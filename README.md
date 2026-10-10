@@ -239,6 +239,8 @@ Explicit [two-flop structural admission](docs/preflop-two-complete-flops.md) cov
 
 Optional [exact requested-accuracy stopping](docs/preflop-convergence-stop.md) checks legal best responses to completed delayed-CFR+ average policies and reports actual completed iterations, checkpoint history and target misses. Admission still reserves the full requested ceiling and all possible checks before training; default fixed-iteration behavior is unchanged.
 
+A [target-delta plan experiment](docs/preflop-target-plan-prototype.md) preserved exact policies but failed its predeclared runtime gate and increased traced allocations. It remains a reproducible research helper; production solvers do not use it.
+
 ## Range notation
 
 Separate tokens with spaces or commas:
