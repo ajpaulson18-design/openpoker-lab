@@ -42,23 +42,21 @@ Recursive requests reuse existing `cfr_plus.train(delay=d)`. Public-vector
 requests use a preflop-local orchestration module with unchanged repository
 validation, prefix aggregation and target-player delta helpers. Its independent
 average-only traversal preserves operation order, dense index holes and missing
-rows. Each vector sweep keeps two regret traversals and one average traversal
-even when its weight is zero. The recursive average visitor is cleared in
-`finally` on success/failure.
+rows. The optimized positive-delay adapter caches its profile, rematches only updated player rows and skips zero-weight average passes. The recursive average visitor is cleared in `finally` on success/failure. See the [two-flop milestone](preflop-two-complete-flops.md) for exact policy parity and paired runtime evidence.
 
 `d` must be an exact integer with `0 <= d < iterations`. Booleans, negative,
 noninteger, `None` and no-positive-average schedules reject before enumeration.
 Positive delays require CFR+. All existing caps remain, including the opt-in
-vector resource model's unchanged conservative CFR+ envelope.
+vector resource model's versioned conservative delayed-v2 envelope. Zero-delay solver paths retain the unchanged shared trainer and v1 budget.
 
 Positive results add `averaging_delay`, `averaging_positive_sweeps` and the
-delayed schedule description. The vector adapter performs `3*iterations`
-traversals; the generic reference skips zero-weight average passes and performs
-`3*iterations-d`. Its variable `training_passes_per_iteration` is null. Regret
+delayed schedule description. The positive-delay vector adapter and generic reference both skip zero-weight average passes and perform `3*iterations-d` traversals. Their variable `training_passes_per_iteration` is null. Regret
 and average pass counts are separate. No-information-set games report zero
 training passes and zero contributing averaging sweeps, preserving blind refunds.
 
-## Independent checks and measured scope
+## Historical independent checks and measured scope
+
+The following frozen reports measured the original adapter, before selective rematching and omission of zero-weight average traversals. Their recorded timings, pass counts and v1 budgets describe those historical sources; current optimized evidence is recorded separately in the [two-flop milestone](preflop-two-complete-flops.md).
 
 Thirteen new tests cover exact zero-delay vector parity, positive-delay generic
 reference parity, weighted hidden chance, hand-derived average chronology,
