@@ -123,7 +123,7 @@ def _configured_sizes(values):
 
 def replay_policy(result, sb_range, bb_range, *, config, runouts,
                   flop_config=None, turn_config=None, river_config=None,
-                  monetary_mode="configured"):
+                  monetary_mode="configured", postflop_scope="all-streets"):
     """Rebuild states from rules and integrate a policy and both legal exact BRs.
 
     A responder maximizes only after its own hand and revealed public history
@@ -132,9 +132,17 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
     ``configured`` mirrors binary64 local-ledger sizing and per-action cleanup;
     ``global-rational`` retains the historical Fraction-backed global ledger,
     including its float-before-nine-decimal quantization, for diagnostics.
+    Explicit ``flop-checkdown`` settles immediately after flop betting while
+    keeping every selected future world hidden in the terminal expectation.
     """
     if monetary_mode not in ("configured", "global-rational"):
         raise ValueError("monetary_mode must be configured or global-rational")
+    if postflop_scope not in ("all-streets", "flop-checkdown"):
+        raise ValueError("postflop_scope must be all-streets or flop-checkdown")
+    if result.get("postflop_scope", "all-streets") != postflop_scope:
+        raise ValueError("Replay scope must match the explicitly declared result scope")
+    if postflop_scope == "flop-checkdown" and (turn_config is not None or river_config is not None):
+        raise ValueError("Flop-checkdown replay does not accept turn or river action configs")
     configured = monetary_mode == "configured"
     config = config.to_dict() if hasattr(config, "to_dict") else dict(config)
     raw_stacks = config.get("starting_stack", 100)
@@ -294,8 +302,10 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
         matched = min(state.committed)
         state = replace(state, committed=(matched, matched))
         stack_tolerance = 1e-9 if configured else 0
-        if state.street == 5 or any(matched >= stack - stack_tolerance
-                                    for stack in stacks):
+        final_betting_street = state.street == 5 or (
+            postflop_scope == "flop-checkdown" and state.street == 3)
+        if final_betting_street or any(matched >= stack - stack_tolerance
+                                      for stack in stacks):
             return terminal(group, state)
         next_street = {0: 3, 3: 4, 4: 5}[state.street]
         partitions = defaultdict(list)
@@ -436,6 +446,7 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
             "sb_best_response_value": br_sb, "bb_best_response_value": br_bb,
             "nash_conv": max(0.0, br_sb + br_bb), "worlds": len(worlds),
             "monetary_mode": monetary_mode,
+            **({"postflop_scope": postflop_scope} if postflop_scope == "flop-checkdown" else {}),
             "checked_information_sets": len(checked),
             "private_pair_probabilities": [{"sb": sb, "bb": bb, "probability": mass}
                                             for (sb, bb), mass in sorted(pair_probabilities.items())]}
