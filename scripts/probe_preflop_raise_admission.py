@@ -137,8 +137,7 @@ def probe(label, runouts, config):
             record["physical_preflight"] = captured["enumeration"]
         return record
     if "budget" not in captured:
-        record["status"] = "unexpected_return_without_admission_intercept"
-        return record
+        raise AssertionError("solve_preflop returned without the expected admission stop.")
     record["physical_preflight"] = captured["enumeration"]
     record["information_sets"] = len(captured["infos"])
     record["base_budget"] = captured["budget"]
@@ -162,7 +161,7 @@ def probe(label, runouts, config):
                 "admitted": budget["total_loop_entries_upper_bound"]
                             <= budget["total_loop_entry_limit"],
             }
-        except Exception as exc:
+        except ValueError as exc:
             record["additional_iteration_estimates"][str(iterations)] = {
                 "delay": delay, "admitted": False,
                 "error_type": type(exc).__name__, "error": str(exc)}
