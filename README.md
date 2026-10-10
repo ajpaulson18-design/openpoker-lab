@@ -317,3 +317,5 @@ Non-all-in preflop raise coverage and retained structural admission limits: [pro
 An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
 
 Measured exact-payload setup improvement for flop-checkdown solves: [active legal prefixes](docs/preflop-active-prefixes.md).
+
+Optional hidden-future grouping for the same finite flop-checkdown game: [API, admission, full-world verification and measured limits](docs/preflop-hidden-future-groups.md).
