@@ -14,7 +14,8 @@ from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
-from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
+from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, MAX_TOTAL_LOOP_ENTRIES, estimate_vector_budget
+from .preflop_future_groups import estimate_future_grouping, group_hidden_futures
 from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from .preflop_runout_index import RunoutBlockerIndex
 from .preflop_private_indices import compact_private_indices
@@ -530,7 +531,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
                   target_nash_conv=None, convergence_check_interval=None,
-                  private_indexing="original"):
+                  private_indexing="original", future_indexing="original"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -555,6 +556,12 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     future-board worlds stay hidden and are integrated at terminal utility;
     turn and river betting are not modeled. Turn/river action configs are
     rejected in this scope. The default ``all-streets`` path is unchanged.
+
+    Optional ``future_indexing="flop-sign"`` groups hidden outcomes by private
+    pair, public flop and final showdown sign in flop-checkdown mode only.
+    Physical enumeration, outputs and all existing admission limits remain;
+    a separately bounded grouped view serves training and exact diagnostics.
+    Changed floating summation order can produce small numerical differences.
 
     Optional paired ``target_nash_conv`` / ``convergence_check_interval`` stop
     positive-delay public-vector CFR+ after a complete sweep whose exact legal
@@ -588,6 +595,10 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("postflop_scope must be all-streets or flop-checkdown.")
     if postflop_scope == "flop-checkdown" and (turn_config is not None or river_config is not None):
         raise ValueError("flop-checkdown does not accept turn_config or river_config.")
+    if future_indexing not in ("original", "flop-sign"):
+        raise ValueError("future_indexing must be original or flop-sign.")
+    if future_indexing == "flop-sign" and postflop_scope != "flop-checkdown":
+        raise ValueError("flop-sign future indexing requires flop-checkdown scope.")
     expanded_tree = tree_admission == "vector"
     if expanded_tree and resource_model != "public-vector":
         raise ValueError("Vector tree admission requires the public-vector resource model.")
@@ -678,6 +689,25 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         **({"checkpoint_interval": convergence_check_interval} if convergence_enabled else {}))
         if vector_budget_enabled else None)
 
+    # Retain the full physical-world vector envelope, including inactive future
+    # prefixes. Grouping only reduces backend row/prefix work; no prior admission
+    # is relaxed. Add its original-world scan/map/copy envelope before allocation.
+    future_grouping_budget = None
+    if future_indexing == "flop-sign":
+        future_grouping_budget = estimate_future_grouping(worlds)
+        total = (vector_budget["total_loop_entries_upper_bound"] +
+                 future_grouping_budget["grouping_loop_entries_upper_bound"])
+        if total > MAX_TOTAL_LOOP_ENTRIES:
+            raise ValueError("Future grouping vector estimated loop entries exceed 500,000,000")
+        vector_budget = dict(vector_budget)
+        vector_budget.update({
+            "physical_world_reference_budget_version": vector_budget["budget_version"],
+            "budget_version": "preflop-public-vector-future-group-budget-v5",
+            "future_grouping": future_grouping_budget,
+            "total_loop_entries_upper_bound": total,
+            "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds.",
+        })
+
     # The estimator admits the extra copying before the compact structures are
     # allocated. Preserve the original identities for final policy labels and
     # public result counts; all training and vector diagnostics use compact ids.
@@ -703,7 +733,18 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     sampling_stats = None
 
     compaction_completed = False
+    grouped_source_worlds = None
+    future_indexing_metadata = None
     try:
+        if future_indexing == "flop-sign":
+            grouped_source_worlds = worlds
+            worlds = group_hidden_futures(worlds)
+            future_indexing_metadata = {
+                "physical_world_count": len(grouped_source_worlds),
+                "training_world_rows": len(worlds),
+                "group_key": ["sb_hand", "bb_hand", "public_flop", "showdown_sign"],
+                "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim.",
+            }
         payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
         training_pot_anchor = None
         training_view_states = 0
@@ -816,6 +857,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         nash_conv = gain_sb + gain_bb
         compaction_completed = True
     finally:
+        if grouped_source_worlds is not None:
+            worlds = grouped_source_worlds
+            grouped_source_worlds = None
         if compaction is not None:
             try:
                 if compaction_completed:
@@ -915,6 +959,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         result["scope"] = (
             "Approximate equilibrium of the conditioned finite game with preflop and flop betting, followed by forced checkdown over the selected complete future-board outcomes. Turn and river remain hidden; no turn or river decisions are modeled. This is not an all-streets Hold'em equilibrium claim."
         )
+    if future_indexing == "flop-sign":
+        result["future_indexing"] = "flop-sign"
+        result["future_indexing_metadata"] = future_indexing_metadata
     if private_indexing == "compact":
         result["private_indexing"] = "compact"
         result["private_indexing_metadata"] = private_indexing_metadata
