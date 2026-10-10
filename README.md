@@ -311,3 +311,5 @@ and tests that measure poker correctness or statistical behavior. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 MIT licensed. Research software; no performance or profitability claims.
+
+Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
