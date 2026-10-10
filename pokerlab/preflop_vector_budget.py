@@ -18,10 +18,14 @@ MAX_PREFIX_EDGES = 250_000
 MAX_DENSE_PREFIX_SLOTS = 2_000_000
 MAX_INFO_ACTION_SLOTS = 1_000_000
 MAX_TOTAL_LOOP_ENTRIES = 500_000_000
+MAX_COMPACTION_REFERENCE_SLOTS = 8_000_000
+_COMPACT_MAX_WORLD_ROWS = 3_000_000
+_COMPACT_MAX_WORLD_FIELDS = 25_000_000
+_COMPACT_MAX_INFO_ROWS = 500_000
 _MAX_HAND_INDEX = 1326
 
 
-def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0, checkpoint_interval=None):
+def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0, checkpoint_interval=None, private_indexing="original"):
     """Return JSON-safe conservative loop/allocation bounds for vector work.
 
     Bounds include one aggregation for training and one for requested vector
@@ -42,6 +46,11 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
             raise ValueError("checkpoint interval must be a positive integer")
         if algorithm != "cfrplus" or not averaging_delay:
             raise ValueError("checkpoint admission requires positive-delay CFR+")
+    if private_indexing not in ("original", "compact"):
+        raise ValueError("private_indexing must be original or compact")
+    compact = private_indexing == "compact"
+    if compact and (algorithm != "cfrplus" or not averaging_delay):
+        raise ValueError("compact private indices require positive-delay CFR+")
     if not isinstance(chance_type, type):
         raise TypeError("chance_type must be a node class")
     if not isinstance(worlds, (tuple, list)) or not worlds:
@@ -49,15 +58,27 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
     if not isinstance(infos, Mapping):
         raise TypeError("infos must be a mapping")
 
+    if compact and len(worlds) > _COMPACT_MAX_WORLD_ROWS:
+        raise ValueError("Private-index compaction world-row cap exceeded")
+    if compact and len(infos) > _COMPACT_MAX_INFO_ROWS:
+        raise ValueError("Private-index compaction info-row cap exceeded")
+    active_hands = (set(), set()) if compact else None
+    world_fields = 0
     max_indices = [-1, -1]
     for world in worlds:
         if not isinstance(world, (tuple, list)) or len(world) < 4:
             raise ValueError("each world needs two hands, mass, and sign")
+        if compact:
+            world_fields += len(world)
+            if world_fields > _COMPACT_MAX_WORLD_FIELDS:
+                raise ValueError("Private-index compaction world-field cap exceeded")
         for player in (0, 1):
             hand = world[player]
             if type(hand) is not int or not 0 <= hand < _MAX_HAND_INDEX:
                 raise ValueError("world hand index is outside the 1,326-combo range")
             max_indices[player] = max(max_indices[player], hand)
+            if compact:
+                active_hands[player].add(hand)
         if not isinstance(world[4:], (tuple, list)):
             raise ValueError("world future cards must be a sequence")
         try:
@@ -71,6 +92,8 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
                 type(key[1]) is not int or not 0 <= key[1] < _MAX_HAND_INDEX or
                 not isinstance(key[2], tuple) or type(actions) is not int or actions < 1):
             raise ValueError("infos must map (player, hand, history) to positive action counts")
+        if compact and key[1] not in active_hands[key[0]]:
+            raise ValueError("Private-index compaction info hand is absent from all worlds")
         infos_action_slots += actions
         if infos_action_slots > MAX_INFO_ACTION_SLOTS:
             raise ValueError("Vector budget information-set action slots exceed 1,000,000")
@@ -81,10 +104,26 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
     for key in infos:
         marker = (key[0], key[2])
         info_hands_by_node[marker] = info_hands_by_node.get(marker, 0) + 1
-    hand_counts = tuple(index + 1 for index in max_indices)
+    original_hand_counts = tuple(index + 1 for index in max_indices)
+    hand_counts = (tuple(len(indices) for indices in active_hands) if compact else
+                   original_hand_counts)
     if min(hand_counts) < 1:
         raise ValueError("both players need at least one hand index")
     hand_sum = sum(hand_counts)
+    compaction_reference_slots = 0
+    compaction_loop_entries = 0
+    if compact:
+        # Conservative logical references: world copy/list-to-tuple overlap,
+        # compact keys, both policy-order arrays, maps/inverse/metadata and
+        # final restored dictionaries. Python headers/allocator/RSS excluded.
+        compaction_reference_slots = (128 + 4 * world_fields + 4 * len(worlds) +
+                                      12 * len(infos) + 16 * hand_sum)
+        if compaction_reference_slots > MAX_COMPACTION_REFERENCE_SLOTS:
+            raise ValueError("Private-index compaction references exceed 8,000,000 slots")
+        # Census, bounded sorting/maps, complete row copying and final policy
+        # restoration. Existing per-pass envelopes retain actual dimensions.
+        compaction_loop_entries = (128 + 8 * len(worlds) + 6 * world_fields +
+                                   12 * len(infos) + 24 * hand_sum)
 
     # Sparse prefix/pair census. Reserve every unique edge before adding it.
     prefix_pairs = {}
@@ -272,12 +311,14 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         4 * len(worlds) + len(infos)
     )
     total_loop_entries = (training_loop_entries + diagnostics_loop_entries +
-                          aggregation_loop_entries)
+                          aggregation_loop_entries + compaction_loop_entries)
     if total_loop_entries > MAX_TOTAL_LOOP_ENTRIES:
         raise ValueError("Vector budget estimated loop entries exceed 500,000,000")
 
     result = {
-        "budget_version": ("preflop-public-vector-convergence-budget-v3"
+        "budget_version": ("preflop-public-vector-private-compact-budget-v4"
+                           if compact else
+                           "preflop-public-vector-convergence-budget-v3"
                            if checkpoint_interval is not None else
                            "preflop-public-vector-delayed-budget-v2"
                            if averaging_delay else VECTOR_BUDGET_VERSION),
@@ -334,5 +375,16 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
             "checkpoint_diagnostics_upper_bound": checkpoint_diagnostics,
             "diagnostic_evaluations_upper_bound": diagnostic_evaluations,
             "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission.",
+        })
+    if compact:
+        result.update({
+            "private_indexing": "compact",
+            "original_hand_counts": list(original_hand_counts),
+            "active_hand_counts": list(hand_counts),
+            "private_index_world_fields": world_fields,
+            "private_index_compaction_reference_slots_upper_bound": compaction_reference_slots,
+            "private_index_compaction_reference_slot_limit": MAX_COMPACTION_REFERENCE_SLOTS,
+            "private_index_compaction_loop_entries_upper_bound": compaction_loop_entries,
+            "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions.",
         })
     return result

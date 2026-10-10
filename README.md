@@ -241,6 +241,8 @@ Optional [exact requested-accuracy stopping](docs/preflop-convergence-stop.md) c
 
 A [target-delta plan experiment](docs/preflop-target-plan-prototype.md) preserved exact policies but failed its predeclared runtime gate and increased traced allocations. It remains a reproducible research helper; production solvers do not use it.
 
+Opt-in [private-index compaction](docs/preflop-private-compaction.md) removes globally inactive hand slots for delayed public-vector CFR+, with original policy identities, independent replay and versioned copy/work admission. Its frozen benchmark evaluates complete-call runtime and Python allocations on a shape with blocker-induced index holes.
+
 ## Range notation
 
 Separate tokens with spaces or commas:

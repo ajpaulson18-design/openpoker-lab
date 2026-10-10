@@ -17,6 +17,7 @@ from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, estimate_vector_budget
 from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from .preflop_runout_index import RunoutBlockerIndex
+from .preflop_private_indices import compact_private_indices
 from .preflop_sampled_budget import estimate_sampled_budget
 from .preflop_sampled_storage import MAX_SAMPLER_ENTRIES, estimate_sampler_storage
 from .preflop_sampled_cfr import train_chance_sampled, validate_sampling_options
@@ -489,7 +490,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
-                  target_nash_conv=None, convergence_check_interval=None):
+                  target_nash_conv=None, convergence_check_interval=None,
+                  private_indexing="original"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -530,6 +532,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Preflop traversal supports recursive, planned, public-batched, or chance-sampled CFR.")
     if diagnostics not in ("recursive", "public-batched"):
         raise ValueError("Preflop diagnostics must be recursive or public-batched.")
+    if private_indexing not in ("original", "compact"):
+        raise ValueError("private_indexing must be original or compact.")
     if resource_model not in ("world", "public-vector", "chance-sampled"):
         raise ValueError("Preflop resource model must be world, public-vector, or chance-sampled.")
     if tree_admission not in ("decision-count", "vector"):
@@ -556,6 +560,13 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("CFR+ averaging delay must be an integer from zero to iterations-1.")
     if averaging_delay and algorithm != "cfrplus":
         raise ValueError("Positive averaging delay requires CFR+ training.")
+    if private_indexing == "compact" and not (
+            algorithm == "cfrplus" and averaging_delay > 0 and
+            resource_model == "public-vector" and traversal == "public-batched" and
+            diagnostics == "public-batched"):
+        raise ValueError(
+            "Compact private indexing requires positive-delay CFR+ with public-vector "
+            "public-batched training and diagnostics.")
     convergence_enabled = target_nash_conv is not None or convergence_check_interval is not None
     if convergence_enabled:
         if (isinstance(target_nash_conv, bool) or
@@ -611,9 +622,23 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
 
     vector_budget = (estimate_vector_budget(
         root, worlds, infos, iterations, algorithm, chance_type=_Chance,
+        **({"private_indexing": private_indexing} if private_indexing == "compact" else {}),
         **({"averaging_delay": averaging_delay} if averaging_delay else {}),
         **({"checkpoint_interval": convergence_check_interval} if convergence_enabled else {}))
         if vector_budget_enabled else None)
+
+    # The estimator admits the extra copying before the compact structures are
+    # allocated. Preserve the original identities for final policy labels and
+    # public result counts; all training and vector diagnostics use compact ids.
+    private_indexing_metadata = None
+    compaction = None
+    original_worlds = None
+    original_infos = None
+    if private_indexing == "compact":
+        original_worlds, original_infos = worlds, infos
+        compaction = compact_private_indices(worlds, infos)
+        worlds, infos = compaction.worlds, compaction.infos
+        private_indexing_metadata = compaction.metadata
 
     sampled_storage = estimate_sampler_storage(worlds) if sampled else None
     sampled_budget = (estimate_sampled_budget(
@@ -626,116 +651,128 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         if sampled else None)
     sampling_stats = None
 
-    payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
-    training_pot_anchor = None
-    training_view_states = 0
-    diagnostic_values = None
-    diagnostic_view_anchor = None
-    diagnostic_view_states = 0
-    diagnostic_view_source = None
-    completed_iterations = iterations if infos else 0
-    convergence_checkpoints = []
-    convergence_reached = False
-    if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
-                      diagnostics == "public-batched"):
-        averages = {}
-    elif sampled:
-        averages, sampling_stats = train_chance_sampled(
-            root, worlds, infos, iterations, payoff, _node_key, _chance_child,
-            seed=sampling_seed, batch_size=samples_per_iteration)
-        if sampling_stats["actual_node_visits"] > sampled_budget["total_node_visits_upper_bound"]:
-            raise RuntimeError("Sampled trainer exceeded its structural visit bound.")
-    elif traversal == "public-batched":
-        training_root, training_pot_anchor, training_view_states = \
-            _positive_pot_training_view(root)
-        def check_convergence(iteration, policy):
-            nonlocal diagnostic_values, completed_iterations, convergence_reached
-            # A delayed policy has no contributing average before this point.
-            # Do not certify an untrained uniform fallback as a delayed result.
-            if iteration <= averaging_delay:
-                return False
-            values = evaluate_public_profile(
-                training_root, worlds, policy,
-                pot=2 * training_pot_anchor, chance_type=_Chance)
-            if not all(isfinite(value) for value in values):
-                raise ValueError("Convergence diagnostic returned nonfinite values.")
-            value, response_sb, response_bb = values
-            gap = max(0.0, response_sb - value) + max(0.0, response_bb + value)
-            reached = gap + 1e-10 <= target_nash_conv
-            convergence_checkpoints.append({
-                "completed_iterations": iteration, "nash_conv": gap,
-                "value_sb": value, "sb_best_response_value": response_sb,
-                "bb_best_response_value": response_bb, "target_reached": reached,
-            })
-            completed_iterations = iteration
-            diagnostic_values = values
-            convergence_reached = reached
-            return reached
+    compaction_completed = False
+    try:
+        payoff = lambda terminal, world: _terminal_value(terminal, world[3], 0.0)
+        training_pot_anchor = None
+        training_view_states = 0
+        diagnostic_values = None
+        diagnostic_view_anchor = None
+        diagnostic_view_states = 0
+        diagnostic_view_source = None
+        completed_iterations = iterations if infos else 0
+        convergence_checkpoints = []
+        convergence_reached = False
+        if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
+                          diagnostics == "public-batched"):
+            averages = {}
+        elif sampled:
+            averages, sampling_stats = train_chance_sampled(
+                root, worlds, infos, iterations, payoff, _node_key, _chance_child,
+                seed=sampling_seed, batch_size=samples_per_iteration)
+            if sampling_stats["actual_node_visits"] > sampled_budget["total_node_visits_upper_bound"]:
+                raise RuntimeError("Sampled trainer exceeded its structural visit bound.")
+        elif traversal == "public-batched":
+            training_root, training_pot_anchor, training_view_states = \
+                _positive_pot_training_view(root)
+            def check_convergence(iteration, policy):
+                nonlocal diagnostic_values, completed_iterations, convergence_reached
+                # A delayed policy has no contributing average before this point.
+                # Do not certify an untrained uniform fallback as a delayed result.
+                if iteration <= averaging_delay:
+                    return False
+                values = evaluate_public_profile(
+                    training_root, worlds, policy,
+                    pot=2 * training_pot_anchor, chance_type=_Chance)
+                if not all(isfinite(value) for value in values):
+                    raise ValueError("Convergence diagnostic returned nonfinite values.")
+                value, response_sb, response_bb = values
+                gap = max(0.0, response_sb - value) + max(0.0, response_bb + value)
+                reached = gap + 1e-10 <= target_nash_conv
+                convergence_checkpoints.append({
+                    "completed_iterations": iteration, "nash_conv": gap,
+                    "value_sb": value, "sb_best_response_value": response_sb,
+                    "bb_best_response_value": response_bb, "target_reached": reached,
+                })
+                completed_iterations = iteration
+                diagnostic_values = values
+                convergence_reached = reached
+                return reached
 
-        try:
-            if averaging_delay:
-                averages = train_delayed_public_cfrplus(
-                    training_root, worlds, infos, iterations,
-                    averaging_delay=averaging_delay,
-                    pot=2 * training_pot_anchor, chance_type=_Chance,
-                    **({"checkpoint_interval": convergence_check_interval,
-                        "checkpoint_callback": check_convergence} if convergence_enabled else {}),
-                )
-            else:
-                averages = train_public_batched(
-                    training_root, worlds, infos, iterations, algorithm,
-                    pot=2 * training_pot_anchor, chance_type=_Chance,
-                )
-            if diagnostics == "public-batched":
-                if not convergence_enabled or diagnostic_values is None:
-                    diagnostic_values = evaluate_public_profile(
-                        training_root, worlds, averages,
+            try:
+                if averaging_delay:
+                    averages = train_delayed_public_cfrplus(
+                        training_root, worlds, infos, iterations,
+                        averaging_delay=averaging_delay,
+                        pot=2 * training_pot_anchor, chance_type=_Chance,
+                        **({"checkpoint_interval": convergence_check_interval,
+                            "checkpoint_callback": check_convergence} if convergence_enabled else {}),
+                    )
+                else:
+                    averages = train_public_batched(
+                        training_root, worlds, infos, iterations, algorithm,
                         pot=2 * training_pot_anchor, chance_type=_Chance,
                     )
-                diagnostic_view_anchor = training_pot_anchor
-                diagnostic_view_states = training_view_states
-                diagnostic_view_source = "training-view-reused"
-        finally:
-            training_root = None
-    elif algorithm == "cfrplus":
-        if averaging_delay:
-            averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
-                                     _node_key, _chance_child, delay=averaging_delay)
+                if diagnostics == "public-batched":
+                    if not convergence_enabled or diagnostic_values is None:
+                        diagnostic_values = evaluate_public_profile(
+                            training_root, worlds, averages,
+                            pot=2 * training_pot_anchor, chance_type=_Chance,
+                        )
+                    diagnostic_view_anchor = training_pot_anchor
+                    diagnostic_view_states = training_view_states
+                    diagnostic_view_source = "training-view-reused"
+            finally:
+                training_root = None
+        elif algorithm == "cfrplus":
+            if averaging_delay:
+                averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
+                                         _node_key, _chance_child, delay=averaging_delay)
+            else:
+                averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
+                                         _node_key, _chance_child)
+        elif traversal == "planned":
+            trainer = train_planned
+            averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
+                               _node_key, _chance_child, max_plan_ops=MAX_PLAN_OPS)
         else:
-            averages = train_cfrplus(root, worlds, infos, iterations, "cfrplus", payoff,
-                                     _node_key, _chance_child)
-    elif traversal == "planned":
-        trainer = train_planned
-        averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
-                           _node_key, _chance_child, max_plan_ops=MAX_PLAN_OPS)
-    else:
-        averages = cfr.train(root, worlds, infos, iterations, algorithm, payoff,
-                           _node_key, _chance_child)
-    if diagnostics == "public-batched" and diagnostic_values is None:
-        diagnostic_root, diagnostic_view_anchor, diagnostic_view_states = \
-            _positive_pot_training_view(root)
-        try:
-            diagnostic_values = evaluate_public_profile(
-                diagnostic_root, worlds, averages,
-                pot=2 * diagnostic_view_anchor, chance_type=_Chance,
-            )
-            diagnostic_view_source = (
-                "no-information-set-evaluation-view" if not infos
-                else "separate-evaluation-view"
-            )
-        finally:
-            diagnostic_root = None
-    if diagnostic_values is None:
-        value_sb = cfr.evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
-        br_sb = cfr.best_response(0, root, worlds, averages, payoff, _node_key,
-                                  _chance_partitions)
-        br_bb = cfr.best_response(1, root, worlds, averages, payoff, _node_key,
-                                  _chance_partitions)
-    else:
-        value_sb, br_sb, br_bb = diagnostic_values
-    gain_sb = max(0.0, br_sb - value_sb)
-    gain_bb = max(0.0, br_bb + value_sb)
-    nash_conv = gain_sb + gain_bb
+            averages = cfr.train(root, worlds, infos, iterations, algorithm, payoff,
+                               _node_key, _chance_child)
+        if diagnostics == "public-batched" and diagnostic_values is None:
+            diagnostic_root, diagnostic_view_anchor, diagnostic_view_states = \
+                _positive_pot_training_view(root)
+            try:
+                diagnostic_values = evaluate_public_profile(
+                    diagnostic_root, worlds, averages,
+                    pot=2 * diagnostic_view_anchor, chance_type=_Chance,
+                )
+                diagnostic_view_source = (
+                    "no-information-set-evaluation-view" if not infos
+                    else "separate-evaluation-view"
+                )
+            finally:
+                diagnostic_root = None
+        if diagnostic_values is None:
+            value_sb = cfr.evaluate(root, worlds, averages, payoff, _node_key, _chance_child)
+            br_sb = cfr.best_response(0, root, worlds, averages, payoff, _node_key,
+                                      _chance_partitions)
+            br_bb = cfr.best_response(1, root, worlds, averages, payoff, _node_key,
+                                      _chance_partitions)
+        else:
+            value_sb, br_sb, br_bb = diagnostic_values
+        gain_sb = max(0.0, br_sb - value_sb)
+        gain_bb = max(0.0, br_bb + value_sb)
+        nash_conv = gain_sb + gain_bb
+        compaction_completed = True
+    finally:
+        if compaction is not None:
+            try:
+                if compaction_completed:
+                    averages = compaction.restore_policy(averages)
+            finally:
+                worlds, infos = original_worlds, original_infos
+                compaction = None
+                original_worlds = original_infos = None
 
     if convergence_enabled and not all(isfinite(value) for value in
                                        (value_sb, br_sb, br_bb, nash_conv)):
@@ -819,6 +856,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         "scope": "Approximate equilibrium of the configured heads-up finite betting abstraction and selected physical runouts; no unrestricted preflop or Hold'em GTO claim.",
         "strategy": strategy,
     }
+    if private_indexing == "compact":
+        result["private_indexing"] = "compact"
+        result["private_indexing_metadata"] = private_indexing_metadata
     if algorithm == "cfrplus":
         result.update({
             "training_schedule": (
