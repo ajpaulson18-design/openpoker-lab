@@ -21,7 +21,7 @@ MAX_TOTAL_LOOP_ENTRIES = 500_000_000
 _MAX_HAND_INDEX = 1326
 
 
-def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type):
+def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0):
     """Return JSON-safe conservative loop/allocation bounds for vector work.
 
     Bounds include one aggregation for training and one for requested vector
@@ -33,6 +33,10 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         raise ValueError("iterations must be a positive integer")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
         raise ValueError("algorithm must be vanilla, dcfr, or cfrplus")
+    if type(averaging_delay) is not int or not 0 <= averaging_delay < iterations:
+        raise ValueError("averaging_delay must be an integer in [0, iterations)")
+    if averaging_delay and algorithm != "cfrplus":
+        raise ValueError("positive averaging_delay requires cfrplus")
     if not isinstance(chance_type, type):
         raise TypeError("chance_type must be a node class")
     if not isinstance(worlds, (tuple, list)) or not worlds:
@@ -213,6 +217,18 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         training_setup_entries = 4 * len(infos) + 4 * infos_action_slots
         trainer_aggregation_count = 1
     training_loop_entries = training_setup_entries + iterations * per_iteration
+    if algorithm == "cfrplus" and averaging_delay and infos:
+        # Initial full match; target partitions together rematch each row once
+        # per sweep. Only positive-weight averages traverse. The update
+        # envelope remains conservative for the two target-player passes.
+        training_setup_entries += 4 * len(infos)
+        training_loop_entries = (
+            training_setup_entries + regret_matching_bound +
+            iterations * (2 * visitor_bound + regret_matching_bound +
+                          2 * regret_update_bound + 4) +
+            (iterations - averaging_delay) * average_only_bound
+        )
+        training_traversals_per_iteration = None
 
     # The public evaluator does one profile and two responder traversals. Its
     # policy() lookup can synthesize a dense fallback row for unreachable
@@ -240,8 +256,9 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
     if total_loop_entries > MAX_TOTAL_LOOP_ENTRIES:
         raise ValueError("Vector budget estimated loop entries exceed 500,000,000")
 
-    return {
-        "budget_version": VECTOR_BUDGET_VERSION,
+    result = {
+        "budget_version": ("preflop-public-vector-delayed-budget-v2"
+                           if averaging_delay else VECTOR_BUDGET_VERSION),
         "world_count": len(worlds),
         "iterations": iterations,
         "algorithm": algorithm,
@@ -279,5 +296,11 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
             "World enumeration and tree construction use separate existing guards."
         ),
     }
-
-
+    if averaging_delay:
+        result.update({
+            "averaging_delay": averaging_delay,
+            "training_regret_passes": 2 * iterations if infos else 0,
+            "training_average_passes": iterations - averaging_delay if infos else 0,
+            "training_policy_match_rows": (iterations + 1) * len(infos) if infos else 0,
+        })
+    return result

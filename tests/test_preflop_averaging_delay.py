@@ -64,9 +64,9 @@ class PreflopAveragingDelayTests(unittest.TestCase):
                 self.assertEqual(reference["training_average_passes"], 20 - delay)
                 self.assertEqual(reference["training_passes"], 60 - delay)
                 self.assertIsNone(reference["training_passes_per_iteration"])
-                self.assertEqual(vector["training_average_passes"], 20)
-                self.assertEqual(vector["training_passes"], 60)
-                self.assertEqual(vector["training_passes_per_iteration"], 3)
+                self.assertEqual(vector["training_average_passes"], 20 - delay)
+                self.assertEqual(vector["training_passes"], 60 - delay)
+                self.assertIsNone(vector["training_passes_per_iteration"])
                 for field in FIELDS:
                     self.assertAlmostEqual(reference[field], vector[field], delta=1e-11)
                 self.assertEqual(len(reference["strategy"]), len(vector["strategy"]))

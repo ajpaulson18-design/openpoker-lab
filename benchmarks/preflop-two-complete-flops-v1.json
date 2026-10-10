@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-two-complete-flops-v1",
+  "historical_reference": "benchmarks/results/preflop-averaging-delay-160-v1.json",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "config": {
+    "starting_stack": 2,
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "checkpoints": [
+    {
+      "iterations": 50,
+      "delay": 25
+    },
+    {
+      "iterations": 90,
+      "delay": 45
+    }
+  ],
+  "target_nash_conv": 0.005,
+  "worlds": 11880,
+  "information_sets": 30128,
+  "paired_timing": {
+    "iterations": 40,
+    "delay": 20,
+    "pairs": 3
+  },
+  "fixed_flop_regression": {
+    "iterations": 160,
+    "delay": 80,
+    "target_nash_conv": 0.001
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "selection_scope": "Two predeclared checkpoints in a broader selected-flop game, chosen before measurement from structural admission only. Two flops are conditioned physical outcomes with all legal ordered future deals; not full-deck preflop. No target or checkpoint changes after results."
+}

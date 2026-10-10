@@ -377,8 +377,9 @@ def _positive_pot_training_view(root):
 
 
 def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
-                        *, enforce_world_work=True):
+                        *, enforce_world_work=True, decision_limit=None):
     """Graft one transient postflop template per live boundary and flop."""
+    decision_limit = _MAX_PUBLIC_NODES if decision_limit is None else decision_limit
     continuations = []
 
     def find(node):
@@ -400,8 +401,8 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
         nonlocal state_count, decision_count
         if state_count >= _MAX_PUBLIC_STATES:
             raise ValueError("Combined preflop/postflop tree exceeds 250,000 public states.")
-        if kind == "decision" and decision_count >= _MAX_PUBLIC_NODES:
-            raise ValueError("Combined preflop/postflop tree exceeds 10,000 decisions.")
+        if kind == "decision" and decision_count >= decision_limit:
+            raise ValueError(f"Combined preflop/postflop tree exceeds {decision_limit:,} decisions.")
         state_count += 1
         if kind == "decision":
             decision_count += 1
@@ -450,8 +451,8 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
                 max_template_decisions = max(max_template_decisions, template_decisions)
                 if state_count + allocation["total"] > _MAX_PUBLIC_STATES:
                     raise ValueError("Combined preflop/postflop tree exceeds 250,000 public states.")
-                if decision_count + template_decisions > _MAX_PUBLIC_NODES:
-                    raise ValueError("Combined preflop/postflop tree exceeds 10,000 decisions.")
+                if decision_count + template_decisions > decision_limit:
+                    raise ValueError(f"Combined preflop/postflop tree exceeds {decision_limit:,} decisions.")
                 added_work = flop_world_counts[flop_key] * visited_nodes * iterations
                 if enforce_world_work and world_decision_work + added_work > _MAX_WORLD_NODE_WORK:
                     raise ValueError("Combined preflop/postflop traversal exceeds 30 million world-decision iterations.")
@@ -487,7 +488,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   flop_config=None, turn_config=None, river_config=None,
                   iterations=1000, algorithm="vanilla", traversal="recursive",
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
-                  sampling_seed=0, samples_per_iteration=1):
+                  sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -503,6 +504,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     and exact public-batched diagnostics. It replaces full-world training work
     charges with bounded sampled-node/action work, retaining construction caps.
     ``sampling_seed`` and ``samples_per_iteration`` control reproducible batches.
+    ``tree_admission="vector"`` explicitly replaces the aggregate 10,000
+    decision guard with public-state, action-slot and vector-work admission;
+    it requires ``resource_model="public-vector"``. Templates remain bounded.
     Positive ``averaging_delay`` optionally applies CFR+ weights
     ``max(iteration-delay, 0)`` after each completed alternating sweep.
     """
@@ -522,6 +526,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("Preflop diagnostics must be recursive or public-batched.")
     if resource_model not in ("world", "public-vector", "chance-sampled"):
         raise ValueError("Preflop resource model must be world, public-vector, or chance-sampled.")
+    if tree_admission not in ("decision-count", "vector"):
+        raise ValueError("Tree admission must be decision-count or vector.")
+    expanded_tree = tree_admission == "vector"
+    if expanded_tree and resource_model != "public-vector":
+        raise ValueError("Vector tree admission requires the public-vector resource model.")
     sampled = traversal == "chance-sampled"
     validate_sampling_options(sampling_seed, samples_per_iteration)
     if sampled:
@@ -553,7 +562,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
      max_template_states, max_template_decisions) = \
         _merge_preflop_tree(preflop_tree, worlds, specs, traversal,
                             iterations * 3 if algorithm == "cfrplus" else iterations,
-                            enforce_world_work=not (vector_budget_enabled or sampled))
+                            enforce_world_work=not (vector_budget_enabled or sampled),
+                            **({"decision_limit": _MAX_PUBLIC_STATES} if expanded_tree else {}))
 
     # Global hand identity is SB=0, BB=1. Each history sees only own hands that
     # remain legal after its public flop/turn/river prefix.
@@ -579,7 +589,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             info_action_slots += len(node.actions)
 
     vector_budget = (estimate_vector_budget(
-        root, worlds, infos, iterations, algorithm, chance_type=_Chance)
+        root, worlds, infos, iterations, algorithm, chance_type=_Chance,
+        **({"averaging_delay": averaging_delay} if averaging_delay else {}))
         if vector_budget_enabled else None)
 
     sampled_storage = estimate_sampler_storage(worlds) if sampled else None
@@ -773,8 +784,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             ),
         })
     if averaging_delay:
-        average_passes = (iterations if traversal == "public-batched"
-                          else iterations - averaging_delay) if infos else 0
+        average_passes = iterations - averaging_delay if infos else 0
         result.update({
             "averaging_delay": averaging_delay,
             "averaging_positive_sweeps": iterations - averaging_delay if infos else 0,
@@ -788,7 +798,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         })
         if traversal == "public-batched":
             result["public_batched_training_kernel"] = "preflop-delayed-cfrplus-python"
-        elif infos:
+        if infos:
             result["training_passes_per_iteration"] = None
     if diagnostics == "public-batched":
         result.update({
@@ -798,6 +808,15 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             "public_diagnostics_view_states": diagnostic_view_states,
             "public_diagnostics_view_source": diagnostic_view_source,
         })
+    if expanded_tree:
+        result.update({
+            "tree_admission": "vector",
+            "decision_count_limit_enforced": False,
+            "tree_admission_scope": "Aggregate public-state and information-set action-slot ceilings plus structural vector work replace the legacy aggregate decision count; temporary per-flop template ceilings remain.",
+        })
+        result["limits"]["reference_decision_nodes"] = _MAX_PUBLIC_NODES
+        result["limits"]["decision_nodes"] = None
+        result["limits"]["decision_nodes_from_public_states"] = _MAX_PUBLIC_STATES
     if sampled:
         result.update({
             "method": "chance-sampled Monte Carlo CFR",

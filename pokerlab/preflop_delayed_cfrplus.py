@@ -31,7 +31,11 @@ def train_delayed_public_cfrplus(root, worlds, infos, iterations, *,
     if not infos:
         return {}
     edges, marginals = public_cfr._aggregate_prefixes(worlds, hand_counts)
+    # Preserve the caller's original row order in returned mappings, while
+    # keeping per-player update lists for selective rematching.
     keys = list(infos)
+    keys_by_player = {player: [key for key in keys if key[0] == player]
+                      for player in (0, 1)}
     regrets = {key: [0.0] * infos[key] for key in keys}
     sums = {key: [0.0] * infos[key] for key in keys}
     half_pot = pot / 2.0
@@ -75,21 +79,24 @@ def train_delayed_public_cfrplus(root, worlds, infos, iterations, *,
             # Break the recursive closure cycle on normal and exceptional exits.
             visit = None
 
+    # The profile begins at the uniform strategy and then only the active
+    # player's rows change after each alternating regret sweep. Keep the other
+    # player's cached rows intact instead of rematching every information set.
+    current = {key: strategy(regrets[key]) for key in keys}
     for iteration in range(1, iterations + 1):
-        current = {key: strategy(row) for key, row in regrets.items()}
         for player in (0, 1):
             deltas = public_cfr._cfrplus_target_deltas(
                 root, edges, infos, current, player, hand_counts,
                 half_pot, chance_type,
             )
-            for key in keys:
-                if key[0] == player:
-                    regrets[key] = [max(0.0, old + delta)
-                                    for old, delta in zip(regrets[key], deltas[key])]
-            current = {key: strategy(row) for key, row in regrets.items()}
+            for key in keys_by_player[player]:
+                regrets[key] = [max(0.0, old + delta)
+                                for old, delta in zip(regrets[key], deltas[key])]
+                current[key] = strategy(regrets[key])
 
         weight = float(max(iteration - averaging_delay, 0))
-        accumulate_average(current, weight)
+        if weight > 0.0:
+            accumulate_average(current, weight)
 
     averages = {}
     for key in keys:

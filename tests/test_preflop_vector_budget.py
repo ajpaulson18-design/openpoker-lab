@@ -8,6 +8,7 @@ from pokerlab.postflop_solver import _Chance
 from pokerlab.preflop_solver import _Action
 from pokerlab.river_tree import _Node, _Terminal
 from pokerlab.preflop_vector_budget import estimate_vector_budget
+from pokerlab.preflop_delayed_cfrplus import train_delayed_public_cfrplus
 
 
 def _toy():
@@ -83,6 +84,87 @@ class PreflopVectorBudgetTests(unittest.TestCase):
         self.assertEqual(cfrplus["training_traversals_per_iteration"], 3)
         self.assertGreater(cfrplus["training_loop_entries_upper_bound"],
                            vanilla["training_loop_entries_upper_bound"])
+
+    def test_delayed_cfrplus_budget_metadata_and_no_info_path(self):
+        root, worlds, infos = _instrumentation_game()
+        estimate = estimate_vector_budget(root, worlds, infos, 8, "cfrplus",
+                                          chance_type=_Chance, averaging_delay=3)
+        self.assertEqual(estimate["budget_version"],
+                         "preflop-public-vector-delayed-budget-v2")
+        self.assertEqual(estimate["averaging_delay"], 3)
+        self.assertEqual(estimate["training_regret_passes"], 16)
+        self.assertEqual(estimate["training_average_passes"], 5)
+        self.assertEqual(estimate["training_policy_match_rows"], 9 * len(infos))
+        self.assertIsNone(estimate["training_traversals_per_iteration"])
+        self.assertGreater(estimate["total_loop_entries_upper_bound"],
+                           estimate["diagnostics_loop_entries_upper_bound"])
+
+        terminal = _Terminal("showdown", (0.5, 1.0))
+        no_info = estimate_vector_budget(terminal, ((0, 0, 1.0, 1),), {}, 8,
+                                         "cfrplus", chance_type=_Chance,
+                                         averaging_delay=3)
+        self.assertEqual(no_info["training_loop_entries_upper_bound"], 0)
+        self.assertEqual(no_info["training_average_passes"], 0)
+        self.assertEqual(no_info["training_regret_passes"], 0)
+        self.assertEqual(no_info["training_policy_match_rows"], 0)
+        self.assertEqual(no_info["aggregation_count"], 1)
+        self.assertGreater(no_info["diagnostics_loop_entries_upper_bound"], 0)
+
+    def test_delayed_budget_rejects_invalid_delay_before_census(self):
+        for delay in (True, -1, 1.5, 1, "1"):
+            with self.subTest(delay=delay):
+                with self.assertRaises(ValueError):
+                    estimate_vector_budget(object(), object(), object(), 1,
+                                           "cfrplus", chance_type=_Chance,
+                                           averaging_delay=delay)
+
+    def test_delayed_adapter_and_exact_diagnostics_fit_measured_loop_envelope(self):
+        monitoring = getattr(sys, "monitoring", None)
+        if monitoring is None:
+            self.skipTest("sys.monitoring instruction events require Python 3.12+")
+        from pokerlab.public_diagnostics import evaluate_profile
+
+        root, worlds, infos = _instrumentation_game()
+        iterations, delay = 3, 1
+        budget = estimate_vector_budget(root, worlds, infos, iterations, "cfrplus",
+                                        chance_type=_Chance,
+                                        averaging_delay=delay)
+        observed = 0
+        allowed = {"preflop_delayed_cfrplus.py", "public_cfr.py",
+                   "public_diagnostics.py", "cfr.py"}
+        tool_id = next((index for index in range(6)
+                        if monitoring.get_tool(index) is None), None)
+        if tool_id is None:
+            self.skipTest("no sys.monitoring tool ID is available")
+
+        def instruction(code, offset):
+            nonlocal observed
+            filename = code.co_filename.replace("\\", "/").rsplit("/", 1)[-1]
+            if filename in allowed and code.co_code[offset] == dis.opmap["FOR_ITER"]:
+                observed += 1
+
+        allocated = False
+        try:
+            monitoring.use_tool_id(tool_id, "delayed-vector-budget-test")
+            allocated = True
+            monitoring.register_callback(tool_id, monitoring.events.INSTRUCTION,
+                                         instruction)
+            monitoring.set_events(tool_id, monitoring.events.INSTRUCTION)
+            profile = train_delayed_public_cfrplus(
+                root, worlds, infos, iterations, averaging_delay=delay,
+                pot=1.0, chance_type=_Chance,
+            )
+            evaluate_profile(root, worlds, profile, pot=1.0, chance_type=_Chance)
+        finally:
+            if allocated:
+                try:
+                    monitoring.set_events(tool_id, 0)
+                    monitoring.register_callback(tool_id,
+                                                 monitoring.events.INSTRUCTION, None)
+                finally:
+                    monitoring.free_tool_id(tool_id)
+        self.assertGreater(observed, 0)
+        self.assertGreaterEqual(budget["total_loop_entries_upper_bound"], observed)
 
     def test_terminal_no_info_skips_training_but_keeps_diagnostic_work(self):
         root = _Terminal("showdown", (0.5, 1.0))
