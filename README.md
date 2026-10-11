@@ -319,3 +319,5 @@ An explicit preflop/flop betting model with hidden checkdown continuation: [API,
 Measured exact-payload setup improvement for flop-checkdown solves: [active legal prefixes](docs/preflop-active-prefixes.md).
 
 Optional hidden-future grouping for the same finite flop-checkdown game: [API, admission, full-world verification and measured limits](docs/preflop-hidden-future-groups.md).
+
+Richer flop betting measured across three stack depths: [fixed admission and accuracy matrix, including target misses](docs/preflop-flop-raise-coverage.md).
