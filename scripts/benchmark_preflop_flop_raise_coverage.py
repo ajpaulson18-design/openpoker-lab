@@ -191,4 +191,3 @@ def main():
     print(f"saved {OUTPUT}; admitted={sum(x['status']=='admitted' for x in admissions)}/{len(admissions)}", flush=True)
 
 if __name__ == "__main__": main()
-
