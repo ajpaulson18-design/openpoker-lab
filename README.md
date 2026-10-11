@@ -321,3 +321,5 @@ Measured exact-payload setup improvement for flop-checkdown solves: [active lega
 Optional hidden-future grouping for the same finite flop-checkdown game: [API, admission, full-world verification and measured limits](docs/preflop-hidden-future-groups.md).
 
 Richer flop betting measured across three stack depths: [fixed admission and accuracy matrix, including target misses](docs/preflop-flop-raise-coverage.md).
+
+Explicit grouped-world construction admission enables longer verified flop-checkdown runs: [API, replaced reference guard, unchanged vector caps and quality evidence](docs/preflop-grouped-world-admission.md).
