@@ -325,3 +325,5 @@ Richer flop betting measured across three stack depths: [fixed admission and acc
 Explicit grouped-world construction admission enables longer verified flop-checkdown runs: [API, replaced reference guard, unchanged vector caps and quality evidence](docs/preflop-grouped-world-admission.md).
 
 Preflop opening, 3-bet, 4-bet and all-in action coverage: [fixed six-case admission and independent accuracy matrix](docs/preflop-action-coverage.md).
+
+Weighted private ranges with colliding hands and a blocked flop: [rational conditioned priors and independently verified accuracy](docs/preflop-weighted-range-coverage.md).

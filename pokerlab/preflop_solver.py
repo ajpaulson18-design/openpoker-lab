@@ -1120,6 +1120,15 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         result["limits"]["reference_world_decision_work"] = _MAX_WORLD_NODE_WORK
         result["limits"]["world_decision_work"] = None
     if grouped_world_admission:
+        result["future_indexing_metadata"]["scope"] = (
+            "First-seen groups sum the original normalized physical masses without renormalization. "
+            "Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation "
+            "view; all selected futures remain hidden. Original worlds govern outputs and the full "
+            "requested-iteration vector/grouping envelope. Only the legacy physical-world-count times "
+            "requested-iterations proxy is replaced by the ten-iteration construction guard; all "
+            "remaining caps stay enforced. Floating summation order changes; no bitwise policy "
+            "equivalence claim."
+        )
         result["world_admission"] = "grouped-vector"
         result["world_construction_admission_iterations"] = 10
         result["world_admission_scope"] = (

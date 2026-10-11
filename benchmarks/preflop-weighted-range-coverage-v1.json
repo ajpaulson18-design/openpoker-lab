@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-weighted-range-coverage-v1",
+  "game_spec": "benchmarks/preflop-flop-raise-coverage-v1.json",
+  "sb_range": "AsAd:1,QhJh:0.5,7s6s:0.25",
+  "bb_range": "KsKd:0.75,AhKh:1,8s7s:0.5",
+  "starting_stack": 10,
+  "preflop_config": {
+    "small_blind": 0.5,
+    "big_blind": 1.0,
+    "raise_sizes": [
+      0.5,
+      1.0
+    ],
+    "max_raises": 3,
+    "include_all_in": true
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "flop_config": {
+    "bet_sizes": [
+      0.5,
+      1.0
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": true
+  },
+  "postflop_scope": "flop-checkdown",
+  "expected_candidate_private_pairs": 9,
+  "expected_compatible_private_pairs": 8,
+  "expected_overlapping_pair": {
+    "sb": "7s6s",
+    "bb": "8s7s",
+    "shared_card": "7s"
+  },
+  "expected_blocked_flop_hand": {
+    "hand": "7s6s",
+    "flop": [
+      "5h",
+      "6s",
+      "Jc"
+    ],
+    "shared_card": "6s"
+  },
+  "expected_selected_outcomes": 4704,
+  "expected_physical_worlds": 27720,
+  "posterior_denominator": 115,
+  "expected_pair_distribution": [
+    {
+      "sb": "AsAd",
+      "bb": "KsKd",
+      "worlds": 3960,
+      "numerator": 24
+    },
+    {
+      "sb": "AsAd",
+      "bb": "AhKh",
+      "worlds": 3960,
+      "numerator": 32
+    },
+    {
+      "sb": "AsAd",
+      "bb": "8s7s",
+      "worlds": 3960,
+      "numerator": 16
+    },
+    {
+      "sb": "QhJh",
+      "bb": "KsKd",
+      "worlds": 3960,
+      "numerator": 12
+    },
+    {
+      "sb": "QhJh",
+      "bb": "AhKh",
+      "worlds": 3960,
+      "numerator": 16
+    },
+    {
+      "sb": "QhJh",
+      "bb": "8s7s",
+      "worlds": 3960,
+      "numerator": 8
+    },
+    {
+      "sb": "7s6s",
+      "bb": "KsKd",
+      "worlds": 1980,
+      "numerator": 3
+    },
+    {
+      "sb": "7s6s",
+      "bb": "AhKh",
+      "worlds": 1980,
+      "numerator": 4
+    }
+  ],
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "checkpoints": [
+    {
+      "iterations": 500,
+      "delay": 250
+    },
+    {
+      "iterations": 1000,
+      "delay": 500
+    }
+  ],
+  "coverage_requirements": {
+    "two_distinct_sb_open_sizes": true,
+    "bb_three_bet": true,
+    "sb_regular_four_bet": true,
+    "preflop_all_in": true,
+    "cap_respected": true,
+    "flop_actions_from_existing_rich_fixture": true
+  },
+  "selection_scope": "One fixed weighted 3-by-3 exact-combo range fixture, one 10-chip stack and two predeclared half-delay checkpoints. Preflight both grouped-world admission cases before any training. Independently assert the eight compatible private-pair keys, single overlap, flop blocker, physical-world counts and posterior probabilities from hand-counted rational weights. Independently replay every completed policy over original physical worlds and exact legal visible-information best responses. Retain all preflight rejections and target misses; do not simplify or retry. Preserve the unchanged NashConv + 1e-10 <= 0.005 target. One descriptive complete-call-plus-JSON measurement per completed case; no memory or speedup comparison.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with three weighted exact combos per player, two selected flops, 4,704 ordered future candidates and 27,720 compatible physical worlds, and forced checkdown after flop betting. One shared 10-chip stack, two requested iteration ceilings, configured preflop raises/all-ins and rich flop actions. Not broad-range/full-deck, all-streets, multiway, unrestricted NLHE, or a general convergence claim.",
+  "algorithm": "cfrplus",
+  "traversal": "public-batched",
+  "diagnostics": "public-batched",
+  "resource_model": "public-vector",
+  "future_indexing": "flop-sign",
+  "world_admission": "grouped-vector"
+}
