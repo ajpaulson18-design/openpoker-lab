@@ -1,0 +1,3110 @@
+{
+  "schema_version": 1,
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "benchmark_id": "preflop-local-profile-v1",
+  "generated_at_utc": "2026-10-11T13:49:13.867730+00:00",
+  "source_revision": "62b6e9d0123456cdf73dfac9f59f866860ddba58",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab/coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab/coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab/coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab/coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab/contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab/current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab/decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab/equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab/explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab/exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab/game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab/matrix_free_river.py": "aedae83d279def8288be363bf73ac236e6415401381e17184701909f36bb7ec3",
+    "pokerlab/matrix_free_turn.py": "1efea724fdd807e191bf7985553be1cc8ece2e686bcdf960bc564ff1de1d83fe",
+    "pokerlab/models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab/personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_future_groups.py": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab/preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab/preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab/preflop_solver.py": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab/situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab/solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_preflop_flop_checkdown.py": "2d6e2a161e4a4efe8ed2130d7b12d5a50e30948f829312ef08661e43ecbac5cb",
+    "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+    "scripts/benchmark_preflop_two_flops.py": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "scripts/cfr_quality.py": "dafca0225a87987a4e229e83e1cbd6b678a298ef0c704eefe8f64fc26a84e447",
+    "tests/test_preflop_delayed_cfrplus.py": "c7127cea4e991eaa2ad83b538057255ceb67d59d4b8c3084f1ab03d73cea6af9",
+    "tests/test_preflop_flop_checkdown.py": "39d55786363754e25cce4fb78a8c5ee8962e4ab7520f7a107a50511c6a9b89dd",
+    "scripts/benchmark_preflop_weighted_range_coverage.py": "1a19944948e62e946932bb2cc7b582f158c00c1813cc572594d4767a26d30f2b",
+    "scripts/benchmark_preflop_action_coverage.py": "e45c96849a412a25cdf2e3f0497186ae18107f9bc77e792678fa595161ea5a3c",
+    "scripts/benchmark_preflop_flop_raise_coverage.py": "776ad167db3ba8465f7348b1e89b8c9c987ba2f0e7d8812ebaac1490de2b537b",
+    "scripts/benchmark_preflop_grouped_world_admission.py": "bd903f8ac7e10ea2964ff3aa954107efed46103d4e4276cd8395821cebb9782a",
+    "tests/test_preflop_future_groups.py": "3642810ac55cdc6d70a2b9662654c1701ce458b85ed6026fe291a2ceeeb0cf3f",
+    "tests/test_preflop_future_indexing.py": "c131970fef66375131cff06b0039c161f5197e4d9830281f8f67131d8ce0c1dd",
+    "tests/test_preflop_grouped_world_admission.py": "987a3d0a6373b36cd47a918d429ed93387eca2f9a4cf305e149dd8f1b37315ec",
+    "benchmarks/preflop-flop-checkdown-v1.json": "0e62d5138ade0774906c72ab28308c3f80505d370d3e325d090efed81f5ebf79",
+    "benchmarks/preflop-flop-raise-coverage-v1.json": "be2ae7f9a79fc64a58c7e28e83001a51cad1f1f6ee3e411e759c3606648a971b",
+    "benchmarks/preflop-grouped-world-admission-v1.json": "0c8f01cb58aaa471cbbd8090d001a4349baef907c823d33d34511c0f796f17c4",
+    "benchmarks/preflop-action-coverage-v1.json": "f72304c2cd8518564dee4c4cbffa3cdeda2fcfce95cbf1005cd5e6ee3c062bb6",
+    "benchmarks/preflop-weighted-range-coverage-v1.json": "331e05d50253b689ed1c4a461f53f4ff80da1424ece656b2f192d425173edd1d",
+    "benchmarks/results/preflop-weighted-range-coverage-v1.json": "71a997aead029343b240d10385f76d6dfe9c6f3f532df9f3ba2b6d0413e02611",
+    "scripts/profile_preflop_local_costs.py": "a6a9f876ea2484fd4636c9e8e5b21b8100ed7760eab75af2eb6834d0114554c8",
+    "benchmarks/preflop-local-profile-v1.json": "b788c92fd9ff48461d4cf7cba280a92ee0f2e1a130b7bcac58fea195665d0bed"
+  },
+  "profile_spec_sha256": "b788c92fd9ff48461d4cf7cba280a92ee0f2e1a130b7bcac58fea195665d0bed",
+  "weighted_spec_sha256": "331e05d50253b689ed1c4a461f53f4ff80da1424ece656b2f192d425173edd1d",
+  "profile_script_sha256": "a6a9f876ea2484fd4636c9e8e5b21b8100ed7760eab75af2eb6834d0114554c8",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-local-profile-v1",
+    "weighted_fixture": "benchmarks/preflop-weighted-range-coverage-v1.json",
+    "weighted_result_provenance": "benchmarks/results/preflop-weighted-range-coverage-v1.json",
+    "iterations": 500,
+    "averaging_delay": 250,
+    "profile_repeats": 1,
+    "top_function_rows": 20,
+    "preflop_local_self_time_share_threshold": 0.1,
+    "interpretation": "The 0.10 exclusive-self-time share is a diagnostic materiality marker only; it does not automatically justify an optimization. Any changed loop/allocation accounting requires a separate public-vector admission review.",
+    "profile_scope": "One cProfile capture around solve_preflop and JSON serialization only. Runouts/options are prepared before profiling; independent numeric replay and rational posterior verification occur after profiling. No tracemalloc, memory claim, paired runtime comparison, or solver run before the frozen source merge."
+  },
+  "profile_scope": "One cProfile capture around solve_preflop and JSON serialization only. Runouts/options are prepared before profiling; independent numeric replay and rational posterior verification occur after profiling. No tracemalloc, memory claim, paired runtime comparison, or solver run before the frozen source merge.",
+  "profiled_wall_seconds": 23.473776500002714,
+  "serialized_json_bytes": 615944,
+  "serialized_json_sha256": "412149b96a7bd79f4f0e6c32bffc5e6f293ccd0ec6cc3538d9de2540d7439bc2",
+  "profile": {
+    "total_calls": 12873783,
+    "primitive_calls": 11997431,
+    "profile_total_self_seconds": 23.456976499999993,
+    "preflop_delayed_cfrplus_exclusive_self_seconds": 3.5598395000000003,
+    "preflop_delayed_cfrplus_share_of_profile_self": 0.15176037286817426,
+    "materiality_threshold": 0.1,
+    "threshold_is_diagnostic_only": true,
+    "function_records": [
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _abc._abc_instancecheck>",
+        "primitive_calls": 11892,
+        "calls": 11892,
+        "self_seconds": 0.0118773,
+        "cumulative_seconds": 0.0119929
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _abc._abc_subclasscheck>",
+        "primitive_calls": 3,
+        "calls": 16,
+        "self_seconds": 9.240000000000001e-05,
+        "cumulative_seconds": 0.0001112
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _collections._count_elements>",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.0644923,
+        "cumulative_seconds": 0.2138246
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _sre.compile>",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 8.1e-06,
+        "cumulative_seconds": 8.1e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _sre.unicode_iscased>",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 3.4e-06,
+        "cumulative_seconds": 3.4e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method _sre.unicode_tolower>",
+        "primitive_calls": 20,
+        "calls": 20,
+        "self_seconds": 1.2100000000000001e-05,
+        "cumulative_seconds": 1.2100000000000001e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.abs>",
+        "primitive_calls": 56595,
+        "calls": 56595,
+        "self_seconds": 0.015022400000000002,
+        "cumulative_seconds": 0.015022400000000002
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.all>",
+        "primitive_calls": 115575,
+        "calls": 115575,
+        "self_seconds": 0.1369205,
+        "cumulative_seconds": 0.23384800000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.any>",
+        "primitive_calls": 10571,
+        "calls": 10571,
+        "self_seconds": 0.034707800000000004,
+        "cumulative_seconds": 0.10296390000000001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.divmod>",
+        "primitive_calls": 4704,
+        "calls": 4704,
+        "self_seconds": 0.0013637,
+        "cumulative_seconds": 0.0013637
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.format>",
+        "primitive_calls": 929,
+        "calls": 929,
+        "self_seconds": 0.0013285,
+        "cumulative_seconds": 0.0013285
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.getattr>",
+        "primitive_calls": 26,
+        "calls": 26,
+        "self_seconds": 2.01e-05,
+        "cumulative_seconds": 2.01e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.hasattr>",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 1.2e-05,
+        "cumulative_seconds": 1.2e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.hash>",
+        "primitive_calls": 83228,
+        "calls": 83228,
+        "self_seconds": 0.034809,
+        "cumulative_seconds": 0.034809
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.id>",
+        "primitive_calls": 694,
+        "calls": 694,
+        "self_seconds": 0.00031620000000000004,
+        "cumulative_seconds": 0.00031620000000000004
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.isinstance>",
+        "primitive_calls": 2115763,
+        "calls": 2115763,
+        "self_seconds": 0.8185747000000001,
+        "cumulative_seconds": 0.8428165000000001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.iter>",
+        "primitive_calls": 14130,
+        "calls": 14130,
+        "self_seconds": 0.0073398000000000005,
+        "cumulative_seconds": 0.0073398000000000005
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.len>",
+        "primitive_calls": 554778,
+        "calls": 554781,
+        "self_seconds": 0.2297874,
+        "cumulative_seconds": 0.22979110000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.max>",
+        "primitive_calls": 1908921,
+        "calls": 1908921,
+        "self_seconds": 0.9952412,
+        "cumulative_seconds": 1.0048001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.min>",
+        "primitive_calls": 419641,
+        "calls": 419641,
+        "self_seconds": 0.2649673,
+        "cumulative_seconds": 0.2649673
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.next>",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.0156891,
+        "cumulative_seconds": 0.43754010000000004
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.ord>",
+        "primitive_calls": 23,
+        "calls": 23,
+        "self_seconds": 1.34e-05,
+        "cumulative_seconds": 1.34e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.round>",
+        "primitive_calls": 3124,
+        "calls": 3124,
+        "self_seconds": 0.0051505000000000006,
+        "cumulative_seconds": 0.0051505000000000006
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.sorted>",
+        "primitive_calls": 71640,
+        "calls": 71640,
+        "self_seconds": 0.15198810000000001,
+        "cumulative_seconds": 0.21667740000000002
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.sum>",
+        "primitive_calls": 806851,
+        "calls": 807629,
+        "self_seconds": 1.2731136,
+        "cumulative_seconds": 2.1552675000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method from_bytes>",
+        "primitive_calls": 52,
+        "calls": 52,
+        "self_seconds": 9.82e-05,
+        "cumulative_seconds": 9.82e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method fromkeys>",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 1.3500000000000001e-05,
+        "cumulative_seconds": 1.3500000000000001e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method math.frexp>",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 2.9e-06,
+        "cumulative_seconds": 2.9e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method math.fsum>",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0100554,
+        "cumulative_seconds": 0.0207489
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method math.isfinite>",
+        "primitive_calls": 168721,
+        "calls": 168721,
+        "self_seconds": 0.0523464,
+        "cumulative_seconds": 0.0523464
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method math.ldexp>",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.9e-06,
+        "cumulative_seconds": 3.9e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'add' of 'set' objects>",
+        "primitive_calls": 154850,
+        "calls": 154850,
+        "self_seconds": 0.08342970000000001,
+        "cumulative_seconds": 0.08342970000000001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'append' of 'list' objects>",
+        "primitive_calls": 40079,
+        "calls": 40079,
+        "self_seconds": 0.022512200000000003,
+        "cumulative_seconds": 0.022512200000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'bit_count' of 'int' objects>",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 6.7e-06,
+        "cumulative_seconds": 6.7e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'bit_length' of 'int' objects>",
+        "primitive_calls": 27720,
+        "calls": 27720,
+        "self_seconds": 0.0147954,
+        "cumulative_seconds": 0.0147954
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'cast' of 'memoryview' objects>",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 3e-06,
+        "cumulative_seconds": 3e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'disable' of '_lsprof.Profiler' objects>",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 5.86e-05,
+        "cumulative_seconds": 5.86e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'extend' of 'list' objects>",
+        "primitive_calls": 1209,
+        "calls": 1209,
+        "self_seconds": 0.0025449,
+        "cumulative_seconds": 0.004806
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'find' of 'bytearray' objects>",
+        "primitive_calls": 23,
+        "calls": 23,
+        "self_seconds": 4.2900000000000006e-05,
+        "cumulative_seconds": 4.2900000000000006e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'fullmatch' of 're.Pattern' objects>",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 1.79e-05,
+        "cumulative_seconds": 1.79e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'get' of 'dict' objects>",
+        "primitive_calls": 2060472,
+        "calls": 2060472,
+        "self_seconds": 1.3236703,
+        "cumulative_seconds": 1.3236703
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'index' of 'str' objects>",
+        "primitive_calls": 83772,
+        "calls": 83772,
+        "self_seconds": 0.058312,
+        "cumulative_seconds": 0.058312
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'intersection' of 'set' objects>",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 1e-05,
+        "cumulative_seconds": 1e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'isdisjoint' of 'set' objects>",
+        "primitive_calls": 9,
+        "calls": 9,
+        "self_seconds": 9.2e-06,
+        "cumulative_seconds": 9.2e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'items' of 'dict' objects>",
+        "primitive_calls": 31743,
+        "calls": 31743,
+        "self_seconds": 0.0208845,
+        "cumulative_seconds": 0.0208845
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'join' of 'str' objects>",
+        "primitive_calls": 33169,
+        "calls": 33169,
+        "self_seconds": 0.0231318,
+        "cumulative_seconds": 0.0231318
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'lower' of 'str' objects>",
+        "primitive_calls": 23544,
+        "calls": 23544,
+        "self_seconds": 0.0129455,
+        "cumulative_seconds": 0.0129455
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'partition' of 'str' objects>",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 7.000000000000001e-06,
+        "cumulative_seconds": 7.000000000000001e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'pop' of 'dict' objects>",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 3.7e-06,
+        "cumulative_seconds": 3.7e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'pop' of 'list' objects>",
+        "primitive_calls": 694,
+        "calls": 694,
+        "self_seconds": 0.00031810000000000003,
+        "cumulative_seconds": 0.00031810000000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'remove' of 'set' objects>",
+        "primitive_calls": 694,
+        "calls": 694,
+        "self_seconds": 0.00040950000000000003,
+        "cumulative_seconds": 0.00040950000000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'replace' of 'str' objects>",
+        "primitive_calls": 40,
+        "calls": 40,
+        "self_seconds": 2.79e-05,
+        "cumulative_seconds": 2.79e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'rstrip' of 'str' objects>",
+        "primitive_calls": 1858,
+        "calls": 1858,
+        "self_seconds": 0.001371,
+        "cumulative_seconds": 0.001371
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'setdefault' of 'dict' objects>",
+        "primitive_calls": 55440,
+        "calls": 55440,
+        "self_seconds": 0.0360175,
+        "cumulative_seconds": 0.0360175
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'sort' of 'list' objects>",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0028048,
+        "cumulative_seconds": 0.0374579
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'split' of 're.Pattern' objects>",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 2.01e-05,
+        "cumulative_seconds": 2.01e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'startswith' of 'str' objects>",
+        "primitive_calls": 13329,
+        "calls": 13329,
+        "self_seconds": 0.007738200000000001,
+        "cumulative_seconds": 0.007738200000000001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'strip' of 'str' objects>",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 4.800000000000001e-06,
+        "cumulative_seconds": 4.800000000000001e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'sub' of 're.Pattern' objects>",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 3.12e-05,
+        "cumulative_seconds": 3.12e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'to_bytes' of 'int' objects>",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 2.71e-05,
+        "cumulative_seconds": 2.71e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'tolist' of 'memoryview' objects>",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 1.4900000000000001e-05,
+        "cumulative_seconds": 1.4900000000000001e-05
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'translate' of 'bytearray' objects>",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 9.600000000000001e-06,
+        "cumulative_seconds": 9.600000000000001e-06
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'update' of 'dict' objects>",
+        "primitive_calls": 39,
+        "calls": 39,
+        "self_seconds": 0.0001404,
+        "cumulative_seconds": 0.0001404
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'upper' of 'str' objects>",
+        "primitive_calls": 23538,
+        "calls": 23538,
+        "self_seconds": 0.0132644,
+        "cumulative_seconds": 0.0132644
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'values' of 'dict' objects>",
+        "primitive_calls": 31,
+        "calls": 31,
+        "self_seconds": 2.01e-05,
+        "cumulative_seconds": 2.01e-05
+      },
+      {
+        "file": "builtin",
+        "line": 2,
+        "function": "__init__",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 3.76e-05,
+        "cumulative_seconds": 3.76e-05
+      },
+      {
+        "file": "builtin",
+        "line": 117,
+        "function": "__instancecheck__",
+        "primitive_calls": 11892,
+        "calls": 11892,
+        "self_seconds": 0.0122489,
+        "cumulative_seconds": 0.0242418
+      },
+      {
+        "file": "builtin",
+        "line": 121,
+        "function": "__subclasscheck__",
+        "primitive_calls": 3,
+        "calls": 16,
+        "self_seconds": 1.3100000000000002e-05,
+        "cumulative_seconds": 0.0001156
+      },
+      {
+        "file": "builtin",
+        "line": 341,
+        "function": "__subclasshook__",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 2.7e-06,
+        "cumulative_seconds": 2.7e-06
+      },
+      {
+        "file": "builtin",
+        "line": 435,
+        "function": "__subclasshook__",
+        "primitive_calls": 13,
+        "calls": 13,
+        "self_seconds": 7.4e-06,
+        "cumulative_seconds": 7.4e-06
+      },
+      {
+        "file": "pokerlab/analysis.py",
+        "line": 6,
+        "function": "number",
+        "primitive_calls": 191,
+        "calls": 191,
+        "self_seconds": 0.0004131,
+        "cumulative_seconds": 0.000573
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 14,
+        "function": "cards",
+        "primitive_calls": 4712,
+        "calls": 4712,
+        "self_seconds": 0.0496197,
+        "cumulative_seconds": 0.20222
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 23,
+        "function": "<genexpr>",
+        "primitive_calls": 28250,
+        "calls": 28250,
+        "self_seconds": 0.0729108,
+        "cumulative_seconds": 0.09911460000000001
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 24,
+        "function": "<genexpr>",
+        "primitive_calls": 28250,
+        "calls": 28250,
+        "self_seconds": 0.027624100000000002,
+        "cumulative_seconds": 0.027624100000000002
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 33,
+        "function": "straight_high",
+        "primitive_calls": 11731,
+        "calls": 11731,
+        "self_seconds": 0.3393778,
+        "cumulative_seconds": 0.649425
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 38,
+        "function": "<genexpr>",
+        "primitive_calls": 335935,
+        "calls": 335935,
+        "self_seconds": 0.1695633,
+        "cumulative_seconds": 0.1695633
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 43,
+        "function": "rank_hand",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.1796839,
+        "cumulative_seconds": 1.7838822
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 47,
+        "function": "<genexpr>",
+        "primitive_calls": 94968,
+        "calls": 94968,
+        "self_seconds": 0.09153800000000001,
+        "cumulative_seconds": 0.1493323
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 49,
+        "function": "<genexpr>",
+        "primitive_calls": 12006,
+        "calls": 12006,
+        "self_seconds": 0.066111,
+        "cumulative_seconds": 0.42204670000000005
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 50,
+        "function": "<genexpr>",
+        "primitive_calls": 379152,
+        "calls": 379152,
+        "self_seconds": 0.1746451,
+        "cumulative_seconds": 0.1746451
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 53,
+        "function": "<genexpr>",
+        "primitive_calls": 82329,
+        "calls": 82329,
+        "self_seconds": 0.040537300000000005,
+        "cumulative_seconds": 0.040537300000000005
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 55,
+        "function": "<genexpr>",
+        "primitive_calls": 20,
+        "calls": 20,
+        "self_seconds": 1.69e-05,
+        "cumulative_seconds": 1.69e-05
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 67,
+        "function": "<genexpr>",
+        "primitive_calls": 20889,
+        "calls": 20889,
+        "self_seconds": 0.024068100000000002,
+        "cumulative_seconds": 0.024068100000000002
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 69,
+        "function": "<genexpr>",
+        "primitive_calls": 9897,
+        "calls": 9897,
+        "self_seconds": 0.0083601,
+        "cumulative_seconds": 0.0083601
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 75,
+        "function": "expand_range",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 0.00014110000000000001,
+        "cumulative_seconds": 0.0038355000000000004
+      },
+      {
+        "file": "pokerlab/cfr.py",
+        "line": 4,
+        "function": "strategy",
+        "primitive_calls": 364728,
+        "calls": 364728,
+        "self_seconds": 1.0491798,
+        "cumulative_seconds": 1.7170311
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 171,
+        "function": "_build_public_tree",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 0.000594,
+        "cumulative_seconds": 0.0261982
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 187,
+        "function": "<genexpr>",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 2.0600000000000003e-05,
+        "cumulative_seconds": 2.0600000000000003e-05
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 194,
+        "function": "reserve",
+        "primitive_calls": 606,
+        "calls": 606,
+        "self_seconds": 0.0006922,
+        "cumulative_seconds": 0.0006922
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 206,
+        "function": "add_tree",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 0.0001963,
+        "cumulative_seconds": 0.0189742
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 283,
+        "function": "collect",
+        "primitive_calls": 30,
+        "calls": 606,
+        "self_seconds": 0.0012489,
+        "cumulative_seconds": 0.0016572000000000002
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 300,
+        "function": "visited",
+        "primitive_calls": 30,
+        "calls": 606,
+        "self_seconds": 0.0009594,
+        "cumulative_seconds": 0.0024262000000000003
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 305,
+        "function": "<genexpr>",
+        "primitive_calls": 114,
+        "calls": 808,
+        "self_seconds": 0.0006203000000000001,
+        "cumulative_seconds": 0.0022568
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 307,
+        "function": "plan_operations",
+        "primitive_calls": 30,
+        "calls": 606,
+        "self_seconds": 0.0008826000000000001,
+        "cumulative_seconds": 0.0022502
+      },
+      {
+        "file": "pokerlab/postflop_solver.py",
+        "line": 312,
+        "function": "<genexpr>",
+        "primitive_calls": 114,
+        "calls": 808,
+        "self_seconds": 0.000572,
+        "cumulative_seconds": 0.0020934
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 15,
+        "function": "train_delayed_public_cfrplus",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.7952489,
+        "cumulative_seconds": 18.528252300000002
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 63,
+        "function": "accumulate_average",
+        "primitive_calls": 250,
+        "calls": 250,
+        "self_seconds": 0.0014934000000000002,
+        "cumulative_seconds": 2.3035972
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 64,
+        "function": "visit",
+        "primitive_calls": 250,
+        "calls": 173500,
+        "self_seconds": 1.7630972,
+        "cumulative_seconds": 2.3021038000000003
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 22,
+        "function": "_world_count",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 9.3e-06,
+        "cumulative_seconds": 6.21e-05
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 31,
+        "function": "estimate_future_grouping",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 1.23e-05,
+        "cumulative_seconds": 7.44e-05
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 62,
+        "function": "_validated_row",
+        "primitive_calls": 55440,
+        "calls": 55440,
+        "self_seconds": 0.3877804,
+        "cumulative_seconds": 0.5625842000000001
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 88,
+        "function": "group_hidden_futures",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.1039338,
+        "cumulative_seconds": 0.7073262
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 16,
+        "function": "_checked_runouts",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0612933,
+        "cumulative_seconds": 0.1398452
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 42,
+        "function": "<genexpr>",
+        "primitive_calls": 28224,
+        "calls": 28224,
+        "self_seconds": 0.0288021,
+        "cumulative_seconds": 0.037427100000000005
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 57,
+        "function": "_build_postings",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.009042600000000001,
+        "cumulative_seconds": 0.010546600000000001
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 66,
+        "function": "<genexpr>",
+        "primitive_calls": 53,
+        "calls": 53,
+        "self_seconds": 4.1700000000000004e-05,
+        "cumulative_seconds": 0.0001399
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 84,
+        "function": "__init__",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0002635,
+        "cumulative_seconds": 0.1506559
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 92,
+        "function": "selected_count",
+        "primitive_calls": 27720,
+        "calls": 27720,
+        "self_seconds": 0.0108877,
+        "cumulative_seconds": 0.0108877
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 105,
+        "function": "_blocked_mask",
+        "primitive_calls": 16,
+        "calls": 16,
+        "self_seconds": 0.0002378,
+        "cumulative_seconds": 0.00042320000000000004
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 113,
+        "function": "<genexpr>",
+        "primitive_calls": 80,
+        "calls": 80,
+        "self_seconds": 7.26e-05,
+        "cumulative_seconds": 9.28e-05
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 126,
+        "function": "valid_count",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 2.01e-05,
+        "cumulative_seconds": 0.0001498
+      },
+      {
+        "file": "pokerlab/preflop_runout_index.py",
+        "line": 130,
+        "function": "iter_valid_indices",
+        "primitive_calls": 27728,
+        "calls": 27728,
+        "self_seconds": 0.0642457,
+        "cumulative_seconds": 0.0902561
+      },
+      {
+        "file": "pokerlab/preflop_sampled_cfr.py",
+        "line": 25,
+        "function": "validate_sampling_options",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.7e-06,
+        "cumulative_seconds": 3.7e-06
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 49,
+        "function": "_clean",
+        "primitive_calls": 1092,
+        "calls": 1092,
+        "self_seconds": 0.0012493,
+        "cumulative_seconds": 0.0027894
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 58,
+        "function": "action_dict",
+        "primitive_calls": 31,
+        "calls": 31,
+        "self_seconds": 0.0001005,
+        "cumulative_seconds": 0.0001005
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 62,
+        "function": "_make_stage_spec",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 6.27e-05,
+        "cumulative_seconds": 0.00022720000000000002
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 76,
+        "function": "<genexpr>",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 1.06e-05,
+        "cumulative_seconds": 1.3500000000000001e-05
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 80,
+        "function": "_stage_configs",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.52e-05,
+        "cumulative_seconds": 0.0002424
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 87,
+        "function": "_requested_runouts",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.044561,
+        "cumulative_seconds": 0.3058428
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 117,
+        "function": "<genexpr>",
+        "primitive_calls": 28224,
+        "calls": 28224,
+        "self_seconds": 0.0135311,
+        "cumulative_seconds": 0.0135311
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 117,
+        "function": "<lambda>",
+        "primitive_calls": 4704,
+        "calls": 4704,
+        "self_seconds": 0.021122000000000002,
+        "cumulative_seconds": 0.0346531
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 122,
+        "function": "_compatible",
+        "primitive_calls": 9,
+        "calls": 9,
+        "self_seconds": 2.82e-05,
+        "cumulative_seconds": 3.74e-05
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 126,
+        "function": "_rank_world",
+        "primitive_calls": 27720,
+        "calls": 27720,
+        "self_seconds": 0.16477930000000002,
+        "cumulative_seconds": 1.9874477000000002
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 137,
+        "function": "_enumerate_physical_worlds",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.12146850000000001,
+        "cumulative_seconds": 2.7155208
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 216,
+        "function": "<genexpr>",
+        "primitive_calls": 27721,
+        "calls": 27721,
+        "self_seconds": 0.0106935,
+        "cumulative_seconds": 0.0106935
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 230,
+        "function": "_revealed_board",
+        "primitive_calls": 990,
+        "calls": 990,
+        "self_seconds": 0.0112081,
+        "cumulative_seconds": 0.0239075
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 234,
+        "function": "<genexpr>",
+        "primitive_calls": 3480,
+        "calls": 3480,
+        "self_seconds": 0.0022611000000000003,
+        "cumulative_seconds": 0.0022611000000000003
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 260,
+        "function": "_all_nodes",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 9.3e-06,
+        "cumulative_seconds": 0.0021619
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 263,
+        "function": "visit",
+        "primitive_calls": 1,
+        "calls": 694,
+        "self_seconds": 0.0014959,
+        "cumulative_seconds": 0.0021526
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 279,
+        "function": "_legal_private_hands",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.18447090000000002,
+        "cumulative_seconds": 0.2918312
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 307,
+        "function": "_template_config",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 0.0004753,
+        "cumulative_seconds": 0.0033597
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 313,
+        "function": "<genexpr>",
+        "primitive_calls": 90,
+        "calls": 90,
+        "self_seconds": 0.00010680000000000001,
+        "cumulative_seconds": 0.0001273
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 321,
+        "function": "_clone_template",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 0.00010360000000000001,
+        "cumulative_seconds": 0.0151806
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 323,
+        "function": "clone",
+        "primitive_calls": 30,
+        "calls": 606,
+        "self_seconds": 0.0066693,
+        "cumulative_seconds": 0.015077
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 359,
+        "function": "_positive_pot_training_view",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0017856,
+        "cumulative_seconds": 0.0105432
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 387,
+        "function": "reserve",
+        "primitive_calls": 694,
+        "calls": 694,
+        "self_seconds": 0.0002909,
+        "cumulative_seconds": 0.0002909
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 393,
+        "function": "clone",
+        "primitive_calls": 1,
+        "calls": 694,
+        "self_seconds": 0.0040032,
+        "cumulative_seconds": 0.0071197000000000005
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 402,
+        "function": "<genexpr>",
+        "primitive_calls": 1251,
+        "calls": 1251,
+        "self_seconds": 0.0006446000000000001,
+        "cumulative_seconds": 0.0006446000000000001
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 406,
+        "function": "<genexpr>",
+        "primitive_calls": 6,
+        "calls": 925,
+        "self_seconds": 0.0007002,
+        "cumulative_seconds": 0.0070977
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 415,
+        "function": "_merge_preflop_tree",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.025980100000000002,
+        "cumulative_seconds": 0.408057
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 422,
+        "function": "find",
+        "primitive_calls": 1,
+        "calls": 88,
+        "self_seconds": 0.00022630000000000003,
+        "cumulative_seconds": 0.00030040000000000004
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 437,
+        "function": "reserve",
+        "primitive_calls": 635,
+        "calls": 635,
+        "self_seconds": 0.00048180000000000006,
+        "cumulative_seconds": 0.00048180000000000006
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 462,
+        "function": "graft",
+        "primitive_calls": 1,
+        "calls": 88,
+        "self_seconds": 0.32254730000000004,
+        "cumulative_seconds": 0.3676508
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 521,
+        "function": "<genexpr>",
+        "primitive_calls": 6,
+        "calls": 117,
+        "self_seconds": 0.0001662,
+        "cumulative_seconds": 0.36763500000000005
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 533,
+        "function": "solve_preflop",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0441498,
+        "cumulative_seconds": 23.4425856
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 17,
+        "function": "_clean",
+        "primitive_calls": 353,
+        "calls": 353,
+        "self_seconds": 0.0005025,
+        "cumulative_seconds": 0.0010938
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 22,
+        "function": "_sizes",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.15e-05,
+        "cumulative_seconds": 6.15e-05
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 26,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 5.8e-06,
+        "cumulative_seconds": 1.29e-05
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 29,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 4.3e-06,
+        "cumulative_seconds": 5.1e-06
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 53,
+        "function": "__post_init__",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.5600000000000005e-05,
+        "cumulative_seconds": 0.00015680000000000002
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 77,
+        "function": "stacks",
+        "primitive_calls": 108,
+        "calls": 108,
+        "self_seconds": 0.00014330000000000001,
+        "cumulative_seconds": 0.00020370000000000002
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 84,
+        "function": "pot",
+        "primitive_calls": 14,
+        "calls": 14,
+        "self_seconds": 5.4e-06,
+        "cumulative_seconds": 5.4e-06
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 89,
+        "function": "to_dict",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 9.800000000000001e-06,
+        "cumulative_seconds": 0.00013020000000000002
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 96,
+        "function": "from_dict",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.47e-05,
+        "cumulative_seconds": 0.00021630000000000003
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 144,
+        "function": "_continuation",
+        "primitive_calls": 29,
+        "calls": 29,
+        "self_seconds": 0.0006418,
+        "cumulative_seconds": 0.0017721000000000002
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 147,
+        "function": "<genexpr>",
+        "primitive_calls": 87,
+        "calls": 87,
+        "self_seconds": 9.300000000000001e-05,
+        "cumulative_seconds": 0.0002607
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 148,
+        "function": "<genexpr>",
+        "primitive_calls": 87,
+        "calls": 87,
+        "self_seconds": 8.76e-05,
+        "cumulative_seconds": 0.0002516
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 150,
+        "function": "<genexpr>",
+        "primitive_calls": 87,
+        "calls": 87,
+        "self_seconds": 4.69e-05,
+        "cumulative_seconds": 4.69e-05
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 164,
+        "function": "build_preflop_tree",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 6.26e-05,
+        "cumulative_seconds": 0.0059465
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 183,
+        "function": "reserve",
+        "primitive_calls": 88,
+        "calls": 88,
+        "self_seconds": 9.190000000000001e-05,
+        "cumulative_seconds": 9.190000000000001e-05
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 197,
+        "function": "settled",
+        "primitive_calls": 29,
+        "calls": 29,
+        "self_seconds": 8.59e-05,
+        "cumulative_seconds": 0.0018870000000000002
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 202,
+        "function": "fold",
+        "primitive_calls": 29,
+        "calls": 29,
+        "self_seconds": 0.0001965,
+        "cumulative_seconds": 0.000567
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 204,
+        "function": "<genexpr>",
+        "primitive_calls": 87,
+        "calls": 87,
+        "self_seconds": 8.48e-05,
+        "cumulative_seconds": 0.00026270000000000004
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 206,
+        "function": "build",
+        "primitive_calls": 1,
+        "calls": 30,
+        "self_seconds": 0.0010297000000000001,
+        "cumulative_seconds": 0.00583
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 242,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 5.1e-06,
+        "cumulative_seconds": 8.5e-06
+      },
+      {
+        "file": "pokerlab/preflop_tree.py",
+        "line": 274,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 8.000000000000001e-06,
+        "cumulative_seconds": 1.1900000000000001e-05
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 28,
+        "function": "estimate_vector_budget",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.4172522,
+        "cumulative_seconds": 0.6193914
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 107,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 2.7e-06,
+        "cumulative_seconds": 2.7e-06
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 166,
+        "function": "walk",
+        "primitive_calls": 1,
+        "calls": 694,
+        "self_seconds": 0.005493700000000001,
+        "cumulative_seconds": 0.008512500000000001
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 223,
+        "function": "<genexpr>",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 3.9e-06,
+        "cumulative_seconds": 3.9e-06
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 27,
+        "function": "_aggregate_prefixes",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 0.0004331,
+        "cumulative_seconds": 0.0006166
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 73,
+        "function": "_validate_inputs",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 0.0053909000000000006,
+        "cumulative_seconds": 0.0081198
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 135,
+        "function": "_cfrplus_target_deltas",
+        "primitive_calls": 1000,
+        "calls": 1000,
+        "self_seconds": 0.3648885,
+        "cumulative_seconds": 12.2141414
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 144,
+        "function": "visit",
+        "primitive_calls": 1000,
+        "calls": 694000,
+        "self_seconds": 8.547142000000001,
+        "cumulative_seconds": 11.848404100000002
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 195,
+        "function": "<genexpr>",
+        "primitive_calls": 1387500,
+        "calls": 1387500,
+        "self_seconds": 0.6854421,
+        "cumulative_seconds": 0.6854421
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 12,
+        "function": "evaluate_profile",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.26e-05,
+        "cumulative_seconds": 0.071608
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 44,
+        "function": "_normalize_policies",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0047350000000000005,
+        "cumulative_seconds": 0.0115613
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 52,
+        "function": "<genexpr>",
+        "primitive_calls": 2573,
+        "calls": 2573,
+        "self_seconds": 0.001417,
+        "cumulative_seconds": 0.001417
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 55,
+        "function": "<genexpr>",
+        "primitive_calls": 2573,
+        "calls": 2573,
+        "self_seconds": 0.0018697000000000002,
+        "cumulative_seconds": 0.0025239000000000004
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 62,
+        "function": "_evaluate_prepared",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 2.8100000000000002e-05,
+        "cumulative_seconds": 0.0556559
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 67,
+        "function": "terminal_vector",
+        "primitive_calls": 834,
+        "calls": 834,
+        "self_seconds": 0.007366,
+        "cumulative_seconds": 0.0086114
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 91,
+        "function": "policy",
+        "primitive_calls": 3978,
+        "calls": 3978,
+        "self_seconds": 0.010018,
+        "cumulative_seconds": 0.016295
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 102,
+        "function": "profile",
+        "primitive_calls": 1,
+        "calls": 694,
+        "self_seconds": 0.0080756,
+        "cumulative_seconds": 0.022913700000000002
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 109,
+        "function": "<genexpr>",
+        "primitive_calls": 45,
+        "calls": 45,
+        "self_seconds": 8.910000000000001e-05,
+        "cumulative_seconds": 0.0201129
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 122,
+        "function": "<genexpr>",
+        "primitive_calls": 1637,
+        "calls": 1637,
+        "self_seconds": 0.0013563000000000002,
+        "cumulative_seconds": 0.0013563000000000002
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 125,
+        "function": "<genexpr>",
+        "primitive_calls": 1742,
+        "calls": 1742,
+        "self_seconds": 0.0013411,
+        "cumulative_seconds": 0.0013411
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 142,
+        "function": "best",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 2.61e-05,
+        "cumulative_seconds": 0.0327141
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 144,
+        "function": "visit",
+        "primitive_calls": 2,
+        "calls": 1388,
+        "self_seconds": 0.0114198,
+        "cumulative_seconds": 0.032683300000000005
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 167,
+        "function": "<genexpr>",
+        "primitive_calls": 2775,
+        "calls": 2775,
+        "self_seconds": 0.0011819,
+        "cumulative_seconds": 0.0011819
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 24,
+        "function": "__post_init__",
+        "primitive_calls": 31,
+        "calls": 31,
+        "self_seconds": 0.0006226000000000001,
+        "cumulative_seconds": 0.0024643
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 29,
+        "function": "<genexpr>",
+        "primitive_calls": 93,
+        "calls": 93,
+        "self_seconds": 0.0001363,
+        "cumulative_seconds": 0.00030260000000000004
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 46,
+        "function": "stacks",
+        "primitive_calls": 620,
+        "calls": 620,
+        "self_seconds": 0.0005793,
+        "cumulative_seconds": 0.0008008000000000001
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 74,
+        "function": "_sizes",
+        "primitive_calls": 62,
+        "calls": 62,
+        "self_seconds": 0.0005803000000000001,
+        "cumulative_seconds": 0.0013658000000000001
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 78,
+        "function": "<genexpr>",
+        "primitive_calls": 155,
+        "calls": 155,
+        "self_seconds": 0.000133,
+        "cumulative_seconds": 0.0003617
+      },
+      {
+        "file": "pokerlab/river_config.py",
+        "line": 81,
+        "function": "<genexpr>",
+        "primitive_calls": 155,
+        "calls": 155,
+        "self_seconds": 0.00010410000000000001,
+        "cumulative_seconds": 0.0001342
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 9,
+        "function": "_clean",
+        "primitive_calls": 1679,
+        "calls": 1679,
+        "self_seconds": 0.0021809,
+        "cumulative_seconds": 0.005200000000000001
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 14,
+        "function": "_amount_label",
+        "primitive_calls": 929,
+        "calls": 929,
+        "self_seconds": 0.0029042,
+        "cumulative_seconds": 0.0084831
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 25,
+        "function": "token",
+        "primitive_calls": 2682,
+        "calls": 2682,
+        "self_seconds": 0.0024329,
+        "cumulative_seconds": 0.010916
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 47,
+        "function": "_add_action",
+        "primitive_calls": 318,
+        "calls": 318,
+        "self_seconds": 0.0020421000000000003,
+        "cumulative_seconds": 0.0055317000000000005
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 53,
+        "function": "<genexpr>",
+        "primitive_calls": 550,
+        "calls": 550,
+        "self_seconds": 0.0005033,
+        "cumulative_seconds": 0.0006061
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 58,
+        "function": "_opening_actions",
+        "primitive_calls": 60,
+        "calls": 60,
+        "self_seconds": 0.0004464,
+        "cumulative_seconds": 0.0038880000000000004
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 66,
+        "function": "<lambda>",
+        "primitive_calls": 108,
+        "calls": 108,
+        "self_seconds": 4.24e-05,
+        "cumulative_seconds": 4.24e-05
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 69,
+        "function": "_raise_actions",
+        "primitive_calls": 62,
+        "calls": 62,
+        "self_seconds": 0.0006100000000000001,
+        "cumulative_seconds": 0.0033130000000000004
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 97,
+        "function": "<lambda>",
+        "primitive_calls": 92,
+        "calls": 92,
+        "self_seconds": 4.1500000000000006e-05,
+        "cumulative_seconds": 4.1500000000000006e-05
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 109,
+        "function": "_build_tree",
+        "primitive_calls": 30,
+        "calls": 30,
+        "self_seconds": 0.00038280000000000003,
+        "cumulative_seconds": 0.0187779
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 122,
+        "function": "<genexpr>",
+        "primitive_calls": 90,
+        "calls": 90,
+        "self_seconds": 9.300000000000001e-05,
+        "cumulative_seconds": 0.0005316
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 126,
+        "function": "terminal",
+        "primitive_calls": 374,
+        "calls": 374,
+        "self_seconds": 0.0008082,
+        "cumulative_seconds": 0.0019396
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 131,
+        "function": "settled",
+        "primitive_calls": 202,
+        "calls": 202,
+        "self_seconds": 0.00031600000000000004,
+        "cumulative_seconds": 0.0013619
+      },
+      {
+        "file": "pokerlab/river_tree.py",
+        "line": 137,
+        "function": "build",
+        "primitive_calls": 30,
+        "calls": 232,
+        "self_seconds": 0.0043752,
+        "cumulative_seconds": 0.017837600000000002
+      },
+      {
+        "file": "stdlib/collections/__init__.py",
+        "line": 595,
+        "function": "__init__",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.039771900000000006,
+        "cumulative_seconds": 0.31725010000000003
+      },
+      {
+        "file": "stdlib/collections/__init__.py",
+        "line": 669,
+        "function": "update",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.0220545,
+        "cumulative_seconds": 0.2774782
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1278,
+        "function": "fields",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.81e-05,
+        "cumulative_seconds": 3.0100000000000003e-05
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1293,
+        "function": "<genexpr>",
+        "primitive_calls": 7,
+        "calls": 7,
+        "self_seconds": 9.600000000000001e-06,
+        "cumulative_seconds": 9.600000000000001e-06
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1296,
+        "function": "_is_dataclass_instance",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 8.200000000000001e-06,
+        "cumulative_seconds": 1.4000000000000001e-05
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1308,
+        "function": "asdict",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.6100000000000002e-05,
+        "cumulative_seconds": 0.00011970000000000001
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1332,
+        "function": "_asdict_inner",
+        "primitive_calls": 1,
+        "calls": 9,
+        "self_seconds": 4.6500000000000005e-05,
+        "cumulative_seconds": 9.750000000000001e-05
+      },
+      {
+        "file": "stdlib/dataclasses.py",
+        "line": 1373,
+        "function": "<genexpr>",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 5e-06,
+        "cumulative_seconds": 7.000000000000001e-06
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 202,
+        "function": "__get__",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 1.15e-05,
+        "cumulative_seconds": 1.6000000000000003e-05
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 720,
+        "function": "__call__",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 2.0300000000000002e-05,
+        "cumulative_seconds": 2.82e-05
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 1128,
+        "function": "__new__",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 7.9e-06,
+        "cumulative_seconds": 7.9e-06
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 1291,
+        "function": "value",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 4.5e-06,
+        "cumulative_seconds": 4.5e-06
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 1543,
+        "function": "_get_value",
+        "primitive_calls": 12,
+        "calls": 12,
+        "self_seconds": 2.75e-05,
+        "cumulative_seconds": 4.3400000000000005e-05
+      },
+      {
+        "file": "stdlib/enum.py",
+        "line": 1561,
+        "function": "__and__",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 4.2000000000000004e-05,
+        "cumulative_seconds": 0.00011360000000000001
+      },
+      {
+        "file": "stdlib/json/__init__.py",
+        "line": 183,
+        "function": "dumps",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 2.01e-05,
+        "cumulative_seconds": 0.020779500000000003
+      },
+      {
+        "file": "stdlib/json/encoder.py",
+        "line": 105,
+        "function": "__init__",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 4.5e-06,
+        "cumulative_seconds": 4.5e-06
+      },
+      {
+        "file": "stdlib/json/encoder.py",
+        "line": 183,
+        "function": "encode",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 2.0300000000000002e-05,
+        "cumulative_seconds": 0.0207549
+      },
+      {
+        "file": "stdlib/json/encoder.py",
+        "line": 205,
+        "function": "iterencode",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.020729,
+        "cumulative_seconds": 0.020729
+      },
+      {
+        "file": "stdlib/re/__init__.py",
+        "line": 169,
+        "function": "fullmatch",
+        "primitive_calls": 6,
+        "calls": 6,
+        "self_seconds": 2.04e-05,
+        "cumulative_seconds": 0.0018232
+      },
+      {
+        "file": "stdlib/re/__init__.py",
+        "line": 179,
+        "function": "sub",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 2.6900000000000003e-05,
+        "cumulative_seconds": 8.790000000000001e-05
+      },
+      {
+        "file": "stdlib/re/__init__.py",
+        "line": 199,
+        "function": "split",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 1.97e-05,
+        "cumulative_seconds": 0.0014467
+      },
+      {
+        "file": "stdlib/re/__init__.py",
+        "line": 280,
+        "function": "_compile",
+        "primitive_calls": 16,
+        "calls": 16,
+        "self_seconds": 0.00011970000000000001,
+        "cumulative_seconds": 0.0032216000000000002
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 37,
+        "function": "_compile",
+        "primitive_calls": 2,
+        "calls": 3,
+        "self_seconds": 0.0001094,
+        "cumulative_seconds": 0.0020225
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 216,
+        "function": "_compile_charset",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 2.6600000000000003e-05,
+        "cumulative_seconds": 4.4500000000000004e-05
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 243,
+        "function": "_optimize_charset",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 0.0009226000000000001,
+        "cumulative_seconds": 0.0011846
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 391,
+        "function": "_mk_bitmap",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 0.00012230000000000002,
+        "cumulative_seconds": 0.00013460000000000002
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 396,
+        "function": "_bytes_to_codes",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 2.19e-05,
+        "cumulative_seconds": 4.22e-05
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 403,
+        "function": "_simple",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3e-06,
+        "cumulative_seconds": 8.7e-06
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 433,
+        "function": "_get_iscased",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 4.000000000000001e-06,
+        "cumulative_seconds": 4.000000000000001e-06
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 441,
+        "function": "_get_literal_prefix",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 8.6e-06,
+        "cumulative_seconds": 1.09e-05
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 472,
+        "function": "_get_charset_prefix",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 2.0700000000000002e-05,
+        "cumulative_seconds": 2.65e-05
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 516,
+        "function": "_compile_info",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 5.8800000000000006e-05,
+        "cumulative_seconds": 0.00015930000000000002
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 575,
+        "function": "isstring",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 5.7000000000000005e-06,
+        "cumulative_seconds": 8.000000000000001e-06
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 578,
+        "function": "_code",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 6.54e-05,
+        "cumulative_seconds": 0.002249
+      },
+      {
+        "file": "stdlib/re/_compiler.py",
+        "line": 745,
+        "function": "compile",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 4.75e-05,
+        "cumulative_seconds": 0.0029427000000000004
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 77,
+        "function": "__init__",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 3.2000000000000003e-06,
+        "cumulative_seconds": 3.2000000000000003e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 83,
+        "function": "groups",
+        "primitive_calls": 4,
+        "calls": 4,
+        "self_seconds": 5.4e-06,
+        "cumulative_seconds": 7.6e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 113,
+        "function": "__init__",
+        "primitive_calls": 3,
+        "calls": 3,
+        "self_seconds": 2.9e-06,
+        "cumulative_seconds": 2.9e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 164,
+        "function": "__len__",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 6e-06,
+        "cumulative_seconds": 8.7e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 168,
+        "function": "__getitem__",
+        "primitive_calls": 12,
+        "calls": 12,
+        "self_seconds": 0.0006751000000000001,
+        "cumulative_seconds": 0.000684
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 172,
+        "function": "__setitem__",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.3e-06,
+        "cumulative_seconds": 1.3e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 176,
+        "function": "append",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 6.900000000000001e-06,
+        "cumulative_seconds": 1.09e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 178,
+        "function": "getwidth",
+        "primitive_calls": 2,
+        "calls": 3,
+        "self_seconds": 4.5600000000000004e-05,
+        "cumulative_seconds": 5.47e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 231,
+        "function": "__init__",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 9.7e-06,
+        "cumulative_seconds": 1.5100000000000001e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 240,
+        "function": "__next",
+        "primitive_calls": 39,
+        "calls": 39,
+        "self_seconds": 3.93e-05,
+        "cumulative_seconds": 3.93e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 256,
+        "function": "match",
+        "primitive_calls": 31,
+        "calls": 31,
+        "self_seconds": 2.09e-05,
+        "cumulative_seconds": 2.23e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 261,
+        "function": "get",
+        "primitive_calls": 35,
+        "calls": 35,
+        "self_seconds": 4.6500000000000005e-05,
+        "cumulative_seconds": 8e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 293,
+        "function": "tell",
+        "primitive_calls": 8,
+        "calls": 8,
+        "self_seconds": 1.23e-05,
+        "cumulative_seconds": 1.72e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 312,
+        "function": "_class_escape",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 6.5000000000000004e-06,
+        "cumulative_seconds": 9.600000000000001e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 449,
+        "function": "_uniq",
+        "primitive_calls": 5,
+        "calls": 5,
+        "self_seconds": 2.0300000000000002e-05,
+        "cumulative_seconds": 3.38e-05
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 452,
+        "function": "_parse_sub",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 9.09e-05,
+        "cumulative_seconds": 0.0005631000000000001
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 512,
+        "function": "_parse",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 0.0002279,
+        "cumulative_seconds": 0.00046290000000000003
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 953,
+        "function": "fix_flags",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 5.2e-06,
+        "cumulative_seconds": 6.200000000000001e-06
+      },
+      {
+        "file": "stdlib/re/_parser.py",
+        "line": 969,
+        "function": "parse",
+        "primitive_calls": 2,
+        "calls": 2,
+        "self_seconds": 3.68e-05,
+        "cumulative_seconds": 0.0006244
+      }
+    ],
+    "top_self_time": [
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 144,
+        "function": "visit",
+        "primitive_calls": 1000,
+        "calls": 694000,
+        "self_seconds": 8.547142000000001,
+        "cumulative_seconds": 11.848404100000002
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 15,
+        "function": "train_delayed_public_cfrplus",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.7952489,
+        "cumulative_seconds": 18.528252300000002
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 64,
+        "function": "visit",
+        "primitive_calls": 250,
+        "calls": 173500,
+        "self_seconds": 1.7630972,
+        "cumulative_seconds": 2.3021038000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'get' of 'dict' objects>",
+        "primitive_calls": 2060472,
+        "calls": 2060472,
+        "self_seconds": 1.3236703,
+        "cumulative_seconds": 1.3236703
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.sum>",
+        "primitive_calls": 806851,
+        "calls": 807629,
+        "self_seconds": 1.2731136,
+        "cumulative_seconds": 2.1552675000000003
+      },
+      {
+        "file": "pokerlab/cfr.py",
+        "line": 4,
+        "function": "strategy",
+        "primitive_calls": 364728,
+        "calls": 364728,
+        "self_seconds": 1.0491798,
+        "cumulative_seconds": 1.7170311
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.max>",
+        "primitive_calls": 1908921,
+        "calls": 1908921,
+        "self_seconds": 0.9952412,
+        "cumulative_seconds": 1.0048001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.isinstance>",
+        "primitive_calls": 2115763,
+        "calls": 2115763,
+        "self_seconds": 0.8185747000000001,
+        "cumulative_seconds": 0.8428165000000001
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 195,
+        "function": "<genexpr>",
+        "primitive_calls": 1387500,
+        "calls": 1387500,
+        "self_seconds": 0.6854421,
+        "cumulative_seconds": 0.6854421
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 28,
+        "function": "estimate_vector_budget",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.4172522,
+        "cumulative_seconds": 0.6193914
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 62,
+        "function": "_validated_row",
+        "primitive_calls": 55440,
+        "calls": 55440,
+        "self_seconds": 0.3877804,
+        "cumulative_seconds": 0.5625842000000001
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 135,
+        "function": "_cfrplus_target_deltas",
+        "primitive_calls": 1000,
+        "calls": 1000,
+        "self_seconds": 0.3648885,
+        "cumulative_seconds": 12.2141414
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 33,
+        "function": "straight_high",
+        "primitive_calls": 11731,
+        "calls": 11731,
+        "self_seconds": 0.3393778,
+        "cumulative_seconds": 0.649425
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 462,
+        "function": "graft",
+        "primitive_calls": 1,
+        "calls": 88,
+        "self_seconds": 0.32254730000000004,
+        "cumulative_seconds": 0.3676508
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.min>",
+        "primitive_calls": 419641,
+        "calls": 419641,
+        "self_seconds": 0.2649673,
+        "cumulative_seconds": 0.2649673
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.len>",
+        "primitive_calls": 554778,
+        "calls": 554781,
+        "self_seconds": 0.2297874,
+        "cumulative_seconds": 0.22979110000000003
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 279,
+        "function": "_legal_private_hands",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.18447090000000002,
+        "cumulative_seconds": 0.2918312
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 43,
+        "function": "rank_hand",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.1796839,
+        "cumulative_seconds": 1.7838822
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 50,
+        "function": "<genexpr>",
+        "primitive_calls": 379152,
+        "calls": 379152,
+        "self_seconds": 0.1746451,
+        "cumulative_seconds": 0.1746451
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 38,
+        "function": "<genexpr>",
+        "primitive_calls": 335935,
+        "calls": 335935,
+        "self_seconds": 0.1695633,
+        "cumulative_seconds": 0.1695633
+      }
+    ],
+    "top_cumulative_time": [
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 533,
+        "function": "solve_preflop",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0441498,
+        "cumulative_seconds": 23.4425856
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 15,
+        "function": "train_delayed_public_cfrplus",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.7952489,
+        "cumulative_seconds": 18.528252300000002
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 135,
+        "function": "_cfrplus_target_deltas",
+        "primitive_calls": 1000,
+        "calls": 1000,
+        "self_seconds": 0.3648885,
+        "cumulative_seconds": 12.2141414
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 144,
+        "function": "visit",
+        "primitive_calls": 1000,
+        "calls": 694000,
+        "self_seconds": 8.547142000000001,
+        "cumulative_seconds": 11.848404100000002
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 137,
+        "function": "_enumerate_physical_worlds",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.12146850000000001,
+        "cumulative_seconds": 2.7155208
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 63,
+        "function": "accumulate_average",
+        "primitive_calls": 250,
+        "calls": 250,
+        "self_seconds": 0.0014934000000000002,
+        "cumulative_seconds": 2.3035972
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 64,
+        "function": "visit",
+        "primitive_calls": 250,
+        "calls": 173500,
+        "self_seconds": 1.7630972,
+        "cumulative_seconds": 2.3021038000000003
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.sum>",
+        "primitive_calls": 806851,
+        "calls": 807629,
+        "self_seconds": 1.2731136,
+        "cumulative_seconds": 2.1552675000000003
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 126,
+        "function": "_rank_world",
+        "primitive_calls": 27720,
+        "calls": 27720,
+        "self_seconds": 0.16477930000000002,
+        "cumulative_seconds": 1.9874477000000002
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 43,
+        "function": "rank_hand",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.1796839,
+        "cumulative_seconds": 1.7838822
+      },
+      {
+        "file": "pokerlab/cfr.py",
+        "line": 4,
+        "function": "strategy",
+        "primitive_calls": 364728,
+        "calls": 364728,
+        "self_seconds": 1.0491798,
+        "cumulative_seconds": 1.7170311
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<method 'get' of 'dict' objects>",
+        "primitive_calls": 2060472,
+        "calls": 2060472,
+        "self_seconds": 1.3236703,
+        "cumulative_seconds": 1.3236703
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.max>",
+        "primitive_calls": 1908921,
+        "calls": 1908921,
+        "self_seconds": 0.9952412,
+        "cumulative_seconds": 1.0048001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.isinstance>",
+        "primitive_calls": 2115763,
+        "calls": 2115763,
+        "self_seconds": 0.8185747000000001,
+        "cumulative_seconds": 0.8428165000000001
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 88,
+        "function": "group_hidden_futures",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.1039338,
+        "cumulative_seconds": 0.7073262
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 195,
+        "function": "<genexpr>",
+        "primitive_calls": 1387500,
+        "calls": 1387500,
+        "self_seconds": 0.6854421,
+        "cumulative_seconds": 0.6854421
+      },
+      {
+        "file": "pokerlab/cards.py",
+        "line": 33,
+        "function": "straight_high",
+        "primitive_calls": 11731,
+        "calls": 11731,
+        "self_seconds": 0.3393778,
+        "cumulative_seconds": 0.649425
+      },
+      {
+        "file": "pokerlab/preflop_vector_budget.py",
+        "line": 28,
+        "function": "estimate_vector_budget",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.4172522,
+        "cumulative_seconds": 0.6193914
+      },
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 62,
+        "function": "_validated_row",
+        "primitive_calls": 55440,
+        "calls": 55440,
+        "self_seconds": 0.3877804,
+        "cumulative_seconds": 0.5625842000000001
+      },
+      {
+        "file": "builtin",
+        "line": 0,
+        "function": "<built-in method builtins.next>",
+        "primitive_calls": 11871,
+        "calls": 11871,
+        "self_seconds": 0.0156891,
+        "cumulative_seconds": 0.43754010000000004
+      }
+    ],
+    "key_function_records": [
+      {
+        "file": "pokerlab/preflop_future_groups.py",
+        "line": 88,
+        "function": "group_hidden_futures",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.1039338,
+        "cumulative_seconds": 0.7073262
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 279,
+        "function": "_legal_private_hands",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.18447090000000002,
+        "cumulative_seconds": 0.2918312
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 137,
+        "function": "_enumerate_physical_worlds",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.12146850000000001,
+        "cumulative_seconds": 2.7155208
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 12,
+        "function": "evaluate_profile",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 3.26e-05,
+        "cumulative_seconds": 0.071608
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 415,
+        "function": "_merge_preflop_tree",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.025980100000000002,
+        "cumulative_seconds": 0.408057
+      },
+      {
+        "file": "pokerlab/preflop_solver.py",
+        "line": 533,
+        "function": "solve_preflop",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 0.0441498,
+        "cumulative_seconds": 23.4425856
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 15,
+        "function": "train_delayed_public_cfrplus",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 1.7952489,
+        "cumulative_seconds": 18.528252300000002
+      },
+      {
+        "file": "pokerlab/public_cfr.py",
+        "line": 135,
+        "function": "_cfrplus_target_deltas",
+        "primitive_calls": 1000,
+        "calls": 1000,
+        "self_seconds": 0.3648885,
+        "cumulative_seconds": 12.2141414
+      },
+      {
+        "file": "pokerlab/public_diagnostics.py",
+        "line": 62,
+        "function": "_evaluate_prepared",
+        "primitive_calls": 1,
+        "calls": 1,
+        "self_seconds": 2.8100000000000002e-05,
+        "cumulative_seconds": 0.0556559
+      },
+      {
+        "file": "pokerlab/preflop_delayed_cfrplus.py",
+        "line": 63,
+        "function": "accumulate_average",
+        "primitive_calls": 250,
+        "calls": 250,
+        "self_seconds": 0.0014934000000000002,
+        "cumulative_seconds": 2.3035972
+      }
+    ]
+  },
+  "quality": {
+    "independent_replay": {
+      "configured_replay": {
+        "value_sb": 1.0000000000131244,
+        "value_bb": -1.0000000000131244,
+        "sb_best_response_value": 1.0000003792212901,
+        "bb_best_response_value": -0.9994526777096219,
+        "nash_conv": 0.0005477015116682749,
+        "worlds": 27720,
+        "monetary_mode": "configured",
+        "postflop_scope": "flop-checkdown",
+        "checked_information_sets": 728,
+        "private_pair_probabilities": [
+          {
+            "sb": "6s7s",
+            "bb": "AhKh",
+            "probability": 0.03478260869565192
+          },
+          {
+            "sb": "6s7s",
+            "bb": "KdKs",
+            "probability": 0.026086956521739767
+          },
+          {
+            "sb": "AdAs",
+            "bb": "7s8s",
+            "probability": 0.1391304347826138
+          },
+          {
+            "sb": "AdAs",
+            "bb": "AhKh",
+            "probability": 0.2782608695652276
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.20869565217391864
+          },
+          {
+            "sb": "JhQh",
+            "bb": "7s8s",
+            "probability": 0.0695652173913069
+          },
+          {
+            "sb": "JhQh",
+            "bb": "AhKh",
+            "probability": 0.1391304347826138
+          },
+          {
+            "sb": "JhQh",
+            "bb": "KdKs",
+            "probability": 0.10434782608695932
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "target_nash_conv": 0.005,
+      "target_met": true,
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-grouped-world-budget-v6",
+        "world_count": 27720,
+        "iterations": 500,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          3,
+          3
+        ],
+        "public_prefixes": 4797,
+        "prefix_edges": 28372,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 28782,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 728,
+        "information_set_action_slots": 1845,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 262,
+        "chance_nodes": 15,
+        "terminal_nodes": 417,
+        "action_edges": 663,
+        "chance_edges": 30,
+        "terminal_prefix_edge_visits": 2962,
+        "diagnostic_missing_policy_lookups": 288,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 616028,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 34039,
+        "training_loop_entries_upper_bound": 47670467,
+        "training_setup_loop_entries_upper_bound": 13204,
+        "diagnostics_loop_entries_upper_bound": 112768,
+        "diagnostics_setup_loop_entries_upper_bound": 7567,
+        "diagnostics_dense_fallback_slot_upper_bound": 1728,
+        "diagnostics_uniform_fallback_slot_upper_bound": 780,
+        "total_loop_entries_upper_bound": 49064575,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 250,
+        "training_regret_passes": 1000,
+        "training_average_passes": 250,
+        "training_policy_match_rows": 364728,
+        "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+        "future_grouping": {
+          "physical_world_count": 27720,
+          "grouped_rows_upper_bound": 27720,
+          "grouping_reference_slots_upper_bound": 609968,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 665312,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "future_grouping_admission_scope": "Original-world vector, prefix, dense, action-slot, grouping and copy caps remain enforced. Physical-world construction separately uses ten iterations per row; the full requested ceiling remains charged by vector/grouping admission.",
+        "base_budget_version": "preflop-public-vector-future-group-budget-v5",
+        "world_admission": "grouped-vector",
+        "world_construction_admission_iterations": 10,
+        "world_admission_scope": "Only the legacy physical-world-count times requested-iterations guard is replaced by a ten-iteration physical-row construction cap. The original-world vector, prefix, dense, action-slot, grouping and copy caps remain enforced; full requested iterations remain charged in vector/grouping work."
+      },
+      "worlds": 27720,
+      "public_states": 694,
+      "decisions": 262,
+      "information_sets": 728,
+      "private_pair_probabilities": [
+        {
+          "sb_hand": "AdAs",
+          "bb_hand": "KdKs",
+          "probability": 0.20869565217391303
+        },
+        {
+          "sb_hand": "AdAs",
+          "bb_hand": "AhKh",
+          "probability": 0.2782608695652174
+        },
+        {
+          "sb_hand": "AdAs",
+          "bb_hand": "7s8s",
+          "probability": 0.1391304347826087
+        },
+        {
+          "sb_hand": "JhQh",
+          "bb_hand": "KdKs",
+          "probability": 0.10434782608695652
+        },
+        {
+          "sb_hand": "JhQh",
+          "bb_hand": "AhKh",
+          "probability": 0.1391304347826087
+        },
+        {
+          "sb_hand": "JhQh",
+          "bb_hand": "7s8s",
+          "probability": 0.06956521739130435
+        },
+        {
+          "sb_hand": "6s7s",
+          "bb_hand": "KdKs",
+          "probability": 0.02608695652173913
+        },
+        {
+          "sb_hand": "6s7s",
+          "bb_hand": "AhKh",
+          "probability": 0.034782608695652174
+        }
+      ]
+    },
+    "rational_pair_posterior_comparison": {
+      "max_solver_probability_delta_vs_rational": 0.0,
+      "max_oracle_probability_delta_vs_rational": 1.021405182655144e-14,
+      "tolerance": 1e-12
+    },
+    "target_nash_conv": 0.005,
+    "target_met": true
+  },
+  "interpretation": "A single instrumented profile locates work; its elapsed time is not a performance benchmark. No memory trace was collected.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with three weighted exact combos per player, two selected flops, 4,704 ordered future candidates and 27,720 compatible physical worlds, and forced checkdown after flop betting. One shared 10-chip stack, two requested iteration ceilings, configured preflop raises/all-ins and rich flop actions. Not broad-range/full-deck, all-streets, multiway, unrestricted NLHE, or a general convergence claim."
+}
