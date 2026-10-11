@@ -135,10 +135,16 @@ def _rank_world(sb_hand, bb_hand, runout, cache):
 
 
 def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
-                               materialized_world_limit=None):
+                               materialized_world_limit=None,
+                               world_work_iterations=None):
     """Preflight and build normalized joint SB/BB/five-card worlds."""
     ranges = (expand_range(sb_range), expand_range(bb_range))
     hands = (list(ranges[0]), list(ranges[1]))
+    if world_work_iterations is not None and (
+            type(world_work_iterations) is not int or world_work_iterations < 1):
+        raise ValueError("world_work_iterations must be a positive integer.")
+    world_guard_iterations = (iterations if world_work_iterations is None
+                              else world_work_iterations)
     candidate_pair_count = len(hands[0]) * len(hands[1])
     if candidate_pair_count * iterations > _MAX_CANDIDATE_HAND_ITERATIONS:
         raise ValueError("Preflop solver exceeds 3 million candidate-pair iterations.")
@@ -184,7 +190,7 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
             world_count += valid_count
             if materialized_world_limit is not None and world_count > materialized_world_limit:
                 raise ValueError("Sampled solver exceeds its materialized sampler-world entry limit.")
-            if world_count * iterations > _MAX_WORLD_ITERATIONS:
+            if world_count * world_guard_iterations > _MAX_WORLD_ITERATIONS:
                 raise ValueError("Preflop solver exceeds 3 million world iterations.")
     if not world_count:
         raise ValueError("Selected runouts contain no compatible physical deals.")
@@ -531,7 +537,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   diagnostics="recursive", resource_model="world", averaging_delay=0,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
                   target_nash_conv=None, convergence_check_interval=None,
-                  private_indexing="original", future_indexing="original"):
+                  private_indexing="original", future_indexing="original",
+                  world_admission="world-iterations"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -562,6 +569,13 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     Physical enumeration, outputs and all existing admission limits remain;
     a separately bounded grouped view serves training and exact diagnostics.
     Changed floating summation order can produce small numerical differences.
+
+    Opt-in ``world_admission="grouped-vector"`` is limited to grouped
+    flop-checkdown solves with positive-delay public-vector CFR+ and exact
+    public-batched diagnostics. It replaces only the physical-world-count times
+    requested-iterations guard with a construction bound of ten iterations per
+    physical row. The requested iteration ceiling remains fully charged by the
+    original-world vector envelope plus grouping work before copies/training.
 
     Optional paired ``target_nash_conv`` / ``convergence_check_interval`` stop
     positive-delay public-vector CFR+ after a complete sweep whose exact legal
@@ -597,6 +611,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("flop-checkdown does not accept turn_config or river_config.")
     if future_indexing not in ("original", "flop-sign"):
         raise ValueError("future_indexing must be original or flop-sign.")
+    if world_admission not in ("world-iterations", "grouped-vector"):
+        raise ValueError("world_admission must be world-iterations or grouped-vector.")
     if future_indexing == "flop-sign" and postflop_scope != "flop-checkdown":
         raise ValueError("flop-sign future indexing requires flop-checkdown scope.")
     expanded_tree = tree_admission == "vector"
@@ -627,6 +643,15 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             diagnostics == "public-batched"):
         raise ValueError(
             "flop-checkdown requires positive-delay CFR+ with public-vector public-batched training and diagnostics.")
+    grouped_world_admission = world_admission == "grouped-vector"
+    if grouped_world_admission and not (
+            postflop_scope == "flop-checkdown" and future_indexing == "flop-sign" and
+            algorithm == "cfrplus" and averaging_delay > 0 and
+            resource_model == "public-vector" and traversal == "public-batched" and
+            diagnostics == "public-batched"):
+        raise ValueError(
+            "Grouped-vector world admission requires grouped flop-checkdown with positive-delay "
+            "public-vector public-batched CFR+ training and diagnostics.")
     if private_indexing == "compact" and not (
             algorithm == "cfrplus" and averaging_delay > 0 and
             resource_model == "public-vector" and traversal == "public-batched" and
@@ -655,7 +680,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         _enumerate_physical_worlds(sb_range, bb_range, runouts,
                                    1 if sampled else iterations,
                                    **({"materialized_world_limit": MAX_SAMPLER_ENTRIES}
-                                      if sampled else {}))
+                                      if sampled else {}),
+                                   **({"world_work_iterations": 10}
+                                      if grouped_world_admission else {}))
     preflop_tree = build_preflop_tree(config)
     (root, public_state_count, decision_count, world_decision_work, planned_ops,
      max_template_states, max_template_decisions) = \
@@ -690,8 +717,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         if vector_budget_enabled else None)
 
     # Retain the full physical-world vector envelope, including inactive future
-    # prefixes. Grouping only reduces backend row/prefix work; no prior admission
-    # is relaxed. Add its original-world scan/map/copy envelope before allocation.
+    # prefixes. Grouping only reduces backend row/prefix work; no prior vector
+    # admission is relaxed. The opt-in world mode changes only the separately
+    # recorded physical construction multiplier. Add grouping work before allocation.
     future_grouping_budget = None
     if future_indexing == "flop-sign":
         future_grouping_budget = estimate_future_grouping(worlds)
@@ -707,6 +735,24 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             "total_loop_entries_upper_bound": total,
             "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds.",
         })
+        if grouped_world_admission:
+            vector_budget.update({
+                "base_budget_version": vector_budget["budget_version"],
+                "budget_version": "preflop-public-vector-grouped-world-budget-v6",
+                "world_admission": "grouped-vector",
+                "world_construction_admission_iterations": 10,
+                "world_admission_scope": (
+                    "Only the legacy physical-world-count times requested-iterations guard is replaced "
+                    "by a ten-iteration physical-row construction cap. The original-world vector, "
+                    "prefix, dense, action-slot, grouping and copy caps remain enforced; full requested "
+                    "iterations remain charged in vector/grouping work."
+                ),
+                "future_grouping_admission_scope": (
+                    "Original-world vector, prefix, dense, action-slot, grouping and copy caps remain "
+                    "enforced. Physical-world construction separately uses ten iterations per row; the "
+                    "full requested ceiling remains charged by vector/grouping admission."
+                ),
+            })
 
     # The estimator admits the extra copying before the compact structures are
     # allocated. Preserve the original identities for final policy labels and
@@ -1073,5 +1119,16 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         # enforced admission ceiling for this explicitly selected model.
         result["limits"]["reference_world_decision_work"] = _MAX_WORLD_NODE_WORK
         result["limits"]["world_decision_work"] = None
+    if grouped_world_admission:
+        result["world_admission"] = "grouped-vector"
+        result["world_construction_admission_iterations"] = 10
+        result["world_admission_scope"] = (
+            "Opt-in grouped flop-checkdown construction admission uses ten iterations per physical row; "
+            "the full requested ceiling is separately charged by vector/grouping admission."
+        )
+        result["limits"]["reference_world_iterations"] = _MAX_WORLD_ITERATIONS
+        result["limits"]["world_iterations"] = None
+        result["limits"]["constructed_worlds"] = _MAX_WORLD_ITERATIONS // 10
+        result["limits"]["world_construction_admission_iterations"] = 10
     return result
 
