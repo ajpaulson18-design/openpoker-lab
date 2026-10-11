@@ -323,3 +323,5 @@ Optional hidden-future grouping for the same finite flop-checkdown game: [API, a
 Richer flop betting measured across three stack depths: [fixed admission and accuracy matrix, including target misses](docs/preflop-flop-raise-coverage.md).
 
 Explicit grouped-world construction admission enables longer verified flop-checkdown runs: [API, replaced reference guard, unchanged vector caps and quality evidence](docs/preflop-grouped-world-admission.md).
+
+Preflop opening, 3-bet, 4-bet and all-in action coverage: [fixed six-case admission and independent accuracy matrix](docs/preflop-action-coverage.md).
