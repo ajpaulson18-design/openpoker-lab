@@ -1,6 +1,6 @@
 """Frozen weighted private-range coverage for a finite flop-checkdown game.
 
-This draft harness preflights every case before training. Run only after it has
+This harness preflights every case before training. Run only after it has
 been copied into a clean, frozen repository commit with its matching spec.
 """
 from __future__ import annotations
@@ -358,8 +358,8 @@ def main() -> None:
         "action_coverage_union": coverage_union,
         "timing_scope": "One descriptive complete solve plus JSON serialization per admitted checkpoint. Includes physical enumeration/ranking, tree construction, original-world and grouped-vector admission, grouping, training and exact diagnostics. Preallocated selected runouts, pre-call garbage collection and independent replay are excluded. No speedup or memory comparison.",
         "quality_scope": "Every admitted result is independently replayed over original physical worlds with numeric poker rules and exact visible-information best responses. Pair posterior probabilities are separately checked against hand-counted rational combo weights and blocker-conditioned world counts. All target misses and preflight rejections remain visible; the finite-game 0.005-chip target is per checkpoint, not a general convergence claim.",
-        "admission_scope": "Both grouped-vector cases are preflighted before any training. The preflight stops before grouping/copy/trainer allocation, preserves the full requested iteration count in the vector envelope, and includes the separately reported grouping charge. No cap is relaxed and no rejected case is simplified or retried.",
-        "provenance": "Luna drafted this isolated weighted-range fixture and harness; the lead freezes and measures the committed experiment. Independent combo/pair/posterior assertions are hand-counted in this script using rational weights; policy values and legal responses use the existing independent numeric replay. No production, shared-kernel, Coach, third-party source, or dependency changes.",
+        "admission_scope": "Both grouped-vector cases are preflighted before any training. The preflight stops before grouping/copy/trainer allocation, preserves the full requested iteration count in the vector envelope, and includes the separately reported grouping charge. Existing grouped-vector mode replaces only the legacy physical-world-count times requested-iterations proxy with its ten-iteration construction guard. Full requested work stays in the vector/grouping envelope and every remaining cap stays enforced; this experiment changes no additional caps and no rejected case is simplified or retried.",
+        "provenance": "Luna drafted this isolated weighted-range fixture and harness; the lead freezes and measures the committed experiment. Independent combo/pair/posterior assertions are hand-counted in this script using rational weights; policy values and legal responses use the existing independent numeric replay. A preflop result-metadata wording fix explicitly identifies the existing replaced world guard; calculation paths and default metadata remain unchanged. No shared-kernel, Coach, third-party source, or dependency changes.",
         "model_limits": spec["model_limits"],
     }
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)

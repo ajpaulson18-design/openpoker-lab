@@ -25,6 +25,18 @@ class GroupedWorldAdmissionTests(unittest.TestCase):
         self.assertNotIn("world_admission", default)
         self.assertEqual(default["limits"]["world_iterations"], solver._MAX_WORLD_ITERATIONS)
 
+    def test_grouped_scope_names_replaced_guard_and_preserves_legacy_metadata(self):
+        legacy = solver.solve_preflop(SB, BB, **dict(GROUPED, world_admission="world-iterations"))
+        grouped = solver.solve_preflop(SB, BB, **GROUPED)
+        self.assertIn("every old admission cap", legacy["future_indexing_metadata"]["scope"])
+        self.assertNotIn("every old admission cap", grouped["future_indexing_metadata"]["scope"])
+        self.assertIn("proxy is replaced", grouped["future_indexing_metadata"]["scope"])
+        self.assertIn("ten-iteration construction guard", grouped["future_indexing_metadata"]["scope"])
+        self.assertEqual(grouped["strategy"], legacy["strategy"])
+        for field in ("worlds", "private_pair_probabilities", "value_sb", "value_bb",
+                      "sb_best_response_value", "bb_best_response_value", "nash_conv"):
+            self.assertEqual(grouped[field], legacy[field])
+
     def test_invalid_mode_or_missing_dependencies_reject_before_enumeration(self):
         invalid = [
             {"world_admission": "other"},
