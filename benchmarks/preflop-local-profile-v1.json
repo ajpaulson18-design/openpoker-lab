@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-local-profile-v1",
+  "weighted_fixture": "benchmarks/preflop-weighted-range-coverage-v1.json",
+  "weighted_result_provenance": "benchmarks/results/preflop-weighted-range-coverage-v1.json",
+  "iterations": 500,
+  "averaging_delay": 250,
+  "profile_repeats": 1,
+  "top_function_rows": 20,
+  "preflop_local_self_time_share_threshold": 0.10,
+  "interpretation": "The 0.10 exclusive-self-time share is a diagnostic materiality marker only; it does not automatically justify an optimization. Any changed loop/allocation accounting requires a separate public-vector admission review.",
+  "profile_scope": "One cProfile capture around solve_preflop and JSON serialization only. Runouts/options are prepared before profiling; independent numeric replay and rational posterior verification occur after profiling. No tracemalloc, memory claim, paired runtime comparison, or solver run before the frozen source merge."
+}
