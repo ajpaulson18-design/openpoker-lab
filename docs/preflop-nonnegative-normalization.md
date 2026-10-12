@@ -40,4 +40,3 @@ python -m scripts.benchmark_preflop_nonnegative_normalization
 The harness saves the report before exiting with status 1 when a promotion gate fails. That is the expected result for this frozen experiment; it is not a request to rerun or adopt the candidate.
 
 The raw report is [benchmarks/results/preflop-nonnegative-normalization-v1.json](../benchmarks/results/preflop-nonnegative-normalization-v1.json); the frozen specification is [benchmarks/preflop-nonnegative-normalization-v1.json](../benchmarks/preflop-nonnegative-normalization-v1.json).
-
