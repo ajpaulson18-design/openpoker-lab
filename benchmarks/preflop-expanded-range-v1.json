@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-expanded-range-v1",
+  "starting_stack": 10.0,
+  "sb_range": "AsAd:1,QhJh:0.5,7s6s:0.25,Tc9c:0.75",
+  "bb_range": "KsKd:0.75,AhKh:1,8s7s:0.5,QcQd:0.25",
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ],
+    [
+      "9c",
+      "Th",
+      "2d"
+    ],
+    [
+      "Ks",
+      "3d",
+      "Qh"
+    ]
+  ],
+  "preflop_config": {
+    "small_blind": 0.5,
+    "big_blind": 1.0,
+    "raise_sizes": [
+      0.5,
+      1.0
+    ],
+    "max_raises": 3,
+    "include_all_in": true
+  },
+  "flop_config": {
+    "bet_sizes": [
+      0.5,
+      1.0
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": true
+  },
+  "postflop_scope": "flop-checkdown",
+  "algorithm": "cfrplus",
+  "traversal": "public-batched",
+  "diagnostics": "public-batched",
+  "resource_model": "public-vector",
+  "future_indexing": "flop-sign",
+  "world_admission": "grouped-vector",
+  "candidate_private_pairs": 16,
+  "compatible_private_pairs": 15,
+  "overlapping_pair": {
+    "sb": "7s6s",
+    "bb": "8s7s",
+    "shared_card": "7s"
+  },
+  "blocked_hand_flops": [
+    {
+      "player": "sb",
+      "hand": "7s6s",
+      "flop": [
+        "5h",
+        "6s",
+        "Jc"
+      ],
+      "shared_card": "6s"
+    },
+    {
+      "player": "sb",
+      "hand": "Tc9c",
+      "flop": [
+        "9c",
+        "Th",
+        "2d"
+      ],
+      "shared_card": "9c"
+    },
+    {
+      "player": "sb",
+      "hand": "QhJh",
+      "flop": [
+        "Ks",
+        "3d",
+        "Qh"
+      ],
+      "shared_card": "Qh"
+    },
+    {
+      "player": "bb",
+      "hand": "KsKd",
+      "flop": [
+        "Ks",
+        "3d",
+        "Qh"
+      ],
+      "shared_card": "Ks"
+    }
+  ],
+  "blocked_both_pair_flop": {
+    "sb": "QhJh",
+    "bb": "KsKd",
+    "flop": [
+      "Ks",
+      "3d",
+      "Qh"
+    ]
+  },
+  "expected_selected_outcomes": 9408,
+  "expected_physical_worlds": 91080,
+  "posterior_denominator": 310,
+  "expected_pair_distribution": [
+    {
+      "sb": "AsAd",
+      "bb": "KsKd",
+      "worlds": 5940,
+      "numerator": 36
+    },
+    {
+      "sb": "AsAd",
+      "bb": "AhKh",
+      "worlds": 7920,
+      "numerator": 64
+    },
+    {
+      "sb": "AsAd",
+      "bb": "8s7s",
+      "worlds": 7920,
+      "numerator": 32
+    },
+    {
+      "sb": "AsAd",
+      "bb": "QcQd",
+      "worlds": 7920,
+      "numerator": 16
+    },
+    {
+      "sb": "QhJh",
+      "bb": "KsKd",
+      "worlds": 5940,
+      "numerator": 18
+    },
+    {
+      "sb": "QhJh",
+      "bb": "AhKh",
+      "worlds": 5940,
+      "numerator": 24
+    },
+    {
+      "sb": "QhJh",
+      "bb": "8s7s",
+      "worlds": 5940,
+      "numerator": 12
+    },
+    {
+      "sb": "QhJh",
+      "bb": "QcQd",
+      "worlds": 5940,
+      "numerator": 6
+    },
+    {
+      "sb": "7s6s",
+      "bb": "KsKd",
+      "worlds": 3960,
+      "numerator": 6
+    },
+    {
+      "sb": "7s6s",
+      "bb": "AhKh",
+      "worlds": 5940,
+      "numerator": 12
+    },
+    {
+      "sb": "7s6s",
+      "bb": "QcQd",
+      "worlds": 5940,
+      "numerator": 3
+    },
+    {
+      "sb": "Tc9c",
+      "bb": "KsKd",
+      "worlds": 3960,
+      "numerator": 18
+    },
+    {
+      "sb": "Tc9c",
+      "bb": "AhKh",
+      "worlds": 5940,
+      "numerator": 36
+    },
+    {
+      "sb": "Tc9c",
+      "bb": "8s7s",
+      "worlds": 5940,
+      "numerator": 18
+    },
+    {
+      "sb": "Tc9c",
+      "bb": "QcQd",
+      "worlds": 5940,
+      "numerator": 9
+    }
+  ],
+  "target_nash_conv": 0.005,
+  "target_padding": 1E-10,
+  "checkpoints": [
+    {
+      "iterations": 500,
+      "delay": 250
+    },
+    {
+      "iterations": 1000,
+      "delay": 500
+    }
+  ],
+  "model_limits": "Finite conditioned heads-up preflop/flop game with four weighted exact combos per player, four selected flops, 9,408 ordered future candidates, 91,080 compatible physical worlds, forced flop checkdown, and one shared 10-chip stack. Not full-deck preflop, turn/river betting, multiway or unrestricted NLHE; no general convergence claim.",
+  "expected_candidate_private_pairs": 16,
+  "expected_compatible_private_pairs": 15,
+  "expected_overlapping_pair": {
+    "sb": "7s6s",
+    "bb": "8s7s",
+    "shared_card": "7s"
+  },
+  "expected_blocked_flop_hand": {
+    "hand": "7s6s",
+    "flop": [
+      "5h",
+      "6s",
+      "Jc"
+    ],
+    "shared_card": "6s"
+  }
+}
