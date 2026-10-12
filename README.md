@@ -333,3 +333,5 @@ A diagnostic cost profile of the verified weighted fixture: [exclusive preflop-l
 A preflop normalization candidate retained as a failed promotion experiment: [exact parity, paired timings and allocation limits](docs/preflop-nonnegative-normalization.md).
 
 Broader private-hand and flop conditioning coverage: [four weighted hands per seat, four flops and original-world accuracy checks](docs/preflop-expanded-range.md).
+
+A grouped preflop target-plan reassessment retained as a failed experiment: [exact payload parity, paired timings and allocation evidence](docs/preflop-grouped-target-plan.md).
