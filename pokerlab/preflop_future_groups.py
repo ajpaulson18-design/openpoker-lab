@@ -36,7 +36,13 @@ def estimate_future_grouping(worlds):
     from each input row. The scan envelope also charges key creation, lookup,
     accumulation, and output conversion at a generous linear coefficient.
     """
-    count = _world_count(worlds)
+    return estimate_future_grouping_count(_world_count(worlds))
+
+
+def estimate_future_grouping_count(count):
+    """Reserve the identical grouping envelope from an admitted physical count."""
+    if type(count) is not int or count < 1:
+        raise ValueError("at least one physical world is required")
     if count > MAX_GROUP_ROWS:
         raise ValueError("Flop/sign grouping exceeds the 3,000,000-row cap.")
     grouped_upper = count
@@ -98,6 +104,26 @@ def group_hidden_futures(worlds):
     for world in worlds:
         _validated_row(world)
 
+    return _group_rows(worlds)
+
+
+def group_hidden_future_stream(rows, world_count):
+    """Group generated rows after count admission; validate each row before use."""
+    estimate_future_grouping_count(world_count)
+
+    def counted():
+        count = 0
+        for row in rows:
+            if count >= world_count:
+                raise ValueError("stream produced more physical worlds than admitted")
+            count += 1
+            yield row
+        if count != world_count:
+            raise ValueError("stream produced fewer physical worlds than admitted")
+    return _group_rows(counted())
+
+
+def _group_rows(worlds):
     groups = {}
     for world in worlds:
         sb_index, bb_index, mass, sign, flop = _validated_row(world)
