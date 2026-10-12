@@ -329,3 +329,5 @@ Preflop opening, 3-bet, 4-bet and all-in action coverage: [fixed six-case admiss
 Weighted private ranges with colliding hands and a blocked flop: [rational conditioned priors and independently verified accuracy](docs/preflop-weighted-range-coverage.md).
 
 A diagnostic cost profile of the verified weighted fixture: [exclusive preflop-local attribution and limits](docs/preflop-local-profile.md).
+
+A preflop normalization candidate retained as a failed promotion experiment: [exact parity, paired timings and allocation limits](docs/preflop-nonnegative-normalization.md).

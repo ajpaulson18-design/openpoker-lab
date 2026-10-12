@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-nonnegative-normalization-v1",
+  "weighted_fixture": "benchmarks/preflop-weighted-range-coverage-v1.json",
+  "weighted_result_provenance": "benchmarks/results/preflop-weighted-range-coverage-v1.json",
+  "profile_provenance": "benchmarks/results/preflop-local-profile-v1.json",
+  "iterations": 500,
+  "averaging_delay": 250,
+  "timing_pairs": 3,
+  "pair_order": [
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate"
+  ],
+  "timing_gate_median_reduction": 0.05,
+  "allocation_iterations": 10,
+  "allocation_delay": 5,
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "payload_parity_required": true,
+  "allocation_peak_scope": "Separate tracemalloc peak for each complete solve plus JSON serialization at 10 iterations/delay 5; verify original-world metrics after tracing. Python-traced allocations only, not RSS or high-iteration memory.",
+  "interpretation": "Candidate replaces only the delayed adapter's imported strategy alias with direct normalization of its CFR+-clamped nonnegative regret rows. Exact output equality and quality checks are mandatory. Timing is a three-pair whole-call comparison; promotion requires at least a 5% median reduction. Any changed loop or allocation accounting requires a separate public-vector admission review.",
+  "model_limits": "Same fixed weighted fixture as the prior profile: finite conditioned heads-up preflop/flop-checkdown game, three exact private combos per player, two selected flops and 27,720 physical worlds; one shared 10-chip stack; forced checkdown after flop betting. Not broad-range/full-deck, all-streets, multiway, unrestricted NLHE, or a general convergence claim.",
+  "require_candidate_faster_each_timing_pair": true,
+  "allocation_peak_nonregression_ratio": 1.01,
+  "promotion_gate_rule": "Exact payload parity and quality target on every timing arm; candidate faster in all three paired runs; median reduction at least 5%; separate candidate traced peak no more than 1.01 times baseline. The traced-peak condition is only a nonregression gate, not evidence of an RSS or general memory gain."
+}
