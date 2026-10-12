@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-grouped-target-plan-v1",
+  "game_spec": "benchmarks/preflop-expanded-range-v1.json",
+  "verified_game_report": "benchmarks/results/preflop-expanded-range-v1.json",
+  "previous_plan_report": "benchmarks/results/preflop-target-plan-prototype-v1.json",
+  "checkpoint": {
+    "iterations": 1000,
+    "delay": 500
+  },
+  "allocation_checkpoint": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "pair_order": [
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate"
+  ],
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "timing_gate_median_reduction": 0.05,
+  "allocation_peak_nonregression_ratio": 1.01,
+  "selection_reason": "The old failed plan test used 20 sweeps, an all-streets tree with 59,448 plan records and an unmet quality target. The new independently verified grouped flop-checkdown game has 1,300 public states, 108 grouped world rows and 1,744 information sets; 1,000 sweeps pass quality. Reuse the unchanged helper to test a materially different compilation/storage amortization regime. Preserve the old negative report; no candidate modification or post-hoc retry.",
+  "gate": "Research evidence only: exact full payload SHA across all six timed arms and separately both allocation arms; every timed arm meets unchanged quality; candidate faster in all three pairs; median paired reduction at least 5%; candidate separate traced peak <=1.01x baseline. Production integration still requires independent versioned plan work/allocation admission.",
+  "scope": "Fixed four-combo-per-seat, four-selected-flop, 10-chip heads-up preflop/flop game with forced future checkdown. No shared source edits, dependencies, third-party source or Coach work. Standalone prototype caps do not replace production admission."
+}
