@@ -331,3 +331,5 @@ Weighted private ranges with colliding hands and a blocked flop: [rational condi
 A diagnostic cost profile of the verified weighted fixture: [exclusive preflop-local attribution and limits](docs/preflop-local-profile.md).
 
 A preflop normalization candidate retained as a failed promotion experiment: [exact parity, paired timings and allocation limits](docs/preflop-nonnegative-normalization.md).
+
+Broader private-hand and flop conditioning coverage: [four weighted hands per seat, four flops and original-world accuracy checks](docs/preflop-expanded-range.md).
