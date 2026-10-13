@@ -112,7 +112,67 @@ clamping consistency rule is not a rigorous floating-point error bound.
 
 ## Development record
 
-Sol inspected current main, active worktrees/PRs, prior Sol/Luna instructions,
-matrix-free implementations and existing component/integration tests. Luna is
-assigned bounded implementation and adversarial validation. Acceptance and
-executed results will be recorded after review; this specification is a plan.
+Sol inspected current main, active worktrees/PRs, matrix-free implementations
+and existing component/integration tests. Luna implemented the independent
+oracle and 13 tests; Sol reviewed the physical law, numeric betting semantics,
+hidden-information best responses, input rejection and resource guards. The
+implementation was frozen at `431db6f261a3df21c1ccf5be17b96af485c1770c`, based
+on main `323ce3030dfa10d2a11dbeb314b7a76ca222d984` after a documentation-only
+main update. No production, shared CFR, preflop or flop source changes occur
+in cycle 1.
+
+### Executed cycle 1 validation, October 13, 2026
+
+The [complete machine-readable report](../benchmarks/results/turn-river-independent-v1.json)
+records 52 unchanged source/specification SHA-256 hashes, interpreter/platform,
+all fixtures, scalar differences, and raw timing samples. Run with:
+
+```text
+python -m scripts.benchmark_turn_river_independent --output benchmarks/results/turn-river-independent-v1.json
+```
+
+Four fixtures, two backends, three algorithms, three iteration ceilings
+(20/100/300), and three repeats produce 216 complete calls and 72 rows.
+Every complete serialized policy, value and both legal best responses passed
+independent replay at the predeclared absolute tolerance of `1e-9` chips.
+Repeated complete payloads were identical. The maximum scalar disagreement
+was `3.907985046680551e-14` chips. Full turn checks cover 176 physical worlds
+and 1,112 information sets; the conditioned raised turn covers eight worlds
+and 138 information sets. All policies, including off-policy rows, are checked.
+
+Every measured profile missed the unchanged `0.001`-chip NashConv target.
+The following independently measured gaps at 300 iterations apply to both
+backends up to the scalar agreement above:
+
+| Fixture | Vanilla | DCFR | CFR+ |
+| --- | ---: | ---: | ---: |
+| Full 44-river blocked game | 1.47715512 | 0.02149704 | 0.01611100 |
+| Two conditioned rivers, asymmetric multisize | 3.23491921 | 1.81179328 | 0.04694023 |
+| Polarised river bluffcatcher | 2.87361498 | 2.29465832 | 0.20754699 |
+| Weighted river raises | 2.91977182 | 0.51274093 | 0.04211258 |
+
+Complete-call timing includes deterministic JSON serialization; replay is
+timed separately. Other work ran on this shared Windows host. These are raw
+observations, not controlled speedup, equal-cost quality or memory evidence.
+No RSS or allocation peak was measured. Accuracy here means agreement with
+an independent finite-game replay, not achievement of the quality target,
+a formal floating-point bound, larger-game coverage or commercial parity.
+
+The 13 new tests passed normally and with `python -O`. They include a known
+rational one-bet equilibrium, exhaustive tiny-game pure-policy BR comparison,
+future-card no-peek, weighted blockers, full deck, short all-ins, decimal
+sizes and corrupted-policy rejection. Documentation validation passed.
+The full Python suite passed in GitHub CI on 3.11, 3.12 and 3.13 at the frozen
+implementation head. A normal local baseline suite ran 629 tests with 14
+Windows temporary-file/SQLite permission errors. The affected 35 tests passed
+outside that sandbox with a unique project-local TEMP/TMP directory; no
+persistence production changes were made to disguise an environment failure.
+
+The oracle bounds physical-world preallocation, public-tree construction and
+modeled world/node passes, plus separate exact-BR work counters. These are
+development admission guards, not wall-time/RSS guarantees. Card/range grammar
+and the independent ranker are shared as stated above. Optional result labels
+`runout_mode` and `reachable_runouts` are not yet checked; numeric input law,
+selected rivers, actual worlds and policy rows are checked. Metadata hardening
+is a later validation slice. Cycle 2 changes diagnostics after this frozen run
+and requires its own acceptance evidence.
