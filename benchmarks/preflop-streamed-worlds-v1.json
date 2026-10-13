@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-streamed-worlds-v1",
+  "game_spec": "benchmarks/preflop-expanded-range-v1.json",
+  "prior_verified_report": "benchmarks/results/preflop-expanded-range-v1.json",
+  "baseline_main": "a05aabfff4585b1683efbaddd42d2b7f2915a701",
+  "checkpoint": {
+    "iterations": 500,
+    "delay": 250
+  },
+  "allocation_checkpoint": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "pair_order": [
+    "materialized",
+    "streamed",
+    "streamed",
+    "materialized",
+    "materialized",
+    "streamed"
+  ],
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "minimum_traced_peak_reduction": 0.2,
+  "minimum_median_runtime_reduction": 0.0,
+  "maximum_pair_runtime_ratio": 1.05,
+  "gate": "Every timing arm meets independent original-world accuracy; exact complete payload parity across timing arms and separately allocation arms after removing only explicit new storage/budget metadata; three alternating complete-call-plus-JSON pairs, median candidate time no worse and each pair <=1.05x baseline; separate 10-sweep Python-traced peak at least 20% lower. Short-arm target misses retained. One fixed experiment, no post-hoc retries.",
+  "scope": "Same verified four-hand-per-seat/four-flop conditioned preflop/flop betting game and forced future checkdown; original private indexing only. Full original-world and additional streaming budgets enforced before ranking/groups. Standard library only; no shared kernels, later-street betting, Coach or third-party source.",
+  "replay_reuse": "Independently replay every distinct normalized complete-game payload once. Later arms may reuse metric-only replay evidence only for the same fixture hash and exact normalized full-payload SHA-256; posterior and production metric comparisons still run per arm. No policy objects or strings retained. All six timing payloads must additionally equal the prior verified 500/250 complete-payload hash."
+}
