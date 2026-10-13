@@ -1,5 +1,19 @@
 # Solver progress record
 
+## Strict complete-result turn and river replay
+
+The independent oracle now requires current board/runout/reachability metadata
+and core physical counts, checks every world/private-pair alias with bool-safe
+integer types, and compares both unilateral gains and metric identities.
+Reachability is derived from physical worlds; both existing canonical serializer
+orders are preserved. Independent BR sanity checks precede per-player clipping.
+
+All 18 focused tests passed normally and with Python `-O`. All 24 complete
+20-iteration profiles across four fixtures, two backends and three algorithms
+pass the hardened replay; maximum scalar disagreement is `3.91e-14` chips and
+every 0.001-chip target still misses. Production/earlier-street code is unchanged.
+See [contract, source hashes and results](turn-river-independent-validation.md#cycle-3-complete-result-metadata-and-gain-validation).
+
 ## Matrix-free turn and river diagnostic gain consistency
 
 The isolated adapters separately clamp accepted small negative unilateral BR

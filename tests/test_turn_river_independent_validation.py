@@ -8,16 +8,307 @@ from pokerlab.matrix_free_river import solve_matrix_free_river
 from pokerlab.matrix_free_turn import solve_matrix_free_turn
 from pokerlab.postflop_solver import solve_postflop
 from pokerlab.river_config import RiverConfig
+from pokerlab.cards import DECK
 from scripts.river_analytical import (
     equilibrium as polar_equilibrium, metrics as polar_metrics, serialized_profile,
 )
 from scripts.turn_river_validation import (
     _Chance, _Decision, _Terminal, _best_response,
-    compare_result, replay_policy,
+    _diagnostic_gains, compare_result, replay_policy,
 )
 
 
 class TurnRiverIndependentValidationTests(unittest.TestCase):
+    def test_required_metadata_modes_zero_support_and_both_reachable_orders(self):
+        board = "2c5d9hJc"
+        config = RiverConfig(10, 20, (0.5,), (), 0, False)
+
+        # Explicitly supplying every candidate river is still a conditioned
+        # subset request, even though its card set is the full candidate set.
+        all_rivers = tuple(card for card in DECK if card not in board)
+        full_subset = solve_matrix_free_turn(
+            board, "AsAh", "KsKh", config, runouts=all_rivers,
+            iterations=10, algorithm="vanilla",
+        )
+        self.assertEqual(full_subset["runout_mode"], "conditioned-subset")
+        full_subset_oracle = replay_policy(
+            full_subset, "AsAh", "KsKh", board=board, config=config,
+            runouts=all_rivers,
+        )
+        self.assertTrue(compare_result(full_subset, full_subset_oracle))
+
+        # Kc is in the selected list but blocked by every positive-mass IP
+        # holding. It remains requested and has no physical posterior support.
+        selected = ("3s", "Kc")
+        blocked = solve_matrix_free_turn(
+            board, "AsAh", "KcKd", config, runouts=selected,
+            iterations=10, algorithm="vanilla",
+        )
+        blocked_oracle = replay_policy(
+            blocked, "AsAh", "KcKd", board=board, config=config,
+            runouts=selected,
+        )
+        self.assertEqual(blocked["runouts"], ["3s", "Kc"])
+        self.assertEqual(blocked["reachable_runouts"], ["3s"])
+        self.assertEqual(set(blocked_oracle["river_probabilities"]), {"3s"})
+        self.assertEqual(blocked_oracle["river_probabilities"]["3s"], 1.0)
+        corrupt_blocked = deepcopy(blocked)
+        corrupt_blocked["reachable_runouts"].append("Kc")
+        with self.assertRaises(ValueError):
+            replay_policy(corrupt_blocked, "AsAh", "KcKd", board=board,
+                          config=config, runouts=selected)
+
+        # Lexical and DECK orders differ for these mixed ranks. Both existing
+        # serializers must replay without harmonizing their output ordering.
+        mixed = ("Ac", "Tc", "2d")
+        matrix_result = solve_matrix_free_turn(
+            board, "AsAh", "KsKh", config, runouts=mixed,
+            iterations=10, algorithm="vanilla",
+        )
+        materialized_result = solve_postflop(
+            board, "AsAh", "KsKh", config, runouts=mixed,
+            iterations=10, algorithm="vanilla", traversal="public-batched",
+            diagnostics="public-batched",
+        )
+        self.assertEqual(matrix_result["reachable_runouts"], ["2d", "Ac", "Tc"])
+        self.assertEqual(materialized_result["reachable_runouts"], ["2d", "Tc", "Ac"])
+        for result in (matrix_result, materialized_result):
+            oracle = replay_policy(result, "AsAh", "KsKh", board=board,
+                                   config=config, runouts=mixed)
+            self.assertTrue(compare_result(result, oracle))
+
+    def test_required_metadata_and_reachability_corruptions_are_rejected(self):
+        board = "2c5d9hJc"
+        oop, ip = "AsAh", "KsKh"
+        config = RiverConfig(10, 20, (0.5,), (), 0, False)
+        runouts = ("2d", "Tc", "Ac")
+        results = [
+            solve_matrix_free_turn(board, oop, ip, config, runouts=runouts,
+                                   iterations=10, algorithm="vanilla"),
+            solve_postflop(board, oop, ip, config, runouts=runouts,
+                           iterations=10, algorithm="vanilla",
+                           traversal="public-batched", diagnostics="public-batched"),
+        ]
+        river_board = "2c5d9hJc7s"
+        results.extend((
+            solve_matrix_free_river(river_board, oop, ip, config,
+                                    iterations=10, algorithm="vanilla"),
+            solve_postflop(river_board, oop, ip, config, iterations=10,
+                           algorithm="vanilla", traversal="public-batched",
+                           diagnostics="public-batched"),
+        ))
+        for result in results:
+            replay = replay_policy(result, oop, ip,
+                                   board=board if len(result["board"]) == 4 else river_board,
+                                   config=config,
+                                   runouts=runouts if len(result["board"]) == 4 else None)
+            self.assertTrue(compare_result(result, replay))
+            for field in ("board", "runouts", "runout_mode", "reachable_runouts"):
+                corrupt = deepcopy(result)
+                del corrupt[field]
+                with self.subTest(solver=result["solver_version"], missing=field), \
+                     self.assertRaises(ValueError):
+                    replay_policy(corrupt, oop, ip,
+                                  board=board if len(result["board"]) == 4 else river_board,
+                                  config=config,
+                                  runouts=runouts if len(result["board"]) == 4 else None)
+
+        base = results[0]
+        mutations = (
+            ("runout_mode", "full-deck"),
+            ("runout_mode", True),
+            ("runouts", "2d,Tc,Ac"),
+            ("runouts", ["2d", "2d", "Ac"]),
+            ("runouts", ["2d", "Tc", "Ac", "Ks"]),
+            ("reachable_runouts", ["Ac", "2d", "Tc"]),
+            ("reachable_runouts", ["2d", "Ac"]),
+            ("reachable_runouts", ["2d", "Tc", "Ac", "Ks"]),
+            ("reachable_runouts", ["2d", "Ac", "Tc", "Ac"]),
+            ("reachable_runouts", ["2d", "Tc", 14]),
+            ("reachable_runouts", "2d,Tc,Ac"),
+            ("board", ["2c", "5d", "9h", "Jc", True]),
+        )
+        for field, value in mutations:
+            corrupt = deepcopy(base)
+            corrupt[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                replay_policy(corrupt, oop, ip, board=board, config=config,
+                              runouts=runouts)
+
+    def test_required_count_aliases_are_strict_and_all_present_aliases_are_checked(self):
+        board = "2c5d9hJc"
+        oop, ip = "AsAh", "KsKh"
+        config = RiverConfig(10, 20, (0.5,), (), 0, False)
+        runouts = ("2d", "Tc", "Ac")
+        result = solve_postflop(
+            board, oop, ip, config, runouts=runouts, iterations=10,
+            algorithm="vanilla", traversal="public-batched",
+            diagnostics="public-batched",
+        )
+        oracle = replay_policy(result, oop, ip, board=board, config=config,
+                               runouts=runouts)
+        for field in ("info_sets", "worlds", "compatible_pairs", "deals"):
+            original = result[field]
+            for bad in (True, False, float(original), -1, original + 1):
+                corrupt = deepcopy(result)
+                corrupt[field] = bad
+                with self.subTest(field=field, bad=bad):
+                    with self.assertRaises(ValueError):
+                        replay_policy(corrupt, oop, ip, board=board,
+                                      config=config, runouts=runouts)
+                    with self.assertRaises(ValueError):
+                        compare_result(corrupt, oracle)
+
+        for missing in (("info_sets",), ("worlds", "compatible_world_count")):
+            corrupt = deepcopy(result)
+            for field in missing:
+                corrupt.pop(field, None)
+            with self.subTest(missing=missing), self.assertRaises(ValueError):
+                replay_policy(corrupt, oop, ip, board=board,
+                              config=config, runouts=runouts)
+        optional_pair_aliases_removed = deepcopy(result)
+        optional_pair_aliases_removed.pop("compatible_pairs")
+        optional_pair_aliases_removed.pop("deals")
+        self.assertTrue(compare_result(
+            optional_pair_aliases_removed,
+            replay_policy(optional_pair_aliases_removed, oop, ip, board=board,
+                          config=config, runouts=runouts),
+        ))
+
+        river = "2c5d9hJc7s"
+        river_result = solve_matrix_free_river(
+            river, oop, ip, config, iterations=10, algorithm="vanilla")
+        river_oracle = replay_policy(river_result, oop, ip, board=river,
+                                     config=config)
+        for field in ("info_sets", "compatible_pairs", "deals"):
+            original = river_result[field]
+            for bad in (True, False, float(original), -1, original + 1):
+                corrupt = deepcopy(river_result)
+                corrupt[field] = bad
+                with self.subTest(river_field=field, bad=bad):
+                    with self.assertRaises(ValueError):
+                        replay_policy(corrupt, oop, ip, board=river, config=config)
+                    with self.assertRaises(ValueError):
+                        compare_result(corrupt, river_oracle)
+        river_missing = deepcopy(river_result)
+        river_missing.pop("compatible_pairs")
+        river_missing.pop("deals")
+        with self.assertRaises(ValueError):
+            replay_policy(river_missing, oop, ip, board=river, config=config)
+
+        matrix_turn = solve_matrix_free_turn(
+            board, oop, ip, config, runouts=runouts,
+            iterations=10, algorithm="vanilla",
+        )
+        matrix_turn_oracle = replay_policy(
+            matrix_turn, oop, ip, board=board, config=config, runouts=runouts)
+        matrix_turn_missing = deepcopy(matrix_turn)
+        matrix_turn_missing.pop("compatible_world_count")
+        with self.assertRaises(ValueError):
+            replay_policy(matrix_turn_missing, oop, ip, board=board,
+                          config=config, runouts=runouts)
+        for field in ("info_sets", "compatible_world_count"):
+            original = matrix_turn[field]
+            for bad in (True, False, float(original), -1, original + 1):
+                corrupt = deepcopy(matrix_turn)
+                corrupt[field] = bad
+                with self.subTest(matrix_turn_field=field, bad=bad):
+                    with self.assertRaises(ValueError):
+                        replay_policy(corrupt, oop, ip, board=board,
+                                      config=config, runouts=runouts)
+                    with self.assertRaises(ValueError):
+                        compare_result(corrupt, matrix_turn_oracle)
+
+        materialized_river = solve_postflop(
+            river, oop, ip, config, iterations=10, algorithm="vanilla",
+            traversal="public-batched", diagnostics="public-batched",
+        )
+        materialized_river_oracle = replay_policy(
+            materialized_river, oop, ip, board=river, config=config)
+        for field in ("info_sets", "worlds", "compatible_pairs", "deals"):
+            original = materialized_river[field]
+            for bad in (True, False, float(original), -1, original + 1):
+                corrupt = deepcopy(materialized_river)
+                corrupt[field] = bad
+                with self.subTest(materialized_river_field=field, bad=bad):
+                    with self.assertRaises(ValueError):
+                        replay_policy(corrupt, oop, ip, board=river, config=config)
+                    with self.assertRaises(ValueError):
+                        compare_result(corrupt, materialized_river_oracle)
+
+    def test_compare_checks_published_gain_fields_and_metric_identities(self):
+        board = "2c5d9hJcKd"
+        oop, ip = "AsAh", "KsKh"
+        config = RiverConfig(10, 20, (0.5,), (), 0, False)
+        result = solve_matrix_free_river(board, oop, ip, config,
+                                         iterations=10, algorithm="vanilla")
+        oracle = replay_policy(result, oop, ip, board=board, config=config)
+        differences = compare_result(result, oracle)
+        self.assertEqual(set(differences), {
+            "value_oop", "value_ip", "oop_best_response_value",
+            "ip_best_response_value", "oop_best_response_gain",
+            "ip_best_response_gain", "nash_conv", "exploitability",
+        })
+        for field in ("oop_best_response_gain", "ip_best_response_gain"):
+            for bad in (-1e-6, True, float("nan"), float("inf"),
+                        -float("inf"), oracle[field] + 0.01):
+                corrupt = deepcopy(result)
+                corrupt[field] = bad
+                with self.subTest(field=field, bad=bad), self.assertRaises(ValueError):
+                    compare_result(corrupt, oracle)
+            corrupt = deepcopy(result)
+            del corrupt[field]
+            with self.subTest(field=field, bad="missing"), self.assertRaises(ValueError):
+                compare_result(corrupt, oracle)
+
+        for field, bad in (
+            ("nash_conv", result["nash_conv"] + 0.01),
+            ("exploitability", result["exploitability"] + 0.01),
+            ("value_ip", result["value_ip"] + 0.01),
+        ):
+            corrupt = deepcopy(result)
+            corrupt[field] = bad
+            with self.subTest(field=field, bad=bad), self.assertRaises(ValueError):
+                compare_result(corrupt, oracle)
+
+        tolerance = 1e-9
+        zero_sum = deepcopy(result)
+        zero_sum["value_oop"] += 0.75 * tolerance
+        zero_sum["value_ip"] += 0.75 * tolerance
+        with self.assertRaisesRegex(ValueError, "zero-sum value identity"):
+            compare_result(zero_sum, oracle, tolerance)
+
+        nash_identity = deepcopy(result)
+        nash_identity["oop_best_response_gain"] += 0.75 * tolerance
+        nash_identity["ip_best_response_gain"] += 0.75 * tolerance
+        with self.assertRaisesRegex(ValueError, "NashConv identity"):
+            compare_result(nash_identity, oracle, tolerance)
+
+        self.assertGreater(result["exploitability"], 2.0 * tolerance)
+        exploit_identity = deepcopy(result)
+        exploit_identity["nash_conv"] += 0.75 * tolerance
+        exploit_identity["exploitability"] -= 0.75 * tolerance
+        with self.assertRaisesRegex(ValueError, "exploitability identity"):
+            compare_result(exploit_identity, oracle, tolerance)
+
+    def test_independent_response_sanity_guard_precedes_per_player_gain_clamp(self):
+        self.assertEqual(_diagnostic_gains(0.0, 1e-9, -1e-9, 100.0),
+                         (1e-9, 0.0, 1e-9))
+        self.assertEqual(_diagnostic_gains(0.0, -1e-9, 0.0, 100.0),
+                         (0.0, 0.0, 0.0))
+        self.assertEqual(_diagnostic_gains(0.0, 0.0, -1e-9, 100.0),
+                         (0.0, 0.0, 0.0))
+        self.assertEqual(_diagnostic_gains(0.0, -1e-9, 1e-9, 100.0),
+                         (0.0, 1e-9, 1e-9))
+        for diagnostic in ((0.0, -1e-5, 0.0), (0.0, 0.0, -1e-5)):
+            with self.subTest(diagnostic=diagnostic), self.assertRaises(ValueError):
+                _diagnostic_gains(*diagnostic, 100.0)
+        for diagnostic in ((float("nan"), 0.0, 0.0),
+                           (0.0, float("inf"), 0.0),
+                           (0.0, 0.0, -float("inf"))):
+            with self.subTest(diagnostic=diagnostic), self.assertRaises(ValueError):
+                _diagnostic_gains(*diagnostic, 100.0)
+
     def test_river_polarized_anchor_matches_independent_rational_game(self):
         board = "2c7d9hJsKd"
         config = RiverConfig(100, 500, (1.0,), (), 0, False)
