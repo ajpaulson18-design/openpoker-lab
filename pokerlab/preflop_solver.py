@@ -795,7 +795,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         vector_budget = dict(vector_budget)
         vector_budget.update({
             "streamed_world_reference_budget_version": vector_budget["budget_version"],
-            "budget_version": "preflop-public-vector-streamed-world-budget-v7",
+            "budget_version": "preflop-public-vector-streamed-world-budget-v8",
             "streamed_world_construction": world_storage_metadata,
             "total_loop_entries_upper_bound": total,
         })

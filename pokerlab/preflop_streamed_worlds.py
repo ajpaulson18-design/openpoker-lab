@@ -8,6 +8,7 @@ from itertools import chain, repeat
 from math import fsum, isfinite
 
 from .preflop_future_groups import estimate_future_grouping_count, group_hidden_future_stream
+from .preflop_vector_budget import MAX_TOTAL_LOOP_ENTRIES
 
 MAX_STREAM_REFERENCE_SLOTS = 8_000_000
 
@@ -29,16 +30,25 @@ def estimate_streamed_construction(world_count, selected_count, pair_count):
     combined = old["grouping_reference_slots_upper_bound"] + extra
     if combined > MAX_STREAM_REFERENCE_SLOTS:
         raise ValueError("Streamed world summaries exceed the logical reference-slot cap")
+    packed_bytes = (selected_count + 7) // 8
+    scan_byte_visits = 4 * pair_count * packed_bytes
+    scan_loops = 4 * scan_byte_visits
+    extra_loops = 128 + 40 * world_count + 8 * selected_count + 16 * pair_count + scan_loops
+    if extra_loops > MAX_TOTAL_LOOP_ENTRIES:
+        raise ValueError("Streamed construction exceeds the logical loop-entry cap before scans")
     return {
-        "budget_version": "preflop-streamed-world-construction-v1",
+        "budget_version": "preflop-streamed-world-construction-v2",
         "physical_world_count": world_count,
         "selected_runouts": selected_count,
         "compatible_private_pairs": pair_count,
         "additional_reference_slots_upper_bound": extra,
         "combined_grouping_reference_slots_upper_bound": combined,
         "combined_reference_slot_limit": MAX_STREAM_REFERENCE_SLOTS,
-        "additional_loop_entries_upper_bound": 128 + 40 * world_count + 8 * selected_count + 16 * pair_count,
-        "retained_posting_payload_bytes": 52 * ((selected_count + 7) // 8),
+        "additional_loop_entries_upper_bound": extra_loops,
+        "blocker_scan_passes": 4,
+        "blocker_scan_byte_visits_upper_bound": scan_byte_visits,
+        "blocker_scan_loop_entries_upper_bound": scan_loops,
+        "retained_posting_payload_bytes": 52 * packed_bytes,
         "reachable_flag_payload_bytes": selected_count,
         "scope": "Additional bounded source summaries, repeated shape-row construction and grouping orchestration. Full original-world vector and grouping envelopes remain charged. Reference counts and packed payloads exclude Python headers/allocator overhead and are not allocation or RSS bounds.",
     }
