@@ -353,13 +353,44 @@ def _collect_nodes(root):
     return output
 
 
-def _validate_policy(result, root, nodes, worlds, board, selected):
+def _validate_policy(result, root, nodes, worlds, board, selected,
+                     runouts_were_omitted):
     if len(nodes) * len(worlds) > MAX_ORACLE_WORK:
         raise ValueError("Independent policy replay exceeds work limit")
-    if "board" in result and result["board"] != list(board):
+
+    required = ("board", "runouts", "runout_mode", "reachable_runouts")
+    missing = [field for field in required if field not in result]
+    if missing:
+        raise ValueError(f"Result is missing required metadata: {', '.join(missing)}")
+    result_board = result["board"]
+    if (type(result_board) is not list or
+            any(type(card) is not str or card not in DECK for card in result_board) or
+            result_board != list(board)):
         raise ValueError("Result public board does not match replay input")
-    if "runouts" in result and result["runouts"] != list(selected):
+    result_runouts = result["runouts"]
+    if (type(result_runouts) is not list or
+            any(type(card) is not str or card not in DECK for card in result_runouts) or
+            result_runouts != list(selected)):
         raise ValueError("Result runouts do not match replay conditioning")
+    expected_mode = ("none" if len(board) == 5 else
+                     "full-deck" if runouts_were_omitted else
+                     "conditioned-subset")
+    # Mode records the caller's conditioning choice, even when an explicit
+    # subset happens to contain every available river.
+    if type(result["runout_mode"]) is not str or result["runout_mode"] != expected_mode:
+        raise ValueError("Result runout mode does not match replay conditioning")
+    reachable = result["reachable_runouts"]
+    if (type(reachable) is not list or
+            any(type(card) is not str or card not in DECK for card in reachable) or
+            len(set(reachable)) != len(reachable)):
+        raise ValueError("Result reachable runouts must be unique canonical card strings")
+    physically_reachable = {world["river"] for world in worlds
+                            if world["river"] is not None and world["weight"] > 0}
+    expected_reachable_deck = [card for card in selected
+                               if card in physically_reachable]
+    expected_reachable_lexical = sorted(expected_reachable_deck)
+    if reachable not in (expected_reachable_deck, expected_reachable_lexical):
+        raise ValueError("Result reachable runouts do not match positive physical support")
     rows = result.get("strategy")
     if not isinstance(rows, list):
         raise ValueError("Result strategy must be a list")
@@ -431,6 +462,31 @@ def _validate_policy(result, root, nodes, worlds, board, selected):
             raise ValueError("Strategy probabilities must sum to one")
         policies[(0 if player == "oop" else 1, hand, history)] = tuple(probabilities)
     return policies
+
+
+def _validate_count_metadata(result, *, world_count, pair_count, info_count,
+                             board_length):
+    if "info_sets" not in result:
+        raise ValueError("Result is missing required information-set count")
+    count_fields = {
+        "info_sets": info_count,
+        "compatible_world_count": world_count,
+        "worlds": world_count,
+        "compatible_pairs": pair_count,
+        "deals": pair_count,
+    }
+    for field, expected in count_fields.items():
+        if field not in result:
+            continue
+        value = result[field]
+        if type(value) is not int or value < 0:
+            raise ValueError(f"Result count {field} must be a nonnegative integer")
+        if value != expected:
+            raise ValueError(f"Result count {field} differs from independent replay")
+    required_aliases = ("compatible_world_count", "worlds") if board_length == 4 else (
+        "compatible_pairs", "deals")
+    if not any(field in result for field in required_aliases):
+        raise ValueError("Result is missing its required physical deal count")
 
 
 def _terminal_payoff(node, world):
@@ -506,9 +562,26 @@ def _best_response(root, worlds, policies, player, pot):
     return value if player == 0 else -value
 
 
+def _diagnostic_gains(value, br0, br1, pot):
+    """Validate independent response bounds, then clamp roundoff per player."""
+    if not all(isfinite(number) for number in (value, br0, br1, pot)):
+        raise ValueError("Independent diagnostic values must be finite")
+    tolerance = 1e-10 * max(1.0, pot, abs(value), abs(br0), abs(br1))
+    if br0 < value - tolerance or br1 < -value - tolerance:
+        raise ValueError("Independent best response violates its legal lower bound")
+    gain0 = max(0.0, br0 - value)
+    gain1 = max(0.0, br1 + value)
+    gap = gain0 + gain1
+    if not all(isfinite(number) for number in (gain0, gain1, gap)):
+        raise ValueError("Independent diagnostic gains must be finite")
+    return gain0, gain1, gap
+
+
 def replay_policy(result, oop_range, ip_range, *, board, config,
                   river_config=None, runouts=None):
     """Validate and independently replay one configured turn or river result."""
+    if not isinstance(result, dict):
+        raise ValueError("Result must be a complete serialized result object")
     board = cards(board)
     if len(board) not in (4, 5):
         raise ValueError("Replay board must contain four turn cards or five river cards")
@@ -541,13 +614,17 @@ def replay_policy(result, oop_range, ip_range, *, board, config,
     nodes = _collect_nodes(root)
     if len(nodes) * len(worlds) * 4 > MAX_ORACLE_WORK:
         raise ValueError("Independent replay exceeds conservative modeled world-node admission")
-    policies = _validate_policy(result, root, nodes, worlds, board, selected)
+    policies = _validate_policy(result, root, nodes, worlds, board, selected,
+                                runouts_were_omitted=runouts is None)
+    pair_count = len({(world["hands"][0], world["hands"][1]) for world in worlds})
+    _validate_count_metadata(
+        result, world_count=len(worlds), pair_count=pair_count,
+        info_count=len(policies), board_length=len(board),
+    )
     value = _profile(root, worlds, policies, config.pot)
     br0 = _best_response(root, worlds, policies, 0, config.pot)
     br1 = _best_response(root, worlds, policies, 1, config.pot)
-    gain0 = max(0.0, br0 - value)
-    gain1 = max(0.0, br1 + value)
-    gap = gain0 + gain1
+    gain0, gain1, gap = _diagnostic_gains(value, br0, br1, config.pot)
     pair_weights = {}
     river_weights = {}
     for world in worlds:
@@ -573,27 +650,46 @@ def compare_result(result, oracle, tolerance=1e-9):
     """Compare solver diagnostics and structural counts with an oracle replay."""
     if isinstance(tolerance, bool) or not isinstance(tolerance, (int, float)) or not isfinite(float(tolerance)) or tolerance < 0:
         raise ValueError("tolerance must be a finite nonnegative number")
+    if not isinstance(result, dict) or not isinstance(oracle, dict):
+        raise ValueError("Result and oracle must be objects")
+    board = result.get("board")
+    if type(board) is not list or len(board) not in (4, 5):
+        raise ValueError("Result must include a four- or five-card public board")
+    oracle_worlds = oracle.get("worlds")
+    oracle_pairs = oracle.get("compatible_pair_count")
+    oracle_infos = oracle.get("checked_information_sets")
+    for name, value in (("oracle worlds", oracle_worlds),
+                        ("oracle compatible pairs", oracle_pairs),
+                        ("oracle information sets", oracle_infos)):
+        if type(value) is not int or value < 0:
+            raise ValueError(f"{name} must be a nonnegative integer")
+    _validate_count_metadata(
+        result, world_count=oracle_worlds, pair_count=oracle_pairs,
+        info_count=oracle_infos, board_length=len(board),
+    )
     differences = {}
     for field in ("value_oop", "value_ip", "oop_best_response_value",
-                  "ip_best_response_value", "nash_conv", "exploitability"):
+                  "ip_best_response_value", "oop_best_response_gain",
+                  "ip_best_response_gain", "nash_conv", "exploitability"):
         candidate = result.get(field)
         expected = oracle.get(field)
         if isinstance(candidate, bool) or not isinstance(candidate, (int, float)) or not isfinite(float(candidate)):
             raise ValueError(f"Result metric {field} must be finite")
         if isinstance(expected, bool) or not isinstance(expected, (int, float)) or not isfinite(float(expected)):
             raise ValueError(f"Oracle metric {field} must be finite")
+        if field in ("oop_best_response_gain", "ip_best_response_gain",
+                     "nash_conv", "exploitability") and (candidate < 0 or expected < 0):
+            raise ValueError(f"Metric {field} must be nonnegative")
         differences[field] = float(candidate) - float(expected)
         if abs(differences[field]) > tolerance:
             raise ValueError(f"Result metric {field} differs from independent replay")
-    reported_rows = result.get("info_sets")
-    if reported_rows is not None and reported_rows != oracle["checked_information_sets"]:
-        raise ValueError("Result information-set count differs from checked rows")
-    expected_worlds = result.get("compatible_world_count", result.get("worlds"))
-    if expected_worlds is None:
-        expected_worlds = result.get("compatible_pairs", result.get("deals"))
-        actual_worlds = oracle["compatible_pair_count"]
-    else:
-        actual_worlds = oracle["worlds"] if "compatible_world_count" in result or "worlds" in result else oracle["compatible_pair_count"]
-    if expected_worlds is not None and expected_worlds != actual_worlds:
-        raise ValueError("Result physical deal count differs from independent replay")
+    identities = (
+        ("zero-sum value identity", result["value_oop"] + result["value_ip"]),
+        ("NashConv identity", result["nash_conv"] -
+         (result["oop_best_response_gain"] + result["ip_best_response_gain"])),
+        ("exploitability identity", result["exploitability"] - result["nash_conv"] / 2.0),
+    )
+    for label, error in identities:
+        if abs(error) > tolerance:
+            raise ValueError(f"Result violates {label}")
     return differences

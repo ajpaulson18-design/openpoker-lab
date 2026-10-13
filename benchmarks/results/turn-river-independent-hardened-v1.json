@@ -1,0 +1,1200 @@
+{
+  "benchmark_id": "turn-river-independent-replay-v1",
+  "created_at_utc": "2026-10-13T19:14:46.826152+00:00",
+  "fixtures": {
+    "benchmark_id": "turn-river-algorithm-quality-v1",
+    "checkpoints": [
+      20,
+      100,
+      300
+    ],
+    "scenarios": [
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "full44-blocked-runouts",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "runout_scope": "all-compatible-runouts"
+      },
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "id": "two-conditioned-runouts-asymmetric-multisize",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_scope": "selected-conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ]
+      },
+      {
+        "board": "2c7d9hJsKd",
+        "config": {
+          "bet_sizes": [
+            1.0
+          ],
+          "effective_stack": 100,
+          "include_all_in": false,
+          "pot": 100
+        },
+        "id": "river-polarised-bluffcatcher",
+        "ip": "QsQh",
+        "oop": "AsAh,3c4c",
+        "purpose": "Nuts/air versus bluffcatcher, pot-size bet, finite tree"
+      },
+      {
+        "board": "Js8d4c2h2s",
+        "config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100,
+          "raise_sizes": [
+            0.5,
+            1
+          ]
+        },
+        "id": "river-weighted-raises",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Weighted river range, two opening sizes, raises and unequal stacks"
+      }
+    ],
+    "schema_version": 1
+  },
+  "methodology": {
+    "correctness": "Every full serialized policy replayed from independent physical deals, numeric betting rules, best-five ranks and legal information-set BRs, absolute tolerance 1e-9 chips.",
+    "limitations": "Synthetic small ranges and finite actions; conditioned rivers are not unconditional deck results. Binary64 arithmetic agreement is not an interval proof or commercial parity.",
+    "memory": "Not measured; no memory/RSS or storage performance claim.",
+    "quality": "Predeclared 0.001-chip NashConv target for each finite fixture; all misses retained. Equal iterations are not equal computation budgets.",
+    "timing": "Rotating repeated complete solve plus deterministic JSON encoding; independent replay timed separately."
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.12.14",
+  "results": [
+    {
+      "algorithm": "vanilla",
+      "backend": "materialized",
+      "complete_call_median_seconds": 1.2178587999660522,
+      "complete_call_seconds": [
+        1.2178587999660522
+      ],
+      "independent_replay_seconds": [
+        0.7433545999811031
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 7.56264367673465,
+        "ip_best_response_value": 26.009596731317096,
+        "nash_conv": 15.1252873534693,
+        "oop_best_response_value": -10.884309377847796,
+        "value_ip": 19.836438318248128,
+        "value_oop": -19.836438318248128
+      },
+      "oracle": {
+        "exploitability": 7.562643676734652,
+        "ip_best_response_value": 26.009596731317096,
+        "nash_conv": 15.125287353469304,
+        "oop_best_response_value": -10.884309377847792,
+        "value_oop": -19.836438318248124
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": -3.552713678800501e-15,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "materialized",
+      "complete_call_median_seconds": 1.2424420000170358,
+      "complete_call_seconds": [
+        1.2424420000170358
+      ],
+      "independent_replay_seconds": [
+        0.41636339999968186
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 8.102608225724104,
+        "ip_best_response_value": 24.560168823270075,
+        "nash_conv": 16.20521645144821,
+        "oop_best_response_value": -8.354952371821867,
+        "value_ip": 18.865947669311897,
+        "value_oop": -18.865947669311897
+      },
+      "oracle": {
+        "exploitability": 8.102608225724124,
+        "ip_best_response_value": 24.560168823270104,
+        "nash_conv": 16.205216451448248,
+        "oop_best_response_value": -8.354952371821856,
+        "value_oop": -18.8659476693119
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.9539925233402755e-14,
+        "ip_best_response_gain": -2.4868995751603507e-14,
+        "ip_best_response_value": -2.842170943040401e-14,
+        "nash_conv": -3.907985046680551e-14,
+        "oop_best_response_gain": -1.4210854715202004e-14,
+        "oop_best_response_value": -1.0658141036401503e-14,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.9881705999723636,
+      "complete_call_seconds": [
+        0.9881705999723636
+      ],
+      "independent_replay_seconds": [
+        0.3784159999922849
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 1.730424598402859,
+        "ip_best_response_value": 20.242551057064837,
+        "nash_conv": 3.460849196805718,
+        "oop_best_response_value": -16.78170186025912,
+        "value_ip": 18.66101486823055,
+        "value_oop": -18.66101486823055
+      },
+      "oracle": {
+        "exploitability": 1.7304245984028714,
+        "ip_best_response_value": 20.242551057064848,
+        "nash_conv": 3.460849196805743,
+        "oop_best_response_value": -16.781701860259105,
+        "value_oop": -18.661014868230552
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.2434497875801753e-14,
+        "ip_best_response_gain": -7.105427357601002e-15,
+        "ip_best_response_value": -1.0658141036401503e-14,
+        "nash_conv": -2.4868995751603507e-14,
+        "oop_best_response_gain": -1.7763568394002505e-14,
+        "oop_best_response_value": -1.4210854715202004e-14,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 4.310723600035999,
+      "complete_call_seconds": [
+        4.310723600035999
+      ],
+      "independent_replay_seconds": [
+        0.40893030003644526
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 7.562643676734643,
+        "ip_best_response_value": 26.00959673131708,
+        "nash_conv": 15.125287353469286,
+        "oop_best_response_value": -10.884309377847796,
+        "value_ip": 19.836438318248124,
+        "value_oop": -19.836438318248124
+      },
+      "oracle": {
+        "exploitability": 7.562643676734645,
+        "ip_best_response_value": 26.009596731317096,
+        "nash_conv": 15.12528735346929,
+        "oop_best_response_value": -10.884309377847806,
+        "value_oop": -19.836438318248124
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": -1.4210854715202004e-14,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": 1.0658141036401503e-14,
+        "oop_best_response_value": 1.0658141036401503e-14,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 4.641717799997423,
+      "complete_call_seconds": [
+        4.641717799997423
+      ],
+      "independent_replay_seconds": [
+        0.5787753000040539
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 8.102608225724099,
+        "ip_best_response_value": 24.560168823270075,
+        "nash_conv": 16.205216451448198,
+        "oop_best_response_value": -8.354952371821877,
+        "value_ip": 18.865947669311918,
+        "value_oop": -18.865947669311918
+      },
+      "oracle": {
+        "exploitability": 8.102608225724119,
+        "ip_best_response_value": 24.560168823270097,
+        "nash_conv": 16.205216451448237,
+        "oop_best_response_value": -8.35495237182186,
+        "value_oop": -18.865947669311918
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.9539925233402755e-14,
+        "ip_best_response_gain": -2.1316282072803006e-14,
+        "ip_best_response_value": -2.1316282072803006e-14,
+        "nash_conv": -3.907985046680551e-14,
+        "oop_best_response_gain": -1.7763568394002505e-14,
+        "oop_best_response_value": -1.7763568394002505e-14,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 6.434024500020314,
+      "complete_call_seconds": [
+        6.434024500020314
+      ],
+      "independent_replay_seconds": [
+        0.5262740000034682
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 1.7304245984028732,
+        "ip_best_response_value": 20.242551057064844,
+        "nash_conv": 3.4608491968057464,
+        "oop_best_response_value": -16.781701860259098,
+        "value_ip": 18.66101486823054,
+        "value_oop": -18.66101486823054
+      },
+      "oracle": {
+        "exploitability": 1.730424598402875,
+        "ip_best_response_value": 20.24255105706485,
+        "nash_conv": 3.46084919680575,
+        "oop_best_response_value": -16.7817018602591,
+        "value_oop": -18.661014868230552
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": 3.552713678800501e-15,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": -1.0658141036401503e-14,
+        "value_oop": 1.0658141036401503e-14
+      },
+      "scenario": "full44-blocked-runouts",
+      "verified_information_sets": 1112,
+      "verified_worlds": 176
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.13495770003646612,
+      "complete_call_seconds": [
+        0.13495770003646612
+      ],
+      "independent_replay_seconds": [
+        0.04554429999552667
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 13.816662032854603,
+        "ip_best_response_value": 34.541846279232544,
+        "nash_conv": 27.633324065709207,
+        "oop_best_response_value": -6.908522213523337,
+        "value_ip": 23.702238298753983,
+        "value_oop": -23.702238298753983
+      },
+      "oracle": {
+        "exploitability": 13.816662032854607,
+        "ip_best_response_value": 34.54184627923255,
+        "nash_conv": 27.633324065709214,
+        "oop_best_response_value": -6.908522213523337,
+        "value_oop": -23.70223829875398
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -3.552713678800501e-15,
+        "ip_best_response_gain": -1.0658141036401503e-14,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": -7.105427357601002e-15,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.12939080002252012,
+      "complete_call_seconds": [
+        0.12939080002252012
+      ],
+      "independent_replay_seconds": [
+        0.06106589996488765
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 14.824483569039474,
+        "ip_best_response_value": 39.505540398603486,
+        "nash_conv": 29.648967138078948,
+        "oop_best_response_value": -9.856573260524538,
+        "value_ip": 25.965642708351535,
+        "value_oop": -25.965642708351535
+      },
+      "oracle": {
+        "exploitability": 14.82448356903947,
+        "ip_best_response_value": 39.505540398603486,
+        "nash_conv": 29.64896713807894,
+        "oop_best_response_value": -9.856573260524545,
+        "value_oop": -25.965642708351538
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 3.552713678800501e-15,
+        "ip_best_response_gain": 3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 7.105427357601002e-15,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 7.105427357601002e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.207766100007575,
+      "complete_call_seconds": [
+        0.207766100007575
+      ],
+      "independent_replay_seconds": [
+        0.040076399978715926
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 4.242885945628309,
+        "ip_best_response_value": 22.567036007827056,
+        "nash_conv": 8.485771891256618,
+        "oop_best_response_value": -14.081264116570438,
+        "value_ip": 18.946053205847747,
+        "value_oop": -18.946053205847747
+      },
+      "oracle": {
+        "exploitability": 4.242885945628306,
+        "ip_best_response_value": 22.567036007827056,
+        "nash_conv": 8.485771891256611,
+        "oop_best_response_value": -14.081264116570445,
+        "value_oop": -18.946053205847747
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 3.552713678800501e-15,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 7.105427357601002e-15,
+        "oop_best_response_gain": 7.105427357601002e-15,
+        "oop_best_response_value": 7.105427357601002e-15,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.6814974999870174,
+      "complete_call_seconds": [
+        0.6814974999870174
+      ],
+      "independent_replay_seconds": [
+        0.041325800004415214
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 13.816662032854609,
+        "ip_best_response_value": 34.54184627923255,
+        "nash_conv": 27.633324065709218,
+        "oop_best_response_value": -6.908522213523334,
+        "value_ip": 23.70223829875398,
+        "value_oop": -23.70223829875398
+      },
+      "oracle": {
+        "exploitability": 13.816662032854603,
+        "ip_best_response_value": 34.541846279232544,
+        "nash_conv": 27.633324065709207,
+        "oop_best_response_value": -6.908522213523337,
+        "value_oop": -23.702238298753983
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 5.329070518200751e-15,
+        "ip_best_response_gain": 1.0658141036401503e-14,
+        "ip_best_response_value": 7.105427357601002e-15,
+        "nash_conv": 1.0658141036401503e-14,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.7024042999837548,
+      "complete_call_seconds": [
+        0.7024042999837548
+      ],
+      "independent_replay_seconds": [
+        0.03424459998495877
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 14.824483569039476,
+        "ip_best_response_value": 39.50554039860349,
+        "nash_conv": 29.64896713807895,
+        "oop_best_response_value": -9.856573260524542,
+        "value_ip": 25.965642708351545,
+        "value_oop": -25.965642708351545
+      },
+      "oracle": {
+        "exploitability": 14.824483569039483,
+        "ip_best_response_value": 39.50554039860351,
+        "nash_conv": 29.648967138078966,
+        "oop_best_response_value": -9.856573260524542,
+        "value_oop": -25.965642708351545
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -7.105427357601002e-15,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": -1.4210854715202004e-14,
+        "nash_conv": -1.4210854715202004e-14,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.7166180000058375,
+      "complete_call_seconds": [
+        0.7166180000058375
+      ],
+      "independent_replay_seconds": [
+        0.05095530004473403
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 4.242885945628283,
+        "ip_best_response_value": 22.567036007826996,
+        "nash_conv": 8.485771891256565,
+        "oop_best_response_value": -14.08126411657043,
+        "value_ip": 18.946053205847736,
+        "value_oop": -18.946053205847736
+      },
+      "oracle": {
+        "exploitability": 4.242885945628281,
+        "ip_best_response_value": 22.567036007826996,
+        "nash_conv": 8.485771891256562,
+        "oop_best_response_value": -14.081264116570434,
+        "value_oop": -18.94605320584774
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 1.7763568394002505e-15,
+        "ip_best_response_gain": 3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 3.552713678800501e-15,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "two-conditioned-runouts-asymmetric-multisize",
+      "verified_information_sets": 138,
+      "verified_worlds": 8
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.0056730000069364905,
+      "complete_call_seconds": [
+        0.0056730000069364905
+      ],
+      "independent_replay_seconds": [
+        0.006653499964158982
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 9.055394652965262,
+        "ip_best_response_value": -14.192118801447661,
+        "nash_conv": 18.110789305930524,
+        "oop_best_response_value": 32.30290810737819,
+        "value_ip": -21.626538052657178,
+        "value_oop": 21.626538052657178
+      },
+      "oracle": {
+        "exploitability": 9.055394652965262,
+        "ip_best_response_value": -14.192118801447661,
+        "nash_conv": 18.110789305930524,
+        "oop_best_response_value": 32.30290810737819,
+        "value_oop": 21.62653805265719
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -1.0658141036401503e-14,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 1.0658141036401503e-14,
+        "oop_best_response_value": 0.0,
+        "value_ip": 1.0658141036401503e-14,
+        "value_oop": -1.0658141036401503e-14
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.009749700024258345,
+      "complete_call_seconds": [
+        0.009749700024258345
+      ],
+      "independent_replay_seconds": [
+        0.004417499992996454
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 7.477165120025994,
+        "ip_best_response_value": -15.5955005507439,
+        "nash_conv": 14.954330240051988,
+        "oop_best_response_value": 30.549830790795887,
+        "value_ip": -25.50194711857906,
+        "value_oop": 25.50194711857906
+      },
+      "oracle": {
+        "exploitability": 7.477165120025994,
+        "ip_best_response_value": -15.5955005507439,
+        "nash_conv": 14.954330240051988,
+        "oop_best_response_value": 30.549830790795887,
+        "value_oop": 25.501947118579054
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 7.105427357601002e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.012474399991333485,
+      "complete_call_seconds": [
+        0.012474399991333485
+      ],
+      "independent_replay_seconds": [
+        0.005795000004582107
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 1.512732350216453,
+        "ip_best_response_value": -23.56445897217788,
+        "nash_conv": 3.025464700432906,
+        "oop_best_response_value": 26.589923672610787,
+        "value_ip": -24.80890772468552,
+        "value_oop": 24.80890772468552
+      },
+      "oracle": {
+        "exploitability": 1.512732350216453,
+        "ip_best_response_value": -23.56445897217788,
+        "nash_conv": 3.025464700432906,
+        "oop_best_response_value": 26.589923672610787,
+        "value_oop": 24.808907724685522
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.03494390001287684,
+      "complete_call_seconds": [
+        0.03494390001287684
+      ],
+      "independent_replay_seconds": [
+        0.007112499966751784
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 9.055394652965266,
+        "ip_best_response_value": -14.192118801447657,
+        "nash_conv": 18.11078930593053,
+        "oop_best_response_value": 32.30290810737819,
+        "value_ip": -21.626538052657185,
+        "value_oop": 21.626538052657185
+      },
+      "oracle": {
+        "exploitability": 9.055394652965262,
+        "ip_best_response_value": -14.192118801447661,
+        "nash_conv": 18.110789305930524,
+        "oop_best_response_value": 32.30290810737819,
+        "value_oop": 21.62653805265719
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 3.552713678800501e-15,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 3.552713678800501e-15,
+        "nash_conv": 7.105427357601002e-15,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.03968039999017492,
+      "complete_call_seconds": [
+        0.03968039999017492
+      ],
+      "independent_replay_seconds": [
+        0.006986899999901652
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 7.477165120025995,
+        "ip_best_response_value": -15.595500550743905,
+        "nash_conv": 14.95433024005199,
+        "oop_best_response_value": 30.549830790795895,
+        "value_ip": -25.50194711857906,
+        "value_oop": 25.50194711857906
+      },
+      "oracle": {
+        "exploitability": 7.477165120025997,
+        "ip_best_response_value": -15.5955005507439,
+        "nash_conv": 14.954330240051995,
+        "oop_best_response_value": 30.549830790795895,
+        "value_oop": 25.501947118579054
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -2.6645352591003757e-15,
+        "ip_best_response_gain": 1.7763568394002505e-15,
+        "ip_best_response_value": -5.329070518200751e-15,
+        "nash_conv": -5.329070518200751e-15,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.029387799964752048,
+      "complete_call_seconds": [
+        0.029387799964752048
+      ],
+      "independent_replay_seconds": [
+        0.0043314999784342945
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 1.5127323502164494,
+        "ip_best_response_value": -23.56445897217789,
+        "nash_conv": 3.0254647004328987,
+        "oop_best_response_value": 26.589923672610787,
+        "value_ip": -24.80890772468552,
+        "value_oop": 24.80890772468552
+      },
+      "oracle": {
+        "exploitability": 1.512732350216453,
+        "ip_best_response_value": -23.56445897217788,
+        "nash_conv": 3.025464700432906,
+        "oop_best_response_value": 26.589923672610787,
+        "value_oop": 24.808907724685522
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -3.552713678800501e-15,
+        "ip_best_response_gain": -1.0658141036401503e-14,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": -7.105427357601002e-15,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.02942029997939244,
+      "complete_call_seconds": [
+        0.02942029997939244
+      ],
+      "independent_replay_seconds": [
+        0.01219660002971068
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 9.643634375820884,
+        "ip_best_response_value": 28.938446164287647,
+        "nash_conv": 19.28726875164177,
+        "oop_best_response_value": -9.651177412645879,
+        "value_ip": 22.248121128670558,
+        "value_oop": -22.248121128670558
+      },
+      "oracle": {
+        "exploitability": 9.643634375820888,
+        "ip_best_response_value": 28.93844616428766,
+        "nash_conv": 19.287268751641776,
+        "oop_best_response_value": -9.651177412645886,
+        "value_oop": -22.248121128670558
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -3.552713678800501e-15,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": -1.4210854715202004e-14,
+        "nash_conv": -7.105427357601002e-15,
+        "oop_best_response_gain": 7.105427357601002e-15,
+        "oop_best_response_value": 7.105427357601002e-15,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.03361650003353134,
+      "complete_call_seconds": [
+        0.03361650003353134
+      ],
+      "independent_replay_seconds": [
+        0.013325400010216981
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 11.444484034121867,
+        "ip_best_response_value": 34.26298895700749,
+        "nash_conv": 22.888968068243734,
+        "oop_best_response_value": -11.374020888763752,
+        "value_ip": 23.731187556377183,
+        "value_oop": -23.731187556377183
+      },
+      "oracle": {
+        "exploitability": 11.444484034121869,
+        "ip_best_response_value": 34.262988957007494,
+        "nash_conv": 22.888968068243738,
+        "oop_best_response_value": -11.374020888763756,
+        "value_oop": -23.731187556377183
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": -7.105427357601002e-15,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "complete_call_median_seconds": 0.04441290005343035,
+      "complete_call_seconds": [
+        0.04441290005343035
+      ],
+      "independent_replay_seconds": [
+        0.010095400037243962
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 2.8335860628144918,
+        "ip_best_response_value": 21.83374483124179,
+        "nash_conv": 5.6671721256289835,
+        "oop_best_response_value": -16.166572705612808,
+        "value_ip": 18.904979245025082,
+        "value_oop": -18.904979245025082
+      },
+      "oracle": {
+        "exploitability": 2.8335860628144864,
+        "ip_best_response_value": 21.83374483124178,
+        "nash_conv": 5.667172125628973,
+        "oop_best_response_value": -16.166572705612808,
+        "value_oop": -18.904979245025086
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 5.329070518200751e-15,
+        "ip_best_response_gain": 1.4210854715202004e-14,
+        "ip_best_response_value": 1.0658141036401503e-14,
+        "nash_conv": 1.0658141036401503e-14,
+        "oop_best_response_gain": -3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "algorithm": "vanilla",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.12699399999110028,
+      "complete_call_seconds": [
+        0.12699399999110028
+      ],
+      "independent_replay_seconds": [
+        0.012412299984134734
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 9.64363437582088,
+        "ip_best_response_value": 28.938446164287647,
+        "nash_conv": 19.28726875164176,
+        "oop_best_response_value": -9.651177412645886,
+        "value_ip": 22.248121128670554,
+        "value_oop": -22.248121128670554
+      },
+      "oracle": {
+        "exploitability": 9.643634375820888,
+        "ip_best_response_value": 28.93844616428766,
+        "nash_conv": 19.287268751641776,
+        "oop_best_response_value": -9.651177412645886,
+        "value_oop": -22.24812112867056
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -7.105427357601002e-15,
+        "ip_best_response_gain": -7.105427357601002e-15,
+        "ip_best_response_value": -1.4210854715202004e-14,
+        "nash_conv": -1.4210854715202004e-14,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "algorithm": "dcfr",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.12443660001736134,
+      "complete_call_seconds": [
+        0.12443660001736134
+      ],
+      "independent_replay_seconds": [
+        0.010001500020734966
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 11.44448403412188,
+        "ip_best_response_value": 34.26298895700752,
+        "nash_conv": 22.88896806824376,
+        "oop_best_response_value": -11.374020888763763,
+        "value_ip": 23.73118755637718,
+        "value_oop": -23.73118755637718
+      },
+      "oracle": {
+        "exploitability": 11.444484034121883,
+        "ip_best_response_value": 34.26298895700753,
+        "nash_conv": 22.888968068243766,
+        "oop_best_response_value": -11.374020888763763,
+        "value_oop": -23.731187556377183
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": -3.552713678800501e-15,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": -7.105427357601002e-15,
+        "oop_best_response_gain": -3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "complete_call_median_seconds": 0.14575429999968037,
+      "complete_call_seconds": [
+        0.14575429999968037
+      ],
+      "independent_replay_seconds": [
+        0.012973800010513514
+      ],
+      "iterations": 20,
+      "metrics": {
+        "exploitability": 2.83358606281449,
+        "ip_best_response_value": 21.833744831241788,
+        "nash_conv": 5.66717212562898,
+        "oop_best_response_value": -16.166572705612808,
+        "value_ip": 18.904979245025082,
+        "value_oop": -18.904979245025082
+      },
+      "oracle": {
+        "exploitability": 2.833586062814488,
+        "ip_best_response_value": 21.833744831241788,
+        "nash_conv": 5.667172125628976,
+        "oop_best_response_value": -16.16657270561281,
+        "value_oop": -18.904979245025086
+      },
+      "quality_target_met": false,
+      "quality_target_nash_conv": 0.001,
+      "scalar_differences": {
+        "exploitability": 1.7763568394002505e-15,
+        "ip_best_response_gain": 3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 3.552713678800501e-15,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256": {
+    "benchmarks\\turn-river-quality-v1.json": "772ae0dfb6f76307dce98707782012425e5d6918fb8cb8b1154dd3d3a4f37fbf",
+    "pokerlab\\__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab\\analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab\\cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab\\cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab\\cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab\\coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab\\coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab\\coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab\\coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab\\coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab\\contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab\\current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab\\decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab\\equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab\\equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab\\explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab\\exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab\\flop_checkdown_solver.py": "a3e40ecd9c653c47359f582d769eebe9b7ee57e3e3ff1c19d9e0607c865d7ae7",
+    "pokerlab\\flop_checkdown_worlds.py": "4d9d35941771b7e793457068c12978d8ecc3f9c3772273d7ebb70f0db5d7483d",
+    "pokerlab\\game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab\\matrix_free_river.py": "6987405a1112c3ad20be7602880b574f4804434bc6323df69ccf5de708d8f084",
+    "pokerlab\\matrix_free_turn.py": "d5467842e6cfe6a34c5d9cb715268c1706d0554e552dc35b00953e6fb9c9656d",
+    "pokerlab\\models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab\\personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab\\planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab\\postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab\\practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab\\preflop_delayed_cfrplus.py": "3dd745f4a548b0f7fd46a6b02f519be1d98f027eaa37499f03cf8de1135a259e",
+    "pokerlab\\preflop_future_groups.py": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106",
+    "pokerlab\\preflop_private_indices.py": "6d46e31d58f24a979d3881671b4e898bfa23597b1771c160dbbe43c0a47776c1",
+    "pokerlab\\preflop_runout_index.py": "4001b76d6f092c3c441795e1a4fa83fd5ef33d2584ab7aa05ab911a12f92806b",
+    "pokerlab\\preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab\\preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab\\preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab\\preflop_solver.py": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9",
+    "pokerlab\\preflop_tree.py": "7d57148b0eeba05535e0f2e10eadb8c3c43fdaa9a1d5b7e91f372bc38f164e2c",
+    "pokerlab\\preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab\\public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab\\public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab\\ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab\\restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab\\river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab\\river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab\\server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab\\situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab\\solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab\\turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab\\turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts\\benchmark_turn_river_independent.py": "5e5e062083a5fbbed0c7e0933a6105dcf7c59fc4d8ac6142072231fae109ebd5",
+    "scripts\\preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+    "scripts\\turn_river_validation.py": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1"
+  }
+}

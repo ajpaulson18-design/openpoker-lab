@@ -172,7 +172,7 @@ The oracle bounds physical-world preallocation, public-tree construction and
 modeled world/node passes, plus separate exact-BR work counters. These are
 development admission guards, not wall-time/RSS guarantees. Card/range grammar
 and the independent ranker are shared as stated above. Optional result labels
-`runout_mode` and `reachable_runouts` are not yet checked; numeric input law,
+`runout_mode` and `reachable_runouts` were not checked in cycle 1; numeric input law,
 selected rivers, actual worlds and policy rows are checked. Metadata hardening
 is a later validation slice. Cycle 2 changes diagnostics after this frozen run
 and requires its own acceptance evidence.
@@ -197,7 +197,9 @@ diagnostic tests passed in 15.353 seconds. The regressions check fixed/target
 modes, accepted negatives, positive deviation preservation, true-zero early
 stopping, material negative responses and NaN/positive/negative infinity in
 every evaluator component. Real unpatched profiles also satisfy the metric
-identities. Full final-head CI is required before acceptance.
+identities. Full final-head CI passed on Python 3.11/3.12/3.13 at
+`7563bc3618fa4eb10b6a9ad9170c53f8ed6e9b7e`; PR111 merged and that head was
+verified as an ancestor of main `119f96d10ad638a6e0bde02110d079fb8c22d00d`.
 
 The [ordinary-profile parity report](../benchmarks/results/turn-river-gains-parity-v1.json)
 checks four existing fixtures, all three algorithms, and fixed/zero-target
@@ -226,3 +228,58 @@ bounded development comparison, not a new production solver option.
 Shared postflop diagnostics have the analogous signed-sum pattern; their
 follow-up is explicitly deferred to the shared/preflop/flop owners. No shared
 diagnostic or earlier-street source was modified here.
+
+### Cycle 3: complete-result metadata and gain validation
+
+Complete-result replay now requires the public board, selected runouts,
+runout mode and physically reachable runouts, plus `info_sets` and a physical
+deal-count alias appropriate to the starting street. Optional config fields
+retain their existing compatibility. Deliberately stripped legacy fragments
+are no longer accepted as complete solver results. Every present world/pair
+count alias must be a matching nonnegative integer; bool and float lookalikes
+are rejected. Counts of materialized storage are not confused with logical
+physical-world counts.
+
+Mode follows whether the input selected runouts were omitted or explicitly
+provided; an explicitly complete candidate set remains `conditioned-subset`.
+Reachability derives from independently enumerated positive-mass physical
+worlds, so an everywhere-blocked selected card remains in `runouts` and is
+absent from `reachable_runouts`. The existing matrix-free serializer uses
+lexical reachable-card order while the materialized serializer uses DECK
+order. Both documented canonical orders are accepted; incorrect support,
+duplicates, invalid types and other permutations are rejected. Production
+serializers remain unchanged.
+
+`compare_result` checks eight scalar fields, adding both published unilateral
+gains, and verifies nonnegative gains/gaps, zero-sum values, NashConv=sum gains
+and exploitability=NashConv/2 within the caller's absolute tolerance. All count
+aliases are checked rather than stopping at the first one. Before clipping,
+independently computed BR values receive finite and material lower-bound
+sanity checks under the documented scale-relative tolerance. This is a sanity
+check, not a formal floating-point error bound.
+
+Luna implemented the bounded oracle/test changes, and Sol reviewed the code,
+mixed-rank serializer ordering, every alias and tolerance-isolated identity
+tests. Five new test methods extend the focused suite to 18 tests: all passed
+normally (6.558 seconds) and under `python -O` (6.487 seconds). Corruptions cover
+missing/current metadata, zero-support reachability, explicit full selection,
+both serializer/street variants, bool/float/negative/mismatching counts, both
+gain fields, metric identities and independent-BR lower bounds.
+
+The [hardened replay report](../benchmarks/results/turn-river-independent-hardened-v1.json)
+retains all 24 complete 20-iteration profiles (four fixtures, two backends,
+three algorithms), source hashes, all eight scalar differences and every
+quality-target miss. Every full policy passes replay, with maximum scalar
+disagreement `3.907985046680551e-14` chips. Every 0.001-chip target misses.
+Single raw timings are retained for transparency, without a performance or
+memory claim. Historical 216-call measurements remain pinned to the cycle 1
+source; this is fresh acceptance evidence for the hardened oracle only.
+
+```text
+python -m unittest tests.test_turn_river_independent_validation
+python -O -m unittest tests.test_turn_river_independent_validation
+python -m scripts.benchmark_turn_river_independent --iterations 20 --repeats 1 --output benchmarks/results/turn-river-independent-hardened-v1.json
+```
+
+Full final-head CI and remote blob verification remain merge gates. No
+production solver, trainer, preflop/flop, UI or Coach changes are included.
