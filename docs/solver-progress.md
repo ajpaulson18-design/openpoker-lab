@@ -1,5 +1,21 @@
 # Solver progress record
 
+## Matrix-free turn and river diagnostic gain consistency
+
+The isolated adapters separately clamp accepted small negative unilateral BR
+differences before summing NashConv. A positive gain can no longer be canceled
+by the other player's tolerated negative roundoff and falsely satisfy a zero
+target. Existing finite/material-invalid guards and training are unchanged.
+The reproduction is fault-injected accepted roundoff, not a measured natural
+solver failure or a formal floating-point bound.
+
+Eight new regressions cover both players, fixed and target modes, continuation
+through both checkpoints, invalid responses and ordinary profiles. The combined
+42 focused tests passed. All 24 ordinary complete profiles match the frozen
+baseline and pass independent replay. Shared postflop/preflop/flop diagnostics
+remain outside this isolated change. See the
+[cycle 2 method and results](turn-river-independent-validation.md#cycle-2-preserve-each-unilateral-gain).
+
 ## Independent complete turn and river policy replay
 
 A development oracle rebuilds physical deals, weighted blocker conditioning,

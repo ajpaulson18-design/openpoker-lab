@@ -73,6 +73,93 @@ def _fraction_joint_marginals(hands, weights):
 
 
 class MatrixFreeRiverTests(unittest.TestCase):
+    def _diagnostic_result(self, diagnostic, *, target=False):
+        case = _fixtures()[0]
+        kwargs = ({"target_exploitability": 0.0, "check_interval": 10}
+                  if target else {})
+        with patch.object(matrix_free, "evaluate_ranked_profile",
+                          return_value=diagnostic):
+            return _solve(case, iterations=20 if target else 10,
+                          algorithm="vanilla", **kwargs)
+
+    def test_diagnostic_clamps_each_accepted_negative_gain_in_fixed_and_target_modes(self):
+        for target in (False, True):
+            for diagnostic in ((0.0, -1e-9, 0.0), (0.0, 0.0, -1e-9)):
+                with self.subTest(target=target, diagnostic=diagnostic):
+                    result = self._diagnostic_result(diagnostic, target=target)
+                    self.assertEqual(result["oop_best_response_gain"], 0.0)
+                    self.assertEqual(result["ip_best_response_gain"], 0.0)
+                    self.assertEqual(result["nash_conv"], 0.0)
+                    self.assertEqual(result["exploitability"], 0.0)
+                    if target:
+                        self.assertEqual(result["iterations"], 10)
+                        self.assertEqual(result["convergence"]["stop_reason"],
+                                         "target-reached")
+                        self.assertEqual(result["convergence"]["checkpoints"][-1]["nash_conv"],
+                                         0.0)
+
+    def test_diagnostic_preserves_opposite_positive_gains_and_blocks_zero_target(self):
+        for target in (False, True):
+            for diagnostic, expected_gains in (
+                ((0.0, 1e-9, -1e-9), (1e-9, 0.0)),
+                ((0.0, -1e-9, 1e-9), (0.0, 1e-9)),
+            ):
+                with self.subTest(target=target, diagnostic=diagnostic):
+                    result = self._diagnostic_result(diagnostic, target=target)
+                    self.assertEqual((result["oop_best_response_gain"],
+                                      result["ip_best_response_gain"]), expected_gains)
+                    self.assertAlmostEqual(result["nash_conv"], sum(expected_gains),
+                                           delta=1e-20)
+                    self.assertAlmostEqual(result["exploitability"],
+                                           result["nash_conv"] / 2.0, delta=1e-20)
+                    if target:
+                        self.assertEqual(result["convergence"]["stop_reason"],
+                                         "iteration-limit")
+                        self.assertEqual(result["iterations"], 20)
+                        self.assertGreater(result["convergence"]["achieved"], 0.0)
+                        self.assertEqual([entry["iteration"] for entry in
+                                          result["convergence"]["checkpoints"]],
+                                         [10, 20])
+                        for checkpoint in result["convergence"]["checkpoints"]:
+                            gains = (
+                                max(0.0, checkpoint["oop_best_response_value"] -
+                                    checkpoint["value_oop"]),
+                                max(0.0, checkpoint["ip_best_response_value"] +
+                                    checkpoint["value_oop"]),
+                            )
+                            self.assertGreater(sum(gains), 0.0)
+                            self.assertEqual(checkpoint["nash_conv"], sum(gains))
+
+    def test_diagnostic_rejects_material_negative_and_each_nonfinite_component(self):
+        for target in (False, True):
+            for diagnostic in ((0.0, -1e-5, 0.0), (0.0, 0.0, -1e-5)):
+                with self.subTest(target=target, diagnostic=diagnostic), \
+                     self.assertRaisesRegex(RuntimeError, "legal response bounds"):
+                    self._diagnostic_result(diagnostic, target=target)
+            for index in range(3):
+                for invalid in (float("nan"), float("inf"), -float("inf")):
+                    diagnostic = [0.0, 0.0, 0.0]
+                    diagnostic[index] = invalid
+                    with self.subTest(target=target, diagnostic=diagnostic), \
+                         self.assertRaisesRegex(ValueError, "Diagnostics must be finite"):
+                        self._diagnostic_result(tuple(diagnostic), target=target)
+
+    def test_real_profile_diagnostics_sum_published_nonnegative_gains(self):
+        for target in (False, True):
+            kwargs = ({"target_exploitability": 1e9, "check_interval": 10}
+                      if target else {})
+            result = _solve(_fixtures()[0], iterations=20,
+                            algorithm="vanilla", **kwargs)
+            diagnostics = result["convergence"]["checkpoints"] if target else [result]
+            for diagnostic in diagnostics:
+                oop_gain = max(0.0, diagnostic["oop_best_response_value"] -
+                               diagnostic["value_oop"])
+                ip_gain = max(0.0, diagnostic["ip_best_response_value"] +
+                              diagnostic["value_oop"])
+                self.assertEqual(diagnostic["nash_conv"], oop_gain + ip_gain)
+                self.assertEqual(diagnostic["exploitability"],
+                                 diagnostic["nash_conv"] / 2.0)
+
     def test_joint_marginals_match_independent_fraction_pair_loop(self):
         board = ("2c", "3d", "4h", "5s", "9c")
         rng = random.Random(42613)
