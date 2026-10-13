@@ -10,6 +10,10 @@ The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
 explicit. It does **not** claim to solve unrestricted no-limit Hold'em.
 
+## Project knowledge
+
+New contributors and AI agents: start with [docs/START_HERE.md](docs/START_HERE.md) for product intent, implementation status, architecture, decision history and safe handoffs. Detailed existing specifications remain canonical.
+
 ## Run locally
 
 Requires Python **3.11 or newer**. There are no runtime dependencies. The app

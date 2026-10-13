@@ -15,3 +15,5 @@ calibrated.
 Do not commit `data/`, databases, credentials, proprietary solver output, or
 copied commercial interfaces. Pull requests should explain the problem, change,
 validation, and remaining limitations.
+
+Consult [project onboarding](docs/START_HERE.md) and [the knowledge maintenance protocol](docs/agents/TASK_PROTOCOL.md). Update the affected canonical documents alongside material architecture, capability, decision, limitation or dependency changes. Run `python -m scripts.validate_docs` for documentation changes.

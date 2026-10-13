@@ -1,8 +1,12 @@
 # Repository agent instructions
 
+## Required onboarding
+
+Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifications before changes. Preserve owner intent in [the decision register](docs/decisions/DECISION_LOG.md); keep plans, implementation evidence and unknowns distinct. Follow [the contribution and handoff protocol](docs/agents/TASK_PROTOCOL.md). Run `python -m scripts.validate_docs` for documentation changes.
+
 ## Project
 
-OpenPoker Lab is a standard-library Python research application with a plain JavaScript browser UI. It combines poker simulation, persistent opponent observations, transparent EV analysis, deterministic explanations, practice/review flows, and a deliberately restricted river CFR solver. It does not solve unrestricted no-limit Hold'em and makes no profitability claims.
+OpenPoker Lab is a standard-library Python research application with a plain JavaScript browser UI. It combines poker simulation, persistent opponent observations, transparent EV analysis, deterministic explanations, practice/review flows, and bounded heads-up preflop and postflop CFR solvers. It does not solve unrestricted no-limit Hold'em and makes no profitability claims.
 
 ## Setup and validation
 
@@ -37,7 +41,7 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
-Codex is the primary builder and senior engineer for features, architecture, difficult debugging, large refactors, and cross-repository decisions. Copilot specialists support testing, automated remediation, documentation, and independent review; they should not compete for major implementation work.
+The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.
 
 - `preflop_runout_index.py` indexes canonical selected outcomes by card under the unchanged 300,000-outcome bound. Preserve exact valid counts, ascending selected index/world order, original per-pair admission charges and guard order before ranking/world allocation. Do not retain per-pair masks or normalized outcome copies after posting construction. Packed payload/conversion estimates exclude Python object overhead and are not allocation/RSS bounds; distinguish index-only traces from whole-solve memory.
 
