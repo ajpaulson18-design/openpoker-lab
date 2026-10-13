@@ -4,7 +4,6 @@ import gc, hashlib, json, platform, re, statistics, subprocess, time, tracemallo
 from datetime import datetime, timezone
 from pathlib import Path
 from pokerlab import preflop_solver as solver
-from pokerlab.preflop_streamed_worlds import estimate_streamed_construction
 from scripts import benchmark_preflop_expanded_range as expanded
 from scripts import benchmark_preflop_weighted_range_coverage as weighted
 from scripts.benchmark_preflop_flop_checkdown import verify
@@ -128,6 +127,16 @@ def _gates(spec, rows, allocation):
 
 
 def main():
+    try:
+        from pokerlab.preflop_streamed_worlds import estimate_streamed_construction
+    except ModuleNotFoundError as exc:
+        if exc.name != "pokerlab.preflop_streamed_worlds":
+            raise
+        raise RuntimeError(
+            "Research candidate was not adopted. Reproduce in a clean worktree at "
+            "ec12cba69f90df08c5c251678b45318e127cec12 using "
+            "python -m scripts.benchmark_preflop_streamed_worlds_v2."
+        ) from exc
     spec, game, prior = (json.loads(p.read_text(encoding="utf-8-sig")) for p in (SPEC, GAME, PRIOR))
     revision = weighted.git_revision(None)
     if weighted.worktree_dirty() is not False or not re.fullmatch(r"[0-9a-f]{40}", revision or ""):

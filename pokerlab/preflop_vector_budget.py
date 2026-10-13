@@ -23,36 +23,6 @@ _COMPACT_MAX_WORLD_ROWS = 3_000_000
 _COMPACT_MAX_WORLD_FIELDS = 25_000_000
 _COMPACT_MAX_INFO_ROWS = 500_000
 _MAX_HAND_INDEX = 1326
-_MAX_STREAMED_WORLD_ROWS = 300_000
-
-
-class _RepeatableWorldRows:
-    """A length-checked, non-materializing view over a repeatable row factory."""
-
-    __slots__ = ("_factory", "_count")
-
-    def __init__(self, factory, count):
-        self._factory = factory
-        self._count = count
-
-    def __len__(self):
-        return self._count
-
-    def __iter__(self):
-        try:
-            rows = iter(self._factory())
-        except TypeError as exc:
-            raise ValueError("row_factory must return an iterable on every pass") from exc
-        count = 0
-        for row in rows:
-            if count >= self._count:
-                raise ValueError("row_factory produced more rows than world_count")
-            if not isinstance(row, (tuple, list)) or len(row) != 7:
-                raise ValueError("streamed worlds must be seven-field tuple/list rows")
-            count += 1
-            yield row
-        if count != self._count:
-            raise ValueError("row_factory produced fewer rows than world_count")
 
 
 def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance_type, averaging_delay=0, checkpoint_interval=None, private_indexing="original"):
@@ -83,8 +53,7 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
         raise ValueError("compact private indices require positive-delay CFR+")
     if not isinstance(chance_type, type):
         raise TypeError("chance_type must be a node class")
-    if (not isinstance(worlds, (tuple, list, _RepeatableWorldRows)) or
-            len(worlds) < 1):
+    if not isinstance(worlds, (tuple, list)) or not worlds:
         raise ValueError("worlds must be a nonempty sized sequence")
     if not isinstance(infos, Mapping):
         raise TypeError("infos must be a mapping")
@@ -419,25 +388,3 @@ def estimate_vector_budget(root, worlds, infos, iterations, algorithm, *, chance
             "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions.",
         })
     return result
-
-
-def estimate_vector_budget_from_rows(root, row_factory, world_count, infos,
-                                     iterations, algorithm, *, chance_type,
-                                     averaging_delay=0, checkpoint_interval=None):
-    """Estimate original-index vector work from repeatable seven-field rows.
-
-    The caller owns construction-work admission and must charge it separately.
-    This returns the same original-world vector budget as
-    :func:`estimate_vector_budget`; it does not include row construction or
-    storage overhead. The factory is invoked for each census pass and must
-    reproduce physical-order rows without materializing them as a collection.
-    """
-    if type(world_count) is not int or not 1 <= world_count <= _MAX_STREAMED_WORLD_ROWS:
-        raise ValueError("world_count must be an integer in [1, 300000]")
-    if not callable(row_factory):
-        raise TypeError("row_factory must be callable")
-    rows = _RepeatableWorldRows(row_factory, world_count)
-    return estimate_vector_budget(
-        root, rows, infos, iterations, algorithm, chance_type=chance_type,
-        averaging_delay=averaging_delay, checkpoint_interval=checkpoint_interval,
-        private_indexing="original")

@@ -335,3 +335,5 @@ A preflop normalization candidate retained as a failed promotion experiment: [ex
 Broader private-hand and flop conditioning coverage: [four weighted hands per seat, four flops and original-world accuracy checks](docs/preflop-expanded-range.md).
 
 A grouped preflop target-plan reassessment retained as a failed experiment: [exact payload parity, paired timings and allocation evidence](docs/preflop-grouped-target-plan.md).
+
+A streamed preflop construction experiment retained without production adoption: [corrected work admission, exact parity and a failed paired runtime gate](docs/preflop-streamed-worlds-experiment.md).

@@ -14,9 +14,8 @@ from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
-from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, MAX_TOTAL_LOOP_ENTRIES, estimate_vector_budget, estimate_vector_budget_from_rows
-from .preflop_future_groups import estimate_future_grouping, estimate_future_grouping_count, group_hidden_futures
-from .preflop_streamed_worlds import StreamedPhysicalWorlds
+from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, MAX_TOTAL_LOOP_ENTRIES, estimate_vector_budget
+from .preflop_future_groups import estimate_future_grouping, group_hidden_futures
 from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
 from .preflop_runout_index import RunoutBlockerIndex
 from .preflop_private_indices import compact_private_indices
@@ -137,7 +136,7 @@ def _rank_world(sb_hand, bb_hand, runout, cache):
 
 def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
                                materialized_world_limit=None,
-                               world_work_iterations=None, stream_groups=False):
+                               world_work_iterations=None):
     """Preflight and build normalized joint SB/BB/five-card worlds."""
     ranges = (expand_range(sb_range), expand_range(bb_range))
     hands = (list(ranges[0]), list(ranges[1]))
@@ -195,13 +194,6 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
                 raise ValueError("Preflop solver exceeds 3 million world iterations.")
     if not world_count:
         raise ValueError("Selected runouts contain no compatible physical deals.")
-
-    if stream_groups:
-        prepared = StreamedPhysicalWorlds(ranges, hands, selected, runout_index,
-                                         compatible_counts, world_count,
-                                         _OUTCOMES_PER_UNBLOCKED_PAIR)
-        return (hands, prepared, len(compatible_counts),
-                prepared.pair_probabilities, selected, preflight_checks)
 
     raw_worlds = []
     pair_masses = {}
@@ -422,7 +414,7 @@ def _positive_pot_training_view(root):
 
 def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
                         postflop_scope="all-streets",
-                        *, enforce_world_work=True, decision_limit=None, world_summary=None):
+                        *, enforce_world_work=True, decision_limit=None):
     """Graft one transient postflop template per live boundary and flop."""
     decision_limit = _MAX_PUBLIC_NODES if decision_limit is None else decision_limit
     continuations = []
@@ -452,14 +444,9 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
         if kind == "decision":
             decision_count += 1
 
-    if world_summary is None:
-        flop_world_counts = {}
-        for world in worlds:
-            flop_world_counts[world[4]] = flop_world_counts.get(world[4], 0) + 1
-    else:
-        if postflop_scope != "flop-checkdown":
-            raise ValueError("Streamed world summaries require flop-checkdown")
-        flop_world_counts = world_summary.flop_world_counts
+    flop_world_counts = {}
+    for world in worlds:
+        flop_world_counts[world[4]] = flop_world_counts.get(world[4], 0) + 1
     max_template_states = max_template_decisions = 0
     preflop_plan_ops = preflop_tree.public_state_count - preflop_tree.continuation_count
     world_decision_work = (len(worlds) * preflop_tree.decision_node_count * iterations)
@@ -486,10 +473,10 @@ def _merge_preflop_tree(preflop_tree, worlds, specs, traversal, iterations,
                 boundary_specs = ({"flop": specs["flop"]}
                                   if postflop_scope == "flop-checkdown" else specs)
                 boundary_configs = _template_config(boundary_specs, node)
-                local_worlds = (None if world_summary is not None else [
+                local_worlds = [
                     (world[1], world[0], world[2], -world[3], world[5], world[6])
                     for world in worlds if world[4] == flop_key
-                ])
+                ]
                 allocation = {}
                 if postflop_scope == "flop-checkdown":
                     template, template_nodes, _chance_count, visited_nodes, plan_ops = \
@@ -551,7 +538,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
                   target_nash_conv=None, convergence_check_interval=None,
                   private_indexing="original", future_indexing="original",
-                  world_admission="world-iterations", world_storage="materialized"):
+                  world_admission="world-iterations"):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -589,12 +576,6 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     requested-iterations guard with a construction bound of ten iterations per
     physical row. The requested iteration ceiling remains fully charged by the
     original-world vector envelope plus grouping work before copies/training.
-
-    Opt-in ``world_storage="streamed-flop-sign"`` constructs first-seen sign
-    groups directly after full original-world vector admission. It requires
-    original private indexing and grouped flop-checkdown mode. Physical shape
-    rows are repeated for census without ranking or retaining world tuples;
-    extra construction work and summary references are admitted separately.
 
     Optional paired ``target_nash_conv`` / ``convergence_check_interval`` stop
     positive-delay public-vector CFR+ after a complete sweep whose exact legal
@@ -634,13 +615,6 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         raise ValueError("world_admission must be world-iterations or grouped-vector.")
     if future_indexing == "flop-sign" and postflop_scope != "flop-checkdown":
         raise ValueError("flop-sign future indexing requires flop-checkdown scope.")
-    if world_storage not in ("materialized", "streamed-flop-sign"):
-        raise ValueError("world_storage must be materialized or streamed-flop-sign.")
-    streamed_worlds = world_storage == "streamed-flop-sign"
-    if streamed_worlds and (future_indexing != "flop-sign" or
-                            postflop_scope != "flop-checkdown" or
-                            private_indexing != "original"):
-        raise ValueError("Streamed world storage requires flop-sign, flop-checkdown and original private indexing.")
     expanded_tree = tree_admission == "vector"
     if expanded_tree and resource_model != "public-vector":
         raise ValueError("Vector tree admission requires the public-vector resource model.")
@@ -708,8 +682,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                                    **({"materialized_world_limit": MAX_SAMPLER_ENTRIES}
                                       if sampled else {}),
                                    **({"world_work_iterations": 10}
-                                      if grouped_world_admission else {}),
-                                   **({"stream_groups": True} if streamed_worlds else {}))
+                                      if grouped_world_admission else {}))
     preflop_tree = build_preflop_tree(config)
     (root, public_state_count, decision_count, world_decision_work, planned_ops,
      max_template_states, max_template_decisions) = \
@@ -717,12 +690,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                             iterations * 3 if algorithm == "cfrplus" else iterations,
                             postflop_scope,
                             enforce_world_work=not (vector_budget_enabled or sampled),
-                            **({"decision_limit": _MAX_PUBLIC_STATES} if expanded_tree else {}),
-                            **({"world_summary": worlds} if streamed_worlds else {}))
+                            **({"decision_limit": _MAX_PUBLIC_STATES} if expanded_tree else {}))
 
     # Global hand identity is SB=0, BB=1. Histories see only own hands
     # compatible with the public prefix represented by this tree scope.
-    legal = worlds.legal_hands() if streamed_worlds else _legal_private_hands(worlds, postflop_scope)
+    legal = _legal_private_hands(worlds, postflop_scope)
 
     nodes = _all_nodes(root)
     infos, metadata = {}, {}
@@ -737,10 +709,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             metadata[key] = node
             info_action_slots += len(node.actions)
 
-    budget_estimator = estimate_vector_budget_from_rows if streamed_worlds else estimate_vector_budget
-    budget_world_args = (worlds.shape_rows, len(worlds)) if streamed_worlds else (worlds,)
-    vector_budget = (budget_estimator(
-        root, *budget_world_args, infos, iterations, algorithm, chance_type=_Chance,
+    vector_budget = (estimate_vector_budget(
+        root, worlds, infos, iterations, algorithm, chance_type=_Chance,
         **({"private_indexing": private_indexing} if private_indexing == "compact" else {}),
         **({"averaging_delay": averaging_delay} if averaging_delay else {}),
         **({"checkpoint_interval": convergence_check_interval} if convergence_enabled else {}))
@@ -752,8 +722,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     # recorded physical construction multiplier. Add grouping work before allocation.
     future_grouping_budget = None
     if future_indexing == "flop-sign":
-        future_grouping_budget = (estimate_future_grouping_count(len(worlds))
-                                  if streamed_worlds else estimate_future_grouping(worlds))
+        future_grouping_budget = estimate_future_grouping(worlds)
         total = (vector_budget["total_loop_entries_upper_bound"] +
                  future_grouping_budget["grouping_loop_entries_upper_bound"])
         if total > MAX_TOTAL_LOOP_ENTRIES:
@@ -785,21 +754,6 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                 ),
             })
 
-    world_storage_metadata = None
-    if streamed_worlds:
-        world_storage_metadata = dict(worlds.construction_budget)
-        total = (vector_budget["total_loop_entries_upper_bound"] +
-                 world_storage_metadata["additional_loop_entries_upper_bound"])
-        if total > MAX_TOTAL_LOOP_ENTRIES:
-            raise ValueError("Streamed construction vector estimated loop entries exceed 500,000,000")
-        vector_budget = dict(vector_budget)
-        vector_budget.update({
-            "streamed_world_reference_budget_version": vector_budget["budget_version"],
-            "budget_version": "preflop-public-vector-streamed-world-budget-v8",
-            "streamed_world_construction": world_storage_metadata,
-            "total_loop_entries_upper_bound": total,
-        })
-
     # The estimator admits the extra copying before the compact structures are
     # allocated. Preserve the original identities for final policy labels and
     # public result counts; all training and vector diagnostics use compact ids.
@@ -830,8 +784,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     try:
         if future_indexing == "flop-sign":
             grouped_source_worlds = worlds
-            worlds = (worlds.grouped_rows(_rank_world) if streamed_worlds
-                      else group_hidden_futures(worlds))
+            worlds = group_hidden_futures(worlds)
             future_indexing_metadata = {
                 "physical_world_count": len(grouped_source_worlds),
                 "training_world_rows": len(worlds),
@@ -989,14 +942,9 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         })
 
     selected_output = [list(flop + (turn, river)) for flop, turn, river in selected]
-    if streamed_worlds:
-        reachable_output = [list(flop + (turn, river))
-                            for index, (flop, turn, river) in enumerate(selected)
-                            if worlds.reachable_indices[index]]
-    else:
-        compatible_runouts = {world[4:7] for world in worlds}
-        reachable_output = [list(flop + (turn, river)) for flop, turn, river in selected
-                            if ("".join(flop), turn, river) in compatible_runouts]
+    compatible_runouts = {world[4:7] for world in worlds}
+    reachable_output = [list(flop + (turn, river)) for flop, turn, river in selected
+                        if ("".join(flop), turn, river) in compatible_runouts]
     result = {
         "method": "full-traversal CFR",
         "solver_version": ("preflop-flop-checkdown-v1"
@@ -1191,8 +1139,5 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         result["limits"]["world_iterations"] = None
         result["limits"]["constructed_worlds"] = _MAX_WORLD_ITERATIONS // 10
         result["limits"]["world_construction_admission_iterations"] = 10
-    if streamed_worlds:
-        result["world_storage"] = world_storage
-        result["world_storage_metadata"] = world_storage_metadata
     return result
 
