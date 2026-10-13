@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Longer-budget independently verified river CFR+ accuracy
+
+An evidence-guided extension preserves all 12 fixed river CFR+ profiles at
+1,000/3,000/10,000 iterations with materialized and matrix-free backends.
+Weighted raises meets the unchanged 0.001-chip NashConv target at 3,000 and
+10,000: gaps 0.000848854325 and 0.000279553443. The polarised bluff-catcher
+still misses at 10,000 with gap 0.00790056594. Four profiles meet, eight miss.
+
+Every saved complete policy passes hardened independent replay across all
+eight metrics, physical counts and metadata; maximum disagreement is 1.78e-14
+chips. Six separately normalized exact rational one-bet witnesses have legal
+BR intervals containing the known 25-chip game value. This certifies only
+those explicitly normalized witness profiles, with probability adjustment at
+most 9.34e-17. It is not a general binary64 interval proof or raised-game proof.
+All policies/hashes, target misses and raw single-call timings are retained.
+Production, shared trainer and earlier-street source remain unchanged; no
+runtime/memory claim follows. See [evidence, scope and reproduction](river-accuracy-extension.md).
+
 ## Strict complete-result turn and river replay
 
 The independent oracle now requires current board/runout/reachability metadata
