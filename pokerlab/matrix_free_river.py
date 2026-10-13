@@ -122,7 +122,9 @@ def solve_matrix_free_river(board, oop_range, ip_range, config=None, *,
         tolerance = 1e-10 * max(1.0, config.pot, abs(value), abs(response0), abs(response1))
         if response0 < value - tolerance or response1 < -value - tolerance:
             raise RuntimeError("Best-response diagnostics violate legal response bounds.")
-        nash_conv = max(0.0, (response0 - value) + (response1 + value))
+        oop_gain = max(0.0, response0 - value)
+        ip_gain = max(0.0, response1 + value)
+        nash_conv = oop_gain + ip_gain
         exploitability = nash_conv / 2.0
         if not math.isfinite(nash_conv) or not math.isfinite(exploitability):
             raise ValueError("Diagnostics must be finite; refusing to report convergence.")

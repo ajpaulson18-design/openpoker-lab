@@ -176,3 +176,53 @@ and the independent ranker are shared as stated above. Optional result labels
 selected rivers, actual worlds and policy rows are checked. Metadata hardening
 is a later validation slice. Cycle 2 changes diagnostics after this frozen run
 and requires its own acceptance evidence.
+
+### Cycle 2: preserve each unilateral gain
+
+Both isolated adapters now compute `max(0, BR0 - value)` and
+`max(0, BR1 + value)` separately, then sum them for NashConv and divide by two
+for exploitability. The finite-value and legal-response lower-bound guards,
+their tolerance, all trainers, policies and resource admissions are unchanged.
+The accepted-roundoff example in the specification now reports gap `1e-9`
+and exploitability `5e-10`; a zero target continues through both checkpoints
+at iterations 10 and 20 and ends at the iteration limit. Both orientations of
+the error are covered. This is diagnostic consistency under the existing
+tolerance, not a proved error bound or a naturally observed convergence bug.
+
+Luna implemented the two small adapter edits and eight new tests. Sol reviewed
+the complete diff, both error orientations and stopping behavior. The combined
+two matrix-free test modules and independent replay module passed 42 tests in
+103.841 seconds; after strengthening iteration assertions, the six targeted
+diagnostic tests passed in 15.353 seconds. The regressions check fixed/target
+modes, accepted negatives, positive deviation preservation, true-zero early
+stopping, material negative responses and NaN/positive/negative infinity in
+every evaluator component. Real unpatched profiles also satisfy the metric
+identities. Full final-head CI is required before acceptance.
+
+The [ordinary-profile parity report](../benchmarks/results/turn-river-gains-parity-v1.json)
+checks four existing fixtures, all three algorithms, and fixed/zero-target
+modes at 20 iterations: 24 old/new profile pairs. Every complete result is
+identical to the frozen baseline adapter, and every new profile passes
+independent replay, with maximum scalar disagreement `3.91e-14` chips.
+This result covers these ordinary fixtures; the deliberate accepted-negative
+injections change diagnostic values and stopping as described above.
+No performance improvement is claimed.
+
+Reproduce on this slice's checkout with unchanged shared dependencies:
+
+```powershell
+New-Item -ItemType Directory -Force work/gain-baseline
+git show 431db6f:pokerlab/matrix_free_turn.py | Set-Content -Encoding utf8 work/gain-baseline/baseline_matrix_free_turn.py
+git show 431db6f:pokerlab/matrix_free_river.py | Set-Content -Encoding utf8 work/gain-baseline/baseline_matrix_free_river.py
+python -m scripts.validate_turn_river_gain_parity --baseline-dir work/gain-baseline --output work/gain-parity.json
+python -m unittest tests.test_matrix_free_turn tests.test_matrix_free_river tests.test_turn_river_independent_validation
+```
+
+The parity harness verifies canonical historical adapter fingerprints before
+import, uses the current checkout's unchanged shared dependencies, and records
+all current source hashes plus supplied historical file hashes. It refuses a
+different historical adapter or source mutation during the run. This is a
+bounded development comparison, not a new production solver option.
+Shared postflop diagnostics have the analogous signed-sum pattern; their
+follow-up is explicitly deferred to the shared/preflop/flop owners. No shared
+diagnostic or earlier-street source was modified here.
