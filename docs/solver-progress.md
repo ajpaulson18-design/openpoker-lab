@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Independent complete turn and river policy replay
+
+A development oracle rebuilds physical deals, weighted blocker conditioning,
+numeric betting rules, best-five ranks and legal information-set best responses
+without production tree, payoff, CFR or diagnostic helpers. It checks every
+serialized policy row, including rows with zero policy reach. Production solver
+and preflop/flop behavior are unchanged in this validation slice.
+
+At frozen `431db6f`, all 216 calls across four finite fixtures, materialized and
+matrix-free backends, vanilla/DCFR/CFR+, and 20/100/300 iterations passed
+independent replay. Maximum scalar disagreement is `3.91e-14` chips. Every
+measured profile missed the predeclared `0.001`-chip NashConv target; these
+results validate diagnostics, not that convergence claim. Thirteen new tests
+include known rational equilibrium, exhaustive tiny-game legal BR, no-peek,
+decimal sizing, blockers, full turn chance and malformed-policy rejection.
+Full CI suites passed on Python 3.11/3.12/3.13. See the
+[scope, all results and reproduction](turn-river-independent-validation.md).
+
 ## 2026-10-09 matrix-free turn continuation
 
 Branch `solver/matrix-free-turn-20261009` follows merged river PR80. New isolated
