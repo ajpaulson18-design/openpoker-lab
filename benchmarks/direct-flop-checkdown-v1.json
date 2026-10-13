@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "direct-flop-checkdown-v1",
+  "baseline_main": "eff6ef3baded544bb8e0663ea18f7026d39fe5ba",
+  "algorithm": "cfrplus",
+  "checkpoints": [
+    100,
+    1000,
+    4000
+  ],
+  "timed_repeats": 3,
+  "allocation_iterations": 10,
+  "target_padding": 1e-10,
+  "scalar_tolerance": 1e-10,
+  "fixtures": [
+    {
+      "id": "known-aa-kk",
+      "board": "2c3c4d",
+      "oop_range": "AsAd",
+      "ip_range": "KsKd",
+      "config": {
+        "pot": 2,
+        "effective_stack": 1,
+        "bet_sizes": [
+          0.5
+        ],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": true
+      },
+      "target_nash_conv": 0.0001,
+      "known_oop_value": 1,
+      "known_value_tolerance": 0.0001
+    },
+    {
+      "id": "weighted-asymmetric-raises",
+      "board": "2c3c4d",
+      "oop_range": "AsAd:.5,QsQd:.25,2c2d",
+      "ip_range": "KsKd,AhKh:.5,QsQd:.75",
+      "config": {
+        "pot": 5.5,
+        "effective_stack": [
+          3.25,
+          7.75
+        ],
+        "bet_sizes": [
+          0.25,
+          0.5,
+          1
+        ],
+        "raise_sizes": [
+          0.25,
+          0.75
+        ],
+        "max_raises": 2,
+        "include_all_in": true
+      },
+      "target_nash_conv": 0.005
+    },
+    {
+      "id": "four-hands-colliding",
+      "board": "2c3c4d",
+      "oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75",
+      "ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25",
+      "config": {
+        "pot": 6,
+        "effective_stack": 12,
+        "bet_sizes": [
+          0.5,
+          1
+        ],
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "target_nash_conv": 0.005
+    }
+  ],
+  "gate": "Every measured profile passes independent ordered-future counts, numeric action legality, complete serialized own-hand/history coverage, values and exact legal BR replay within 1e-10; deterministic complete payload equality per checkpoint; final gap improves from first and meets fixture target with padding. All earlier and short allocation target misses remain recorded. No runtime promotion comparison or speedup claim. The final known-AA/KK value error must also meet its fixed0.0001 tolerance with padding.",
+  "model_limits": "Heads-up fixed-flop finite fractional action tree, complete future deck with forced turn/river checkdown; at most128 compatible pairs. Symmetric existing-pot share utility, matched extra wagers, no rake/multiway/later-street betting/full-deck preflop.",
+  "provenance": "Independently developed from probability marginalization and existing repository CFR/betting kernels; no thirdparty source or dependencies. Independent oracle enumerates ordered future deals and all best-five hands, rebuilds numeric rules and maximizes only over visible own-hand/history information."
+}
