@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-action-coverage-v1",
+  "game_spec": "benchmarks/preflop-flop-raise-coverage-v1.json",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "starting_stacks": [6, 10],
+  "preflop_config": {
+    "small_blind": 0.5,
+    "big_blind": 1.0,
+    "raise_sizes": [0.5, 1.0],
+    "max_raises": 3,
+    "include_all_in": true
+  },
+  "flops": [["2c", "3c", "4d"], ["5h", "6s", "Jc"]],
+  "flop_config": {
+    "bet_sizes": [0.5, 1.0],
+    "raise_sizes": [0.5],
+    "max_raises": 1,
+    "include_all_in": true
+  },
+  "postflop_scope": "flop-checkdown",
+  "expected_worlds": 11880,
+  "expected_selected_outcomes": 4704,
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "checkpoints": [
+    {"iterations": 250, "delay": 125},
+    {"iterations": 500, "delay": 250},
+    {"iterations": 1000, "delay": 500}
+  ],
+  "matrix_cases": 6,
+  "coverage_requirements": {
+    "sb_open_raise_to": [2.0, 3.0],
+    "bb_three_bet_after_one_raise": true,
+    "sb_four_bet_after_two_raises": true,
+    "require_regular_sb_four_bet": true,
+    "preflop_all_in": true,
+    "no_raise_or_all_in_after_three_raises": true
+  },
+  "selection_scope": "Freeze the full 2-stack by 3-checkpoint matrix before training. Preflight legacy and grouped-vector admission for all six cases before any training. Independently replay every admitted grouped-vector result over all original physical worlds and exact visible-information best responses. Retain every rejection and target miss; do not simplify or retry. The unchanged per-checkpoint target is NashConv + 1e-10 <= 0.005. No memory experiment or speedup claim.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with two narrow ranges, two selected flops, all 4,704 ordered future candidates and 11,880 compatible physical worlds, and forced checkdown after flop betting. Preflop actions use the configured two raise fractions, maximum three voluntary raises and all-in inclusion. This is not an all-streets, full-deck/broad-range, multiway, unrestricted NLHE, or universal convergence result."
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "fixed-flop-complete-future-deck-v1",
+  "sb": "AsAd", "bb": "KsKd", "flop": "2c3c4d",
+  "config": {"starting_stack": 2, "max_raises": 0, "include_all_in": false},
+  "iterations": [10, 30], "repeats": 3, "memory_iterations": 10,
+  "algorithm": "dcfr", "traversal": "planned",
+  "known_value_sb": 1.0, "final_nash_conv_ceiling": 0.1
+}

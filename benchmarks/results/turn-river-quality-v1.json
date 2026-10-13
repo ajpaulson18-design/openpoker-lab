@@ -1,0 +1,1093 @@
+{
+  "benchmark_id": "turn-river-algorithm-quality-v1",
+  "created_at_utc": "2026-10-09T04:04:58.960109+00:00",
+  "fixtures": {
+    "benchmark_id": "turn-river-algorithm-quality-v1",
+    "checkpoints": [
+      20,
+      100,
+      300
+    ],
+    "scenarios": [
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "full44-blocked-runouts",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Enumerate every river remaining after each compatible pair of private hands on a four-card board using a small no-raise tree.",
+        "river_config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 220,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "runout_scope": "all-compatible-runouts"
+      },
+      {
+        "board": "Js8d4c2h",
+        "config": {
+          "bet_sizes": [
+            0.5,
+            1.0
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "id": "two-conditioned-runouts-asymmetric-multisize",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Condition jointly on two selected rivers while exercising asymmetric stacks, multiple sizes, raises and all-in actions.",
+        "river_config": {
+          "bet_sizes": [
+            0.75,
+            1.25
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_scope": "selected-conditioned-subset",
+        "runouts": [
+          "3c",
+          "5h"
+        ]
+      },
+      {
+        "board": "2c7d9hJsKd",
+        "config": {
+          "bet_sizes": [
+            1.0
+          ],
+          "effective_stack": 100,
+          "include_all_in": false,
+          "pot": 100
+        },
+        "id": "river-polarised-bluffcatcher",
+        "ip": "QsQh",
+        "oop": "AsAh,3c4c",
+        "purpose": "Nuts/air versus bluffcatcher, pot-size bet, finite tree"
+      },
+      {
+        "board": "Js8d4c2h2s",
+        "config": {
+          "bet_sizes": [
+            0.33,
+            0.75
+          ],
+          "effective_stack": [
+            220,
+            120
+          ],
+          "include_all_in": true,
+          "max_raises": 2,
+          "pot": 100,
+          "raise_sizes": [
+            0.5,
+            1
+          ]
+        },
+        "id": "river-weighted-raises",
+        "ip": "AcAd:1,KcKd:0.75",
+        "oop": "AsAh:0.5,KsKh:1",
+        "purpose": "Weighted river range, two opening sizes, raises and unequal stacks"
+      }
+    ],
+    "schema_version": 1
+  },
+  "methodology": {
+    "comparison": "Exact NashConv in each finite game; alternating CFR+ has two regret passes and one averaging pass per iteration, simultaneous methods have one pass.",
+    "diagnostics": "recursive",
+    "limitations": "Synthetic ranges, conditional subsets where specified, machine-specific timings; no commercial solver equivalence.",
+    "memory": "Separate untimed whole-call tracemalloc peak at the recorded memory_iterations; excludes RSS",
+    "memory_iterations": 20,
+    "timing": "Rotating interleaved whole solves plus JSON serialization"
+  },
+  "provenance": {
+    "dirty": true,
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "revision": "a02b01f3e3a39f180a4eabdcd5fc35260e1e5880",
+    "source_sha256": {
+      "benchmarks/turn-river-quality-v1.json": "b54c5d7de419d410e938b7667c3f98b3d86a913130199b350e1e5ab62eef1c33",
+      "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+      "pokerlab/postflop_solver.py": "daa725ff978c2fde0564678f40b48b9fe83055a1889cb293437d4190f278312a",
+      "pokerlab/public_cfr.py": "9e89d2f547da67f3cc7a22e365c62f417cac41e1dcd29e8f1c25fbf4e3e8eae8",
+      "pokerlab/public_diagnostics.py": "c9a040ff4208af659231e1e930da0cf2745b906c0d9f65ddc780ee82e6883335",
+      "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+      "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+      "pokerlab/turn_solver.py": "8eb58d37bf7a05f9ddedc735cb04745dd9fface8f3850fe3af3db764a49f8b71",
+      "scripts/benchmark_turn_river_quality.py": "38e8e9f98a4bf3382af0fd952249cfe141671fee99b9170e8cd908b205a4f751"
+    }
+  },
+  "results": [
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 7.56264367673465,
+        "info_sets": 1112,
+        "ip_best_response_value": 26.009596731317096,
+        "nash_conv": 15.1252873534693,
+        "oop_best_response_value": -10.884309377847796,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -19.836438318248124,
+        "worlds": 176
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.151252873534693,
+      "peak_tracemalloc_bytes": 2108153,
+      "runtime_median": 0.11494925199986028,
+      "runtime_samples": [
+        0.11935264800013101,
+        0.11110433599969838,
+        0.11494925199986028
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 8.102608225724124,
+        "info_sets": 1112,
+        "ip_best_response_value": 24.560168823270104,
+        "nash_conv": 16.205216451448248,
+        "oop_best_response_value": -8.354952371821856,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.8659476693119,
+        "worlds": 176
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.16205216451448248,
+      "peak_tracemalloc_bytes": 2108121,
+      "runtime_median": 0.11942489100010789,
+      "runtime_samples": [
+        0.12021581599992714,
+        0.11901535500010141,
+        0.11942489100010789
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.7304245984028714,
+        "info_sets": 1112,
+        "ip_best_response_value": 20.242551057064848,
+        "nash_conv": 3.460849196805743,
+        "oop_best_response_value": -16.781701860259105,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.661014868230552,
+        "worlds": 176
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.03460849196805743,
+      "peak_tracemalloc_bytes": 2108211,
+      "runtime_median": 0.1668661220001013,
+      "runtime_samples": [
+        0.16532154200012883,
+        0.16778047500019966,
+        0.1668661220001013
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.962642129499903,
+        "info_sets": 1112,
+        "ip_best_response_value": 20.278159814257343,
+        "nash_conv": 3.925284258999806,
+        "oop_best_response_value": -16.352875555257537,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.256635537468632,
+        "worlds": 176
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.03925284258999806,
+      "peak_tracemalloc_bytes": 2108153,
+      "runtime_median": 0.4501859670003796,
+      "runtime_samples": [
+        0.44409528000005594,
+        0.4501859670003796,
+        0.45690951899996435
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.28733829544988154,
+        "info_sets": 1112,
+        "ip_best_response_value": 18.41171278046535,
+        "nash_conv": 0.5746765908997631,
+        "oop_best_response_value": -17.837036189565588,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.170094147182205,
+        "worlds": 176
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.005746765908997631,
+      "peak_tracemalloc_bytes": 2108121,
+      "runtime_median": 0.4811950230000548,
+      "runtime_samples": [
+        0.478229156999987,
+        0.5032833979998941,
+        0.4811950230000548
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.07202094124944658,
+        "info_sets": 1112,
+        "ip_best_response_value": 18.132795349766624,
+        "nash_conv": 0.14404188249889316,
+        "oop_best_response_value": -17.98875346726773,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.067538497137647,
+        "worlds": 176
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.0014404188249889315,
+      "peak_tracemalloc_bytes": 2108211,
+      "runtime_median": 0.7218777019998015,
+      "runtime_samples": [
+        0.7218777019998015,
+        0.7174096240000836,
+        0.7253323099998852
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.7385775609783582,
+        "info_sets": 1112,
+        "ip_best_response_value": 18.95553066779292,
+        "nash_conv": 1.4771551219567165,
+        "oop_best_response_value": -17.478375545836204,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.237755131144365,
+        "worlds": 176
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.014771551219567166,
+      "peak_tracemalloc_bytes": 2108153,
+      "runtime_median": 1.3679390289998992,
+      "runtime_samples": [
+        1.4250799300002654,
+        1.3575520640001741,
+        1.3679390289998992
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.010748521264721589,
+        "info_sets": 1112,
+        "ip_best_response_value": 18.05498817233605,
+        "nash_conv": 0.021497042529443178,
+        "oop_best_response_value": -18.033491129806606,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.04594178556439,
+        "worlds": 176
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.0002149704252944318,
+      "peak_tracemalloc_bytes": 2108121,
+      "runtime_median": 1.422517883999717,
+      "runtime_samples": [
+        1.4580499020003117,
+        1.4073697359999642,
+        1.422517883999717
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.008055498412170792,
+        "info_sets": 1112,
+        "ip_best_response_value": 18.051378753387723,
+        "nash_conv": 0.016110996824341584,
+        "oop_best_response_value": -18.035267756563382,
+        "pot": 100.0,
+        "public_nodes": 580,
+        "value_oop": -18.044082425155512,
+        "worlds": 176
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.00016110996824341583,
+      "peak_tracemalloc_bytes": 2108211,
+      "runtime_median": 2.175836860000345,
+      "runtime_samples": [
+        2.108325564000097,
+        2.175836860000345,
+        2.1820573300001342
+      ],
+      "scenario": "full44-blocked-runouts"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 13.816662032854602,
+        "info_sets": 138,
+        "ip_best_response_value": 34.541846279232544,
+        "nash_conv": 27.633324065709203,
+        "oop_best_response_value": -6.908522213523341,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -23.70223829875398,
+        "worlds": 8
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.276333240657092,
+      "peak_tracemalloc_bytes": 298463,
+      "runtime_median": 0.014089235000028566,
+      "runtime_samples": [
+        0.01622602499992354,
+        0.014078239000355097,
+        0.014089235000028566
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 14.824483569039474,
+        "info_sets": 138,
+        "ip_best_response_value": 39.505540398603486,
+        "nash_conv": 29.648967138078948,
+        "oop_best_response_value": -9.856573260524538,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -25.965642708351538,
+        "worlds": 8
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.29648967138078947,
+      "peak_tracemalloc_bytes": 298488,
+      "runtime_median": 0.015540922000127466,
+      "runtime_samples": [
+        0.015583934999995108,
+        0.015540922000127466,
+        0.015199346999906993
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 4.242885945628309,
+        "info_sets": 138,
+        "ip_best_response_value": 22.567036007827056,
+        "nash_conv": 8.485771891256618,
+        "oop_best_response_value": -14.081264116570438,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -18.946053205847747,
+        "worlds": 8
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.08485771891256619,
+      "peak_tracemalloc_bytes": 299572,
+      "runtime_median": 0.021180182000080094,
+      "runtime_samples": [
+        0.02127662499970029,
+        0.021180182000080094,
+        0.02080310399969676
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 4.501285173054206,
+        "info_sets": 138,
+        "ip_best_response_value": 21.018403503684773,
+        "nash_conv": 9.002570346108412,
+        "oop_best_response_value": -12.015833157576362,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -17.9864806689604,
+        "worlds": 8
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.09002570346108411,
+      "peak_tracemalloc_bytes": 298463,
+      "runtime_median": 0.05956311599993569,
+      "runtime_samples": [
+        0.05957331699983115,
+        0.05956311599993569,
+        0.05803549699976429
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 2.0517775599422388,
+        "info_sets": 138,
+        "ip_best_response_value": 19.692305011005047,
+        "nash_conv": 4.1035551198844775,
+        "oop_best_response_value": -15.58874989112057,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -17.837432793777033,
+        "worlds": 8
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.04103555119884478,
+      "peak_tracemalloc_bytes": 298488,
+      "runtime_median": 0.06304254099995887,
+      "runtime_samples": [
+        0.06263422400024865,
+        0.06345506800016665,
+        0.06304254099995887
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.2098367747105332,
+        "info_sets": 138,
+        "ip_best_response_value": 19.202065018435047,
+        "nash_conv": 0.4196735494210664,
+        "oop_best_response_value": -18.78239146901398,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -18.92973597896479,
+        "worlds": 8
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.004196735494210664,
+      "peak_tracemalloc_bytes": 299572,
+      "runtime_median": 0.09322257799976796,
+      "runtime_samples": [
+        0.09336094299987963,
+        0.09322257799976796,
+        0.0918023340000218
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.6174596026038959,
+        "info_sets": 138,
+        "ip_best_response_value": 19.924432352371035,
+        "nash_conv": 3.2349192052077917,
+        "oop_best_response_value": -16.689513147163243,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -17.826925883015004,
+        "worlds": 8
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.03234919205207792,
+      "peak_tracemalloc_bytes": 298463,
+      "runtime_median": 0.1742905029996109,
+      "runtime_samples": [
+        0.16343481900003098,
+        0.1742905029996109,
+        0.17455051799970533
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.9058966387041032,
+        "info_sets": 138,
+        "ip_best_response_value": 19.549751498578544,
+        "nash_conv": 1.8117932774082064,
+        "oop_best_response_value": -17.737958221170338,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -18.809048674867487,
+        "worlds": 8
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.018117932774082066,
+      "peak_tracemalloc_bytes": 298488,
+      "runtime_median": 0.19145390399989992,
+      "runtime_samples": [
+        0.17395946299984644,
+        0.1927535380000336,
+        0.19145390399989992
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.02347011544381239,
+        "info_sets": 138,
+        "ip_best_response_value": 19.064893735384732,
+        "nash_conv": 0.04694023088762478,
+        "oop_best_response_value": -19.017953504497108,
+        "pot": 100.0,
+        "public_nodes": 69,
+        "value_oop": -19.033629053878386,
+        "worlds": 8
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.00046940230887624777,
+      "peak_tracemalloc_bytes": 299572,
+      "runtime_median": 0.27519482699972286,
+      "runtime_samples": [
+        0.2665586660000372,
+        0.2810127109996756,
+        0.27519482699972286
+      ],
+      "scenario": "two-conditioned-runouts-asymmetric-multisize"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 9.055394652965262,
+        "info_sets": 6,
+        "ip_best_response_value": -14.192118801447661,
+        "nash_conv": 18.110789305930524,
+        "oop_best_response_value": 32.30290810737819,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 21.62653805265719,
+        "worlds": 2
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.18110789305930525,
+      "peak_tracemalloc_bytes": 27645,
+      "runtime_median": 0.0007665940001970739,
+      "runtime_samples": [
+        0.0009645159998399322,
+        0.0007665940001970739,
+        0.0007464840000466211
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 7.477165120025994,
+        "info_sets": 6,
+        "ip_best_response_value": -15.5955005507439,
+        "nash_conv": 14.954330240051988,
+        "oop_best_response_value": 30.549830790795887,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 25.501947118579054,
+        "worlds": 2
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.14954330240051988,
+      "peak_tracemalloc_bytes": 27669,
+      "runtime_median": 0.0008243390002462547,
+      "runtime_samples": [
+        0.0008249999996223778,
+        0.0007902990000729915,
+        0.0008243390002462547
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.512732350216453,
+        "info_sets": 6,
+        "ip_best_response_value": -23.56445897217788,
+        "nash_conv": 3.025464700432906,
+        "oop_best_response_value": 26.589923672610787,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.808907724685522,
+        "worlds": 2
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.030254647004329057,
+      "peak_tracemalloc_bytes": 27459,
+      "runtime_median": 0.0010611290003907925,
+      "runtime_samples": [
+        0.0010611290003907925,
+        0.001047388999722898,
+        0.0010885799997595313
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 2.6033324537957405,
+        "info_sets": 6,
+        "ip_best_response_value": -19.9828739707906,
+        "nash_conv": 5.206664907591481,
+        "oop_best_response_value": 25.18953887838208,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 23.48176075037218,
+        "worlds": 2
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.05206664907591481,
+      "peak_tracemalloc_bytes": 27645,
+      "runtime_median": 0.0026079069998559135,
+      "runtime_samples": [
+        0.0024990449996948882,
+        0.0026079069998559135,
+        0.002669768000032491
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 2.7277238730866173,
+        "info_sets": 6,
+        "ip_best_response_value": -23.114150063130083,
+        "nash_conv": 5.455447746173235,
+        "oop_best_response_value": 28.569597809303318,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.720990086278583,
+        "worlds": 2
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.054554477461732344,
+      "peak_tracemalloc_bytes": 27669,
+      "runtime_median": 0.002623499999572232,
+      "runtime_samples": [
+        0.0026101800003743847,
+        0.002623499999572232,
+        0.002865758999632817
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.25182402309830465,
+        "info_sets": 6,
+        "ip_best_response_value": -24.6026548311468,
+        "nash_conv": 0.5036480461966093,
+        "oop_best_response_value": 25.10630287734341,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.993831802531318,
+        "worlds": 2
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.005036480461966093,
+      "peak_tracemalloc_bytes": 27459,
+      "runtime_median": 0.0039223200001288205,
+      "runtime_samples": [
+        0.0041452700002082565,
+        0.0038538389999303035,
+        0.0039223200001288205
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.4368074920493328,
+        "info_sets": 6,
+        "ip_best_response_value": -23.872779127100586,
+        "nash_conv": 2.8736149840986656,
+        "oop_best_response_value": 26.74639411119925,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.50515238488584,
+        "worlds": 2
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.028736149840986654,
+      "peak_tracemalloc_bytes": 27645,
+      "runtime_median": 0.006909759000336635,
+      "runtime_samples": [
+        0.006909759000336635,
+        0.00690389999999752,
+        0.006920314000126382
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.14732916019652,
+        "info_sets": 6,
+        "ip_best_response_value": -22.763553213171264,
+        "nash_conv": 2.29465832039304,
+        "oop_best_response_value": 25.058211533564304,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.994368279923968,
+        "worlds": 2
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.022946583203930403,
+      "peak_tracemalloc_bytes": 27669,
+      "runtime_median": 0.007370890999936819,
+      "runtime_samples": [
+        0.007042175000151474,
+        0.007370890999936819,
+        0.007954123999752483
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.10377349253322521,
+        "info_sets": 6,
+        "ip_best_response_value": -24.86465038462636,
+        "nash_conv": 0.20754698506645042,
+        "oop_best_response_value": 25.07219736969281,
+        "pot": 100.0,
+        "public_nodes": 4,
+        "value_oop": 24.99910723908863,
+        "worlds": 2
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.002075469850664504,
+      "peak_tracemalloc_bytes": 27459,
+      "runtime_median": 0.011400640000374551,
+      "runtime_samples": [
+        0.01139060499963307,
+        0.011652753000362281,
+        0.011400640000374551
+      ],
+      "scenario": "river-polarised-bluffcatcher"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 9.643634375820882,
+        "info_sets": 36,
+        "ip_best_response_value": 28.938446164287644,
+        "nash_conv": 19.287268751641765,
+        "oop_best_response_value": -9.651177412645879,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -22.248121128670558,
+        "worlds": 4
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.19287268751641765,
+      "peak_tracemalloc_bytes": 90534,
+      "runtime_median": 0.004131349999624945,
+      "runtime_samples": [
+        0.0043457970000417845,
+        0.004113362000225607,
+        0.004131349999624945
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 11.44448403412187,
+        "info_sets": 36,
+        "ip_best_response_value": 34.262988957007494,
+        "nash_conv": 22.88896806824374,
+        "oop_best_response_value": -11.374020888763752,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -23.731187556377183,
+        "worlds": 4
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.22888968068243742,
+      "peak_tracemalloc_bytes": 90518,
+      "runtime_median": 0.004240710999965813,
+      "runtime_samples": [
+        0.004240710999965813,
+        0.0041873330001180875,
+        0.004509188000156428
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 2.83358606281449,
+        "info_sets": 36,
+        "ip_best_response_value": 21.833744831241788,
+        "nash_conv": 5.66717212562898,
+        "oop_best_response_value": -16.166572705612808,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -18.904979245025086,
+        "worlds": 4
+      },
+      "iterations": 20,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.0566717212562898,
+      "peak_tracemalloc_bytes": 91456,
+      "runtime_median": 0.006404731999737123,
+      "runtime_samples": [
+        0.006404731999737123,
+        0.006144055999811826,
+        0.006431941999835544
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 3.680140695575014,
+        "info_sets": 36,
+        "ip_best_response_value": 22.354064758792333,
+        "nash_conv": 7.360281391150028,
+        "oop_best_response_value": -14.993783367642305,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -18.871414911880258,
+        "worlds": 4
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.07360281391150028,
+      "peak_tracemalloc_bytes": 90534,
+      "runtime_median": 0.01609652500019365,
+      "runtime_samples": [
+        0.01659551200009446,
+        0.016057776999787166,
+        0.01609652500019365
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.9951419772132422,
+        "info_sets": 36,
+        "ip_best_response_value": 21.41670341637666,
+        "nash_conv": 3.9902839544264843,
+        "oop_best_response_value": -17.426419461950175,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -19.841748524287596,
+        "worlds": 4
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.039902839544264844,
+      "peak_tracemalloc_bytes": 90518,
+      "runtime_median": 0.018230871000014304,
+      "runtime_samples": [
+        0.017972538000321947,
+        0.023799805999715318,
+        0.018230871000014304
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.1854563350798184,
+        "info_sets": 36,
+        "ip_best_response_value": 20.14041065153097,
+        "nash_conv": 0.3709126701596368,
+        "oop_best_response_value": -19.769497981371334,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -19.989975941402832,
+        "worlds": 4
+      },
+      "iterations": 100,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.003709126701596368,
+      "peak_tracemalloc_bytes": 91456,
+      "runtime_median": 0.025959931000215875,
+      "runtime_samples": [
+        0.025959931000215875,
+        0.02869134100001247,
+        0.024728610000238405
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "vanilla",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 1.4598859091257665,
+        "info_sets": 36,
+        "ip_best_response_value": 21.067231873172254,
+        "nash_conv": 2.919771818251533,
+        "oop_best_response_value": -18.14746005492072,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -19.589707647466813,
+        "worlds": 4
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.02919771818251533,
+      "peak_tracemalloc_bytes": 90534,
+      "runtime_median": 0.04569961399965905,
+      "runtime_samples": [
+        0.04569961399965905,
+        0.045837207000204216,
+        0.04472754600010376
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "dcfr",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.2563704626176442,
+        "info_sets": 36,
+        "ip_best_response_value": 20.184612542839336,
+        "nash_conv": 0.5127409252352884,
+        "oop_best_response_value": -19.671871617604047,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -19.93351408201308,
+        "worlds": 4
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.005127409252352884,
+      "peak_tracemalloc_bytes": 90518,
+      "runtime_median": 0.05087389600021197,
+      "runtime_samples": [
+        0.05087389600021197,
+        0.05678629900012311,
+        0.04687780699987343
+      ],
+      "scenario": "river-weighted-raises"
+    },
+    {
+      "algorithm": "cfrplus",
+      "game": {
+        "execution_backend": "public-batched-python",
+        "exploitability": 0.02105629230111994,
+        "info_sets": 36,
+        "ip_best_response_value": 20.048380279929592,
+        "nash_conv": 0.04211258460223988,
+        "oop_best_response_value": -20.006267695327352,
+        "pot": 100.0,
+        "public_nodes": 18,
+        "value_oop": -20.03111632676239,
+        "worlds": 4
+      },
+      "iterations": 300,
+      "memory_iterations": 20,
+      "nash_conv_pot_fraction": 0.0004211258460223988,
+      "peak_tracemalloc_bytes": 91456,
+      "runtime_median": 0.08102138000003833,
+      "runtime_samples": [
+        0.08102138000003833,
+        0.08306518199970014,
+        0.07425156799990873
+      ],
+      "scenario": "river-weighted-raises"
+    }
+  ],
+  "schema_version": 1
+}

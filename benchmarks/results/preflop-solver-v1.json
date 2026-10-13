@@ -1,0 +1,1206 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-heads-up-preflop-v1",
+  "generated_at": "2026-10-09T04:42:01.856801+00:00",
+  "source_revision": "7b5694f16876de4cb45bc49f600859891dcfdea0",
+  "worktree_dirty": true,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "108aa1dff18c5a07e71d6a41c4a99097bfb989a916fe66234ea17c4da5db832f",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "bfd5afa3d5dbd9e8cdac54b9597217736bd46a7c268bcae707b0c58e6763469c",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/preflop_validation.py": "83ca07b5a766d645dfc1b33132dea3d01deef1be12a78f370a4f1b41fc29fb97",
+    "scripts/benchmark_preflop_solver.py": "3235d0e7cb62aca2337a4f4686a4dbc1aed1b1928e77f4e1a15e6ea78f58bafb",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "benchmarks/preflop-solver-v1.json": "0ac294b6d99f32537a1acd2b6276f2d246bd2becd6de51a7f0025e184b92852c"
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "repeats": 3,
+  "timing_scope": "Complete call: physical-world enumeration, public tree, training, exact legal best responses and serialization. Independent replay excluded from timing.",
+  "memory_scope": "Separate complete call under tracemalloc; traced Python allocations, not RSS or a universal process-memory ceiling.",
+  "oracle_scope": "Independent physical-world weights, enumerated best-five rankings, numeric betting/history replay and exact legal information-set responses to serialized average policies; card/range parsing shared.",
+  "scope": "Tiny conditioned selected-outcome games. No full-deck preflop, unrestricted NLHE, multiway, rake or performance scaling claim.",
+  "records": [
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.01274609996471554,
+        0.006229699996765703,
+        0.007639399962499738
+      ],
+      "median_seconds": 0.007639399962499738,
+      "peak_traced_python_bytes": 14834,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.0024999999999999467,
+      "nash_conv": 0.0025,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0025,
+      "independent_replay": {
+        "value_sb": -0.0025,
+        "value_bb": 0.0025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0025,
+        "nash_conv": 0.0025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.334274688628682e-17,
+        "value_bb": 5.334274688628682e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        0.02470730000641197,
+        0.014936799998395145,
+        0.00995940004941076
+      ],
+      "median_seconds": 0.014936799998395145,
+      "peak_traced_python_bytes": 15000,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.0024999999999999467,
+      "nash_conv": 0.0025,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0025,
+      "independent_replay": {
+        "value_sb": -0.0025,
+        "value_bb": 0.0025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0025,
+        "nash_conv": 0.0025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.334274688628682e-17,
+        "value_bb": 5.334274688628682e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.09300940000684932,
+        0.09799440001370385,
+        0.0881587999756448
+      ],
+      "median_seconds": 0.09300940000684932,
+      "peak_traced_python_bytes": 14314,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.00024999999999997247,
+      "nash_conv": 0.00025,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.00025,
+      "independent_replay": {
+        "value_sb": -0.00025,
+        "value_bb": 0.00025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.00025,
+        "nash_conv": 0.00025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7538735181131813e-17,
+        "value_bb": 2.7538735181131813e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        0.07502559997374192,
+        0.06512689997907728,
+        0.05963279999559745
+      ],
+      "median_seconds": 0.06512689997907728,
+      "peak_traced_python_bytes": 13200,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.00024999999999997247,
+      "nash_conv": 0.00025,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.00025,
+      "independent_replay": {
+        "value_sb": -0.00025,
+        "value_bb": 0.00025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.00025,
+        "nash_conv": 0.00025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7538735181131813e-17,
+        "value_bb": 2.7538735181131813e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.007814300013706088,
+        0.00619020004523918,
+        0.0033644000068306923
+      ],
+      "median_seconds": 0.00619020004523918,
+      "peak_traced_python_bytes": 13090,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -7.388798581864364e-07,
+      "nash_conv": 7.388798581864364e-07,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 7.388798581350673e-07,
+      "independent_replay": {
+        "value_sb": -7.388798581350673e-07,
+        "value_bb": 7.388798581350673e-07,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 7.388798581350673e-07,
+        "nash_conv": 7.388798581350673e-07,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.13691601191843e-17,
+        "value_bb": 5.13691601191843e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 5.13691601191843e-17
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        0.010683499975129962,
+        0.0063257000292651355,
+        0.011269400012679398
+      ],
+      "median_seconds": 0.010683499975129962,
+      "peak_traced_python_bytes": 14032,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -7.388798581864364e-07,
+      "nash_conv": 7.388798581864364e-07,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 7.388798581350673e-07,
+      "independent_replay": {
+        "value_sb": -7.388798581350673e-07,
+        "value_bb": 7.388798581350673e-07,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 7.388798581350673e-07,
+        "nash_conv": 7.388798581350673e-07,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.13691601191843e-17,
+        "value_bb": 5.13691601191843e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 5.13691601191843e-17
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.11355449998518452,
+        0.09122050000587478,
+        0.09470119996694848
+      ],
+      "median_seconds": 0.09470119996694848,
+      "peak_traced_python_bytes": 12642,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -7.488762943097527e-10,
+      "nash_conv": 7.488763110952016e-10,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 7.488763110952016e-10,
+      "independent_replay": {
+        "value_sb": -7.488763110952016e-10,
+        "value_bb": 7.488763110952016e-10,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 7.488763110952016e-10,
+        "nash_conv": 7.488763110952016e-10,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6785448946295665e-17,
+        "value_bb": 1.6785448946295665e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        0.055814399966038764,
+        0.05917870003031567,
+        0.047456600004807115
+      ],
+      "median_seconds": 0.055814399966038764,
+      "peak_traced_python_bytes": 13008,
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -7.488762943097527e-10,
+      "nash_conv": 7.488763110952016e-10,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 7.488763110952016e-10,
+      "independent_replay": {
+        "value_sb": -7.488763110952016e-10,
+        "value_bb": 7.488763110952016e-10,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 7.488763110952016e-10,
+        "nash_conv": 7.488763110952016e-10,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6785448946295665e-17,
+        "value_bb": 1.6785448946295665e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.27131729997927323,
+        0.16320900002028793,
+        0.18924110004445538
+      ],
+      "median_seconds": 0.18924110004445538,
+      "peak_traced_python_bytes": 194990,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.009570531434038743,
+      "nash_conv": 0.1478315736404388,
+      "sb_best_response_value": 0.06889143793188274,
+      "bb_best_response_value": 0.07894013570855607,
+      "independent_replay": {
+        "value_sb": -0.009570531434038907,
+        "value_bb": 0.009570531434038907,
+        "sb_best_response_value": 0.06889143793188257,
+        "bb_best_response_value": 0.07894013570855613,
+        "nash_conv": 0.1478315736404387,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6479873021779667e-16,
+        "value_bb": 1.6479873021779667e-16,
+        "sb_best_response_value": 1.6653345369377348e-16,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        0.1386691000079736,
+        0.12497000000439584,
+        0.15518319996772334
+      ],
+      "median_seconds": 0.1386691000079736,
+      "peak_traced_python_bytes": 201340,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.009570531434038743,
+      "nash_conv": 0.1478315736404388,
+      "sb_best_response_value": 0.06889143793188274,
+      "bb_best_response_value": 0.07894013570855607,
+      "independent_replay": {
+        "value_sb": -0.009570531434038907,
+        "value_bb": 0.009570531434038907,
+        "sb_best_response_value": 0.06889143793188257,
+        "bb_best_response_value": 0.07894013570855613,
+        "nash_conv": 0.1478315736404387,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6479873021779667e-16,
+        "value_bb": 1.6479873021779667e-16,
+        "sb_best_response_value": 1.6653345369377348e-16,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.1102230246251565e-16
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        2.2587824999936856,
+        4.186478999967221,
+        2.888109899999108
+      ],
+      "median_seconds": 2.888109899999108,
+      "peak_traced_python_bytes": 194446,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.001035117983430145,
+      "nash_conv": 0.014783157364044092,
+      "sb_best_response_value": 0.006889143793188501,
+      "bb_best_response_value": 0.00789401357085559,
+      "independent_replay": {
+        "value_sb": -0.0010351179834301725,
+        "value_bb": 0.0010351179834301725,
+        "sb_best_response_value": 0.006889143793188501,
+        "bb_best_response_value": 0.007894013570855646,
+        "nash_conv": 0.014783157364044147,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7538735181131813e-17,
+        "value_bb": 2.7538735181131813e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 5.551115123125783e-17
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        2.260976199992001,
+        0.9020017999573611,
+        1.1806798999896273
+      ],
+      "median_seconds": 1.1806798999896273,
+      "peak_traced_python_bytes": 198084,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.001035117983430145,
+      "nash_conv": 0.014783157364044092,
+      "sb_best_response_value": 0.006889143793188501,
+      "bb_best_response_value": 0.00789401357085559,
+      "independent_replay": {
+        "value_sb": -0.0010351179834301725,
+        "value_bb": 0.0010351179834301725,
+        "sb_best_response_value": 0.006889143793188501,
+        "bb_best_response_value": 0.007894013570855646,
+        "nash_conv": 0.014783157364044147,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7538735181131813e-17,
+        "value_bb": 2.7538735181131813e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 5.551115123125783e-17
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.2346036999952048,
+        0.26757460000226274,
+        0.22771920001832768
+      ],
+      "median_seconds": 0.2346036999952048,
+      "peak_traced_python_bytes": 194094,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.00014461146023836413,
+      "nash_conv": 0.0005915467789632297,
+      "sb_best_response_value": 0.00022350773649937317,
+      "bb_best_response_value": 0.00036803904246385656,
+      "independent_replay": {
+        "value_sb": -0.0001446114602385348,
+        "value_bb": 0.0001446114602385348,
+        "sb_best_response_value": 0.00022350773649915112,
+        "bb_best_response_value": 0.00036803904246391207,
+        "nash_conv": 0.0005915467789630632,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.7068052700353054e-16,
+        "value_bb": 1.7068052700353054e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.6653345369377348e-16
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        0.11605209996923804,
+        0.16160740004852414,
+        0.31712329998845235
+      ],
+      "median_seconds": 0.16160740004852414,
+      "peak_traced_python_bytes": 198084,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -0.00014461146023836413,
+      "nash_conv": 0.0005915467789632297,
+      "sb_best_response_value": 0.00022350773649937317,
+      "bb_best_response_value": 0.00036803904246385656,
+      "independent_replay": {
+        "value_sb": -0.0001446114602385348,
+        "value_bb": 0.0001446114602385348,
+        "sb_best_response_value": 0.00022350773649915112,
+        "bb_best_response_value": 0.00036803904246391207,
+        "nash_conv": 0.0005915467789630632,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.7068052700353054e-16,
+        "value_bb": 1.7068052700353054e-16,
+        "sb_best_response_value": 2.220446049250313e-16,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 1.6653345369377348e-16
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        2.566690900013782,
+        1.6478584000142291,
+        1.9847084000357427
+      ],
+      "median_seconds": 1.9847084000357427,
+      "peak_traced_python_bytes": 194062,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -1.4660037872538112e-07,
+      "nash_conv": 5.995499330503573e-07,
+      "sb_best_response_value": 2.2653161718677595e-07,
+      "bb_best_response_value": 3.7301831586358134e-07,
+      "independent_replay": {
+        "value_sb": -1.4660037874216656e-07,
+        "value_bb": 1.4660037874216656e-07,
+        "sb_best_response_value": 2.265316171312648e-07,
+        "bb_best_response_value": 3.7301831597460364e-07,
+        "nash_conv": 5.995499331058684e-07,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6785440157501656e-17,
+        "value_bb": 1.6785440157501656e-17,
+        "sb_best_response_value": 5.551115123125783e-17,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 5.551115123125783e-17
+      }
+    },
+    {
+      "scenario": "live-four-street-game",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        1.4772700000321493,
+        2.091844700044021,
+        1.1818160999682732
+      ],
+      "median_seconds": 1.4772700000321493,
+      "peak_traced_python_bytes": 198084,
+      "worlds": 2,
+      "public_states": 222,
+      "decisions": 86,
+      "information_sets": 86,
+      "value_sb": -1.4660037872538112e-07,
+      "nash_conv": 5.995499330503573e-07,
+      "sb_best_response_value": 2.2653161718677595e-07,
+      "bb_best_response_value": 3.7301831586358134e-07,
+      "independent_replay": {
+        "value_sb": -1.4660037874216656e-07,
+        "value_bb": 1.4660037874216656e-07,
+        "sb_best_response_value": 2.265316171312648e-07,
+        "bb_best_response_value": 3.7301831597460364e-07,
+        "nash_conv": 5.995499331058684e-07,
+        "worlds": 2,
+        "checked_information_sets": 86,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6785440157501656e-17,
+        "value_bb": 1.6785440157501656e-17,
+        "sb_best_response_value": 5.551115123125783e-17,
+        "bb_best_response_value": 1.1102230246251565e-16,
+        "nash_conv": 5.551115123125783e-17
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        1.605871699983254,
+        1.9735419999924488,
+        2.0053002999629825
+      ],
+      "median_seconds": 1.9735419999924488,
+      "peak_traced_python_bytes": 643858,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6712171899356312,
+      "nash_conv": 0.09700261562630885,
+      "sb_best_response_value": 0.7204489887089847,
+      "bb_best_response_value": -0.6234463730826758,
+      "independent_replay": {
+        "value_sb": 0.6712171899356315,
+        "value_bb": -0.6712171899356315,
+        "sb_best_response_value": 0.7204489887089847,
+        "bb_best_response_value": -0.6234463730826758,
+        "nash_conv": 0.09700261562630885,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "value_bb": 3.3306690738754696e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        0.46332790004089475,
+        1.33517189999111,
+        1.0240103999967687
+      ],
+      "median_seconds": 1.0240103999967687,
+      "peak_traced_python_bytes": 674456,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6712171899356312,
+      "nash_conv": 0.09700261562630885,
+      "sb_best_response_value": 0.7204489887089847,
+      "bb_best_response_value": -0.6234463730826758,
+      "independent_replay": {
+        "value_sb": 0.6712171899356315,
+        "value_bb": -0.6712171899356315,
+        "sb_best_response_value": 0.7204489887089847,
+        "bb_best_response_value": -0.6234463730826758,
+        "nash_conv": 0.09700261562630885,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "value_bb": 3.3306690738754696e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        10.619398000009824,
+        9.532005699991714,
+        9.278931199980434
+      ],
+      "median_seconds": 9.532005699991714,
+      "peak_traced_python_bytes": 694010,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6750367640379532,
+      "nash_conv": 0.009700261562630375,
+      "sb_best_response_value": 0.6801530069790065,
+      "bb_best_response_value": -0.6704527454163761,
+      "independent_replay": {
+        "value_sb": 0.6750367640379531,
+        "value_bb": -0.6750367640379531,
+        "sb_best_response_value": 0.6801530069790065,
+        "bb_best_response_value": -0.6704527454163761,
+        "nash_conv": 0.009700261562630375,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 1000,
+      "algorithm": "vanilla",
+      "traversal": "planned",
+      "seconds": [
+        5.369847399997525,
+        6.5158933000057,
+        5.56228509999346
+      ],
+      "median_seconds": 5.56228509999346,
+      "peak_traced_python_bytes": 670672,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6750367640379532,
+      "nash_conv": 0.009700261562630375,
+      "sb_best_response_value": 0.6801530069790065,
+      "bb_best_response_value": -0.6704527454163761,
+      "independent_replay": {
+        "value_sb": 0.6750367640379531,
+        "value_bb": -0.6750367640379531,
+        "sb_best_response_value": 0.6801530069790065,
+        "bb_best_response_value": -0.6704527454163761,
+        "nash_conv": 0.009700261562630375,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        1.152302399976179,
+        1.1053765999968164,
+        1.007484600006137
+      ],
+      "median_seconds": 1.1053765999968164,
+      "peak_traced_python_bytes": 639506,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6754160732322787,
+      "nash_conv": 0.0007454960962789414,
+      "sb_best_response_value": 0.6759250170398903,
+      "bb_best_response_value": -0.6751795209436113,
+      "independent_replay": {
+        "value_sb": 0.6754160732322788,
+        "value_bb": -0.6754160732322788,
+        "sb_best_response_value": 0.6759250170398903,
+        "bb_best_response_value": -0.6751795209436113,
+        "nash_conv": 0.0007454960962789414,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        0.6555039000231773,
+        0.8060080999857746,
+        0.6963053999934345
+      ],
+      "median_seconds": 0.6963053999934345,
+      "peak_traced_python_bytes": 670672,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6754160732322787,
+      "nash_conv": 0.0007454960962789414,
+      "sb_best_response_value": 0.6759250170398903,
+      "bb_best_response_value": -0.6751795209436113,
+      "independent_replay": {
+        "value_sb": 0.6754160732322788,
+        "value_bb": -0.6754160732322788,
+        "sb_best_response_value": 0.6759250170398903,
+        "bb_best_response_value": -0.6751795209436113,
+        "nash_conv": 0.0007454960962789414,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        11.014316000044346,
+        11.842319799994584,
+        10.050093099998776
+      ],
+      "median_seconds": 11.014316000044346,
+      "peak_traced_python_bytes": 639506,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6756754122172242,
+      "nash_conv": 7.555820619176146e-07,
+      "sb_best_response_value": 0.6756759283904291,
+      "bb_best_response_value": -0.6756751728083672,
+      "independent_replay": {
+        "value_sb": 0.6756754122172242,
+        "value_bb": -0.6756754122172242,
+        "sb_best_response_value": 0.6756759283904291,
+        "bb_best_response_value": -0.6756751728083672,
+        "nash_conv": 7.555820619176146e-07,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 1000,
+      "algorithm": "dcfr",
+      "traversal": "planned",
+      "seconds": [
+        5.721434700011741,
+        7.290465000027325,
+        8.680691399960779
+      ],
+      "median_seconds": 7.290465000027325,
+      "peak_traced_python_bytes": 810992,
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6756754122172242,
+      "nash_conv": 7.555820619176146e-07,
+      "sb_best_response_value": 0.6756759283904291,
+      "bb_best_response_value": -0.6756751728083672,
+      "independent_replay": {
+        "value_sb": 0.6756754122172242,
+        "value_bb": -0.6756754122172242,
+        "sb_best_response_value": 0.6756759283904291,
+        "bb_best_response_value": -0.6756751728083672,
+        "nash_conv": 7.555820619176146e-07,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,1014 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-preflop-cfrplus-v1",
+  "generated_at": "2026-10-09T13:33:33.731891+00:00",
+  "source_revision": "ad432de8a69ab5d36e088cf9bacda43de2746d8d",
+  "worktree_dirty": true,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "e2ab3ed952d4758196d59a21292d9993ab406f5d4399e7fc10ac2daa1ead6ac4",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "d2a8a0ad6d64a9b04a08dd3970b095dc36b0934990961339457b1bb5fb1ad174",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "scripts/preflop_validation.py": "83ca07b5a766d645dfc1b33132dea3d01deef1be12a78f370a4f1b41fc29fb97",
+    "scripts/benchmark_preflop_cfrplus.py": "7fc010bfb88ebe138bcf1baa47bba5a43fb6e2a3e808dab8b2554e48170f5a22",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "benchmarks/preflop-cfrplus-v1.json": "e23464195b186c4c8600e4497095baf3e417a83fbf9b1a71baf3b6f037e76576"
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "repeats": 3,
+  "memory_iterations": 10,
+  "timing_scope": "Complete call including worlds, tree, training, exact legal best responses and serialization; independent replay excluded.",
+  "memory_scope": "Separate 10-iteration complete calls under tracemalloc only. No 100-iteration measurement, RSS or process-memory ceiling.",
+  "oracle_scope": "Independent world weights, best-five rankings, numeric betting/history replay and exact legal information-set responses to serialized averages; card/range parsing shared.",
+  "comparison_scope": "Recursive methods at equal iteration counts, not equal compute budgets: CFR+ uses three world passes per iteration, vanilla/DCFR one. Tiny conditioned selected-outcome games only; no full-deck preflop or unrestricted NLHE claim.",
+  "records": [
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.00209650001488626,
+        0.0010617999942041934,
+        0.0008933999924920499
+      ],
+      "median_seconds": 0.0010617999942041934,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 15242
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.025000000000000022,
+      "nash_conv": 0.025000000000000022,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.025,
+      "independent_replay": {
+        "value_sb": -0.025,
+        "value_bb": 0.025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.025,
+        "nash_conv": 0.025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.0816681711721685e-17,
+        "value_bb": 2.0816681711721685e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.0816681711721685e-17
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.005793699994683266,
+        0.004114999959710985,
+        0.0035242000012658536
+      ],
+      "median_seconds": 0.004114999959710985,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.0024999999999999467,
+      "nash_conv": 0.0025,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0025,
+      "independent_replay": {
+        "value_sb": -0.0025,
+        "value_bb": 0.0025,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0025,
+        "nash_conv": 0.0025,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.334274688628682e-17,
+        "value_bb": 5.334274688628682e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.0015104000340215862,
+        0.0013722999719902873,
+        0.0012285999837331474
+      ],
+      "median_seconds": 0.0013722999719902873,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 14554
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -0.0006493506493506773,
+      "nash_conv": 0.0006493506493506773,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0006493506493506494,
+      "independent_replay": {
+        "value_sb": -0.0006493506493506494,
+        "value_bb": 0.0006493506493506494,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0006493506493506494,
+        "nash_conv": 0.0006493506493506494,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.7972416050126014e-17,
+        "value_bb": 2.7972416050126014e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.7972416050126014e-17
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.003998700005467981,
+        0.0028321999707259238,
+        0.0037469000089913607
+      ],
+      "median_seconds": 0.0037469000089913607,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": -7.388798581864364e-07,
+      "nash_conv": 7.388798581864364e-07,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 7.388798581350673e-07,
+      "independent_replay": {
+        "value_sb": -7.388798581350673e-07,
+        "value_bb": 7.388798581350673e-07,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 7.388798581350673e-07,
+        "nash_conv": 7.388798581350673e-07,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.13691601191843e-17,
+        "value_bb": 5.13691601191843e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 5.13691601191843e-17
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 10,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        0.0022772999946027994,
+        0.002441600023303181,
+        0.0014925000141374767
+      ],
+      "median_seconds": 0.0022772999946027994,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 13274
+      },
+      "training_passes_per_iteration": 3,
+      "training_passes": 30,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": 0.0,
+      "nash_conv": 0.0,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0,
+      "independent_replay": {
+        "value_sb": 0.0,
+        "value_bb": -0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": -0.0,
+        "nash_conv": 0.0,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "hidden-flop-forced-big-blind",
+      "iterations": 100,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        0.011766800016630441,
+        0.011595199990551919,
+        0.006293000013101846
+      ],
+      "median_seconds": 0.011595199990551919,
+      "memory": null,
+      "training_passes_per_iteration": 3,
+      "training_passes": 300,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 2,
+      "public_states": 3,
+      "decisions": 1,
+      "information_sets": 1,
+      "value_sb": 0.0,
+      "nash_conv": 0.0,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0,
+      "independent_replay": {
+        "value_sb": 0.0,
+        "value_bb": -0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": -0.0,
+        "nash_conv": 0.0,
+        "worlds": 2,
+        "checked_information_sets": 1,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 0.0,
+        "value_bb": 0.0,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.05898600001819432,
+        0.058153700025286525,
+        0.059538799978327006
+      ],
+      "median_seconds": 0.05898600001819432,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 299852
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.0509766610586565,
+      "nash_conv": 0.7085984040980802,
+      "sb_best_response_value": 0.23103034214518686,
+      "bb_best_response_value": 0.47756806195289336,
+      "independent_replay": {
+        "value_sb": -0.05097666105865667,
+        "value_bb": 0.05097666105865667,
+        "sb_best_response_value": 0.23103034214518686,
+        "bb_best_response_value": 0.47756806195289336,
+        "nash_conv": 0.7085984040980802,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.6653345369377348e-16,
+        "value_bb": 1.6653345369377348e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.31042880000313744,
+        0.32224190002307296,
+        0.29790679999860004
+      ],
+      "median_seconds": 0.31042880000313744,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.020453023744654963,
+      "nash_conv": 0.07451859334781594,
+      "sb_best_response_value": 0.023246155649910477,
+      "bb_best_response_value": 0.05127243769790546,
+      "independent_replay": {
+        "value_sb": -0.0204530237446549,
+        "value_bb": 0.0204530237446549,
+        "sb_best_response_value": 0.023246155649910477,
+        "bb_best_response_value": 0.051272437697905446,
+        "nash_conv": 0.07451859334781592,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 6.245004513516506e-17,
+        "value_bb": 6.245004513516506e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 1.3877787807814457e-17,
+        "nash_conv": 1.3877787807814457e-17
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.05601759999990463,
+        0.0631215000175871,
+        0.054799099976662546
+      ],
+      "median_seconds": 0.05601759999990463,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 298068
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.13593289083068383,
+      "nash_conv": 0.4541413475941022,
+      "sb_best_response_value": 0.1198928905529355,
+      "bb_best_response_value": 0.3342484570411667,
+      "independent_replay": {
+        "value_sb": -0.13593289083068388,
+        "value_bb": 0.13593289083068388,
+        "sb_best_response_value": 0.1198928905529355,
+        "bb_best_response_value": 0.3342484570411667,
+        "nash_conv": 0.4541413475941022,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 5.551115123125783e-17,
+        "value_bb": 5.551115123125783e-17,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.3596382000250742,
+        0.29399800003739074,
+        0.2123653999879025
+      ],
+      "median_seconds": 0.29399800003739074,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.00022084651176401682,
+      "nash_conv": 0.0005167560775047638,
+      "sb_best_response_value": 0.0001364231206232767,
+      "bb_best_response_value": 0.00038033295688148707,
+      "independent_replay": {
+        "value_sb": -0.0002208465117640095,
+        "value_bb": 0.0002208465117640095,
+        "sb_best_response_value": 0.0001364231206232767,
+        "bb_best_response_value": 0.00038033295688148707,
+        "nash_conv": 0.0005167560775047638,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 7.318364664277155e-18,
+        "value_bb": 7.318364664277155e-18,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 10,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        0.09457660000771284,
+        0.08741859998553991,
+        0.09251330001279712
+      ],
+      "median_seconds": 0.09251330001279712,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 296884
+      },
+      "training_passes_per_iteration": 3,
+      "training_passes": 30,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.04162130685467569,
+      "nash_conv": 0.23421705423276393,
+      "sb_best_response_value": 0.021364006976583215,
+      "bb_best_response_value": 0.2128530472561807,
+      "independent_replay": {
+        "value_sb": -0.04162130685467561,
+        "value_bb": 0.04162130685467561,
+        "sb_best_response_value": 0.0213640069765832,
+        "bb_best_response_value": 0.2128530472561807,
+        "nash_conv": 0.2342170542327639,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 7.632783294297951e-17,
+        "value_bb": 7.632783294297951e-17,
+        "sb_best_response_value": 1.3877787807814457e-17,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 2.7755575615628914e-17
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "shared-flop-and-turn-prefixes",
+      "iterations": 100,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        0.7460951999528334,
+        0.5722723000217229,
+        0.5772850000066683
+      ],
+      "median_seconds": 0.5772850000066683,
+      "memory": null,
+      "training_passes_per_iteration": 3,
+      "training_passes": 300,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 4,
+      "public_states": 360,
+      "decisions": 138,
+      "information_sets": 138,
+      "value_sb": -0.0005898323438436881,
+      "nash_conv": 0.002550878808475676,
+      "sb_best_response_value": 0.00023267730370540168,
+      "bb_best_response_value": 0.0023182015047702744,
+      "independent_replay": {
+        "value_sb": -0.0005898323438436237,
+        "value_bb": 0.0005898323438436237,
+        "sb_best_response_value": 0.00023267730370539474,
+        "bb_best_response_value": 0.0023182015047702744,
+        "nash_conv": 0.002550878808475669,
+        "worlds": 4,
+        "checked_information_sets": 138,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 1.0
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 6.440160904563896e-17,
+        "value_bb": 6.440160904563896e-17,
+        "sb_best_response_value": 6.938893903907228e-18,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 6.938893903907228e-18
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        0.10212360002333298,
+        0.08823759999359027,
+        0.16264850000152364
+      ],
+      "median_seconds": 0.10212360002333298,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 637842
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.8010490033894148,
+      "nash_conv": 1.1847586054522208,
+      "sb_best_response_value": 1.3737833302890612,
+      "bb_best_response_value": -0.18902472483684044,
+      "independent_replay": {
+        "value_sb": 0.8010490033894149,
+        "value_bb": -0.8010490033894149,
+        "sb_best_response_value": 1.3737833302890612,
+        "bb_best_response_value": -0.18902472483684044,
+        "nash_conv": 1.1847586054522208,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "vanilla",
+      "traversal": "recursive",
+      "seconds": [
+        1.0195614999975078,
+        1.0511092999950051,
+        1.0098260999657214
+      ],
+      "median_seconds": 1.0195614999975078,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6712171899356312,
+      "nash_conv": 0.09700261562630885,
+      "sb_best_response_value": 0.7204489887089847,
+      "bb_best_response_value": -0.6234463730826758,
+      "independent_replay": {
+        "value_sb": 0.6712171899356315,
+        "value_bb": -0.6712171899356315,
+        "sb_best_response_value": 0.7204489887089847,
+        "bb_best_response_value": -0.6234463730826758,
+        "nash_conv": 0.09700261562630885,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 3.3306690738754696e-16,
+        "value_bb": 3.3306690738754696e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        0.09780759998830035,
+        0.10415650001959875,
+        0.135990499984473
+      ],
+      "median_seconds": 0.10415650001959875,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 636338
+      },
+      "training_passes_per_iteration": 1,
+      "training_passes": 10,
+      "training_schedule": "simultaneous updates",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6712489313565994,
+      "nash_conv": 0.664794872564862,
+      "sb_best_response_value": 0.9988692639452152,
+      "bb_best_response_value": -0.3340743913803532,
+      "independent_replay": {
+        "value_sb": 0.6712489313565992,
+        "value_bb": -0.6712489313565992,
+        "sb_best_response_value": 0.9988692639452152,
+        "bb_best_response_value": -0.33407439138035316,
+        "nash_conv": 0.664794872564862,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 5.551115123125783e-17,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "dcfr",
+      "traversal": "recursive",
+      "seconds": [
+        1.0164391999715008,
+        0.6913979999953881,
+        0.928057000041008
+      ],
+      "median_seconds": 0.928057000041008,
+      "memory": null,
+      "training_passes_per_iteration": 1,
+      "training_passes": 100,
+      "training_schedule": "simultaneous updates",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6754160732322787,
+      "nash_conv": 0.0007454960962789414,
+      "sb_best_response_value": 0.6759250170398903,
+      "bb_best_response_value": -0.6751795209436113,
+      "independent_replay": {
+        "value_sb": 0.6754160732322788,
+        "value_bb": -0.6754160732322788,
+        "sb_best_response_value": 0.6759250170398903,
+        "bb_best_response_value": -0.6751795209436113,
+        "nash_conv": 0.0007454960962789414,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 10,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        0.21637699997518212,
+        0.1980617999797687,
+        0.2532712999964133
+      ],
+      "median_seconds": 0.21637699997518212,
+      "memory": {
+        "iterations": 10,
+        "peak_traced_python_bytes": 634978
+      },
+      "training_passes_per_iteration": 3,
+      "training_passes": 30,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.634803939006172,
+      "nash_conv": 0.18851982133426404,
+      "sb_best_response_value": 0.7010119377341264,
+      "bb_best_response_value": -0.5124921163998624,
+      "independent_replay": {
+        "value_sb": 0.6348039390061722,
+        "value_bb": -0.6348039390061722,
+        "sb_best_response_value": 0.7010119377341264,
+        "bb_best_response_value": -0.5124921163998624,
+        "nash_conv": 0.18851982133426404,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    },
+    {
+      "scenario": "weighted-blocker-asymmetric-raises",
+      "iterations": 100,
+      "algorithm": "cfrplus",
+      "traversal": "recursive",
+      "seconds": [
+        2.054677400039509,
+        1.8517561000189744,
+        1.4255067000049166
+      ],
+      "median_seconds": 1.8517561000189744,
+      "memory": null,
+      "training_passes_per_iteration": 3,
+      "training_passes": 300,
+      "training_schedule": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep",
+      "worlds": 8,
+      "public_states": 535,
+      "decisions": 202,
+      "information_sets": 338,
+      "value_sb": 0.6751024049182608,
+      "nash_conv": 0.0020531861729475853,
+      "sb_best_response_value": 0.6759516151634409,
+      "bb_best_response_value": -0.6738984289904933,
+      "independent_replay": {
+        "value_sb": 0.6751024049182607,
+        "value_bb": -0.6751024049182607,
+        "sb_best_response_value": 0.6759516151634409,
+        "bb_best_response_value": -0.6738984289904933,
+        "nash_conv": 0.0020531861729475853,
+        "worlds": 8,
+        "checked_information_sets": 338,
+        "private_pair_probabilities": [
+          {
+            "sb": "AcAh",
+            "bb": "KcKh",
+            "probability": 0.027027027027027025
+          },
+          {
+            "sb": "AcAh",
+            "bb": "KdKs",
+            "probability": 0.1081081081081081
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KcKh",
+            "probability": 0.2162162162162162
+          },
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.6486486486486486
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 1.1102230246251565e-16,
+        "value_bb": 1.1102230246251565e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      },
+      "private_pair_max_probability_gap": 0.0
+    }
+  ]
+}

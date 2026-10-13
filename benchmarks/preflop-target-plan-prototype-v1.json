@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-target-plan-prototype-v1",
+  "base_revision": "637de18aa646dedc966aa1532a85d42aa45f710a",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "config": {
+    "starting_stack": 2,
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "paired_timing": {
+    "iterations": 20,
+    "delay": 10,
+    "pairs": 3
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "target_nash_conv": 0.005,
+  "selection_evidence": {
+    "profile_source_revision": "4fb6342df56f5424e7879bc5006d14b2e2ad3133",
+    "profile_scope": "Instrumented complete two-flop10/delay5 call, not timing comparison",
+    "solve_cumulative_seconds": 32.826,
+    "target_delta_cumulative_seconds": 13.393,
+    "target_visitor_internal_seconds": 9.297,
+    "average_cumulative_seconds": 2.372
+  },
+  "adoption_gate": "Exact policy/order and diagnostic parity, independent final-policy configured replay, at least5% lower median complete-call time in three alternating pairs, explicit preallocation plan caps, and measured separate complete-call Python memory. A passing prototype still requires production work/allocation admission before integration.",
+  "selection_scope": "Freeze before measurement. Same complete two-flop conditioned game and iteration/delay for both arms; no accuracy improvement expected. Short timing/memory fixtures may miss unchanged0.005 target; retain misses. No post-hoc target/workload adjustment or universal speed claim."
+}

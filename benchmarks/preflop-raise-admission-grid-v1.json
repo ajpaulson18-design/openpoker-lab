@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "probe_id": "preflop-raise-admission-grid-v1",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "starting_stacks": [
+    2.25,
+    2.5,
+    2.75,
+    3.0
+  ],
+  "preflop_actions": {
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "flop_counts": [
+    1,
+    2
+  ],
+  "postflop_actions": {
+    "bet_sizes": [
+      0.5
+    ],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": true
+  },
+  "structural_checkpoints": [
+    {
+      "iterations": 10,
+      "delay": 5
+    },
+    {
+      "iterations": 20,
+      "delay": 10
+    },
+    {
+      "iterations": 40,
+      "delay": 20
+    },
+    {
+      "iterations": 90,
+      "delay": 45
+    }
+  ],
+  "quality_target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "selection_rule": "Measure structural admission only for every listed stack and flop count. Retain all rejections. If any complete-future non-all-in raised game admits 90/delay45, prefer two flops then largest admitted listed stack; otherwise retain admission limits and design a separate explicit bounded quality fixture before training. No guard changes, replacement of rejected fixtures, training, or post-hoc quality-target changes in this probe.",
+  "scope": "Preflop opens and raises after a limp both target two chips. All listed stacks leave positive chips after calling that raise. Full ordered future candidates for each selected flop, not full-deck preflop. This shallow-stack grid does not resolve admission of the original three-chip fixture."
+}

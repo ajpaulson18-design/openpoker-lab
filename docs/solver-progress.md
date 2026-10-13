@@ -1,6 +1,101 @@
 # Solver progress record
 
-Snapshot: 2026-10-08. Mathematical calculation only; the AI Coach workstream
+## 2026-10-09 matrix-free turn continuation
+
+Branch `solver/matrix-free-turn-20261009` follows merged river PR80. New isolated
+turn API preserves global pair/runout conditioning, 48 possible rivers versus
+44 per private pair, original hand indices and exact visible-information BR
+ordering. A direct selected-card multiplicity operator accelerates turn folds.
+Nine independent kernel test methods, integration replay/guard/no-peek tests and
+all **488 full-suite tests** pass. No flop/preflop/Coach modules are edited;
+shared defaults retain their previous arithmetic.
+
+Small complete calls are slower, not a claimed speedup. Full two-river random
+ranges now admit 2,140,380 compatible outcomes without world lists (4.48s,
+45.12 MB traced at ten iterations); the 12.158-chip gap explicitly shows this
+probe is not converged. Prepared fold calls improve 17–22x. Investigation of
+finite-iteration differences traced them to exact-tie regret roundoff; all
+candidate policy metrics pass materialized replay. A bounded small-pair phase
+experiment found a narrow crossover, insufficient for broad dispatch. See
+[mathematics, evidence and remaining constraints](matrix-free-turn.md).
+
+## 2026-10-09 matrix-free river storage
+
+Branch `solver/matrix-free-river-20261009`, base `3ee96fb`: a separate fixed-board
+API eliminates quadratic pair-world/prefix-edge storage without changing world
+API limits or default flop/preflop/Coach behavior. Exact blocker-conditioned
+marginals, ranked terminals and prepared CFR/BR traversals retain the configured
+game. Full random ranges now admit all 1,081 holdings per player (1,070,190
+compatible deals), without materialized worlds. Independent review caught an
+extreme joint-product underflow; the backend now explicitly rejects it.
+
+Complete-call median improvements are 1.54–2.43x on 128/256-hand fixtures, with
+256-hand traced allocation reduced from 25.59 MB to 1.75 MB. Full-range CFR+
+exploitability fell to 0.0404 chips at 100 iterations on the pot-100 fixture.
+Fourteen default result dictionaries match merged base exactly; the shared
+preflop resource-envelope review found no loop expansion. See
+[model, validation, measurements and limits](matrix-free-river.md).
+
+## 2026-10-09 ranked river terminal work
+
+Branch `solver/ranked-river-20261009`, base merged `5c712f8`: added an optional
+fixed-board ranked payoff backend for public-batched river training and
+diagnostics. Blocker-aware rank sweeps, compensated accumulation and direct
+summation on ill-conditioned cases preserve physical range products and
+short-stack refunds. Rational pair-loop tests caught and prevented two
+cancellation defects. No earlier-street or Coach behavior is changed.
+
+Cached-sparse terminal phase comparisons show 1.22–15.19x speedups across
+64–512 hands per player, with increased working allocation. Complete-call
+results are mixed: small/preparation-heavy cases can slow down, while the
+256-hand/40-iteration probe improved median time by 1.40x DCFR / 1.72x CFR+.
+That CFR+ probe uses 96% of the existing world-node guard; no limits were
+relaxed. Default results matched the merged baseline exactly on eight
+flop/turn/river cases. Full local tests passed 453 before the final numerical
+regression; all 48 focused tests passed after it. See
+[mathematics, validation, exact measurements and architectural limits](ranked-river.md).
+
+## 2026-10-09 turn/river accuracy-controlled follow-up
+
+Branch `solver/turn-river-accuracy-20261009`, base `b7bf525`: added optional
+absolute-chip exploitability targets with exact completed-iteration checkpoints
+and explicit budget misses. Existing training schedules and default results
+remain unchanged; target mode rejects earlier streets and unsupported backends.
+All four CFR+ benchmark fixtures reached 0.1 chips in 100–240 iterations;
+same-iteration policy comparisons were identical. DCFR missed three targets.
+Six rational poker equilibria and independent pure-policy best responses extend
+validation beyond Kuhn. The full suite passed **436 tests in 114.951 seconds**.
+
+Larger synthetic ranges (up to 128 hands per player on river, 16 on full-deck
+turn) expose pair-world memory growth; all twelve scaling cases were admitted.
+Their single-call timings ran alongside unit tests and are descriptive, not
+controlled optimization comparisons. Commercial parity remains unproven.
+See [accuracy semantics, research, measurements and limits](turn-river-accuracy.md).
+
+## 2026-10-09 isolated turn/river quality work
+
+Branch `solver/turn-river-quality-20261009`, base `65c9ba7`: optional
+alternating CFR+ with linear post-sweep own-reach averaging is enabled only
+for turn/river library starts. An independently authored callback reference,
+closed-form Kuhn equilibrium, exhaustive pure-policy BR checks and public
+backend differential tests validate the addition. Optional exact public-vector
+diagnostics retain generic best responses as the reference. Coach/UI code,
+flop tree construction, evaluator, defaults and existing result shapes remain
+unchanged; source-based vanilla/DCFR comparisons on six turn/river/flop cases
+matched the base exactly. All **352 tests passed in 70.236 seconds**.
+
+Target-only CFR+ regret vectors reduce measured complete-call runtime by
+21–28% across eight synthetic fixture/checkpoint comparisons with pre-optimization
+source `7553734`; maximum frequency/value differences are `5.42e-13`/`7.11e-14`.
+Diagnostics-only turn evaluation is 2.17x faster on a 352-world uniform-policy
+fixture with higher memory consumption. The completed 36-row algorithm report
+shows lower CFR+ gaps but higher runtime than DCFR at 300 iterations, so the
+default is unchanged. No external runtime dependency or third-party code is
+incorporated. The user explicitly authorized public push and merge on 2026-10-09;
+publishing uses the authenticated GitHub connector. See
+[quality work, exact benchmarks, research decisions and remaining priorities](turn-river-quality.md).
+
+Snapshot: 2026-10-09. Mathematical calculation only; the AI Coach workstream
 and its contracts remain separate. GitHub is the delivery source of truth.
 
 ## restricted-river-v2
@@ -339,3 +434,229 @@ NashConv remains 6.1505 chips vanilla and 2.8662 DCFR at these short checkpoints
 neither is a high-accuracy certificate. Both reports preserve source/config/harness
 hashes; the earlier v1 report remains historical. See
 [public-batched validation](public-batched-cfr.md).
+
+## Solver handoff completion and known-game quality
+
+The takeover of the interrupted "Advance OpenPoker solver" chat verified the
+complete final heads of PRs #23, #51, #52, #53, #54, #55 and #63 as ancestors
+of GitHub main `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce`. These include
+configured river betting, DCFR, turn-to-river chance, planned traversal,
+prompt traversal-state release, the shared postflop engine and public batching.
+Their production changes and published benchmark evidence are already merged.
+
+The remaining local work was the independent known-Kuhn quality package,
+completed here with its versioned config, oracle, tests and measured report.
+All 18 checkpoints passed at source `e9d9339`; the 10,000-iteration gaps are
+0.00463557 chips vanilla and 0.00165554 DCFR across all three trainers.
+Four focused tests passed during takeover; the prior complete log records
+335 passing tests. See [quality validation](cfr-known-quality.md) and its
+linked source-frozen report for exact values, provenance and reproduction.
+No solver, Coach, server, browser, persistence or shared contract source changes
+are required by this quality milestone; no external dependency was introduced.
+
+The ongoing solver goal now takes a flop/preflop detour while a separate
+reviewing workstream evaluates turn and river. Preserve the merged turn/river
+implementation and isolate any future shared-kernel changes behind compatible
+interfaces and full regression checks. Full-deck preflop and unrestricted no-limit
+Hold'em equilibrium remain unsupported; Kuhn quality is evidence about these
+training kernels, not a Hold'em accuracy certificate.
+
+## Preflop betting foundation during the flop/preflop detour
+
+The additive `preflop_tree.py` module now constructs heads-up betting from
+capped small/big blind posts. It preserves the big blind's option after a
+limp, minimum full raises, finite sizing/reraise abstractions, short calls,
+all-ins and refunds, and passes an explicit typed boundary to future flop
+play. It shares existing action/node types, sizing and generic CFR interfaces;
+no turn/river or Coach production source was changed. This is preflop game
+construction; live flop and all-in runout boundaries remain unsolved until
+an explicit continuation is supplied.
+
+Luna implemented the bounded tree and rule tests, followed by lead review,
+independent rational edge replay and additional regression cases. Nine focused
+tests passed, including a complete synthetic root's known values and exact
+best responses under recursive/planned vanilla/DCFR. The reproducible replay
+also passed 162 asymmetric stack configurations (914 action edges) and nine
+benchmark fixtures. At source `b786b54`, the wide four-raise/five-size fixture
+has 1,412 decisions and 4,234 public states; construction took 111.12 ms median
+with 1,915,856 traced peak bytes. This measures tree construction, not strategy
+accuracy or full-range solve performance. See [scope, reproduction and report](preflop-betting.md).
+
+The next integration step is to attach independently verifiable physical flop
+chance and postflop betting continuations while preserving position, hidden
+cards, perfect recall and cumulative contributions. Avoid treating sampled
+or conditional continuation values as unrestricted preflop equilibrium.
+Keep turn/river production work isolated from their separate evaluating lane.
+
+## Bounded preflop solving with physical flop chance
+
+The additive `preflop_solver.py` now connects the merged blind-aware betting
+component to physical flop chance and existing postflop templates. Global
+SB/button and BB identities, BB-first postflop action, refunds and cumulative
+whole-hand contributions survive the boundary. Flop order is canonical;
+turn/river order remains physical. Selected outcomes condition one joint
+hand/runout distribution, with blocker-induced private-prior shifts serialized
+for external review. Full-deck preflop requests fail before rank/world allocation.
+
+Luna implemented the bounded solver; lead review added an independently
+implemented physical-world/ranking/numeric-state policy replay and exact legal
+best responses. The oracle shares card/range grammar only. Its hidden-flop
+anchor distinguishes a legal best response worth zero from an illegal
+clairvoyant response worth 0.25 chips. Weighted asymmetric four-street histories,
+minimum raises, stage overrides, short-blind refunds, action legality and
+recursive/planned vanilla/DCFR are checked independently.
+
+Seventeen focused tests passed locally. GitHub's initial complete 360-test suite passed
+on Python 3.11, 3.12 and 3.13, including the Coach regressions; frontend checks
+also passed. Existing turn/river, shared training-kernel and Coach production
+source is unchanged. No external code, dependencies or solver outputs were
+imported. See [model limits, provenance and reproduction](preflop-solver.md).
+
+Source-frozen convergence checks at `7b5694f` compare recursive and planned
+vanilla/DCFR at 100 and 1,000 iterations. At 1,000, NashConv is
+0.00025/7.48876e-10 chips for the hidden-flop anchor,
+0.0147832/5.99550e-7 for the live four-street fixture, and
+0.00970026/7.55582e-7 for the weighted asymmetric fixture (vanilla/DCFR).
+Each checkpoint's values and both legal BRs must agree with independent replay
+within 1e-10, private-pair probabilities within 1e-12, and both traversals must
+agree within 1e-10. All final gaps must be below 0.02 chips vanilla and
+0.001 DCFR and improve from 100 iterations. Complete-call timing and separate
+Python allocation measurements are in the linked versioned report; they do
+not establish full-deck performance or a process-memory ceiling.
+
+The next priority is measured flop/preflop efficiency and broader independent
+chance/information-set validation within explicit resource limits. The selected
+games establish complete-hand calculation in a finite abstraction; they are
+not unconditional full-deck or unrestricted NLHE equilibrium certificates.
+
+## Complete fixed-flop future deck and known Hold'em game value
+
+The next independently validated fixture enumerates all 1,980 legal ordered
+turn/river outcomes after `2c3c4d` with exact SB `AsAd` and BB `KsKd`.
+Its preflop game is conditioned on that particular flop; future cards remain
+hidden until revealed. At two-chip stacks/no preflop raises, the finite tree
+has 8,106 decisions/information sets and 26,248 public states. A constructive
+SB complete-then-shove/call policy and BB check/fold policy prove exact game
+value +1/-1. Independently enumerated wins/losses/ties give a called-flop-shove
+SB expectation of 272/165, while BB never adding chips caps SB at +1.
+
+Luna's full-world regression and the independent constructive-profile replay
+passed. At frozen source `b77a08f`, planned DCFR's learned NashConv drops from
+0.185208 at 10 iterations to 0.008309 at 30; known-value error at 30 is 0.007162.
+Both checkpoint values and exact legal BRs agree with independent replay to
+2.23e-16. The reference profile has zero legal deviation gap. Three complete
+timed calls give medians 5.896/9.562 seconds; a separate call at 10 iterations
+uses 26,226,183 traced peak Python bytes. This is complete future-deck coverage
+for one fixed flop/private pair, not all flops or full private ranges.
+See [proof, reproduction and recorded limits](fixed-flop-complete-chance.md).
+No production solver, shared kernel or Coach source changes are required.
+
+## Bounded deeper complete fixed-flop convergence
+
+Optional preflop `resource_model="public-vector"` uses an independent structural
+vector-work census with prefix, dense-slot, information-set action and modeled
+loop caps before vector view/training allocation. It requires public-vector
+training and diagnostics; default admission and every other existing cap remain.
+It admits DCFR350 and CFR+120 on the complete four-private-pair fixed-flop game,
+which the conservative world-decision guard rejects. Shared kernels, postflop,
+turn/river and Coach source remain unchanged.
+
+At frozen `b8fe302`, independent replay checks all 17,620 policy rows, all 7,920
+worlds, private-pair probabilities and both legal best responses. DCFR100/350
+NashConv is 0.0254528/0.00790802 chips; CFR+120 reaches 0.00247911. Maximum scalar
+disagreement is 1.67e-14. Every endpoint misses the predefined 0.001-chip target.
+One observed complete call per checkpoint takes 78.348/283.792/135.961 seconds,
+including estimator-only allocation tracing. Its approximately 2.02 MB traced
+peak covers only resource preflight, not the complete solve or RSS. See
+[scope, modeled ceilings, value intervals and provenance](preflop-vector-resources.md).
+
+## Delayed preflop CFR+ meets the fixed-flop accuracy target
+
+An isolated preflop adapter exposes published `max(t-delay,0)` CFR+ averaging
+weights, retaining the existing completed-alternating-sweep own-reach convention.
+Default delay zero and all resource ceilings remain unchanged. Recursive
+requests reuse the existing generic delay implementation; a preflop-local
+vector average pass reuses unchanged repository regret/aggregation helpers.
+Shared CFR, postflop, turn/river, diagnostics and Coach source remain unchanged.
+
+At frozen `1240dd0`, complete four-private-pair fixed-flop CFR+120 with delays
+0/20/60 has NashConv 0.00247911/0.00137144/0.00118598 chips; every target misses.
+An explicitly evidence-guided extension freezes 160 iterations with delays 0/80
+at `2075cc6`. Independent replay verifies all 17,620 rows, all 7,920 worlds,
+private-pair probabilities and both legal best responses. Delay zero has gap
+0.00156941; delay 80 has **0.000798538**, meeting the unchanged 0.001 target under
+the unchanged 490,881,772-entry workload estimate. Maximum scalar disagreement
+is 1.58e-14. The padded SB game-value interval is [0.5182045061, 0.5190030442].
+
+The observed uninstrumented full calls at 160 take 118.833/109.401 seconds,
+including serialization; single shared-host samples establish no speedup.
+Separate 20-iteration selected-game traced peaks are approximately 721/714 KB,
+not full-fixed-flop memory or RSS evidence. Thirteen new tests include generic
+parity, independent replay, known Kuhn/exhaustive legal BR accuracy and prompt
+lifetime cleanup. Longer delays worsen the Kuhn gap, so the method stays opt-in.
+See [measured scope, source hashes and provenance](preflop-averaging-delay.md).
+
+## Complete fixed-flop chance with private-hand uncertainty
+
+The full-chance regression now also covers two SB combinations and two BB
+combinations (`AsAd,QsQd` versus `KsKd,JhJc`) with equal prior weights. After
+`2c3c4d`, 2,352 requested public turn/river pairs yield 2,336 reachable public
+outcomes and 7,920 compatible private-pair/future worlds. All four private-pair
+probabilities and all learned information sets, values and exact legal best
+responses are checked independently. This adds hidden opponent-hand uncertainty
+to the earlier single-pair full-chance fixture, without invoking its +1/-1
+known-value claim for a different game.
+
+Luna's saved bounded test was recovered after its usage limit stopped the
+agent. Lead review ran the focused test successfully and incorporated the
+parallel turn/river publication on main before final validation. Requests
+exceeding the world-iteration limit are checked to fail before ranking. This
+10-iteration planned-vanilla check establishes exact policy replay and chance
+coverage; it does not establish high-accuracy equilibrium convergence or new
+runtime/memory performance. See the [expanded fixture scope](fixed-flop-complete-chance.md).
+
+## Indexed preflop blocker filtering
+
+A bounded per-card selected-runout index replaces both dense Python private-pair
+blocker scans while preserving canonical outcome/world order and exact weights.
+Candidate, selected-outcome, world-iteration and 30-million logical preflight
+admission caps remain unchanged. No shared CFR, postflop, turn/river, public
+diagnostic or AI Coach production source changes are required.
+
+At frozen `2eb9f62`, three alternating paired calls preserve exact serialized
+results for all 7,920 fixed-flop worlds and a weighted complete solve. The
+all-blocked 300-pair/100,000-outcome fixture charges exactly 30 million admission
+checks and rejects before ranking on both paths; median preflight time falls
+from 21.061 to 3.090 seconds. This is setup scalability, not larger solved-game
+coverage. Full fixed-flop enumeration medians are 0.436/0.372 seconds. The small
+complete-solve raw timings overlap, so no general solver speedup is claimed.
+
+The separate index-construction trace peaks at 13,923,944 Python bytes for
+100,000 already-canonical outcomes, including helper validation/posting scratch;
+this is not whole-solve memory or RSS. Eleven new helper/integration tests include
+randomized brute-force comparison, exact world/policy parity, independent legal
+BR replay and guard ordering. See [scope, provenance and reproduction](preflop-runout-index.md).
+
+## Experimental preflop chance-sampled training with exact diagnostics
+
+An opt-in isolated vanilla CFR trainer samples the conditioned joint physical
+world law with exact-integer CDF support, frozen minibatches and own-reach
+averaging. It retains full-game exact values and legal best responses. New
+sampled node/action and sampler-entry/bit bounds explicitly replace full-world
+iterative charges; construction/tree and exact-diagnostic guards remain.
+Shared CFR, postflop, turn/river and Coach source are unchanged.
+
+At frozen `b9ea214`, all three full-fixed-flop seeds improve from gaps
+0.224-0.242 at 1,000 iterations to 0.0370-0.0387 at 10,000 with batch 32.
+Every 0.001-chip target misses. Weighted selected-flop gaps 0.0115-0.0134
+also miss their 0.01 target. Independent replay verifies every policy row,
+posterior, value and legal BR with maximum scalar disagreement 2.13e-14.
+The 10,000-iteration complete calls take 152-156 seconds; no controlled
+speedup claim follows. A separate 100-iteration full-call trace peaks at
+42,325,089 Python bytes, excluding process RSS and preallocated caller inputs.
+
+Luna implemented/reviewed bounded core and storage slices; 28 new tests cover
+exact weighted update expectations, hidden information, sampler support,
+known-game legal BRs and admission/cleanup. This path remains experimental;
+previous delayed exact CFR+ remains the strongest fixed-flop accuracy result.
+See [method, all seeds, resource scope and provenance](preflop-chance-sampled.md).

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-private-compaction-v1-interrupted-attempt",
+  "source_revision": "88b8d4006c270f2a9710bc3c53169d18dbc38238",
+  "status": "Incomplete; original process/session no longer exists and no final report was saved. No exit code or cause is available.",
+  "authoritative_adoption_evidence": false,
+  "complete_source_hash_manifest_saved": false,
+  "observed_console_precision": "Times copied from three-decimal console output; not original full-precision timing records.",
+  "rounded_console_pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "original",
+        "compact"
+      ],
+      "original_seconds": 51.852,
+      "compact_seconds": 35.785
+    },
+    {
+      "pair": 2,
+      "order": [
+        "compact",
+        "original"
+      ],
+      "original_seconds": 52.324,
+      "compact_seconds": 35.186
+    },
+    {
+      "pair": 3,
+      "order": [
+        "original",
+        "compact"
+      ],
+      "original_seconds": 51.643,
+      "compact_seconds": 35.598
+    }
+  ],
+  "observed_timing_nash_conv": 0.0110366448494,
+  "observed_stage_progress": "All three pairs advanced after direct policy/diagnostic/physical-prior parity assertions and independent verification. Compact90/delay45 accuracy checkpoint started; no completion output. Allocation traces and final source/spec hash recheck were not reached.",
+  "next_action": "Use a newly frozen resumable harness with the same workload, 5% runtime gate and 0.005 target. Repeat complete evidence; do not use these partial observations for adoption."
+}

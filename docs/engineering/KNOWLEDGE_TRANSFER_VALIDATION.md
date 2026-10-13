@@ -5,7 +5,7 @@ Baseline application source: `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce`.
 The knowledge-transfer branch changes documentation, agent entry points and a
 stdlib documentation checker/CI job; application, solver and coach code is unchanged.
 
-## Commands actually run
+## Original October 8 commands actually run
 
 | Check | Result |
 | --- | --- |
@@ -52,3 +52,29 @@ project chats were not retrieved: conversation search returned an error and only
 the mission artifact surfaced. Historical rationale, alternatives and owner
 choices absent from those partial sources remain missing. Additional source
 exports or working retrieval are needed for a complete project-chat transfer.
+
+## October 13 integration review
+
+The documentation PR was reconciled with main at
+`46e142be8e9585005e5de70bb32bf4a76f731a1c`, including the merged solver
+work through direct flop PR #109 and release-wording PR #19. Current main's
+solver instructions, frontend baseline and application code were preserved.
+The onboarding, system map, implementation status and roadmap were refreshed;
+the original source index, chat coverage and historical validation remain dated
+snapshots. An unfinished local push/fold experiment is not described as shipped.
+
+Executed integration checks on Python 3.12.14:
+
+- `python -m scripts.validate_docs`: passed: 89 Markdown files, 296 local links and 12 required entry points.
+- A temporary synthetic validator exercise detected a missing required entry
+  point and a broken local link, and excluded external URLs, fragments and fenced
+  examples.
+- `git diff --check`: passed.
+- `git diff origin/main -- pokerlab tests benchmarks`: empty; application,
+  mathematical tests and benchmark artifacts were unchanged.
+
+Luna reviewed the incoming documentation and identified stale solver descriptions
+and two main-branch conflicts. The integration retains current main's architecture
+rules and links the current finite-game specifications. GitHub full-suite and
+frontend results are recorded on PR #65 separately from these local docs checks.
+The original 331-test count above is historical and was not rerun locally here.

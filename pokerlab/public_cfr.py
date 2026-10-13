@@ -11,11 +11,17 @@ from collections.abc import Mapping
 import math
 
 from .cfr import strategy
+from .ranked_river import RankedRiverPayoffs
 from .river_tree import _Terminal
+from .turn_range_kernel import TurnRangePayoffs
 
 
 MAX_PREFIX_EDGES = 250_000
 _MAX_PRIVATE_HANDS = 52 * 51 // 2
+
+
+class _RankedNoChance:
+    """Sentinel node class for the matrix-free fixed-board river path."""
 
 
 def _aggregate_prefixes(worlds, hand_counts):
@@ -65,8 +71,8 @@ def _aggregate_prefixes(worlds, hand_counts):
 
 
 def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
-    if algorithm not in ("vanilla", "dcfr"):
-        raise ValueError("Algorithm must be vanilla or dcfr.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
     if type(iterations) is not int or iterations < 1:
         raise ValueError("Iterations must be a positive integer.")
     if not isinstance(infos, Mapping):
@@ -126,9 +132,98 @@ def _validate_inputs(worlds, infos, iterations, algorithm, pot, chance_type):
     return pot, hand_counts
 
 
+def _cfrplus_target_deltas(root, edges, infos, current, target_player,
+                           hand_counts, half_pot, chance_type,
+                           terminal_kernel=None, prefix_kernel=None):
+    """Return one player's regret deltas without constructing opponent values."""
+    deltas = {key: [0.0] * count for key, count in infos.items()
+              if key[0] == target_player}
+    target_count = hand_counts[target_player]
+    opponent = 1 - target_player
+
+    def visit(node, prefix, opponent_reach):
+        if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                not hasattr(node, "player")):
+            raise ValueError("Ranked river training does not support public chance nodes.")
+        if isinstance(node, chance_type):
+            if terminal_kernel is not None:
+                raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
+            value = [0.0] * target_count
+            for card, child in node.branches.items():
+                child_value = visit(child, prefix + (card,), opponent_reach)
+                for index, result in enumerate(child_value):
+                    value[index] += result
+            return value
+
+        if isinstance(node, _Terminal):
+            if prefix_kernel is not None:
+                return prefix_kernel.values(node, opponent_reach, target_player, prefix)
+            if terminal_kernel is not None:
+                if prefix:
+                    raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+                return terminal_kernel.values(node, opponent_reach, target_player)
+            value = [0.0] * target_count
+            if node.kind == "fold":
+                player0_sign = 1.0 if node.winner == 0 else -1.0
+                payoff = player0_sign * (half_pot + min(node.contributions))
+                for oop_index, ip_index, mass, _signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += mass * opponent_reach[ip_index] * payoff
+                    else:
+                        value[ip_index] -= mass * opponent_reach[oop_index] * payoff
+            else:
+                scale = half_pot + min(node.contributions)
+                for oop_index, ip_index, mass, signed_mass in edges[prefix]:
+                    if target_player == 0:
+                        value[oop_index] += signed_mass * opponent_reach[ip_index] * scale
+                    else:
+                        value[ip_index] -= signed_mass * opponent_reach[oop_index] * scale
+            return value
+
+        player = node.player
+        action_count = len(node.actions)
+        uniform = [1.0 / action_count] * action_count
+        probabilities = [current.get((player, hand_index, node.history), uniform)
+                         for hand_index in range(hand_counts[player])]
+
+        if player == target_player:
+            action_values = [visit(child, prefix, opponent_reach)
+                             for child in node.children]
+            value = [0.0] * target_count
+            for hand_index in range(target_count):
+                sigma = probabilities[hand_index]
+                expected = sum(sigma[action] * action_values[action][hand_index]
+                               for action in range(action_count))
+                value[hand_index] = expected
+                row = deltas.get((player, hand_index, node.history))
+                if row is not None:
+                    for action in range(action_count):
+                        row[action] += action_values[action][hand_index] - expected
+            return value
+
+        value = [0.0] * target_count
+        for action_index, child in enumerate(node.children):
+            child_reach = [opponent_reach[hand_index] *
+                           probabilities[hand_index][action_index]
+                           for hand_index in range(hand_counts[opponent])]
+            child_value = visit(child, prefix, child_reach)
+            for hand_index, result in enumerate(child_value):
+                value[hand_index] += result
+        return value
+
+    try:
+        visit(root, (), [1.0] * hand_counts[opponent])
+    finally:
+        # Avoid retaining recursive frames and their private-hand working arrays.
+        visit = None
+    return deltas
+
+
 def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
-                         *, pot, chance_type):
-    """Train exact vanilla CFR or DCFR over the supplied public tree.
+                         *, pot, chance_type, checkpoint_interval=None,
+                         checkpoint_callback=None,
+                         terminal_kernel: RankedRiverPayoffs | None = None):
+    """Train exact vanilla CFR, DCFR, or alternating CFR+ over the supplied tree.
 
     ``worlds`` contains tuples ``(oop_index, ip_index, mass, sign, *future)``;
     masses are the caller's joint range/blocker/chance weights. ``infos`` maps
@@ -138,25 +233,152 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
     The result maps each information-set key to its average action policy. This
     trainer has no lock or arbitrary callback API; use the shared CFR kernel
     when those features are required. Sparse prefix/hand edges are capped at
-    ``MAX_PREFIX_EDGES``.
+    ``MAX_PREFIX_EDGES``. When supplied together, ``checkpoint_interval`` and
+    ``checkpoint_callback`` add checkpoints after each completed interval and
+    at the final completed iteration, even when it is off-interval. The
+    callback receives ``(iteration, average_policy)`` with a fresh snapshot
+    whose rows do not alias trainer state; a truthy return stops training
+    after that completed iteration. Without these options, training behavior
+    is unchanged. ``terminal_kernel`` optionally replaces sparse terminal
+    accumulation with a validated fixed-board ``RankedRiverPayoffs`` kernel.
+    It accepts only the complete compatible river world set and rejects
+    future-card or otherwise correlated weighted worlds; it does not support
+    arbitrary utility callbacks.
     """
     pot, hand_counts = _validate_inputs(
         worlds, infos, iterations, algorithm, pot, chance_type,
     )
+    if terminal_kernel is not None:
+        if not isinstance(terminal_kernel, RankedRiverPayoffs):
+            raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+        terminal_kernel.validate_worlds(worlds, pot=pot)
+        context_counts = [len(terminal_kernel.hands[0]),
+                          len(terminal_kernel.hands[1])]
+        if any(key[1] >= context_counts[key[0]] for key in infos):
+            raise ValueError("An information-set hand index is outside the ranked river kernel.")
+        # Preserve the complete caller range indexing, including legal hands
+        # with no compatible opponent holding and therefore no public infos.
+        hand_counts = context_counts
+    if checkpoint_callback is not None and not callable(checkpoint_callback):
+        raise TypeError("checkpoint_callback must be callable.")
+    if checkpoint_interval is not None and (type(checkpoint_interval) is not int or
+                                             checkpoint_interval < 1):
+        raise ValueError("checkpoint_interval must be a positive integer.")
+    if (checkpoint_callback is not None) != (checkpoint_interval is not None):
+        raise ValueError("checkpoint_interval and checkpoint_callback must be supplied together.")
     edges, marginals = _aggregate_prefixes(worlds, hand_counts)
 
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=pot, chance_type=chance_type,
+        hand_counts=hand_counts, edges=edges, marginals=marginals,
+        checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, terminal_kernel=terminal_kernel,
+    )
+
+
+def _validate_ranked_infos(infos, terminal_kernel):
+    if not isinstance(infos, Mapping):
+        raise TypeError("infos must map information-set keys to action counts.")
+    hand_counts = [len(terminal_kernel.hands[0]), len(terminal_kernel.hands[1])]
+    for key, action_count in infos.items():
+        if (not isinstance(key, tuple) or len(key) != 3 or
+                type(key[0]) is not int or key[0] not in (0, 1) or
+                type(key[1]) is not int or not 0 <= key[1] < hand_counts[key[0]] or
+                not isinstance(key[2], tuple)):
+            raise ValueError("Information-set keys must match the ranked river hand ranges.")
+        if type(action_count) is not int or action_count < 1:
+            raise ValueError("Information sets must have a positive integer action count.")
+    return hand_counts
+
+
+def _validate_checkpoint_options(checkpoint_interval, checkpoint_callback):
+    if checkpoint_callback is not None and not callable(checkpoint_callback):
+        raise TypeError("checkpoint_callback must be callable.")
+    if checkpoint_interval is not None and (type(checkpoint_interval) is not int or
+                                             checkpoint_interval < 1):
+        raise ValueError("checkpoint_interval must be a positive integer.")
+    if (checkpoint_callback is not None) != (checkpoint_interval is not None):
+        raise ValueError("checkpoint_interval and checkpoint_callback must be supplied together.")
+
+
+def train_ranked_river(root, infos, iterations, algorithm="vanilla", *,
+                       terminal_kernel: RankedRiverPayoffs,
+                       checkpoint_interval=None, checkpoint_callback=None):
+    """Train on fixed-board river ranges without constructing joint worlds."""
+    if not isinstance(terminal_kernel, RankedRiverPayoffs):
+        raise TypeError("terminal_kernel must be a RankedRiverPayoffs instance.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
+    if type(iterations) is not int or iterations < 1:
+        raise ValueError("Iterations must be a positive integer.")
+    hand_counts = _validate_ranked_infos(infos, terminal_kernel)
+    _validate_checkpoint_options(checkpoint_interval, checkpoint_callback)
+    joint_marginals = terminal_kernel.joint_marginals()
+    if (not isinstance(joint_marginals, (tuple, list)) or
+            len(joint_marginals) != 2 or
+            tuple(map(len, joint_marginals)) != tuple(hand_counts)):
+        raise ValueError("Ranked river joint marginals do not match the hand ranges.")
+    marginals = {(): (joint_marginals[0], joint_marginals[1])}
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=terminal_kernel.pot,
+        chance_type=_RankedNoChance, hand_counts=hand_counts, edges={},
+        marginals=marginals, checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, terminal_kernel=terminal_kernel,
+    )
+
+
+def _train_prepared(root, infos, iterations, algorithm, *, pot, chance_type,
+                    hand_counts, edges, marginals, checkpoint_interval=None,
+                    checkpoint_callback=None,
+                    terminal_kernel: RankedRiverPayoffs | None = None,
+                    prefix_kernel: TurnRangePayoffs | None = None):
     keys = list(infos)
     regrets = {key: [0.0] * infos[key] for key in keys}
     sums = {key: [0.0] * infos[key] for key in keys}
     half_pot = pot / 2.0
 
-    for iteration in range(1, iterations + 1):
-        current = {key: strategy(row) for key, row in regrets.items()}
-        deltas = {key: [0.0] * infos[key] for key in keys}
-        average_factor = iteration * iteration if algorithm == "dcfr" else 1.0
-
+    def visitor(current, deltas, target_player=None, average_factor=0.0,
+                average_only=False):
         def visit(node, prefix, reach0, reach1):
+            if (terminal_kernel is not None and not isinstance(node, _Terminal) and
+                    not hasattr(node, "player")):
+                raise ValueError("Ranked river training does not support public chance nodes.")
+            if average_only:
+                if isinstance(node, chance_type):
+                    if terminal_kernel is not None:
+                        raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
+                    for card, child in node.branches.items():
+                        visit(child, prefix + (card,), reach0, reach1)
+                    return
+                if isinstance(node, _Terminal):
+                    return
+                player = node.player
+                action_count = len(node.actions)
+                uniform = [1.0 / action_count] * action_count
+                for hand_index in range(hand_counts[player]):
+                    key = (player, hand_index, node.history)
+                    if key in sums:
+                        sigma = current.get(key, uniform)
+                        own_mass = marginals[prefix][player][hand_index]
+                        own_reach = reach0[hand_index] if player == 0 else reach1[hand_index]
+                        for action in range(action_count):
+                            sums[key][action] += (own_mass * own_reach * sigma[action] *
+                                                  average_factor)
+                for action_index, child in enumerate(node.children):
+                    if player == 0:
+                        child_reach0 = [reach0[i] * current.get(
+                            (player, i, node.history), uniform)[action_index]
+                            for i in range(hand_counts[0])]
+                        visit(child, prefix, child_reach0, reach1)
+                    else:
+                        child_reach1 = [reach1[i] * current.get(
+                            (player, i, node.history), uniform)[action_index]
+                            for i in range(hand_counts[1])]
+                        visit(child, prefix, reach0, child_reach1)
+                return
             if isinstance(node, chance_type):
+                if terminal_kernel is not None:
+                    raise ValueError("Ranked river payoffs cannot traverse public chance nodes.")
                 value0 = [0.0] * hand_counts[0]
                 value1 = [0.0] * hand_counts[1]
                 for card, child in node.branches.items():
@@ -168,6 +390,14 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                 return value0, value1
 
             if isinstance(node, _Terminal):
+                if prefix_kernel is not None:
+                    return (prefix_kernel.values(node, reach1, 0, prefix),
+                            prefix_kernel.values(node, reach0, 1, prefix))
+                if terminal_kernel is not None:
+                    if prefix:
+                        raise ValueError("Ranked river payoffs require an empty public-card prefix.")
+                    return (terminal_kernel.values(node, reach1, 0),
+                            terminal_kernel.values(node, reach0, 1))
                 value0 = [0.0] * hand_counts[0]
                 value1 = [0.0] * hand_counts[1]
                 if node.kind == "fold":
@@ -214,9 +444,11 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                                    for action in range(action_count))
                     value0[hand_index] = expected
                     key = (player, hand_index, node.history)
-                    if key in deltas:
+                    if key in deltas and (target_player is None or target_player == player):
                         for action in range(action_count):
                             deltas[key][action] += action_values0[action][hand_index] - expected
+                    if target_player is None and average_factor and key in sums:
+                        for action in range(action_count):
                             sums[key][action] += (own_mass[hand_index] * reach0[hand_index] *
                                                   sigma[action] * average_factor)
                 for hand_index in range(hand_counts[1]):
@@ -230,9 +462,11 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
                                    for action in range(action_count))
                     value1[hand_index] = expected
                     key = (player, hand_index, node.history)
-                    if key in deltas:
+                    if key in deltas and (target_player is None or target_player == player):
                         for action in range(action_count):
                             deltas[key][action] += action_values1[action][hand_index] - expected
+                    if target_player is None and average_factor and key in sums:
+                        for action in range(action_count):
                             sums[key][action] += (own_mass[hand_index] * reach1[hand_index] *
                                                   sigma[action] * average_factor)
                 for hand_index in range(hand_counts[0]):
@@ -243,17 +477,45 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
         try:
             visit(root, (), [1.0] * hand_counts[0], [1.0] * hand_counts[1])
         finally:
-            # Break the self-reference even if traversal raises. Otherwise the
-            # function cycle retains this iteration's dense CFR working arrays.
             visit = None
 
-        for key in keys:
-            updated = [old + delta for old, delta in zip(regrets[key], deltas[key])]
-            if algorithm == "dcfr":
-                positive_discount = iteration ** 1.5 / (iteration ** 1.5 + 1.0)
-                updated = [value * (positive_discount if value > 0 else 0.5)
-                           for value in updated]
-            regrets[key] = updated
+    for iteration in range(1, iterations + 1):
+        current = {key: strategy(row) for key, row in regrets.items()}
+        deltas = ({} if algorithm == "cfrplus" else
+                  {key: [0.0] * infos[key] for key in keys})
+        average_factor = iteration * iteration if algorithm == "dcfr" else 1.0
+        if algorithm == "cfrplus":
+            for player in (0, 1):
+                deltas = _cfrplus_target_deltas(
+                    root, edges, infos, current, player, hand_counts,
+                    half_pot, chance_type, terminal_kernel=terminal_kernel,
+                    prefix_kernel=prefix_kernel,
+                )
+                for key in keys:
+                    if key[0] == player:
+                        regrets[key] = [max(0.0, old + delta)
+                                        for old, delta in zip(regrets[key], deltas[key])]
+                current = {key: strategy(row) for key, row in regrets.items()}
+            visitor(current, {}, average_factor=float(iteration), average_only=True)
+        else:
+            visitor(current, deltas, average_factor=average_factor)
+            for key in keys:
+                updated = [old + delta for old, delta in zip(regrets[key], deltas[key])]
+                if algorithm == "dcfr":
+                    positive_discount = iteration ** 1.5 / (iteration ** 1.5 + 1.0)
+                    updated = [value * (positive_discount if value > 0 else 0.5)
+                               for value in updated]
+                regrets[key] = updated
+
+        if checkpoint_callback is not None and (
+                iteration % checkpoint_interval == 0 or iteration == iterations):
+            snapshot = {}
+            for key in keys:
+                total = sum(sums[key])
+                snapshot[key] = ([value / total for value in sums[key]] if total else
+                                 [1.0 / infos[key]] * infos[key])
+            if checkpoint_callback(iteration, snapshot):
+                break
 
     averages = {}
     for key in keys:
@@ -261,3 +523,28 @@ def train_public_batched(root, worlds, infos, iterations, algorithm="vanilla",
         averages[key] = ([value / total for value in sums[key]] if total else
                          [1.0 / infos[key]] * infos[key])
     return averages
+
+
+def train_ranked_turn(root, infos, iterations, algorithm="vanilla", *,
+                      terminal_kernel: TurnRangePayoffs, chance_type,
+                      checkpoint_interval=None, checkpoint_callback=None):
+    """Train over a physical turn chance tree using prefix-aware river kernels."""
+    if not isinstance(terminal_kernel, TurnRangePayoffs):
+        raise TypeError("terminal_kernel must be a TurnRangePayoffs instance.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
+        raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
+    if type(iterations) is not int or iterations < 1:
+        raise ValueError("Iterations must be a positive integer.")
+    if not isinstance(chance_type, type):
+        raise TypeError("chance_type must be a chance-node class.")
+    hand_counts = _validate_ranked_infos(infos, terminal_kernel)
+    _validate_checkpoint_options(checkpoint_interval, checkpoint_callback)
+    marginals = {(): terminal_kernel.joint_marginals()}
+    for river in terminal_kernel.branch_probabilities:
+        marginals[(river,)] = terminal_kernel.joint_marginals((river,))
+    return _train_prepared(
+        root, infos, iterations, algorithm, pot=terminal_kernel.pot,
+        chance_type=chance_type, hand_counts=hand_counts, edges={},
+        marginals=marginals, checkpoint_interval=checkpoint_interval,
+        checkpoint_callback=checkpoint_callback, prefix_kernel=terminal_kernel,
+    )

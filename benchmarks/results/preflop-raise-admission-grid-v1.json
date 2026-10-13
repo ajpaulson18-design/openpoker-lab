@@ -1,0 +1,1476 @@
+{
+  "schema_version": 1,
+  "probe_id": "preflop-raise-admission-grid-v1",
+  "source_revision": "dddc5605a02b7b7b465ef99382316ff92c5c7754",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab/coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab/coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab/coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab/coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab/contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab/current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab/decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab/equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab/explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab/exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab/game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab/matrix_free_river.py": "aedae83d279def8288be363bf73ac236e6415401381e17184701909f36bb7ec3",
+    "pokerlab/matrix_free_turn.py": "1efea724fdd807e191bf7985553be1cc8ece2e686bcdf960bc564ff1de1d83fe",
+    "pokerlab/models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab/personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab/preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab/preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab/preflop_solver.py": "13d34891e08d7664f686b0f78d74fb98ee8d556ed9c9f8085cdd4429bef507b9",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab/situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab/solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_preflop_two_flops.py": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "tests/test_preflop_delayed_cfrplus.py": "c7127cea4e991eaa2ad83b538057255ceb67d59d4b8c3084f1ab03d73cea6af9",
+    "scripts/probe_preflop_raise_admission.py": "2863341068701754d58747c4a34c03eedf076cb9db8ea30269f977c81442f448",
+    "scripts/probe_preflop_raise_grid.py": "cad79e4330d609f84d555a003a4ebcd2aaab7ce17776a8a192dded741199aae1",
+    "benchmarks/preflop-raise-admission-grid-v1.json": "a9be28a947131044c32dfe5427ea7936af01be184bf1dc091ea7aac3eedcc037"
+  },
+  "configuration_sha256": "a9be28a947131044c32dfe5427ea7936af01be184bf1dc091ea7aac3eedcc037",
+  "generated_at_utc": "2026-10-10T14:24:52.873711+00:00",
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "specification": {
+    "schema_version": 1,
+    "probe_id": "preflop-raise-admission-grid-v1",
+    "sb": "AsAd,QsQd",
+    "bb": "KsKd,JhJc",
+    "starting_stacks": [
+      2.25,
+      2.5,
+      2.75,
+      3.0
+    ],
+    "preflop_actions": {
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": false
+    },
+    "flops": [
+      [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      [
+        "5h",
+        "6s",
+        "Jc"
+      ]
+    ],
+    "flop_counts": [
+      1,
+      2
+    ],
+    "postflop_actions": {
+      "bet_sizes": [
+        0.5
+      ],
+      "raise_sizes": [],
+      "max_raises": 0,
+      "include_all_in": true
+    },
+    "structural_checkpoints": [
+      {
+        "iterations": 10,
+        "delay": 5
+      },
+      {
+        "iterations": 20,
+        "delay": 10
+      },
+      {
+        "iterations": 40,
+        "delay": 20
+      },
+      {
+        "iterations": 90,
+        "delay": 45
+      }
+    ],
+    "quality_target_nash_conv": 0.005,
+    "target_padding": 1e-10,
+    "selection_rule": "Measure structural admission only for every listed stack and flop count. Retain all rejections. If any complete-future non-all-in raised game admits 90/delay45, prefer two flops then largest admitted listed stack; otherwise retain admission limits and design a separate explicit bounded quality fixture before training. No guard changes, replacement of rejected fixtures, training, or post-hoc quality-target changes in this probe.",
+    "scope": "Preflop opens and raises after a limp both target two chips. All listed stacks leave positive chips after calling that raise. Full ordered future candidates for each selected flop, not full-deck preflop. This shallow-stack grid does not resolve admission of the original three-chip fixture."
+  },
+  "records": [
+    {
+      "starting_stack": 2.25,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.25,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.25,
+            1.25
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.25,
+            0.25
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "1-flop",
+      "selected_flops": 1,
+      "selected_outcomes": 2352,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 7920,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          }
+        ],
+        "selected_outcomes": 2352,
+        "preflight_checks": 9408
+      }
+    },
+    {
+      "starting_stack": 2.25,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.25,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.25,
+            1.25
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.25,
+            0.25
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "2-flop",
+      "selected_flops": 2,
+      "selected_outcomes": 4704,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 11880,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ],
+        "selected_outcomes": 4704,
+        "preflight_checks": 18816
+      }
+    },
+    {
+      "starting_stack": 2.5,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.5,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.5,
+            1.5
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.5,
+            0.5
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "1-flop",
+      "selected_flops": 1,
+      "selected_outcomes": 2352,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 7920,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          }
+        ],
+        "selected_outcomes": 2352,
+        "preflight_checks": 9408
+      }
+    },
+    {
+      "starting_stack": 2.5,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.5,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.5,
+            1.5
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.5,
+            0.5
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "2-flop",
+      "selected_flops": 2,
+      "selected_outcomes": 4704,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 11880,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ],
+        "selected_outcomes": 4704,
+        "preflight_checks": 18816
+      }
+    },
+    {
+      "starting_stack": 2.75,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.75,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.75,
+            1.75
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.75,
+            0.75
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "1-flop",
+      "selected_flops": 1,
+      "selected_outcomes": 2352,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 7920,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          }
+        ],
+        "selected_outcomes": 2352,
+        "preflight_checks": 9408
+      }
+    },
+    {
+      "starting_stack": 2.75,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 2.75,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.75,
+            1.75
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            0.75,
+            0.75
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "2-flop",
+      "selected_flops": 2,
+      "selected_outcomes": 4704,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 11880,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ],
+        "selected_outcomes": 4704,
+        "preflight_checks": 18816
+      }
+    },
+    {
+      "starting_stack": 3.0,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 3.0,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            2.0,
+            2.0
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.0,
+            1.0
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "1-flop",
+      "selected_flops": 1,
+      "selected_outcomes": 2352,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 7920,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.25
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.25
+          }
+        ],
+        "selected_outcomes": 2352,
+        "preflight_checks": 9408
+      }
+    },
+    {
+      "starting_stack": 3.0,
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": 3.0,
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "preflop_tree_boundary": {
+        "root_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 0.5,
+            "raise_to": 1.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.5,
+            "raise_to": 2.0
+          }
+        ],
+        "tree_counts": {
+          "decision_nodes": 4,
+          "fold_terminals": 3,
+          "continuations": 3,
+          "public_states": 10
+        },
+        "after_limp_actions": [
+          {
+            "name": "check",
+            "token": "check",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "raise",
+            "token": "raise@2",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "limp_check_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            1.0,
+            1.0
+          ],
+          "pot": 2.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            2.0,
+            2.0
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        },
+        "sb_after_limp_raise_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "sb_reraise_available_after_limp_raise": false,
+        "bb_after_open_actions": [
+          {
+            "name": "fold",
+            "token": "fold",
+            "amount": 0.0,
+            "raise_to": 0.0
+          },
+          {
+            "name": "call",
+            "token": "call",
+            "amount": 1.0,
+            "raise_to": 2.0
+          }
+        ],
+        "open_call_boundary": {
+          "street": "flop",
+          "matched_contributions": [
+            2.0,
+            2.0
+          ],
+          "pot": 4.0,
+          "refunds": [
+            0.0,
+            0.0
+          ],
+          "remaining_stacks": [
+            1.0,
+            1.0
+          ],
+          "all_in": [
+            false,
+            false
+          ],
+          "next_player": 1
+        }
+      },
+      "fixture": "2-flop",
+      "selected_flops": 2,
+      "selected_outcomes": 4704,
+      "requested_iterations": 10,
+      "averaging_delay": 5,
+      "status": "rejected_before_vector_estimator",
+      "vector_estimator_reached": false,
+      "training_and_view_forbidden_by_probe": true,
+      "error_type": "ValueError",
+      "error": "Postflop solver public tree exceeds 10,000 decision nodes.",
+      "physical_preflight": {
+        "expanded_private_hands": [
+          2,
+          2
+        ],
+        "materialized_worlds": 11880,
+        "compatible_private_pairs": 4,
+        "pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ],
+        "selected_outcomes": 4704,
+        "preflight_checks": 18816
+      }
+    }
+  ],
+  "scope": "Structural admission only; all listed fixtures retained. No training/view allocation, policy quality, convergence, runtime or memory measurement. Current guards and shared postflop kernels are unchanged; a smaller admitted stack does not resolve a larger rejected stack."
+}

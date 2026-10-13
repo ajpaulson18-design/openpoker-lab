@@ -1,0 +1,1468 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-private-compaction-v1",
+  "generated_at": "2026-10-10T14:03:09.193532+00:00",
+  "source_revision": "5fd68f59c364b1dd887f537e05e17c9118f3ce97",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab/coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab/coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab/coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab/coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab/contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab/current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab/decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab/equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab/explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab/exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab/game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab/matrix_free_river.py": "aedae83d279def8288be363bf73ac236e6415401381e17184701909f36bb7ec3",
+    "pokerlab/matrix_free_turn.py": "1efea724fdd807e191bf7985553be1cc8ece2e686bcdf960bc564ff1de1d83fe",
+    "pokerlab/models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab/personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab/preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab/preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab/preflop_solver.py": "13d34891e08d7664f686b0f78d74fb98ee8d556ed9c9f8085cdd4429bef507b9",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab/situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab/solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_preflop_private_compaction.py": "d55da085bcd56a816273dd28c48c59ca12f722bb34e2e76bce7da07ddea60e21",
+    "scripts/benchmark_preflop_two_flops.py": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "tests/test_preflop_private_indices.py": "cc5356cf7a9ad535f6d51ff5bad1b2c98a27179f8f5a565acf98550fe7fde28a",
+    "tests/test_preflop_private_index_budget.py": "e55b2fd9b92777115172e153bb17e8de6bccacda501a9fb1eda5685eae2790ef",
+    "tests/test_preflop_private_index_integration.py": "f4441642b01b975e8a9a2f26568e38fb3e6d9f107c77d96f8ff80ba529643954"
+  },
+  "configuration_sha256": "2bb427a992d121585491c16046096099dab67ea3458be5eddcc76343a28ec4f8",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-private-compaction-v1",
+    "base_revision": "f3a44154a3d596e0410716f4850cdf57df686122",
+    "sb": "As2s,As3s,As4s,As5s,As6s,As7s,As8s,As9s,AsTs,AsJs,AsQs,AsKs,QsQd,JcJd",
+    "bb": "AsAd,As2d",
+    "config": {
+      "starting_stack": 2,
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "flops": [
+      [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      [
+        "5h",
+        "6s",
+        "Jc"
+      ]
+    ],
+    "paired_timing": {
+      "iterations": 20,
+      "delay": 10,
+      "pairs": 3
+    },
+    "memory": {
+      "iterations": 10,
+      "delay": 5
+    },
+    "accuracy": {
+      "iterations": 90,
+      "delay": 45
+    },
+    "minimum_median_time_reduction": 0.05,
+    "target_nash_conv": 0.005,
+    "adoption_gate": "Exact serialized policy and row-order, diagnostic and physical-prior parity in every pair; independent configured numeric replay and exact legal best responses; at least5% lower median complete-call time in three alternating pairs; bounded pre-copy versioned work/reference admission; separate complete-call Python memory measurement. Preserve all accuracy-target misses.",
+    "selection_evidence": "Twelve leading SB hands contain As and are physically incompatible with every BB hand; globally active indices12/13 remain with original dense dimension14. BB AsAd and As2d provide different showdown strengths. Two selected flops include Jc, removing JcJd and conditioning private-pair masses. All ordered future deals are included for each selected flop.",
+    "selection_scope": "Freeze before timing. Fixed same iterations/delay and original/compact production orchestration; no post-hoc target or workload adjustment. Improvement is shape-specific, with inactive global indices; no broad-range or hole-free speed claim."
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "paired_timings": [
+    {
+      "pair": 1,
+      "order": [
+        "original",
+        "compact"
+      ],
+      "policy_row_order_diagnostics_and_physical_priors_exactly_equal": true,
+      "records": {
+        "original": {
+          "complete_call_seconds": 22.497823599999947,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              14,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 70576,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 446120,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 439084,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 4563766,
+            "training_loop_entries_upper_bound": 210636324,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 23742780,
+            "diagnostics_setup_loop_entries_upper_bound": 1129082,
+            "diagnostics_dense_fallback_slot_upper_bound": 7137920,
+            "diagnostics_uniform_fallback_slot_upper_bound": 892240,
+            "total_loop_entries_upper_bound": 234818188,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726
+          },
+          "private_indexing_metadata": null,
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        },
+        "compact": {
+          "complete_call_seconds": 15.703298000000018,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-private-compact-budget-v4",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 17644,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 22712,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 333220,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1816390,
+            "training_loop_entries_upper_bound": 94390164,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 5913132,
+            "diagnostics_setup_loop_entries_upper_bound": 282266,
+            "diagnostics_dense_fallback_slot_upper_bound": 90848,
+            "diagnostics_uniform_fallback_slot_upper_bound": 45424,
+            "total_loop_entries_upper_bound": 101586012,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726,
+            "private_indexing": "compact",
+            "original_hand_counts": [
+              14,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "private_index_world_fields": 83160,
+            "private_index_compaction_reference_slots_upper_bound": 735624,
+            "private_index_compaction_reference_slot_limit": 8000000,
+            "private_index_compaction_loop_entries_upper_bound": 949496,
+            "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions."
+          },
+          "private_indexing_metadata": {
+            "original_hand_dimensions": [
+              14,
+              2
+            ],
+            "compact_hand_dimensions": [
+              2,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "original_active_indices": [
+              [
+                12,
+                13
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "world_rows": 11880,
+            "world_fields_copied": 83160,
+            "info_rows": 29606,
+            "info_action_slots": 59210,
+            "caps": {
+              "active_hands_per_player": 1326,
+              "world_rows": 3000000,
+              "world_fields": 25000000,
+              "info_rows": 500000,
+              "info_action_slots": 1000000
+            },
+            "scope": "Input rows are copied to preserve caller data; limits count logical rows/fields, not Python object overhead or RSS."
+          },
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        }
+      },
+      "phase_started_at": "2026-10-10T13:55:06.508349+00:00",
+      "phase_completed_at": "2026-10-10T13:55:59.781775+00:00"
+    },
+    {
+      "pair": 2,
+      "order": [
+        "compact",
+        "original"
+      ],
+      "policy_row_order_diagnostics_and_physical_priors_exactly_equal": true,
+      "records": {
+        "compact": {
+          "complete_call_seconds": 19.41088919999993,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-private-compact-budget-v4",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 17644,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 22712,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 333220,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1816390,
+            "training_loop_entries_upper_bound": 94390164,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 5913132,
+            "diagnostics_setup_loop_entries_upper_bound": 282266,
+            "diagnostics_dense_fallback_slot_upper_bound": 90848,
+            "diagnostics_uniform_fallback_slot_upper_bound": 45424,
+            "total_loop_entries_upper_bound": 101586012,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726,
+            "private_indexing": "compact",
+            "original_hand_counts": [
+              14,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "private_index_world_fields": 83160,
+            "private_index_compaction_reference_slots_upper_bound": 735624,
+            "private_index_compaction_reference_slot_limit": 8000000,
+            "private_index_compaction_loop_entries_upper_bound": 949496,
+            "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions."
+          },
+          "private_indexing_metadata": {
+            "original_hand_dimensions": [
+              14,
+              2
+            ],
+            "compact_hand_dimensions": [
+              2,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "original_active_indices": [
+              [
+                12,
+                13
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "world_rows": 11880,
+            "world_fields_copied": 83160,
+            "info_rows": 29606,
+            "info_action_slots": 59210,
+            "caps": {
+              "active_hands_per_player": 1326,
+              "world_rows": 3000000,
+              "world_fields": 25000000,
+              "info_rows": 500000,
+              "info_action_slots": 1000000
+            },
+            "scope": "Input rows are copied to preserve caller data; limits count logical rows/fields, not Python object overhead or RSS."
+          },
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        },
+        "original": {
+          "complete_call_seconds": 26.42515639999999,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              14,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 70576,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 446120,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 439084,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 4563766,
+            "training_loop_entries_upper_bound": 210636324,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 23742780,
+            "diagnostics_setup_loop_entries_upper_bound": 1129082,
+            "diagnostics_dense_fallback_slot_upper_bound": 7137920,
+            "diagnostics_uniform_fallback_slot_upper_bound": 892240,
+            "total_loop_entries_upper_bound": 234818188,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726
+          },
+          "private_indexing_metadata": null,
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        }
+      },
+      "phase_started_at": "2026-10-10T13:55:59.877216+00:00",
+      "phase_completed_at": "2026-10-10T13:57:03.023051+00:00"
+    },
+    {
+      "pair": 3,
+      "order": [
+        "original",
+        "compact"
+      ],
+      "policy_row_order_diagnostics_and_physical_priors_exactly_equal": true,
+      "records": {
+        "original": {
+          "complete_call_seconds": 20.60694209999997,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              14,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 70576,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 446120,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 439084,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 4563766,
+            "training_loop_entries_upper_bound": 210636324,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 23742780,
+            "diagnostics_setup_loop_entries_upper_bound": 1129082,
+            "diagnostics_dense_fallback_slot_upper_bound": 7137920,
+            "diagnostics_uniform_fallback_slot_upper_bound": 892240,
+            "total_loop_entries_upper_bound": 234818188,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726
+          },
+          "private_indexing_metadata": null,
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        },
+        "compact": {
+          "complete_call_seconds": 13.175564699999995,
+          "worlds": 11880,
+          "information_sets": 29606,
+          "decisions": 17642,
+          "public_states": 57138,
+          "private_pair_probabilities": [
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "AdAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "QdQs",
+              "bb_hand": "2dAs",
+              "probability": 0.33333333333333337
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "AdAs",
+              "probability": 0.16666666666666669
+            },
+            {
+              "sb_hand": "JcJd",
+              "bb_hand": "2dAs",
+              "probability": 0.16666666666666669
+            }
+          ],
+          "target_nash_conv": 0.005,
+          "independent_target_met": false,
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-private-compact-budget-v4",
+            "world_count": 11880,
+            "iterations": 20,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 4411,
+            "prefix_edges": 12160,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 17644,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 29606,
+            "information_set_action_slots": 59210,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 17642,
+            "chance_nodes": 477,
+            "terminal_nodes": 39019,
+            "action_edges": 35283,
+            "chance_edges": 21854,
+            "terminal_prefix_edge_visits": 107476,
+            "diagnostic_missing_policy_lookups": 22712,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 333220,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1816390,
+            "training_loop_entries_upper_bound": 94390164,
+            "training_setup_loop_entries_upper_bound": 473688,
+            "diagnostics_loop_entries_upper_bound": 5913132,
+            "diagnostics_setup_loop_entries_upper_bound": 282266,
+            "diagnostics_dense_fallback_slot_upper_bound": 90848,
+            "diagnostics_uniform_fallback_slot_upper_bound": 45424,
+            "total_loop_entries_upper_bound": 101586012,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 40,
+            "training_average_passes": 10,
+            "training_policy_match_rows": 621726,
+            "private_indexing": "compact",
+            "original_hand_counts": [
+              14,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "private_index_world_fields": 83160,
+            "private_index_compaction_reference_slots_upper_bound": 735624,
+            "private_index_compaction_reference_slot_limit": 8000000,
+            "private_index_compaction_loop_entries_upper_bound": 949496,
+            "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions."
+          },
+          "private_indexing_metadata": {
+            "original_hand_dimensions": [
+              14,
+              2
+            ],
+            "compact_hand_dimensions": [
+              2,
+              2
+            ],
+            "active_hand_counts": [
+              2,
+              2
+            ],
+            "original_active_indices": [
+              [
+                12,
+                13
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "world_rows": 11880,
+            "world_fields_copied": 83160,
+            "info_rows": 29606,
+            "info_action_slots": 59210,
+            "caps": {
+              "active_hands_per_player": 1326,
+              "world_rows": 3000000,
+              "world_fields": 25000000,
+              "info_rows": 500000,
+              "info_action_slots": 1000000
+            },
+            "scope": "Input rows are copied to preserve caller data; limits count logical rows/fields, not Python object overhead or RSS."
+          },
+          "configured_replay": {
+            "value_sb": -0.40062268705219295,
+            "value_bb": 0.40062268705219295,
+            "sb_best_response_value": -0.39697281678254237,
+            "bb_best_response_value": 0.40800946163191076,
+            "nash_conv": 0.011036644849368393,
+            "worlds": 11880,
+            "monetary_mode": "configured",
+            "checked_information_sets": 29606,
+            "private_pair_probabilities": [
+              {
+                "sb": "JcJd",
+                "bb": "2dAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "JcJd",
+                "bb": "AdAs",
+                "probability": 0.16666666666666585
+              },
+              {
+                "sb": "QdQs",
+                "bb": "2dAs",
+                "probability": 0.3333333333333153
+              },
+              {
+                "sb": "QdQs",
+                "bb": "AdAs",
+                "probability": 0.3333333333333153
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 7.216449660063518e-16,
+            "value_bb": 7.216449660063518e-16,
+            "sb_best_response_value": 9.992007221626409e-16,
+            "bb_best_response_value": 7.771561172376096e-16,
+            "nash_conv": 2.220446049250313e-16
+          },
+          "padded_value_interval": [
+            -0.40800946173191077,
+            -0.39697281668254236
+          ]
+        }
+      },
+      "phase_started_at": "2026-10-10T13:57:03.114722+00:00",
+      "phase_completed_at": "2026-10-10T13:57:51.711125+00:00"
+    }
+  ],
+  "paired_timing_medians": {
+    "original": 22.497823599999947,
+    "compact": 15.703298000000018
+  },
+  "observed_median_time_reduction": 0.302008128466255,
+  "runtime_gate_met": true,
+  "accuracy": {
+    "iterations": 90,
+    "delay": 45,
+    "complete_call_seconds": 48.85830920000001,
+    "worlds": 11880,
+    "information_sets": 29606,
+    "decisions": 17642,
+    "public_states": 57138,
+    "private_pair_probabilities": [
+      {
+        "sb_hand": "QdQs",
+        "bb_hand": "AdAs",
+        "probability": 0.33333333333333337
+      },
+      {
+        "sb_hand": "QdQs",
+        "bb_hand": "2dAs",
+        "probability": 0.33333333333333337
+      },
+      {
+        "sb_hand": "JcJd",
+        "bb_hand": "AdAs",
+        "probability": 0.16666666666666669
+      },
+      {
+        "sb_hand": "JcJd",
+        "bb_hand": "2dAs",
+        "probability": 0.16666666666666669
+      }
+    ],
+    "target_nash_conv": 0.005,
+    "independent_target_met": true,
+    "vector_work_budget": {
+      "budget_version": "preflop-public-vector-private-compact-budget-v4",
+      "world_count": 11880,
+      "iterations": 90,
+      "algorithm": "cfrplus",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "public_prefixes": 4411,
+      "prefix_edges": 12160,
+      "prefix_edge_limit": 250000,
+      "dense_prefix_slots": 17644,
+      "dense_prefix_slot_limit": 2000000,
+      "information_sets": 29606,
+      "information_set_action_slots": 59210,
+      "information_set_action_slot_limit": 1000000,
+      "decision_nodes": 17642,
+      "chance_nodes": 477,
+      "terminal_nodes": 39019,
+      "action_edges": 35283,
+      "chance_edges": 21854,
+      "terminal_prefix_edge_visits": 107476,
+      "diagnostic_missing_policy_lookups": 22712,
+      "aggregation_count": 2,
+      "aggregation_loop_entries_upper_bound": 333220,
+      "training_traversals_per_iteration": null,
+      "visitor_loop_entries_per_traversal_upper_bound": 1816390,
+      "training_loop_entries_upper_bound": 422372504,
+      "training_setup_loop_entries_upper_bound": 473688,
+      "diagnostics_loop_entries_upper_bound": 5913132,
+      "diagnostics_setup_loop_entries_upper_bound": 282266,
+      "diagnostics_dense_fallback_slot_upper_bound": 90848,
+      "diagnostics_uniform_fallback_slot_upper_bound": 45424,
+      "total_loop_entries_upper_bound": 429568352,
+      "total_loop_entry_limit": 500000000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+      "averaging_delay": 45,
+      "training_regret_passes": 180,
+      "training_average_passes": 45,
+      "training_policy_match_rows": 2694146,
+      "private_indexing": "compact",
+      "original_hand_counts": [
+        14,
+        2
+      ],
+      "active_hand_counts": [
+        2,
+        2
+      ],
+      "private_index_world_fields": 83160,
+      "private_index_compaction_reference_slots_upper_bound": 735624,
+      "private_index_compaction_reference_slot_limit": 8000000,
+      "private_index_compaction_loop_entries_upper_bound": 949496,
+      "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions."
+    },
+    "private_indexing_metadata": {
+      "original_hand_dimensions": [
+        14,
+        2
+      ],
+      "compact_hand_dimensions": [
+        2,
+        2
+      ],
+      "active_hand_counts": [
+        2,
+        2
+      ],
+      "original_active_indices": [
+        [
+          12,
+          13
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "world_rows": 11880,
+      "world_fields_copied": 83160,
+      "info_rows": 29606,
+      "info_action_slots": 59210,
+      "caps": {
+        "active_hands_per_player": 1326,
+        "world_rows": 3000000,
+        "world_fields": 25000000,
+        "info_rows": 500000,
+        "info_action_slots": 1000000
+      },
+      "scope": "Input rows are copied to preserve caller data; limits count logical rows/fields, not Python object overhead or RSS."
+    },
+    "configured_replay": {
+      "value_sb": -0.4063731718394394,
+      "value_bb": 0.4063731718394394,
+      "sb_best_response_value": -0.40282551194223337,
+      "bb_best_response_value": 0.4066011824146718,
+      "nash_conv": 0.0037756704724384305,
+      "worlds": 11880,
+      "monetary_mode": "configured",
+      "checked_information_sets": 29606,
+      "private_pair_probabilities": [
+        {
+          "sb": "JcJd",
+          "bb": "2dAs",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "JcJd",
+          "bb": "AdAs",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "QdQs",
+          "bb": "2dAs",
+          "probability": 0.3333333333333153
+        },
+        {
+          "sb": "QdQs",
+          "bb": "AdAs",
+          "probability": 0.3333333333333153
+        }
+      ]
+    },
+    "metric_absolute_gaps": {
+      "value_sb": 8.326672684688674e-16,
+      "value_bb": 8.326672684688674e-16,
+      "sb_best_response_value": 2.220446049250313e-16,
+      "bb_best_response_value": 1.0547118733938987e-15,
+      "nash_conv": 8.326672684688674e-16
+    },
+    "padded_value_interval": [
+      -0.4066011825146718,
+      -0.40282551184223336
+    ],
+    "phase_started_at": "2026-10-10T13:57:51.817226+00:00",
+    "phase_completed_at": "2026-10-10T13:58:47.739802+00:00"
+  },
+  "memory": {
+    "original": {
+      "complete_peak_traced_python_bytes": 74364817,
+      "parity_sha256": "1025b1b15d002178bae1ff8ae19814085d24aefa3ccba0272db83ab96006876d",
+      "worlds": 11880,
+      "information_sets": 29606,
+      "decisions": 17642,
+      "public_states": 57138,
+      "private_pair_probabilities": [
+        {
+          "sb_hand": "QdQs",
+          "bb_hand": "AdAs",
+          "probability": 0.33333333333333337
+        },
+        {
+          "sb_hand": "QdQs",
+          "bb_hand": "2dAs",
+          "probability": 0.33333333333333337
+        },
+        {
+          "sb_hand": "JcJd",
+          "bb_hand": "AdAs",
+          "probability": 0.16666666666666669
+        },
+        {
+          "sb_hand": "JcJd",
+          "bb_hand": "2dAs",
+          "probability": 0.16666666666666669
+        }
+      ],
+      "target_nash_conv": 0.005,
+      "independent_target_met": false,
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 10,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          14,
+          2
+        ],
+        "public_prefixes": 4411,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 70576,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 29606,
+        "information_set_action_slots": 59210,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 17642,
+        "chance_nodes": 477,
+        "terminal_nodes": 39019,
+        "action_edges": 35283,
+        "chance_edges": 21854,
+        "terminal_prefix_edge_visits": 107476,
+        "diagnostic_missing_policy_lookups": 446120,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 439084,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 4563766,
+        "training_loop_entries_upper_bound": 105658624,
+        "training_setup_loop_entries_upper_bound": 473688,
+        "diagnostics_loop_entries_upper_bound": 23742780,
+        "diagnostics_setup_loop_entries_upper_bound": 1129082,
+        "diagnostics_dense_fallback_slot_upper_bound": 7137920,
+        "diagnostics_uniform_fallback_slot_upper_bound": 892240,
+        "total_loop_entries_upper_bound": 129840488,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 5,
+        "training_regret_passes": 20,
+        "training_average_passes": 5,
+        "training_policy_match_rows": 325666
+      },
+      "private_indexing_metadata": null,
+      "configured_replay": {
+        "value_sb": -0.3920533659962372,
+        "value_bb": 0.3920533659962372,
+        "sb_best_response_value": -0.38813772991211837,
+        "bb_best_response_value": 0.4082712697519998,
+        "nash_conv": 0.02013353983988142,
+        "worlds": 11880,
+        "monetary_mode": "configured",
+        "checked_information_sets": 29606,
+        "private_pair_probabilities": [
+          {
+            "sb": "JcJd",
+            "bb": "2dAs",
+            "probability": 0.16666666666666585
+          },
+          {
+            "sb": "JcJd",
+            "bb": "AdAs",
+            "probability": 0.16666666666666585
+          },
+          {
+            "sb": "QdQs",
+            "bb": "2dAs",
+            "probability": 0.3333333333333153
+          },
+          {
+            "sb": "QdQs",
+            "bb": "AdAs",
+            "probability": 0.3333333333333153
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.996003610813204e-16,
+        "value_bb": 4.996003610813204e-16,
+        "sb_best_response_value": 1.1102230246251565e-16,
+        "bb_best_response_value": 7.771561172376096e-16,
+        "nash_conv": 6.661338147750939e-16
+      },
+      "padded_value_interval": [
+        -0.4082712698519998,
+        -0.38813772981211836
+      ],
+      "phase_started_at": "2026-10-10T13:58:47.843051+00:00",
+      "phase_completed_at": "2026-10-10T14:01:20.196014+00:00"
+    },
+    "compact": {
+      "complete_peak_traced_python_bytes": 74366857,
+      "parity_sha256": "1025b1b15d002178bae1ff8ae19814085d24aefa3ccba0272db83ab96006876d",
+      "worlds": 11880,
+      "information_sets": 29606,
+      "decisions": 17642,
+      "public_states": 57138,
+      "private_pair_probabilities": [
+        {
+          "sb_hand": "QdQs",
+          "bb_hand": "AdAs",
+          "probability": 0.33333333333333337
+        },
+        {
+          "sb_hand": "QdQs",
+          "bb_hand": "2dAs",
+          "probability": 0.33333333333333337
+        },
+        {
+          "sb_hand": "JcJd",
+          "bb_hand": "AdAs",
+          "probability": 0.16666666666666669
+        },
+        {
+          "sb_hand": "JcJd",
+          "bb_hand": "2dAs",
+          "probability": 0.16666666666666669
+        }
+      ],
+      "target_nash_conv": 0.005,
+      "independent_target_met": false,
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-private-compact-budget-v4",
+        "world_count": 11880,
+        "iterations": 10,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4411,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 17644,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 29606,
+        "information_set_action_slots": 59210,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 17642,
+        "chance_nodes": 477,
+        "terminal_nodes": 39019,
+        "action_edges": 35283,
+        "chance_edges": 21854,
+        "terminal_prefix_edge_visits": 107476,
+        "diagnostic_missing_policy_lookups": 22712,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 333220,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 1816390,
+        "training_loop_entries_upper_bound": 47535544,
+        "training_setup_loop_entries_upper_bound": 473688,
+        "diagnostics_loop_entries_upper_bound": 5913132,
+        "diagnostics_setup_loop_entries_upper_bound": 282266,
+        "diagnostics_dense_fallback_slot_upper_bound": 90848,
+        "diagnostics_uniform_fallback_slot_upper_bound": 45424,
+        "total_loop_entries_upper_bound": 54731392,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 5,
+        "training_regret_passes": 20,
+        "training_average_passes": 5,
+        "training_policy_match_rows": 325666,
+        "private_indexing": "compact",
+        "original_hand_counts": [
+          14,
+          2
+        ],
+        "active_hand_counts": [
+          2,
+          2
+        ],
+        "private_index_world_fields": 83160,
+        "private_index_compaction_reference_slots_upper_bound": 735624,
+        "private_index_compaction_reference_slot_limit": 8000000,
+        "private_index_compaction_loop_entries_upper_bound": 949496,
+        "private_index_compaction_scope": "Independent pre-copy census; ascending global active-hand renumbering preserves world/info order and arithmetic. Logical references include temporary copy overlap and final policy restoration, not Python object headers or RSS. Existing caps remain at actual compact dimensions."
+      },
+      "private_indexing_metadata": {
+        "original_hand_dimensions": [
+          14,
+          2
+        ],
+        "compact_hand_dimensions": [
+          2,
+          2
+        ],
+        "active_hand_counts": [
+          2,
+          2
+        ],
+        "original_active_indices": [
+          [
+            12,
+            13
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "world_rows": 11880,
+        "world_fields_copied": 83160,
+        "info_rows": 29606,
+        "info_action_slots": 59210,
+        "caps": {
+          "active_hands_per_player": 1326,
+          "world_rows": 3000000,
+          "world_fields": 25000000,
+          "info_rows": 500000,
+          "info_action_slots": 1000000
+        },
+        "scope": "Input rows are copied to preserve caller data; limits count logical rows/fields, not Python object overhead or RSS."
+      },
+      "configured_replay": {
+        "value_sb": -0.3920533659962372,
+        "value_bb": 0.3920533659962372,
+        "sb_best_response_value": -0.38813772991211837,
+        "bb_best_response_value": 0.4082712697519998,
+        "nash_conv": 0.02013353983988142,
+        "worlds": 11880,
+        "monetary_mode": "configured",
+        "checked_information_sets": 29606,
+        "private_pair_probabilities": [
+          {
+            "sb": "JcJd",
+            "bb": "2dAs",
+            "probability": 0.16666666666666585
+          },
+          {
+            "sb": "JcJd",
+            "bb": "AdAs",
+            "probability": 0.16666666666666585
+          },
+          {
+            "sb": "QdQs",
+            "bb": "2dAs",
+            "probability": 0.3333333333333153
+          },
+          {
+            "sb": "QdQs",
+            "bb": "AdAs",
+            "probability": 0.3333333333333153
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 4.996003610813204e-16,
+        "value_bb": 4.996003610813204e-16,
+        "sb_best_response_value": 1.1102230246251565e-16,
+        "bb_best_response_value": 7.771561172376096e-16,
+        "nash_conv": 6.661338147750939e-16
+      },
+      "padded_value_interval": [
+        -0.4082712698519998,
+        -0.38813772981211836
+      ],
+      "phase_started_at": "2026-10-10T14:01:20.284797+00:00",
+      "phase_completed_at": "2026-10-10T14:03:09.106206+00:00"
+    }
+  },
+  "memory_policy_row_order_diagnostics_and_physical_priors_exactly_equal": true,
+  "accuracy_scope": "Same fixed iterations/delay for timing/memory arms; all nine final policies independently replayed from numeric rules and complete legal visible-information best responses. Timing20/delay10 misses the unchanged0.005 target at0.011036644849368393; memory10/delay5 misses at0.02013353983988142. Compact90/delay45 meets it at0.0037756704724384305. The accuracy checkpoint is a single measurement with no runtime comparison to original90. No accuracy improvement from compaction is claimed.",
+  "timing_scope": "Three alternating pairs of complete two-flop20/delay10 solves plus JSON on one host, including preflight, compact copies, training, exact diagnostics and original-identity restoration. Preallocated runout arguments, pre-call GC and independent replay excluded. Shape-specific observed medians, no universal speed claim.",
+  "memory_scope": "Separate complete two-flop10/delay5 solves plus JSON under tracemalloc. Each arm runs without retaining the other result; each includes its own copies through diagnostics/restoration. Runout args preallocated; replay and parity digest excluded. Traced Python allocations, not RSS/native or higher-iteration guarantees.",
+  "admission_scope": "Independent v4 pre-copy structural census uses actual compact dimensions and reserves additional copy/restoration loop entries and logical reference slots. Original physical world/tree/candidate guards and numerical model unchanged. Logical slots exclude Python headers, allocator effects and RSS.",
+  "provenance": "Independently implemented ascending bijection of this repository's own global active-hand indices. No third-party source/dependencies or shared postflop/turn/river changes. Luna owns compaction/integration and independent budget tests/review; lead owns workload admission, independent integration checks, frozen measurement and adoption decision.",
+  "model_limits": "Conditioned finite heads-up two-selected-flop game with complete ordered future deals and narrow ranges with twelve globally inactive SB hands. No full-deck preflop, unrestricted NLHE, multiway, broad-range convergence, universal performance or formal floating-point certificate.",
+  "report_editorial_note": "Accuracy-scope prose clarified after measurement and review. All saved phase payloads, numerical records, source/specification manifests and parity digests are unchanged."
+}

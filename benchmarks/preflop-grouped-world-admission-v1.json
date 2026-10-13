@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-grouped-world-admission-v1",
+  "game_spec": "benchmarks/preflop-flop-raise-coverage-v1.json",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "config": {
+    "starting_stack": 6,
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": false
+  },
+  "flops": [
+    [
+      "2c",
+      "3c",
+      "4d"
+    ],
+    [
+      "5h",
+      "6s",
+      "Jc"
+    ]
+  ],
+  "flop_config": {
+    "bet_sizes": [
+      0.5,
+      1.0
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 1,
+    "include_all_in": true
+  },
+  "postflop_scope": "flop-checkdown",
+  "expected_worlds": 11880,
+  "expected_selected_outcomes": 4704,
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-10,
+  "checkpoints": [
+    {
+      "iterations": 250,
+      "delay": 125
+    },
+    {
+      "iterations": 500,
+      "delay": 250
+    },
+    {
+      "iterations": 1000,
+      "delay": 500
+    },
+    {
+      "iterations": 2000,
+      "delay": 1000
+    }
+  ],
+  "selection_scope": "Chosen after the fixed richer-flop matrix retained a six-chip250/delay125 miss (NashConv0.0116322490163). Freeze all four checkpoints before higher-iteration training. Preflight both legacy and opt-in admission for all checkpoints before any training. Require exact250-sweep serialized policy/physical/scalar parity between admissions, then independently replay every opt-in result over original physical worlds. Keep unchanged0.005 target, all misses and all cap rejections. No early stop, action/world reduction, speedup or memory claim.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with two narrow ranges/two selected flops, complete ordered future candidates and forced future checkdown. New opt-in admission explicitly replaces the legacyworlds*requested-iterations proxy with max300000physicalrows plus separately bounded full-requested-iteration vector work. Every other guard remains. No RSS bound, broad-range/full-deck, all-streets, multiway, unrestricted solver or general convergence guarantee."
+}

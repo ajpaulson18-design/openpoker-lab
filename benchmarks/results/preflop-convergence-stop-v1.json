@@ -1,0 +1,1250 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-exact-convergence-stop-v1",
+  "generated_at": "2026-10-10T01:30:35.929944+00:00",
+  "source_revision": "4efd3abfd5b1fb0295c696283a3487d7b4f1da1d",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab/coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab/coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab/coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab/coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab/contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab/current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab/decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab/equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab/explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab/exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab/game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab/matrix_free_river.py": "aedae83d279def8288be363bf73ac236e6415401381e17184701909f36bb7ec3",
+    "pokerlab/matrix_free_turn.py": "1efea724fdd807e191bf7985553be1cc8ece2e686bcdf960bc564ff1de1d83fe",
+    "pokerlab/models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab/personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab/preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab/preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab/preflop_solver.py": "7d6c3d2ca77eca0ffd96169c380de1919334f538c1895a661184a2d915e8bf75",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "a27fe3d5200dc4b06bbbcb8edf5b38f0f3c9ece2b1fde65e5d755650eaa9e3b0",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab/situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab/solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_preflop_convergence_stop.py": "f4bcc3012f0781a84598a78087fa30a57e9b3b7ec00bc3a3b488c14577480972",
+    "scripts/benchmark_preflop_two_flops.py": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2",
+    "scripts/preflop_validation.py": "db12b3dbb772649d7be76ec707b655f57a8a3b5dd29a225bc224f5173fb8c2a3",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "tests/test_preflop_convergence.py": "07a35c85eff8905d45c784ecdca3a2b00ed3b6faa96e3eca91a4acfdf6e8f5eb",
+    "tests/test_preflop_delayed_cfrplus.py": "c7127cea4e991eaa2ad83b538057255ceb67d59d4b8c3084f1ab03d73cea6af9",
+    "tests/test_preflop_vector_budget.py": "b81383c562f2c2563291bd92fe4b67ae577fa3c4df3a1261ca01442664d1cae4",
+    "tests/test_preflop_tree_admission.py": "0ca95d8db515a4a399e6fe4ed57dc0ee45720d6ef7558a5527ce73e6cd4a2039"
+  },
+  "configuration_sha256": "965e0db6f325e4ba295c6a387a6369b37bbb9bca40c1113bf46a6e96492fd0d0",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-exact-convergence-stop-v1",
+    "historical_reference": "benchmarks/results/preflop-two-complete-flops-v1.json",
+    "sb": "AsAd,QsQd",
+    "bb": "KsKd,JhJc",
+    "config": {
+      "starting_stack": 2,
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "flops": [
+      [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      [
+        "5h",
+        "6s",
+        "Jc"
+      ]
+    ],
+    "full_game": {
+      "iterations": 90,
+      "delay": 45,
+      "interval": 10,
+      "target_nash_conv": 0.005
+    },
+    "paired_fixed_flop": {
+      "iterations": 40,
+      "delay": 10,
+      "interval": 5,
+      "target_nash_conv": 0.05,
+      "pairs": 3
+    },
+    "unmet_selected": {
+      "sb": "AsAd:1,AhAc:0.25",
+      "bb": "KsKd:1,KcKh:0.5",
+      "config": {
+        "starting_stack": [
+          4,
+          3
+        ],
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 1,
+        "include_all_in": false
+      },
+      "runouts": [
+        "2c3c4d7h8h",
+        "Kc2d3h7s8c",
+        "Ac2d3h7s8c"
+      ],
+      "flop_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "raise_sizes": [],
+        "max_raises": 0,
+        "include_all_in": false
+      },
+      "iterations": 35,
+      "delay": 5,
+      "interval": 10,
+      "target_nash_conv": 1e-12
+    },
+    "memory": {
+      "iterations": 10,
+      "delay": 5,
+      "interval": 5,
+      "target_nash_conv": 0.005
+    },
+    "selection_scope": "Freeze before measurements. Core two-flop0.005 target and90/45 ceiling from prior independently verified report; adaptive full-game final policy must independently meet the same target or explicitly report a miss. Paired runtime measures a separate complete-fixed-first-flop40/10 workload with predeclared0.05 requested accuracy, not an improvement to historical accuracy targets. Tight selected-game target is intentionally below the1e-10 numerical guard, exercising explicit unmet-target reporting. No universal convergence or runtime claim.",
+    "selection_evidence": {
+      "source_revision": "4fb6342df56f5424e7879bc5006d14b2e2ad3133",
+      "profile_game": "complete two-flop10iterations/delay5",
+      "profile_scope": "cProfile instrumented solve including runout-argument creation; not a timing comparison",
+      "profile_cumulative_seconds": {
+        "solve_preflop": 32.826,
+        "averaging": 2.372,
+        "target_delta_passes": 13.393
+      },
+      "decision": "Averaging is only about7.2% of the profiled whole call. Prioritize requested-accuracy stopping instead of a new average traversal plan and its memory footprint."
+    }
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "paired_timings": [
+    {
+      "pair": 1,
+      "order": [
+        "fixed-ceiling",
+        "accuracy-stopped"
+      ],
+      "records": {
+        "fixed-ceiling": {
+          "requested_iterations": 40,
+          "completed_iterations": 40,
+          "delay": 10,
+          "interval": null,
+          "complete_call_seconds": 24.237141699995846,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": false,
+          "convergence_checkpoints": [],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 213488,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 108963006,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 3229492,
+            "diagnostics_setup_loop_entries_upper_bound": 152730,
+            "diagnostics_dense_fallback_slot_upper_bound": 23552,
+            "diagnostics_uniform_fallback_slot_upper_bound": 11776,
+            "total_loop_entries_upper_bound": 112405986,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420
+          },
+          "configured_replay": {
+            "value_sb": 0.516496329086059,
+            "value_bb": -0.516496329086059,
+            "sb_best_response_value": 0.524610442760846,
+            "bb_best_response_value": -0.5143298711446247,
+            "nash_conv": 0.010280571616221312,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 1.9095836023552692e-14,
+            "value_bb": 1.9095836023552692e-14,
+            "sb_best_response_value": 1.1879386363489175e-14,
+            "bb_best_response_value": 1.9095836023552692e-14,
+            "nash_conv": 7.216449660063518e-15
+          },
+          "padded_value_interval": [
+            0.5143298710446247,
+            0.524610442860846
+          ]
+        },
+        "accuracy-stopped": {
+          "requested_iterations": 40,
+          "completed_iterations": 20,
+          "delay": 10,
+          "interval": 5,
+          "complete_call_seconds": 13.176577500009444,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": true,
+          "convergence_checkpoints": [
+            {
+              "completed_iterations": 15,
+              "nash_conv": 0.0870315297237032,
+              "value_sb": 0.5134293386473461,
+              "sb_best_response_value": 0.5913703519001461,
+              "bb_best_response_value": -0.5043388221764429,
+              "target_reached": false
+            },
+            {
+              "completed_iterations": 20,
+              "nash_conv": 0.02569987566936227,
+              "value_sb": 0.5124741709288785,
+              "sb_best_response_value": 0.5342550531989037,
+              "bb_best_response_value": -0.5085551775295414,
+              "target_reached": true
+            }
+          ],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-convergence-budget-v3",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 8,
+            "aggregation_loop_entries_upper_bound": 853952,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 110372670,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 22606444,
+            "diagnostics_setup_loop_entries_upper_bound": 1069110,
+            "diagnostics_dense_fallback_slot_upper_bound": 164864,
+            "diagnostics_uniform_fallback_slot_upper_bound": 82432,
+            "total_loop_entries_upper_bound": 133833066,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420,
+            "checkpoint_interval": 5,
+            "checkpoint_count_upper_bound": 8,
+            "checkpoint_snapshot_loop_entries_upper_bound": 1409536,
+            "checkpoint_orchestration_loop_entries_upper_bound": 128,
+            "checkpoint_diagnostics_upper_bound": 6,
+            "diagnostic_evaluations_upper_bound": 7,
+            "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+          },
+          "configured_replay": {
+            "value_sb": 0.5124741709289004,
+            "value_bb": -0.5124741709289004,
+            "sb_best_response_value": 0.5342550531989156,
+            "bb_best_response_value": -0.5085551775295634,
+            "nash_conv": 0.02569987566935228,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 2.1871393585115584e-14,
+            "value_bb": 2.1871393585115584e-14,
+            "sb_best_response_value": 1.199040866595169e-14,
+            "bb_best_response_value": 2.19824158875781e-14,
+            "nash_conv": 9.992007221626409e-15
+          },
+          "padded_value_interval": [
+            0.5085551774295634,
+            0.5342550532989156
+          ],
+          "fixed_completed_iteration_policy_exactly_equal": true
+        }
+      }
+    },
+    {
+      "pair": 2,
+      "order": [
+        "accuracy-stopped",
+        "fixed-ceiling"
+      ],
+      "records": {
+        "accuracy-stopped": {
+          "requested_iterations": 40,
+          "completed_iterations": 20,
+          "delay": 10,
+          "interval": 5,
+          "complete_call_seconds": 14.066617499978747,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": true,
+          "convergence_checkpoints": [
+            {
+              "completed_iterations": 15,
+              "nash_conv": 0.0870315297237032,
+              "value_sb": 0.5134293386473461,
+              "sb_best_response_value": 0.5913703519001461,
+              "bb_best_response_value": -0.5043388221764429,
+              "target_reached": false
+            },
+            {
+              "completed_iterations": 20,
+              "nash_conv": 0.02569987566936227,
+              "value_sb": 0.5124741709288785,
+              "sb_best_response_value": 0.5342550531989037,
+              "bb_best_response_value": -0.5085551775295414,
+              "target_reached": true
+            }
+          ],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-convergence-budget-v3",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 8,
+            "aggregation_loop_entries_upper_bound": 853952,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 110372670,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 22606444,
+            "diagnostics_setup_loop_entries_upper_bound": 1069110,
+            "diagnostics_dense_fallback_slot_upper_bound": 164864,
+            "diagnostics_uniform_fallback_slot_upper_bound": 82432,
+            "total_loop_entries_upper_bound": 133833066,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420,
+            "checkpoint_interval": 5,
+            "checkpoint_count_upper_bound": 8,
+            "checkpoint_snapshot_loop_entries_upper_bound": 1409536,
+            "checkpoint_orchestration_loop_entries_upper_bound": 128,
+            "checkpoint_diagnostics_upper_bound": 6,
+            "diagnostic_evaluations_upper_bound": 7,
+            "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+          },
+          "configured_replay": {
+            "value_sb": 0.5124741709289004,
+            "value_bb": -0.5124741709289004,
+            "sb_best_response_value": 0.5342550531989156,
+            "bb_best_response_value": -0.5085551775295634,
+            "nash_conv": 0.02569987566935228,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 2.1871393585115584e-14,
+            "value_bb": 2.1871393585115584e-14,
+            "sb_best_response_value": 1.199040866595169e-14,
+            "bb_best_response_value": 2.19824158875781e-14,
+            "nash_conv": 9.992007221626409e-15
+          },
+          "padded_value_interval": [
+            0.5085551774295634,
+            0.5342550532989156
+          ]
+        },
+        "fixed-ceiling": {
+          "requested_iterations": 40,
+          "completed_iterations": 40,
+          "delay": 10,
+          "interval": null,
+          "complete_call_seconds": 24.377778699970804,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": false,
+          "convergence_checkpoints": [],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 213488,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 108963006,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 3229492,
+            "diagnostics_setup_loop_entries_upper_bound": 152730,
+            "diagnostics_dense_fallback_slot_upper_bound": 23552,
+            "diagnostics_uniform_fallback_slot_upper_bound": 11776,
+            "total_loop_entries_upper_bound": 112405986,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420
+          },
+          "configured_replay": {
+            "value_sb": 0.516496329086059,
+            "value_bb": -0.516496329086059,
+            "sb_best_response_value": 0.524610442760846,
+            "bb_best_response_value": -0.5143298711446247,
+            "nash_conv": 0.010280571616221312,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 1.9095836023552692e-14,
+            "value_bb": 1.9095836023552692e-14,
+            "sb_best_response_value": 1.1879386363489175e-14,
+            "bb_best_response_value": 1.9095836023552692e-14,
+            "nash_conv": 7.216449660063518e-15
+          },
+          "padded_value_interval": [
+            0.5143298710446247,
+            0.524610442860846
+          ]
+        }
+      }
+    },
+    {
+      "pair": 3,
+      "order": [
+        "fixed-ceiling",
+        "accuracy-stopped"
+      ],
+      "records": {
+        "fixed-ceiling": {
+          "requested_iterations": 40,
+          "completed_iterations": 40,
+          "delay": 10,
+          "interval": null,
+          "complete_call_seconds": 26.477110199979506,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": false,
+          "convergence_checkpoints": [],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-delayed-budget-v2",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 213488,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 108963006,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 3229492,
+            "diagnostics_setup_loop_entries_upper_bound": 152730,
+            "diagnostics_dense_fallback_slot_upper_bound": 23552,
+            "diagnostics_uniform_fallback_slot_upper_bound": 11776,
+            "total_loop_entries_upper_bound": 112405986,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420
+          },
+          "configured_replay": {
+            "value_sb": 0.516496329086059,
+            "value_bb": -0.516496329086059,
+            "sb_best_response_value": 0.524610442760846,
+            "bb_best_response_value": -0.5143298711446247,
+            "nash_conv": 0.010280571616221312,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 1.9095836023552692e-14,
+            "value_bb": 1.9095836023552692e-14,
+            "sb_best_response_value": 1.1879386363489175e-14,
+            "bb_best_response_value": 1.9095836023552692e-14,
+            "nash_conv": 7.216449660063518e-15
+          },
+          "padded_value_interval": [
+            0.5143298710446247,
+            0.524610442860846
+          ]
+        },
+        "accuracy-stopped": {
+          "requested_iterations": 40,
+          "completed_iterations": 20,
+          "delay": 10,
+          "interval": 5,
+          "complete_call_seconds": 14.480855900037568,
+          "worlds": 7920,
+          "information_sets": 17620,
+          "target_nash_conv": 0.05,
+          "independent_target_met": true,
+          "stopped_early": true,
+          "convergence_checkpoints": [
+            {
+              "completed_iterations": 15,
+              "nash_conv": 0.0870315297237032,
+              "value_sb": 0.5134293386473461,
+              "sb_best_response_value": 0.5913703519001461,
+              "bb_best_response_value": -0.5043388221764429,
+              "target_reached": false
+            },
+            {
+              "completed_iterations": 20,
+              "nash_conv": 0.02569987566936227,
+              "value_sb": 0.5124741709288785,
+              "sb_best_response_value": 0.5342550531989037,
+              "bb_best_response_value": -0.5085551775295414,
+              "target_reached": true
+            }
+          ],
+          "vector_work_budget": {
+            "budget_version": "preflop-public-vector-convergence-budget-v3",
+            "world_count": 7920,
+            "iterations": 40,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              2,
+              2
+            ],
+            "public_prefixes": 2387,
+            "prefix_edges": 8108,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 9548,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 17620,
+            "information_set_action_slots": 35238,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 9546,
+            "chance_nodes": 249,
+            "terminal_nodes": 21125,
+            "action_edges": 19091,
+            "chance_edges": 11828,
+            "terminal_prefix_edge_visits": 71652,
+            "diagnostic_missing_policy_lookups": 5888,
+            "aggregation_count": 8,
+            "aggregation_loop_entries_upper_bound": 853952,
+            "training_traversals_per_iteration": null,
+            "visitor_loop_entries_per_traversal_upper_bound": 1009886,
+            "training_loop_entries_upper_bound": 110372670,
+            "training_setup_loop_entries_upper_bound": 281912,
+            "diagnostics_loop_entries_upper_bound": 22606444,
+            "diagnostics_setup_loop_entries_upper_bound": 1069110,
+            "diagnostics_dense_fallback_slot_upper_bound": 164864,
+            "diagnostics_uniform_fallback_slot_upper_bound": 82432,
+            "total_loop_entries_upper_bound": 133833066,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+            "averaging_delay": 10,
+            "training_regret_passes": 80,
+            "training_average_passes": 30,
+            "training_policy_match_rows": 722420,
+            "checkpoint_interval": 5,
+            "checkpoint_count_upper_bound": 8,
+            "checkpoint_snapshot_loop_entries_upper_bound": 1409536,
+            "checkpoint_orchestration_loop_entries_upper_bound": 128,
+            "checkpoint_diagnostics_upper_bound": 6,
+            "diagnostic_evaluations_upper_bound": 7,
+            "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+          },
+          "configured_replay": {
+            "value_sb": 0.5124741709289004,
+            "value_bb": -0.5124741709289004,
+            "sb_best_response_value": 0.5342550531989156,
+            "bb_best_response_value": -0.5085551775295634,
+            "nash_conv": 0.02569987566935228,
+            "worlds": 7920,
+            "monetary_mode": "configured",
+            "checked_information_sets": 17620,
+            "private_pair_probabilities": [
+              {
+                "sb": "AdAs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "AdAs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "JcJh",
+                "probability": 0.24999999999998782
+              },
+              {
+                "sb": "QdQs",
+                "bb": "KdKs",
+                "probability": 0.24999999999998782
+              }
+            ]
+          },
+          "metric_absolute_gaps": {
+            "value_sb": 2.1871393585115584e-14,
+            "value_bb": 2.1871393585115584e-14,
+            "sb_best_response_value": 1.199040866595169e-14,
+            "bb_best_response_value": 2.19824158875781e-14,
+            "nash_conv": 9.992007221626409e-15
+          },
+          "padded_value_interval": [
+            0.5085551774295634,
+            0.5342550532989156
+          ]
+        }
+      }
+    }
+  ],
+  "paired_timing_medians": {
+    "fixed-ceiling": 24.377778699970804,
+    "accuracy-stopped": 14.066617499978747
+  },
+  "observed_median_ratio": 1.733023500497375,
+  "full_game": {
+    "requested_iterations": 90,
+    "completed_iterations": 80,
+    "delay": 45,
+    "interval": 10,
+    "complete_call_seconds": 93.33240660000592,
+    "worlds": 11880,
+    "information_sets": 30128,
+    "target_nash_conv": 0.005,
+    "independent_target_met": true,
+    "stopped_early": true,
+    "convergence_checkpoints": [
+      {
+        "completed_iterations": 50,
+        "nash_conv": 0.020917727459386914,
+        "value_sb": 0.4465882685476805,
+        "sb_best_response_value": 0.4596711404188777,
+        "bb_best_response_value": -0.4387534129594908,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 60,
+        "nash_conv": 0.010231718274302137,
+        "value_sb": 0.4471597985964369,
+        "sb_best_response_value": 0.4534973385965838,
+        "bb_best_response_value": -0.4432656203222817,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 70,
+        "nash_conv": 0.006105752402132514,
+        "value_sb": 0.4476755284213866,
+        "sb_best_response_value": 0.4502449284414205,
+        "bb_best_response_value": -0.444139176039288,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 80,
+        "nash_conv": 0.0039504118779273845,
+        "value_sb": 0.4472406170567293,
+        "sb_best_response_value": 0.44885868005919977,
+        "bb_best_response_value": -0.4449082681812724,
+        "target_reached": true
+      }
+    ],
+    "vector_work_budget": {
+      "budget_version": "preflop-public-vector-convergence-budget-v3",
+      "world_count": 11880,
+      "iterations": 90,
+      "algorithm": "cfrplus",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "public_prefixes": 4589,
+      "prefix_edges": 12160,
+      "prefix_edge_limit": 250000,
+      "dense_prefix_slots": 18356,
+      "dense_prefix_slot_limit": 2000000,
+      "information_sets": 30128,
+      "information_set_action_slots": 60254,
+      "information_set_action_slot_limit": 1000000,
+      "decision_nodes": 18354,
+      "chance_nodes": 487,
+      "terminal_nodes": 40607,
+      "action_edges": 36707,
+      "chance_edges": 22740,
+      "terminal_prefix_edge_visits": 107476,
+      "diagnostic_missing_policy_lookups": 26320,
+      "aggregation_count": 7,
+      "aggregation_loop_entries_upper_bound": 1174908,
+      "training_traversals_per_iteration": null,
+      "visitor_loop_entries_per_traversal_upper_bound": 1881102,
+      "training_loop_entries_upper_bound": 439055102,
+      "training_setup_loop_entries_upper_bound": 482040,
+      "diagnostics_loop_entries_upper_bound": 36885144,
+      "diagnostics_setup_loop_entries_upper_bound": 1761948,
+      "diagnostics_dense_fallback_slot_upper_bound": 631680,
+      "diagnostics_uniform_fallback_slot_upper_bound": 315840,
+      "total_loop_entries_upper_bound": 477115154,
+      "total_loop_entry_limit": 500000000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+      "averaging_delay": 45,
+      "training_regret_passes": 180,
+      "training_average_passes": 45,
+      "training_policy_match_rows": 2741648,
+      "checkpoint_interval": 10,
+      "checkpoint_count_upper_bound": 9,
+      "checkpoint_snapshot_loop_entries_upper_bound": 2711448,
+      "checkpoint_orchestration_loop_entries_upper_bound": 144,
+      "checkpoint_diagnostics_upper_bound": 5,
+      "diagnostic_evaluations_upper_bound": 6,
+      "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+    },
+    "configured_replay": {
+      "value_sb": 0.4472406170567305,
+      "value_bb": -0.4472406170567305,
+      "sb_best_response_value": 0.4488586800592005,
+      "bb_best_response_value": -0.4449082681812734,
+      "nash_conv": 0.003950411877927107,
+      "worlds": 11880,
+      "monetary_mode": "configured",
+      "checked_information_sets": 30128,
+      "private_pair_probabilities": [
+        {
+          "sb": "AdAs",
+          "bb": "JcJh",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "AdAs",
+          "bb": "KdKs",
+          "probability": 0.3333333333333153
+        },
+        {
+          "sb": "QdQs",
+          "bb": "JcJh",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "QdQs",
+          "bb": "KdKs",
+          "probability": 0.3333333333333153
+        }
+      ]
+    },
+    "metric_absolute_gaps": {
+      "value_sb": 1.2212453270876722e-15,
+      "value_bb": 1.2212453270876722e-15,
+      "sb_best_response_value": 7.216449660063518e-16,
+      "bb_best_response_value": 9.992007221626409e-16,
+      "nash_conv": 2.7755575615628914e-16
+    },
+    "padded_value_interval": [
+      0.4449082680812734,
+      0.4488586801592005
+    ],
+    "fixed_completed_iteration_policy_exactly_equal": true,
+    "historical_ceiling_nash_conv": 0.0024466017258181205
+  },
+  "unmet_selected": {
+    "requested_iterations": 35,
+    "completed_iterations": 35,
+    "delay": 5,
+    "interval": 10,
+    "complete_call_seconds": null,
+    "worlds": 8,
+    "information_sets": 308,
+    "target_nash_conv": 1e-12,
+    "independent_target_met": false,
+    "stopped_early": false,
+    "convergence_checkpoints": [
+      {
+        "completed_iterations": 10,
+        "nash_conv": 0.03228026200731571,
+        "value_sb": 0.6707650508771885,
+        "sb_best_response_value": 0.6757943291436831,
+        "bb_best_response_value": -0.6435140671363674,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 20,
+        "nash_conv": 0.004035032750914325,
+        "value_sb": 0.6750353423336396,
+        "sb_best_response_value": 0.6756905073591766,
+        "bb_best_response_value": -0.6716554746082622,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 30,
+        "nash_conv": 0.0014898582464916155,
+        "value_sb": 0.6754383630381986,
+        "sb_best_response_value": 0.6756811519895838,
+        "bb_best_response_value": -0.6741912937430922,
+        "target_reached": false
+      },
+      {
+        "completed_iterations": 35,
+        "nash_conv": 0.0010412987744294888,
+        "value_sb": 0.675509703378018,
+        "sb_best_response_value": 0.6756795032069016,
+        "bb_best_response_value": -0.6746382044324721,
+        "target_reached": false
+      }
+    ],
+    "vector_work_budget": {
+      "budget_version": "preflop-public-vector-convergence-budget-v3",
+      "world_count": 8,
+      "iterations": 35,
+      "algorithm": "cfrplus",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "public_prefixes": 10,
+      "prefix_edges": 28,
+      "prefix_edge_limit": 250000,
+      "dense_prefix_slots": 40,
+      "dense_prefix_slot_limit": 2000000,
+      "information_sets": 308,
+      "information_set_action_slots": 618,
+      "information_set_action_slot_limit": 1000000,
+      "decision_nodes": 184,
+      "chance_nodes": 87,
+      "terminal_nodes": 192,
+      "action_edges": 369,
+      "chance_edges": 93,
+      "terminal_prefix_edge_visits": 516,
+      "diagnostic_missing_policy_lookups": 240,
+      "aggregation_count": 6,
+      "aggregation_loop_entries_upper_bound": 2808,
+      "training_traversals_per_iteration": null,
+      "visitor_loop_entries_per_traversal_upper_bound": 15074,
+      "training_loop_entries_upper_bound": 1516744,
+      "training_setup_loop_entries_upper_bound": 4936,
+      "diagnostics_loop_entries_upper_bound": 250460,
+      "diagnostics_setup_loop_entries_upper_bound": 14750,
+      "diagnostics_dense_fallback_slot_upper_bound": 4800,
+      "diagnostics_uniform_fallback_slot_upper_bound": 2400,
+      "total_loop_entries_upper_bound": 1770012,
+      "total_loop_entry_limit": 500000000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+      "averaging_delay": 5,
+      "training_regret_passes": 70,
+      "training_average_passes": 30,
+      "training_policy_match_rows": 11088,
+      "checkpoint_interval": 10,
+      "checkpoint_count_upper_bound": 4,
+      "checkpoint_snapshot_loop_entries_upper_bound": 12352,
+      "checkpoint_orchestration_loop_entries_upper_bound": 64,
+      "checkpoint_diagnostics_upper_bound": 4,
+      "diagnostic_evaluations_upper_bound": 5,
+      "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+    },
+    "configured_replay": {
+      "value_sb": 0.6755097033780179,
+      "value_bb": -0.6755097033780179,
+      "sb_best_response_value": 0.6756795032069016,
+      "bb_best_response_value": -0.6746382044324721,
+      "nash_conv": 0.0010412987744294888,
+      "worlds": 8,
+      "monetary_mode": "configured",
+      "checked_information_sets": 308,
+      "private_pair_probabilities": [
+        {
+          "sb": "AcAh",
+          "bb": "KcKh",
+          "probability": 0.027027027027027025
+        },
+        {
+          "sb": "AcAh",
+          "bb": "KdKs",
+          "probability": 0.1081081081081081
+        },
+        {
+          "sb": "AdAs",
+          "bb": "KcKh",
+          "probability": 0.2162162162162162
+        },
+        {
+          "sb": "AdAs",
+          "bb": "KdKs",
+          "probability": 0.6486486486486486
+        }
+      ]
+    },
+    "metric_absolute_gaps": {
+      "value_sb": 1.1102230246251565e-16,
+      "value_bb": 1.1102230246251565e-16,
+      "sb_best_response_value": 0.0,
+      "bb_best_response_value": 0.0,
+      "nash_conv": 0.0
+    },
+    "padded_value_interval": [
+      0.6746382043324721,
+      0.6756795033069016
+    ],
+    "fixed_ceiling_policy_exactly_equal": true
+  },
+  "memory": {
+    "requested_iterations": 10,
+    "completed_iterations": 10,
+    "delay": 5,
+    "interval": 5,
+    "complete_call_seconds": null,
+    "worlds": 11880,
+    "information_sets": 30128,
+    "target_nash_conv": 0.005,
+    "independent_target_met": false,
+    "stopped_early": false,
+    "convergence_checkpoints": [
+      {
+        "completed_iterations": 10,
+        "nash_conv": 0.09479928785426006,
+        "value_sb": 0.4731205653530938,
+        "sb_best_response_value": 0.49688223719160796,
+        "bb_best_response_value": -0.4020829493373479,
+        "target_reached": false
+      }
+    ],
+    "vector_work_budget": {
+      "budget_version": "preflop-public-vector-convergence-budget-v3",
+      "world_count": 11880,
+      "iterations": 10,
+      "algorithm": "cfrplus",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "public_prefixes": 4589,
+      "prefix_edges": 12160,
+      "prefix_edge_limit": 250000,
+      "dense_prefix_slots": 18356,
+      "dense_prefix_slot_limit": 2000000,
+      "information_sets": 30128,
+      "information_set_action_slots": 60254,
+      "information_set_action_slot_limit": 1000000,
+      "decision_nodes": 18354,
+      "chance_nodes": 487,
+      "terminal_nodes": 40607,
+      "action_edges": 36707,
+      "chance_edges": 22740,
+      "terminal_prefix_edge_visits": 107476,
+      "diagnostic_missing_policy_lookups": 26320,
+      "aggregation_count": 3,
+      "aggregation_loop_entries_upper_bound": 503532,
+      "training_traversals_per_iteration": null,
+      "visitor_loop_entries_per_traversal_upper_bound": 1881102,
+      "training_loop_entries_upper_bound": 49701126,
+      "training_setup_loop_entries_upper_bound": 482040,
+      "diagnostics_loop_entries_upper_bound": 12295048,
+      "diagnostics_setup_loop_entries_upper_bound": 587316,
+      "diagnostics_dense_fallback_slot_upper_bound": 210560,
+      "diagnostics_uniform_fallback_slot_upper_bound": 105280,
+      "total_loop_entries_upper_bound": 62499706,
+      "total_loop_entry_limit": 500000000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+      "averaging_delay": 5,
+      "training_regret_passes": 20,
+      "training_average_passes": 5,
+      "training_policy_match_rows": 331408,
+      "checkpoint_interval": 5,
+      "checkpoint_count_upper_bound": 2,
+      "checkpoint_snapshot_loop_entries_upper_bound": 602544,
+      "checkpoint_orchestration_loop_entries_upper_bound": 32,
+      "checkpoint_diagnostics_upper_bound": 1,
+      "diagnostic_evaluations_upper_bound": 2,
+      "convergence_budget_scope": "Full requested iteration ceiling, every scheduled snapshot, every positive-average exact check and one extra conservative final diagnostic; early stopping never bypasses admission."
+    },
+    "configured_replay": {
+      "value_sb": 0.4731205653530901,
+      "value_bb": -0.4731205653530901,
+      "sb_best_response_value": 0.4968822371916086,
+      "bb_best_response_value": -0.4020829493373444,
+      "nash_conv": 0.09479928785426422,
+      "worlds": 11880,
+      "monetary_mode": "configured",
+      "checked_information_sets": 30128,
+      "private_pair_probabilities": [
+        {
+          "sb": "AdAs",
+          "bb": "JcJh",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "AdAs",
+          "bb": "KdKs",
+          "probability": 0.3333333333333153
+        },
+        {
+          "sb": "QdQs",
+          "bb": "JcJh",
+          "probability": 0.16666666666666585
+        },
+        {
+          "sb": "QdQs",
+          "bb": "KdKs",
+          "probability": 0.3333333333333153
+        }
+      ]
+    },
+    "metric_absolute_gaps": {
+      "value_sb": 3.7192471324942744e-15,
+      "value_bb": 3.7192471324942744e-15,
+      "sb_best_response_value": 6.661338147750939e-16,
+      "bb_best_response_value": 3.497202527569243e-15,
+      "nash_conv": 4.163336342344337e-15
+    },
+    "padded_value_interval": [
+      0.4020829492373444,
+      0.49688223729160863
+    ],
+    "complete_peak_traced_python_bytes": 80467842
+  },
+  "historical_reference": {
+    "path": "benchmarks/results/preflop-two-complete-flops-v1.json",
+    "sha256": "4518783e1ee2478de636eba99e199ae2e2ba80bcc2bde7478a61247b14fc3a65",
+    "source_revision": "4f9f9c94e3fd53cd87f72cbcdf4c504a49419a97"
+  },
+  "accuracy_scope": "Final policies independently replayed from numeric poker rules, physical posteriors and exact visible-information best responses. Checkpoint history is production exact diagnostics; integration tests independently reconstruct every checkpoint in a smaller weighted game. Same-completed-iteration policy parity is checked separately. Fixed delay remains unchanged when stopping; all misses retained.",
+  "timing_scope": "Three alternating paired complete fixed-first-flop40/delay10 calls plus JSON, with requested0.05 accuracy on adaptive calls. Fixed calls always finish ceiling40. Both final policies are independently assessed against the same timing-fixture target; policy accuracy can differ. Pre-call GC, independent replay and extra parity calls excluded. One shared host; no universal speed claim. Core two-flop0.005 target is a separate single complete adaptive call and is not weakened by the timing target.",
+  "memory_scope": "Separate complete two-flop10/delay5/interval5 adaptive call plus JSON under tracemalloc, including exact check while trainer state is live. Runout arguments preallocated; independent replay and native/RSS excluded. No high-iteration guarantee or controlled comparison against historical memory.",
+  "provenance": "Independent preflop-local checkpoint orchestration around our existing CFR+ and exact diagnostic implementation. Published delay schedule remains completed-sweep own-reach, not verbatim Algorithm1. No third-party source/dependencies; shared postflop/turn/river kernels and AI Coach unchanged.",
+  "model_limits": "Conditioned finite heads-up selected-flop betting game. Full requested ceiling and possible snapshots/diagnostics are admitted before training. Target uses a1e-10 numerical guard, not a formal floating-point error bound; targets below that cannot be certified. No full-deck preflop, unrestricted NLHE or multiway claim."
+}

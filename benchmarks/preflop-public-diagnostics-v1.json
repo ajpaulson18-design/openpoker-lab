@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "conditioned-preflop-vector-exact-diagnostics-v1",
+  "repeats": 3,
+  "memory_iterations": 10,
+  "algorithm": "dcfr",
+  "scenarios": [
+    {
+      "id": "eighteen-versus-eighteen-private-combinations",
+      "sb": "AA,KK,QQ", "bb": "JJ,TT,99",
+      "config": {"starting_stack": [4, 3], "raise_sizes": [0.5], "max_raises": 1, "include_all_in": false},
+      "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c", "Ac2d3h7s8c"],
+      "iterations": [10, 100]
+    },
+    {
+      "id": "four-private-pairs-complete-fixed-flop-future-deck",
+      "sb": "AsAd,QsQd", "bb": "KsKd,JhJc",
+      "config": {"starting_stack": 2, "max_raises": 0, "include_all_in": false},
+      "complete_future_flop": ["2c", "3c", "4d"],
+      "iterations": [10],
+      "known_worlds": 7920,
+      "known_compatible_private_pairs": 4
+    }
+  ]
+}

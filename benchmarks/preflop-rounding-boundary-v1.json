@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "fixture_id": "fractional-flop-raise-rounding-boundary-v1",
+  "status": "configured monetary replay corrected; historical global reference still differs",
+  "observed_at_source": "d41ab5b378a7834ddaed5ae75928c36b2e488de0",
+  "sb": "AsAd",
+  "bb": "KsKd",
+  "config": {
+    "small_blind": 0.123456789,
+    "big_blind": 0.345678901,
+    "starting_stack": [2, 1.5],
+    "raise_sizes": [0.5],
+    "max_raises": 1,
+    "include_all_in": false
+  },
+  "runouts": ["2c3c4d7h8h", "Kc2d3h7s8c"],
+  "flop_config": {"bet_sizes": [0.123456789], "raise_sizes": [0.25], "max_raises": 1, "include_all_in": false},
+  "turn_config": {"bet_sizes": [0.333333333], "raise_sizes": [0.125], "max_raises": 1, "include_all_in": false},
+  "river_config": {"bet_sizes": [0.2], "raise_sizes": [0.3], "max_raises": 1, "include_all_in": false},
+  "mismatch": {
+    "reference_mode": "global-rational",
+    "history_prefix": ["raise@0.691357802", "call", "flop@2c3c4d", "check", "bet@0.862063431"],
+    "production_raise_to": 1.293095146,
+    "independent_replay_raise_to": 1.293095147,
+    "configured_replay_raise_to": 1.293095146,
+    "scope": "Historical Fraction/global-ledger replay differs by one nanounit at an intermediate binary quantization threshold. Configured replay now independently models local postflop rounding before whole-hand translation and agrees with production. Solver/shared monetary sizing is unchanged; exact-decimal equivalence remains unproven."
+  }
+}

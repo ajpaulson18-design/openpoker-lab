@@ -75,9 +75,8 @@ persist a conversation. The request uses the Responses API with structured outpu
    Toggle Live Coach without changing the saved calculation, and choose a coach
    voice to change delivery without changing strategy.
 
-The package declares version 0.2.0, including opponent-aware analysis, coaching,
-review, and presentation capabilities. The public API remains pre-1.0; the package
-version alone does not establish a published distribution release.
+Version 0.2.0 adds opponent-aware analysis, coaching, review, and presentation
+capabilities. The public API remains pre-1.0.
 
 ## Model boundaries
 
@@ -189,7 +188,7 @@ compatible private pair. It reuses the configured betting builder and the CFR
 backends, and hides each future card until its public reveal. Full-deck flop
 solving currently fits only small games under the resource limits; selected
 ordered runouts define a conditional study game. See [postflop examples and
-validation](docs/postflop-validation.md). Preflop, broader practical ranges and
+validation](docs/postflop-validation.md). Full-deck preflop, broader practical ranges and
 eventually multiway equilibrium remain development goals.
 
 Optional `traversal="public-batched"` shares exact training work across private
@@ -197,6 +196,55 @@ hands at each public node. Recursive remains the default and reference. This
 backend retains physical chance weights and adds a 250,000 prefix/hand-edge
 storage cap; it specializes the postflop fold/showdown utilities. See
 [public-batched validation and measurements](docs/public-batched-cfr.md).
+
+The three production training kernels also have a
+[known small-game accuracy check](docs/cfr-known-quality.md), with independently
+enumerated best responses and quantitative convergence gates. Run
+`python -m scripts.validate_cfr_quality --output benchmarks/results/cfr-quality-v1.json`
+to reproduce it. This checks the kernels on Kuhn poker, alongside the separate
+Hold'em physical-world and betting validation.
+
+An additive [heads-up preflop betting component](docs/preflop-betting.md)
+constructs blind-aware actions and explicit flop/all-in continuation boundaries.
+It reuses the existing action and CFR interfaces, including the big blind's
+option after a limp. Continuation leaves remain unsolved; this component does
+not itself supply preflop equilibrium strategies. The additive
+[bounded preflop solver](docs/preflop-solver.md) now connects it to physical
+flop chance and the existing postflop trees, with independent serialized-policy
+replay and exact legal best responses. Selected five-card outcomes condition
+the whole joint game; this is not an unconditional full-deck preflop solution.
+Optional recursive [preflop CFR+](docs/preflop-cfrplus.md) has independently
+replayed best responses and measured comparisons with vanilla/DCFR; existing
+defaults are retained.
+Optional [delayed CFR+ averaging](docs/preflop-averaging-delay.md) exposes the
+published weight schedule through isolated preflop adapters, with independent
+reference/replay checks. Delay zero remains the default.
+Optional [preflop private-hand vectors](docs/preflop-public-batched.md) preserve
+the configured game and exact responses, with measured range comparisons and
+explicit memory and numerical limits.
+Optional [vector value and best-response diagnostics](docs/preflop-public-diagnostics.md)
+reuse that utility-preserving view to compute the configured game's legal
+responses, with independent replay validation. Recursive diagnostics remain
+the default.
+An opt-in [vector workload model](docs/preflop-vector-resources.md) bounds
+shared public traversal and scratch dimensions before admitting deeper
+complete fixed-flop solves. Legacy resource admission remains the default;
+independent legal best responses measure each checkpoint's actual accuracy.
+The [independent monetary replay](docs/preflop-monetary-replay.md) checks the
+configured local rounding order exactly and retains a separate historical
+precision diagnostic.
+
+[Indexed selected-outcome blockers](docs/preflop-runout-index.md) reduce preflop
+physical-world setup work while retaining the existing admission ceilings and
+exact conditioned-game outputs. Optional [chance-sampled CFR](docs/preflop-chance-sampled.md) records exact final diagnostics, resource limits and multi-seed accuracy misses.
+
+Explicit [two-flop structural admission](docs/preflop-two-complete-flops.md) covers two selected flops with every legal ordered future deal, independently replayed policies and exact legal responses. Its preflop-local delayed CFR+ optimization preserves policy numbers while removing redundant work; full-deck preflop remains outside scope.
+
+Optional [exact requested-accuracy stopping](docs/preflop-convergence-stop.md) checks legal best responses to completed delayed-CFR+ average policies and reports actual completed iterations, checkpoint history and target misses. Admission still reserves the full requested ceiling and all possible checks before training; default fixed-iteration behavior is unchanged.
+
+A [target-delta plan experiment](docs/preflop-target-plan-prototype.md) preserved exact policies but failed its predeclared runtime gate and increased traced allocations. It remains a reproducible research helper; production solvers do not use it.
+
+Opt-in [private-index compaction](docs/preflop-private-compaction.md) removes globally inactive hand slots for delayed public-vector CFR+, with original policy identities, independent replay and versioned copy/work admission. Its frozen two-flop benchmark recorded about30% lower median complete-call time on a shape with globally inactive hands, essentially equal traced Python peaks, and an independently replayed higher-iteration policy meeting the stated accuracy target; the feature remains opt-in and model limits are explicit.
 
 ## Range notation
 
@@ -266,3 +314,31 @@ and tests that measure poker correctness or statistical behavior. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 MIT licensed. Research software; no performance or profitability claims.
+
+Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
+
+An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
+
+Measured exact-payload setup improvement for flop-checkdown solves: [active legal prefixes](docs/preflop-active-prefixes.md).
+
+Optional hidden-future grouping for the same finite flop-checkdown game: [API, admission, full-world verification and measured limits](docs/preflop-hidden-future-groups.md).
+
+Richer flop betting measured across three stack depths: [fixed admission and accuracy matrix, including target misses](docs/preflop-flop-raise-coverage.md).
+
+Explicit grouped-world construction admission enables longer verified flop-checkdown runs: [API, replaced reference guard, unchanged vector caps and quality evidence](docs/preflop-grouped-world-admission.md).
+
+Preflop opening, 3-bet, 4-bet and all-in action coverage: [fixed six-case admission and independent accuracy matrix](docs/preflop-action-coverage.md).
+
+Weighted private ranges with colliding hands and a blocked flop: [rational conditioned priors and independently verified accuracy](docs/preflop-weighted-range-coverage.md).
+
+A diagnostic cost profile of the verified weighted fixture: [exclusive preflop-local attribution and limits](docs/preflop-local-profile.md).
+
+A preflop normalization candidate retained as a failed promotion experiment: [exact parity, paired timings and allocation limits](docs/preflop-nonnegative-normalization.md).
+
+Broader private-hand and flop conditioning coverage: [four weighted hands per seat, four flops and original-world accuracy checks](docs/preflop-expanded-range.md).
+
+A grouped preflop target-plan reassessment retained as a failed experiment: [exact payload parity, paired timings and allocation evidence](docs/preflop-grouped-target-plan.md).
+
+A streamed preflop construction experiment retained without production adoption: [corrected work admission, exact parity and a failed paired runtime gate](docs/preflop-streamed-worlds-experiment.md).
+
+A direct fixed-flop solver with complete hidden future-deck integration: [API, independently replayed convergence, bounded work and model limits](docs/direct-flop-checkdown.md).

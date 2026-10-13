@@ -1,0 +1,1923 @@
+{
+  "benchmark_id": "matrix-free-turn-v1",
+  "cases": [
+    {
+      "input": {
+        "board": "2c7d9hJs",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 200.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "ip": "2s6h:0.75,3c9c:0.25,3dQc:0.125,3hAs:1.0,4c7c:0.5,4dJc:0.75,4s5c:0.25,5c9s:0.125",
+        "iterations": 40,
+        "oop": "2hKs:1.0,2sJh:0.5,3c9s:0.75,3d8c:0.25,3h6h:0.125,3s5h:1.0,4c4s:0.5,4cAs:0.75",
+        "range_size_per_player": 8,
+        "range_spec": {
+          "ip": [
+            {
+              "hand": "2s6h",
+              "weight": 0.75
+            },
+            {
+              "hand": "3c9c",
+              "weight": 0.25
+            },
+            {
+              "hand": "3dQc",
+              "weight": 0.125
+            },
+            {
+              "hand": "3hAs",
+              "weight": 1.0
+            },
+            {
+              "hand": "4c7c",
+              "weight": 0.5
+            },
+            {
+              "hand": "4dJc",
+              "weight": 0.75
+            },
+            {
+              "hand": "4s5c",
+              "weight": 0.25
+            },
+            {
+              "hand": "5c9s",
+              "weight": 0.125
+            }
+          ],
+          "oop": [
+            {
+              "hand": "2hKs",
+              "weight": 1.0
+            },
+            {
+              "hand": "2sJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3c9s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3d8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "3h6h",
+              "weight": 0.125
+            },
+            {
+              "hand": "3s5h",
+              "weight": 1.0
+            },
+            {
+              "hand": "4c4s",
+              "weight": 0.5
+            },
+            {
+              "hand": "4cAs",
+              "weight": 0.75
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "algorithm": "dcfr",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 54,
+              "deals": 54,
+              "info_sets": 4448,
+              "iterations": 40,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 2376
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 2376,
+              "info_sets": 4448,
+              "iterations": 40,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 2376,
+                "fallback_pair_checks": 65913,
+                "hand_counts": [
+                  8,
+                  8
+                ],
+                "hand_slots": 736,
+                "hand_state_pass_work": 866520,
+                "info_action_slots": 8896,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 6.473866186614929,
+              "ip_best_response_value": 15.091556007328387,
+              "nash_conv": 12.947732373229858,
+              "oop_best_response_value": -2.1438236340985295,
+              "value_oop": -8.444302168618172
+            },
+            "matrix-free": {
+              "exploitability": 6.020999841178372,
+              "ip_best_response_value": 14.940925385513578,
+              "nash_conv": 12.041999682356744,
+              "oop_best_response_value": -2.8989257031568343,
+              "value_oop": -8.641655946111065
+            }
+          },
+          "iterations": 40,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 7.105427357601002e-15,
+            "metric_abs_differences": {
+              "exploitability": 2.6645352591003757e-15,
+              "ip_best_response_value": 7.105427357601002e-15,
+              "nash_conv": 5.329070518200751e-15,
+              "oop_best_response_value": 1.7763568394002505e-15,
+              "value_oop": 0.0
+            },
+            "metrics": {
+              "exploitability": 6.020999841178369,
+              "ip_best_response_value": 14.940925385513571,
+              "nash_conv": 12.041999682356739,
+              "oop_best_response_value": -2.8989257031568325,
+              "value_oop": -8.641655946111065
+            },
+            "passed": true,
+            "policy_rows_replayed": 4448,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 2376
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.4528663454365569,
+              "ip_best_response_value": 0.15063062181480902,
+              "nash_conv": 0.9057326908731138,
+              "oop_best_response_value": 0.7551020690583048,
+              "value_oop": 0.19735377749289285
+            },
+            "max_absolute_difference_chips": 0.9057326908731138,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 54,
+                "deals": 54,
+                "info_sets": 4448,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 2376
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 7134061
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 2376,
+                "info_sets": 4448,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 2376,
+                  "fallback_pair_checks": 20997,
+                  "hand_counts": [
+                    8,
+                    8
+                  ],
+                  "hand_slots": 736,
+                  "hand_state_pass_work": 240120,
+                  "info_action_slots": 8896,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 7581389
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.5528764558940551,
+            "rows": 4448,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 8,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.27206163232997393,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 0.8995470889999524,
+              "samples": [
+                0.9796661240000049,
+                0.8995470889999524,
+                0.859572235000087
+              ]
+            },
+            "matrix-free": {
+              "median": 3.306409217999999,
+              "samples": [
+                3.306409217999999,
+                3.1186566840001433,
+                3.562307015999977
+              ]
+            }
+          }
+        },
+        {
+          "algorithm": "cfrplus",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 54,
+              "deals": 54,
+              "info_sets": 4448,
+              "iterations": 40,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 2376
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 2376,
+              "info_sets": 4448,
+              "iterations": 40,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 2376,
+                "fallback_pair_checks": 37928,
+                "hand_counts": [
+                  8,
+                  8
+                ],
+                "hand_slots": 736,
+                "hand_state_pass_work": 1284120,
+                "info_action_slots": 8896,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 0.4721515843451791,
+              "ip_best_response_value": 8.808736769913196,
+              "nash_conv": 0.9443031686903582,
+              "oop_best_response_value": -7.864433601222838,
+              "value_oop": -8.386397235521759
+            },
+            "matrix-free": {
+              "exploitability": 0.4725234895411745,
+              "ip_best_response_value": 8.808259029887445,
+              "nash_conv": 0.945046979082349,
+              "oop_best_response_value": -7.863212050805096,
+              "value_oop": -8.386629354761101
+            }
+          },
+          "iterations": 40,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 5.329070518200751e-15,
+            "metric_abs_differences": {
+              "exploitability": 8.881784197001252e-16,
+              "ip_best_response_value": 5.329070518200751e-15,
+              "nash_conv": 1.7763568394002505e-15,
+              "oop_best_response_value": 3.552713678800501e-15,
+              "value_oop": 5.329070518200751e-15
+            },
+            "metrics": {
+              "exploitability": 0.4725234895411736,
+              "ip_best_response_value": 8.80825902988744,
+              "nash_conv": 0.9450469790823472,
+              "oop_best_response_value": -7.8632120508050924,
+              "value_oop": -8.386629354761096
+            },
+            "passed": true,
+            "policy_rows_replayed": 4448,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 2376
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0003719051959953923,
+              "ip_best_response_value": 0.0004777400257509612,
+              "nash_conv": 0.0007438103919907846,
+              "oop_best_response_value": 0.0012215504177417458,
+              "value_oop": 0.00023211923934240986
+            },
+            "max_absolute_difference_chips": 0.0012215504177417458,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 54,
+                "deals": 54,
+                "info_sets": 4448,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 2376
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 7131213
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 2376,
+                "info_sets": 4448,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 2376,
+                  "fallback_pair_checks": 5932,
+                  "hand_counts": [
+                    8,
+                    8
+                  ],
+                  "hand_slots": 736,
+                  "hand_state_pass_work": 344520,
+                  "info_action_slots": 8896,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 7491237
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.10869623737330766,
+            "rows": 4448,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 8,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.35758370903036657,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 1.323862108000185,
+              "samples": [
+                1.1848659009999665,
+                1.323862108000185,
+                1.498445638000021
+              ]
+            },
+            "matrix-free": {
+              "median": 3.7022439070001383,
+              "samples": [
+                3.627642514999934,
+                3.7022439070001383,
+                4.229741970999839
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "board": "2c7d9hJs",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 200.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "ip": "3d6s:0.75,3hTc:0.25,3sKd:0.125,4d6c:1.0,4hTd:0.5,4sAh:0.75,5d9s:0.25,5hAs:0.125,6cJh:1.0,6h9d:0.5,7c8d:0.75,7s8d:0.25,8d9d:0.125,8sJh:1.0,9dAs:0.5,AhTd:0.75",
+        "iterations": 20,
+        "oop": "3cKh:1.0,3dQc:0.5,3hTh:0.75,3s9d:0.25,4c8h:0.125,4d8c:1.0,4h7s:0.5,4s7s:0.75,5c8c:0.25,5d8h:0.125,5h9d:1.0,5sTh:0.5,6cQc:0.75,6dKh:0.25,6s7h:0.125,7cTc:1.0",
+        "range_size_per_player": 16,
+        "range_spec": {
+          "ip": [
+            {
+              "hand": "3d6s",
+              "weight": 0.75
+            },
+            {
+              "hand": "3hTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "3sKd",
+              "weight": 0.125
+            },
+            {
+              "hand": "4d6c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4hTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "4sAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "5d9s",
+              "weight": 0.25
+            },
+            {
+              "hand": "5hAs",
+              "weight": 0.125
+            },
+            {
+              "hand": "6cJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "6h9d",
+              "weight": 0.5
+            },
+            {
+              "hand": "7c8d",
+              "weight": 0.75
+            },
+            {
+              "hand": "7s8d",
+              "weight": 0.25
+            },
+            {
+              "hand": "8d9d",
+              "weight": 0.125
+            },
+            {
+              "hand": "8sJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "9dAs",
+              "weight": 0.5
+            },
+            {
+              "hand": "AhTd",
+              "weight": 0.75
+            }
+          ],
+          "oop": [
+            {
+              "hand": "3cKh",
+              "weight": 1.0
+            },
+            {
+              "hand": "3dQc",
+              "weight": 0.5
+            },
+            {
+              "hand": "3hTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3s9d",
+              "weight": 0.25
+            },
+            {
+              "hand": "4c8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "4d8c",
+              "weight": 1.0
+            },
+            {
+              "hand": "4h7s",
+              "weight": 0.5
+            },
+            {
+              "hand": "4s7s",
+              "weight": 0.75
+            },
+            {
+              "hand": "5c8c",
+              "weight": 0.25
+            },
+            {
+              "hand": "5d8h",
+              "weight": 0.125
+            },
+            {
+              "hand": "5h9d",
+              "weight": 1.0
+            },
+            {
+              "hand": "5sTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "6cQc",
+              "weight": 0.75
+            },
+            {
+              "hand": "6dKh",
+              "weight": 0.25
+            },
+            {
+              "hand": "6s7h",
+              "weight": 0.125
+            },
+            {
+              "hand": "7cTc",
+              "weight": 1.0
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "algorithm": "dcfr",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 235,
+              "deals": 235,
+              "info_sets": 8896,
+              "iterations": 20,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 10340
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 10340,
+              "info_sets": 8896,
+              "iterations": 20,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 10340,
+                "fallback_pair_checks": 71736,
+                "hand_counts": [
+                  16,
+                  16
+                ],
+                "hand_slots": 1472,
+                "hand_state_pass_work": 897840,
+                "info_action_slots": 17792,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 12.176409754288295,
+              "ip_best_response_value": 41.74950970161126,
+              "nash_conv": 24.35281950857659,
+              "oop_best_response_value": -17.39669019303467,
+              "value_oop": -32.68994682369253
+            },
+            "matrix-free": {
+              "exploitability": 12.178475701882457,
+              "ip_best_response_value": 41.76037024840643,
+              "nash_conv": 24.356951403764914,
+              "oop_best_response_value": -17.403418844641518,
+              "value_oop": -32.69203695925822
+            }
+          },
+          "iterations": 20,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 3.552713678800501e-15,
+            "metric_abs_differences": {
+              "exploitability": 1.7763568394002505e-15,
+              "ip_best_response_value": 0.0,
+              "nash_conv": 3.552713678800501e-15,
+              "oop_best_response_value": 3.552713678800501e-15,
+              "value_oop": 0.0
+            },
+            "metrics": {
+              "exploitability": 12.178475701882455,
+              "ip_best_response_value": 41.76037024840643,
+              "nash_conv": 24.35695140376491,
+              "oop_best_response_value": -17.40341884464152,
+              "value_oop": -32.69203695925822
+            },
+            "passed": true,
+            "policy_rows_replayed": 8896,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 10340
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0020659475941613437,
+              "ip_best_response_value": 0.0108605467951719,
+              "nash_conv": 0.004131895188322687,
+              "oop_best_response_value": 0.006728651606849212,
+              "value_oop": 0.00209013556568749
+            },
+            "max_absolute_difference_chips": 0.0108605467951719,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 235,
+                "deals": 235,
+                "info_sets": 8896,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 10340
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 14055805
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 10340,
+                "info_sets": 8896,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 10340,
+                  "fallback_pair_checks": 30767,
+                  "hand_counts": [
+                    16,
+                    16
+                  ],
+                  "hand_slots": 1472,
+                  "hand_state_pass_work": 480240,
+                  "info_action_slots": 17792,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 13308741
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.03164894973458732,
+            "rows": 8896,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 16,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.4673410611231467,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 1.5530004629999894,
+              "samples": [
+                1.5488965740000822,
+                1.5530004629999894,
+                1.5783388209999885
+              ]
+            },
+            "matrix-free": {
+              "median": 3.323055883999814,
+              "samples": [
+                3.323055883999814,
+                3.383950958000014,
+                3.148987023000018
+              ]
+            }
+          }
+        },
+        {
+          "algorithm": "cfrplus",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 235,
+              "deals": 235,
+              "info_sets": 8896,
+              "iterations": 20,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 10340
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 10340,
+              "info_sets": 8896,
+              "iterations": 20,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 10340,
+                "fallback_pair_checks": 46583,
+                "hand_counts": [
+                  16,
+                  16
+                ],
+                "hand_slots": 1472,
+                "hand_state_pass_work": 1315440,
+                "info_action_slots": 17792,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 1.7796878800456053,
+              "ip_best_response_value": 32.978493332152645,
+              "nash_conv": 3.5593757600912106,
+              "oop_best_response_value": -29.419117572061435,
+              "value_oop": -31.64761763444061
+            },
+            "matrix-free": {
+              "exploitability": 1.7818140683450867,
+              "ip_best_response_value": 32.98387882886835,
+              "nash_conv": 3.5636281366901734,
+              "oop_best_response_value": -29.420250692178175,
+              "value_oop": -31.651133354207538
+            }
+          },
+          "iterations": 20,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 7.105427357601002e-15,
+            "metric_abs_differences": {
+              "exploitability": 1.7763568394002505e-15,
+              "ip_best_response_value": 7.105427357601002e-15,
+              "nash_conv": 3.552713678800501e-15,
+              "oop_best_response_value": 3.552713678800501e-15,
+              "value_oop": 0.0
+            },
+            "metrics": {
+              "exploitability": 1.7818140683450885,
+              "ip_best_response_value": 32.983878828868356,
+              "nash_conv": 3.563628136690177,
+              "oop_best_response_value": -29.42025069217818,
+              "value_oop": -31.651133354207538
+            },
+            "passed": true,
+            "policy_rows_replayed": 8896,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 10340
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.002126188299481413,
+              "ip_best_response_value": 0.005385496715703653,
+              "nash_conv": 0.004252376598962826,
+              "oop_best_response_value": 0.0011331201167408267,
+              "value_oop": 0.0035157197669271056
+            },
+            "max_absolute_difference_chips": 0.005385496715703653,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 235,
+                "deals": 235,
+                "info_sets": 8896,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 10340
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 14052845
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 10340,
+                "info_sets": 8896,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 10340,
+                  "fallback_pair_checks": 15651,
+                  "hand_counts": [
+                    16,
+                    16
+                  ],
+                  "hand_slots": 1472,
+                  "hand_state_pass_work": 689040,
+                  "info_action_slots": 17792,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 13304877
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.6030180907836972,
+            "rows": 8896,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 16,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.5543840813312912,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 1.788645243000019,
+              "samples": [
+                1.6550854199999776,
+                1.788645243000019,
+                1.8006371100000251
+              ]
+            },
+            "matrix-free": {
+              "median": 3.2263647229999606,
+              "samples": [
+                3.122310263999907,
+                3.2263647229999606,
+                3.595349504000069
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "input": {
+        "board": "2c7d9hJs",
+        "config": {
+          "bet_sizes": [
+            0.75
+          ],
+          "effective_stack": 200.0,
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100.0,
+          "raise_sizes": []
+        },
+        "ip": "4dTs:0.75,4hAs:0.25,5c9d:0.125,5dAd:1.0,5sTh:0.5,6d7s:0.75,6hAc:0.25,7cKc:0.125,7sKc:1.0,8dAc:0.5,9cTh:0.75,9sAd:0.25,AsTh:0.125,AhJh:1.0,KhKs:0.5,2dQs:0.75,2hAh:0.25,3c4s:0.125,3d7h:1.0,3hTh:0.5,3sKs:0.75,4d6h:0.25,4hTs:0.125,5c5d:1.0,5dTd:0.5,5s6d:0.75,6cQd:0.25,6hTc:0.125,7c8s:1.0,7s8s:0.5,8dTc:0.75,8sQd:0.25",
+        "iterations": 10,
+        "oop": "4d5h:1.0,4h5d:0.5,4s5d:0.75,5c5h:0.25,5d6c:0.125,5h6s:1.0,5s8c:0.5,6c9d:0.75,6dJc:0.25,6hKc:0.125,7c7h:1.0,7hTd:0.5,7sKd:0.75,8dTc:0.25,8hKs:0.125,9cQd:1.0,9sJh:0.5,QdTd:0.75,KsTs:0.25,JhKd:0.125,KcQs:1.0,2d2s:0.5,2dQs:0.75,2hTd:0.25,2s8c:0.125,3c6c:1.0,3d4h:0.5,3dAh:0.75,3hKd:0.25,3sQd:0.125,4cJd:1.0,4dTs:0.5",
+        "range_size_per_player": 32,
+        "range_spec": {
+          "ip": [
+            {
+              "hand": "4dTs",
+              "weight": 0.75
+            },
+            {
+              "hand": "4hAs",
+              "weight": 0.25
+            },
+            {
+              "hand": "5c9d",
+              "weight": 0.125
+            },
+            {
+              "hand": "5dAd",
+              "weight": 1.0
+            },
+            {
+              "hand": "5sTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "6d7s",
+              "weight": 0.75
+            },
+            {
+              "hand": "6hAc",
+              "weight": 0.25
+            },
+            {
+              "hand": "7cKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7sKc",
+              "weight": 1.0
+            },
+            {
+              "hand": "8dAc",
+              "weight": 0.5
+            },
+            {
+              "hand": "9cTh",
+              "weight": 0.75
+            },
+            {
+              "hand": "9sAd",
+              "weight": 0.25
+            },
+            {
+              "hand": "AsTh",
+              "weight": 0.125
+            },
+            {
+              "hand": "AhJh",
+              "weight": 1.0
+            },
+            {
+              "hand": "KhKs",
+              "weight": 0.5
+            },
+            {
+              "hand": "2dQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2hAh",
+              "weight": 0.25
+            },
+            {
+              "hand": "3c4s",
+              "weight": 0.125
+            },
+            {
+              "hand": "3d7h",
+              "weight": 1.0
+            },
+            {
+              "hand": "3hTh",
+              "weight": 0.5
+            },
+            {
+              "hand": "3sKs",
+              "weight": 0.75
+            },
+            {
+              "hand": "4d6h",
+              "weight": 0.25
+            },
+            {
+              "hand": "4hTs",
+              "weight": 0.125
+            },
+            {
+              "hand": "5c5d",
+              "weight": 1.0
+            },
+            {
+              "hand": "5dTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "5s6d",
+              "weight": 0.75
+            },
+            {
+              "hand": "6cQd",
+              "weight": 0.25
+            },
+            {
+              "hand": "6hTc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7c8s",
+              "weight": 1.0
+            },
+            {
+              "hand": "7s8s",
+              "weight": 0.5
+            },
+            {
+              "hand": "8dTc",
+              "weight": 0.75
+            },
+            {
+              "hand": "8sQd",
+              "weight": 0.25
+            }
+          ],
+          "oop": [
+            {
+              "hand": "4d5h",
+              "weight": 1.0
+            },
+            {
+              "hand": "4h5d",
+              "weight": 0.5
+            },
+            {
+              "hand": "4s5d",
+              "weight": 0.75
+            },
+            {
+              "hand": "5c5h",
+              "weight": 0.25
+            },
+            {
+              "hand": "5d6c",
+              "weight": 0.125
+            },
+            {
+              "hand": "5h6s",
+              "weight": 1.0
+            },
+            {
+              "hand": "5s8c",
+              "weight": 0.5
+            },
+            {
+              "hand": "6c9d",
+              "weight": 0.75
+            },
+            {
+              "hand": "6dJc",
+              "weight": 0.25
+            },
+            {
+              "hand": "6hKc",
+              "weight": 0.125
+            },
+            {
+              "hand": "7c7h",
+              "weight": 1.0
+            },
+            {
+              "hand": "7hTd",
+              "weight": 0.5
+            },
+            {
+              "hand": "7sKd",
+              "weight": 0.75
+            },
+            {
+              "hand": "8dTc",
+              "weight": 0.25
+            },
+            {
+              "hand": "8hKs",
+              "weight": 0.125
+            },
+            {
+              "hand": "9cQd",
+              "weight": 1.0
+            },
+            {
+              "hand": "9sJh",
+              "weight": 0.5
+            },
+            {
+              "hand": "QdTd",
+              "weight": 0.75
+            },
+            {
+              "hand": "KsTs",
+              "weight": 0.25
+            },
+            {
+              "hand": "JhKd",
+              "weight": 0.125
+            },
+            {
+              "hand": "KcQs",
+              "weight": 1.0
+            },
+            {
+              "hand": "2d2s",
+              "weight": 0.5
+            },
+            {
+              "hand": "2dQs",
+              "weight": 0.75
+            },
+            {
+              "hand": "2hTd",
+              "weight": 0.25
+            },
+            {
+              "hand": "2s8c",
+              "weight": 0.125
+            },
+            {
+              "hand": "3c6c",
+              "weight": 1.0
+            },
+            {
+              "hand": "3d4h",
+              "weight": 0.5
+            },
+            {
+              "hand": "3dAh",
+              "weight": 0.75
+            },
+            {
+              "hand": "3hKd",
+              "weight": 0.25
+            },
+            {
+              "hand": "3sQd",
+              "weight": 0.125
+            },
+            {
+              "hand": "4cJd",
+              "weight": 1.0
+            },
+            {
+              "hand": "4dTs",
+              "weight": 0.5
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "algorithm": "dcfr",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 948,
+              "deals": 948,
+              "info_sets": 17792,
+              "iterations": 10,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 41712
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 41712,
+              "info_sets": 17792,
+              "iterations": 10,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 41712,
+                "fallback_pair_checks": 40040,
+                "hand_counts": [
+                  32,
+                  32
+                ],
+                "hand_slots": 2944,
+                "hand_state_pass_work": 960480,
+                "info_action_slots": 35584,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 12.663341806451266,
+              "ip_best_response_value": 8.194368193011318,
+              "nash_conv": 25.32668361290253,
+              "oop_best_response_value": 17.132315419891214,
+              "value_oop": 1.6050205008006788
+            },
+            "matrix-free": {
+              "exploitability": 12.646370702199146,
+              "ip_best_response_value": 8.197735950927976,
+              "nash_conv": 25.292741404398292,
+              "oop_best_response_value": 17.095005453470318,
+              "value_oop": 1.606843785016558
+            }
+          },
+          "iterations": 10,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 1.4210854715202004e-14,
+            "metric_abs_differences": {
+              "exploitability": 7.105427357601002e-15,
+              "ip_best_response_value": 3.552713678800501e-15,
+              "nash_conv": 1.4210854715202004e-14,
+              "oop_best_response_value": 7.105427357601002e-15,
+              "value_oop": 1.7763568394002505e-15
+            },
+            "metrics": {
+              "exploitability": 12.646370702199153,
+              "ip_best_response_value": 8.19773595092798,
+              "nash_conv": 25.292741404398306,
+              "oop_best_response_value": 17.095005453470325,
+              "value_oop": 1.6068437850165598
+            },
+            "passed": true,
+            "policy_rows_replayed": 17792,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 41712
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.016971104252119673,
+              "ip_best_response_value": 0.0033677579166582206,
+              "nash_conv": 0.033942208504239346,
+              "oop_best_response_value": 0.03730996642089579,
+              "value_oop": 0.001823284215879184
+            },
+            "max_absolute_difference_chips": 0.03730996642089579,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 948,
+                "deals": 948,
+                "info_sets": 17792,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 41712
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 29533797
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 41712,
+                "info_sets": 17792,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 41712,
+                  "fallback_pair_checks": 40040,
+                  "hand_counts": [
+                    32,
+                    32
+                  ],
+                  "hand_slots": 2944,
+                  "hand_state_pass_work": 960480,
+                  "info_action_slots": 35584,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 26094221
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.43683938543208434,
+            "rows": 17792,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 32,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.7221730479783773,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 2.448977333999892,
+              "samples": [
+                2.2161229670000466,
+                2.448977333999892,
+                2.5664607559999695
+              ]
+            },
+            "matrix-free": {
+              "median": 3.3911225859999377,
+              "samples": [
+                3.042588662999833,
+                3.4563047199999346,
+                3.3911225859999377
+              ]
+            }
+          }
+        },
+        {
+          "algorithm": "cfrplus",
+          "counts": {
+            "materialized": {
+              "chance_nodes": 3,
+              "compatible_pairs": 948,
+              "deals": 948,
+              "info_sets": 17792,
+              "iterations": 10,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "world_traversal_nodes": 16,
+              "worlds": 41712
+            },
+            "matrix-free": {
+              "chance_nodes": 3,
+              "compatible_world_count": 41712,
+              "info_sets": 17792,
+              "iterations": 10,
+              "public_nodes": 580,
+              "public_states": 1305,
+              "resource_usage": {
+                "compatible_world_count": 41712,
+                "fallback_pair_checks": 7693,
+                "hand_counts": [
+                  32,
+                  32
+                ],
+                "hand_slots": 2944,
+                "hand_state_pass_work": 1378080,
+                "info_action_slots": 35584,
+                "kernel_public_states": 1305,
+                "limits": {
+                  "fallback_pair_checks": 30000000,
+                  "hand_slots": 120000,
+                  "hand_state_pass_work": 30000000,
+                  "info_action_slots": 1000000,
+                  "public_nodes": 10000,
+                  "public_states": 250000
+                },
+                "turn_fold_terminals": 2
+              },
+              "worlds_materialized": 0
+            }
+          },
+          "gap_metrics": {
+            "materialized": {
+              "exploitability": 2.8544131534220503,
+              "ip_best_response_value": 3.095703992125992,
+              "nash_conv": 5.7088263068441005,
+              "oop_best_response_value": 2.613122314718108,
+              "value_oop": -0.9148973335197894
+            },
+            "matrix-free": {
+              "exploitability": 2.85539152443729,
+              "ip_best_response_value": 3.097087583470231,
+              "nash_conv": 5.71078304887458,
+              "oop_best_response_value": 2.6136954654043496,
+              "value_oop": -0.9189173501934906
+            }
+          },
+          "iterations": 10,
+          "matrix_free_metric_validation": {
+            "max_metric_abs_difference_chips": 6.217248937900877e-15,
+            "metric_abs_differences": {
+              "exploitability": 3.1086244689504383e-15,
+              "ip_best_response_value": 2.220446049250313e-15,
+              "nash_conv": 6.217248937900877e-15,
+              "oop_best_response_value": 3.552713678800501e-15,
+              "value_oop": 1.7763568394002505e-15
+            },
+            "metrics": {
+              "exploitability": 2.855391524437293,
+              "ip_best_response_value": 3.097087583470233,
+              "nash_conv": 5.710783048874586,
+              "oop_best_response_value": 2.613695465404353,
+              "value_oop": -0.9189173501934924
+            },
+            "passed": true,
+            "policy_rows_replayed": 17792,
+            "replay_method": "materialized public-vector replay",
+            "tolerance_chips": 1e-08,
+            "worlds_materialized_for_replay": 41712
+          },
+          "metric_comparison": {
+            "absolute_differences": {
+              "exploitability": 0.0009783710152397873,
+              "ip_best_response_value": 0.0013835913442390435,
+              "nash_conv": 0.0019567420304795746,
+              "oop_best_response_value": 0.0005731506862414193,
+              "value_oop": 0.004020016673701221
+            },
+            "max_absolute_difference_chips": 0.004020016673701221,
+            "tolerance_chips": 1e-08,
+            "within_tolerance": false
+          },
+          "peak_memory_10_iterations": {
+            "materialized": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_pairs": 948,
+                "deals": 948,
+                "info_sets": 17792,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "world_traversal_nodes": 16,
+                "worlds": 41712
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 29523877
+            },
+            "matrix-free": {
+              "counts": {
+                "chance_nodes": 3,
+                "compatible_world_count": 41712,
+                "info_sets": 17792,
+                "iterations": 10,
+                "public_nodes": 580,
+                "public_states": 1305,
+                "resource_usage": {
+                  "compatible_world_count": 41712,
+                  "fallback_pair_checks": 7693,
+                  "hand_counts": [
+                    32,
+                    32
+                  ],
+                  "hand_slots": 2944,
+                  "hand_state_pass_work": 1378080,
+                  "info_action_slots": 35584,
+                  "kernel_public_states": 1305,
+                  "limits": {
+                    "fallback_pair_checks": 30000000,
+                    "hand_slots": 120000,
+                    "hand_state_pass_work": 30000000,
+                    "info_action_slots": 1000000,
+                    "public_nodes": 10000,
+                    "public_states": 250000
+                  },
+                  "turn_fold_terminals": 2
+                },
+                "worlds_materialized": 0
+              },
+              "iterations": 10,
+              "peak_tracemalloc_bytes": 26083085
+            }
+          },
+          "policy_comparison": {
+            "max_probability_abs_difference": 0.9863013698630138,
+            "rows": 17792,
+            "same_information_sets": true
+          },
+          "range_size_per_player": 32,
+          "rejection_reasons": {},
+          "speedup_matrix_free_vs_materialized": 0.813045390058856,
+          "status": {
+            "materialized": "admitted",
+            "matrix-free": "admitted"
+          },
+          "whole_call_seconds": {
+            "materialized": {
+              "median": 3.0853132349998305,
+              "samples": [
+                2.7195277769999393,
+                3.0853132349998305,
+                3.205426149999994
+              ]
+            },
+            "matrix-free": {
+              "median": 3.7947613660001025,
+              "samples": [
+                3.4222625980000885,
+                3.832108172000062,
+                3.7947613660001025
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "configuration": {
+    "board": "2c7d9hJs",
+    "config": {
+      "bet_sizes": [
+        0.75
+      ],
+      "effective_stack": 200.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100.0,
+      "raise_sizes": []
+    },
+    "full_random": "Uniform full ranges with two selected rivers (3c,4d), 10 iterations, vanilla; legacy admission probe is attempted once at the same minimum budget.",
+    "small_range_selection": "Concrete board-excluded combinations selected with deterministic coprime strides 37/53 and offsets count*11/count*11+19; nonuniform weights repeat [1,.5,.75,.25,.125]. Exact hands/weights appear in cases."
+  },
+  "created_at_utc": "2026-10-09T19:50:35.425204+00:00",
+  "full_random_selected_runouts": {
+    "algorithm": "vanilla",
+    "counts": {
+      "compatible_world_count": 2140380,
+      "info_sets": 30452,
+      "iterations": 10,
+      "public_nodes": 28,
+      "public_states": 63,
+      "resource_usage": {
+        "compatible_world_count": 2140380,
+        "fallback_pair_checks": 1349088,
+        "hand_counts": [
+          1128,
+          1128
+        ],
+        "hand_slots": 4324,
+        "hand_state_pass_work": 1634472,
+        "info_action_slots": 60904,
+        "kernel_public_states": 63,
+        "limits": {
+          "fallback_pair_checks": 30000000,
+          "hand_slots": 120000,
+          "hand_state_pass_work": 30000000,
+          "info_action_slots": 1000000,
+          "public_nodes": 10000,
+          "public_states": 250000
+        },
+        "turn_fold_terminals": 2
+      },
+      "worlds_materialized": 0
+    },
+    "gap_metrics": {
+      "exploitability": 12.157983394150374,
+      "ip_best_response_value": 15.69470855117424,
+      "nash_conv": 24.31596678830075,
+      "oop_best_response_value": 8.621258237126508,
+      "value_oop": -4.4402413828899
+    },
+    "iterations": 10,
+    "legacy_rejection": "Postflop solver allows 3 million candidate hand-pair iterations.",
+    "legacy_status": "rejected-by-existing-guard",
+    "peak_memory": {
+      "counts": {
+        "compatible_world_count": 2140380,
+        "resource_usage": {
+          "compatible_world_count": 2140380,
+          "fallback_pair_checks": 1349088,
+          "hand_counts": [
+            1128,
+            1128
+          ],
+          "hand_slots": 4324,
+          "hand_state_pass_work": 1634472,
+          "info_action_slots": 60904,
+          "kernel_public_states": 63,
+          "limits": {
+            "fallback_pair_checks": 30000000,
+            "hand_slots": 120000,
+            "hand_state_pass_work": 30000000,
+            "info_action_slots": 1000000,
+            "public_nodes": 10000,
+            "public_states": 250000
+          },
+          "turn_fold_terminals": 2
+        },
+        "worlds_materialized": 0
+      },
+      "iterations": 10,
+      "peak_tracemalloc_bytes": 45122299
+    },
+    "runouts": [
+      "3c",
+      "4d"
+    ],
+    "status": "admitted",
+    "whole_call_seconds": 4.478633774000173
+  },
+  "metadata": {
+    "algorithms": [
+      "dcfr",
+      "cfrplus"
+    ],
+    "command": "python -m scripts.benchmark_matrix_free_turn",
+    "input_sha256": "e70594079435360b18081e4660057d64defca2cdabdce83798aebd748a9530f3",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "prototype_blob": "710b60b5070a4014eebfdbbd1cd04a7c2c15a76d",
+    "prototype_sha256": "5bc16ea03739e15c7e5a4a641acbb97c6689dda79689c47a7a9ab6624c602cf9",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_version": "3.12.14",
+    "revision": "6365e7650d76d3b5ee6c4ada5157421c396f204b",
+    "rootfold_timing_repeats": 10,
+    "small_iterations": {
+      "8": 40,
+      "16": 20,
+      "32": 10
+    },
+    "source_sha256": {
+      "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "pokerlab/matrix_free_turn.py": "a76ad53d45fbeca8b6f52807b641979c58ac0b02e5a3b9ad4deef479bc1d5f4f",
+      "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+      "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+      "pokerlab/public_cfr.py": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+      "pokerlab/public_diagnostics.py": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+      "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+      "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+      "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+      "pokerlab/turn_range_kernel.py": "42cc6c897d2a0fc779098d7433d96101123cc58705048eb7591a19f902ff14cc",
+      "scripts/benchmark_matrix_free_turn.py": "ed0f8f68e62bf55a755b42c3e697ec63a8b56093a34593d38d2bf56ded5cd5f3",
+      "scripts/benchmark_turn_solver.py": "6b69737aa73ef6d007217f5180876dd6f112b806c07f8a2351cc366a25440b8f"
+    },
+    "timing_repeats": 3,
+    "worktree_dirty": true
+  },
+  "methodology": {
+    "complete_call": "Interleaved full solve_postflop public-batched training/diagnostics versus solve_matrix_free_turn; calls include setup, enumeration, training, exact BR diagnostics, and result assembly.",
+    "limitations": "Synthetic ranges, tiny finite iteration budgets, machine-specific timings. Matrix-free outputs are independently replayed through the materialized public-vector evaluator; finite-iteration matrix-free versus legacy policy/gap differences are reported without a parity claim. Full-range solver call is descriptive and no old solver is called beyond its existing guard.",
+    "memory": "Separate 10-iteration tracemalloc calls for admitted small solver comparisons; selected-runout full-range trace is attempted only if its untraced call is under 15 seconds.",
+    "rootfold": "Current and immutable prototype TurnRangePayoffs are separately prepared; then ten interleaved timings per implementation call values for both players, each using a distinct nonuniform reach vector with zeros. No equilibrium claim.",
+    "finite_iteration_roundoff": "A deterministic binary64 roundoff perturbation can break an exact regret tie differently between backends (for example, zero regrets versus approximately +/-6.94e-18 at iteration 2), selecting different valid actions and causing later finite-iteration policy/gap drift. The materialized public-vector replay validates each matrix-free candidate policy against the same terminal payoff law; it does not establish legacy trajectory parity."
+  },
+  "rootfold_phase": [
+    {
+      "max_absolute_vector_difference": 3.552713678800501e-15,
+      "prepared_rootfold_values_seconds": {
+        "current": {
+          "median": 7.536150019404886e-05,
+          "samples": [
+            7.286800018846407e-05,
+            7.861699987188331e-05,
+            6.996299998718314e-05,
+            7.570200023110374e-05,
+            6.787099982830114e-05,
+            8.41340001898061e-05,
+            6.565700005012332e-05,
+            7.502100015699398e-05,
+            8.163099982994027e-05,
+            9.597200005373452e-05
+          ]
+        },
+        "prototype": {
+          "median": 0.0012910680000004504,
+          "samples": [
+            0.0012904469999739376,
+            0.0012889249996987928,
+            0.0013923589999649266,
+            0.0012916890000269632,
+            0.0013206220000938629,
+            0.001275935999728972,
+            0.0013063709998277773,
+            0.0012774880001416022,
+            0.0013524999999390275,
+            0.0012786299998879258
+          ]
+        }
+      },
+      "range_size_per_player": 8,
+      "reach_note": "Both players are evaluated; each opponent reach vector is nonuniform and contains zero entries.",
+      "runout_count": 44,
+      "scope": "Prepared root-fold values only; no solver or equilibrium speed claim.",
+      "setup_seconds": {
+        "current": {
+          "median": 0.01170738499968138,
+          "samples": [
+            0.01170738499968138,
+            0.0118789379998816,
+            0.011115280000012717
+          ]
+        },
+        "prototype": {
+          "median": 0.011396446000162541,
+          "samples": [
+            0.011396446000162541,
+            0.011123241999939637,
+            0.011973748999935196
+          ]
+        }
+      },
+      "setup_timing_repeats": 3,
+      "speedup_current_vs_prototype": 17.13166532879614,
+      "timing_repeats": 10
+    },
+    {
+      "max_absolute_vector_difference": 6.661338147750939e-16,
+      "prepared_rootfold_values_seconds": {
+        "current": {
+          "median": 0.00018670600002224091,
+          "samples": [
+            0.00018148800018025213,
+            0.00018621500021254178,
+            0.00016898900003070594,
+            0.00018719699983194005,
+            0.00017024199996740208,
+            0.00018723700031841872,
+            0.0001734069996928156,
+            0.0001940070001182903,
+            0.00020432200017239666,
+            0.00022075600008975016
+          ]
+        },
+        "prototype": {
+          "median": 0.0034799240002030274,
+          "samples": [
+            0.0033416289998058346,
+            0.003487716000108776,
+            0.0033554099995853903,
+            0.003587802999845735,
+            0.003732465999746637,
+            0.0035185009996894223,
+            0.003472132000297279,
+            0.003489869000077306,
+            0.003463770000053046,
+            0.0033872969997901237
+          ]
+        }
+      },
+      "range_size_per_player": 32,
+      "reach_note": "Both players are evaluated; each opponent reach vector is nonuniform and contains zero entries.",
+      "runout_count": 44,
+      "scope": "Prepared root-fold values only; no solver or equilibrium speed claim.",
+      "setup_seconds": {
+        "current": {
+          "median": 0.0436602770000718,
+          "samples": [
+            0.0436602770000718,
+            0.04438154300032693,
+            0.04254350600012913
+          ]
+        },
+        "prototype": {
+          "median": 0.04386957600036112,
+          "samples": [
+            0.04386957600036112,
+            0.04508014499970159,
+            0.04209353100031876
+          ]
+        }
+      },
+      "setup_timing_repeats": 3,
+      "speedup_current_vs_prototype": 18.638522595891345,
+      "timing_repeats": 10
+    },
+    {
+      "max_absolute_vector_difference": 2.220446049250313e-16,
+      "prepared_rootfold_values_seconds": {
+        "current": {
+          "median": 0.0006061409999347234,
+          "samples": [
+            0.0006014890000187734,
+            0.0006296400001701841,
+            0.0005979840002510173,
+            0.0006959780002944171,
+            0.0005929970002398477,
+            0.0007770879997224256,
+            0.00063709200003359,
+            0.0006040729999767791,
+            0.0005528579999918293,
+            0.0006082089998926676
+          ]
+        },
+        "prototype": {
+          "median": 0.013557714999933523,
+          "samples": [
+            0.0139805650001108,
+            0.014962777000164351,
+            0.01403093999988414,
+            0.014569295999990572,
+            0.01333293900006538,
+            0.013482088000273507,
+            0.013630737999847042,
+            0.013299679000283504,
+            0.013448618999973405,
+            0.013484692000020004
+          ]
+        }
+      },
+      "range_size_per_player": 128,
+      "reach_note": "Both players are evaluated; each opponent reach vector is nonuniform and contains zero entries.",
+      "runout_count": 44,
+      "scope": "Prepared root-fold values only; no solver or equilibrium speed claim.",
+      "setup_seconds": {
+        "current": {
+          "median": 0.16555261200028326,
+          "samples": [
+            0.16639393500008737,
+            0.16555261200028326,
+            0.16367567799989047
+          ]
+        },
+        "prototype": {
+          "median": 0.16393431000005876,
+          "samples": [
+            0.1638402609996774,
+            0.16393431000005876,
+            0.16614999500006888
+          ]
+        }
+      },
+      "setup_timing_repeats": 3,
+      "speedup_current_vs_prototype": 22.36726273489763,
+      "timing_repeats": 10
+    }
+  ],
+  "schema_version": 1
+}

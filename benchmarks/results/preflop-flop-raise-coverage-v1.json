@@ -1,0 +1,2831 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-flop-raise-coverage-v1",
+  "generated_at_utc": "2026-10-11T04:27:14.985114+00:00",
+  "source_revision": "ebab6da3a5cdcc9f4f5d93d81979613ce5a72b40",
+  "worktree_dirty_at_start": false,
+  "source_hashes": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab/coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab/coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab/coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab/coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab/coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab/contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab/current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab/decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab/equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab/explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab/exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab/game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab/matrix_free_river.py": "aedae83d279def8288be363bf73ac236e6415401381e17184701909f36bb7ec3",
+    "pokerlab/matrix_free_turn.py": "1efea724fdd807e191bf7985553be1cc8ece2e686bcdf960bc564ff1de1d83fe",
+    "pokerlab/models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab/personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab/practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_future_groups.py": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab/preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab/preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab/preflop_solver.py": "9bd8a8f9a3c5266e4620e0c51aea82ea9e6c7cdab5df5418ddb1e1ab6b25191c",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab/restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab/situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab/solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab/turn_range_kernel.py": "14bb6c60ffe6cf80e7b3efec37e2c4306686f89d1b50d6781a555962b3c6fc37",
+    "pokerlab/turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_preflop_flop_checkdown.py": "2d6e2a161e4a4efe8ed2130d7b12d5a50e30948f829312ef08661e43ecbac5cb",
+    "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+    "scripts/benchmark_preflop_two_flops.py": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "scripts/cfr_quality.py": "dafca0225a87987a4e229e83e1cbd6b678a298ef0c704eefe8f64fc26a84e447",
+    "tests/test_preflop_delayed_cfrplus.py": "c7127cea4e991eaa2ad83b538057255ceb67d59d4b8c3084f1ab03d73cea6af9",
+    "tests/test_preflop_flop_checkdown.py": "39d55786363754e25cce4fb78a8c5ee8962e4ab7520f7a107a50511c6a9b89dd",
+    "scripts/benchmark_preflop_flop_raise_coverage.py": "776ad167db3ba8465f7348b1e89b8c9c987ba2f0e7d8812ebaac1490de2b537b",
+    "tests/test_preflop_future_groups.py": "3642810ac55cdc6d70a2b9662654c1701ce458b85ed6026fe291a2ceeeb0cf3f",
+    "tests/test_preflop_future_indexing.py": "c131970fef66375131cff06b0039c161f5197e4d9830281f8f67131d8ce0c1dd",
+    "benchmarks/preflop-flop-checkdown-v1.json": "0e62d5138ade0774906c72ab28308c3f80505d370d3e325d090efed81f5ebf79",
+    "benchmarks/preflop-flop-raise-coverage-v1.json": "be2ae7f9a79fc64a58c7e28e83001a51cad1f1f6ee3e411e759c3606648a971b"
+  },
+  "benchmark_script_sha256": "776ad167db3ba8465f7348b1e89b8c9c987ba2f0e7d8812ebaac1490de2b537b",
+  "benchmark_script_location": "scripts/benchmark_preflop_flop_raise_coverage.py",
+  "configuration_sha256": "be2ae7f9a79fc64a58c7e28e83001a51cad1f1f6ee3e411e759c3606648a971b",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-flop-raise-coverage-v1",
+    "game_spec": "benchmarks/preflop-flop-checkdown-v1.json",
+    "sb": "AsAd,QsQd",
+    "bb": "KsKd,JhJc",
+    "physical_outcomes": {
+      "flops": [
+        [
+          "2c",
+          "3c",
+          "4d"
+        ],
+        [
+          "5h",
+          "6s",
+          "Jc"
+        ]
+      ],
+      "ordered_future_candidates": 4704,
+      "compatible_physical_worlds": 11880
+    },
+    "preflop_config": {
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": false
+    },
+    "flop_config": {
+      "bet_sizes": [
+        0.5,
+        1.0
+      ],
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": true
+    },
+    "postflop_scope": "flop-checkdown",
+    "future_indexing": "flop-sign",
+    "algorithm": "cfrplus",
+    "traversal": "public-batched",
+    "diagnostics": "public-batched",
+    "resource_model": "public-vector",
+    "target_nash_conv": 0.005,
+    "target_padding": 1e-10,
+    "matrix": {
+      "starting_stacks": [
+        3,
+        4,
+        6
+      ],
+      "checkpoints": [
+        {
+          "iterations": 20,
+          "delay": 10
+        },
+        {
+          "iterations": 90,
+          "delay": 45
+        },
+        {
+          "iterations": 250,
+          "delay": 125
+        }
+      ],
+      "cases": 9
+    },
+    "selection_scope": "Freeze the complete 3x3 matrix before execution. Preflight every case before training any case. Report all admissions, rejections, and quality misses; do not simplify or retry rejected cases. No cap changes or speedup/memory comparison.",
+    "model_limits": "Finite conditioned heads-up preflop/flop game with two narrow ranges, two selected flops, complete ordered future outcomes, and forced checkdown after flop betting. No all-streets, full-deck/broad-range, multiway, unrestricted NLHE, or universal accuracy claim."
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "preflight": [
+    {
+      "starting_stack": 3,
+      "iterations": 20,
+      "delay": 10,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 36,
+      "information_sets": 64,
+      "tree_counts": {
+        "public_states": 88,
+        "decisions": 36,
+        "maximum_template_states": 21,
+        "maximum_template_decisions": 8
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 20,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 64,
+        "information_set_action_slots": 144,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 36,
+        "chance_nodes": 3,
+        "terminal_nodes": 49,
+        "action_edges": 81,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 150,
+        "diagnostic_missing_policy_lookups": 36,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275560,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3042,
+        "training_loop_entries_upper_bound": 169784,
+        "training_setup_loop_entries_upper_bound": 1088,
+        "diagnostics_loop_entries_upper_bound": 10058,
+        "diagnostics_setup_loop_entries_upper_bound": 632,
+        "diagnostics_dense_fallback_slot_upper_bound": 144,
+        "diagnostics_uniform_fallback_slot_upper_bound": 84,
+        "total_loop_entries_upper_bound": 455402,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 10,
+        "training_regret_passes": 40,
+        "training_average_passes": 10,
+        "training_policy_match_rows": 1344
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 740554,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 3,
+      "iterations": 90,
+      "delay": 45,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 36,
+      "information_sets": 64,
+      "tree_counts": {
+        "public_states": 88,
+        "decisions": 36,
+        "maximum_template_states": 21,
+        "maximum_template_decisions": 8
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 90,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 64,
+        "information_set_action_slots": 144,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 36,
+        "chance_nodes": 3,
+        "terminal_nodes": 49,
+        "action_edges": 81,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 150,
+        "diagnostic_missing_policy_lookups": 36,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275560,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3042,
+        "training_loop_entries_upper_bound": 758484,
+        "training_setup_loop_entries_upper_bound": 1088,
+        "diagnostics_loop_entries_upper_bound": 10058,
+        "diagnostics_setup_loop_entries_upper_bound": 632,
+        "diagnostics_dense_fallback_slot_upper_bound": 144,
+        "diagnostics_uniform_fallback_slot_upper_bound": 84,
+        "total_loop_entries_upper_bound": 1044102,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 45,
+        "training_regret_passes": 180,
+        "training_average_passes": 45,
+        "training_policy_match_rows": 5824
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 1329254,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 3,
+      "iterations": 250,
+      "delay": 125,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 36,
+      "information_sets": 64,
+      "tree_counts": {
+        "public_states": 88,
+        "decisions": 36,
+        "maximum_template_states": 21,
+        "maximum_template_decisions": 8
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 250,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 64,
+        "information_set_action_slots": 144,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 36,
+        "chance_nodes": 3,
+        "terminal_nodes": 49,
+        "action_edges": 81,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 150,
+        "diagnostic_missing_policy_lookups": 36,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275560,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3042,
+        "training_loop_entries_upper_bound": 2104084,
+        "training_setup_loop_entries_upper_bound": 1088,
+        "diagnostics_loop_entries_upper_bound": 10058,
+        "diagnostics_setup_loop_entries_upper_bound": 632,
+        "diagnostics_dense_fallback_slot_upper_bound": 144,
+        "diagnostics_uniform_fallback_slot_upper_bound": 84,
+        "total_loop_entries_upper_bound": 2389702,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 125,
+        "training_regret_passes": 500,
+        "training_average_passes": 125,
+        "training_policy_match_rows": 16064
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 2674854,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 20,
+      "delay": 10,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 44,
+      "information_sets": 78,
+      "tree_counts": {
+        "public_states": 112,
+        "decisions": 44,
+        "maximum_template_states": 33,
+        "maximum_template_decisions": 12
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 20,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 78,
+        "information_set_action_slots": 186,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 44,
+        "chance_nodes": 3,
+        "terminal_nodes": 65,
+        "action_edges": 105,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 198,
+        "diagnostic_missing_policy_lookups": 48,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275588,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3874,
+        "training_loop_entries_upper_bound": 216204,
+        "training_setup_loop_entries_upper_bound": 1368,
+        "diagnostics_loop_entries_upper_bound": 12844,
+        "diagnostics_setup_loop_entries_upper_bound": 810,
+        "diagnostics_dense_fallback_slot_upper_bound": 192,
+        "diagnostics_uniform_fallback_slot_upper_bound": 124,
+        "total_loop_entries_upper_bound": 504636,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 10,
+        "training_regret_passes": 40,
+        "training_average_passes": 10,
+        "training_policy_match_rows": 1638
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 789788,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 90,
+      "delay": 45,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 44,
+      "information_sets": 78,
+      "tree_counts": {
+        "public_states": 112,
+        "decisions": 44,
+        "maximum_template_states": 33,
+        "maximum_template_decisions": 12
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 90,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 78,
+        "information_set_action_slots": 186,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 44,
+        "chance_nodes": 3,
+        "terminal_nodes": 65,
+        "action_edges": 105,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 198,
+        "diagnostic_missing_policy_lookups": 48,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275588,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3874,
+        "training_loop_entries_upper_bound": 965904,
+        "training_setup_loop_entries_upper_bound": 1368,
+        "diagnostics_loop_entries_upper_bound": 12844,
+        "diagnostics_setup_loop_entries_upper_bound": 810,
+        "diagnostics_dense_fallback_slot_upper_bound": 192,
+        "diagnostics_uniform_fallback_slot_upper_bound": 124,
+        "total_loop_entries_upper_bound": 1254336,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 45,
+        "training_regret_passes": 180,
+        "training_average_passes": 45,
+        "training_policy_match_rows": 7098
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 1539488,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 250,
+      "delay": 125,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 44,
+      "information_sets": 78,
+      "tree_counts": {
+        "public_states": 112,
+        "decisions": 44,
+        "maximum_template_states": 33,
+        "maximum_template_decisions": 12
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 250,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 78,
+        "information_set_action_slots": 186,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 44,
+        "chance_nodes": 3,
+        "terminal_nodes": 65,
+        "action_edges": 105,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 198,
+        "diagnostic_missing_policy_lookups": 48,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275588,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 3874,
+        "training_loop_entries_upper_bound": 2679504,
+        "training_setup_loop_entries_upper_bound": 1368,
+        "diagnostics_loop_entries_upper_bound": 12844,
+        "diagnostics_setup_loop_entries_upper_bound": 810,
+        "diagnostics_dense_fallback_slot_upper_bound": 192,
+        "diagnostics_uniform_fallback_slot_upper_bound": 124,
+        "total_loop_entries_upper_bound": 2967936,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 125,
+        "training_regret_passes": 500,
+        "training_average_passes": 125,
+        "training_policy_match_rows": 19578
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 3253088,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 20,
+      "delay": 10,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 64,
+      "information_sets": 113,
+      "tree_counts": {
+        "public_states": 172,
+        "decisions": 64,
+        "maximum_template_states": 39,
+        "maximum_template_decisions": 14
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 20,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 113,
+        "information_set_action_slots": 291,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 64,
+        "chance_nodes": 3,
+        "terminal_nodes": 105,
+        "action_edges": 165,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 318,
+        "diagnostic_missing_policy_lookups": 78,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275658,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 5954,
+        "training_loop_entries_upper_bound": 332254,
+        "training_setup_loop_entries_upper_bound": 2068,
+        "diagnostics_loop_entries_upper_bound": 19803,
+        "diagnostics_setup_loop_entries_upper_bound": 1255,
+        "diagnostics_dense_fallback_slot_upper_bound": 312,
+        "diagnostics_uniform_fallback_slot_upper_bound": 218,
+        "total_loop_entries_upper_bound": 627715,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 10,
+        "training_regret_passes": 40,
+        "training_average_passes": 10,
+        "training_policy_match_rows": 2373
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 912867,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 90,
+      "delay": 45,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 64,
+      "information_sets": 113,
+      "tree_counts": {
+        "public_states": 172,
+        "decisions": 64,
+        "maximum_template_states": 39,
+        "maximum_template_decisions": 14
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 90,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 113,
+        "information_set_action_slots": 291,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 64,
+        "chance_nodes": 3,
+        "terminal_nodes": 105,
+        "action_edges": 165,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 318,
+        "diagnostic_missing_policy_lookups": 78,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275658,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 5954,
+        "training_loop_entries_upper_bound": 1484454,
+        "training_setup_loop_entries_upper_bound": 2068,
+        "diagnostics_loop_entries_upper_bound": 19803,
+        "diagnostics_setup_loop_entries_upper_bound": 1255,
+        "diagnostics_dense_fallback_slot_upper_bound": 312,
+        "diagnostics_uniform_fallback_slot_upper_bound": 218,
+        "total_loop_entries_upper_bound": 1779915,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 45,
+        "training_regret_passes": 180,
+        "training_average_passes": 45,
+        "training_policy_match_rows": 10283
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 2065067,
+      "grouping_or_training_allocation_called": false
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 250,
+      "delay": 125,
+      "status": "admitted",
+      "rejection": null,
+      "world_count": 11880,
+      "public_prefixes": 4589,
+      "decision_nodes": 64,
+      "information_sets": 113,
+      "tree_counts": {
+        "public_states": 172,
+        "decisions": 64,
+        "maximum_template_states": 39,
+        "maximum_template_decisions": 14
+      },
+      "vector_work_budget": {
+        "budget_version": "preflop-public-vector-delayed-budget-v2",
+        "world_count": 11880,
+        "iterations": 250,
+        "algorithm": "cfrplus",
+        "hand_counts": [
+          2,
+          2
+        ],
+        "public_prefixes": 4589,
+        "prefix_edges": 12160,
+        "prefix_edge_limit": 250000,
+        "dense_prefix_slots": 18356,
+        "dense_prefix_slot_limit": 2000000,
+        "information_sets": 113,
+        "information_set_action_slots": 291,
+        "information_set_action_slot_limit": 1000000,
+        "decision_nodes": 64,
+        "chance_nodes": 3,
+        "terminal_nodes": 105,
+        "action_edges": 165,
+        "chance_edges": 6,
+        "terminal_prefix_edge_visits": 318,
+        "diagnostic_missing_policy_lookups": 78,
+        "aggregation_count": 2,
+        "aggregation_loop_entries_upper_bound": 275658,
+        "training_traversals_per_iteration": null,
+        "visitor_loop_entries_per_traversal_upper_bound": 5954,
+        "training_loop_entries_upper_bound": 4118054,
+        "training_setup_loop_entries_upper_bound": 2068,
+        "diagnostics_loop_entries_upper_bound": 19803,
+        "diagnostics_setup_loop_entries_upper_bound": 1255,
+        "diagnostics_dense_fallback_slot_upper_bound": 312,
+        "diagnostics_uniform_fallback_slot_upper_bound": 218,
+        "total_loop_entries_upper_bound": 4413515,
+        "total_loop_entry_limit": 500000000,
+        "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+        "averaging_delay": 125,
+        "training_regret_passes": 500,
+        "training_average_passes": 125,
+        "training_policy_match_rows": 28363
+      },
+      "grouping_budget": {
+        "physical_world_count": 11880,
+        "grouped_rows_upper_bound": 11880,
+        "grouping_reference_slots_upper_bound": 261488,
+        "grouping_reference_slot_limit": 8000000,
+        "grouping_loop_entries_upper_bound": 285152,
+        "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+      },
+      "combined_modeled_loop_entries": 4698667,
+      "grouping_or_training_allocation_called": false
+    }
+  ],
+  "results": [
+    {
+      "starting_stack": 3,
+      "iterations": 20,
+      "delay": 10,
+      "status": "completed",
+      "complete_call_seconds": 0.4803386000057799,
+      "serialized_json_bytes": 325241,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 3,
+        "iterations": 20,
+        "delay": 10,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 36,
+        "information_sets": 64,
+        "tree_counts": {
+          "public_states": 88,
+          "decisions": 36,
+          "maximum_template_states": 21,
+          "maximum_template_decisions": 8
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 169784,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 455402,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 1344
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 740554,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.6153223598368345,
+          "value_bb": -0.6153223598368345,
+          "sb_best_response_value": 0.6820697819424076,
+          "bb_best_response_value": -0.5864663495515543,
+          "nash_conv": 0.09560343239085334,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 64,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.1102230246251565e-16
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 169784,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 740554,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 1344,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 88,
+        "decisions": 36,
+        "information_sets": 64,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 35,
+          "bet": 7,
+          "raise": 0,
+          "all_in": 28
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": false
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 3,
+      "iterations": 90,
+      "delay": 45,
+      "status": "completed",
+      "complete_call_seconds": 0.5521439999938593,
+      "serialized_json_bytes": 325354,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 3,
+        "iterations": 90,
+        "delay": 45,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 36,
+        "information_sets": 64,
+        "tree_counts": {
+          "public_states": 88,
+          "decisions": 36,
+          "maximum_template_states": 21,
+          "maximum_template_decisions": 8
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 758484,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 1044102,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 5824
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 1329254,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.6356322832611528,
+          "value_bb": -0.6356322832611528,
+          "sb_best_response_value": 0.648450206030585,
+          "bb_best_response_value": -0.630129020773678,
+          "nash_conv": 0.018321185256906958,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 64,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 758484,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 1329254,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 5824,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 88,
+        "decisions": 36,
+        "information_sets": 64,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 35,
+          "bet": 7,
+          "raise": 0,
+          "all_in": 28
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": false
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 3,
+      "iterations": 250,
+      "delay": 125,
+      "status": "completed",
+      "complete_call_seconds": 1.2297074000016437,
+      "serialized_json_bytes": 325276,
+      "target_nash_conv": 0.005,
+      "target_met": true,
+      "preflight": {
+        "starting_stack": 3,
+        "iterations": 250,
+        "delay": 125,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 36,
+        "information_sets": 64,
+        "tree_counts": {
+          "public_states": 88,
+          "decisions": 36,
+          "maximum_template_states": 21,
+          "maximum_template_decisions": 8
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 2104084,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 2389702,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 16064
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 2674854,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.6400185892569483,
+          "value_bb": -0.6400185892569483,
+          "sb_best_response_value": 0.6410362720808007,
+          "bb_best_response_value": -0.6384916714598774,
+          "nash_conv": 0.0025446006209233207,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 64,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0
+        },
+        "target_nash_conv": 0.005,
+        "target_met": true,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 64,
+          "information_set_action_slots": 144,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 36,
+          "chance_nodes": 3,
+          "terminal_nodes": 49,
+          "action_edges": 81,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 150,
+          "diagnostic_missing_policy_lookups": 36,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275560,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3042,
+          "training_loop_entries_upper_bound": 2104084,
+          "training_setup_loop_entries_upper_bound": 1088,
+          "diagnostics_loop_entries_upper_bound": 10058,
+          "diagnostics_setup_loop_entries_upper_bound": 632,
+          "diagnostics_dense_fallback_slot_upper_bound": 144,
+          "diagnostics_uniform_fallback_slot_upper_bound": 84,
+          "total_loop_entries_upper_bound": 2674854,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 16064,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 88,
+        "decisions": 36,
+        "information_sets": 64,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 35,
+          "bet": 7,
+          "raise": 0,
+          "all_in": 28
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": false
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 20,
+      "delay": 10,
+      "status": "completed",
+      "complete_call_seconds": 2.424704400000337,
+      "serialized_json_bytes": 331865,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 4,
+        "iterations": 20,
+        "delay": 10,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 44,
+        "information_sets": 78,
+        "tree_counts": {
+          "public_states": 112,
+          "decisions": 44,
+          "maximum_template_states": 33,
+          "maximum_template_decisions": 12
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 216204,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 504636,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 1638
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 789788,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.7733788815976138,
+          "value_bb": -0.7733788815976138,
+          "sb_best_response_value": 0.867747311766077,
+          "bb_best_response_value": -0.6876582936107545,
+          "nash_conv": 0.18008901815532252,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 78,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 2.220446049250313e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 3.3306690738754696e-16
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 216204,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 789788,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 1638,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 112,
+        "decisions": 44,
+        "information_sets": 78,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 49,
+          "bet": 14,
+          "raise": 0,
+          "all_in": 35
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 90,
+      "delay": 45,
+      "status": "completed",
+      "complete_call_seconds": 1.6529903999980888,
+      "serialized_json_bytes": 332296,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 4,
+        "iterations": 90,
+        "delay": 45,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 44,
+        "information_sets": 78,
+        "tree_counts": {
+          "public_states": 112,
+          "decisions": 44,
+          "maximum_template_states": 33,
+          "maximum_template_decisions": 12
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 965904,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 1254336,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 7098
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 1539488,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.7959110550513158,
+          "value_bb": -0.7959110550513158,
+          "sb_best_response_value": 0.8081681669443759,
+          "bb_best_response_value": -0.7852959883281712,
+          "nash_conv": 0.02287217861620472,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 78,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 2.220446049250313e-16,
+          "nash_conv": 2.220446049250313e-16
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 965904,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 1539488,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 7098,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 112,
+        "decisions": 44,
+        "information_sets": 78,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 49,
+          "bet": 14,
+          "raise": 0,
+          "all_in": 35
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 4,
+      "iterations": 250,
+      "delay": 125,
+      "status": "completed",
+      "complete_call_seconds": 1.857749499999045,
+      "serialized_json_bytes": 332090,
+      "target_nash_conv": 0.005,
+      "target_met": true,
+      "preflight": {
+        "starting_stack": 4,
+        "iterations": 250,
+        "delay": 125,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 44,
+        "information_sets": 78,
+        "tree_counts": {
+          "public_states": 112,
+          "decisions": 44,
+          "maximum_template_states": 33,
+          "maximum_template_decisions": 12
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 2679504,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 2967936,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 19578
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 3253088,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.7930337876318108,
+          "value_bb": -0.7930337876318108,
+          "sb_best_response_value": 0.795006674229645,
+          "bb_best_response_value": -0.7925160258510673,
+          "nash_conv": 0.002490648378577709,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 78,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0
+        },
+        "target_nash_conv": 0.005,
+        "target_met": true,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 78,
+          "information_set_action_slots": 186,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 44,
+          "chance_nodes": 3,
+          "terminal_nodes": 65,
+          "action_edges": 105,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 198,
+          "diagnostic_missing_policy_lookups": 48,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275588,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 3874,
+          "training_loop_entries_upper_bound": 2679504,
+          "training_setup_loop_entries_upper_bound": 1368,
+          "diagnostics_loop_entries_upper_bound": 12844,
+          "diagnostics_setup_loop_entries_upper_bound": 810,
+          "diagnostics_dense_fallback_slot_upper_bound": 192,
+          "diagnostics_uniform_fallback_slot_upper_bound": 124,
+          "total_loop_entries_upper_bound": 3253088,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 19578,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 112,
+        "decisions": 44,
+        "information_sets": 78,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 49,
+          "bet": 14,
+          "raise": 0,
+          "all_in": 35
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": false,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 20,
+      "delay": 10,
+      "status": "completed",
+      "complete_call_seconds": 1.581272799994622,
+      "serialized_json_bytes": 349248,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 6,
+        "iterations": 20,
+        "delay": 10,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 64,
+        "information_sets": 113,
+        "tree_counts": {
+          "public_states": 172,
+          "decisions": 64,
+          "maximum_template_states": 39,
+          "maximum_template_decisions": 14
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 332254,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 627715,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 2373
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 912867,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.9824511462965454,
+          "value_bb": -0.9824511462965454,
+          "sb_best_response_value": 1.039986880583947,
+          "bb_best_response_value": -0.8551006001154431,
+          "nash_conv": 0.18488628046850386,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 113,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 20,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 332254,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 912867,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 10,
+          "training_regret_passes": 40,
+          "training_average_passes": 10,
+          "training_policy_match_rows": 2373,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 172,
+        "decisions": 64,
+        "information_sets": 113,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 84,
+          "bet": 28,
+          "raise": 7,
+          "all_in": 49
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": true,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 90,
+      "delay": 45,
+      "status": "completed",
+      "complete_call_seconds": 1.433991400001105,
+      "serialized_json_bytes": 348810,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 6,
+        "iterations": 90,
+        "delay": 45,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 64,
+        "information_sets": 113,
+        "tree_counts": {
+          "public_states": 172,
+          "decisions": 64,
+          "maximum_template_states": 39,
+          "maximum_template_decisions": 14
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 1484454,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 1779915,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 10283
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 2065067,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.9829672680713716,
+          "value_bb": -0.9829672680713716,
+          "sb_best_response_value": 0.986282246521926,
+          "bb_best_response_value": -0.9664374438478872,
+          "nash_conv": 0.019844802674038764,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 113,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.1102230246251565e-16
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 90,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 1484454,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 2065067,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 45,
+          "training_regret_passes": 180,
+          "training_average_passes": 45,
+          "training_policy_match_rows": 10283,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 172,
+        "decisions": 64,
+        "information_sets": 113,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 84,
+          "bet": 28,
+          "raise": 7,
+          "all_in": 49
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": true,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    },
+    {
+      "starting_stack": 6,
+      "iterations": 250,
+      "delay": 125,
+      "status": "completed",
+      "complete_call_seconds": 2.1189100999981747,
+      "serialized_json_bytes": 348657,
+      "target_nash_conv": 0.005,
+      "target_met": false,
+      "preflight": {
+        "starting_stack": 6,
+        "iterations": 250,
+        "delay": 125,
+        "status": "admitted",
+        "rejection": null,
+        "world_count": 11880,
+        "public_prefixes": 4589,
+        "decision_nodes": 64,
+        "information_sets": 113,
+        "tree_counts": {
+          "public_states": 172,
+          "decisions": 64,
+          "maximum_template_states": 39,
+          "maximum_template_decisions": 14
+        },
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-delayed-budget-v2",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 4118054,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 4413515,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 28363
+        },
+        "grouping_budget": {
+          "physical_world_count": 11880,
+          "grouped_rows_upper_bound": 11880,
+          "grouping_reference_slots_upper_bound": 261488,
+          "grouping_reference_slot_limit": 8000000,
+          "grouping_loop_entries_upper_bound": 285152,
+          "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+        },
+        "combined_modeled_loop_entries": 4698667,
+        "grouping_or_training_allocation_called": false
+      },
+      "verification": {
+        "configured_replay": {
+          "value_sb": 0.9805176517393409,
+          "value_bb": -0.9805176517393409,
+          "sb_best_response_value": 0.9903441058320063,
+          "bb_best_response_value": -0.9787118568157454,
+          "nash_conv": 0.01163224901626092,
+          "worlds": 11880,
+          "monetary_mode": "configured",
+          "postflop_scope": "flop-checkdown",
+          "checked_information_sets": 113,
+          "private_pair_probabilities": [
+            {
+              "sb": "AdAs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "AdAs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            },
+            {
+              "sb": "QdQs",
+              "bb": "JcJh",
+              "probability": 0.16666666666666585
+            },
+            {
+              "sb": "QdQs",
+              "bb": "KdKs",
+              "probability": 0.3333333333333153
+            }
+          ]
+        },
+        "metric_absolute_gaps": {
+          "value_sb": 3.3306690738754696e-16,
+          "value_bb": 3.3306690738754696e-16,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.1102230246251565e-16
+        },
+        "target_nash_conv": 0.005,
+        "target_met": false,
+        "vector_work_budget": {
+          "budget_version": "preflop-public-vector-future-group-budget-v5",
+          "world_count": 11880,
+          "iterations": 250,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            2,
+            2
+          ],
+          "public_prefixes": 4589,
+          "prefix_edges": 12160,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 18356,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 113,
+          "information_set_action_slots": 291,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 64,
+          "chance_nodes": 3,
+          "terminal_nodes": 105,
+          "action_edges": 165,
+          "chance_edges": 6,
+          "terminal_prefix_edge_visits": 318,
+          "diagnostic_missing_policy_lookups": 78,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 275658,
+          "training_traversals_per_iteration": null,
+          "visitor_loop_entries_per_traversal_upper_bound": 5954,
+          "training_loop_entries_upper_bound": 4118054,
+          "training_setup_loop_entries_upper_bound": 2068,
+          "diagnostics_loop_entries_upper_bound": 19803,
+          "diagnostics_setup_loop_entries_upper_bound": 1255,
+          "diagnostics_dense_fallback_slot_upper_bound": 312,
+          "diagnostics_uniform_fallback_slot_upper_bound": 218,
+          "total_loop_entries_upper_bound": 4698667,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+          "averaging_delay": 125,
+          "training_regret_passes": 500,
+          "training_average_passes": 125,
+          "training_policy_match_rows": 28363,
+          "physical_world_reference_budget_version": "preflop-public-vector-delayed-budget-v2",
+          "future_grouping": {
+            "physical_world_count": 11880,
+            "grouped_rows_upper_bound": 11880,
+            "grouping_reference_slots_upper_bound": 261488,
+            "grouping_reference_slot_limit": 8000000,
+            "grouping_loop_entries_upper_bound": 285152,
+            "grouping_loop_entry_scope": "Conservative linear validation, hash/group accumulation, and output-copy envelope; not bytecode, elapsed time, Python-allocation, or RSS prediction."
+          },
+          "future_grouping_admission_scope": "Full original-world vector envelope retained, plus separately bounded grouping construction. Fewer/shorter backend rows and prefixes cannot relax any existing cap; compact copies remain charged against original seven-field worlds."
+        },
+        "worlds": 11880,
+        "public_states": 172,
+        "decisions": 64,
+        "information_sets": 113,
+        "private_pair_probabilities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "probability": 0.33333333333333337
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "JcJh",
+            "probability": 0.16666666666666669
+          }
+        ]
+      },
+      "action_coverage": {
+        "serialized_flop_action_rows_by_name": {
+          "check": 21,
+          "call": 84,
+          "bet": 28,
+          "raise": 7,
+          "all_in": 49
+        },
+        "limp_check_root_flop_bet_amounts": [
+          1.0,
+          2.0
+        ],
+        "union_has_check_call_bet_raise_all_in": true,
+        "union_has_both_requested_flop_bet_amounts": true
+      },
+      "future_indexing_metadata": {
+        "physical_world_count": 11880,
+        "training_world_rows": 16,
+        "group_key": [
+          "sb_hand",
+          "bb_hand",
+          "public_flop",
+          "showdown_sign"
+        ],
+        "scope": "First-seen groups sum the original normalized physical masses without renormalization. Final signs remain -1, 0 or 1. Only the public flop survives in the training/evaluation view; all selected futures remain hidden. Original worlds govern outputs and every old admission cap. Floating summation order changes; no bitwise policy equivalence claim."
+      }
+    }
+  ],
+  "action_coverage": {
+    "serialized_flop_action_rows_by_name": {
+      "check": 189,
+      "call": 504,
+      "bet": 147,
+      "raise": 21,
+      "all_in": 336
+    },
+    "limp_check_root_flop_bet_amounts": [
+      1.0,
+      2.0
+    ],
+    "union_has_check_call_bet_raise_all_in": true,
+    "union_has_both_requested_flop_bet_amounts": true
+  },
+  "action_coverage_note": "Coverage is reported across the admitted matrix, not asserted per individual case; capped/deduplicated sizes may remove actions.",
+  "timing_scope": "One descriptive complete solve plus JSON per admitted case on one host. Includes physical enumeration/ranking, tree construction, original-world admission, grouping, training and exact diagnostics. Preallocated runouts, pre-call GC and independent replay excluded. No speedup comparison.",
+  "quality_scope": "Every admitted case is independently replayed over original physical worlds with numeric poker rules and exact visible-information best responses. All misses and preflight rejections remain visible. The 0.005-chip target is per checkpoint in this finite fixture, not a general convergence claim.",
+  "provenance": "Fixed action/stack coverage extension of this repository game. Luna drafted the isolated benchmark/spec; lead reviewed, narrowed action coverage to independently checked flop rows, preserved rejection reports and froze/measured the full matrix. No production, shared postflop/turn/river kernel, Coach, third-party source or dependency changes.",
+  "admission_scope": "All nine configurations are preflighted before training. Group allocation, training-view construction and trainer entry are forbidden during preflight. Existing caps are unchanged; no rejected case is simplified or retried.",
+  "model_limits": "Finite conditioned heads-up preflop/flop game with two narrow ranges, two selected flops, complete ordered future outcomes, and forced checkdown after flop betting. No all-streets, full-deck/broad-range, multiway, unrestricted NLHE, or universal accuracy claim."
+}

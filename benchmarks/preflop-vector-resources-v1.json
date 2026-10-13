@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "complete-fixed-flop-vector-resource-convergence-v1",
+  "sb": "AsAd,QsQd",
+  "bb": "KsKd,JhJc",
+  "flop": ["2c", "3c", "4d"],
+  "config": {"starting_stack": 2, "max_raises": 0, "include_all_in": false},
+  "worlds": 7920,
+  "private_pairs": 4,
+  "target_nash_conv": 0.001,
+  "checkpoints": [
+    {"algorithm": "dcfr", "iterations": 100, "legacy_rejection_required": false},
+    {"algorithm": "dcfr", "iterations": 350, "legacy_rejection_required": true},
+    {"algorithm": "cfrplus", "iterations": 120, "legacy_rejection_required": true}
+  ],
+  "historical_baseline": {
+    "report": "benchmarks/results/preflop-public-diagnostics-v1.json",
+    "scenario": "four-private-pairs-complete-fixed-flop-future-deck",
+    "algorithm": "dcfr", "iterations": 10, "diagnostics": "public-batched"
+  }
+}

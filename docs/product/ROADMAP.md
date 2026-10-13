@@ -6,8 +6,11 @@ This is a priority map, not new approval to start features or a dated release pr
 | Workstream | Status and source | Next safe action |
 | --- | --- | --- |
 | Repository institutional memory | Confirmed owner mission | Keep evidence, onboarding and handoffs synchronized |
-| Broader practical solver | Documented active direction in [solver progress](../solver-progress.md) | Profile whole-call work, preserve exact reference/oracles, assess gains and accuracy before defaults change |
-| Preflop, larger ranges, eventually multiway equilibrium | Future computational ambition; not shipped | Establish tractable scope, independent validation and tooling/reuse audit before implementation |
+| Solver coverage and accuracy | Documented direction in [solver progress](../solver-progress.md), not a ranked current commitment | Continue only with explicit game scope, whole-call/resource evidence and independent policy/value validation before changing defaults |
+| Bounded heads-up preflop | Implemented for finite trees and selected physical outcomes; optional training, diagnostics and admission paths are documented separately | Preserve exact conditioned probabilities, visible-information responses and each opt-in resource envelope; report misses rather than widening claims |
+| Fixed-flop complete future deck | Implemented as a separate fixed-flop game with forced turn/river checkdown | Treat the known-value and measured fixtures as model-specific; do not infer later-street or full-deck preflop solving |
+| Matrix-free river/turn and specialized river paths | Optional bounded library paths are implemented; existing defaults remain | Use their own contracts and source-frozen evidence; do not generalize one fixture's speed or accuracy |
+| Beyond current bounded solver models | Full-deck preflop and multiway equilibrium remain unsupported; broader ranges and unrestricted no-limit are not certified | Establish tractable scope, independent validation and tooling/reuse audit before proposing implementation |
 | Contextual coach | Confirmed owner direction; existing slices documented in [coach architecture](../ai-coach-architecture.md) | Improve scenario understanding through trusted evidence; identify unsupported difficulty assessments explicitly |
 | Visual interface | Recorded approved baseline in [visual interface](../visual-interface.md) | Minor evidence-driven refinements; broader redesign requires owner direction |
 | Range inference, history import, model calibration | README development direction; not completed | Define opportunity semantics and held-out evaluation before predictive claims |

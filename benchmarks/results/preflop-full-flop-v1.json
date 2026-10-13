@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "fixed-flop-complete-future-deck-v1",
+  "generated_at": "2026-10-09T04:58:58.170780+00:00",
+  "source_revision": "b77a08f1e1d868ad4c6e0b533c33fa20ed9f6ef0",
+  "worktree_dirty": true,
+  "source_hashes": {
+    "pokerlab/preflop_solver.py": "108aa1dff18c5a07e71d6a41c4a99097bfb989a916fe66234ea17c4da5db832f",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/postflop_solver.py": "bfd5afa3d5dbd9e8cdac54b9597217736bd46a7c268bcae707b0c58e6763469c",
+    "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab/planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/preflop_validation.py": "83ca07b5a766d645dfc1b33132dea3d01deef1be12a78f370a4f1b41fc29fb97",
+    "scripts/benchmark_preflop_full_flop.py": "30ad2bbdf1656ca4e521a1601d424c674322ca78715b4a479f534164f420cff3",
+    "scripts/benchmark_turn_solver.py": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e",
+    "benchmarks/preflop-full-flop-v1.json": "8192ed9ea739f30c9e158eafd920d2c844f24dd90a066655cabf8b2db0625191"
+  },
+  "fixture": {
+    "schema_version": 1,
+    "benchmark_id": "fixed-flop-complete-future-deck-v1",
+    "sb": "AsAd",
+    "bb": "KsKd",
+    "flop": "2c3c4d",
+    "config": {
+      "starting_stack": 2,
+      "max_raises": 0,
+      "include_all_in": false
+    },
+    "iterations": [
+      10,
+      30
+    ],
+    "repeats": 3,
+    "memory_iterations": 10,
+    "algorithm": "dcfr",
+    "traversal": "planned",
+    "known_value_sb": 1.0,
+    "final_nash_conv_ceiling": 0.1
+  },
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "scope": "Every legal ordered future pair for one fixed flop and one private pair, inside a conditioned preflop game. Not full-deck preflop, full ranges or unrestricted NLHE.",
+  "timing_scope": "Three complete calls per checkpoint: construction, training, exact values/BRs and returned policy serialization. Oracle excluded.",
+  "memory_scope": "One separate complete call at explicitly recorded memory_iterations under tracemalloc; Python allocations, not RSS. No memory-scaling inference across iterations.",
+  "memory_iterations": 10,
+  "peak_traced_python_bytes": 26226183,
+  "physical_outcomes": 1980,
+  "showdown_counts": {
+    "-1": 150,
+    "0": 48,
+    "1": 1782
+  },
+  "signed_showdown_mean_fraction": "136/165",
+  "all_in_call_mean_fraction": "272/165",
+  "known_value_proof": "SB completes and shoves after a flop check or calls a flop shove: BB fold pays +1, a called shove pays 2*mean_sign >=1. BB checks/folds throughout, never adds chips, capping SB at +1. These strategies establish value +1/-1.",
+  "constructive_equilibrium_replay": {
+    "value_sb": 1.0,
+    "value_bb": -1.0,
+    "sb_best_response_value": 1.0,
+    "bb_best_response_value": -1.0,
+    "nash_conv": 0.0,
+    "worlds": 1980,
+    "checked_information_sets": 8106,
+    "private_pair_probabilities": [
+      {
+        "sb": "AdAs",
+        "bb": "KdKs",
+        "probability": 0.9999999999999513
+      }
+    ]
+  },
+  "records": [
+    {
+      "iterations": 10,
+      "seconds": [
+        4.4740572000155225,
+        5.896443800011184,
+        6.592063200019766
+      ],
+      "median_seconds": 5.896443800011184,
+      "value_sb": 1.0056648927148264,
+      "nash_conv": 0.1852075646416178,
+      "known_value_error": 0.005664892714826397,
+      "worlds": 1980,
+      "decisions": 8106,
+      "public_states": 26248,
+      "information_sets": 8106,
+      "independent_replay": {
+        "value_sb": 1.0056648927148262,
+        "value_bb": -1.0056648927148262,
+        "sb_best_response_value": 1.0337408206996845,
+        "bb_best_response_value": -0.8485332560580667,
+        "nash_conv": 0.1852075646416178,
+        "worlds": 1980,
+        "checked_information_sets": 8106,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.9999999999999513
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    },
+    {
+      "iterations": 30,
+      "seconds": [
+        9.524980999995023,
+        9.562144299969077,
+        10.15541479998501
+      ],
+      "median_seconds": 9.562144299969077,
+      "value_sb": 0.992838413943538,
+      "nash_conv": 0.00830914587078524,
+      "known_value_error": 0.007161586056461999,
+      "worlds": 1980,
+      "decisions": 8106,
+      "public_states": 26248,
+      "information_sets": 8106,
+      "independent_replay": {
+        "value_sb": 0.9928384139435378,
+        "value_bb": -0.9928384139435378,
+        "sb_best_response_value": 1.0004057284405397,
+        "bb_best_response_value": -0.9920965825697544,
+        "nash_conv": 0.00830914587078524,
+        "worlds": 1980,
+        "checked_information_sets": 8106,
+        "private_pair_probabilities": [
+          {
+            "sb": "AdAs",
+            "bb": "KdKs",
+            "probability": 0.9999999999999513
+          }
+        ]
+      },
+      "metric_absolute_gaps": {
+        "value_sb": 2.220446049250313e-16,
+        "value_bb": 2.220446049250313e-16,
+        "sb_best_response_value": 0.0,
+        "bb_best_response_value": 0.0,
+        "nash_conv": 0.0
+      }
+    }
+  ]
+}

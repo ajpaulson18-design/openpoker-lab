@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-active-prefixes-v1",
+  "game_spec": "benchmarks/preflop-flop-checkdown-v1.json",
+  "paired_timing": {
+    "iterations": 90,
+    "delay": 45,
+    "pairs": 3
+  },
+  "memory": {
+    "iterations": 10,
+    "delay": 5
+  },
+  "minimum_median_time_reduction": 0.05,
+  "selection_scope": "Frozen before measurement: same two-flop three-chip flop-checkdown game and fixed90/delay45 policy, three alternating complete-call+JSON pairs against the literal former legal-prefix loop. Require exact entire serialized-result parity and at least5% observed median time reduction for adoption. Separate10/delay5 allocation traces retain no other policy; no assumed memory saving. No world/model/budget/kernel changes."
+}
