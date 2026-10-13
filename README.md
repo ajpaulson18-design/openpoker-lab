@@ -337,3 +337,5 @@ Broader private-hand and flop conditioning coverage: [four weighted hands per se
 A grouped preflop target-plan reassessment retained as a failed experiment: [exact payload parity, paired timings and allocation evidence](docs/preflop-grouped-target-plan.md).
 
 A streamed preflop construction experiment retained without production adoption: [corrected work admission, exact parity and a failed paired runtime gate](docs/preflop-streamed-worlds-experiment.md).
+
+A direct fixed-flop solver with complete hidden future-deck integration: [API, independently replayed convergence, bounded work and model limits](docs/direct-flop-checkdown.md).
