@@ -1671,6 +1671,17 @@
   },
   "platform": "Windows-10-10.0.19045-SP0",
   "python": "3.12.14",
+  "report_amendments": [
+    {
+      "corrected_runner_sha256": "43aace8f103313cff5c857634f3f06ca94b3a9e631c8d2b08b0fe5a36ff3f7a5",
+      "fields": [
+        "results[].diagnostic_origin",
+        "results[].production_diagnostics_compared"
+      ],
+      "numeric_policy_timing_or_historical_source_data_changed": false,
+      "reason": "Read-only review found summary metrics are independently replayed, including full profiles; production diagnostics are compared separately."
+    }
+  ],
   "results": [
     {
       "algorithm": "cfrplus",
@@ -1690,6 +1701,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-materialized-prefix.json",
       "policy_sha256": "b078ce40da93271edd2b4997f820be2b58204723a791f3bddc541844dfd9a3c5",
+      "production_diagnostics_compared": false,
       "profile_kind": "prefix",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1714,7 +1726,7 @@
     {
       "algorithm": "cfrplus",
       "backend": "materialized",
-      "diagnostic_origin": "production",
+      "diagnostic_origin": "independent-replay-of-production",
       "iterations": 10000,
       "metrics": {
         "exploitability": 0.0039502829700204245,
@@ -1729,6 +1741,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-materialized-full.json",
       "policy_sha256": "743b79ea931b2ae3022e345b17b514c4cf739e82989d8a0d45e710f459a280a7",
+      "production_diagnostics_compared": true,
       "profile_kind": "full",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1768,6 +1781,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-materialized-tail.json",
       "policy_sha256": "67761d6b0c37b0edce22984583c14aaeabd36507ab426939e58753be050a1344",
+      "production_diagnostics_compared": false,
       "profile_kind": "tail",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1807,6 +1821,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-matrix-free-prefix.json",
       "policy_sha256": "84be736e4003a5ab3a0657768c5b50fb4bbaeed8765602018be79fb2f6c6c692",
+      "production_diagnostics_compared": false,
       "profile_kind": "prefix",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1831,7 +1846,7 @@
     {
       "algorithm": "cfrplus",
       "backend": "matrix-free",
-      "diagnostic_origin": "production",
+      "diagnostic_origin": "independent-replay-of-production",
       "iterations": 10000,
       "metrics": {
         "exploitability": 0.003950282969974239,
@@ -1846,6 +1861,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-matrix-free-full.json",
       "policy_sha256": "c8d3087316d955c5b00e6de0a96893c529676b3318d276e15881d1273dd828ca",
+      "production_diagnostics_compared": true,
       "profile_kind": "full",
       "scalar_differences": {
         "exploitability": -5.329070518200751e-15,
@@ -1885,6 +1901,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-polarised-bluffcatcher-matrix-free-tail.json",
       "policy_sha256": "e62ebc3da7d9d2d1bde3d1d0fc5afc6359537cc1c292e3ae0d53d31cc2f4a97a",
+      "production_diagnostics_compared": false,
       "profile_kind": "tail",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1924,6 +1941,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-materialized-prefix.json",
       "policy_sha256": "432885200020004526efcb7af950fd39cd76c5a69c3a63521639600cc9e72646",
+      "production_diagnostics_compared": false,
       "profile_kind": "prefix",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -1948,7 +1966,7 @@
     {
       "algorithm": "cfrplus",
       "backend": "materialized",
-      "diagnostic_origin": "production",
+      "diagnostic_origin": "independent-replay-of-production",
       "iterations": 10000,
       "metrics": {
         "exploitability": 0.00013977672140441655,
@@ -1963,6 +1981,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-materialized-full.json",
       "policy_sha256": "499a460b566f40ca4ed23f7d6f9567e1bd41fd43984284438b6807643dddb8e0",
+      "production_diagnostics_compared": true,
       "profile_kind": "full",
       "scalar_differences": {
         "exploitability": 8.881784197001252e-15,
@@ -2002,6 +2021,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-materialized-tail.json",
       "policy_sha256": "cfff9bba2fd253e0701d37eb5c845399c6643f344cf11565a7a2e5b598514b62",
+      "production_diagnostics_compared": false,
       "profile_kind": "tail",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -2041,6 +2061,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-matrix-free-prefix.json",
       "policy_sha256": "82511f751b77d1ca1b4356b533ac2751d62c73dce3270c8774cdbfff16354a33",
+      "production_diagnostics_compared": false,
       "profile_kind": "prefix",
       "scalar_differences": {
         "exploitability": 0.0,
@@ -2065,7 +2086,7 @@
     {
       "algorithm": "cfrplus",
       "backend": "matrix-free",
-      "diagnostic_origin": "production",
+      "diagnostic_origin": "independent-replay-of-production",
       "iterations": 10000,
       "metrics": {
         "exploitability": 0.00013977672141329833,
@@ -2080,6 +2101,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-matrix-free-full.json",
       "policy_sha256": "0619ce135a3d960f0065ef359edf29a0ff94cb04c6ce7274b6e3afdbb3925605",
+      "production_diagnostics_compared": true,
       "profile_kind": "full",
       "scalar_differences": {
         "exploitability": -1.7763568394002505e-15,
@@ -2119,6 +2141,7 @@
       "nash_conv_target": 0.001,
       "policy_file": "river-weighted-raises-matrix-free-tail.json",
       "policy_sha256": "c66982030b437c236952c0c90c1179ce9505b66aed84f85f8d151c7846a3937a",
+      "production_diagnostics_compared": false,
       "profile_kind": "tail",
       "scalar_differences": {
         "exploitability": 0.0,

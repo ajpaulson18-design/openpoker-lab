@@ -9,6 +9,8 @@ and an earlier prefix from the **same training trajectory** into an average
 over later sweeps. Luna implemented the pure conversion and exact proof tests.
 After Luna reached its account usage limit, Sol implemented the observational
 capture harness and its tests; no replacement worker/model was substituted.
+Luna subsequently resumed for an independent read-only review, accepted the
+capture/index/lifetime paths and identified the report-label correction below.
 
 The experiment was fixed before the poker runs: the two existing complete
 river fixtures, both existing backends, discard checkpoint **D=3,000** and
@@ -107,6 +109,12 @@ profiles, byte hashes, exact Fraction correction ledgers, independent metrics,
 target outcomes, raw timings and source/baseline fingerprints. Source calls
 were frozen at implementation commit `af5da71`; source-byte hashes include the
 actual checkout line endings and differ from Git's canonical blob hashes.
+After that run, review corrected the flat summary's full-profile metric origin
+label to `independent-replay-of-production` and added an explicit production
+comparison flag. All summary metrics already came from independent replay;
+the separate production differences remain in the capture record. The report
+records this metadata-only amendment and the corrected harness fingerprint.
+No policy, numerical result, timing or historical run fingerprint was rewritten.
 
 All four tails pass the predeclared legality/correction gates and improve their
 measured gap. Rounded NashConv below applies to both backends; exact binary64

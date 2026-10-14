@@ -236,7 +236,9 @@ def main(argv=None):
                     'source_iteration_window': ([1, DISCARD] if kind == 'prefix' else
                                                 [DISCARD + 1, TOTAL] if kind == 'tail' else [1, TOTAL]),
                     'metrics': {field: oracle[field] for field in METRICS},
-                    'diagnostic_origin': 'production' if kind == 'full' else 'independent-derived',
+                    'diagnostic_origin': ('independent-replay-of-production' if kind == 'full'
+                                          else 'independent-derived'),
+                    'production_diagnostics_compared': kind == 'full',
                     'scalar_differences': delta, 'nash_conv_target': TARGET,
                     'target_met': oracle['nash_conv'] <= TARGET,
                     'verified_worlds': oracle['worlds'],
