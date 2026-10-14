@@ -1,5 +1,21 @@
 # Solver progress record
 
+## Longer-budget conditional turn-to-river accuracy
+
+Both existing backends now have saved complete CFR+ evidence at 1k/3k/10k
+on the predeclared two-runout, weighted, raised, asymmetric-stack fixture.
+Independent NashConv is 0.00423446838 / 0.000470810047 / 0.0000423827902
+on each backend to the shown precision. Both 1k profiles miss the unchanged
+0.001 reporting threshold; both 3k and 10k meet. All six policies are retained.
+
+Every saved complete policy independently replays all eight metrics, physical
+counts, both street configurations and selected-runout legality. Sol separately
+checked saved bytes/hashes/replay and all 53 source fingerprints. Maximum
+scalar disagreement is 1.42e-14 chips. All 21 focused tests passed; full-request
+resource charges remain under the unchanged backend caps. Production and
+earlier-street source are unchanged. See
+[full evidence, scope and reproduction](turn-selected-accuracy.md).
+
 ## Bounded longer river solves meet the bluff-catcher threshold
 
 The isolated matrix-free river ceiling is now 100,000 requested iterations
