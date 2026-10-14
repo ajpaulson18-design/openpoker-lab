@@ -33,3 +33,12 @@ The application currently binds to loopback. Public commercial hosting would nee
 a separately approved security and operational design, not simply a bind change.
 Current MIT/public status is preserved; commercial intent alone does not approve
 a license or visibility change. [License boundaries](../research/LICENSING.md).
+
+## Full-board restricted preflop addition
+
+The separate [preflop shove/fold API](../preflop-push-fold.md) adds full-deck final-board
+chance to a bounded heads-up SB fold/shove and BB fold/call game, with at most
+four compatible private pairs. Its prepared equity tables can be reused. This
+does not expand the existing selected-outcome preflop API to a full-deck game,
+or add limps, non-all-in raises, later-street betting or multiway equilibrium.
+Read the dedicated specification for work admission and independent evidence.

@@ -80,3 +80,12 @@ The checks below are source-verifiable at the pinned revision; this overview doe
 | HTTP and browser | `tests/test_core.py`, `tests/test_practice.py`, `scripts/test_frontend.cjs` | Endpoint behavior, local access checks and frontend contract checks. |
 
 Historical run counts and timings are documented in detailed docs and benchmark JSON, tied to their source hash, interpreter, harness and fixtures. The Oct. 8–9 knowledge audit covered only `65c9ba7`; it predates the bounded preflop and fixed-flop additions. For new validation claims, run the commands in `AGENTS.md` and record outcomes against a full SHA. This documentation refresh did not run tests.
+
+## Full-board restricted preflop addition
+
+The separate [preflop shove/fold API](../preflop-push-fold.md) adds full-deck final-board
+chance to a bounded heads-up SB fold/shove and BB fold/call game, with at most
+four compatible private pairs. Its prepared equity tables can be reused. This
+does not expand the existing selected-outcome preflop API to a full-deck game,
+or add limps, non-all-in raises, later-street betting or multiway equilibrium.
+Read the dedicated specification for work admission and independent evidence.

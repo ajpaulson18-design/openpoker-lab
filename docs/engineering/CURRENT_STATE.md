@@ -57,3 +57,12 @@ Use existing detailed docs as canonical, rather than copying their derivations i
 * Hand capture and review: [decision capture](../decision-capture-v1.md), [decision study](../decision-study-v1.md).
 
 The pre-existing `docs/architecture.md` remains valuable for mathematical and API detail; use [system overview](../architecture/SYSTEM_OVERVIEW.md), [solver progress](../solver-progress.md) and the preflop specifications for the current source map. Historical October 8 knowledge files remain pinned snapshots and do not supersede these current records. Validation results must retain full source SHA, Python version, command, outcome and scope; do not convert tests present or passes on another snapshot into a fresh current-baseline result.
+
+## Full-board restricted preflop addition
+
+The separate [preflop shove/fold API](../preflop-push-fold.md) adds full-deck final-board
+chance to a bounded heads-up SB fold/shove and BB fold/call game, with at most
+four compatible private pairs. Its prepared equity tables can be reused. This
+does not expand the existing selected-outcome preflop API to a full-deck game,
+or add limps, non-all-in raises, later-street betting or multiway equilibrium.
+Read the dedicated specification for work admission and independent evidence.
