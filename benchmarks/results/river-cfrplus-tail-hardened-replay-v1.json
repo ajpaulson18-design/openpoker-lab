@@ -1,0 +1,302 @@
+{
+  "extension_report_canonical_sha256": "5956b2c3ce94ddbd6f04613496fd93af9d2ebe76300d26a959c6488902143717",
+  "hardened_validator_sha256": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1",
+  "replay_script_sha256": "5e95100c7a28c1c93e0e3f5296136b57aab023c40e763f23e47d5c4ac3a851d5",
+  "results": [
+    {
+      "backend": "materialized",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-1700248721548777780167297899917270867160/68056473384187694876744199655651190373",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 5.551381624644673e-17,
+        "nash_conv_fraction": "11212121404177372048496478656102696364239697074705440/612998216346355494959212601301622020058938212947679643",
+        "oop_br_fraction": "225190791954457000/9007199254740991",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "1700248721548777780167297899917270867160/68056473384187694876744199655651190373",
+        "value_oop_fraction": "289480155134174410115369639507899043989681516103819934533234870990392769570210/11579208923731618823741741470901501019117117910643065947843640819659192602277",
+        "value_upper_fraction": "225190791954457000/9007199254740991"
+      },
+      "iterations": 3000,
+      "policy_sha256": "b078ce40da93271edd2b4997f820be2b58204723a791f3bddc541844dfd9a3c5",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "materialized",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-68048433159981980968446121669196389387700/2722258935367507583399234419924526516979",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 5.55221358978196e-17,
+        "nash_conv_fraction": "193721313175073585884618724891497593569707120820644450/24519928653854217891809831863045900092090761962008786189",
+        "oop_br_fraction": "225224540469837850/9007199254740991",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "68048433159981980968446121669196389387700/2722258935367507583399234419924526516979",
+        "value_oop_fraction": "30877889180175362002909706068624680385223910611456532596370613134155388472638850/1235115618531372522878573560671279529588317414358256792450013824418766692771471",
+        "value_upper_fraction": "225224540469837850/9007199254740991"
+      },
+      "iterations": 10000,
+      "policy_sha256": "743b79ea931b2ae3022e345b17b514c4cf739e82989d8a0d45e710f459a280a7",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "materialized",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-112582987592901075/4503599627370496",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 2.0290059554128144e-24,
+        "nash_conv_fraction": "7737988133075/1125899906842624",
+        "oop_br_fraction": "112613939545433375/4503599627370496",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "112582987592901075/4503599627370496",
+        "value_oop_fraction": "507060233382649249397611429048725/20282409603651670423947251286016",
+        "value_upper_fraction": "112613939545433375/4503599627370496"
+      },
+      "iterations": 10000,
+      "policy_sha256": "67761d6b0c37b0edce22984583c14aaeabd36507ab426939e58753be050a1344",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "matrix-free",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-1062655450967985286190619528019071729025/42535295865117306936775127950518386688",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 8.327072436967023e-17,
+        "nash_conv_fraction": "14015151755270629866351820803104263621224202093983875/766247770432944283628302326934796463874111450726268928",
+        "oop_br_fraction": "450381583908914800/18014398509481981",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "1062655450967985286190619528019071729025/42535295865117306936775127950518386688",
+        "value_oop_fraction": "361850193917717972005223247325838646238860572712371219870554879322456329355725/14474011154664521922736833836325401626905209629112342152261936380344524603392",
+        "value_upper_fraction": "450381583908914800/18014398509481981"
+      },
+      "iterations": 3000,
+      "policy_sha256": "84be736e4003a5ab3a0657768c5b50fb4bbaeed8765602018be79fb2f6c6c692",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "matrix-free",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-4253027072498877116184468329458117596025/170141183460469233407182865184759742464",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 2.816023814401206e-17,
+        "nash_conv_fraction": "5376846556115071616564962721720279675/680564733841876933628731460739038969856",
+        "oop_br_fraction": "112612270234918525/4503599627370496",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "4253027072498877116184468329458117596025/170141183460469233407182865184759742464",
+        "value_oop_fraction": "964934036880480223840116516874771725100215275358927560924238141654356258277375/38597363079105397767707089975091276588076361586681381458623301401482117513216",
+        "value_upper_fraction": "112612270234918525/4503599627370496"
+      },
+      "iterations": 10000,
+      "policy_sha256": "c8d3087316d955c5b00e6de0a96893c529676b3318d276e15881d1273dd828ca",
+      "scalar_differences": {
+        "exploitability": -5.329070518200751e-15,
+        "ip_best_response_gain": -1.0658141036401503e-14,
+        "ip_best_response_value": -1.0658141036401503e-14,
+        "nash_conv": -1.0658141036401503e-14,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "matrix-free",
+      "exact_rational_witness": {
+        "ip_br_fraction": "-112582987592901175/4503599627370496",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 2.0290059554128144e-24,
+        "nash_conv_fraction": "30951952531725/4503599627370496",
+        "oop_br_fraction": "28153484886358225/1125899906842624",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "112582987592901175/4503599627370496",
+        "value_oop_fraction": "126765058345662312406616402398975/5070602400912917605986812821504",
+        "value_upper_fraction": "28153484886358225/1125899906842624"
+      },
+      "iterations": 10000,
+      "policy_sha256": "e62ebc3da7d9d2d1bde3d1d0fc5afc6359537cc1c292e3ae0d53d31cc2f4a97a",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-polarised-bluffcatcher",
+      "verified_information_sets": 6,
+      "verified_worlds": 2
+    },
+    {
+      "backend": "materialized",
+      "iterations": 3000,
+      "policy_sha256": "432885200020004526efcb7af950fd39cd76c5a69c3a63521639600cc9e72646",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "backend": "materialized",
+      "iterations": 10000,
+      "policy_sha256": "499a460b566f40ca4ed23f7d6f9567e1bd41fd43984284438b6807643dddb8e0",
+      "scalar_differences": {
+        "exploitability": 8.881784197001252e-15,
+        "ip_best_response_gain": 7.105427357601002e-15,
+        "ip_best_response_value": 7.105427357601002e-15,
+        "nash_conv": 1.7763568394002505e-14,
+        "oop_best_response_gain": 1.0658141036401503e-14,
+        "oop_best_response_value": 1.0658141036401503e-14,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "backend": "materialized",
+      "iterations": 10000,
+      "policy_sha256": "cfff9bba2fd253e0701d37eb5c845399c6643f344cf11565a7a2e5b598514b62",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "backend": "matrix-free",
+      "iterations": 3000,
+      "policy_sha256": "82511f751b77d1ca1b4356b533ac2751d62c73dce3270c8774cdbfff16354a33",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "backend": "matrix-free",
+      "iterations": 10000,
+      "policy_sha256": "0619ce135a3d960f0065ef359edf29a0ff94cb04c6ce7274b6e3afdbb3925605",
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": 1.4210854715202004e-14,
+        "ip_best_response_value": 7.105427357601002e-15,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": -1.7763568394002505e-14,
+        "oop_best_response_value": -1.0658141036401503e-14,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    },
+    {
+      "backend": "matrix-free",
+      "iterations": 10000,
+      "policy_sha256": "c66982030b437c236952c0c90c1179ce9505b66aed84f85f8d151c7846a3937a",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "river-weighted-raises",
+      "verified_information_sets": 36,
+      "verified_worlds": 4
+    }
+  ],
+  "schema_version": 1
+}
