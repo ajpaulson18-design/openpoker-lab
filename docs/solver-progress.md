@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Full remaining-deck turn accuracy on both existing backends
+
+The existing full44 fixture now has complete CFR+ evidence at 1k/1.5k/3k
+sweeps on both materialized/public-batched and matrix-free backends. Each
+private pair retains all 44 remaining rivers: four pairs, 176 physical worlds,
+48 globally reachable public rivers and 1,112 information sets. Independent
+NashConv is approximately 0.00145336964 / 0.000646157234 / 0.000161593137
+on each backend. Both 1k profiles miss the unchanged 0.001 reporting threshold;
+all four 1.5k/3k profiles meet. No stopping target is configured.
+
+All six complete saved policies independently replay all eight metrics before
+and after saving. Sol separately checked each byte hash, physical deal law,
+resource dimensions and all 53 source fingerprints. Maximum scalar difference
+is 2.84e-14 chips; all 24 focused tests passed. Original modeled-work caps and
+production/earlier-street sources remain unchanged. Raw uncontrolled timings,
+including an extreme outlier, are retained without a performance claim. See
+[full model, admission, evidence and reproduction](full-deck-turn-accuracy.md).
+
 ## Exact rational response bounds for normalized selected-turn policies
 
 All six saved selected-turn CFR+ profiles now have exact rational EV and legal
