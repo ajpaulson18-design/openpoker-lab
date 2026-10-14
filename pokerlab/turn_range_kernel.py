@@ -5,6 +5,7 @@ does not claim equivalence to a commercial or unrestricted Hold'em solver.
 """
 import math
 import sys
+from fractions import Fraction
 from numbers import Real
 from types import MappingProxyType
 
@@ -15,7 +16,13 @@ from .river_tree import _Terminal
 
 MAX_HAND_SLOTS = 120_000
 MAX_FALLBACK_PAIR_CHECKS = 30_000_000
+MAX_STABLE_ROOT_PAIR_CHECKS = 100_000
+STABLE_ROOT_MAX_INTEGER_BITS = 7_500
 _CARD_ID = {card: index for index, card in enumerate(DECK)}
+
+
+def _fraction_from_float(value):
+    return Fraction.from_float(value)
 
 
 def _side_hands(values, board, label):
@@ -94,7 +101,8 @@ class TurnRangePayoffs:
     """
 
     def __init__(self, board, hands, weights, *, pot, runouts=None,
-                 fallback_pair_limit=MAX_FALLBACK_PAIR_CHECKS):
+                 fallback_pair_limit=MAX_FALLBACK_PAIR_CHECKS,
+                 stable_root_pair_limit=MAX_STABLE_ROOT_PAIR_CHECKS):
         self.board = cards(board, 4)
         if not isinstance(hands, (tuple, list)) or len(hands) != 2:
             raise ValueError("hands must contain OOP and IP holding sequences.")
@@ -108,6 +116,11 @@ class TurnRangePayoffs:
             raise ValueError("Fallback pair limit must be a nonnegative integer.")
         self.fallback_pair_limit = fallback_pair_limit
         self.fallback_pair_checks = 0
+        if type(stable_root_pair_limit) is not int or stable_root_pair_limit < 0:
+            raise ValueError("Stable root pair limit must be a nonnegative integer.")
+        self.stable_root_pair_limit = stable_root_pair_limit
+        self.stable_root_fold_calls = 0
+        self.stable_root_fold_pair_checks = 0
         try:
             if isinstance(pot, bool) or not isinstance(pot, Real):
                 raise ValueError("Pot must be a finite positive real number.")
@@ -400,6 +413,12 @@ class TurnRangePayoffs:
                       in zip(opponent_weights, opponent_reach)]
         if any(not math.isfinite(value) for value in opponent_q):
             raise ValueError("Weighted opponent reach must be finite.")
+        if any(weight > 0 and reach > 0 and value < sys.float_info.min
+               for weight, reach, value
+               in zip(opponent_weights, opponent_reach, opponent_q)):
+            return self._stable_root_fold_values(
+                node, opponent_reach, player, scale,
+            )
         total_q = math.fsum(opponent_q)
         if not math.isfinite(total_q):
             raise ValueError("Weighted opponent reach total must be finite.")
@@ -465,7 +484,88 @@ class TurnRangePayoffs:
             joint_mass = self.weights[player][own_index] * approximate
             if not math.isfinite(joint_mass):
                 raise ValueError("Turn fold joint mass is not finite.")
-            value = (joint_mass / self._total_mass) * sign * scale
+            if (self.weights[player][own_index] > 0 and approximate > 0 and
+                    joint_mass < sys.float_info.min):
+                return self._stable_root_fold_values(
+                    node, opponent_reach, player, scale,
+                )
+            normalized_mass = joint_mass / self._total_mass
+            if (joint_mass > 0 and normalized_mass < sys.float_info.min):
+                return self._stable_root_fold_values(
+                    node, opponent_reach, player, scale,
+                )
+            value = normalized_mass * sign * scale
+            if not math.isfinite(value):
+                raise ValueError("Turn fold payoff is not representable in binary64.")
+            answer[own_index] = value
+        return answer
+
+    def _stable_root_fold_values(self, node, opponent_reach, player, scale):
+        """Recompute a risky root fold with exact binary-rational pair sums."""
+        opponent = 1 - player
+        own_hands = self.hands[player]
+        opponent_hands = self.hands[opponent]
+        pairs = len(own_hands) * len(opponent_hands)
+        proposed_fallback = self.fallback_pair_checks + pairs
+        proposed_stable = self.stable_root_fold_pair_checks + pairs
+        if proposed_fallback > self.fallback_pair_limit:
+            raise ValueError("Turn range fallback pair-check budget exceeded.")
+        if proposed_stable > self.stable_root_pair_limit:
+            raise ValueError("Stable turn root-fold pair-check budget exceeded.")
+
+        # Reserve both cumulative budgets atomically before any Fraction
+        # conversion or pair inspection. Accepted work remains charged if a
+        # later conversion or arithmetic operation raises.
+        self.fallback_pair_checks = proposed_fallback
+        self.stable_root_fold_pair_checks = proposed_stable
+        self.stable_root_fold_calls += 1
+
+        root_mass = _fraction_from_float(self._total_mass)
+        exact_scale = _fraction_from_float(scale)
+        sign = 1 if node.winner == player else -1
+        selected_count = len(self._selected_runouts)
+        answer = [0.0] * len(own_hands)
+        for own_index, own_hand in enumerate(own_hands):
+            own_set = set(own_hand)
+            own_selected = sum(
+                _CARD_ID[card] in self._selected_card_ids for card in own_hand
+            )
+            own_weight = _fraction_from_float(self.weights[player][own_index])
+            compatible_reach_mass = Fraction(0)
+            for opponent_index, opponent_hand in enumerate(opponent_hands):
+                if not own_set.isdisjoint(opponent_hand):
+                    continue
+                legal_runouts = (
+                    selected_count - own_selected - sum(
+                        _CARD_ID[card] in self._selected_card_ids
+                        for card in opponent_hand
+                    )
+                )
+                reach = opponent_reach[opponent_index]
+                if legal_runouts <= 0 or reach == 0:
+                    continue
+                term = (_fraction_from_float(
+                    self.weights[opponent][opponent_index]) *
+                    _fraction_from_float(reach) * legal_runouts)
+                compatible_reach_mass += term
+                if (compatible_reach_mass.numerator.bit_length() >
+                        STABLE_ROOT_MAX_INTEGER_BITS or
+                        compatible_reach_mass.denominator.bit_length() >
+                        STABLE_ROOT_MAX_INTEGER_BITS):
+                    raise ValueError("Stable turn root-fold accumulator exceeds its integer-width bound.")
+            exact_value = (own_weight * compatible_reach_mass * exact_scale /
+                           root_mass)
+            if sign < 0:
+                exact_value = -exact_value
+            if (exact_value.numerator.bit_length() > STABLE_ROOT_MAX_INTEGER_BITS or
+                    exact_value.denominator.bit_length() > STABLE_ROOT_MAX_INTEGER_BITS):
+                raise ValueError("Stable turn root-fold result exceeds its integer-width bound.")
+            try:
+                value = float(exact_value)
+            except OverflowError as exc:
+                raise ValueError(
+                    "Turn fold payoff is not representable in binary64."
+                ) from exc
             if not math.isfinite(value):
                 raise ValueError("Turn fold payoff is not representable in binary64.")
             answer[own_index] = value
