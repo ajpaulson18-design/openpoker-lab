@@ -3,6 +3,7 @@
 from fractions import Fraction as F
 from math import isfinite
 import unittest
+import math
 from unittest.mock import patch
 
 from pokerlab.cards import DECK, rank_hand
@@ -114,10 +115,176 @@ class TurnRangeKernelTests(unittest.TestCase):
         hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
                  (_hand("As", "Kc"), _hand("Ah", "Qh")))
         weights = ((F(1), F(1, 10**200)), (F(1), F(1, 10**200)))
-        # Three high-mass pairings are blocked; only the doubly tiny pair is
-        # physically compatible, whose normalized joint mass underflows.
+        # Three high-mass pairings are blocked. The remaining compatible
+        # pair reaches RankedRiverPayoffs' reciprocal/compatible-mass limit
+        # before turn-level conditional branch normalization is constructed.
         with self.assertRaisesRegex(ValueError, "unrepresentable"):
             TurnRangePayoffs(board, hands, weights, pot=20)
+
+    def test_subnormal_conditioned_root_fold_matches_exact_world_sum_both_players(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        tiny = math.nextafter(0.0, 1.0)
+        weights = ((1.0, tiny), (1.0,))
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20, runouts=("As",))
+        self.assertTrue(kernel.exceptional_conditioning)
+        self.assertEqual(kernel.branch_probabilities["As"], 1.0)
+
+        for contributions, factor in (((0.0, 0.0), 10.0), ((4.0, 4.0), 14.0)):
+            for reach in (0.25, 0.75):
+                for player, winner in ((0, 0), (0, 1), (1, 1), (1, 0)):
+                    fold = _Terminal("fold", contributions, winner)
+                    opponent_reach = (reach,) if player == 0 else (reach, reach)
+                    actual_root = kernel.values(fold, opponent_reach, player)
+                    actual_prefix = kernel.values(
+                        fold, opponent_reach, player, prefix=("As",),
+                    )
+                    expected = _oracle(
+                        board, hands, weights, 20, ("As",), fold,
+                        opponent_reach, player,
+                    )
+                    signed_expected = factor * reach * (1 if winner == player else -1)
+                    self.assertEqual(actual_root, actual_prefix)
+                    if player == 0:
+                        self.assertEqual(actual_root[1], signed_expected)
+                        self.assertEqual(actual_root[0], 0.0)
+                    else:
+                        self.assertEqual(actual_root[0], signed_expected)
+                    for got, want in zip(actual_root, expected):
+                        self.assertEqual(got, float(want))
+
+    def test_scaled_branch_mass_admits_selected_one_world_at_1e400_scale(self):
+        board = ("2c", "7d", "9h", "Js")
+        hands = ((_hand("As", "Ah"), _hand("3c", "4c")),
+                 (_hand("As", "Kh"), _hand("5c", "6c")))
+        tiny = float("1e-200")
+        weights = ((1.0, tiny), (1.0, tiny))
+        selected = ("As",)
+        kernel = TurnRangePayoffs(board, hands, weights, pot=100,
+                                  runouts=selected)
+        self.assertTrue(kernel.exceptional_conditioning)
+        self.assertEqual(kernel.branch_probabilities, {"As": 1.0})
+        expected_marginals, exact_branch_mass = _oracle_marginals(
+            board, hands, weights, selected,
+        )
+        self.assertEqual(exact_branch_mass, F(1))
+        actual_marginals = kernel.joint_marginals()
+        for player in (0, 1):
+            self.assertEqual(actual_marginals[player], tuple(
+                float(value) for value in expected_marginals[player]
+            ))
+        self.assertEqual(actual_marginals[0], (0.0, 1.0))
+        fold = _Terminal("fold", (0.0, 0.0), 0)
+        for player, reach in ((0, (1.0, 1.0)), (1, (1.0, 1.0))):
+            actual = kernel.values(fold, reach, player)
+            expected = _oracle(board, hands, weights, 100, selected,
+                               fold, reach, player)
+            self.assertEqual(actual, [float(value) for value in expected])
+            showdown = _Terminal("showdown", (0.0, 0.0))
+            actual_showdown = kernel.values(showdown, reach, player,
+                                            prefix=("As",))
+            expected_showdown = _oracle(
+                board, hands, weights, 100, selected, showdown, reach, player,
+                prefix=("As",),
+            )
+            self.assertEqual(actual_showdown,
+                             [float(value) for value in expected_showdown])
+
+    def test_scaled_branch_probabilities_normalize_before_subnormal_rounding(self):
+        board = ("2c", "7d", "9h", "Js")
+        hands = ((_hand("As", "Ah"), _hand("3c", "4c")),
+                 (_hand("As", "Kd"), _hand("5c", "6c")))
+        tiny = math.nextafter(0.0, 1.0)
+        weights = ((1.0, tiny), (1.0, tiny))
+        selected = ("As", "Kd")
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20,
+                                  runouts=selected)
+        exact_marginals, _ = _oracle_marginals(board, hands, weights, selected)
+        expected_branch_probabilities = {
+            river: _oracle_marginals(board, hands, weights, selected, (river,))[1]
+            for river in selected
+        }
+        for river in selected:
+            self.assertEqual(kernel.branch_probabilities[river],
+                             float(expected_branch_probabilities[river]))
+        self.assertEqual(kernel.branch_probabilities["As"], tiny)
+        self.assertEqual(kernel.branch_probabilities["Kd"], 1.0)
+        actual_marginals = kernel.joint_marginals()
+        for player in (0, 1):
+            self.assertEqual(actual_marginals[player], tuple(
+                float(value) for value in exact_marginals[player]
+            ))
+        self.assertEqual(actual_marginals[0][1], 2.0 * tiny)
+
+        # Adding Ah contributes a second ordinary-mass branch, making the
+        # positive As conditional probability round below min-subnormal.
+        with self.assertRaisesRegex(ValueError, "conditional probability"):
+            TurnRangePayoffs(board, hands, weights, pot=20,
+                             runouts=("As", "Kd", "Ah"))
+
+    def test_unequal_tiny_multiriver_mass_matches_fraction_law_and_root_folds(self):
+        board = ("2c", "7d", "9h", "Js")
+        hands = ((_hand("Ah", "As"), _hand("3c", "4c"),
+                  _hand("3h", "As")),
+                 (_hand("Ah", "As"), _hand("5c", "6c")))
+        tiny = float("1e-200")
+        weights = ((1.0, tiny, 2 * tiny), (1.0, tiny))
+        selected = ("As", "Ah")
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20,
+                                  runouts=selected)
+        self.assertTrue(kernel.exceptional_conditioning)
+
+        expected_root, _ = _oracle_marginals(board, hands, weights, selected)
+        expected_branches = {
+            river: _oracle_marginals(board, hands, weights, selected,
+                                     (river,))[1]
+            for river in selected
+        }
+        self.assertEqual(kernel.branch_probabilities["As"], 0.25)
+        self.assertEqual(kernel.branch_probabilities["Ah"], 0.75)
+        for river in selected:
+            self.assertEqual(kernel.branch_probabilities[river],
+                             float(expected_branches[river]))
+        marginals = kernel.joint_marginals()
+        self.assertEqual(marginals[0], (0.0, 0.5, 0.5))
+        self.assertEqual(marginals[1], (0.0, 1.0))
+        for player in (0, 1):
+            for actual, expected in zip(marginals[player], expected_root[player]):
+                self.assertEqual(actual, float(expected))
+
+        reaches = {0: (0.17, 0.25), 1: (0.13, 0.25, 0.75)}
+        for contributions, payout in (((0.0, 0.0), 10.0),
+                                      ((4.0, 4.0), 14.0)):
+            for player in (0, 1):
+                reach = reaches[player]
+                for winner in (player, 1 - player):
+                    fold = _Terminal("fold", contributions, winner)
+                    actual = kernel.values(fold, reach, player)
+                    expected = _oracle(board, hands, weights, 20, selected,
+                                       fold, reach, player)
+                    prefix_sum = [0.0] * len(hands[player])
+                    for river in selected:
+                        branch_values = kernel.values(
+                            fold, reach, player, prefix=(river,),
+                        )
+                        for index, value in enumerate(branch_values):
+                            prefix_sum[index] += value
+                    for got, want, prefix_value in zip(actual, expected, prefix_sum):
+                        self.assertAlmostEqual(got, float(want), places=14)
+                        self.assertAlmostEqual(got, prefix_value, places=14)
+
+                    if winner == player and contributions == (0.0, 0.0):
+                        expected_anchor = (
+                            (0.0, 1.25, 1.25) if player == 0 else (0.0, 5.0)
+                        )
+                        self.assertEqual(actual, list(expected_anchor))
+                    if winner == player and contributions == (4.0, 4.0):
+                        expected_anchor = (
+                            (0.0, 1.75, 1.75) if player == 0 else (0.0, 7.0)
+                        )
+                        for got, want in zip(actual, expected_anchor):
+                            self.assertAlmostEqual(got, want, places=14)
 
     def test_hand_slot_cap_precedes_rank_kernel_allocation(self):
         board = ("2c", "5d", "9h", "Jc")

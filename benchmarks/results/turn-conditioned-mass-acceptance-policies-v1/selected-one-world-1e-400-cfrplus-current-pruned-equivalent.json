@@ -1,0 +1,379 @@
+{
+  "algorithm": "cfrplus",
+  "average_schedule": "linear-post-sweep-own-reach",
+  "backend": "exact-public-chance-tree",
+  "board": [
+    "2c",
+    "7d",
+    "9h",
+    "Js"
+  ],
+  "chance_nodes": 3,
+  "chance_note": "Private ranges are normalized before river filtering; compatible joint range and river mass is conditioned once across selected river branches.",
+  "compatible_world_count": 1,
+  "config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 100.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 100.0,
+    "raise_sizes": []
+  },
+  "diagnostics_backend": "public-batched-python",
+  "effective_stack": 100.0,
+  "execution_backend": "matrix-free-ranked-python",
+  "exploitability": 0.8471496706790838,
+  "info_sets": 8,
+  "ip_best_response_gain": 0.0042683740162843264,
+  "ip_best_response_value": 51.69429934135817,
+  "iterations": 20,
+  "method": "full-traversal CFR",
+  "nash_conv": 1.6942993413581675,
+  "oop_best_response_gain": 1.6900309673418832,
+  "oop_best_response_value": -50.0,
+  "pot": 100.0,
+  "public_nodes": 8,
+  "public_state_limit": 250000,
+  "public_states": 20,
+  "reachable_runouts": [
+    "As"
+  ],
+  "resource_model": "turn-hand-vectors-v1",
+  "resource_usage": {
+    "compatible_world_count": 1,
+    "fallback_pair_checks": 0,
+    "hand_counts": [
+      1,
+      1
+    ],
+    "hand_slots": 2,
+    "hand_state_pass_work": 1260,
+    "info_action_slots": 16,
+    "kernel_public_states": 20,
+    "limits": {
+      "fallback_pair_checks": 30000000,
+      "hand_slots": 120000,
+      "hand_state_pass_work": 30000000,
+      "info_action_slots": 1000000,
+      "public_nodes": 10000,
+      "public_states": 250000
+    },
+    "turn_fold_terminals": 2
+  },
+  "river_config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 100.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 100.0,
+    "raise_sizes": []
+  },
+  "runout_mode": "conditioned-subset",
+  "runouts": [
+    "As"
+  ],
+  "scope": "Approximate equilibrium of the configured heads-up turn and river abstraction; no preflop, multiway play, or rake.",
+  "solver_version": "matrix-free-turn-v1",
+  "strategy": [
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.992020592020592,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "all_in@100",
+          "name": "all_in",
+          "probability": 0.00797940797940798,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js"
+      ],
+      "hand": "3c4c",
+      "history": [],
+      "player": "oop",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "check",
+        "all_in@100"
+      ],
+      "player": "oop",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.9909643151500351,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "all_in@100",
+          "name": "all_in",
+          "probability": 0.009035684849964896,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js",
+        "As"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "check",
+        "check",
+        "river@As"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js",
+        "As"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "check",
+        "all_in@100"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "all_in@100"
+      ],
+      "player": "ip",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.9976190476190476,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "all_in@100",
+          "name": "all_in",
+          "probability": 0.002380952380952381,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0011933174224343676,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9988066825775657,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js",
+        "As"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "all_in@100"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.5,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 100.0,
+          "history_key": "all_in@100",
+          "name": "all_in",
+          "probability": 0.5,
+          "raise_to": 100.0
+        }
+      ],
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js",
+        "As"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    }
+  ],
+  "strategy_schema": "postflop-strategy-v1",
+  "street_configs": {
+    "river": {
+      "bet_sizes": [
+        1.0
+      ],
+      "effective_stack": 100.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100.0,
+      "raise_sizes": []
+    },
+    "turn": {
+      "bet_sizes": [
+        1.0
+      ],
+      "effective_stack": 100.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100.0,
+      "raise_sizes": []
+    }
+  },
+  "terminal_backend": "ranked-turn-python",
+  "terminal_nodes": 9,
+  "training_passes_per_iteration": 3,
+  "tree_actions": 16,
+  "turn_config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 100.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 100.0,
+    "raise_sizes": []
+  },
+  "update_schedule": "alternating-oop-then-ip",
+  "value_ip": 51.69003096734188,
+  "value_oop": -51.69003096734188,
+  "worlds_materialized": 0
+}

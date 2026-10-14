@@ -1,0 +1,1236 @@
+{
+  "algorithms": [
+    "vanilla",
+    "dcfr",
+    "cfrplus"
+  ],
+  "baseline_git_commit": "bfae1fdfbd564500d662fe7e92459cbb4f1b5287",
+  "benchmark_id": "turn-conditioned-mass-exceptional-acceptance-v1",
+  "cases": [
+    {
+      "board": "2c7d9hJs",
+      "config": {
+        "bet_sizes": [
+          1.0
+        ],
+        "effective_stack": 100.0,
+        "include_all_in": false,
+        "max_raises": 0,
+        "pot": 100.0,
+        "raise_sizes": []
+      },
+      "id": "selected-one-world-1e-400",
+      "ip": "AsKh:1,5c6c:1e-200",
+      "iterations_requested": 20,
+      "oop": "AsAh:1,3c4c:1e-200",
+      "runouts": [
+        "As"
+      ]
+    },
+    {
+      "board": "2c5d9hJc",
+      "config": {
+        "bet_sizes": [
+          1.0
+        ],
+        "effective_stack": 20.0,
+        "include_all_in": false,
+        "max_raises": 0,
+        "pot": 20.0,
+        "raise_sizes": []
+      },
+      "id": "subnormal-root-fold-2p5-7p5",
+      "ip": "QhQs",
+      "iterations_requested": 20,
+      "oop": "AhAs:1,KcKd:5e-324",
+      "runouts": [
+        "As"
+      ]
+    }
+  ],
+  "created_at_utc": "2026-10-14T04:06:43.754319+00:00",
+  "current_results": [
+    {
+      "algorithm": "vanilla",
+      "call_seconds_uncontrolled": 0.015644600032828748,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 9.86328125,
+        "ip_best_response_gain": 2.0234375,
+        "ip_best_response_value": 69.7265625,
+        "nash_conv": 19.7265625,
+        "oop_best_response_gain": 17.703125,
+        "oop_best_response_value": -50.0,
+        "value_ip": 67.703125,
+        "value_oop": -67.703125
+      },
+      "oracle_metrics": {
+        "exploitability": 9.86328125,
+        "ip_best_response_gain": 2.0234375,
+        "ip_best_response_value": 69.7265625,
+        "nash_conv": 19.7265625,
+        "oop_best_response_gain": 17.703125,
+        "oop_best_response_value": -50.0,
+        "value_ip": 67.703125,
+        "value_oop": -67.703125
+      },
+      "policy": {
+        "file": "selected-one-world-1e-400-vanilla-current-original.json",
+        "sha256": "25e000d9cc77f466247895e97f93e1130305819baa7965db2e634af11b2dbf43",
+        "size_bytes": 7975
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 9.86328125,
+          "ip_best_response_gain": 2.0234375,
+          "ip_best_response_value": 69.7265625,
+          "nash_conv": 19.7265625,
+          "oop_best_response_gain": 17.703125,
+          "oop_best_response_value": -50.0,
+          "value_ip": 67.703125,
+          "value_oop": -67.703125
+        },
+        "oracle_metrics": {
+          "exploitability": 9.86328125,
+          "ip_best_response_gain": 2.0234375,
+          "ip_best_response_value": 69.7265625,
+          "nash_conv": 19.7265625,
+          "oop_best_response_gain": 17.703125,
+          "oop_best_response_value": -50.0,
+          "value_ip": 67.703125,
+          "value_oop": -67.703125
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "policy": {
+          "file": "selected-one-world-1e-400-vanilla-current-pruned-equivalent.json",
+          "sha256": "38f35a5b7294da2bb71e41fb51d1fbf7701e8924f992bd2f7f78940d3362d014",
+          "size_bytes": 7862
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "selected-one-world-1e-400",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "call_seconds_uncontrolled": 0.015373700007330626,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 0.5291242520908632,
+        "ip_best_response_gain": 0.004479296060615923,
+        "ip_best_response_value": 51.058248504181726,
+        "nash_conv": 1.0582485041817264,
+        "oop_best_response_gain": 1.0537692081211105,
+        "oop_best_response_value": -50.0,
+        "value_ip": 51.05376920812111,
+        "value_oop": -51.05376920812111
+      },
+      "oracle_metrics": {
+        "exploitability": 0.5291242520908632,
+        "ip_best_response_gain": 0.0044792960606301335,
+        "ip_best_response_value": 51.058248504181726,
+        "nash_conv": 1.0582485041817264,
+        "oop_best_response_gain": 1.0537692081210963,
+        "oop_best_response_value": -50.0,
+        "value_ip": 51.053769208121096,
+        "value_oop": -51.053769208121096
+      },
+      "policy": {
+        "file": "selected-one-world-1e-400-dcfr-current-original.json",
+        "sha256": "d30fc06b29972542ef4b014d6226a94ae73271d2718dda36a0b7e95251775c6e",
+        "size_bytes": 8087
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 0.5291242520908632,
+          "ip_best_response_gain": 0.004479296060615923,
+          "ip_best_response_value": 51.058248504181726,
+          "nash_conv": 1.0582485041817264,
+          "oop_best_response_gain": 1.0537692081211105,
+          "oop_best_response_value": -50.0,
+          "value_ip": 51.05376920812111,
+          "value_oop": -51.05376920812111
+        },
+        "oracle_metrics": {
+          "exploitability": 0.5291242520908632,
+          "ip_best_response_gain": 0.0044792960606301335,
+          "ip_best_response_value": 51.058248504181726,
+          "nash_conv": 1.0582485041817264,
+          "oop_best_response_gain": 1.0537692081210963,
+          "oop_best_response_value": -50.0,
+          "value_ip": 51.053769208121096,
+          "value_oop": -51.053769208121096
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": -1.4210854715202004e-14,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 1.4210854715202004e-14,
+          "oop_best_response_value": 0.0,
+          "value_ip": 1.4210854715202004e-14,
+          "value_oop": -1.4210854715202004e-14
+        },
+        "policy": {
+          "file": "selected-one-world-1e-400-dcfr-current-pruned-equivalent.json",
+          "sha256": "77d02360c72f374a5db95ecd695930ab66f3b48b4db3584ab420824b194536c4",
+          "size_bytes": 7974
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 1.4210854715202004e-14,
+        "oop_best_response_value": 0.0,
+        "value_ip": 1.4210854715202004e-14,
+        "value_oop": -1.4210854715202004e-14
+      },
+      "scenario": "selected-one-world-1e-400",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "call_seconds_uncontrolled": 0.015351199952419847,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 0.8471496706790838,
+        "ip_best_response_gain": 0.0042683740162843264,
+        "ip_best_response_value": 51.69429934135817,
+        "nash_conv": 1.6942993413581675,
+        "oop_best_response_gain": 1.6900309673418832,
+        "oop_best_response_value": -50.0,
+        "value_ip": 51.69003096734188,
+        "value_oop": -51.69003096734188
+      },
+      "oracle_metrics": {
+        "exploitability": 0.8471496706790838,
+        "ip_best_response_gain": 0.004268374016277221,
+        "ip_best_response_value": 51.69429934135817,
+        "nash_conv": 1.6942993413581675,
+        "oop_best_response_gain": 1.6900309673418903,
+        "oop_best_response_value": -50.0,
+        "value_ip": 51.69003096734189,
+        "value_oop": -51.69003096734189
+      },
+      "policy": {
+        "file": "selected-one-world-1e-400-cfrplus-current-original.json",
+        "sha256": "095284cfbf55623f397b9acf3606a707c7a7f8d84b9e3b66e76b534166dbf4e9",
+        "size_bytes": 8098
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 0.8471496706790838,
+          "ip_best_response_gain": 0.0042683740162843264,
+          "ip_best_response_value": 51.69429934135817,
+          "nash_conv": 1.6942993413581675,
+          "oop_best_response_gain": 1.6900309673418832,
+          "oop_best_response_value": -50.0,
+          "value_ip": 51.69003096734188,
+          "value_oop": -51.69003096734188
+        },
+        "oracle_metrics": {
+          "exploitability": 0.8471496706790838,
+          "ip_best_response_gain": 0.004268374016277221,
+          "ip_best_response_value": 51.69429934135817,
+          "nash_conv": 1.6942993413581675,
+          "oop_best_response_gain": 1.6900309673418903,
+          "oop_best_response_value": -50.0,
+          "value_ip": 51.69003096734189,
+          "value_oop": -51.69003096734189
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 7.105427357601002e-15,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": -7.105427357601002e-15,
+          "oop_best_response_value": 0.0,
+          "value_ip": -7.105427357601002e-15,
+          "value_oop": 7.105427357601002e-15
+        },
+        "policy": {
+          "file": "selected-one-world-1e-400-cfrplus-current-pruned-equivalent.json",
+          "sha256": "ceb49afde6e651e17f5525c88c6a4ee663528be9d656b42dc8ca270116363dfc",
+          "size_bytes": 7986
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 7.105427357601002e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "selected-one-world-1e-400",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "vanilla",
+      "call_seconds_uncontrolled": 0.014072099991608411,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 1.89423076923077,
+        "ip_best_response_gain": 3.3192508012820543,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 3.78846153846154,
+        "oop_best_response_gain": 0.4692107371794858,
+        "oop_best_response_value": 13.78846153846154,
+        "value_ip": -13.319250801282054,
+        "value_oop": 13.319250801282054
+      },
+      "oracle_metrics": {
+        "exploitability": 1.89423076923077,
+        "ip_best_response_gain": 3.3192508012820543,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 3.78846153846154,
+        "oop_best_response_gain": 0.4692107371794858,
+        "oop_best_response_value": 13.78846153846154,
+        "value_ip": -13.319250801282054,
+        "value_oop": 13.319250801282054
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-vanilla-current-original.json",
+        "sha256": "60ea3e7df680e7241f65cae2b63f352e28f72a89224c7d524feee90676243daa",
+        "size_bytes": 7992
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 1.89423076923077,
+          "ip_best_response_gain": 3.3192508012820543,
+          "ip_best_response_value": -10.0,
+          "nash_conv": 3.78846153846154,
+          "oop_best_response_gain": 0.4692107371794858,
+          "oop_best_response_value": 13.78846153846154,
+          "value_ip": -13.319250801282054,
+          "value_oop": 13.319250801282054
+        },
+        "oracle_metrics": {
+          "exploitability": 1.89423076923077,
+          "ip_best_response_gain": 3.3192508012820543,
+          "ip_best_response_value": -10.0,
+          "nash_conv": 3.78846153846154,
+          "oop_best_response_gain": 0.4692107371794858,
+          "oop_best_response_value": 13.78846153846154,
+          "value_ip": -13.319250801282054,
+          "value_oop": 13.319250801282054
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "policy": {
+          "file": "subnormal-root-fold-2p5-7p5-vanilla-current-pruned-equivalent.json",
+          "sha256": "0c809b3f36ac2079dc3660e2bdfe736a303cfb1c5b5f9ae9a98b35f923b4667a",
+          "size_bytes": 7879
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "call_seconds_uncontrolled": 0.014649700024165213,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 0.12004230426950446,
+        "ip_best_response_gain": 0.23831838779738135,
+        "ip_best_response_value": -10.000000000000002,
+        "nash_conv": 0.24008460853900893,
+        "oop_best_response_gain": 0.0017662207416275777,
+        "oop_best_response_value": 10.24008460853901,
+        "value_ip": -10.238318387797383,
+        "value_oop": 10.238318387797383
+      },
+      "oracle_metrics": {
+        "exploitability": 0.12004230426950446,
+        "ip_best_response_gain": 0.23831838779738135,
+        "ip_best_response_value": -10.000000000000002,
+        "nash_conv": 0.24008460853900893,
+        "oop_best_response_gain": 0.0017662207416275777,
+        "oop_best_response_value": 10.24008460853901,
+        "value_ip": -10.238318387797383,
+        "value_oop": 10.238318387797383
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-dcfr-current-original.json",
+        "sha256": "d19c386e190402140b4fdd5c5765c129c019ad7ecf8ef18227aefc1163dd130a",
+        "size_bytes": 8072
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 0.12004230426950446,
+          "ip_best_response_gain": 0.23831838779738135,
+          "ip_best_response_value": -10.000000000000002,
+          "nash_conv": 0.24008460853900893,
+          "oop_best_response_gain": 0.0017662207416275777,
+          "oop_best_response_value": 10.24008460853901,
+          "value_ip": -10.238318387797383,
+          "value_oop": 10.238318387797383
+        },
+        "oracle_metrics": {
+          "exploitability": 0.12004230426950446,
+          "ip_best_response_gain": 0.23831838779738135,
+          "ip_best_response_value": -10.000000000000002,
+          "nash_conv": 0.24008460853900893,
+          "oop_best_response_gain": 0.0017662207416275777,
+          "oop_best_response_value": 10.24008460853901,
+          "value_ip": -10.238318387797383,
+          "value_oop": 10.238318387797383
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "policy": {
+          "file": "subnormal-root-fold-2p5-7p5-dcfr-current-pruned-equivalent.json",
+          "sha256": "85188028b8452252115b8e9c2224581b1d7226a646740ac065fa137c0f1ea6b0",
+          "size_bytes": 7959
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "call_seconds_uncontrolled": 0.01754679996520281,
+      "iterations_completed": 20,
+      "metrics": {
+        "exploitability": 0.08333333333333393,
+        "ip_best_response_gain": 0.11695238095238203,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 0.16666666666666785,
+        "oop_best_response_gain": 0.04971428571428582,
+        "oop_best_response_value": 10.166666666666668,
+        "value_ip": -10.116952380952382,
+        "value_oop": 10.116952380952382
+      },
+      "oracle_metrics": {
+        "exploitability": 0.08333333333333393,
+        "ip_best_response_gain": 0.11695238095238203,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 0.16666666666666785,
+        "oop_best_response_gain": 0.04971428571428582,
+        "oop_best_response_value": 10.166666666666668,
+        "value_ip": -10.116952380952382,
+        "value_oop": 10.116952380952382
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-cfrplus-current-original.json",
+        "sha256": "956225b15ac1225d5e589fcab887d4d232455f8c441ac2f5f0502a29ffc95a3b",
+        "size_bytes": 8097
+      },
+      "policy_metadata": {
+        "compatible_world_count": 1,
+        "info_sets": 8,
+        "reachable_runouts": [
+          "As"
+        ],
+        "runout_mode": "conditioned-subset",
+        "runouts": [
+          "As"
+        ],
+        "solver_version": "matrix-free-turn-v1",
+        "worlds_materialized": 0
+      },
+      "profile_kind": "current-original-ranges",
+      "pruned_equivalent": {
+        "metric_differences_vs_original": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "metrics": {
+          "exploitability": 0.08333333333333393,
+          "ip_best_response_gain": 0.11695238095238203,
+          "ip_best_response_value": -10.0,
+          "nash_conv": 0.16666666666666785,
+          "oop_best_response_gain": 0.04971428571428582,
+          "oop_best_response_value": 10.166666666666668,
+          "value_ip": -10.116952380952382,
+          "value_oop": 10.116952380952382
+        },
+        "oracle_metrics": {
+          "exploitability": 0.08333333333333393,
+          "ip_best_response_gain": 0.11695238095238203,
+          "ip_best_response_value": -10.0,
+          "nash_conv": 0.16666666666666785,
+          "oop_best_response_gain": 0.04971428571428582,
+          "oop_best_response_value": 10.166666666666668,
+          "value_ip": -10.116952380952382,
+          "value_oop": 10.116952380952382
+        },
+        "oracle_scalar_differences": {
+          "exploitability": 0.0,
+          "ip_best_response_gain": 0.0,
+          "ip_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "oop_best_response_gain": 0.0,
+          "oop_best_response_value": 0.0,
+          "value_ip": 0.0,
+          "value_oop": 0.0
+        },
+        "policy": {
+          "file": "subnormal-root-fold-2p5-7p5-cfrplus-current-pruned-equivalent.json",
+          "sha256": "a79d9230525228b7136f57c15d39a58cfad1a491f0c81f950e5adfc829483435",
+          "size_bytes": 7985
+        },
+        "strategy_equal": true,
+        "target_met": false
+      },
+      "runout_probabilities": {
+        "As": 1.0
+      },
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_compatible_pairs": 1,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    }
+  ],
+  "historical_results": [
+    {
+      "algorithm": "vanilla",
+      "call_seconds_uncontrolled": 0.0012797000235877931,
+      "error": "Selected river branch mass is not representable.",
+      "error_type": "ValueError",
+      "scenario": "selected-one-world-1e-400",
+      "status": "admission-rejected"
+    },
+    {
+      "algorithm": "dcfr",
+      "call_seconds_uncontrolled": 0.0004756999551318586,
+      "error": "Selected river branch mass is not representable.",
+      "error_type": "ValueError",
+      "scenario": "selected-one-world-1e-400",
+      "status": "admission-rejected"
+    },
+    {
+      "algorithm": "cfrplus",
+      "call_seconds_uncontrolled": 0.0004401000333018601,
+      "error": "Selected river branch mass is not representable.",
+      "error_type": "ValueError",
+      "scenario": "selected-one-world-1e-400",
+      "status": "admission-rejected"
+    },
+    {
+      "algorithm": "vanilla",
+      "call_seconds_uncontrolled": 0.014425600005779415,
+      "completed_iterations": 20,
+      "metric_differences": {
+        "exploitability": 0.25,
+        "ip_best_response_gain": 0.5187499999999989,
+        "ip_best_response_value": 0.5,
+        "nash_conv": 0.5,
+        "oop_best_response_gain": -0.018749999999998934,
+        "oop_best_response_value": 0.0,
+        "value_ip": -0.018749999999998934,
+        "value_oop": 0.018749999999998934
+      },
+      "metrics": {
+        "exploitability": 1.25,
+        "ip_best_response_gain": 2.3593749999999982,
+        "ip_best_response_value": -9.5,
+        "nash_conv": 2.5,
+        "oop_best_response_gain": 0.14062500000000178,
+        "oop_best_response_value": 12.0,
+        "value_ip": -11.859374999999998,
+        "value_oop": 11.859374999999998
+      },
+      "oracle_metrics": {
+        "exploitability": 1.0,
+        "ip_best_response_gain": 1.8406249999999993,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 2.0,
+        "oop_best_response_gain": 0.1593750000000007,
+        "oop_best_response_value": 12.0,
+        "value_ip": -11.840625,
+        "value_oop": 11.840625
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-vanilla-historical-original.json",
+        "sha256": "71db067c81e194786db0b338e7db6064387ef9f93704f61236f96d38557a93b7",
+        "size_bytes": 7809
+      },
+      "replay_comparison_error": "Result metric value_oop differs from independent replay",
+      "replay_within_1e-9": false,
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "status": "admitted-replay-mismatch",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "call_seconds_uncontrolled": 0.01605490001384169,
+      "completed_iterations": 20,
+      "metric_differences": {
+        "exploitability": 0.004355400696864464,
+        "ip_best_response_gain": 0.008713077735556851,
+        "ip_best_response_value": 0.008710801393728929,
+        "nash_conv": 0.008710801393728929,
+        "oop_best_response_gain": -2.276341827922579e-06,
+        "oop_best_response_value": 0.0,
+        "value_ip": -2.276341827922579e-06,
+        "value_oop": 2.276341827922579e-06
+      },
+      "metrics": {
+        "exploitability": 0.033101045296167975,
+        "ip_best_response_gain": 0.06609070159890429,
+        "ip_best_response_value": -9.991289198606271,
+        "nash_conv": 0.06620209059233595,
+        "oop_best_response_gain": 0.00011138899343166031,
+        "oop_best_response_value": 10.057491289198607,
+        "value_ip": -10.057379900205175,
+        "value_oop": 10.057379900205175
+      },
+      "oracle_metrics": {
+        "exploitability": 0.02874564459930351,
+        "ip_best_response_gain": 0.05737762386334744,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 0.05749128919860702,
+        "oop_best_response_gain": 0.00011366533525958289,
+        "oop_best_response_value": 10.057491289198607,
+        "value_ip": -10.057377623863347,
+        "value_oop": 10.057377623863347
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-dcfr-historical-original.json",
+        "sha256": "79e6c4fd3efd90f0383de0f0123c04c8d9d6d4376f98bc9c80f7a30c0ee9a8ce",
+        "size_bytes": 7966
+      },
+      "replay_comparison_error": "Result metric value_oop differs from independent replay",
+      "replay_within_1e-9": false,
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "status": "admitted-replay-mismatch",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "call_seconds_uncontrolled": 0.018715099955443293,
+      "completed_iterations": 20,
+      "metric_differences": {
+        "exploitability": 2.5,
+        "ip_best_response_gain": 5.0,
+        "ip_best_response_value": 5.0,
+        "nash_conv": 5.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "metrics": {
+        "exploitability": 2.5238095238095237,
+        "ip_best_response_gain": 5.018956916099773,
+        "ip_best_response_value": -5.0,
+        "nash_conv": 5.0476190476190474,
+        "oop_best_response_gain": 0.028662131519274325,
+        "oop_best_response_value": 10.047619047619047,
+        "value_ip": -10.018956916099773,
+        "value_oop": 10.018956916099773
+      },
+      "oracle_metrics": {
+        "exploitability": 0.023809523809523725,
+        "ip_best_response_gain": 0.018956916099773125,
+        "ip_best_response_value": -10.0,
+        "nash_conv": 0.04761904761904745,
+        "oop_best_response_gain": 0.028662131519274325,
+        "oop_best_response_value": 10.047619047619047,
+        "value_ip": -10.018956916099773,
+        "value_oop": 10.018956916099773
+      },
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-cfrplus-historical-original.json",
+        "sha256": "9106e632ea18cf17a9cd9834c510f3b31daaf715cf44e510ad5a10306a1e7d5f",
+        "size_bytes": 7887
+      },
+      "replay_comparison_error": "Result metric ip_best_response_value differs from independent replay",
+      "replay_within_1e-9": false,
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "status": "admitted-replay-mismatch",
+      "target_met": false,
+      "target_nash_conv": 0.001,
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    }
+  ],
+  "historical_source_sha256": {
+    "matrix_free_turn.py": "92d90b7b28ae3d18116b1e8db68c8b158debd5e70bf1a1994220928fab601cc0",
+    "turn_range_kernel.py": "42cc6c897d2a0fc779098d7433d96101123cc58705048eb7591a19f902ff14cc"
+  },
+  "iterations": 20,
+  "methodology": {
+    "comparison": "Original weighted ranges are compared with their physically equivalent one-world pruned ranges by exact serialized strategy rows and all eight diagnostic scalar differences.",
+    "correctness": "Every current original-range and pruned-equivalent complete policy is saved as UTF-8 LF JSON, byte-hash checked, reloaded and independently replayed with physical Fraction weighting, numeric betting rules and legal information-set best responses. The eight replay metrics and physical-world/pair/information-set counts are recorded.",
+    "historical": "The archived adapter and turn kernel are fingerprinted from the pre-fix baseline. Historical admission errors are retained; admitted policies are independently replayed and all eight metric differences are recorded without requiring validation to pass.",
+    "quality": "The predeclared 0.001-chip NashConv threshold is reported for every profile, including misses.",
+    "timing": "Single complete-call observations are uncontrolled and descriptive only; no speed, memory, or RSS claim is made."
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.12.14",
+  "saved_policy_replays": [
+    {
+      "algorithm": "vanilla",
+      "policy": {
+        "file": "selected-one-world-1e-400-vanilla-current-original.json",
+        "sha256": "25e000d9cc77f466247895e97f93e1130305819baa7965db2e634af11b2dbf43",
+        "size_bytes": 7975
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "vanilla",
+      "policy": {
+        "file": "selected-one-world-1e-400-vanilla-current-pruned-equivalent.json",
+        "sha256": "38f35a5b7294da2bb71e41fb51d1fbf7701e8924f992bd2f7f78940d3362d014",
+        "size_bytes": 7862
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "policy": {
+        "file": "selected-one-world-1e-400-dcfr-current-original.json",
+        "sha256": "d30fc06b29972542ef4b014d6226a94ae73271d2718dda36a0b7e95251775c6e",
+        "size_bytes": 8087
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 1.4210854715202004e-14,
+        "oop_best_response_value": 0.0,
+        "value_ip": 1.4210854715202004e-14,
+        "value_oop": -1.4210854715202004e-14
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "policy": {
+        "file": "selected-one-world-1e-400-dcfr-current-pruned-equivalent.json",
+        "sha256": "77d02360c72f374a5db95ecd695930ab66f3b48b4db3584ab420824b194536c4",
+        "size_bytes": 7974
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -1.4210854715202004e-14,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 1.4210854715202004e-14,
+        "oop_best_response_value": 0.0,
+        "value_ip": 1.4210854715202004e-14,
+        "value_oop": -1.4210854715202004e-14
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "policy": {
+        "file": "selected-one-world-1e-400-cfrplus-current-original.json",
+        "sha256": "095284cfbf55623f397b9acf3606a707c7a7f8d84b9e3b66e76b534166dbf4e9",
+        "size_bytes": 8098
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 7.105427357601002e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "policy": {
+        "file": "selected-one-world-1e-400-cfrplus-current-pruned-equivalent.json",
+        "sha256": "ceb49afde6e651e17f5525c88c6a4ee663528be9d656b42dc8ca270116363dfc",
+        "size_bytes": 7986
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 7.105427357601002e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -7.105427357601002e-15,
+        "value_oop": 7.105427357601002e-15
+      },
+      "scenario": "selected-one-world-1e-400",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "vanilla",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-vanilla-current-original.json",
+        "sha256": "60ea3e7df680e7241f65cae2b63f352e28f72a89224c7d524feee90676243daa",
+        "size_bytes": 7992
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "vanilla",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-vanilla-current-pruned-equivalent.json",
+        "sha256": "0c809b3f36ac2079dc3660e2bdfe736a303cfb1c5b5f9ae9a98b35f923b4667a",
+        "size_bytes": 7879
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-dcfr-current-original.json",
+        "sha256": "d19c386e190402140b4fdd5c5765c129c019ad7ecf8ef18227aefc1163dd130a",
+        "size_bytes": 8072
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "dcfr",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-dcfr-current-pruned-equivalent.json",
+        "sha256": "85188028b8452252115b8e9c2224581b1d7226a646740ac065fa137c0f1ea6b0",
+        "size_bytes": 7959
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-cfrplus-current-original.json",
+        "sha256": "956225b15ac1225d5e589fcab887d4d232455f8c441ac2f5f0502a29ffc95a3b",
+        "size_bytes": 8097
+      },
+      "profile_kind": "original",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    },
+    {
+      "algorithm": "cfrplus",
+      "policy": {
+        "file": "subnormal-root-fold-2p5-7p5-cfrplus-current-pruned-equivalent.json",
+        "sha256": "a79d9230525228b7136f57c15d39a58cfad1a491f0c81f950e5adfc829483435",
+        "size_bytes": 7985
+      },
+      "profile_kind": "pruned-equivalent",
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "scenario": "subnormal-root-fold-2p5-7p5",
+      "verified_information_sets": 8,
+      "verified_worlds": 1
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256_before_and_after": {
+    "benchmarks\\turn-river-quality-v1.json": "772ae0dfb6f76307dce98707782012425e5d6918fb8cb8b1154dd3d3a4f37fbf",
+    "historical/matrix_free_turn.py": "92d90b7b28ae3d18116b1e8db68c8b158debd5e70bf1a1994220928fab601cc0",
+    "historical/turn_range_kernel.py": "42cc6c897d2a0fc779098d7433d96101123cc58705048eb7591a19f902ff14cc",
+    "pokerlab\\__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab\\analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab\\cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab\\cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab\\cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab\\coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab\\coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab\\coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab\\coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab\\coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab\\contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab\\current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab\\decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab\\equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab\\equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab\\explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab\\exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab\\flop_checkdown_solver.py": "a3e40ecd9c653c47359f582d769eebe9b7ee57e3e3ff1c19d9e0607c865d7ae7",
+    "pokerlab\\flop_checkdown_worlds.py": "4d9d35941771b7e793457068c12978d8ecc3f9c3772273d7ebb70f0db5d7483d",
+    "pokerlab\\game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab\\matrix_free_river.py": "6987405a1112c3ad20be7602880b574f4804434bc6323df69ccf5de708d8f084",
+    "pokerlab\\matrix_free_turn.py": "7d7d961d8bfd245115d5e920f6d6bab31e3002f60ffd6890dd861450807f9f8e",
+    "pokerlab\\models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab\\personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab\\planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab\\postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab\\practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab\\preflop_delayed_cfrplus.py": "3dd745f4a548b0f7fd46a6b02f519be1d98f027eaa37499f03cf8de1135a259e",
+    "pokerlab\\preflop_future_groups.py": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106",
+    "pokerlab\\preflop_private_indices.py": "6d46e31d58f24a979d3881671b4e898bfa23597b1771c160dbbe43c0a47776c1",
+    "pokerlab\\preflop_runout_index.py": "4001b76d6f092c3c441795e1a4fa83fd5ef33d2584ab7aa05ab911a12f92806b",
+    "pokerlab\\preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab\\preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab\\preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab\\preflop_solver.py": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9",
+    "pokerlab\\preflop_tree.py": "7d57148b0eeba05535e0f2e10eadb8c3c43fdaa9a1d5b7e91f372bc38f164e2c",
+    "pokerlab\\preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab\\public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab\\public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab\\ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab\\restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab\\river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab\\river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab\\server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab\\situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab\\solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab\\turn_range_kernel.py": "17f332c874a3c797598c5c5dfc3525a0425f73ea97a696f79fcfb127cdd5851a",
+    "pokerlab\\turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts\\benchmark_turn_conditioned_mass.py": "cb10cb5bb18934183ea05815d371ceb9df53e3fa88d4e5c5ef7403fe73dcf989",
+    "scripts\\benchmark_turn_river_independent.py": "5e5e062083a5fbbed0c7e0933a6105dcf7c59fc4d8ac6142072231fae109ebd5",
+    "scripts\\preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+    "scripts\\turn_river_validation.py": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1",
+    "scripts\\validate_turn_conditioning_parity.py": "33c71e2e901c7d54b0896884cd9a54354372de328f865a4df9d6bdaa18c62ac6"
+  },
+  "target_nash_conv": 0.001
+}

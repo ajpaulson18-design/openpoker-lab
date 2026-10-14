@@ -4,6 +4,7 @@ This is preparatory payoff infrastructure only; it is not a turn solver and
 does not claim equivalence to a commercial or unrestricted Hold'em solver.
 """
 import math
+import sys
 from numbers import Real
 from types import MappingProxyType
 
@@ -168,29 +169,69 @@ class TurnRangePayoffs:
             mass0 = math.fsum(branch_weights[0])
             mass1 = math.fsum(branch_weights[1])
             branch_mass = (mass0 * mass1) / kernel.factor
-            if not math.isfinite(branch_mass) or branch_mass <= 0:
+            if not math.isfinite(branch_mass):
                 raise ValueError("Selected river branch mass is not representable.")
+            mass0_mantissa, mass0_exponent = math.frexp(mass0)
+            mass1_mantissa, mass1_exponent = math.frexp(mass1)
+            factor_mantissa, factor_exponent = math.frexp(kernel.factor)
+            ratio_mantissa, ratio_adjustment = math.frexp(
+                (mass0_mantissa * mass1_mantissa) / factor_mantissa
+            )
+            mass_exponent = (mass0_exponent + mass1_exponent -
+                             factor_exponent + ratio_adjustment)
             branches[river] = {
                 "kernel": kernel, "indexes": (indexes0, indexes1),
-                "mass": branch_mass, "pair_count": kernel.compatible_pair_count,
+                "mass": branch_mass,
+                "mass_mantissa": ratio_mantissa,
+                "mass_exponent": mass_exponent,
+                "pair_count": kernel.compatible_pair_count,
                 "marginals": None,
             }
         if not branches:
             raise ValueError("Selected runouts contain no compatible physical deals.")
-        total_mass = math.fsum(branch["mass"] for branch in branches.values())
-        if not math.isfinite(total_mass) or total_mass <= 0:
-            raise ValueError("Selected runout joint mass is not representable.")
+        ordinary_masses = [branch["mass"] for branch in branches.values()]
+        exceptional_conditioning = any(
+            mass <= 0 or mass < sys.float_info.min for mass in ordinary_masses
+        )
+        if exceptional_conditioning:
+            largest_exponent = max(branch["mass_exponent"]
+                                   for branch in branches.values())
+            scaled_total = math.fsum(
+                math.ldexp(branch["mass_mantissa"],
+                           branch["mass_exponent"] - largest_exponent)
+                for branch in branches.values()
+            )
+            if not math.isfinite(scaled_total) or scaled_total <= 0:
+                raise ValueError("Selected runout joint mass is not representable.")
+            probabilities = {
+                river: math.ldexp(
+                    branch["mass_mantissa"] / scaled_total,
+                    branch["mass_exponent"] - largest_exponent,
+                )
+                for river, branch in branches.items()
+            }
+            total_mass = None
+        else:
+            total_mass = math.fsum(ordinary_masses)
+            if not math.isfinite(total_mass) or total_mass <= 0:
+                raise ValueError("Selected runout joint mass is not representable.")
+            probabilities = {
+                river: branch["mass"] / total_mass
+                for river, branch in branches.items()
+            }
         self._branches = branches
         self._selected_runouts = tuple(selected)
         self._selected_card_ids = frozenset(_CARD_ID[river] for river in selected)
         self._total_mass = total_mass
-        self.branch_probabilities = MappingProxyType({
-            river: branch["mass"] / total_mass
-            for river, branch in branches.items()
-        })
+        self.exceptional_conditioning = exceptional_conditioning
+        self.branch_probabilities = MappingProxyType(probabilities)
         if any(not math.isfinite(probability) or probability <= 0
                for probability in self.branch_probabilities.values()):
             raise ValueError("A selected river has unrepresentable conditional probability.")
+        if exceptional_conditioning and not math.isclose(
+                math.fsum(self.branch_probabilities.values()), 1.0,
+                rel_tol=1e-12, abs_tol=1e-12):
+            raise ValueError("Selected river conditional probabilities do not sum to one.")
         self.compatible_world_count = sum(branch["pair_count"]
                                           for branch in branches.values())
 
@@ -327,6 +368,31 @@ class TurnRangePayoffs:
         scale = self.pot / 2.0 + matched
         if not math.isfinite(scale):
             raise ValueError("Terminal payoff scale must be finite.")
+        if self.exceptional_conditioning:
+            answer = [0.0] * len(self.hands[player])
+            for river, branch in self._branches.items():
+                branch_kernel = branch["kernel"]
+                opponent_indexes = branch["indexes"][1 - player]
+                compact_reach = tuple(opponent_reach[index]
+                                      for index in opponent_indexes)
+                self._prepare_kernel_budget(branch)
+                before = branch_kernel.fallback_pair_checks
+                try:
+                    compact_values = branch_kernel.values(
+                        node, compact_reach, player,
+                    )
+                finally:
+                    self._charge(branch, before)
+                probability = self.branch_probabilities[river]
+                for compact_index, original_index in enumerate(
+                        branch["indexes"][player]):
+                    answer[original_index] += (
+                        probability * compact_values[compact_index]
+                    )
+            if not all(math.isfinite(value) for value in answer):
+                raise ValueError("Turn range payoff values must be finite.")
+            return answer
+
         opponent = 1 - player
         opponent_hands = self.hands[opponent]
         opponent_weights = self.weights[opponent]
