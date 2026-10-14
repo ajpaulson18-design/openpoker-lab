@@ -1,5 +1,27 @@
 # Solver progress record
 
+## Research-only same-run river CFR+ tail realization
+
+An exact Fraction conversion reconstructs original-weight CFR+ tails from
+same-trajectory D3000/T10000 snapshots using each player's own realization
+reach. All four predeclared fixture/backend cases pass complete independent
+replay and correction gates. Full production payloads and prefix strategy
+rows exactly match the historical baselines; observational callbacks leave
+the final solver return unchanged.
+
+The bluff-catcher gap falls from 0.00790056594 to 0.00687271407, still missing
+the unchanged 0.001 target. Weighted raises falls from 0.000279553443 to
+0.000223234524, meeting it on both backends. Every prefix/full/tail policy,
+including all misses, is retained. Tiny corrections/fallbacks are explicit;
+maximum reconstructed-flow discrepancy is 3.39e-20, under the predeclared
+1e-11 gate. This is an experimental gate, not a formal trainer rounding bound.
+
+All 40 focused tests pass, including an independent exact toy proof, all-row
+callback parity, error restoration and hardened replay. Saved-policy audit
+adds six separate rational one-bet witnesses; maximum diagnostic disagreement
+is 1.78e-14 chips. This stays research-only, with production/shared/earlier-street
+source unchanged and no speed/RSS claim. See [derivation, complete evidence and reproduction](river-tail-realization.md).
+
 ## Longer-budget independently verified river CFR+ accuracy
 
 An evidence-guided extension preserves all 12 fixed river CFR+ profiles at
