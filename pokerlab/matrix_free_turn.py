@@ -149,10 +149,20 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
     diagnostic_checks = (iterations // check_interval + 1) if target is not None else 1
     passes = 3 if algorithm == "cfrplus" else 2
     kernel_public_states = public_counts["total"]
-    hand_state_pass_work = (
+    base_hand_state_pass_work = (
         max(map(len, hands)) * kernel_public_states *
         (iterations * passes + 3 * diagnostic_checks)
     )
+    exceptional_root_fold_pass_work = 0
+    if kernel.exceptional_conditioning:
+        exceptional_root_fold_pass_work = (
+            turn_fold_terminals *
+            (4 * max(map(len, hands)) * len(kernel.branch_probabilities) +
+             2 * kernel.hand_slots) *
+            (iterations * passes + 3 * diagnostic_checks)
+        )
+    hand_state_pass_work = (base_hand_state_pass_work +
+                            exceptional_root_fold_pass_work)
     if hand_state_pass_work > MAX_HAND_STATE_PASS_WORK:
         raise ValueError("Matrix-free turn exceeds 30 million hand-state pass operations.")
 
@@ -300,6 +310,11 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
             },
         },
     }
+    if kernel.exceptional_conditioning:
+        result["conditioning_mode"] = "scaled-branch-mass-and-conditioned-folds"
+        result["resource_usage"]["exceptional_root_fold_pass_work"] = (
+            exceptional_root_fold_pass_work
+        )
     if algorithm == "cfrplus":
         result["update_schedule"] = "alternating-oop-then-ip"
         result["average_schedule"] = "linear-post-sweep-own-reach"

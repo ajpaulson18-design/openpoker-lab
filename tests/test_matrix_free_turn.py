@@ -19,6 +19,7 @@ from pokerlab.river_tree import _Terminal
 from pokerlab.turn_range_kernel import TurnRangePayoffs
 import pokerlab.matrix_free_turn as matrix_free_turn
 from pokerlab.matrix_free_turn import solve_matrix_free_turn
+from scripts.turn_river_validation import compare_result, replay_policy
 
 
 def _cases():
@@ -238,6 +239,71 @@ class MatrixFreeTurnTests(unittest.TestCase):
                         solve_matrix_free_turn(board, oop, ip, config, runouts=runouts,
                                                iterations=10, algorithm=algorithm)
                 trainer.assert_not_called()
+
+    def test_selected_one_world_underflow_replays_original_ranges(self):
+        board = "2c7d9hJs"
+        oop = "AsAh:1,3c4c:1e-200"
+        ip = "AsKh:1,5c6c:1e-200"
+        config = RiverConfig(100, 100, (1.0,), (), 0, False)
+        original = solve_matrix_free_turn(
+            board, oop, ip, config, runouts=("As",), iterations=10,
+            algorithm="vanilla",
+        )
+        pruned = solve_matrix_free_turn(
+            board, "3c4c", "5c6c", config, runouts=("As",),
+            iterations=10, algorithm="vanilla",
+        )
+        self.assertEqual(original["conditioning_mode"],
+                         "scaled-branch-mass-and-conditioned-folds")
+        self.assertEqual(original["compatible_world_count"], 1)
+        self.assertEqual(_strategy_snapshot(original), _strategy_snapshot(pruned))
+        for field in ("value_oop", "value_ip", "oop_best_response_value",
+                      "ip_best_response_value", "nash_conv", "exploitability"):
+            self.assertEqual(original[field], pruned[field])
+        replay = replay_policy(original, oop, ip, board=board, config=config,
+                               runouts=("As",))
+        self.assertTrue(compare_result(original, replay))
+
+    def test_exceptional_fold_work_admission_uses_full_target_ceiling(self):
+        board = "2c5d9hJc"
+        oop = "AhAs:1,KcKd:5e-324"
+        ip = "QhQs"
+        config = RiverConfig(20, 100, (0.5,), (), 0, False)
+        kwargs = dict(runouts=("As",), iterations=20, algorithm="vanilla",
+                      target_exploitability=1e9, check_interval=10)
+        admitted = solve_matrix_free_turn(board, oop, ip, config, **kwargs)
+        self.assertEqual(admitted["iterations"], 10)
+        self.assertIn("exceptional_root_fold_pass_work",
+                      admitted["resource_usage"])
+        usage = admitted["resource_usage"]
+        max_hands = max(usage["hand_counts"])
+        branch_count = len(admitted["reachable_runouts"])
+        vector_slots_per_fold = (
+            4 * max_hands * branch_count + 2 * usage["hand_slots"]
+        )
+
+        def expected_work(iteration_ceiling):
+            diagnostic_checks = iteration_ceiling // 10 + 1
+            multiplier = iteration_ceiling * 2 + 3 * diagnostic_checks
+            base = max_hands * usage["kernel_public_states"] * multiplier
+            extra = (usage["turn_fold_terminals"] * vector_slots_per_fold *
+                     multiplier)
+            return base + extra, extra
+
+        full_total, full_extra = expected_work(20)
+        early_total, _early_extra = expected_work(10)
+        self.assertEqual(usage["hand_state_pass_work"], full_total)
+        self.assertEqual(usage["exceptional_root_fold_pass_work"], full_extra)
+        self.assertLess(early_total, full_total)
+        cap_between = early_total + (full_total - early_total) // 2
+        self.assertGreater(cap_between, early_total)
+        self.assertLess(cap_between, full_total)
+        with patch("pokerlab.matrix_free_turn.MAX_HAND_STATE_PASS_WORK",
+                   cap_between), \
+             patch("pokerlab.matrix_free_turn.train_ranked_turn") as trainer:
+            with self.assertRaisesRegex(ValueError, "hand-state pass"):
+                solve_matrix_free_turn(board, oop, ip, config, **kwargs)
+        trainer.assert_not_called()
 
     def test_public_state_node_and_info_slot_caps_precede_training(self):
         board, oop, ip = "2c5d9hJc", "AsAh", "KcKd"
