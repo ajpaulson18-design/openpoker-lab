@@ -29,7 +29,13 @@ PREFIX = "preflop-push-fold-v1"
 
 
 def hashes():
-    paths = sorted((ROOT / "pokerlab").glob("*.py")) + [
+    # Complete local import dependency set for the adapter and both rank paths.
+    # Unrelated Coach/turn research must not invalidate expensive board counts.
+    paths = [ROOT / "pokerlab" / name for name in (
+        "__init__.py", "cards.py", "equity.py", "analysis.py", "cfr.py",
+        "cfr_plus.py", "river_config.py", "river_tree.py", "preflop_tree.py",
+        "preflop_full_board_equity.py", "preflop_push_fold.py",
+    )] + [
         ROOT / "scripts/preflop_validation.py",
         ROOT / "scripts/preflop_push_fold_validation.py",
         Path(__file__).resolve(), CONFIG,

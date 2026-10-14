@@ -95,6 +95,28 @@ completed per-pair oracle checkpoints may be reused only with matching hashes,
 fixture identities and priors. Artifact checksums detect accidental output edits;
 they are not signatures or proof against deliberate coordinated tampering.
 
+## Independently derived mixed-equilibrium anchor
+
+Let `a=8/13`, `b=1/13`, `d=4/13` be the AA/KK, QQ/AK and QQ/KK priors.
+For each independently counted pair, its expected showdown sign is
+`(wins-losses)/1,712,304`; call those signs `u`, `v`, `z`. Let `s` and `B`
+be the blinds and `m` the effective starting stack. In the checked regime where
+AA always shoves, AK always calls, and QQ/KK mix, the indifference equations give:
+
+```text
+QQ shove frequency x = a*(m*u-B) / (d*(B-m*z))
+KK call frequency  y = (b*m*v+d*B+s*(b+d)) / (d*(B-m*z))
+SB equilibrium value = a*((1-y)*B+y*m*u)-s*(b+d)
+```
+
+The certificate requires `m*u>B`, `m*v<B`, and both frequencies strictly
+between zero and one, then checks the entire constructed policy using legal
+own-hand best responses. Arithmetic uses exact count/prior fractions. A regime
+failure rejects this certificate instead of forcing it onto another game.
+The unit suite's separately labeled synthetic signs `(3/4,1/4,-3/4)` at
+`m=2`, `s=1/2`, `B=1` give `x=2/5`, `y=7/10` and value `83/130`.
+Those synthetic signs are not claimed to be physical Hold'em equities.
+
 ## Research and provenance
 
 Published jam/fold research motivates a deliberately restricted preflop action

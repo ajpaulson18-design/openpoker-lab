@@ -54,7 +54,7 @@ The finite heads-up engine now includes bounded preflop models with explicit
 continuation boundaries, plus an isolated fixed-flop game that integrates the
 hidden future deck under forced checkdown. Optional matrix-free river and
 turn-to-river paths have their own admission rules. These are finite abstractions:
-full-deck preflop solving, multiway equilibrium, and unrestricted NLHE remain
+full-deck preflop with later-street betting, multiway equilibrium, and unrestricted NLHE remain
 unsupported. Practice EV is a simplified estimate, not a solve of the live hand.
 Selected runouts define a conditional joint game. Exact chance enumeration is
 not a guarantee that a finite-iteration strategy is equilibrium. Never fill
