@@ -1,5 +1,22 @@
 # Solver progress record
 
+## Exact normalized response bounds cover every remaining river
+
+All six archived full44 CFR+ policies now have exact rational EV/legal-response
+bounds, preserving all 44 rivers per private pair and the original independent
+physical model. Exact NashConv is approximately 0.00145336964360 /
+0.000646157234394 / 0.000161593137092 at 1k/1.5k/3k on both backends.
+The two 1k misses and four later meets of exact 1/1000 remain explicit.
+
+An optional stable chance partition in the development exact helper completes
+each audit at 82,950/100,000 modeled work units without raising work/depth/bit
+caps. The original scan default retains all six complete selected-turn outputs.
+All 47 focused tests passed. Sol separately reconstructed every normalization
+row/hash and verified exact metric identities, model dimensions and 65 frozen
+fingerprints. Maximum exact-versus-floating metric difference is 1.07e-14 chips.
+Production and earlier-street code is unchanged. These bounds concern explicitly
+normalized saved policies; see [derivation, evidence and limits](full-deck-turn-rational-certificate.md).
+
 ## Research: bounded turn terminal reuse preserves complete policies
 
 A development-only per-solve memoizer now has exact complete-policy parity

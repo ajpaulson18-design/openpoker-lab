@@ -128,3 +128,5 @@ abstraction and two weighted hands per range. It does not solve unrestricted
 Hold'em, establish general convergence, or supply a closed-form game value.
 The existing exact rational auditor remains pinned to the six earlier selected
 policies; this slice does not silently extend that certificate's model scope.
+A subsequent, separate [full-deck rational audit](full-deck-turn-rational-certificate.md)
+now adds exact normalized legal-response bounds for these six saved policies.
