@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Research: bounded turn terminal reuse preserves complete policies
+
+A development-only per-solve memoizer now has exact complete-policy parity
+against both archived matrix-free CFR+ 1,000-sweep turn fixtures. All six saved
+profiles independently replay all eight metrics; Sol's separate artifact audit
+checked hashes, physical counts, resource counters, medians and 62 frozen
+source/input fingerprints. Maximum scalar difference is 1.42e-14 chips and all
+84 focused tests passed. Every accuracy threshold miss is retained.
+
+Three paired complete 300-sweep calls per fixture gave median baseline/candidate
+ratios of 1.490869 for selected rivers and 1.423057 for full44, meeting the
+predeclared 1.10 research gate in this environment. The wrapper retains original
+solver admission, adds a separate full-request cache-slot guard and capped LRU,
+validates before lookup, preserves fallback accounting, and excludes exceptional
+numerical paths. Production/shared/earlier-street code is unchanged. No public
+solver mode, general performance or memory gain follows; see
+[scope, raw timings, evidence and reproduction](turn-terminal-memoization.md).
+
 ## Full remaining-deck turn accuracy on both existing backends
 
 The existing full44 fixture now has complete CFR+ evidence at 1k/1.5k/3k
