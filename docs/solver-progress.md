@@ -1,5 +1,22 @@
 # Solver progress record
 
+## Exact rational response bounds for normalized selected-turn policies
+
+All six saved selected-turn CFR+ profiles now have exact rational EV and legal
+best-response bounds for explicitly normalized complete policies. The four
+3k/10k threshold meets and two 1k misses remain unchanged under exact `1/1000`
+NashConv comparisons. The 10k legal-response interval is approximately
+`[-19.047634645102352, -19.04759226231214]` OOP chips in the configured model.
+
+All 32 focused tests passed. Sol independently reconstructed all row ledgers
+and normalized hashes, checked eight exact metric identities and all 55 source
+fingerprints. Maximum exact-versus-floating metric difference is 1.50e-14 chips;
+maximum row adjustment is 1.16e-16. This audits the existing independent numeric
+rules with exact arithmetic; it does not establish a raw-binary64 interval proof,
+compute an exact equilibrium, or extend selected rivers to the full deck.
+Production and earlier-street source are unchanged. See
+[derivation, provenance, resource limits and evidence](turn-rational-certificate.md).
+
 ## Longer-budget conditional turn-to-river accuracy
 
 Both existing backends now have saved complete CFR+ evidence at 1k/3k/10k

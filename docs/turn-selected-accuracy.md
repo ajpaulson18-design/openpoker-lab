@@ -108,6 +108,7 @@ python -m scripts.validate_docs
 
 These measured policies are specific to the selected two-river game. Broader
 full-deck turn accuracy, arbitrary extreme ranges and unrestricted Hold'em
-remain separate. Independent float diagnostics still have numerical rounding;
-an exact rational certificate for a separately normalized complete policy is
-a useful next validation step, without implying an exact raw-binary64 bound.
+remain separate. Independent float diagnostics still have numerical rounding.
+The later [exact rational arithmetic audit](turn-rational-certificate.md) adds
+response bounds for separately normalized versions of these complete policies,
+without implying an exact raw-binary64 bound or changing this experiment.
