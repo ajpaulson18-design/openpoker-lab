@@ -18,7 +18,7 @@ MAX_HAND_STATE_PASS_WORK = 30_000_000
 MAX_INFO_ACTION_SLOTS = 1_000_000
 MAX_PUBLIC_STATES = 250_000
 MAX_FALLBACK_PAIR_CHECKS = 30_000_000
-_MAX_ITERATIONS = 10_000
+_MAX_ITERATIONS = 100_000
 
 
 def _target_value(value):
@@ -52,7 +52,7 @@ def solve_matrix_free_river(board, oop_range, ip_range, config=None, *,
     elif not isinstance(config, RiverConfig):
         raise TypeError("config must be a RiverConfig or configuration object.")
     if type(iterations) is not int or not 10 <= iterations <= _MAX_ITERATIONS:
-        raise ValueError("Iterations must be an integer from 10 through 10000.")
+        raise ValueError("Iterations must be an integer from 10 through 100000.")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
         raise ValueError("Algorithm must be vanilla, dcfr, or cfrplus.")
     if type(check_interval) is not int or check_interval < 1:

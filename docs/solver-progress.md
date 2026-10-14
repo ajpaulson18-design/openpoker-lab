@@ -1,5 +1,22 @@
 # Solver progress record
 
+## Bounded longer river solves meet the bluff-catcher threshold
+
+The isolated matrix-free river ceiling is now 100,000 requested iterations
+under its unchanged 30-million modeled hand/state/pass cap. Defaults, shared
+postflop limits, training and ordinary payloads remain unchanged. Full requested
+work and conservatively planned diagnostics still admit before information
+rows and training, even when a target could stop early.
+
+On the predeclared polarised fixture, independently replayed CFR+ NashConv is
+0.00790056594 / 0.00265815977 / 0.000907974712 at 10k/30k/100k. Only 100k
+meets the unchanged 0.001-chip reporting threshold; every miss is retained.
+All saved profiles pass all eight independent metrics and normalized exact
+rational known-value witnesses. The 10k complete payload exactly equals its
+archived baseline. All 41 focused tests and 12 complete ordinary parity/replay
+cases pass. No speed/RSS or broader equilibrium claim follows. See
+[admission, full policies and reproducible evidence](river-long-budget.md).
+
 ## Stable turn root-fold products at normal branch mass
 
 A rare exact binary-rational pair sum now preserves representable fold values

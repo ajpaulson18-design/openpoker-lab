@@ -13,6 +13,8 @@ from pokerlab.ranked_river import RankedRiverPayoffs
 from pokerlab.river_config import RiverConfig
 from pokerlab.cards import DECK
 from scripts.river_analytical import metrics, serialized_profile
+from scripts.replay_river_accuracy_extension import rational_polarised
+from scripts.turn_river_validation import compare_result, replay_policy
 
 
 def _fixtures():
@@ -244,6 +246,25 @@ class MatrixFreeRiverTests(unittest.TestCase):
                                places=9)
         self.assertLess(result["nash_conv"], 4)
 
+    def test_more_than_ten_thousand_iterations_on_known_value_game(self):
+        board = "2c7d9hJsKd"
+        oop, ip = "AsAh,3c4c", "QsQh"
+        config = {
+            "pot": 100, "effective_stack": 100, "bet_sizes": [1.0],
+            "include_all_in": False,
+        }
+        result = solve_matrix_free_river(
+            board, oop, ip, config, iterations=10_001, algorithm="cfrplus",
+        )
+        self.assertEqual(result["iterations"], 10_001)
+        oracle = replay_policy(result, oop, ip, board=board, config=config)
+        compare_result(result, oracle)
+        witness = rational_polarised(result, {
+            "board": board, "oop": oop, "ip": ip, "config": config,
+        })
+        self.assertTrue(witness["known_value_in_interval"])
+        self.assertEqual(witness["known_game_value_fraction"], "25")
+
     def test_zero_and_orphan_hands_and_tiny_surviving_compatible_weight(self):
         board = "2c3d4h5s9c"
         config = RiverConfig(40, 80, (0.5,), (), 0, False)
@@ -329,6 +350,54 @@ class MatrixFreeRiverTests(unittest.TestCase):
                 solve_matrix_free_river(board, oop, ip, config, iterations=10,
                                         target_exploitability=1,
                                         check_interval=interval)
+
+    def test_iteration_ceiling_rejects_invalid_values_before_kernel_or_training(self):
+        case = _fixtures()[0]
+        for iterations in (100_001, 100_000.0, True, "10000"):
+            with self.subTest(iterations=iterations), \
+                 patch.object(matrix_free, "RankedRiverPayoffs",
+                              side_effect=AssertionError("kernel constructed before validation")), \
+                 patch.object(matrix_free, "train_ranked_river",
+                              side_effect=AssertionError("training ran before validation")), \
+                 self.assertRaisesRegex(ValueError, "10 through 100000"):
+                _solve(case, iterations=iterations)
+
+    def test_full_long_target_budget_is_admitted_before_early_stop(self):
+        board = "2c7d9hJsKd"
+        config = RiverConfig(100, 100, (1.0,), (), 0, False)
+        # This exact game has two OOP hands, one IP hand and nine public
+        # states. CFR+ charges three training passes and three passes per
+        # conservatively planned diagnostic check.
+        max_hands = 2
+        public_states = 9
+        passes = 3
+        requested = 100_000
+        interval = 10
+        full_checks = requested // interval + 1
+        early_stop = 10
+        early_checks = early_stop // interval + 1
+        full_charge = max_hands * public_states * (
+            requested * passes + 3 * full_checks
+        )
+        early_charge = max_hands * public_states * (
+            early_stop * passes + 3 * early_checks
+        )
+        self.assertEqual(full_charge, 5_940_054)
+        self.assertEqual(early_charge, 648)
+        cap = 1_000
+        self.assertGreater(full_charge, cap)
+        self.assertLessEqual(early_charge, cap)
+        with patch.object(matrix_free, "MAX_HAND_STATE_PASS_WORK", cap), \
+             patch.object(matrix_free, "train_ranked_river",
+                          side_effect=AssertionError("training ran before full-budget admission")), \
+             patch.object(matrix_free, "evaluate_ranked_profile",
+                          side_effect=AssertionError("diagnostics ran before admission")), \
+             self.assertRaisesRegex(ValueError, "30 million hand-state pass"):
+            solve_matrix_free_river(
+                board, "AsAh,3c4c", "QsQh", config,
+                iterations=requested, algorithm="cfrplus",
+                target_exploitability=1e9, check_interval=interval,
+            )
 
     def test_each_resource_guard_rejects_before_training(self):
         case = _fixtures()[0]
