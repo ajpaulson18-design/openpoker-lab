@@ -1,0 +1,376 @@
+{
+  "algorithm": "vanilla",
+  "backend": "exact-public-chance-tree",
+  "board": [
+    "2c",
+    "5d",
+    "9h",
+    "Jc"
+  ],
+  "chance_nodes": 3,
+  "chance_note": "Private ranges are normalized before river filtering; compatible joint range and river mass is conditioned once across selected river branches.",
+  "compatible_world_count": 1,
+  "config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 20.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 20.0,
+    "raise_sizes": []
+  },
+  "diagnostics_backend": "public-batched-python",
+  "effective_stack": 20.0,
+  "execution_backend": "matrix-free-ranked-python",
+  "exploitability": 1.25,
+  "info_sets": 8,
+  "ip_best_response_gain": 2.3593749999999982,
+  "ip_best_response_value": -9.5,
+  "iterations": 20,
+  "method": "full-traversal CFR",
+  "nash_conv": 2.5,
+  "oop_best_response_gain": 0.14062500000000178,
+  "oop_best_response_value": 12.0,
+  "pot": 20.0,
+  "public_nodes": 8,
+  "public_state_limit": 250000,
+  "public_states": 20,
+  "reachable_runouts": [
+    "As"
+  ],
+  "resource_model": "turn-hand-vectors-v1",
+  "resource_usage": {
+    "compatible_world_count": 1,
+    "fallback_pair_checks": 110,
+    "hand_counts": [
+      2,
+      1
+    ],
+    "hand_slots": 2,
+    "hand_state_pass_work": 1720,
+    "info_action_slots": 16,
+    "kernel_public_states": 20,
+    "limits": {
+      "fallback_pair_checks": 30000000,
+      "hand_slots": 120000,
+      "hand_state_pass_work": 30000000,
+      "info_action_slots": 1000000,
+      "public_nodes": 10000,
+      "public_states": 250000
+    },
+    "turn_fold_terminals": 2
+  },
+  "river_config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 20.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 20.0,
+    "raise_sizes": []
+  },
+  "runout_mode": "conditioned-subset",
+  "runouts": [
+    "As"
+  ],
+  "scope": "Approximate equilibrium of the configured heads-up turn and river abstraction; no preflop, multiway play, or rake.",
+  "solver_version": "matrix-free-turn-v1",
+  "strategy": [
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.95,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "all_in@20",
+          "name": "all_in",
+          "probability": 0.05,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hand": "KcKd",
+      "history": [],
+      "player": "oop",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.013157894736842105,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9868421052631579,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "check",
+        "all_in@20"
+      ],
+      "player": "oop",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.9342105263157895,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "all_in@20",
+          "name": "all_in",
+          "probability": 0.06578947368421052,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc",
+        "As"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "check",
+        "check",
+        "river@As"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.007042253521126761,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9929577464788732,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc",
+        "As"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "check",
+        "all_in@20"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.975,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.025,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "all_in@20"
+      ],
+      "player": "ip",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.95,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "all_in@20",
+          "name": "all_in",
+          "probability": 0.05,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "turn"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.9868421052631579,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.013157894736842105,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc",
+        "As"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "all_in@20"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.9473684210526315,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 20.0,
+          "history_key": "all_in@20",
+          "name": "all_in",
+          "probability": 0.05263157894736842,
+          "raise_to": 20.0
+        }
+      ],
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc",
+        "As"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "check",
+        "check",
+        "river@As",
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    }
+  ],
+  "strategy_schema": "postflop-strategy-v1",
+  "street_configs": {
+    "river": {
+      "bet_sizes": [
+        1.0
+      ],
+      "effective_stack": 20.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 20.0,
+      "raise_sizes": []
+    },
+    "turn": {
+      "bet_sizes": [
+        1.0
+      ],
+      "effective_stack": 20.0,
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 20.0,
+      "raise_sizes": []
+    }
+  },
+  "terminal_backend": "ranked-turn-python",
+  "terminal_nodes": 9,
+  "tree_actions": 16,
+  "turn_config": {
+    "bet_sizes": [
+      1.0
+    ],
+    "effective_stack": 20.0,
+    "include_all_in": false,
+    "max_raises": 0,
+    "pot": 20.0,
+    "raise_sizes": []
+  },
+  "value_ip": -11.859374999999998,
+  "value_oop": 11.859374999999998,
+  "worlds_materialized": 0
+}

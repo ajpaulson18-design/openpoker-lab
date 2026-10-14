@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Stable conditioned turn masses and fold utilities
+
+The isolated matrix-free turn path now preserves representable selected games
+whose raw branch mass is zero/subnormal. Exceptional branches use retained
+mantissa/exponent masses and conditioned fold vectors. The exact one-world
+regression now returns 2.5/7.5 chips at quarter/three-quarter opponent reach,
+replacing 0/10. Full requested exceptional vector work is reserved before
+information-row allocation and training, including every planned target check.
+
+All 12 frozen ordinary complete payloads remain exactly equal, across two
+turn fixtures, three algorithms and fixed/zero-target modes. Every policy
+passes independent replay; maximum scalar disagreement is 3.91e-14 chips and
+every 0.001-chip target misses. All 13 kernel, 16 adapter and 18 oracle tests
+passed; the strengthened admission assertion was additionally rerun.
+Shared ranked-river and earlier-street implementations remain unchanged.
+Broader extreme-range ranked-kernel admission remains unresolved. See
+[numerical design, evidence and reproduction](turn-conditioned-mass.md).
+
 ## Research-only same-run river CFR+ tail realization
 
 An exact Fraction conversion reconstructs original-weight CFR+ tails from
