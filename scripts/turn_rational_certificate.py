@@ -220,7 +220,28 @@ def _profile_value(root, worlds, policies, pot, budget):
     return value
 
 
-def _best_response(root, worlds, policies, player, pot, budget):
+def _partition_chance_group(group, branches, budget):
+    """Bucket original world/mass entries by river with an upfront reservation."""
+    branch_count = len(branches)
+    group_count = len(group)
+    # Reserve the entire conservative 2*B + 3*N model before constructing the
+    # branch map/buckets or iterating the input group. The three N slots model
+    # one entry scan, one river lookup and one retained bucket-reference slot.
+    budget.charge("chance_partition_branch_map_bucket_slots", 2 * branch_count)
+    budget.charge("chance_partition_entries_scanned", group_count)
+    budget.charge("chance_partition_river_lookups", group_count)
+    budget.charge("chance_partition_bucket_reference_slots", group_count)
+    buckets = {river: [] for river in branches}
+    for entry in group:
+        river = entry[0]["river"]
+        bucket = buckets.get(river)
+        if bucket is not None:
+            bucket.append(entry)
+    return buckets
+
+
+def _best_response(root, worlds, policies, player, pot, budget,
+                   chance_grouping="scan"):
     budget.charge("own_hand_setup", len(worlds))
     own_hands = sorted({world["hands"][player] for world in worlds})
 
@@ -232,6 +253,12 @@ def _best_response(root, worlds, policies, player, pot, budget):
             return Fraction(0)
         if isinstance(node, validator._Chance):
             total = Fraction(0)
+            if chance_grouping == "partition":
+                buckets = _partition_chance_group(group, node.branches, budget)
+                for river, child in node.branches.items():
+                    value = visit(child, own_hand, buckets[river], depth + 1)
+                    total = budget.add(total, value, "chance outcome sum")
+                return total
             for river, child in node.branches.items():
                 # Charge the whole filter scan before copying any world entries.
                 budget.charge("chance_group_entries_scanned", len(group))
@@ -292,7 +319,7 @@ def _best_response(root, worlds, policies, player, pot, budget):
 
 def evaluate_exact(root, worlds, policies, pot, *, max_work=MAX_EXACT_WORK,
                    max_depth=MAX_EXACT_DEPTH, max_bits=MAX_FRACTION_BITS,
-                   result=None):
+                   result=None, chance_grouping="scan"):
     """Return exact EV and legal BR interval for validated numeric model data.
 
     Public use requires a complete successful ``turn_river_validation`` replay
@@ -301,6 +328,8 @@ def evaluate_exact(root, worlds, policies, pot, *, max_work=MAX_EXACT_WORK,
     exact-arithmetic audit of the same configured model, not another rules
     implementation or a formal certificate for raw unnormalized float rows.
     """
+    if type(chance_grouping) is not str or chance_grouping not in ("scan", "partition"):
+        raise ValueError("chance_grouping must be exactly 'scan' or 'partition'")
     budget = _Budget(max_work, max_depth, max_bits)
     if isinstance(pot, bool) or not isinstance(pot, Real) or not isfinite(float(pot)):
         raise ValueError("Exact replay requires a finite numeric starting pot")
@@ -323,8 +352,10 @@ def evaluate_exact(root, worlds, policies, pot, *, max_work=MAX_EXACT_WORK,
     normalized, ledger, max_adjustment, canonical_rows = _normalize_policies(
         policies, result, budget)
     value = _profile_value(root, worlds, normalized, float(pot), budget)
-    br_oop = _best_response(root, worlds, normalized, 0, float(pot), budget)
-    br_ip = _best_response(root, worlds, normalized, 1, float(pot), budget)
+    br_oop = _best_response(root, worlds, normalized, 0, float(pot), budget,
+                            chance_grouping)
+    br_ip = _best_response(root, worlds, normalized, 1, float(pot), budget,
+                           chance_grouping)
     lower = budget.add(Fraction(0), -br_ip, "lower legal-response bound")
     upper = br_oop
     if not lower <= value <= upper:
@@ -345,7 +376,7 @@ def evaluate_exact(root, worlds, policies, pot, *, max_work=MAX_EXACT_WORK,
     }
     for name, metric in metrics.items():
         budget.fraction(metric, name)
-    return {
+    output = {
         "metrics": metrics,
         "lower_value_bound": lower,
         "upper_value_bound": upper,
@@ -363,3 +394,6 @@ def evaluate_exact(root, worlds, policies, pot, *, max_work=MAX_EXACT_WORK,
         "depth_limit": budget.max_depth,
         "fraction_bit_limit": budget.max_bits,
     }
+    if chance_grouping == "partition":
+        output["chance_grouping"] = chance_grouping
+    return output
