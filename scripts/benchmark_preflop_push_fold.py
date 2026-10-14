@@ -149,13 +149,15 @@ def production(config, source):
     write(RESULTS / f"{PREFIX}-production.json", data, source)
 
 
-def oracle(config, source):
+def oracle(config, source, pair_index=None):
     ranges = [expand_range(config[k]) for k in ("sb_range", "bb_range")]
     pairs = [(a, b, Fraction.from_float(x) * Fraction.from_float(y))
              for a, x in ranges[0].items() for b, y in ranges[1].items()
              if set(a).isdisjoint(b)]
     total = sum((weight for _, _, weight in pairs), Fraction())
     for index, (a, b, weight) in enumerate(pairs):
+        if pair_index is not None and index != pair_index:
+            continue
         path = RESULTS / f"{PREFIX}-oracle-pair-{index}.json"
         if path.exists():
             existing = read(path, source)
@@ -227,6 +229,7 @@ def verify(config, source):
               "config": config, "source_unchanged": True,
               "independent_counts": counts, "exact_equilibrium_certificates": certificates,
               "oracle_seconds": sum(row["elapsed_seconds"] for row in oracle_rows),
+              "oracle_timing_scope": "Sum of individual pair worker elapsed times. Pair workers may overlap; this is neither total end-to-end wall time nor a production performance comparison.",
               "preparation_seconds": measured["preparation_seconds"],
               "prepared_solve_traced_peak_bytes": measured["prepared_solve_traced_peak_bytes"],
               "memory_scope": measured["memory_scope"], "timing_scope": measured["timing_scope"],
@@ -239,9 +242,16 @@ def verify(config, source):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("phase", choices=("production", "oracle", "verify"))
+    parser.add_argument("--oracle-pair", type=int, choices=range(3),
+                        help="Compute one independent pair in a separate worker; oracle phase only")
     args = parser.parse_args()
+    if args.oracle_pair is not None and args.phase != "oracle":
+        parser.error("--oracle-pair applies only to the oracle phase")
     config, source = configuration(), hashes()
-    result = {"production": production, "oracle": oracle, "verify": verify}[args.phase](config, source)
+    if args.phase == "oracle":
+        result = oracle(config, source, pair_index=args.oracle_pair)
+    else:
+        result = {"production": production, "verify": verify}[args.phase](config, source)
     if hashes() != source:
         raise RuntimeError("Source changed during run")
     return result or 0
