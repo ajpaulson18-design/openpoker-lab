@@ -54,7 +54,7 @@ def _oracle(board, hands, weights, pot, runouts, node, opponent_reach, player,
             sign = (rank0 > rank1) - (rank0 < rank1)
             if player == 1:
                 sign = -sign
-        payoff = F(pot, 2) + min(node.contributions)
+        payoff = F(pot) / 2 + F(min(node.contributions))
         values[own] += mass / total * reach * sign * payoff
     return tuple(values)
 
@@ -285,6 +285,182 @@ class TurnRangeKernelTests(unittest.TestCase):
                         )
                         for got, want in zip(actual, expected_anchor):
                             self.assertAlmostEqual(got, want, places=14)
+
+    def test_normal_mass_tiny_reaches_use_exact_root_fold_pairs(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        weights = ((F(1), F(1, 10**300)), (F(1),))
+        selected = ("As",)
+        kernels = []
+        for pot in (20, 2 * 10**100):
+            kernel = TurnRangePayoffs(board, hands, weights, pot=pot,
+                                      runouts=selected)
+            kernels.append(kernel)
+            self.assertFalse(kernel.exceptional_conditioning)
+            self.assertEqual(kernel.branch_probabilities, {"As": 1.0})
+            for contributions, scale in (((0.0, 0.0), F(pot, 2)),
+                                         ((4.0, 4.0), F(pot, 2) + 4)):
+                for player, winner, reach in (
+                    (0, 0, (1e-100,)), (0, 1, (1e-100,)),
+                    (1, 1, (0.0, 1e-100)), (1, 0, (0.0, 1e-100)),
+                ):
+                    fold = _Terminal("fold", contributions, winner)
+                    actual = kernel.values(fold, reach, player)
+                    prefix = kernel.values(fold, reach, player, prefix=("As",))
+                    expected = _oracle(board, hands, weights, pot, selected,
+                                       fold, reach, player)
+                    self.assertEqual(actual, prefix)
+                    self.assertEqual(actual, [float(value) for value in expected])
+                    nonzero = 1 if player == 0 else 0
+                    sign = 1.0 if winner == player else -1.0
+                    self.assertEqual(actual[nonzero], float(scale) * 1e-100 * sign)
+            self.assertGreater(kernel.stable_root_fold_calls, 0)
+            self.assertEqual(kernel.stable_root_fold_pair_checks,
+                             kernel.stable_root_fold_calls * 2)
+            self.assertGreaterEqual(kernel.fallback_pair_checks,
+                                    kernel.stable_root_fold_pair_checks)
+
+    def test_nonzero_subnormal_weighted_reach_uses_exact_pairs(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        weights = ((F(1), F(1, 10**200)), (F(1),))
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20,
+                                  runouts=("As",))
+        self.assertFalse(kernel.exceptional_conditioning)
+        reach = (0.0, 1e-120)
+        product = kernel.weights[0][1] * reach[1]
+        self.assertGreater(product, 0.0)
+        self.assertLess(product, math.ulp(0.0) * 2**52)
+        fold = _Terminal("fold", (0.0, 0.0), 0)
+        actual = kernel.values(fold, reach, 1)
+        expected = _oracle(board, hands, weights, 20, ("As",), fold,
+                           reach, 1)
+        self.assertEqual(actual, [float(value) for value in expected])
+        self.assertEqual(actual[0], -float(F.from_float(1e-120) * 10))
+        self.assertEqual(kernel.stable_root_fold_calls, 1)
+
+    def test_normalized_mass_subnormal_uses_exact_pairs(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("3c", "4c"), _hand("Ah", "As")),
+                 (_hand("Qh", "Qs"),))
+        tiny = math.ldexp(1.0, -1022)
+        weights = ((1.0, tiny), (1.0,))
+        selected = ("As", "Kd")
+        kernel = TurnRangePayoffs(board, hands, weights, pot=2,
+                                  runouts=selected)
+        self.assertFalse(kernel.exceptional_conditioning)
+        fold = _Terminal("fold", (0.0, 0.0), 0)
+        reach = (1.0,)
+        actual = kernel.values(fold, reach, 0)
+        expected = _oracle(board, hands, weights, 2, selected,
+                           fold, reach, 0)
+        self.assertEqual(actual, [float(value) for value in expected])
+        self.assertGreater(actual[1], 0.0)
+        self.assertLess(actual[1], math.ldexp(1.0, -1022))
+        self.assertEqual(kernel.stable_root_fold_calls, 1)
+
+    def test_multi_river_exact_fold_counts_each_legal_selected_card(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("3c", "4c")),
+                 (_hand("Qh", "Qs"), _hand("5c", "6c")))
+        weights = ((F(1), F(1, 10**200)), (F(1), F(1, 10**200)))
+        selected = ("As", "Kd")
+        pot = 2 * 10**300
+        kernel = TurnRangePayoffs(board, hands, weights, pot=pot,
+                                  runouts=selected)
+        self.assertFalse(kernel.exceptional_conditioning)
+        self.assertGreater(kernel.branch_probabilities["As"], 0.0)
+        self.assertGreater(kernel.branch_probabilities["Kd"], 0.0)
+        reaches = {0: (1e-200, 0.0), 1: (0.0, 1e-200)}
+        for player in (0, 1):
+            fold = _Terminal("fold", (0.0, 0.0), player)
+            actual = kernel.values(fold, reaches[player], player)
+            expected = _oracle(board, hands, weights, pot, selected,
+                               fold, reaches[player], player)
+            prefix_sum = [0.0] * len(hands[player])
+            for river in selected:
+                values = kernel.values(fold, reaches[player], player,
+                                       prefix=(river,))
+                prefix_sum = [left + right
+                              for left, right in zip(prefix_sum, values)]
+            self.assertEqual(actual, [float(value) for value in expected])
+            for got, prefix_value in zip(actual, prefix_sum):
+                self.assertAlmostEqual(got, prefix_value, delta=1e-14)
+        self.assertGreater(kernel.stable_root_fold_calls, 0)
+
+    def test_stable_pair_budgets_preflight_atomically_and_keep_failed_charges(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        weights = ((F(1), F(1, 10**300)), (F(1),))
+        fold = _Terminal("fold", (0.0, 0.0), 0)
+
+        stable_limited = TurnRangePayoffs(
+            board, hands, weights, pot=20, runouts=("As",),
+            stable_root_pair_limit=1,
+        )
+        before_fallback = stable_limited.fallback_pair_checks
+        with patch("pokerlab.turn_range_kernel._fraction_from_float",
+                   side_effect=AssertionError("conversion ran before admission")):
+            with self.assertRaisesRegex(ValueError, "Stable turn root-fold"):
+                stable_limited.values(fold, (0.0, 1e-100), 1)
+        self.assertEqual(stable_limited.fallback_pair_checks, before_fallback)
+        self.assertEqual(stable_limited.stable_root_fold_calls, 0)
+        self.assertEqual(stable_limited.stable_root_fold_pair_checks, 0)
+
+        fallback_limited = TurnRangePayoffs(
+            board, hands, weights, pot=20, runouts=("As",),
+            fallback_pair_limit=1,
+        )
+        with patch("pokerlab.turn_range_kernel._fraction_from_float",
+                   side_effect=AssertionError("conversion ran before admission")):
+            with self.assertRaisesRegex(ValueError, "fallback pair-check budget"):
+                fallback_limited.values(fold, (0.0, 1e-100), 1)
+        self.assertEqual(fallback_limited.fallback_pair_checks, 0)
+        self.assertEqual(fallback_limited.stable_root_fold_pair_checks, 0)
+
+        charged = TurnRangePayoffs(
+            board, hands, weights, pot=20, runouts=("As",),
+            stable_root_pair_limit=2, fallback_pair_limit=2,
+        )
+        with patch("pokerlab.turn_range_kernel._fraction_from_float",
+                   side_effect=ArithmeticError("injected conversion failure")):
+            with self.assertRaisesRegex(ArithmeticError, "injected"):
+                charged.values(fold, (0.0, 1e-100), 1)
+        self.assertEqual(charged.stable_root_fold_calls, 1)
+        self.assertEqual(charged.stable_root_fold_pair_checks, 2)
+        self.assertEqual(charged.fallback_pair_checks, 2)
+        with self.assertRaisesRegex(ValueError, "fallback pair-check budget"):
+            charged.values(fold, (0.0, 1e-100), 1)
+        self.assertEqual(charged.stable_root_fold_calls, 1)
+        self.assertEqual(charged.stable_root_fold_pair_checks, 2)
+        self.assertEqual(charged.fallback_pair_checks, 2)
+
+    def test_true_zero_reach_does_not_use_or_charge_stable_path(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"), _hand("Kc", "Kd")),
+                 (_hand("Qh", "Qs"),))
+        weights = ((F(1), F(1, 10**300)), (F(1),))
+        kernel = TurnRangePayoffs(board, hands, weights, pot=20,
+                                  runouts=("As",), stable_root_pair_limit=0)
+        before = kernel.fallback_pair_checks
+        values = kernel.values(_Terminal("fold", (0.0, 0.0), 0), (0.0,), 0)
+        self.assertEqual(values, [0.0, 0.0])
+        self.assertEqual(kernel.stable_root_fold_calls, 0)
+        self.assertEqual(kernel.stable_root_fold_pair_checks, 0)
+        self.assertEqual(kernel.fallback_pair_checks, before)
+
+    def test_stable_root_pair_limit_rejects_bool_negative_and_noninteger(self):
+        board = ("2c", "5d", "9h", "Jc")
+        hands = ((_hand("Ah", "As"),), (_hand("Qh", "Qs"),))
+        for limit in (True, -1, 1.0, "1"):
+            with self.subTest(limit=limit):
+                with self.assertRaisesRegex(ValueError, "Stable root pair limit"):
+                    TurnRangePayoffs(board, hands, ((1,), (1,)), pot=20,
+                                     runouts=("3c",),
+                                     stable_root_pair_limit=limit)
 
     def test_hand_slot_cap_precedes_rank_kernel_allocation(self):
         board = ("2c", "5d", "9h", "Jc")

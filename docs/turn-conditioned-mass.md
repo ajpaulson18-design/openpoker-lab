@@ -186,6 +186,10 @@ slice must address reach-product underflow at normal branch masses while
 retaining bounded work and ordinary-game compatibility. This observation is
 a measured residual, not a completed fix or a material-chip strategy claim.
 
+The subsequent [root-reach correction](turn-root-reach-stability.md) addresses
+that reproduced normal-mass boundary with a separately bounded rare arithmetic
+path. The paragraph above records what remained unresolved at this slice.
+
 The separate [river tail experiment](river-tail-realization.md) still misses
 the 0.001-chip target on the bluff-catcher fixture. Its unresolved strategic
 accuracy remains a priority alongside broader turn numerical coverage.

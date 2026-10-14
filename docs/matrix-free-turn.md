@@ -39,7 +39,10 @@ branch marginals. Zero-support holdings retain their index but no policy row.
 
 Selected rivers condition the **whole pair/runout game**. They are not sampling
 or an unconditional approximation to full-deck solving. Positive physical
-branches with unrepresentable binary64 mass are rejected rather than discarded.
+branches with unrepresentable normalized binary64 probability are rejected
+rather than discarded. Zero/subnormal raw branch masses use retained
+mantissa/exponent components before normalization; see the
+[conditioned-mass correction](turn-conditioned-mass.md).
 
 At chance nodes, vector values sum over river outcomes. A turn action is then
 maximized at its turn information set. Independently maximizing before summing
@@ -61,8 +64,12 @@ add-back. Multiplying by the own range weight and dividing by the global
 pair/runout normalizer gives the exact joint counterfactual mass. The fold
 utility uses the usual signed initial half-pot plus matched contributions.
 This is ordinary linear hand work, with bounded direct scans for ill-conditioned
-cancellation. Joint mass is multiplied before normalization to preserve cases
-where a valid selected branch has tiny original range mass.
+cancellation. Zero/subnormal branch mass instead uses conditioned branch fold
+vectors. At normal branch mass, zero/subnormal intermediate reach or joint-mass
+products trigger a separately bounded exact binary-rational pair sum before
+final float conversion. This preserves demonstrated representable values lost
+by premature rounding; the established binary64 root normalizer remains in use.
+See [root-reach stability and its limits](turn-root-reach-stability.md).
 
 The reference prototype instead sums globally weighted per-river fold vectors.
 Its immutable source blob is `710b60b5070a4014eebfdbbd1cd04a7c2c15a76d` and is
@@ -77,6 +84,10 @@ hand/state/pass work. It admits the entire requested iteration/checkpoint budget
 before training allocations. Direct fallback scans share one cumulative budget
 across every branch and the direct fold operator; failed calls still charge
 consumed work. These counters do not promise elapsed time or resident memory.
+The rare exact root-fold path also preflights a separate cumulative 100,000
+pair cap before ratio conversions/scanning. Its mathematical integer-width
+bound is separate from operation counts. This dynamic allowance can reject a
+solve during training; full vector admission does not guarantee its completion.
 Full random ranges across all 48 rivers can still exceed the information/action
 budget. Coverage is reported by the configured admitted game, never inferred
 from a two-river selected-subset probe.

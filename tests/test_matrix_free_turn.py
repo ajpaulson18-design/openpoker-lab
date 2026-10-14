@@ -464,6 +464,49 @@ class MatrixFreeTurnTests(unittest.TestCase):
         self.assertAlmostEqual(br0, 0.0, places=12)
         self.assertAlmostEqual(br1, 0.0, places=12)
 
+    def test_exact_root_fold_metadata_records_an_injected_risky_reach_probe(self):
+        board = "2c5d9hJc"
+        config = RiverConfig(20, (20, 20), (0.5,), (0.5,), 0, False)
+        original_values = TurnRangePayoffs.values
+        injected = {"done": False}
+
+        baseline = solve_matrix_free_turn(
+            board, "AhAs:1,KcKd:1e-300", "QhQs:1", config,
+            runouts=("As",), iterations=10, algorithm="vanilla",
+        )
+
+        def probe_once(kernel, node, opponent_reach, player, prefix=()):
+            if node.kind == "fold" and not prefix and not injected["done"]:
+                injected["done"] = True
+                risky_reach = tuple(1e-100 for _ in kernel.hands[1 - player])
+                original_values(kernel, node, risky_reach, player)
+            return original_values(kernel, node, opponent_reach, player, prefix)
+
+        with patch.object(TurnRangePayoffs, "values", new=probe_once):
+            result = solve_matrix_free_turn(
+                board, "AhAs:1,KcKd:1e-300", "QhQs:1", config,
+                runouts=("As",), iterations=10, algorithm="vanilla",
+            )
+        self.assertTrue(injected["done"])
+        self.assertEqual(result["strategy"], baseline["strategy"])
+        diagnostic_fields = (
+            "value_oop", "value_ip", "oop_best_response_value",
+            "ip_best_response_value", "oop_best_response_gain",
+            "ip_best_response_gain", "nash_conv", "exploitability",
+        )
+        self.assertEqual(
+            {field: result[field] for field in diagnostic_fields},
+            {field: baseline[field] for field in diagnostic_fields},
+        )
+        self.assertEqual(result["root_fold_mode"],
+                         "exact-normalized-binary64-pairs")
+        self.assertGreater(result["resource_usage"]["stable_root_fold_calls"], 0)
+        self.assertGreater(result["resource_usage"]["stable_root_fold_pair_checks"], 0)
+        self.assertEqual(result["resource_usage"]["stable_root_fold_pair_limit"],
+                         100_000)
+        self.assertEqual(result["resource_usage"]["stable_root_integer_bits_bound"],
+                         7_500)
+
 
 if __name__ == "__main__":
     unittest.main()

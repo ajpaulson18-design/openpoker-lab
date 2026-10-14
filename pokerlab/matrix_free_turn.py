@@ -13,7 +13,11 @@ from .public_cfr import train_ranked_turn
 from .public_diagnostics import evaluate_ranked_turn_profile
 from .river_config import RiverConfig
 from .river_tree import _Node, _Terminal, _build_tree
-from .turn_range_kernel import MAX_HAND_SLOTS, TurnRangePayoffs
+from .turn_range_kernel import (
+    MAX_HAND_SLOTS,
+    STABLE_ROOT_MAX_INTEGER_BITS,
+    TurnRangePayoffs,
+)
 
 MAX_HAND_STATE_PASS_WORK = 30_000_000
 MAX_INFO_ACTION_SLOTS = 1_000_000
@@ -315,6 +319,14 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
         result["resource_usage"]["exceptional_root_fold_pass_work"] = (
             exceptional_root_fold_pass_work
         )
+    if kernel.stable_root_fold_calls:
+        result["root_fold_mode"] = "exact-normalized-binary64-pairs"
+        result["resource_usage"].update({
+            "stable_root_fold_calls": kernel.stable_root_fold_calls,
+            "stable_root_fold_pair_checks": kernel.stable_root_fold_pair_checks,
+            "stable_root_fold_pair_limit": kernel.stable_root_pair_limit,
+            "stable_root_integer_bits_bound": STABLE_ROOT_MAX_INTEGER_BITS,
+        })
     if algorithm == "cfrplus":
         result["update_schedule"] = "alternating-oop-then-ip"
         result["average_schedule"] = "linear-post-sweep-own-reach"
