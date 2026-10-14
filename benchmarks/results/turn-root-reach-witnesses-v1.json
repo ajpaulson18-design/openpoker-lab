@@ -1,0 +1,2314 @@
+{
+  "acceptance": {
+    "max_normalized_absolute_error": 1e-12,
+    "one_unit_anchor_exact": true,
+    "true_zero_uses_stable_path": false
+  },
+  "baseline_canonical_sha256": {
+    "matrix_free_turn.py": "f9e452c324c3df9e9c427fe241f561df070474a18714b4d5333e5c62bdf0ebad",
+    "turn_range_kernel.py": "46f7614ce9dd7f74eb46a06762fbbcf8de9ec0e2ed413c0f68b9b14f4276b920"
+  },
+  "baseline_git_ref": "f934f4a",
+  "benchmark_id": "turn-root-reach-witnesses-v1",
+  "fixtures": [
+    {
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "Kc",
+            "Kd"
+          ]
+        ],
+        [
+          [
+            "Qh",
+            "Qs"
+          ]
+        ]
+      ],
+      "id": "normal-mass-underflowed-reach",
+      "pot": 20.0,
+      "reaches": [
+        [
+          1e-100
+        ],
+        [
+          0.0,
+          1e-100
+        ]
+      ],
+      "runouts": [
+        "As"
+      ],
+      "weights": [
+        [
+          1.0,
+          1e-300
+        ],
+        [
+          1.0
+        ]
+      ]
+    },
+    {
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "Kc",
+            "Kd"
+          ]
+        ],
+        [
+          [
+            "Qh",
+            "Qs"
+          ]
+        ]
+      ],
+      "id": "normal-mass-scale-one-unit",
+      "pot": 2e+100,
+      "reaches": [
+        [
+          1e-100
+        ],
+        [
+          0.0,
+          1e-100
+        ]
+      ],
+      "runouts": [
+        "As"
+      ],
+      "weights": [
+        [
+          1.0,
+          1e-300
+        ],
+        [
+          1.0
+        ]
+      ]
+    },
+    {
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "Kc",
+            "Kd"
+          ]
+        ],
+        [
+          [
+            "Qh",
+            "Qs"
+          ]
+        ]
+      ],
+      "id": "nonzero-subnormal-joint-product",
+      "pot": 2e+20,
+      "reaches": [
+        [
+          1e-20
+        ],
+        [
+          0.0,
+          1e-20
+        ]
+      ],
+      "runouts": [
+        "As"
+      ],
+      "weights": [
+        [
+          1.0,
+          1e-300
+        ],
+        [
+          1.0
+        ]
+      ]
+    },
+    {
+      "board": [
+        "2c",
+        "7d",
+        "9h",
+        "Js"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "3c",
+            "4c"
+          ],
+          [
+            "3h",
+            "As"
+          ]
+        ],
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "5c",
+            "6c"
+          ]
+        ]
+      ],
+      "id": "unequal-two-river-normal-masses",
+      "pot": 2e+30,
+      "reaches": [
+        [
+          1e-30,
+          2.5e-31
+        ],
+        [
+          1e-30,
+          2.5e-31,
+          7.5e-31
+        ]
+      ],
+      "runouts": [
+        "As",
+        "Ah"
+      ],
+      "weights": [
+        [
+          1.0,
+          1e-150,
+          2e-150
+        ],
+        [
+          1.0,
+          1e-150
+        ]
+      ]
+    },
+    {
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "Kc",
+            "Kd"
+          ]
+        ],
+        [
+          [
+            "Qh",
+            "Qs"
+          ]
+        ]
+      ],
+      "id": "normal-joint-subnormal-normalized-product",
+      "pot": 1e+308,
+      "reaches": [
+        [
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "runouts": [
+        "2d",
+        "2h",
+        "2s",
+        "3c",
+        "3d",
+        "3h",
+        "3s",
+        "4c",
+        "4d",
+        "4h"
+      ],
+      "weights": [
+        [
+          1.0,
+          3e-309
+        ],
+        [
+          1.0
+        ]
+      ]
+    },
+    {
+      "board": [
+        "2c",
+        "5d",
+        "9h",
+        "Jc"
+      ],
+      "hands": [
+        [
+          [
+            "Ah",
+            "As"
+          ],
+          [
+            "Kc",
+            "Kd"
+          ]
+        ],
+        [
+          [
+            "Qh",
+            "Qs"
+          ]
+        ]
+      ],
+      "id": "true-zero-reach-control",
+      "pot": 20.0,
+      "reaches": [
+        [
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "runouts": [
+        "As"
+      ],
+      "weights": [
+        [
+          1.0,
+          1e-300
+        ],
+        [
+          1.0
+        ]
+      ]
+    }
+  ],
+  "python": "3.12.14",
+  "results": [
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1e-99
+      ],
+      "expected_float": [
+        0.0,
+        1e-99
+      ],
+      "expected_fraction": [
+        "0",
+        "2462625387274655/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1e-99
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        0.0,
+        1e-99
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1.4e-99
+      ],
+      "expected_float": [
+        0.0,
+        1.4e-99
+      ],
+      "expected_fraction": [
+        "0",
+        "3447675542184517/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1.4e-99
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        0.0,
+        1.4e-99
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1e-99
+      ],
+      "expected_float": [
+        0.0,
+        -1e-99
+      ],
+      "expected_fraction": [
+        "0",
+        "-2462625387274655/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1e-99
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        0.0,
+        -1e-99
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1.4e-99
+      ],
+      "expected_float": [
+        0.0,
+        -1.4e-99
+      ],
+      "expected_fraction": [
+        "0",
+        "-3447675542184517/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1.4e-99
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        0.0,
+        -1.4e-99
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1e-99
+      ],
+      "expected_float": [
+        -1e-99
+      ],
+      "expected_fraction": [
+        "-2462625387274655/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        1e-99
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        -1e-99
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1.4e-99
+      ],
+      "expected_float": [
+        -1.4e-99
+      ],
+      "expected_fraction": [
+        "-3447675542184517/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        1.4e-99
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        -1.4e-99
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1e-99
+      ],
+      "expected_float": [
+        1e-99
+      ],
+      "expected_fraction": [
+        "2462625387274655/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        -1e-99
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        1e-99
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1.4e-99
+      ],
+      "expected_float": [
+        1.4e-99
+      ],
+      "expected_fraction": [
+        "3447675542184517/2462625387274654950767440006258975862817483704404090416746768337765357610718575663213391640930307227550414249394176"
+      ],
+      "historical_physical_differences": [
+        -1.4e-99
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-underflowed-reach",
+      "summed_prefix": [
+        1.4e-99
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1.0
+      ],
+      "expected_float": [
+        0.0,
+        1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "2535301200456458893997512900999/2535301200456458802993406410752"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        0.0,
+        1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1.0
+      ],
+      "expected_float": [
+        0.0,
+        1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "1231312693637327519581431688979593107464549017847815035273226544119146341255146107389684903449562371544572517474387/1231312693637327475383720003129487931408741852202045208373384168882678805359287831606695820465153613775207124697088"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        0.0,
+        1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1.0
+      ],
+      "expected_float": [
+        0.0,
+        -1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "-2535301200456458893997512900999/2535301200456458802993406410752"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1.0
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        0.0,
+        -1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1.0
+      ],
+      "expected_float": [
+        0.0,
+        -1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "-1231312693637327519581431688979593107464549017847815035273226544119146341255146107389684903449562371544572517474387/1231312693637327475383720003129487931408741852202045208373384168882678805359287831606695820465153613775207124697088"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1.0
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        0.0,
+        -1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1.0
+      ],
+      "expected_float": [
+        -1.0
+      ],
+      "expected_fraction": [
+        "-2535301200456458893997512900999/2535301200456458802993406410752"
+      ],
+      "historical_physical_differences": [
+        1.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        -1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1.0
+      ],
+      "expected_float": [
+        -1.0
+      ],
+      "expected_fraction": [
+        "-1231312693637327519581431688979593107464549017847815035273226544119146341255146107389684903449562371544572517474387/1231312693637327475383720003129487931408741852202045208373384168882678805359287831606695820465153613775207124697088"
+      ],
+      "historical_physical_differences": [
+        1.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        -1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1.0
+      ],
+      "expected_float": [
+        1.0
+      ],
+      "expected_fraction": [
+        "2535301200456458893997512900999/2535301200456458802993406410752"
+      ],
+      "historical_physical_differences": [
+        -1.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1.0
+      ],
+      "expected_float": [
+        1.0
+      ],
+      "expected_fraction": [
+        "1231312693637327519581431688979593107464549017847815035273226544119146341255146107389684903449562371544572517474387/1231312693637327475383720003129487931408741852202045208373384168882678805359287831606695820465153613775207124697088"
+      ],
+      "historical_physical_differences": [
+        -1.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-mass-scale-one-unit",
+      "summed_prefix": [
+        1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1.0
+      ],
+      "expected_float": [
+        0.0,
+        1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "633825300114114665985107421875/633825300114114700748351602688"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.0,
+        0.999988867182683
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        0.0,
+        1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        1.0
+      ],
+      "expected_float": [
+        0.0,
+        1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "166153499473114475006646139978924579/166153499473114484112975882535043072"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.0,
+        0.999988867182683
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        0.0,
+        1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1.0
+      ],
+      "expected_float": [
+        0.0,
+        -1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "-633825300114114665985107421875/633825300114114700748351602688"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.0,
+        -0.999988867182683
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        0.0,
+        -1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -1.0
+      ],
+      "expected_float": [
+        0.0,
+        -1.0
+      ],
+      "expected_fraction": [
+        "0",
+        "-166153499473114475006646139978924579/166153499473114484112975882535043072"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.0,
+        -0.999988867182683
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        0.0,
+        -1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1.0
+      ],
+      "expected_float": [
+        -1.0
+      ],
+      "expected_fraction": [
+        "-633825300114114665985107421875/633825300114114700748351602688"
+      ],
+      "historical_physical_differences": [
+        1.1132817317016652e-05
+      ],
+      "historical_root": [
+        -0.999988867182683
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        -1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -1.0
+      ],
+      "expected_float": [
+        -1.0
+      ],
+      "expected_fraction": [
+        "-166153499473114475006646139978924579/166153499473114484112975882535043072"
+      ],
+      "historical_physical_differences": [
+        1.1132817317016652e-05
+      ],
+      "historical_root": [
+        -0.999988867182683
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        -1.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1.0
+      ],
+      "expected_float": [
+        1.0
+      ],
+      "expected_fraction": [
+        "633825300114114665985107421875/633825300114114700748351602688"
+      ],
+      "historical_physical_differences": [
+        -1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.999988867182683
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        1.0
+      ],
+      "expected_float": [
+        1.0
+      ],
+      "expected_fraction": [
+        "166153499473114475006646139978924579/166153499473114484112975882535043072"
+      ],
+      "historical_physical_differences": [
+        -1.1132817317016652e-05
+      ],
+      "historical_root": [
+        0.999988867182683
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "nonzero-subnormal-joint-product",
+      "summed_prefix": [
+        1.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "expected_float": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "expected_fraction": [
+        "0",
+        "633825300114114766172461710745/5070602400912917605986812821504",
+        "633825300114114766172461710745/5070602400912917605986812821504"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "historical_root": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 3,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "expected_float": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "expected_fraction": [
+        "0",
+        "44601490397061250886883903790659597619387925/356811923176489970264571492362373784095686656",
+        "44601490397061250886883903790659597619387925/356811923176489970264571492362373784095686656"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "historical_root": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 3,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "expected_float": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "expected_fraction": [
+        "0",
+        "-633825300114114766172461710745/5070602400912917605986812821504",
+        "-633825300114114766172461710745/5070602400912917605986812821504"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "historical_root": [
+        0.0,
+        -0.0,
+        -0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 3,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "expected_float": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "expected_fraction": [
+        "0",
+        "-44601490397061250886883903790659597619387925/356811923176489970264571492362373784095686656",
+        "-44601490397061250886883903790659597619387925/356811923176489970264571492362373784095686656"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "historical_root": [
+        0.0,
+        -0.0,
+        -0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 3,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        -0.125,
+        -0.125
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -0.5
+      ],
+      "expected_float": [
+        0.0,
+        -0.5
+      ],
+      "expected_fraction": [
+        "0",
+        "-40564819207303341482323870687179/81129638414606681695789005144064"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.5
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 3,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0,
+        -5.551115123125783e-17
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        -0.49999999999999994
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        -0.5
+      ],
+      "expected_float": [
+        0.0,
+        -0.5
+      ],
+      "expected_fraction": [
+        "0",
+        "-2854495385411919806760569842602209276484617535/5708990770823839524233143877797980545530986496"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.5
+      ],
+      "historical_root": [
+        0.0,
+        -0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 3,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0,
+        -5.551115123125783e-17
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        -0.49999999999999994
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.5
+      ],
+      "expected_float": [
+        0.0,
+        0.5
+      ],
+      "expected_fraction": [
+        "0",
+        "40564819207303341482323870687179/81129638414606681695789005144064"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -0.5
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 3,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0,
+        5.551115123125783e-17
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        0.49999999999999994
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.5
+      ],
+      "expected_float": [
+        0.0,
+        0.5
+      ],
+      "expected_fraction": [
+        "0",
+        "2854495385411919806760569842602209276484617535/5708990770823839524233143877797980545530986496"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        -0.5
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 3,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0,
+        5.551115123125783e-17
+      ],
+      "scenario": "unequal-two-river-normal-masses",
+      "summed_prefix": [
+        0.0,
+        0.49999999999999994
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "expected_float": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "expected_fraction": [
+        "2530028166341382757183532056525068072163833588444764693113893937376526801276661186472968910973751657334697274381655100403771001291245281972905380912522662061735296516147248113281668817687741195243074061015997242750788251889624010313668259635310859856405715796709954653522065390500555366220652025416161986080956327975518588894680525472558702555483469426943543064074195177469644609233500167881154024622785663870320884771479615201186595137551201499326126860617996291623493316824574858098574117456571836251298068898058345064467353097230901949457973444743844766027819138421409347636182484357029044858139934075601114328247552062078844928/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179",
+        "7590084499024150083332020667615825093796668601435052261488037784898946851281986060707216782315325369614228135066318703423721332336298391873585706865610273377922307570132957203750539436785938830488340048492379874055526136558377808435248191981387807905236832358402044891401053596362932283538340458245258050966211561619718144/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "matched": 0,
+      "physical_worlds": 20,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        -2.7755575615628914e-17
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        5e+307,
+        0.15000000000000008
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "expected_float": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "expected_fraction": [
+        "2530028166341382757183532056525068072163833588444764693113893937376526801276661186472968910973751657334697274381655100403771001291245281972905380912522662061735296516147248113281668817687741195243074061015997242750788251889624010313668259635310859856405715796709954653522065390500555366220652025416161986081158730228825899513033020819277619862533026076707685182431096535497074948801495514773114408324222788365507962635796427112576403874936994976193140260558734801545010741101141219463041025198665052592537836576531090133029360580655594648076076800393004322368629194933768117188515898972259547390326261584247120591555259803172339712/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179",
+        "7590084499024150083332020667615825093796668601435052261488037784898946851281986060707216782315325369614228135066318703423721332336298391873585706865610273377922307570132957203750539436785938830488340048492379874055526136558377808435248191981387807905236832358402044891401053596362932283538340458245258050966818768379640076/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        5e+307,
+        0.15000000000000005
+      ],
+      "matched": 4,
+      "physical_worlds": 20,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        -2.7755575615628914e-17
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        5e+307,
+        0.15000000000000008
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "expected_float": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "expected_fraction": [
+        "-2530028166341382757183532056525068072163833588444764693113893937376526801276661186472968910973751657334697274381655100403771001291245281972905380912522662061735296516147248113281668817687741195243074061015997242750788251889624010313668259635310859856405715796709954653522065390500555366220652025416161986080956327975518588894680525472558702555483469426943543064074195177469644609233500167881154024622785663870320884771479615201186595137551201499326126860617996291623493316824574858098574117456571836251298068898058345064467353097230901949457973444743844766027819138421409347636182484357029044858139934075601114328247552062078844928/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179",
+        "-7590084499024150083332020667615825093796668601435052261488037784898946851281986060707216782315325369614228135066318703423721332336298391873585706865610273377922307570132957203750539436785938830488340048492379874055526136558377808435248191981387807905236832358402044891401053596362932283538340458245258050966211561619718144/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "matched": 0,
+      "physical_worlds": 20,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        2.7755575615628914e-17
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        -5e+307,
+        -0.15000000000000008
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "expected_float": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "expected_fraction": [
+        "-2530028166341382757183532056525068072163833588444764693113893937376526801276661186472968910973751657334697274381655100403771001291245281972905380912522662061735296516147248113281668817687741195243074061015997242750788251889624010313668259635310859856405715796709954653522065390500555366220652025416161986081158730228825899513033020819277619862533026076707685182431096535497074948801495514773114408324222788365507962635796427112576403874936994976193140260558734801545010741101141219463041025198665052592537836576531090133029360580655594648076076800393004322368629194933768117188515898972259547390326261584247120591555259803172339712/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179",
+        "-7590084499024150083332020667615825093796668601435052261488037784898946851281986060707216782315325369614228135066318703423721332336298391873585706865610273377922307570132957203750539436785938830488340048492379874055526136558377808435248191981387807905236832358402044891401053596362932283538340458245258050966818768379640076/50600563326827654588123836679729326762389162441035529589225339506857584891998836722990095925359281123796769466079202977847452184346448369216753349985184627480379356069141590341116726935523304085309941919618186267140501870856173174654525838912289889085202514128089692388083353653807625633046581877161501565827078736963354179"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        -5e+307,
+        -0.15000000000000005
+      ],
+      "matched": 4,
+      "physical_worlds": 20,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        2.7755575615628914e-17
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        -5e+307,
+        -0.15000000000000008
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -5e+307
+      ],
+      "expected_float": [
+        -5e+307
+      ],
+      "expected_fraction": [
+        "-50000000000000000548953181472022770870246154838655923168405341451578792702455745768581664489247344449530624834860586257805795141871570044164153504599073023015635832251466513592848744849794279521669192233082500589213448813106472588814045597893353729061391985085892207552645901446603936636487442857715111559168"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        -5e+307
+      ],
+      "matched": 0,
+      "physical_worlds": 20,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        -5e+307
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        -5e+307
+      ],
+      "expected_float": [
+        -5e+307
+      ],
+      "expected_fraction": [
+        "-50000000000000000548953181472022770870246154838655923168405341451578792702455745768581664489247344449530624834860586257805795141871570044164153504599073023015635832251466513592848744849794279521669192233082500589213448813106472588814045597893353729061391985085892207552645901446603936636487442857715111559172"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        -5e+307
+      ],
+      "matched": 4,
+      "physical_worlds": 20,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        -5e+307
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        5e+307
+      ],
+      "expected_float": [
+        5e+307
+      ],
+      "expected_fraction": [
+        "50000000000000000548953181472022770870246154838655923168405341451578792702455745768581664489247344449530624834860586257805795141871570044164153504599073023015635832251466513592848744849794279521669192233082500589213448813106472588814045597893353729061391985085892207552645901446603936636487442857715111559168"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        5e+307
+      ],
+      "matched": 0,
+      "physical_worlds": 20,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        5e+307
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        5e+307
+      ],
+      "expected_float": [
+        5e+307
+      ],
+      "expected_fraction": [
+        "50000000000000000548953181472022770870246154838655923168405341451578792702455745768581664489247344449530624834860586257805795141871570044164153504599073023015635832251466513592848744849794279521669192233082500589213448813106472588814045597893353729061391985085892207552645901446603936636487442857715111559172"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        5e+307
+      ],
+      "matched": 4,
+      "physical_worlds": 20,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "normal-joint-subnormal-normalized-product",
+      "summed_prefix": [
+        5e+307
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.0
+      ],
+      "expected_float": [
+        0.0,
+        0.0
+      ],
+      "expected_fraction": [
+        "0",
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0,
+        0.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.0
+      ],
+      "expected_float": [
+        0.0,
+        0.0
+      ],
+      "expected_fraction": [
+        "0",
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0,
+        0.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.0
+      ],
+      "expected_float": [
+        0.0,
+        0.0
+      ],
+      "expected_fraction": [
+        "0",
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0,
+        0.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0,
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "current_root": [
+        0.0,
+        0.0
+      ],
+      "expected_float": [
+        0.0,
+        0.0
+      ],
+      "expected_fraction": [
+        "0",
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0,
+        0.0
+      ],
+      "historical_root": [
+        0.0,
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 0,
+      "root_prefix_differences": [
+        0.0,
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0,
+        0.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        0.0
+      ],
+      "expected_float": [
+        0.0
+      ],
+      "expected_fraction": [
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        0.0
+      ],
+      "expected_float": [
+        0.0
+      ],
+      "expected_fraction": [
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0
+      ],
+      "winner": 0
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        0.0
+      ],
+      "expected_float": [
+        0.0
+      ],
+      "expected_fraction": [
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 0,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0
+      ],
+      "winner": 1
+    },
+    {
+      "current_normalized_absolute_errors": [
+        0.0
+      ],
+      "current_physical_differences": [
+        0.0
+      ],
+      "current_root": [
+        0.0
+      ],
+      "expected_float": [
+        0.0
+      ],
+      "expected_fraction": [
+        "0"
+      ],
+      "historical_physical_differences": [
+        0.0
+      ],
+      "historical_root": [
+        0.0
+      ],
+      "matched": 4,
+      "physical_worlds": 1,
+      "player": 1,
+      "root_prefix_differences": [
+        0.0
+      ],
+      "scenario": "true-zero-reach-control",
+      "summed_prefix": [
+        0.0
+      ],
+      "winner": 1
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Forty-eight numerical fold-vector witnesses only. No learned strategy, convergence, speed, allocation or RSS claim. Independent Fraction oracle normalizes the raw supplied binary64 physical-world weights; stable production fallback uses its established binary64 root mass. Nonzero agreement uses the declared relative tolerance with exact zero/nonzero classification, not an exact normalization identity.",
+  "source_sha256": {
+    "benchmarks\\turn-river-quality-v1.json": "772ae0dfb6f76307dce98707782012425e5d6918fb8cb8b1154dd3d3a4f37fbf",
+    "historical/matrix_free_turn.py": "f9e452c324c3df9e9c427fe241f561df070474a18714b4d5333e5c62bdf0ebad",
+    "historical/turn_range_kernel.py": "46f7614ce9dd7f74eb46a06762fbbcf8de9ec0e2ed413c0f68b9b14f4276b920",
+    "pokerlab\\__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab\\analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+    "pokerlab\\cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "pokerlab\\cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+    "pokerlab\\cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+    "pokerlab\\coach_analysis.py": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441",
+    "pokerlab\\coach_conversation.py": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad",
+    "pokerlab\\coach_grounding.py": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e",
+    "pokerlab\\coach_provider.py": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880",
+    "pokerlab\\coach_teaching.py": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6",
+    "pokerlab\\contracts.py": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247",
+    "pokerlab\\current_study.py": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7",
+    "pokerlab\\decision_study.py": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9",
+    "pokerlab\\equilibrium.py": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407",
+    "pokerlab\\equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+    "pokerlab\\explanations.py": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d",
+    "pokerlab\\exploit.py": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7",
+    "pokerlab\\flop_checkdown_solver.py": "a3e40ecd9c653c47359f582d769eebe9b7ee57e3e3ff1c19d9e0607c865d7ae7",
+    "pokerlab\\flop_checkdown_worlds.py": "4d9d35941771b7e793457068c12978d8ecc3f9c3772273d7ebb70f0db5d7483d",
+    "pokerlab\\game.py": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6",
+    "pokerlab\\matrix_free_river.py": "6987405a1112c3ad20be7602880b574f4804434bc6323df69ccf5de708d8f084",
+    "pokerlab\\matrix_free_turn.py": "cde265d231369d2f3761b900a9478b75a045552a7d0e595c7c1140c455d006cf",
+    "pokerlab\\models.py": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66",
+    "pokerlab\\personalities.py": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1",
+    "pokerlab\\planned_cfr.py": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7",
+    "pokerlab\\postflop_solver.py": "dfdca4568e636020d2095c10ae731ba133964be73225f73747cb12c87c31687f",
+    "pokerlab\\practice.py": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd",
+    "pokerlab\\preflop_delayed_cfrplus.py": "3dd745f4a548b0f7fd46a6b02f519be1d98f027eaa37499f03cf8de1135a259e",
+    "pokerlab\\preflop_future_groups.py": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106",
+    "pokerlab\\preflop_private_indices.py": "6d46e31d58f24a979d3881671b4e898bfa23597b1771c160dbbe43c0a47776c1",
+    "pokerlab\\preflop_runout_index.py": "4001b76d6f092c3c441795e1a4fa83fd5ef33d2584ab7aa05ab911a12f92806b",
+    "pokerlab\\preflop_sampled_budget.py": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5",
+    "pokerlab\\preflop_sampled_cfr.py": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47",
+    "pokerlab\\preflop_sampled_storage.py": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150",
+    "pokerlab\\preflop_solver.py": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9",
+    "pokerlab\\preflop_tree.py": "7d57148b0eeba05535e0f2e10eadb8c3c43fdaa9a1d5b7e91f372bc38f164e2c",
+    "pokerlab\\preflop_vector_budget.py": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be",
+    "pokerlab\\public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab\\public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab\\ranked_river.py": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f",
+    "pokerlab\\restricted_solver.py": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9",
+    "pokerlab\\river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+    "pokerlab\\river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+    "pokerlab\\server.py": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813",
+    "pokerlab\\situation_teaching.py": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a",
+    "pokerlab\\solver.py": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d",
+    "pokerlab\\turn_range_kernel.py": "b2e61068135111f7949c20b509d6f4520d8d6de25b0b22cbb383485470d1420d",
+    "pokerlab\\turn_solver.py": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f",
+    "scripts/benchmark_turn_root_reach.py": "0b79b3db7bf5c71a7f3c6822e4fcf44f894e4cd989610be9f2ac453d3a861092",
+    "scripts/validate_turn_reach_parity.py": "985b1b2d37130a8b7547ab7a6368ad02769d29a5f8febb819fe5daea80bd33bb",
+    "scripts\\benchmark_turn_river_independent.py": "5e5e062083a5fbbed0c7e0933a6105dcf7c59fc4d8ac6142072231fae109ebd5",
+    "scripts\\preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+    "scripts\\turn_river_validation.py": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1"
+  }
+}

@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Stable turn root-fold products at normal branch mass
+
+A rare exact binary-rational pair sum now preserves representable fold values
+when positive weighted reach, joint mass or normalized mass becomes
+zero/subnormal on the ordinary root path. The normal-mass regression loses
+1.0 under a payoff-scale transformation in the old kernel; the correction
+agrees exactly with the independent one-world answer. Pair reservations precede
+all rare conversions/scanning under both shared and separate cumulative caps.
+Integer-width bounds are explicit and make no operation-count or RSS claim.
+
+All 55 focused tests passed. All 48 independent numerical fold-vector witnesses
+equal their independently computed binary64 answers; old output differs in 32,
+up to 1.0. All 12 ordinary complete solver payloads and the six previously
+saved exceptional complete profiles remain exactly equal and independently
+replay. Every short-budget ordinary 0.001 benchmark threshold still misses. Shared ranked
+river, CFR and earlier-street code remain unchanged. See
+[design, resource limits and reproducible evidence](turn-root-reach-stability.md).
+
 ## Stable conditioned turn masses and fold utilities
 
 The isolated matrix-free turn path now preserves representable selected games
