@@ -25,6 +25,11 @@ raises. Inspect `convergence.stop_reason` rather than assuming the requested
 target was achieved. Larger trees and iteration caps can be refused by the
 separate admission model.
 
+The isolated adapter accepts integer iteration requests from 10 through
+100,000 under those same resource limits; the default remains 1,000. The
+shared materialized/postflop solver retains its separate 10,000 ceiling. See
+[longer-budget river evidence and limitations](river-long-budget.md).
+
 ## Mathematical boundary
 
 For compatible holdings i,j, the joint chance weight is
