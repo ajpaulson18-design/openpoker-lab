@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-push-fold-v1",
+  "phase": "independent-full-board-oracle",
+  "provenance": {
+    "git_revision": "151c35a6739251bb280b5be4373c35a05daa2950",
+    "git_status": [],
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "source_sha256": {
+      "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+      "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+      "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/preflop_full_board_equity.py": "e5a21293186963702cc61199d7df7af1517698339db10b2e88cbcf907c4f9a3c",
+      "pokerlab/preflop_push_fold.py": "0cf021fd39aed332be747114cd9900c81a9246df7532da30109ec45a468df91e",
+      "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+      "scripts/preflop_push_fold_validation.py": "eb5b7fd66d2a4b69e682ed6f89247c8b465a152809ed36b7428dea40c2f3ede7",
+      "scripts/benchmark_preflop_push_fold.py": "2d2dced6b7699b6e1348a960105c6c201abe1e305ecdd9ae9547ac1c6e78e3a6",
+      "benchmarks/preflop-push-fold-v1.json": "45c0b857d552ec01d6146abbd8c251b734f7823dae8d428c3c0c56b1fc3f3724"
+    },
+    "created_utc": "2026-10-15T02:26:42.847715+00:00"
+  },
+  "private_pair": [
+    "AdAs",
+    "KdKs"
+  ],
+  "pair_probability_fraction": [
+    8,
+    13
+  ],
+  "elapsed_seconds": 3467.52089059999,
+  "counts": {
+    "sb_hand": "AdAs",
+    "bb_hand": "KdKs",
+    "wins": 1410336,
+    "ties": 9308,
+    "losses": 292660,
+    "boards": 1712304,
+    "pair_probability": 0.6153846153846154
+  },
+  "artifact_sha256": "599c1360f321d845b335b798468c3c6af216951663e87b6812ecb56321895b40"
+}

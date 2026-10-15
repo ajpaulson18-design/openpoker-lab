@@ -1,0 +1,5341 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-push-fold-v1",
+  "phase": "production",
+  "provenance": {
+    "git_revision": "4650d6591c88c25f1a04c28fcf4960efc6ec33de",
+    "git_status": [],
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "source_sha256": {
+      "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+      "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+      "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/preflop_full_board_equity.py": "e5a21293186963702cc61199d7df7af1517698339db10b2e88cbcf907c4f9a3c",
+      "pokerlab/preflop_push_fold.py": "0cf021fd39aed332be747114cd9900c81a9246df7532da30109ec45a468df91e",
+      "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+      "scripts/preflop_push_fold_validation.py": "eb5b7fd66d2a4b69e682ed6f89247c8b465a152809ed36b7428dea40c2f3ede7",
+      "scripts/benchmark_preflop_push_fold.py": "2d2dced6b7699b6e1348a960105c6c201abe1e305ecdd9ae9547ac1c6e78e3a6",
+      "benchmarks/preflop-push-fold-v1.json": "45c0b857d552ec01d6146abbd8c251b734f7823dae8d428c3c0c56b1fc3f3724"
+    },
+    "created_utc": "2026-10-15T01:28:36.612203+00:00"
+  },
+  "config": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-push-fold-v1",
+    "sb_range": "AsAd:1,QsQd:0.5",
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "configs": [
+      {
+        "id": "equal-two-bb",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      },
+      {
+        "id": "sb-excess-refund",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          3,
+          2
+        ]
+      },
+      {
+        "id": "bb-excess-stack",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          2,
+          3
+        ]
+      }
+    ],
+    "algorithms": [
+      "vanilla",
+      "dcfr",
+      "cfrplus"
+    ],
+    "iterations": [
+      100,
+      1000,
+      3000
+    ],
+    "final_exploitability_chip_limit": 0.005,
+    "final_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "scope": "Full legal five-card board deck for three compatible weighted private pairs in a finite heads-up SB fold/shove and BB fold/call game. No selected boards, limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium. Fixed finite-fixture accuracy gates are empirical regression requirements, not convergence guarantees for other ranges or stacks."
+  },
+  "preparation_seconds": 488.1612150000292,
+  "preparation_plus_first_solve_seconds": 488.2060183000285,
+  "pair_counts": [
+    {
+      "sb_hand": "AdAs",
+      "bb_hand": "KdKs",
+      "wins": 1410336,
+      "ties": 9308,
+      "losses": 292660,
+      "board_outcomes": 1712304,
+      "pair_probability": 0.6153846153846154
+    },
+    {
+      "sb_hand": "QdQs",
+      "bb_hand": "AsKh",
+      "wins": 968267,
+      "ties": 7226,
+      "losses": 736811,
+      "board_outcomes": 1712304,
+      "pair_probability": 0.07692307692307693
+    },
+    {
+      "sb_hand": "QdQs",
+      "bb_hand": "KdKs",
+      "wins": 292846,
+      "ties": 9336,
+      "losses": 1410122,
+      "board_outcomes": 1712304,
+      "pair_probability": 0.3076923076923077
+    }
+  ],
+  "preparation_budget": {
+    "candidate_pairs": 4,
+    "compatible_pairs": 3,
+    "boards_per_pair": 1712304,
+    "physical_worlds_upper_bound": 5136912,
+    "board_evaluations_upper_bound": 5136912,
+    "rank_calls_upper_bound": 10273824,
+    "categorical_rows_upper_bound": 12,
+    "limits": {
+      "candidate_pairs": 4096,
+      "compatible_pairs": 4,
+      "board_evaluations": 6849216,
+      "rank_calls": 13698432,
+      "categorical_rows": 12
+    },
+    "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+  },
+  "prepared_solve_traced_peak_bytes": 19437,
+  "memory_scope": "One complete 3,000-iteration CFR+ prepared solve with diagnostics and JSON serialization. Excludes one-time full-board equity preparation; Python traced allocation peak, not process RSS.",
+  "timing_scope": "Single measurements, no backend comparison or speedup claim. Preparation enumerates every board once. Prepared solve timings include training, exact production diagnostics and JSON serialization; they exclude preparation. First composed-call elapsed includes preparation and the first 100-iteration vanilla solve.",
+  "results": [
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.03819379996275529,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0050000000000000044
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7010169603784306
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.29898303962156947
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.005000000000000011
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.18959191767426867
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.8104080823257312
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5539866463427994,
+        "value_bb": -0.5539866463427994,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037212,
+        "nash_conv": 0.02625476893375933,
+        "exploitability": 0.013127384466879666,
+        "sb_best_response_gain": 0.02142926709468118,
+        "bb_best_response_gain": 0.00482550183907815,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.1880407999851741,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0005000000000000063
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7465240293347244
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.25347597066527555
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0004999999999999883
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2622073331224791
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7377926668775209
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5606162269751241,
+        "value_bb": -0.5606162269751241,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465439,
+        "nash_conv": 0.0071412155779042585,
+        "exploitability": 0.0035706077889521293,
+        "sb_best_response_gain": 0.0011495769493240493,
+        "bb_best_response_gain": 0.005991638628580209,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7246353999944404,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667634
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7304274311661585
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26957256883384145
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667433
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.24929696167385373
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7507030383261463
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021284,
+        "nash_conv": 0.004119489217347616,
+        "exploitability": 0.002059744608673808,
+        "sb_best_response_gain": 0.0033087122874585484,
+        "bb_best_response_gain": 0.0008107769298890677,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.027355699974577874,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4777597162701337e-06
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.6893051015185904
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.3106948984814096
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.477759716270133e-06
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.21912649804707887
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7808735019529212
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5596023883062573,
+        "value_bb": -0.5596023883062573,
+        "sb_best_response_value": 0.5698640584488132,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707748,
+        "exploitability": 0.008678097605353874,
+        "sb_best_response_gain": 0.010261670142555857,
+        "bb_best_response_gain": 0.007094525068151891,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.31312959996284917,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4977526221904018e-09
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7271186120666893
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.2728813879333107
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.497752622190403e-09
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26355749985112437
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7364425001488757
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.0018771404808805014,
+        "exploitability": 0.0009385702404402507,
+        "sb_best_response_gain": 0.00041241377942580204,
+        "bb_best_response_gain": 0.0014647267014546994,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7582399999955669,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.55277885763902e-11
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.727493003053576
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.27250699694642405
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.552778857639022e-11
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26597493891355584
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7340250610864442
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611129487422217,
+        "value_bb": -0.5611129487422217,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974501447,
+        "exploitability": 0.0007776805987250723,
+        "sb_best_response_gain": 0.0001478237554423112,
+        "bb_best_response_gain": 0.0014075374420078335,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.020741600019391626,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7294529078351472
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.2705470921648529
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2620951339432557
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7379048660567443
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610974116743652,
+        "value_bb": -0.5610974116743652,
+        "sb_best_response_value": 0.561786894915586,
+        "bb_best_response_value": -0.5600747244297386,
+        "nash_conv": 0.0017121704858473752,
+        "exploitability": 0.0008560852429236876,
+        "sb_best_response_gain": 0.0006894832412207563,
+        "bb_best_response_gain": 0.0010226872446266189,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.4815914999926463,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7348552984218366
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26514470157816344
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26513733990432575
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7348626600956742
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180445,
+        "nash_conv": 0.00012230723052075732,
+        "exploitability": 6.115361526037866e-05,
+        "sb_best_response_gain": 0.00010363293174131538,
+        "bb_best_response_gain": 1.8674298779441934e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.1240975999971852,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7347174858462526
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26528251415374726
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26560490520334873
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7343950947966513
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611114185842174,
+        "value_bb": -0.5611114185842174,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171449,
+        "nash_conv": 6.0383784025730414e-05,
+        "exploitability": 3.0191892012865207e-05,
+        "sb_best_response_gain": 1.5716116953168324e-05,
+        "bb_best_response_gain": 4.466766707256209e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.022207300004083663,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0050000000000000044
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7010169603784306
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.29898303962156947
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.005000000000000011
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.18959191767426867
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.8104080823257312
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5539866463427994,
+        "value_bb": -0.5539866463427994,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037212,
+        "nash_conv": 0.02625476893375933,
+        "exploitability": 0.013127384466879666,
+        "sb_best_response_gain": 0.02142926709468118,
+        "bb_best_response_gain": 0.00482550183907815,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.2935204000095837,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0005000000000000063
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7465240293347244
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.25347597066527555
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0004999999999999883
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2622073331224791
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7377926668775209
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5606162269751241,
+        "value_bb": -0.5606162269751241,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465439,
+        "nash_conv": 0.0071412155779042585,
+        "exploitability": 0.0035706077889521293,
+        "sb_best_response_gain": 0.0011495769493240493,
+        "bb_best_response_gain": 0.005991638628580209,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.6855257000424899,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667634
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7304274311661585
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.26957256883384145
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667433
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.24929696167385373
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7507030383261463
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021284,
+        "nash_conv": 0.004119489217347616,
+        "exploitability": 0.002059744608673808,
+        "sb_best_response_gain": 0.0033087122874585484,
+        "bb_best_response_gain": 0.0008107769298890677,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.03193699999246746,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4777597162701337e-06
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.6893051015185904
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.3106948984814096
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.477759716270133e-06
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.21912649804707887
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7808735019529212
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5596023883062573,
+        "value_bb": -0.5596023883062573,
+        "sb_best_response_value": 0.5698640584488132,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707748,
+        "exploitability": 0.008678097605353874,
+        "sb_best_response_gain": 0.010261670142555857,
+        "bb_best_response_gain": 0.007094525068151891,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.28945329994894564,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4977526221904018e-09
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7271186120666893
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.2728813879333107
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.497752622190403e-09
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26355749985112437
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7364425001488757
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.0018771404808805014,
+        "exploitability": 0.0009385702404402507,
+        "sb_best_response_gain": 0.00041241377942580204,
+        "bb_best_response_gain": 0.0014647267014546994,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.6185975999687798,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.55277885763902e-11
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.727493003053576
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.27250699694642405
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.552778857639022e-11
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26597493891355584
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7340250610864442
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611129487422217,
+        "value_bb": -0.5611129487422217,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974501447,
+        "exploitability": 0.0007776805987250723,
+        "sb_best_response_gain": 0.0001478237554423112,
+        "bb_best_response_gain": 0.0014075374420078335,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.032850800023879856,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7294529078351472
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.2705470921648529
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2620951339432557
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7379048660567443
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610974116743652,
+        "value_bb": -0.5610974116743652,
+        "sb_best_response_value": 0.561786894915586,
+        "bb_best_response_value": -0.5600747244297386,
+        "nash_conv": 0.0017121704858473752,
+        "exploitability": 0.0008560852429236876,
+        "sb_best_response_gain": 0.0006894832412207563,
+        "bb_best_response_gain": 0.0010226872446266189,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.3550715000019409,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7348552984218366
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.26514470157816344
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26513733990432575
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7348626600956742
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180445,
+        "nash_conv": 0.00012230723052075732,
+        "exploitability": 6.115361526037866e-05,
+        "sb_best_response_gain": 0.00010363293174131538,
+        "bb_best_response_gain": 1.8674298779441934e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.0493961000465788,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7347174858462526
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 0.26528251415374726
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26560490520334873
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7343950947966513
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611114185842174,
+        "value_bb": -0.5611114185842174,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171449,
+        "nash_conv": 6.0383784025730414e-05,
+        "exploitability": 3.0191892012865207e-05,
+        "sb_best_response_gain": 1.5716116953168324e-05,
+        "bb_best_response_gain": 4.466766707256209e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.012729700014460832,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0050000000000000044
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7010169603784306
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.29898303962156947
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.005000000000000011
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.18959191767426867
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.8104080823257312
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5539866463427994,
+        "value_bb": -0.5539866463427994,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037212,
+        "nash_conv": 0.02625476893375933,
+        "exploitability": 0.013127384466879666,
+        "sb_best_response_gain": 0.02142926709468118,
+        "bb_best_response_gain": 0.00482550183907815,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.3110749999759719,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0005000000000000063
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7465240293347244
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.25347597066527555
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0004999999999999883
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9995
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2622073331224791
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7377926668775209
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5606162269751241,
+        "value_bb": -0.5606162269751241,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465439,
+        "nash_conv": 0.0071412155779042585,
+        "exploitability": 0.0035706077889521293,
+        "sb_best_response_gain": 0.0011495769493240493,
+        "bb_best_response_gain": 0.005991638628580209,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.265664000005927,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "vanilla",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "vanilla",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667634
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7304274311661585
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26957256883384145
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.00016666666666667433
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9998333333333332
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.24929696167385373
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7507030383261463
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021284,
+        "nash_conv": 0.004119489217347616,
+        "exploitability": 0.002059744608673808,
+        "sb_best_response_gain": 0.0033087122874585484,
+        "bb_best_response_gain": 0.0008107769298890677,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.023908199975267053,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4777597162701337e-06
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.6893051015185904
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.3106948984814096
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.477759716270133e-06
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999985222402837
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.21912649804707887
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7808735019529212
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5596023883062573,
+        "value_bb": -0.5596023883062573,
+        "sb_best_response_value": 0.5698640584488132,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707748,
+        "exploitability": 0.008678097605353874,
+        "sb_best_response_gain": 0.010261670142555857,
+        "bb_best_response_gain": 0.007094525068151891,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.18188410002039745,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.4977526221904018e-09
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7271186120666893
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.2728813879333107
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.497752622190403e-09
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999985022473
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26355749985112437
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7364425001488757
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.0018771404808805014,
+        "exploitability": 0.0009385702404402507,
+        "sb_best_response_gain": 0.00041241377942580204,
+        "bb_best_response_gain": 0.0014647267014546994,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7738186999922618,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "dcfr",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "dcfr",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.55277885763902e-11
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.727493003053576
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.27250699694642405
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 5.552778857639022e-11
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.9999999999444722
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26597493891355584
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7340250610864442
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611129487422217,
+        "value_bb": -0.5611129487422217,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974501447,
+        "exploitability": 0.0007776805987250723,
+        "sb_best_response_gain": 0.0001478237554423112,
+        "bb_best_response_gain": 0.0014075374420078335,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.04845400003250688,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 100,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 100,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 2076224,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 330846816,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7294529078351472
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.2705470921648529
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.2620951339432557
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7379048660567443
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5610974116743652,
+        "value_bb": -0.5610974116743652,
+        "sb_best_response_value": 0.561786894915586,
+        "bb_best_response_value": -0.5600747244297386,
+        "nash_conv": 0.0017121704858473752,
+        "exploitability": 0.0008560852429236876,
+        "sb_best_response_gain": 0.0006894832412207563,
+        "bb_best_response_gain": 0.0010226872446266189,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.36412740004016086,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 1000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 1000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 20738624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 349509216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7348552984218366
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26514470157816344
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26513733990432575
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7348626600956742
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180445,
+        "nash_conv": 0.00012230723052075732,
+        "exploitability": 6.115361526037866e-05,
+        "sb_best_response_gain": 0.00010363293174131538,
+        "bb_best_response_gain": 1.8674298779441934e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.3159263000125065,
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7347174858462526
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26528251415374726
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26560490520334873
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7343950947966513
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611114185842174,
+        "value_bb": -0.5611114185842174,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171449,
+        "nash_conv": 6.0383784025730414e-05,
+        "exploitability": 3.0191892012865207e-05,
+        "sb_best_response_gain": 1.5716116953168324e-05,
+        "bb_best_response_gain": 4.466766707256209e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    }
+  ],
+  "artifact_sha256": "5923e8990ea4cb44d1c53be48f51d3b4a971c3e585bb0779ec4dc84a8803db21"
+}

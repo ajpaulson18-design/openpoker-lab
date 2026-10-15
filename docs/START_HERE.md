@@ -54,7 +54,7 @@ The finite heads-up engine now includes bounded preflop models with explicit
 continuation boundaries, plus an isolated fixed-flop game that integrates the
 hidden future deck under forced checkdown. Optional matrix-free river and
 turn-to-river paths have their own admission rules. These are finite abstractions:
-full-deck preflop solving, multiway equilibrium, and unrestricted NLHE remain
+full-deck preflop with later-street betting, multiway equilibrium, and unrestricted NLHE remain
 unsupported. Practice EV is a simplified estimate, not a solve of the live hand.
 Selected runouts define a conditional joint game. Exact chance enumeration is
 not a guarantee that a finite-iteration strategy is equilibrium. Never fill
@@ -67,3 +67,12 @@ relevant decision. Explain supported scope, assumptions, validation evidence and
 unknowns from repository sources alone. Use the [handoff checklist](agents/TASK_PROTOCOL.md)
 and leave unresolved history in the gap register. No provider account or personal
 chat memory is needed to understand these documents.
+
+## Full-board restricted preflop addition
+
+The separate [preflop shove/fold API](preflop-push-fold.md) adds full-deck final-board
+chance to a bounded heads-up SB fold/shove and BB fold/call game, with at most
+four compatible private pairs. Its prepared equity tables can be reused. This
+does not expand the existing selected-outcome preflop API to a full-deck game,
+or add limps, non-all-in raises, later-street betting or multiway equilibrium.
+Read the dedicated specification for work admission and independent evidence.

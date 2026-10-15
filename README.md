@@ -10,6 +10,8 @@ The destination is an opponent-aware poker decision engine. This first release
 connects the pieces end to end while making the supported games and assumptions
 explicit. It does **not** claim to solve unrestricted no-limit Hold'em.
 
+A separate [full-board preflop shove/fold API](docs/preflop-push-fold.md) enumerates every legal final board for up to four compatible private pairs, under a restricted heads-up action model. It supports reusable equity preparation and reports finite-game best-response gaps; broader preflop betting remains bounded to its documented selected outcomes.
+
 ## Project knowledge
 
 New contributors and AI agents: start with [docs/START_HERE.md](docs/START_HERE.md) for product intent, implementation status, architecture, decision history and safe handoffs. Detailed existing specifications remain canonical.
