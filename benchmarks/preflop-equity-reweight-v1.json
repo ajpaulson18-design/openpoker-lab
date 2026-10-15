@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-equity-reweight-v1",
+  "reference_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+  "reference_report": "benchmarks/results/preflop-push-fold-v1.json",
+  "reference_report_git_blob": "f4a4c57dc7ec0d1e544450aa9b9832c090080479",
+  "iterations": 3000,
+  "repeats": 3,
+  "algorithm": "cfrplus",
+  "exploitability_chip_limit": 0.005,
+  "known_value_error_chip_limit": 0.005,
+  "metric_absolute_tolerance": 1e-10,
+  "cases": [
+    {
+      "id": "original-mixed",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      }
+    },
+    {
+      "id": "aa-heavy",
+      "sb_range": "AsAd:1,QsQd:0.0625",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          3,
+          2
+        ]
+      }
+    },
+    {
+      "id": "ak-heavy",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:1,KsKd:0.125",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "subset-strong-with-inactive-hand",
+      "sb_range": "AsAd:1",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      }
+    },
+    {
+      "id": "subset-weak",
+      "sb_range": "QsQd:0.5",
+      "bb_range": "KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      }
+    },
+    {
+      "id": "reordered-mixed",
+      "sb_range": "QsQd:0.5,AsAd:1",
+      "bb_range": "KsKd:1,AsKh:0.25",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      }
+    }
+  ],
+  "scope": "Reuse independently enumerated published pair counts from PR #125. Measure reweight + complete prepared solve + JSON with no ranking or board enumeration. Exact small-game equilibrium witnesses and policy replay check changed priors, pure/mixed regimes, subsets and reorderings. Excludes original table preparation and file loading; no cold-call memory or cross-source speedup claim."
+}

@@ -39,6 +39,12 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 
 ## Completion standard
 
+Full-board preflop equity tables support `reweight_preflop_equities` for new
+weights and covered private-pair subsets. Preserve global collision conditioning,
+unchanged source counts and table immutability, and reject any uncovered compatible
+pair without board enumeration. Validation establishes structure, not physical
+provenance of caller-supplied counts. See [reweighting evidence](docs/preflop-equity-reweight.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

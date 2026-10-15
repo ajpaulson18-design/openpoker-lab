@@ -27,6 +27,12 @@ Vanilla CFR, DCFR and alternating CFR+ reuse the existing independent kernels;
 positive averaging delay is available only with CFR+. Finite-iteration output
 includes value, information-set best responses and exploitability in this game.
 
+## Reweighting a prepared table
+
+Use [`reweight_preflop_equities`](preflop-equity-reweight.md) to apply new
+private-hand weights to already-covered physical pair counts without ranking
+boards again. It permits covered subsets and fully blocked added hands, and
+rejects any newly compatible pair absent from the source table.
 ## Chance, utility and trust boundaries
 
 For each compatible private pair, exactly `C(48,5) = 1,712,304` equally likely
