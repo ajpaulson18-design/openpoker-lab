@@ -6,6 +6,9 @@ from math import comb, isfinite
 _BOARD_COUNT = comb(48, 5)
 _RANKS = "23456789TJQKA"
 _SUITS = "cdhs"
+_MAX_POLICY_DIMENSIONS = (4, 8)
+_MAX_SUPPORT_CANDIDATES = sum(comb(4, size) * comb(8, size)
+                              for size in range(1, 5))
 
 
 class NoEquilibriumWitness(ValueError):
@@ -45,8 +48,8 @@ def _parse_range(expression):
         result[hand] = weight
     if not any(result.values()):
         raise ValueError("Range must contain at least one positive-weight hand")
-    if sum(weight > 0 for weight in result.values()) > 2:
-        raise ValueError("Exact witness supports at most two active hands per player")
+    if sum(weight > 0 for weight in result.values()) > 3:
+        raise ValueError("Exact witness supports at most three active hands per player")
     return result
 
 
@@ -101,13 +104,35 @@ def _solve_square(matrix, rhs):
 
 
 def exact_zero_sum_witness(payoffs):
-    """Find an exact saddle witness by bounded equal-size support enumeration."""
-    matrix = tuple(tuple(Fraction(value) for value in row) for row in payoffs)
-    if not matrix or not matrix[0]:
+    """Find a bounded exact saddle witness for up to a 4-by-8 matrix.
+
+    Search enumerates equal-cardinality supports only (at most 494 support
+    pairs); it is deliberately not a complete solver for arbitrary matrices.
+    """
+    try:
+        row_count = len(payoffs)
+        rows = payoffs
+    except TypeError:
+        rows = tuple(payoffs)
+        row_count = len(rows)
+    if row_count == 0:
         raise ValueError("Payoff matrix must be nonempty")
-    row_count, col_count = len(matrix), len(matrix[0])
-    if row_count > 4 or col_count > 4 or any(len(row) != col_count for row in matrix):
-        raise ValueError("Exact support search is limited to rectangular matrices up to 4x4")
+    try:
+        first_row = rows[0]
+        col_count = len(first_row)
+    except (IndexError, TypeError) as exc:
+        raise ValueError("Payoff matrix must be a nonempty rectangular sequence") from exc
+    if col_count == 0:
+        raise ValueError("Payoff matrix must be nonempty")
+    if (min(row_count, col_count) > _MAX_POLICY_DIMENSIONS[0]
+            or max(row_count, col_count) > _MAX_POLICY_DIMENSIONS[1]):
+        raise ValueError("Exact support search is limited to rectangular matrices up to 4x8")
+    try:
+        if any(len(row) != col_count for row in rows):
+            raise ValueError("Exact support search requires a rectangular matrix")
+    except TypeError as exc:
+        raise ValueError("Exact support search requires a rectangular matrix") from exc
+    matrix = tuple(tuple(Fraction(value) for value in row) for row in rows)
 
     for size in range(1, min(row_count, col_count) + 1):
         for row_support in combinations(range(row_count), size):
@@ -212,8 +237,9 @@ def equilibrium(sb_range, bb_range, config, counts, *, pair_subset=None,
         raise ValueError("No compatible private pairs remain")
     active_hands = tuple(tuple(sorted({pair[player] for pair in pair_weights}))
                          for player in (0, 1))
-    if any(len(hands) > 2 for hands in active_hands):
-        raise ValueError("Exact witness supports at most two active hands per player")
+    hand_counts = tuple(map(len, active_hands))
+    if max(hand_counts) > 3 or min(hand_counts) > 2:
+        raise ValueError("Exact witness supports at most three active hands on one side and two on the other")
 
     counts_by_pair = {}
     for row in counts:
@@ -243,6 +269,12 @@ def equilibrium(sb_range, bb_range, config, counts, *, pair_subset=None,
     sb_hands, bb_hands = active_hands
     row_policies = tuple(product((0, 1), repeat=len(sb_hands)))
     column_policies = tuple(product((0, 1), repeat=len(bb_hands)))
+    # The hand-count guard above guarantees at most a 4x8 or 8x4 matrix.
+    # Keep this assertion immediately before allocation as a regression guard.
+    policy_dimensions = len(row_policies), len(column_policies)
+    if (min(policy_dimensions) > _MAX_POLICY_DIMENSIONS[0]
+            or max(policy_dimensions) > _MAX_POLICY_DIMENSIONS[1]):
+        raise ValueError("Exact witness policy matrix exceeds the bounded 4x8 limit")
     sb_index = {hand: index for index, hand in enumerate(sb_hands)}
     bb_index = {hand: index for index, hand in enumerate(bb_hands)}
 
@@ -276,6 +308,17 @@ def equilibrium(sb_range, bb_range, config, counts, *, pair_subset=None,
                            if policy[hand_index] == 1), Fraction())
             behavioral[player, "".join(hand)] = nonfold
 
+    search_limit = {"row_policies": len(row_policies),
+                    "column_policies": len(column_policies)}
+    if max(hand_counts) <= 2:
+        # Preserve the original metadata shape for all pre-extension 2x2 cases.
+        search_limit["max_active_hands_per_player"] = 2
+    else:
+        search_limit["active_hands_by_player"] = list(hand_counts)
+        search_limit["max_active_hands_on_larger_side"] = 3
+        search_limit["max_active_hands_on_smaller_side"] = 2
+        search_limit["max_support_candidates"] = _MAX_SUPPORT_CANDIDATES
+
     return {
         "value_sb_fraction": [value.numerator, value.denominator],
         "behavioral_probabilities": behavioral,
@@ -301,8 +344,6 @@ def equilibrium(sb_range, bb_range, config, counts, *, pair_subset=None,
         },
         "pure_policy_payoff_matrix": tuple(matrix),
         "search_method": witness["search_method"],
-        "search_limit": {"row_policies": len(row_policies),
-                         "column_policies": len(column_policies),
-                         "max_active_hands_per_player": 2},
+        "search_limit": search_limit,
     }
 

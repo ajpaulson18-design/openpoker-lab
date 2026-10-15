@@ -45,6 +45,12 @@ unchanged source counts and table immutability, and reject any uncovered compati
 pair without board enumeration. Validation establishes structure, not physical
 provenance of caller-supplied counts. See [reweighting evidence](docs/preflop-equity-reweight.md).
 
+Opt-in `remap_preflop_equities_by_suit` reuses counts through one joint global
+suit permutation of an ordered SB/BB pair. Preserve relative suits, role order,
+source-orbit consistency, current admission caps and literal reweight behavior.
+Record source/target endpoints and the full suit bijection; structural validation
+does not authenticate counts. See [suit transfer](docs/preflop-suit-remap.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

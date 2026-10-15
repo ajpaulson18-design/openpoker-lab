@@ -6,6 +6,10 @@ reusing an existing immutable `FullBoardEquities` table. It does not rank cards
 or enumerate boards. The operation returns a new validated table and leaves the
 source table and its hand-keyed win/tie/loss counts unchanged.
 
+For explicit transfer to globally suit-permuted private pairs, see the separate
+[suit-remap API](preflop-suit-remap.md). Literal reweighting keeps its existing
+covered-pair requirement.
+
 ```python
 from pokerlab.preflop_push_fold import (
     prepare_preflop_equities,
