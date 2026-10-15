@@ -909,3 +909,22 @@ a separate complete prepared-call trace peaked at 19,437 Python bytes and
 excludes equity preparation/RSS. No universal speed or full-call memory claim
 follows. All 773 local regressions passed; bounded Luna reviews and the final
 GitHub checks accompany the PR. See [scope, all results, provenance and limits](preflop-push-fold.md).
+
+## Reuse full-board preflop counts under changed ranges
+
+`reweight_preflop_equities` preserves immutable hand-pair W/T/L counts while
+rebuilding exact globally conditioned priors and categorical masses. Covered
+subsets, reordered hands and newly listed fully blocked hands are accepted;
+uncovered compatible pairs are rejected. Existing solver and resource limits
+remain in place.
+
+At frozen `55cdb2a`, six 3,000-iteration CFR+ cases passed independent exact
+small-game equilibrium and own-hand best-response replay. Changed ranges reach
+distinct mixed/pure regimes; maximum production/replay scalar disagreement is
+1.111e-16 chips. All final exploitability/known-value errors pass the declared
+0.005-chip gates. Three complete warm-call medians range from 0.332 to 0.908
+seconds, with ranking/enumeration disabled. A separate call trace peaks at
+22,621 Python bytes excluding the source table, original preparation and RSS.
+The original physical counts remain pinned to five verified PR #125 Git blobs;
+this run adds no physical pair coverage or cold-call speed comparison.
+See [API, all cases, provenance and measured limits](preflop-equity-reweight.md).

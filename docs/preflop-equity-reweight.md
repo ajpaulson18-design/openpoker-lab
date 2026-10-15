@@ -67,9 +67,46 @@ is checked with a small exact normal-form equilibrium witness (up to two active
 hands per player) and independent policy replay. This is a bounded fixture; it
 is not a full-range equilibrium or general linear-programming result.
 
-Numeric reweight benchmark results are pending the lead's final report. No
-cross-source speedup or RSS claim is made. The benchmark excludes original
-full-board table preparation and loading the historical evidence files.
+The [measured report](../benchmarks/results/preflop-equity-reweight-v1.json)
+passed all six cases at frozen source
+`55cdb2acc22c060fdce41922fd3779691cb7fa1d` on Python 3.12.14 / Windows 10.
+The working tree was clean and all 16 source/config hashes stayed unchanged.
+Each complete warm call includes reweighting, training, exact production
+diagnostics and JSON serialization. Independent replay and witness checks sit
+outside the timings; the table below gives medians of three calls.
+
+| Case | Exploitability (chips) | Known-value error (chips) | Warm call (seconds) |
+| --- | ---: | ---: | ---: |
+| Original mixed | 3.0191892e-5 | 1.40477496e-8 | 0.834515 |
+| AA-heavy | 0 | 0 | 0.808774 |
+| AK-heavy | 0 | 0 | 0.854492 |
+| Strong subset, inactive blocked hand | 0 | 0 | 0.331628 |
+| Weak subset | 1.21160612e-7 | 2.42321223e-7 | 0.376495 |
+| Reordered mixed | 3.0191892e-5 | 1.40477496e-8 | 0.907765 |
+
+The exact AA-heavy witness shoves both SB hands and calls only AK; the AK-heavy
+witness shoves both SB hands and calls both BB hands. The original and reordered
+games retain the original rational mixed witness. Strong/weak single-pair values
+are exactly +1 and -0.5 chips. Every returned matrix witness passes exact pure
+unilateral-deviation inequalities and is independently replayed after conversion
+to serialized frequencies; that conversion leaves at most 1.239e-17 chips of
+replayed NashConv. Maximum production/replay scalar disagreement is 1.111e-16.
+All trained results meet both predeclared 0.005-chip gates. Repeated payloads
+are identical within each case, and the source table stays unchanged.
+
+A separate complete warm-call allocation trace peaks at 22,621 Python bytes.
+It excludes the prebuilt reference table, historical-file loading, original
+full-board preparation and RSS. No cross-source speedup claim follows from
+comparing these calls to the historical preparation run. Ranking and enumeration
+are patched to fail throughout these calls, proving that this reuse path performs
+neither operation. These timings and allocation observations are fixture-specific.
+
+The local full suite passed 794 tests in 388.011 seconds; a subsequently added
+fixture-mutation regression passed separately with the three other evidence
+tests. GitHub checks the published source on Python 3.11/3.12/3.13 plus
+frontend/documentation contracts. Luna implemented the bounded reweight and
+independent witness slices and reviewed the integration; the lead ran the tests,
+frozen benchmark and independent certificate replay.
 
 Reweighting is independently implemented with the standard library and the
 project's existing solver. It incorporates no third-party source, dependency or
