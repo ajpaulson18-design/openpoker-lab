@@ -346,7 +346,8 @@ def _is_clean():
 def _atomic_json(path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.name + ".tmp")
-    temp.write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    temp.write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n",
+                    encoding="utf-8", newline="\n")
     temp.replace(path)
 
 

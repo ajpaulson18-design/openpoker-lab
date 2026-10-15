@@ -134,6 +134,9 @@ class WeightedEightHandBenchmarkTests(unittest.TestCase):
             self.assertEqual(checks, [True, True])
             self.assertEqual(len(list(policy_dir.glob('*.json'))), 2)
             self.assertTrue(report.exists())
+            self.assertNotIn(b'\r\n', report.read_bytes())
+            for policy in policy_dir.glob('*.json'):
+                self.assertNotIn(b'\r\n', policy.read_bytes())
 
     def test_fixture_spec_and_independent_blocker_prior_census(self):
         census = benchmark.validate_spec(self.spec)
