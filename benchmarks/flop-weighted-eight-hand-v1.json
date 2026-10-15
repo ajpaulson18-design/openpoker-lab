@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "flop-weighted-eight-hand-v1",
+  "baseline_main": "22b754848d7884eb5f63062b3d4e9c7612b771f1",
+  "algorithm": "cfrplus",
+  "checkpoints": [100, 1000, 4000],
+  "intermediate_timed_repeats": 1,
+  "final_timed_repeats": 3,
+  "allocation_iterations": 4000,
+  "target_padding": 1e-10,
+  "scalar_tolerance": 1e-10,
+  "expected_chance": {
+    "candidate_pairs": 64,
+    "compatible_pairs": 58,
+    "unordered_boards": 57420,
+    "ordered_future_worlds": 114840,
+    "categorical_rows_upper_bound": 174,
+    "compatible_weight_normalizer": "1185/64",
+    "compatible_weight_unit_total": 1185,
+    "oop_marginal_numerators": [264, 144, 64, 210, 84, 180, 203, 36],
+    "ip_marginal_numerators": [198, 288, 136, 66, 84, 180, 203, 30]
+  },
+  "fixtures": [
+    {
+      "id": "weighted-8x8-stack12-raises1",
+      "board": "2c3c4d",
+      "oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+      "ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+      "config": {
+        "pot": 6,
+        "effective_stack": 12,
+        "bet_sizes": [0.5, 1],
+        "raise_sizes": [0.5],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "target_nash_conv": 0.005,
+      "required_4000_admission": true,
+      "required_4000_accuracy": true
+    },
+    {
+      "id": "weighted-8x8-stack24-raises2",
+      "board": "2c3c4d",
+      "oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+      "ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+      "config": {
+        "pot": 6,
+        "effective_stack": 24,
+        "bet_sizes": [0.5, 1],
+        "raise_sizes": [0.5],
+        "max_raises": 2,
+        "include_all_in": true
+      },
+      "target_nash_conv": 0.005,
+      "required_4000_admission": true,
+      "required_4000_accuracy": true,
+      "required_action_coverage": [
+        "oop-lead-bet-ip-raise-oop-reraise",
+        "oop-check-ip-bet-oop-checkraise-ip-reraise"
+      ]
+    }
+  ],
+  "gate": "All six fixture/checkpoint preflights complete before any world ranking or training. The stack-12 fixture must pass its full 4,000-iteration preflight and accuracy target. Resource-cap rejections are retained with exact reason and census and never trigger fallback or fixture/limit changes. For any admitted 4,000-iteration fixture, every measured final repeat must meet NashConv + 1e-10 <= 0.005 and improve the first-checkpoint gap; misses are recorded as failures. Independently replay every measured profile's ordered future outcomes, physical pair priors, action amounts/targets, visible-information values and legal best responses within 1e-10. The stack-24 fixture additionally requires both declared non-all-in multi-raise action sequences when its 4,000-iteration solve is admitted. Complete-call payloads must be deterministic at repeated final checkpoints.",
+  "model_limits": "Heads-up fixed-flop finite betting tree with all 58 compatible pairs from the specified 8x8 physical combo ranges and the complete hidden future deck (1,980 ordered turn/river outcomes per pair), followed by forced checkdown. No later-street betting, preflop, rake or multiway equilibrium.",
+  "provenance": "Independently developed benchmark using existing OpenPoker kernels and an independent ordered-future/best-five numeric-rule replay. TexasSolver's public console README is configuration-shape inspiration only: https://github.com/bupticybee/TexasSolver/tree/console. This is a different forced-checkdown game abstraction and is not an equivalent-game comparison, runtime comparison, or accuracy comparison. No third-party source or dependencies are incorporated."
+}

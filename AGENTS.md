@@ -58,6 +58,13 @@ guard, unchanged training/diagnostic bounds, full requested iterations and
 500-million ceiling. Validate tables and reject before tree/training allocation;
 logical entries are not CPU, allocation or RSS bounds. See [prepared admission](docs/preflop-prepared-budget.md).
 
+The [weighted eight-hand flop matrix](docs/flop-weighted-eight-hand.md) uses
+the direct fixed-flop API with forced future checkdown. Keep all six no-ranking
+preflights ahead of oracle/training work, exact blocker-conditioned pair support,
+the unchanged admission limits, independent policy replay and explicit flop
+re-raise histories. Preserve every rejection/target miss and publish generated
+policy artifacts only after the clean-source verification.
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

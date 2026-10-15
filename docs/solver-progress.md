@@ -973,3 +973,20 @@ vanilla/DCFR/CFR+. A separate complete 10,000-iteration CFR+ trace peaks at
 24,251 Python bytes excluding the source table, original preparation and RSS.
 This permits longer warm experiments and does not accelerate the kernels or
 expand the betting model. All 823 local tests pass; see [scope, census and every checkpoint](preflop-prepared-budget.md).
+
+## Broader weighted fixed-flop range and raise coverage
+
+At frozen `2c6c858`, the existing direct-flop solver passed independently
+enumerated hidden-board policy and legal best-response replay for eight weighted
+hands per player: 58 compatible pairs and 114,840 ordered future worlds. Both
+one-raise and two-raise flop trees meet the 0.005-chip NashConv gate at 4,000
+CFR+ iterations, with measured gaps 0.0000143935 and 0.000104911 chips. Both
+100-iteration points miss and remain recorded. The deeper tree exposes both a
+non-all-in bet/raise/re-raise and a check/bet/check-raise/re-raise line.
+
+Complete-call medians including ranking and JSON are 12.855 and 17.885 seconds;
+separate full 4,000-iteration Python allocation traces peak at 294,858 and 418,715
+bytes, not RSS. This slice adds fixture, benchmark and regression evidence;
+production solver source and API remain unchanged. Future cards are integrated
+exactly but forced to check down; later-street betting and full ranges remain
+outside this result. See [all checkpoints, provenance and limits](flop-weighted-eight-hand.md).

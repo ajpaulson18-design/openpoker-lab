@@ -1,0 +1,6963 @@
+{
+  "solver_version": "direct-flop-checkdown-v1",
+  "strategy_schema": "postflop-strategy-v1",
+  "algorithm": "cfrplus",
+  "execution_backend": "public-batched-python",
+  "board": [
+    "2c",
+    "3c",
+    "4d"
+  ],
+  "config": {
+    "pot": 6.0,
+    "effective_stack": 24.0,
+    "bet_sizes": [
+      0.5,
+      1.0
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 2,
+    "include_all_in": true
+  },
+  "iterations": 4000,
+  "runout_mode": "full-future-deck",
+  "postflop_scope": "flop-checkdown",
+  "compatible_pairs": 58,
+  "physical_worlds": 114840,
+  "training_world_rows": 164,
+  "info_sets": 176,
+  "public_nodes": 22,
+  "public_states": 63,
+  "terminal_nodes": 41,
+  "work_budget": {
+    "budget_version": "direct-flop-checkdown-budget-v1",
+    "vector_upper_bound": {
+      "budget_version": "preflop-public-vector-budget-v1",
+      "world_count": 174,
+      "iterations": 4000,
+      "algorithm": "cfrplus",
+      "hand_counts": [
+        8,
+        8
+      ],
+      "public_prefixes": 1,
+      "prefix_edges": 58,
+      "prefix_edge_limit": 250000,
+      "dense_prefix_slots": 16,
+      "dense_prefix_slot_limit": 2000000,
+      "information_sets": 176,
+      "information_set_action_slots": 496,
+      "information_set_action_slot_limit": 1000000,
+      "decision_nodes": 22,
+      "chance_nodes": 0,
+      "terminal_nodes": 41,
+      "action_edges": 62,
+      "chance_edges": 0,
+      "terminal_prefix_edge_visits": 2378,
+      "diagnostic_missing_policy_lookups": 0,
+      "aggregation_count": 2,
+      "aggregation_loop_entries_upper_bound": 2356,
+      "training_traversals_per_iteration": 3,
+      "visitor_loop_entries_per_traversal_upper_bound": 10228,
+      "training_loop_entries_upper_bound": 125302688,
+      "training_setup_loop_entries_upper_bound": 2688,
+      "diagnostics_loop_entries_upper_bound": 32524,
+      "diagnostics_setup_loop_entries_upper_bound": 1840,
+      "diagnostics_dense_fallback_slot_upper_bound": 0,
+      "diagnostics_uniform_fallback_slot_upper_bound": 0,
+      "total_loop_entries_upper_bound": 125337568,
+      "total_loop_entry_limit": 500000000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+    },
+    "source_admission": {
+      "candidate_pairs": 64,
+      "compatible_pairs": 58,
+      "physical_worlds": 114840,
+      "unordered_boards": 57420,
+      "rank_calls_upper_bound": 114840,
+      "grouped_rows_upper_bound": 174,
+      "candidate_pair_limit": 4096,
+      "compatible_pair_limit": 128,
+      "unordered_board_evaluation_limit": 126720,
+      "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+    },
+    "source_bookkeeping_loop_entries_upper_bound": 3682688,
+    "total_loop_entries_upper_bound": 129020256,
+    "total_loop_entry_limit": 500000000,
+    "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+  },
+  "pair_equities": [
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "KdKs",
+      "wins": 1782,
+      "ties": 48,
+      "losses": 150,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.04050632911392405
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "AhKh",
+      "wins": 1634,
+      "ties": 340,
+      "losses": 6,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0540084388185654
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "7s8s",
+      "wins": 1902,
+      "ties": 16,
+      "losses": 62,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0270042194092827
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "QcQd",
+      "wins": 1698,
+      "ties": 44,
+      "losses": 238,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.01350210970464135
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "5h6h",
+      "wins": 56,
+      "ties": 18,
+      "losses": 1906,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.03375527426160337
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "8d9d",
+      "wins": 1832,
+      "ties": 46,
+      "losses": 102,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.04725738396624472
+    },
+    {
+      "oop_hand": "AdAs",
+      "ip_hand": "JcTc",
+      "wins": 1232,
+      "ties": 24,
+      "losses": 724,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.006751054852320675
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "KdKs",
+      "wins": 30,
+      "ties": 64,
+      "losses": 1886,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.020253164556962026
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "AhKh",
+      "wins": 378,
+      "ties": 56,
+      "losses": 1546,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0270042194092827
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "7s8s",
+      "wins": 1490,
+      "ties": 32,
+      "losses": 458,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.01350210970464135
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "QcQd",
+      "wins": 6,
+      "ties": 60,
+      "losses": 1914,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.006751054852320675
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "AdJd",
+      "wins": 200,
+      "ties": 54,
+      "losses": 1726,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.010126582278481013
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "5h6h",
+      "wins": 0,
+      "ties": 18,
+      "losses": 1962,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.016877637130801686
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "8d9d",
+      "wins": 1404,
+      "ties": 60,
+      "losses": 516,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.02362869198312236
+    },
+    {
+      "oop_hand": "JhQh",
+      "ip_hand": "JcTc",
+      "wins": 1032,
+      "ties": 36,
+      "losses": 912,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0033755274261603376
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "KdKs",
+      "wins": 370,
+      "ties": 0,
+      "losses": 1610,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.010126582278481013
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "AhKh",
+      "wins": 718,
+      "ties": 0,
+      "losses": 1262,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.01350210970464135
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "QcQd",
+      "wins": 350,
+      "ties": 0,
+      "losses": 1630,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0033755274261603376
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "AdJd",
+      "wins": 670,
+      "ties": 0,
+      "losses": 1310,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.005063291139240506
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "5h6h",
+      "wins": 240,
+      "ties": 18,
+      "losses": 1722,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.008438818565400843
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "8d9d",
+      "wins": 670,
+      "ties": 0,
+      "losses": 1310,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.01181434599156118
+    },
+    {
+      "oop_hand": "6s7s",
+      "ip_hand": "JcTc",
+      "wins": 400,
+      "ties": 0,
+      "losses": 1580,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0016877637130801688
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "KdKs",
+      "wins": 724,
+      "ties": 36,
+      "losses": 1220,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.030379746835443037
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "AhKh",
+      "wins": 1026,
+      "ties": 30,
+      "losses": 924,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.04050632911392405
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "7s8s",
+      "wins": 1724,
+      "ties": 18,
+      "losses": 238,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.020253164556962026
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "QcQd",
+      "wins": 614,
+      "ties": 36,
+      "losses": 1330,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.010126582278481013
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "AdJd",
+      "wins": 996,
+      "ties": 28,
+      "losses": 956,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.015189873417721518
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "5h6h",
+      "wins": 720,
+      "ties": 8,
+      "losses": 1252,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.02531645569620253
+    },
+    {
+      "oop_hand": "9cTc",
+      "ip_hand": "8d9d",
+      "wins": 1732,
+      "ties": 32,
+      "losses": 216,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.035443037974683546
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "AhKh",
+      "wins": 216,
+      "ties": 56,
+      "losses": 1708,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.020253164556962026
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "7s8s",
+      "wins": 1490,
+      "ties": 32,
+      "losses": 458,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.010126582278481013
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "AdJd",
+      "wins": 400,
+      "ties": 54,
+      "losses": 1526,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.007594936708860759
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "5h6h",
+      "wins": 0,
+      "ties": 18,
+      "losses": 1962,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.012658227848101266
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "8d9d",
+      "wins": 1422,
+      "ties": 60,
+      "losses": 498,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.017721518987341773
+    },
+    {
+      "oop_hand": "KsQd",
+      "ip_hand": "JcTc",
+      "wins": 882,
+      "ties": 36,
+      "losses": 1062,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.002531645569620253
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "KdKs",
+      "wins": 1896,
+      "ties": 36,
+      "losses": 48,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.02531645569620253
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "AhKh",
+      "wins": 1776,
+      "ties": 204,
+      "losses": 0,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.03375527426160337
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "7s8s",
+      "wins": 1944,
+      "ties": 18,
+      "losses": 18,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.016877637130801686
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "QcQd",
+      "wins": 1896,
+      "ties": 36,
+      "losses": 48,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.008438818565400843
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "AdJd",
+      "wins": 1704,
+      "ties": 186,
+      "losses": 90,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.012658227848101266
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "5h6h",
+      "wins": 720,
+      "ties": 138,
+      "losses": 1122,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.02109704641350211
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "8d9d",
+      "wins": 1858,
+      "ties": 32,
+      "losses": 90,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.029535864978902954
+    },
+    {
+      "oop_hand": "5cAc",
+      "ip_hand": "JcTc",
+      "wins": 1944,
+      "ties": 36,
+      "losses": 0,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.004219409282700422
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "KdKs",
+      "wins": 166,
+      "ties": 64,
+      "losses": 1750,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.035443037974683546
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "AhKh",
+      "wins": 1214,
+      "ties": 56,
+      "losses": 710,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.04725738396624472
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "7s8s",
+      "wins": 1910,
+      "ties": 32,
+      "losses": 38,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.02362869198312236
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "QcQd",
+      "wins": 150,
+      "ties": 60,
+      "losses": 1770,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.01181434599156118
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "AdJd",
+      "wins": 1158,
+      "ties": 54,
+      "losses": 768,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.017721518987341773
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "5h6h",
+      "wins": 56,
+      "ties": 18,
+      "losses": 1906,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.029535864978902954
+    },
+    {
+      "oop_hand": "8d8h",
+      "ip_hand": "JcTc",
+      "wins": 872,
+      "ties": 36,
+      "losses": 1072,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.00590717299578059
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "KdKs",
+      "wins": 166,
+      "ties": 64,
+      "losses": 1750,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.005063291139240506
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "AhKh",
+      "wins": 1214,
+      "ties": 56,
+      "losses": 710,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.006751054852320675
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "7s8s",
+      "wins": 1886,
+      "ties": 32,
+      "losses": 62,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0033755274261603376
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "QcQd",
+      "wins": 150,
+      "ties": 60,
+      "losses": 1770,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0016877637130801688
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "AdJd",
+      "wins": 1146,
+      "ties": 54,
+      "losses": 780,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.002531645569620253
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "5h6h",
+      "wins": 56,
+      "ties": 18,
+      "losses": 1906,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.004219409282700422
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "8d9d",
+      "wins": 1804,
+      "ties": 60,
+      "losses": 116,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.00590717299578059
+    },
+    {
+      "oop_hand": "ThTs",
+      "ip_hand": "JcTc",
+      "wins": 1032,
+      "ties": 36,
+      "losses": 912,
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.0008438818565400844
+    }
+  ],
+  "value_oop": 0.34903000223935904,
+  "value_ip": -0.34903000223935904,
+  "oop_best_response_value": 0.34909361991784477,
+  "ip_best_response_value": -0.34898870889447725,
+  "oop_best_response_gain": 6.361767848572786e-05,
+  "ip_best_response_gain": 4.12933448817876e-05,
+  "nash_conv": 0.00010491102336751545,
+  "exploitability": 5.245551168375773e-05,
+  "strategy": [
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.3264518510835549
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 0.6250659411773426
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.00010006811674825605
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.04838213962235428
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.980531454124757
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.019468545875243028
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.39531309423181943
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.604685830043156
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 6.800234387015719e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.957015859327908e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9422699766393362
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.05773002336066378
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6538653790346436
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.32734868238418463
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.01878593858117179
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.7273913947010442
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.2726086052989557
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.019799241712173905
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.9795843806841887
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 6.113167109308039e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0005552459325443205
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9918567612734432
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.00814323872655678
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.07590818816797702
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.924091811832023
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 6.316484993816387e-06
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.9999925843978472
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 5.1727128007896853e-08
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.047390030971577e-06
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "AdAs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.9999875446266344
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 9.512096544006786e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 2.828994000956819e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.1428282063217452e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9436214206223754
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.032872644528374545
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.014717060741344828
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.008788874107905338
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8584141076220707
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.032001871534256335
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.10958402084367291
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9994528255856985
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 1.709861179819148e-05
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.0005297973922549279
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.7841024839925985e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999881756144604
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.1824385539506691e-05
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999758711679458
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 2.412883205403057e-05
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999988477047416
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 8.066804396878282e-07
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 1.272232720391842e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.1839154667213095e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "JhQh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8968248781950279
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.10317512180497213
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.00011541305322334312
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 0.9997611209049267
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.00012274574790478943
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 7.202939450303875e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999761566825074
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 5.270314132929449e-07
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 1.987232732473546e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.4439587545295515e-06
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.7023008041413316
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.0015841868301216192
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.29611500902854676
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9658642706056983
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.024933131810716463
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.00576696426332594
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.003435633320259214
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9977643547950618
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.002235645204938236
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9860093042913236
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.011268139615044376
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.0009990902060703496
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0017234658875617491
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "6s7s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6405899454014496
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.3594100545985503
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.5390434025441886
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 0.1694324000394115
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.00014876377892684994
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.29137543363747315
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 9.801909953075241e-08
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9999999019809005
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.1092795950862029e-07
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.9999788764344655
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 1.4242298491786996e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 6.770339083260391e-06
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.9396361730383724
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.06036382696162762
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.184722547197375e-06
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9999988152774528
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.020472417258570987
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.549071527353671
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.0037263094608210767
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.42672974592693685
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.4196878325054112e-07
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.8371998242260795
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 4.511197477164154e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.1627955226076601
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "9cTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.764969470690108
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 0.23486089071369173
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.00016942483526030783
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.1376093993488995e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999974940365534
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 1.51531149806202e-06
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 6.563279202453921e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.343240283216961e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9993687003189593
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0006312996810408104
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9978294412608034
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.00031007658829204296
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0018604821509044841
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.36275656673477835
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.6372421147669978
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 6.007480369796022e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 7.177501869860217e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9934501195557127
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.006549880444287258
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.7714012370404844
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.22859876295951562
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999912648633774
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 7.682664709572642e-06
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 6.977279300121202e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.547439829765288e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "KsQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9806499014219419
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.019350098578058195
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.27000611576085964
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 0.643142611797668
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.0002080535229350915
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.08664321891853721
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.9999455595128662
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 4.2375994596405824e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.2064492537402013e-05
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.515673836662486
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.484326163337514
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 2.47030746748868e-09
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9999999975296925
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 9.200668773246153e-05
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.037996976768783636
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.17138534239320682
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.7905256741502771
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.5483230313995403
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 3.278122078704104e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.4516441873796726
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "5cAc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.9999849794438519
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 1.0502741627401454e-05
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 4.355445416079195e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.6236910459902138e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9945896532246498
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.005410346775350224
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8273000977949313
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.15779305308629885
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.008958618471584596
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.005948230647185198
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.97288056019674
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.02711943980326008
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9247267188320467
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.013291905697518345
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.061981375470434946
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.999994715198014
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 5.28480198596692e-06
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.3347014392593217
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.6649993677318186
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.00029905557563758724
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.3743322208277256e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.999898506216392
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.00010149378360800559
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9998701432518271
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.0001298567481728387
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.680488637680483
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.31951096594952644
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 1.3524419416945776e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.6112579643806496e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "8d8h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8013223528880148
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.1986776471119852
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.9997247344198448
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 8.33158455171898e-05
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.00019175403949765683
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.9569514047397006e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9996638983255712
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.00033610167442879
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9421719154722406
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.055913311285211195
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.001178210938411312
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0007365623041369308
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9991412862511809
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0008587137488190695
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9904081544902824
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.0014603461973003266
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.008131499312417256
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999986659773622
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.3340226377726716e-06
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.08737804939099934
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.9122753222566218
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.0003463512353573452
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.7711702154918697e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999188405901955
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 8.115940980446144e-05
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.7740336687978062
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.2259663312021938
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0018642822003827836
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.9981354079841093
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 8.0201554990922e-08
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 2.2961395301314955e-07
+        }
+      ]
+    },
+    {
+      "player": "oop",
+      "hand": "ThTs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6207174147815284
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.37928258521847164
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.578055254821485
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.42194474517851505
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.2391181812552544
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.7608298794935474
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 2.4232695929410197e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 5.1696924238942494e-05
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.2821375149917208
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.7178624850082793
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.21010332430961748
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.7898966756903825
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.4528003815919495
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.5332547373546219
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.010597754687203809
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0033471263662247022
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.29496541051881875
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.7050345894811813
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.9999535839187096
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 7.6286052851971856e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 3.7020926841689424e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.7665491636170483e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6320437306682472
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.3679562693317529
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.3033314643986702
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.5467062980314742
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.06960317945722647
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.08035905811262908
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8722208026121606
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.12777919738783935
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "KdKs",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.47538805449152843
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.4754087564168661
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.049203189091605544
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999999519654433
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 4.803455668248428e-08
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.24520998368570054
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.3766081632816298
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 9.154972764838239e-05
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.3780903033050213
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8844269472655811
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.11557305273441897
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8622600760542559
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.13773992394574416
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6089025865328122
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.3371125669365205
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.013455418194747201
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.04052942833592012
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.5438133351981338
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.45618666480186615
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.7927157216647335
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 2.267186139601199e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 1.2395254351290616e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.20728077162369182
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.990462273322072
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.009537726677927965
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.4610418421070079
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.4338092908791648
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.05384480679361501
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.05130406022021228
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9741779547312973
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.025822045268702593
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AhKh",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.3264721671153834
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.16682409644962712
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.5067037364349893
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999985753356008
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 3.3367283462817203e-07
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 1.0575691218415763e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.3422442816730345e-08
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999966885865775
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 1.9422597171331253e-07
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 1.8607882199802214e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.256399230847104e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9916051195087184
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.008394880491281521
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.7163484615198706
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 7.234276641217332e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.28364319564144136
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.108562046794316e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9978406832498888
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.002159316750111152
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9967005757427122
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.001140107507176548
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.001079658375055576
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.001079658375055576
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999999449269541
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 5.507304587720605e-08
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "7s8s",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.999998676536984
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 3.531249738562322e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 9.70338042152711e-07
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 9.669822834361582e-06
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9999903301771655
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.6417251749315254e-05
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.9999441893780296
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 8.14970709149084e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.857839951198842e-05
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.3423726941907285
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.6576273058092715
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.25819091192356813
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.7418090880764319
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.004092402597218459
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.27310783650380016
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.00998308836808169
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.7128166725308998
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.2577070008199514
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.7422929991800485
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.47696265654048536
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 1.6673532889953838e-05
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.4755522848502023
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.04746838507642241
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.2657819883821433
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.7342180116178567
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.31649939704148716
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.5508419288900428
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.0582456292353347
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.07441304483313531
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.46993965572958285
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.530060344270417
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "QcQd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.46857414066138
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.5314182671394192
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 7.592199200877005e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999968935551796
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 3.106444820423209e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 6.387407976758781e-07
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.9999924957253554
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 3.673994973325731e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 6.498134349563522e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.33332625871646526
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.6666737412835348
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.2291167082441723
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.7708832917558277
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0019458160629957197
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.9900710632619912
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.006403607667641302
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.001579513007371742
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.038124342337850003
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.96187565766215
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 5.783969016735546e-06
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 2.8259441418131333e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.37314238549581263
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.6268490045910288
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8640509912157242
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.13594900878427577
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.25311296996629357
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.5444569941535672
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.11088961952195266
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.09154041635818658
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9998838984858268
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.00011610151417313742
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "AdJd",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.6213050627279842
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.378683973364482
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.0963907533770955e-05
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 1.0861255436109879e-08
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.11262822437913357
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.8873717647596109
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 1.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 3.1242189452636825e-08
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 5.116782263250113e-08
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.26151148945729374
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.7384884281326941
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 5.97338753977363e-08
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9999999402661246
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 3.124218945263687e-08
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 1.8363891738180768e-05
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.6043967110219466
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.39558489384412576
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.0008506418437351314
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.9991493581562648
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.00042532092186756544
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.0006207081627705797
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.07788796092225099
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.9210660099931108
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 2.5845763951801532e-08
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.999999974154236
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "5h6h",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.723050930120102e-08
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 9.402176128855764e-08
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.9999998887477294
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 1.0
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999955031080637
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 4.236410050617521e-06
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 7.758375983096133e-08
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.828981258731103e-07
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9814479815114922
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.018552018488507793
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9676929839289177
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.03230701607108229
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9948093906608508
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.0016945918062459158
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.0018298870597060115
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0016661304731971547
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.45059479511525513
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.5494052048847449
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 0.9999952612022572
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 2.8132295467762556e-06
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 1.8943260066239172e-06
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 3.1242189452636844e-08
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.994447273332452
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.005552726667547977
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8285680192514302
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.07246297537077778
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.062396837550438226
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.03657216782735388
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9917537453048229
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.008246254695177023
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "8d9d",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.976184788786699
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 0.013777992353566786
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.010037218859734146
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999999043108657
+        },
+        {
+          "name": "call",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 9.568913417391459e-08
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 2.5959523388338314e-07
+        },
+        {
+          "name": "call",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "call",
+          "probability": 0.6778708111419727
+        },
+        {
+          "name": "raise",
+          "amount": 9.0,
+          "raise_to": 9.0,
+          "history_key": "raise@9",
+          "probability": 0.3221169545540156
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.1974708777784596e-05
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8075494083621981
+        },
+        {
+          "name": "call",
+          "amount": 15.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.1924505916378019
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@3",
+        "raise@9",
+        "raise@21"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.7676796908470945
+        },
+        {
+          "name": "call",
+          "amount": 12.0,
+          "raise_to": 21.0,
+          "history_key": "call",
+          "probability": 0.23232030915290544
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.42424384636575985
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "call",
+          "probability": 0.0685657974761811
+        },
+        {
+          "name": "raise",
+          "amount": 15.0,
+          "raise_to": 15.0,
+          "history_key": "raise@15",
+          "probability": 0.50651135635786
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.0006789998001990326
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "bet@6",
+        "raise@15",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.8598003627281805
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.1401996372718195
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check"
+      ],
+      "actions": [
+        {
+          "name": "check",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "check",
+          "probability": 5.041711801460299e-06
+        },
+        {
+          "name": "bet",
+          "amount": 3.0,
+          "raise_to": 3.0,
+          "history_key": "bet@3",
+          "probability": 9.980637980280173e-07
+        },
+        {
+          "name": "bet",
+          "amount": 6.0,
+          "raise_to": 6.0,
+          "history_key": "bet@6",
+          "probability": 0.9999883250207322
+        },
+        {
+          "name": "all_in",
+          "amount": 24.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 5.635203668258894e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9843486010040815
+        },
+        {
+          "name": "call",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 0.0156513989959186
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@3",
+        "raise@9"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.4217855006268232
+        },
+        {
+          "name": "call",
+          "amount": 6.0,
+          "raise_to": 9.0,
+          "history_key": "call",
+          "probability": 0.38660694837398607
+        },
+        {
+          "name": "raise",
+          "amount": 18.0,
+          "raise_to": 21.0,
+          "history_key": "raise@21",
+          "probability": 0.09128864364461393
+        },
+        {
+          "name": "all_in",
+          "amount": 21.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 0.10031890735457688
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "all_in@24"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999989144676529
+        },
+        {
+          "name": "call",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "call",
+          "probability": 1.0855323471064536e-06
+        }
+      ]
+    },
+    {
+      "player": "ip",
+      "hand": "JcTc",
+      "street": "flop",
+      "board": [
+        "2c",
+        "3c",
+        "4d"
+      ],
+      "history": [
+        "check",
+        "bet@6",
+        "raise@15"
+      ],
+      "actions": [
+        {
+          "name": "fold",
+          "amount": 0.0,
+          "raise_to": 0.0,
+          "history_key": "fold",
+          "probability": 0.9999970258658675
+        },
+        {
+          "name": "call",
+          "amount": 9.0,
+          "raise_to": 15.0,
+          "history_key": "call",
+          "probability": 9.999034605060416e-07
+        },
+        {
+          "name": "all_in",
+          "amount": 18.0,
+          "raise_to": 24.0,
+          "history_key": "all_in@24",
+          "probability": 1.974230671978773e-06
+        }
+      ]
+    }
+  ],
+  "update_schedule": "alternating-oop-then-ip; linear completed-sweep own-reach average",
+  "scope": "Finite heads-up fixed-flop betting abstraction with every legal turn/river integrated under forced checkdown. No later-street betting, full-deck preflop, rake or multiway equilibrium. Pot-share values split the existing pot symmetrically and include matched additional wagers."
+}
