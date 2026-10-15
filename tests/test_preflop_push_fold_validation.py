@@ -53,6 +53,7 @@ class IndependentPushFoldReplayTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             replay(bad, SB, BB, CONFIG, counts)
 
+
         bad = deepcopy(result)
         bad["pair_equities"].append(deepcopy(bad["pair_equities"][0]))
         with self.assertRaises(AssertionError):
@@ -67,6 +68,14 @@ class IndependentPushFoldReplayTests(unittest.TestCase):
         bad["strategy"][0]["actions"][0]["probability"] = 0.5
         with self.assertRaises(AssertionError):
             replay(bad, SB, BB, CONFIG, counts)
+
+
+    def test_original_tuple_and_rounded_stack_inputs_replay_canonical_output(self):
+        table, counts = synthetic_table()
+        for stack in ((3, 2), (3.0000000004, 2.0000000004), 2.0000000004):
+            config = {**CONFIG, 'starting_stack': stack}
+            result = solver.solve_prepared_push_fold(table, config=config, iterations=20)
+            replay(result, SB, BB, config, counts)
 
 
 if __name__ == "__main__":

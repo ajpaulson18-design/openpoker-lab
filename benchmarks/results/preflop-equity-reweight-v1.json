@@ -1,0 +1,3118 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-equity-reweight-v1",
+  "config": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-equity-reweight-v1",
+    "reference_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+    "reference_report": "benchmarks/results/preflop-push-fold-v1.json",
+    "reference_report_git_blob": "f4a4c57dc7ec0d1e544450aa9b9832c090080479",
+    "iterations": 3000,
+    "repeats": 3,
+    "algorithm": "cfrplus",
+    "exploitability_chip_limit": 0.005,
+    "known_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "cases": [
+      {
+        "id": "original-mixed",
+        "sb_range": "AsAd:1,QsQd:0.5",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      {
+        "id": "aa-heavy",
+        "sb_range": "AsAd:1,QsQd:0.0625",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": [
+            3,
+            2
+          ]
+        }
+      },
+      {
+        "id": "ak-heavy",
+        "sb_range": "AsAd:1,QsQd:0.5",
+        "bb_range": "AsKh:1,KsKd:0.125",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "id": "subset-strong-with-inactive-hand",
+        "sb_range": "AsAd:1",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      {
+        "id": "subset-weak",
+        "sb_range": "QsQd:0.5",
+        "bb_range": "KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      {
+        "id": "reordered-mixed",
+        "sb_range": "QsQd:0.5,AsAd:1",
+        "bb_range": "KsKd:1,AsKh:0.25",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      }
+    ],
+    "scope": "Reuse independently enumerated published pair counts from PR #125. Measure reweight + complete prepared solve + JSON with no ranking or board enumeration. Exact small-game equilibrium witnesses and policy replay check changed priors, pure/mixed regimes, subsets and reorderings. Excludes original table preparation and file loading; no cold-call memory or cross-source speedup claim."
+  },
+  "historical_physical_count_evidence": {
+    "published_parent_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+    "artifact_git_blobs": {
+      "preflop-push-fold-v1.json": "f4a4c57dc7ec0d1e544450aa9b9832c090080479",
+      "preflop-push-fold-v1-production.json": "7955c97d71252691adbb53e63314027b27edc633",
+      "preflop-push-fold-v1-oracle-pair-0.json": "cc510379eed9484f30e59e428917a9e55ba027a7",
+      "preflop-push-fold-v1-oracle-pair-1.json": "d639fecaee1c9f1ca1eaec95bb29e3162ddd00ff",
+      "preflop-push-fold-v1-oracle-pair-2.json": "864c80c32739f6665b6010c200ad31bcb32e439f"
+    },
+    "original_solver_source": "4650d6591c88c25f1a04c28fcf4960efc6ec33de",
+    "original_source_sha256": {
+      "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+      "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+      "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/preflop_full_board_equity.py": "e5a21293186963702cc61199d7df7af1517698339db10b2e88cbcf907c4f9a3c",
+      "pokerlab/preflop_push_fold.py": "0cf021fd39aed332be747114cd9900c81a9246df7532da30109ec45a468df91e",
+      "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+      "scripts/preflop_push_fold_validation.py": "eb5b7fd66d2a4b69e682ed6f89247c8b465a152809ed36b7428dea40c2f3ede7",
+      "scripts/benchmark_preflop_push_fold.py": "2d2dced6b7699b6e1348a960105c6c201abe1e305ecdd9ae9547ac1c6e78e3a6",
+      "benchmarks/preflop-push-fold-v1.json": "45c0b857d552ec01d6146abbd8c251b734f7823dae8d428c3c0c56b1fc3f3724"
+    },
+    "verified_artifact_sha256": "bf78de722b0fcd1b838e56acc11d1c16984a397f2fd693f71816633b0157725e",
+    "scope": "Previously independently enumerated physical pair counts. Reused exactly; no current full-board enumeration or new-pair coverage claim."
+  },
+  "provenance": {
+    "git_revision": "55cdb2acc22c060fdce41922fd3779691cb7fa1d",
+    "git_status": [],
+    "source_sha256": {
+      "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+      "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+      "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/preflop_full_board_equity.py": "c6a3f30e300beb22aab8e067dbbcbbf6bf30f5cec5fc5b6c38f14baaad0e01eb",
+      "pokerlab/preflop_push_fold.py": "21a15c29e90d349084d2c6f6e9bf62349bf8badabf1dc45c139bea2dcea5efa1",
+      "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+      "scripts/preflop_push_fold_validation.py": "fed9731e06b159085d255cb59a235515e3df95087e192549f06cf2b23ccde086",
+      "scripts/preflop_push_fold_equilibrium.py": "2597ab14f74cb8e18bbddf6fb3d269a9b6c21d64071bd597b3d447deff409098",
+      "scripts/benchmark_preflop_equity_reweight.py": "59fb8c311a014794acaf7c25e887af02080c9a462845d065067a934fc7d28cf8",
+      "benchmarks/preflop-equity-reweight-v1.json": "8f757a61cf2d2896f2a596cb7e6693c125f8b444dd0f13ade27789397f095292"
+    },
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "created_utc": "2026-10-15T04:52:22.514709+00:00"
+  },
+  "source_unchanged": true,
+  "ranking_and_enumeration_calls": 0,
+  "source_table_unchanged": true,
+  "warm_call_traced_peak_bytes": 22621,
+  "methodology": "Three repeated complete reweight + prepared solve + exact production diagnostics + JSON calls per case, GC before timing; independent Fraction equilibrium/replay outside timing. Separate allocation trace of the same warm call. Excludes original equity preparation, reference input table and historical-file loading; not RSS or a cross-source speedup comparison.",
+  "results": [
+    {
+      "id": "original-mixed",
+      "input": {
+        "id": "original-mixed",
+        "sb_range": "AsAd:1,QsQd:0.5",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      "median_seconds": 0.8345153999980539,
+      "seconds": [
+        1.0193154999869876,
+        0.7760303000104614,
+        0.8345153999980539
+      ],
+      "independent": {
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171448,
+        "nash_conv": 6.0383784025834484e-05,
+        "exploitability": 3.0191892012917242e-05,
+        "sb_best_response_gain": 1.5716116953202463e-05,
+        "bb_best_response_gain": 4.466766707263202e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0406985603145236e-16,
+          "exploitability": 5.203492801572618e-17,
+          "sb_best_response_gain": 3.413881590613732e-17,
+          "bb_best_response_gain": 6.993104012531504e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            42222274883258335898177061590247838721,
+            75247577370270863882401263506228309115
+          ],
+          "sb_best_response_value": [
+            28126472806134608260313,
+            50124955766242566370590
+          ],
+          "bb_best_response_value": [
+            -2343620505969275856559,
+            4177079647186879835259
+          ],
+          "nash_conv": [
+            27262400762362238309487550392052493,
+            451485464221625183294407581037369854690
+          ],
+          "sb_best_response_gain": [
+            645054396216178900146488584777987,
+            41044133111056834844946143730669986790
+          ],
+          "bb_best_response_gain": [
+            1120377911332459467104231997749702,
+            25082525790090287960800421168742769705
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6617746790959542,
+                9007199254740991
+              ],
+              [
+                2389452463781449,
+                9007199254740991
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4784712608406309,
+                18014398509481985
+              ],
+              [
+                13229685901075676,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 1.4047749630208273e-08,
+      "equilibrium_witness_replay": {
+        "value_sb": 0.5611114326319669,
+        "value_bb": -0.5611114326319669,
+        "sb_best_response_value": 0.5611114326319669,
+        "bb_best_response_value": -0.5611114326319669,
+        "nash_conv": 1.2380340102323412e-17,
+        "exploitability": 6.190170051161706e-18,
+        "sb_best_response_gain": 2.2547570289747997e-18,
+        "bb_best_response_gain": 1.0125583073348614e-17,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.2380340102323412e-17,
+          "exploitability": 6.190170051161706e-18,
+          "sb_best_response_gain": 2.2547570289747997e-18,
+          "bb_best_response_gain": 1.0125583073348614e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            7916676738809524154693602653343476697,
+            14108920756925787761152670754957950976
+          ],
+          "sb_best_response_value": [
+            878927679394073034403,
+            1566404867695080112128
+          ],
+          "bb_best_response_value": [
+            -2343807145050861373361,
+            4177079647186880299008
+          ],
+          "nash_conv": [
+            155141,
+            12531238941560640897024
+          ],
+          "sb_best_response_gain": [
+            31812188247926871079,
+            14108920756925787761152670754957950976
+          ],
+          "bb_best_response_gain": [
+            10989311476888050685,
+            1085301596686599058550205442689073152
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                3309941293802267,
+                4503599627370496
+              ],
+              [
+                1193658333568229,
+                4503599627370496
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1196554343925401,
+                4503599627370496
+              ],
+              [
+                3307045283445095,
+                4503599627370496
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          256757651065,
+          457587630786
+        ],
+        "behavioral_probabilities": {
+          "0:AdAs": [
+            1,
+            1
+          ],
+          "0:QdQs": [
+            130762,
+            493357
+          ],
+          "1:AsKh": [
+            1,
+            1
+          ],
+          "1:KdKs": [
+            1449111,
+            1973428
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "shove",
+                "fold"
+              ],
+              "probability": [
+                362595,
+                493357
+              ]
+            },
+            {
+              "policy": [
+                "shove",
+                "shove"
+              ],
+              "probability": [
+                130762,
+                493357
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "call",
+                "fold"
+              ],
+              "probability": [
+                524317,
+                1973428
+              ]
+            },
+            {
+              "policy": [
+                "call",
+                "call"
+              ],
+              "probability": [
+                1449111,
+                1973428
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "AdAs|KdKs": [
+            8,
+            13
+          ],
+          "QdQs|AsKh": [
+            1,
+            13
+          ],
+          "QdQs|KdKs": [
+            4,
+            13
+          ]
+        },
+        "pair_showdown_signs": {
+          "AdAs|KdKs": [
+            279419,
+            428076
+          ],
+          "QdQs|AsKh": [
+            4822,
+            35673
+          ],
+          "QdQs|KdKs": [
+            -279319,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              1,
+              13
+            ],
+            [
+              -879695,
+              1391247
+            ],
+            [
+              9644,
+              463749
+            ],
+            [
+              -957782,
+              1391247
+            ]
+          ],
+          [
+            [
+              11,
+              26
+            ],
+            [
+              130789,
+              214038
+            ],
+            [
+              11,
+              26
+            ],
+            [
+              130789,
+              214038
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              9653,
+              20163
+            ],
+            [
+              437720,
+              463749
+            ],
+            [
+              1390,
+              3289
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 4,
+          "column_policies": 4,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7347174858462526
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26528251415374726
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26560490520334873
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7343950947966513
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611114185842174,
+        "value_bb": -0.5611114185842174,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171449,
+        "nash_conv": 6.0383784025730414e-05,
+        "exploitability": 3.0191892012865207e-05,
+        "sb_best_response_gain": 1.5716116953168324e-05,
+        "bb_best_response_gain": 4.466766707256209e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "id": "aa-heavy",
+      "input": {
+        "id": "aa-heavy",
+        "sb_range": "AsAd:1,QsQd:0.0625",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": [
+            3,
+            2
+          ]
+        }
+      },
+      "median_seconds": 0.8087744999793358,
+      "seconds": [
+        0.8087744999793358,
+        0.921948799979873,
+        0.7263800999498926
+      ],
+      "independent": {
+        "value_sb": 0.9894252828733784,
+        "value_bb": -0.9894252828733784,
+        "sb_best_response_value": 0.9894252828733784,
+        "bb_best_response_value": -0.9894252828733784,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.1102230246251565e-16,
+          "exploitability": 5.551115123125783e-17,
+          "sb_best_response_gain": 1.1102230246251565e-16,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            2435408,
+            2461437
+          ],
+          "sb_best_response_value": [
+            2435408,
+            2461437
+          ],
+          "bb_best_response_value": [
+            -2435408,
+            2461437
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 0.0,
+      "equilibrium_witness_replay": {
+        "value_sb": 0.9894252828733784,
+        "value_bb": -0.9894252828733784,
+        "sb_best_response_value": 0.9894252828733784,
+        "bb_best_response_value": -0.9894252828733784,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            2435408,
+            2461437
+          ],
+          "sb_best_response_value": [
+            2435408,
+            2461437
+          ],
+          "bb_best_response_value": [
+            -2435408,
+            2461437
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          2435408,
+          2461437
+        ],
+        "behavioral_probabilities": {
+          "0:AdAs": [
+            1,
+            1
+          ],
+          "0:QdQs": [
+            1,
+            1
+          ],
+          "1:AsKh": [
+            1,
+            1
+          ],
+          "1:KdKs": [
+            0,
+            1
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "shove",
+                "shove"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "call",
+                "fold"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "AdAs|KdKs": [
+            64,
+            69
+          ],
+          "QdQs|AsKh": [
+            1,
+            69
+          ],
+          "QdQs|KdKs": [
+            4,
+            69
+          ]
+        },
+        "pair_showdown_signs": {
+          "AdAs|KdKs": [
+            279419,
+            428076
+          ],
+          "QdQs|AsKh": [
+            4822,
+            35673
+          ],
+          "QdQs|KdKs": [
+            -279319,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              -9,
+              23
+            ],
+            [
+              -3876227,
+              7384311
+            ],
+            [
+              -989200,
+              2461437
+            ],
+            [
+              -3954314,
+              7384311
+            ]
+          ],
+          [
+            [
+              41,
+              46
+            ],
+            [
+              17347721,
+              14768622
+            ],
+            [
+              41,
+              46
+            ],
+            [
+              17347721,
+              14768622
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              771799,
+              671301
+            ],
+            [
+              2435408,
+              2461437
+            ],
+            [
+              8411702,
+              7384311
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 4,
+          "column_policies": 4,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            3.0,
+            2.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.927536231884058
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.014492753623188406
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.057971014492753624
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 2.5,
+                "raise_to": 3.0,
+                "history_key": "all_in@3",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@3"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.0
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.9894252828733784,
+        "value_bb": -0.9894252828733784,
+        "sb_best_response_value": 0.9894252828733785,
+        "bb_best_response_value": -0.9894252828733784,
+        "nash_conv": 1.1102230246251565e-16,
+        "exploitability": 5.551115123125783e-17,
+        "sb_best_response_gain": 1.1102230246251565e-16,
+        "bb_best_response_gain": 0.0,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "id": "ak-heavy",
+      "input": {
+        "id": "ak-heavy",
+        "sb_range": "AsAd:1,QsQd:0.5",
+        "bb_range": "AsKh:1,KsKd:0.125",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": [
+            2,
+            3
+          ]
+        }
+      },
+      "median_seconds": 0.854491500009317,
+      "seconds": [
+        0.7676406999817118,
+        0.854491500009317,
+        1.0457765000173822
+      ],
+      "independent": {
+        "value_sb": 0.3153352548273076,
+        "value_bb": -0.3153352548273076,
+        "sb_best_response_value": 0.3153352548273076,
+        "bb_best_response_value": -0.3153352548273076,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            247477,
+            784806
+          ],
+          "sb_best_response_value": [
+            247477,
+            784806
+          ],
+          "bb_best_response_value": [
+            -247477,
+            784806
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 0.0,
+      "equilibrium_witness_replay": {
+        "value_sb": 0.3153352548273076,
+        "value_bb": -0.3153352548273076,
+        "sb_best_response_value": 0.3153352548273076,
+        "bb_best_response_value": -0.3153352548273076,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            247477,
+            784806
+          ],
+          "sb_best_response_value": [
+            247477,
+            784806
+          ],
+          "bb_best_response_value": [
+            -247477,
+            784806
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          247477,
+          784806
+        ],
+        "behavioral_probabilities": {
+          "0:AdAs": [
+            1,
+            1
+          ],
+          "0:QdQs": [
+            1,
+            1
+          ],
+          "1:AsKh": [
+            1,
+            1
+          ],
+          "1:KdKs": [
+            1,
+            1
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "shove",
+                "shove"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "call",
+                "call"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "AdAs|KdKs": [
+            2,
+            11
+          ],
+          "QdQs|AsKh": [
+            8,
+            11
+          ],
+          "QdQs|KdKs": [
+            1,
+            11
+          ]
+        },
+        "pair_showdown_signs": {
+          "AdAs|KdKs": [
+            279419,
+            428076
+          ],
+          "QdQs|AsKh": [
+            4822,
+            35673
+          ],
+          "QdQs|KdKs": [
+            -279319,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              8,
+              11
+            ],
+            [
+              1218947,
+              2354418
+            ],
+            [
+              77152,
+              392403
+            ],
+            [
+              -30445,
+              2354418
+            ]
+          ],
+          [
+            [
+              -5,
+              22
+            ],
+            [
+              -404333,
+              2354418
+            ],
+            [
+              -5,
+              22
+            ],
+            [
+              -404333,
+              2354418
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              28867,
+              34122
+            ],
+            [
+              184171,
+              392403
+            ],
+            [
+              247477,
+              784806
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 4,
+          "column_policies": 4,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": [
+            2.0,
+            3.0
+          ]
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.18181818181818182
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.7272727272727273
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.09090909090909091
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.3153352548273076,
+        "value_bb": -0.3153352548273076,
+        "sb_best_response_value": 0.3153352548273076,
+        "bb_best_response_value": -0.3153352548273076,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "id": "subset-strong-with-inactive-hand",
+      "input": {
+        "id": "subset-strong-with-inactive-hand",
+        "sb_range": "AsAd:1",
+        "bb_range": "AsKh:0.25,KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      "median_seconds": 0.33162770001217723,
+      "seconds": [
+        0.33162770001217723,
+        0.4175842000404373,
+        0.2578419999917969
+      ],
+      "independent": {
+        "value_sb": 1.0,
+        "value_bb": -1.0,
+        "sb_best_response_value": 1.0,
+        "bb_best_response_value": -1.0,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 2,
+        "checked_physical_boards": 1712304,
+        "exact_fraction_replay": {
+          "value_sb": [
+            1,
+            1
+          ],
+          "sb_best_response_value": [
+            1,
+            1
+          ],
+          "bb_best_response_value": [
+            -1,
+            1
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 0.0,
+      "equilibrium_witness_replay": {
+        "value_sb": 1.0,
+        "value_bb": -1.0,
+        "sb_best_response_value": 1.0,
+        "bb_best_response_value": -1.0,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 2,
+        "checked_physical_boards": 1712304,
+        "exact_fraction_replay": {
+          "value_sb": [
+            1,
+            1
+          ],
+          "sb_best_response_value": [
+            1,
+            1
+          ],
+          "bb_best_response_value": [
+            -1,
+            1
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          1,
+          1
+        ],
+        "behavioral_probabilities": {
+          "0:AdAs": [
+            1,
+            1
+          ],
+          "1:KdKs": [
+            0,
+            1
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "shove"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "fold"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "AdAs|KdKs": [
+            1,
+            1
+          ]
+        },
+        "pair_showdown_signs": {
+          "AdAs|KdKs": [
+            279419,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              279419,
+              214038
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 2,
+          "column_policies": 2,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 1,
+        "physical_boards": 1712304,
+        "training_world_rows": 3,
+        "info_sets": 2,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 1,
+          "categorical_rows_upper_bound": 3,
+          "information_action_slots": 4,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 22273728,
+          "diagnostic_loop_entries_upper_bound": 3584,
+          "source_bookkeeping_loop_entries_upper_bound": 109587728,
+          "total_loop_entries_upper_bound": 131865040,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 2,
+            "compatible_pairs": 1,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 1712304,
+            "board_evaluations_upper_bound": 1712304,
+            "rank_calls_upper_bound": 3424608,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 1.0
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 1.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.0
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.9999999999999999,
+        "value_bb": -0.9999999999999999,
+        "sb_best_response_value": 0.9999999999999999,
+        "bb_best_response_value": -0.9999999999999999,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "id": "subset-weak",
+      "input": {
+        "id": "subset-weak",
+        "sb_range": "QsQd:0.5",
+        "bb_range": "KsKd:1",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      "median_seconds": 0.3764950000331737,
+      "seconds": [
+        0.3300499999895692,
+        0.3764950000331737,
+        0.39508510002633557
+      ],
+      "independent": {
+        "value_sb": -0.5000002423212231,
+        "value_bb": 0.5000002423212231,
+        "sb_best_response_value": -0.5,
+        "bb_best_response_value": 0.5000002423212231,
+        "nash_conv": 2.4232122303385014e-07,
+        "exploitability": 1.2116061151692507e-07,
+        "sb_best_response_gain": 2.4232122303385014e-07,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 5.755625934284413e-17,
+          "exploitability": 2.8778129671422066e-17,
+          "sb_best_response_gain": 5.346604311967152e-17,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 2,
+        "checked_physical_boards": 1712304,
+        "exact_fraction_replay": {
+          "value_sb": [
+            -336922122373500080395792411,
+            673843918173635389277642622
+          ],
+          "sb_best_response_value": [
+            -1,
+            2
+          ],
+          "bb_best_response_value": [
+            336922122373500080395792411,
+            673843918173635389277642622
+          ],
+          "nash_conv": [
+            81643341192878485550,
+            336921959086817694638821311
+          ],
+          "sb_best_response_gain": [
+            81643341192878485550,
+            336921959086817694638821311
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:QdQs": [
+              [
+                9444730122674593857536,
+                9444732965739290069207
+              ],
+              [
+                2843064696211671,
+                9444732965739290069207
+              ]
+            ],
+            "1:KdKs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 2.423212230873162e-07,
+      "equilibrium_witness_replay": {
+        "value_sb": -0.5,
+        "value_bb": 0.5,
+        "sb_best_response_value": -0.5,
+        "bb_best_response_value": 0.5,
+        "nash_conv": 0.0,
+        "exploitability": 0.0,
+        "sb_best_response_gain": 0.0,
+        "bb_best_response_gain": 0.0,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 0.0,
+          "exploitability": 0.0,
+          "sb_best_response_gain": 0.0,
+          "bb_best_response_gain": 0.0
+        },
+        "checked_information_sets": 2,
+        "checked_physical_boards": 1712304,
+        "exact_fraction_replay": {
+          "value_sb": [
+            -1,
+            2
+          ],
+          "sb_best_response_value": [
+            -1,
+            2
+          ],
+          "bb_best_response_value": [
+            1,
+            2
+          ],
+          "nash_conv": [
+            0,
+            1
+          ],
+          "sb_best_response_gain": [
+            0,
+            1
+          ],
+          "bb_best_response_gain": [
+            0,
+            1
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:QdQs": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          -1,
+          2
+        ],
+        "behavioral_probabilities": {
+          "0:QdQs": [
+            0,
+            1
+          ],
+          "1:KdKs": [
+            1,
+            1
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "fold"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "call"
+              ],
+              "probability": [
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "QdQs|KdKs": [
+            1,
+            1
+          ]
+        },
+        "pair_showdown_signs": {
+          "QdQs|KdKs": [
+            -279319,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              -279319,
+              214038
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 2,
+          "column_policies": 2,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 1,
+        "physical_boards": 1712304,
+        "training_world_rows": 3,
+        "info_sets": 2,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 1,
+          "categorical_rows_upper_bound": 3,
+          "information_action_slots": 4,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 22273728,
+          "diagnostic_loop_entries_upper_bound": 3584,
+          "source_bookkeeping_loop_entries_upper_bound": 109587720,
+          "total_loop_entries_upper_bound": 131865032,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 1,
+            "compatible_pairs": 1,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 1712304,
+            "board_evaluations_upper_bound": 1712304,
+            "rank_calls_upper_bound": 3424608,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 1.0
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.9999996989788164
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 3.0102118360835297e-07
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          }
+        ],
+        "value_sb": -0.5000002423212231,
+        "value_bb": 0.5000002423212231,
+        "sb_best_response_value": -0.5,
+        "bb_best_response_value": 0.500000242321223,
+        "nash_conv": 2.423212229762939e-07,
+        "exploitability": 1.2116061148814694e-07,
+        "sb_best_response_gain": 2.423212230873162e-07,
+        "bb_best_response_gain": 0.0,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    },
+    {
+      "id": "reordered-mixed",
+      "input": {
+        "id": "reordered-mixed",
+        "sb_range": "QsQd:0.5,AsAd:1",
+        "bb_range": "KsKd:1,AsKh:0.25",
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1,
+          "starting_stack": 2
+        }
+      },
+      "median_seconds": 0.9077653000131249,
+      "seconds": [
+        0.9995128000155091,
+        0.6539445000234991,
+        0.9077653000131249
+      ],
+      "independent": {
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171449,
+        "nash_conv": 6.038378402572648e-05,
+        "exploitability": 3.019189201286324e-05,
+        "sb_best_response_gain": 1.5716116953196883e-05,
+        "bb_best_response_gain": 4.466766707252959e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 3.937009138837988e-18,
+          "exploitability": 1.968504569418994e-18,
+          "sb_best_response_gain": 2.855856284962599e-17,
+          "bb_best_response_gain": 3.2498960120252995e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            128530517148427209268740985147220192,
+            229064162466577984960368069081001035
+          ],
+          "sb_best_response_value": [
+            128431382676413720821,
+            228881076558185209158
+          ],
+          "bb_best_response_value": [
+            -4687241011938553349722,
+            8354159294373761061765
+          ],
+          "nash_conv": [
+            248971696459483790389289594058761,
+            4123154924398403729286625243458018630
+          ],
+          "sb_best_response_gain": [
+            64799985007994966918190468946229,
+            4123154924398403729286625243458018630
+          ],
+          "bb_best_response_gain": [
+            10231761747304934637283284728474,
+            229064162466577984960368069081001035
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13235493581919096,
+                18014398509481985
+              ],
+              [
+                4778904927562889,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                21848002778111,
+                82257527440557
+              ],
+              [
+                60409524662446,
+                82257527440557
+              ]
+            ]
+          }
+        }
+      },
+      "known_value_error": 1.4047749630208273e-08,
+      "equilibrium_witness_replay": {
+        "value_sb": 0.5611114326319669,
+        "value_bb": -0.5611114326319669,
+        "sb_best_response_value": 0.5611114326319669,
+        "bb_best_response_value": -0.5611114326319669,
+        "nash_conv": 1.2380340102323412e-17,
+        "exploitability": 6.190170051161706e-18,
+        "sb_best_response_gain": 2.2547570289747997e-18,
+        "bb_best_response_gain": 1.0125583073348614e-17,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.2380340102323412e-17,
+          "exploitability": 6.190170051161706e-18,
+          "sb_best_response_gain": 2.2547570289747997e-18,
+          "bb_best_response_gain": 1.0125583073348614e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            7916676738809524154693602653343476697,
+            14108920756925787761152670754957950976
+          ],
+          "sb_best_response_value": [
+            878927679394073034403,
+            1566404867695080112128
+          ],
+          "bb_best_response_value": [
+            -2343807145050861373361,
+            4177079647186880299008
+          ],
+          "nash_conv": [
+            155141,
+            12531238941560640897024
+          ],
+          "sb_best_response_gain": [
+            31812188247926871079,
+            14108920756925787761152670754957950976
+          ],
+          "bb_best_response_gain": [
+            10989311476888050685,
+            1085301596686599058550205442689073152
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                3309941293802267,
+                4503599627370496
+              ],
+              [
+                1193658333568229,
+                4503599627370496
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                1196554343925401,
+                4503599627370496
+              ],
+              [
+                3307045283445095,
+                4503599627370496
+              ]
+            ]
+          }
+        }
+      },
+      "exact_equilibrium_witness": {
+        "value_sb_fraction": [
+          256757651065,
+          457587630786
+        ],
+        "behavioral_probabilities": {
+          "0:AdAs": [
+            1,
+            1
+          ],
+          "0:QdQs": [
+            130762,
+            493357
+          ],
+          "1:AsKh": [
+            1,
+            1
+          ],
+          "1:KdKs": [
+            1449111,
+            1973428
+          ]
+        },
+        "pure_policy_weights": {
+          "sb": [
+            {
+              "policy": [
+                "shove",
+                "fold"
+              ],
+              "probability": [
+                362595,
+                493357
+              ]
+            },
+            {
+              "policy": [
+                "shove",
+                "shove"
+              ],
+              "probability": [
+                130762,
+                493357
+              ]
+            }
+          ],
+          "bb": [
+            {
+              "policy": [
+                "call",
+                "fold"
+              ],
+              "probability": [
+                524317,
+                1973428
+              ]
+            },
+            {
+              "policy": [
+                "call",
+                "call"
+              ],
+              "probability": [
+                1449111,
+                1973428
+              ]
+            }
+          ]
+        },
+        "pair_priors": {
+          "AdAs|KdKs": [
+            8,
+            13
+          ],
+          "QdQs|AsKh": [
+            1,
+            13
+          ],
+          "QdQs|KdKs": [
+            4,
+            13
+          ]
+        },
+        "pair_showdown_signs": {
+          "AdAs|KdKs": [
+            279419,
+            428076
+          ],
+          "QdQs|AsKh": [
+            4822,
+            35673
+          ],
+          "QdQs|KdKs": [
+            -279319,
+            428076
+          ]
+        },
+        "pure_policy_payoff_matrix": [
+          [
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ],
+            [
+              -1,
+              2
+            ]
+          ],
+          [
+            [
+              1,
+              13
+            ],
+            [
+              -879695,
+              1391247
+            ],
+            [
+              9644,
+              463749
+            ],
+            [
+              -957782,
+              1391247
+            ]
+          ],
+          [
+            [
+              11,
+              26
+            ],
+            [
+              130789,
+              214038
+            ],
+            [
+              11,
+              26
+            ],
+            [
+              130789,
+              214038
+            ]
+          ],
+          [
+            [
+              1,
+              1
+            ],
+            [
+              9653,
+              20163
+            ],
+            [
+              437720,
+              463749
+            ],
+            [
+              1390,
+              3289
+            ]
+          ]
+        ],
+        "search_method": "equal-cardinality exact support enumeration",
+        "search_limit": {
+          "row_policies": 4,
+          "column_policies": 4,
+          "max_active_hands_per_player": 2
+        }
+      },
+      "result": {
+        "solver_version": "preflop-push-fold-v1",
+        "strategy_schema": "preflop-strategy-v1",
+        "algorithm": "cfrplus",
+        "iterations": 3000,
+        "averaging_delay": 0,
+        "config": {
+          "small_blind": 0.5,
+          "big_blind": 1.0,
+          "starting_stack": 2.0
+        },
+        "runout_mode": "full-deck-unordered-final-boards",
+        "compatible_pairs": 3,
+        "physical_boards": 5136912,
+        "training_world_rows": 9,
+        "info_sets": 4,
+        "work_budget": {
+          "budget_version": "preflop-push-fold-work-v1",
+          "requested_iterations": 3000,
+          "compatible_pairs": 3,
+          "categorical_rows_upper_bound": 9,
+          "information_action_slots": 8,
+          "public_states": 5,
+          "algorithm": "cfrplus",
+          "training_loop_entries_upper_bound": 62210624,
+          "diagnostic_loop_entries_upper_bound": 7680,
+          "source_bookkeeping_loop_entries_upper_bound": 328762912,
+          "total_loop_entries_upper_bound": 390981216,
+          "total_loop_entry_limit": 500000000,
+          "equity_preparation": {
+            "candidate_pairs": 4,
+            "compatible_pairs": 3,
+            "boards_per_pair": 1712304,
+            "physical_worlds_upper_bound": 5136912,
+            "board_evaluations_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "categorical_rows_upper_bound": 12,
+            "limits": {
+              "candidate_pairs": 4096,
+              "compatible_pairs": 4,
+              "board_evaluations": 6849216,
+              "rank_calls": 13698432,
+              "categorical_rows": 12
+            },
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "scope": "Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds."
+        },
+        "pair_equities": [
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "KdKs",
+            "wins": 292846,
+            "ties": 9336,
+            "losses": 1410122,
+            "boards": 1712304,
+            "pair_probability": 0.3076923076923077
+          },
+          {
+            "sb_hand": "QdQs",
+            "bb_hand": "AsKh",
+            "wins": 968267,
+            "ties": 7226,
+            "losses": 736811,
+            "boards": 1712304,
+            "pair_probability": 0.07692307692307693
+          },
+          {
+            "sb_hand": "AdAs",
+            "bb_hand": "KdKs",
+            "wins": 1410336,
+            "ties": 9308,
+            "losses": 292660,
+            "boards": 1712304,
+            "pair_probability": 0.6153846153846154
+          }
+        ],
+        "strategy": [
+          {
+            "player": "sb",
+            "hand": "QdQs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.7347174858462533
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 0.26528251415374676
+              }
+            ]
+          },
+          {
+            "player": "sb",
+            "hand": "AdAs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "all_in",
+                "amount": 1.5,
+                "raise_to": 2.0,
+                "history_key": "all_in@2",
+                "probability": 1.0
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "KdKs",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.26560490520334873
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 0.7343950947966512
+              }
+            ]
+          },
+          {
+            "player": "bb",
+            "hand": "AsKh",
+            "street": "preflop",
+            "revealed_board": [],
+            "history": [
+              "all_in@2"
+            ],
+            "actions": [
+              {
+                "name": "fold",
+                "amount": 0.0,
+                "raise_to": 0.0,
+                "history_key": "fold",
+                "probability": 0.0
+              },
+              {
+                "name": "call",
+                "amount": 1.0,
+                "raise_to": 2.0,
+                "history_key": "call",
+                "probability": 1.0
+              }
+            ]
+          }
+        ],
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011705,
+        "bb_best_response_value": -0.5610667509171448,
+        "nash_conv": 6.0383784025730414e-05,
+        "exploitability": 3.0191892012865207e-05,
+        "sb_best_response_gain": 1.5716116953168324e-05,
+        "bb_best_response_gain": 4.466766707256209e-05,
+        "scope": "Exact full-board equity for a finite heads-up preflop SB fold/shove and BB fold/call action model. Whole-hand net chip transfers including blinds and unmatched refunds. Both starting stacks exceed the big blind. No limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium."
+      }
+    }
+  ],
+  "passed": true,
+  "failures": [],
+  "artifact_sha256": "5ccec82ee937fab3e22e00ebba0b811ff5a4d56dc8f8eefd708c4f794fc60895"
+}

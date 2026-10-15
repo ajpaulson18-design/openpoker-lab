@@ -53,7 +53,8 @@ def replay(result, sb_range, bb_range, config, counts, tolerance=1e-10):
     assert result['strategy_schema']=='preflop-strategy-v1'
     assert result['runout_mode']=='full-deck-unordered-final-boards'
     assert result['config']['small_blind']==sb and result['config']['big_blind']==bb
-    assert result['config']['starting_stack']==raw
+    canonical_stack=list(stacks) if isinstance(raw,(tuple,list)) else stacks[0]
+    assert result['config']['starting_stack']==canonical_stack
     chance={(r['sb_hand'],r['bb_hand']):r for r in counts}
     assert len(chance)==len(counts)==len(expected_pairs)
     actual_counts={(r['sb_hand'],r['bb_hand']):r for r in result['pair_equities']}

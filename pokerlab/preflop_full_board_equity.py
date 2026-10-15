@@ -409,3 +409,51 @@ def plan_preflop_equities(sb_range, bb_range):
     )
     plan.validate()
     return plan
+
+
+def reweight_preflop_equities(table, sb_range, bb_range):
+    """Reuse covered showdown counts under new, globally conditioned ranges.
+
+    The source table must contain every compatible private pair in the new
+    ranges. New hands that are blocked against every hand in the opposite
+    range are allowed because they add no private-pair chance support. New
+    compatible pairs are rejected; this function never evaluates boards.
+    """
+    if not isinstance(table, FullBoardEquities):
+        raise TypeError("table must be a FullBoardEquities instance")
+    table.validate()
+    plan = plan_preflop_equities(sb_range, bb_range)
+
+    covered_counts = {
+        (table.hands[0][sb_index], table.hands[1][bb_index]): count_row
+        for (sb_index, bb_index, _), count_row in zip(table.pairs, table.counts)
+    }
+    requested_counts = []
+    for sb_index, bb_index, _ in plan.pairs:
+        hand_pair = (plan.hands[0][sb_index], plan.hands[1][bb_index])
+        count_row = covered_counts.get(hand_pair)
+        if count_row is None:
+            raise ValueError("Requested compatible private pair is not covered by the source table.")
+        requested_counts.append(count_row)
+
+    pairs = []
+    worlds = []
+    for (sb_index, bb_index, prior), count_row in zip(plan.pairs, requested_counts):
+        pairs.append((sb_index, bb_index, prior))
+        wins, ties, losses = count_row
+        for sign, count in zip(_SIGNS, (losses, ties, wins)):
+            if not count:
+                continue
+            mass = prior * Fraction(count, BOARDS_PER_PAIR)
+            worlds.append((sb_index, bb_index,
+                           _as_positive_float(mass, "categorical mass"), sign))
+
+    result = FullBoardEquities(
+        hands=plan.hands,
+        pairs=tuple(pairs),
+        counts=tuple(requested_counts),
+        worlds=tuple(worlds),
+        _budget_items=plan._budget_items,
+    )
+    result.validate()
+    return result

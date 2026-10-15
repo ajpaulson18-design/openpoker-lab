@@ -7,7 +7,9 @@ stacks include posted blinds and must both exceed the big blind.
 from . import cfr
 from .cfr_plus import train as train_cfrplus
 from .preflop_tree import PreflopConfig
-from .preflop_full_board_equity import plan_preflop_equities, FullBoardEquities, BOARDS_PER_PAIR
+from .preflop_full_board_equity import (
+    plan_preflop_equities, reweight_preflop_equities, FullBoardEquities, BOARDS_PER_PAIR,
+)
 from .river_tree import _Action, _Node, _Terminal, _terminal_value
 
 MAX_MODELED_LOOP_ENTRIES = 500_000_000
