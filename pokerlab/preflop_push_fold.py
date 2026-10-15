@@ -64,6 +64,43 @@ def _admit(prepared, iterations, algorithm):
             'scope':'Conservative bookkeeping and generic-CFR/reference diagnostic loop entries for the fixed two-decision tree; source preparation is charged even when an immutable table is reused. Internal ranking instructions and caller progress callbacks are excluded; total rank calls have a separate pre-enumeration cap. Not bytecode, elapsed time, allocated bytes or RSS bounds.'}
 
 
+def _admit_prepared_counts(prepared, iterations, algorithm):
+    """Admit a warm-table solve without charging historical board preparation."""
+    pairs=len(prepared.pairs)
+    candidate_pairs=len(prepared.hands[0])*len(prepared.hands[1])
+    rows=3*pairs
+    active=[{pair[p] for pair in prepared.pairs} for p in (0,1)]
+    slots=2*sum(map(len,active))
+    # Bound table census/validation, category-row setup and serialization
+    # bookkeeping. Board ranking is historical work and has its own source
+    # preparation admission; it is not part of this prepared-call envelope.
+    setup=128+32*candidate_pairs+256*pairs+128*rows+128*slots
+    # Preserve the source-inclusive model's conservative training and
+    # diagnostic multipliers. Charge every requested sweep even when CFR+
+    # averaging delay suppresses some average-strategy passes.
+    per_iteration=256+2048*rows+256*slots
+    training=1024+64*rows+128*slots+iterations*per_iteration
+    diagnostics=1024+512*rows+256*slots
+    total=setup+training+diagnostics
+    if total > MAX_MODELED_LOOP_ENTRIES:
+        raise ValueError('Push/fold full-requested prepared work exceeds 500,000,000 modeled loop entries')
+    return {'budget_version':'preflop-push-fold-prepared-count-v1',
+            'requested_iterations':iterations,'compatible_pairs':pairs,
+            'categorical_rows_upper_bound':rows,
+            'information_action_slots':slots,'public_states':5,
+            'algorithm':algorithm,
+            'training_loop_entries_upper_bound':training,
+            'diagnostic_loop_entries_upper_bound':diagnostics,
+            'prepared_setup_loop_entries_upper_bound':setup,
+            'source_bookkeeping_loop_entries_upper_bound':0,
+            'current_rank_calls':0,'current_board_combinations':0,
+            'source_enumeration_charged':False,
+            'total_loop_entries_upper_bound':total,
+            'total_loop_entry_limit':MAX_MODELED_LOOP_ENTRIES,
+            'historical_equity_preparation':dict(prepared.budget),
+            'scope':'Prepared-table solve only. The existing immutable table is structurally validated and its category rows are consumed; this call charges a conservative bounded table census, validation, setup and result-row bookkeeping, plus the unchanged training and diagnostic envelopes. Historical full-board enumeration metadata is recorded for provenance but not charged again; current rank calls and board combinations are zero. Internal ranking instructions and caller progress callbacks are excluded. Not bytecode, elapsed time, allocated bytes or RSS bounds.'}
+
+
 def prepare_preflop_equities(sb_range,bb_range,*,progress=None):
     """Enumerate all full boards once; return an immutable reusable table."""
     return plan_preflop_equities(sb_range,bb_range).build(progress=progress)
@@ -82,13 +119,18 @@ def solve_preflop_push_fold(sb_range,bb_range,*,config=None,iterations=1000,
 
 
 def solve_prepared_push_fold(equities,*,config=None,iterations=1000,
-                             algorithm='cfrplus',averaging_delay=0):
+                             algorithm='cfrplus',averaging_delay=0,
+                             resource_model='source-inclusive'):
     """Solve with structurally validated trusted counts, without re-enumerating boards."""
+    if type(resource_model) is not str or resource_model not in ('source-inclusive','prepared-counts'):
+        raise ValueError("resource_model must be 'source-inclusive' or 'prepared-counts'")
     monetary=_options(config,iterations,algorithm,averaging_delay)
     if not isinstance(equities,FullBoardEquities):
         raise TypeError('equities must be a FullBoardEquities table with trusted counts')
     equities.validate()
-    budget=_admit(equities,iterations,algorithm)
+    budget=(_admit(equities,iterations,algorithm)
+            if resource_model=='source-inclusive'
+            else _admit_prepared_counts(equities,iterations,algorithm))
     sb,bb=monetary.small_blind,monetary.big_blind
     stack_sb,stack_bb=monetary.stacks
     matched=min(stack_sb,stack_bb)

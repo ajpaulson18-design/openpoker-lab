@@ -27,6 +27,12 @@ Vanilla CFR, DCFR and alternating CFR+ reuse the existing independent kernels;
 positive averaging delay is available only with CFR+. Finite-iteration output
 includes value, information-set best responses and exploitability in this game.
 
+Prepared callers may explicitly select
+[`resource_model="prepared-counts"`](preflop-prepared-budget.md) to budget only
+compact-table validation/setup, training and diagnostics. The default still
+charges source preparation, and the full convenience solve keeps its original
+pre-enumeration guard.
+
 ## Reweighting a prepared table
 
 Use [`reweight_preflop_equities`](preflop-equity-reweight.md) to apply new
