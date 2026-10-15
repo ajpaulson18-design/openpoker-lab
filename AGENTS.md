@@ -51,6 +51,13 @@ source-orbit consistency, current admission caps and literal reweight behavior.
 Record source/target endpoints and the full suit bijection; structural validation
 does not authenticate counts. See [suit transfer](docs/preflop-suit-remap.md).
 
+Prepared shove/fold solves may explicitly select `resource_model="prepared-counts"`
+to charge a separate compact-table setup envelope instead of historical board
+preparation. Preserve the source-inclusive default and full-solve pre-build
+guard, unchanged training/diagnostic bounds, full requested iterations and
+500-million ceiling. Validate tables and reject before tree/training allocation;
+logical entries are not CPU, allocation or RSS bounds. See [prepared admission](docs/preflop-prepared-budget.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

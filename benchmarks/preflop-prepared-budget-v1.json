@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-prepared-budget-v1",
+  "baseline_commit": "fdf7c83fa5059705830bf0d70a24e584b20d3379",
+  "resource_model": "prepared-counts",
+  "algorithms": ["vanilla", "dcfr", "cfrplus"],
+  "checkpoints": [100, 1000, 2000, 3000, 5000, 10000],
+  "final_repeats": 3,
+  "exploitability_chip_limit": 0.005,
+  "known_value_error_chip_limit": 0.005,
+  "cfrplus_final_exploitability_chip_limit": 0.00005,
+  "metric_absolute_tolerance": 1e-10,
+  "scope": "Prepared-counts admission only for an already trusted immutable four-pair split-AK table from the suit-remap fixture. Preserve legacy default and full-solve source admission. Measure complete prepared solve, exact diagnostics and JSON; exclude source enumeration, input table construction, historical loading and RSS. Report every convergence checkpoint; no monotonicity or cold-call speedup claim."
+}
