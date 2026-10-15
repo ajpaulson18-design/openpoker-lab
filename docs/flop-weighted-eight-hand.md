@@ -39,14 +39,52 @@ agreement is within `1e-10` chips. Full-call timings include ranking, tree
 construction, training, exact diagnostics and JSON serialization. The
 separate `tracemalloc` result measures Python allocations, not RSS.
 
-The raw versioned report at `benchmarks/results/flop-weighted-eight-hand-v1.json`
-will record the frozen fixture, all preflights, source hashes, world and action
-coverage, quality results and measurements. Reproduce from the recorded source
-with:
+The [raw versioned report](../benchmarks/results/flop-weighted-eight-hand-v1.json)
+records the frozen fixture, all preflights, source hashes, world and action
+coverage, quality results and measurements. Its source revision is
+`2c6c8584d007cd2a0d8db0dd916ec132fc95c1c0`, measured on Windows with Python
+3.12.14. Reproduce from that recorded source with:
 
 ```text
 python -m scripts.benchmark_flop_weighted_eight_hand
 ```
+
+All six requests passed admission before ranking; both final accuracy gates
+passed. The independent replay's largest scalar disagreement with production
+across timed checkpoints was `3.885780586188048e-16` chips. The table reports
+NashConv, which is twice the report's exploitability convention.
+
+| Stack / maximum raises | Iterations | Independent NashConv (chips) | Complete call + JSON seconds | Accuracy gate |
+| --- | ---: | ---: | ---: | --- |
+| 12 / 1 | 100 | 0.00986943665481 | 4.718384 | Miss |
+| 12 / 1 | 1,000 | 0.000195918491829 | 6.148047 | Pass |
+| 12 / 1 | 4,000 | 0.0000143935229765 | 12.855162 median of three | Pass |
+| 24 / 2 | 100 | 0.0490377242713 | 3.769938 | Miss |
+| 24 / 2 | 1,000 | 0.00114882873683 | 6.751501 | Pass |
+| 24 / 2 | 4,000 | 0.000104911023367 | 17.885450 median of three | Pass |
+
+The separate full 4,000-iteration traces peaked at 294,858 and 418,715 Python
+allocation bytes, respectively. They include the complete solve and JSON
+serialization, exclude the independent replay, and do not measure process RSS.
+The modeled total work bounds at 4,000 iterations are 80,878,592 and 129,020,256,
+below the unchanged 500,000,000 cap. The trees contain 112/176 information sets,
+39/63 public states and 25/41 terminal states. Both deeper-tree coverage
+witnesses pass with non-all-in targets 3, 9 and 21 at stack 24; legal action
+availability does not assert positive equilibrium probability on that line.
+
+The first final serialized policy for each fixture is retained beside the
+report, with its exact file SHA-256 recorded there. Repeated final calls and the
+allocation call have identical compact policy hashes. The report's canonical
+checksum is `4a4256b10949f479053cd03ff4d3ac5ace395de63cc84df6b109980e6b9f35c5`.
+Generated policy files are staged outside the checkout until the final source
+revision, hashes and clean-worktree check succeed.
+
+After measurement, the publication-order unit test received a mock-isolation
+fix: it replaces only the benchmark's subprocess reference, preserving Linux
+system-information calls. The report retains the original measured test-file
+hash at the frozen revision. Solver, oracle, specification and harness code did
+not change after measurement. Six focused tests and documentation checks pass;
+the pull request records the final cross-version full-suite CI results.
 
 For prior fixed-flop evidence, the [four-hand benchmark](direct-flop-checkdown.md)
 covered 15 compatible pairs and 29,700 ordered worlds with two bet sizes, one

@@ -126,7 +126,8 @@ class WeightedEightHandBenchmarkTests(unittest.TestCase):
                  patch.object(benchmark, '_is_clean', side_effect=clean_source), \
                  patch.object(benchmark, '_revision', return_value=self.spec['baseline_main']), \
                  patch.object(benchmark, '_hashes', return_value={}), \
-                 patch.object(benchmark.subprocess, 'run', return_value=SimpleNamespace(returncode=0)), \
+                 patch.object(benchmark, 'subprocess', SimpleNamespace(
+                     run=lambda *args, **kwargs: SimpleNamespace(returncode=0))), \
                  patch.object(benchmark, 'preflight_all', return_value=preflights), \
                  patch.object(benchmark, 'prepare_oracle', return_value=oracle), \
                  patch.object(benchmark, '_measured', side_effect=measured):
