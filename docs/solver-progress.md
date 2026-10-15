@@ -951,3 +951,25 @@ Python bytes excluding the source table, original preparation and RSS.
 The four-pair request fits at 2,000 iterations, charges 493,147,312 modeled
 entries and remains rejected at 3,000 under the original 500-million guard.
 See [API, mathematical scope, sources and evidence](preflop-suit-remap.md).
+
+## Explicit prepared-count preflop admission
+
+Prepared shove/fold callers may opt into a versioned compact-table work model.
+It replaces historical full-board preparation charges with bounded current
+validation/setup, while retaining full requested training/diagnostic charges,
+all structural caps and the 500-million limit. The default full payload matches
+the merged golden result exactly; full solves still pre-admit source work before
+enumeration.
+
+At frozen `e8e70bc`, 18 independent checkpoints verify three algorithms through
+10,000 iterations on the four-pair split-AK game. All final 0.005-chip gates pass;
+CFR+ also passes 0.00005, with exploitability 6.882e-6 and value error 9.375e-10.
+Intermediate increases remain recorded. Maximum production/replay scalar
+disagreement is 2.512e-16 chips. Legacy 3,000+ requests still reject; each prepared
+10,000 request charges 273,936,960 modeled entries.
+
+Three-repeat final complete-call medians are 1.866/2.410/4.060 seconds for
+vanilla/DCFR/CFR+. A separate complete 10,000-iteration CFR+ trace peaks at
+24,251 Python bytes excluding the source table, original preparation and RSS.
+This permits longer warm experiments and does not accelerate the kernels or
+expand the betting model. All 823 local tests pass; see [scope, census and every checkpoint](preflop-prepared-budget.md).
