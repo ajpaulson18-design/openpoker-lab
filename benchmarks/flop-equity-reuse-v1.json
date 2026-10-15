@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "flop-equity-reuse-v1",
+  "baseline_main": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+  "algorithm": "cfrplus",
+  "iterations": 4000,
+  "timed_repeats": 3,
+  "allocation_iterations": 4000,
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-09,
+  "scalar_tolerance": 1e-10,
+  "board": "2c3c4d",
+  "base_oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+  "base_ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+  "reversed_oop_range": "AsAd:.125,QhJh:.875,7s6s:.625,Tc9c:.375,KsQd:.75,Ac5c:.25,8h8d:.5,ThTs:1",
+  "reversed_ip_range": "KsKd:.125,AhKh:.875,8s7s:.625,QcQd:.375,AdJd:.25,6h5h:.5,9d8d:1,JcTc:.75",
+  "subset_oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75",
+  "subset_ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25",
+  "fixtures": [
+    {
+      "id": "base-8x8-stack12-raises1",
+      "oop_range": "base_oop_range",
+      "ip_range": "base_ip_range",
+      "effective_stack": 12,
+      "max_raises": 1,
+      "expected_compatible_pairs": 58,
+      "expected_ordered_worlds": 114840,
+      "expected_normalizer": "1185/64",
+      "expected_normalizer_units": 1185
+    },
+    {
+      "id": "base-8x8-stack24-raises2",
+      "oop_range": "base_oop_range",
+      "ip_range": "base_ip_range",
+      "effective_stack": 24,
+      "max_raises": 2,
+      "expected_compatible_pairs": 58,
+      "expected_ordered_worlds": 114840,
+      "expected_normalizer": "1185/64",
+      "expected_normalizer_units": 1185
+    },
+    {
+      "id": "reversed-weights-8x8-stack24-raises2",
+      "oop_range": "reversed_oop_range",
+      "ip_range": "reversed_ip_range",
+      "effective_stack": 24,
+      "max_raises": 2,
+      "expected_compatible_pairs": 58,
+      "expected_ordered_worlds": 114840,
+      "expected_normalizer": "1195/64",
+      "expected_normalizer_units": 1195
+    },
+    {
+      "id": "subset-4x4-stack12-raises1",
+      "oop_range": "subset_oop_range",
+      "ip_range": "subset_ip_range",
+      "effective_stack": 12,
+      "max_raises": 1,
+      "expected_compatible_pairs": 15,
+      "expected_ordered_worlds": 29700,
+      "expected_normalizer": "49/8",
+      "expected_normalizer_units": 392
+    }
+  ],
+  "expected_pair_census": {
+    "base_candidates": 64,
+    "base_compatible_pairs": 58,
+    "base_ordered_worlds": 114840,
+    "base_unordered_boards": 57420,
+    "base_normalizer": "1185/64",
+    "base_normalizer_units": 1185,
+    "reversed_normalizer": "1195/64",
+    "reversed_normalizer_units": 1195,
+    "subset_candidates": 16,
+    "subset_compatible_pairs": 15,
+    "subset_ordered_worlds": 29700,
+    "subset_unordered_boards": 14850,
+    "subset_normalizer": "49/8",
+    "subset_normalizer_units": 392
+  },
+  "historical_count_source": {
+    "commit": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+    "path": "benchmarks/results/flop-weighted-eight-hand-v1.json",
+    "blob": "610ac4e8d272db495936119c60f731b7a1061032"
+  },
+  "methodology": "Prepare the complete physical 8x8 pair-count table once; verify all 58 W/T/L rows against independent ordered-board replay and the pinned PR130 report. Before any oracle ranking, complete no-rank 4,000-iteration preflight for all four fixed fixtures. Compare three fresh solves to three reweighted prepared solves per fixture with exact serialized-result parity after removing only equity_preparation. Every measured profile receives independent visible-information replay. Warm calls guard all ranking boundaries. A separate tracemalloc call measures reweight, prepared solve and JSON serialization for the 8x8 stack-24 fixture, excluding source-table preparation, oracle and process RSS.",
+  "model_limits": "Fixed board 2c3c4d, heads-up finite flop betting followed by forced turn/river checkdown, full hidden future-deck W/T/L integration, four fixed weighted range/config fixtures. No later-street betting, preflop solving, rake, multiway play, unrestricted NLHE or general speed claim.",
+  "provenance": "New benchmark for the independently implemented immutable fixed-flop equity cache. Independent numeric-rule ordered-board replay and own-hand best responses are used for accuracy checks; a pinned previously published report corroborates physical pair counts. No third-party code or runtime dependencies are included."
+}
