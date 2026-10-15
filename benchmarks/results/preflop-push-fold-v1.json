@@ -1,0 +1,2834 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-push-fold-v1",
+  "phase": "independently-verified",
+  "provenance": {
+    "git_revision": "65fa7ba0e4bc8bb9a1f4c47a0bcc884016a4d42e",
+    "git_status": [],
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "source_sha256": {
+      "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "pokerlab/equity.py": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca",
+      "pokerlab/analysis.py": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e",
+      "pokerlab/cfr.py": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a",
+      "pokerlab/cfr_plus.py": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89",
+      "pokerlab/river_config.py": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874",
+      "pokerlab/river_tree.py": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8",
+      "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+      "pokerlab/preflop_full_board_equity.py": "e5a21293186963702cc61199d7df7af1517698339db10b2e88cbcf907c4f9a3c",
+      "pokerlab/preflop_push_fold.py": "0cf021fd39aed332be747114cd9900c81a9246df7532da30109ec45a468df91e",
+      "scripts/preflop_validation.py": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b",
+      "scripts/preflop_push_fold_validation.py": "eb5b7fd66d2a4b69e682ed6f89247c8b465a152809ed36b7428dea40c2f3ede7",
+      "scripts/benchmark_preflop_push_fold.py": "2d2dced6b7699b6e1348a960105c6c201abe1e305ecdd9ae9547ac1c6e78e3a6",
+      "benchmarks/preflop-push-fold-v1.json": "45c0b857d552ec01d6146abbd8c251b734f7823dae8d428c3c0c56b1fc3f3724"
+    },
+    "created_utc": "2026-10-15T02:28:37.690331+00:00"
+  },
+  "config": {
+    "schema_version": 1,
+    "benchmark_id": "preflop-push-fold-v1",
+    "sb_range": "AsAd:1,QsQd:0.5",
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "configs": [
+      {
+        "id": "equal-two-bb",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": 2
+      },
+      {
+        "id": "sb-excess-refund",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          3,
+          2
+        ]
+      },
+      {
+        "id": "bb-excess-stack",
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          2,
+          3
+        ]
+      }
+    ],
+    "algorithms": [
+      "vanilla",
+      "dcfr",
+      "cfrplus"
+    ],
+    "iterations": [
+      100,
+      1000,
+      3000
+    ],
+    "final_exploitability_chip_limit": 0.005,
+    "final_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "scope": "Full legal five-card board deck for three compatible weighted private pairs in a finite heads-up SB fold/shove and BB fold/call game. No selected boards, limps, non-all-in raises, later-street betting, antes, rake or multiway equilibrium. Fixed finite-fixture accuracy gates are empirical regression requirements, not convergence guarantees for other ranges or stacks."
+  },
+  "source_unchanged": true,
+  "independent_counts": [
+    {
+      "sb_hand": "AdAs",
+      "bb_hand": "KdKs",
+      "wins": 1410336,
+      "ties": 9308,
+      "losses": 292660,
+      "boards": 1712304,
+      "pair_probability": 0.6153846153846154
+    },
+    {
+      "sb_hand": "QdQs",
+      "bb_hand": "AsKh",
+      "wins": 968267,
+      "ties": 7226,
+      "losses": 736811,
+      "boards": 1712304,
+      "pair_probability": 0.07692307692307693
+    },
+    {
+      "sb_hand": "QdQs",
+      "bb_hand": "KdKs",
+      "wins": 292846,
+      "ties": 9336,
+      "losses": 1410122,
+      "boards": 1712304,
+      "pair_probability": 0.3076923076923077
+    }
+  ],
+  "exact_equilibrium_certificates": {
+    "equal-two-bb": {
+      "sb_qq_shove_fraction": [
+        130762,
+        493357
+      ],
+      "bb_kk_call_fraction": [
+        1449111,
+        1973428
+      ],
+      "value_sb_fraction": [
+        256757651065,
+        457587630786
+      ]
+    },
+    "sb-excess-refund": {
+      "sb_qq_shove_fraction": [
+        130762,
+        493357
+      ],
+      "bb_kk_call_fraction": [
+        1449111,
+        1973428
+      ],
+      "value_sb_fraction": [
+        256757651065,
+        457587630786
+      ]
+    },
+    "bb-excess-stack": {
+      "sb_qq_shove_fraction": [
+        130762,
+        493357
+      ],
+      "bb_kk_call_fraction": [
+        1449111,
+        1973428
+      ],
+      "value_sb_fraction": [
+        256757651065,
+        457587630786
+      ]
+    }
+  },
+  "oracle_seconds": 10420.19886309997,
+  "oracle_timing_scope": "Sum of individual pair worker elapsed times. Pair workers may overlap; this is neither total end-to-end wall time nor a production performance comparison.",
+  "preparation_seconds": 488.1612150000292,
+  "prepared_solve_traced_peak_bytes": 19437,
+  "memory_scope": "One complete 3,000-iteration CFR+ prepared solve with diagnostics and JSON serialization. Excludes one-time full-board equity preparation; Python traced allocation peak, not process RSS.",
+  "timing_scope": "Single measurements, no backend comparison or speedup claim. Preparation enumerates every board once. Prepared solve timings include training, exact production diagnostics and JSON serialization; they exclude preparation. First composed-call elapsed includes preparation and the first 100-iteration vanilla solve.",
+  "results": [
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.03819379996275529,
+      "independent": {
+        "value_sb": 0.5539866463427995,
+        "value_bb": -0.5539866463427995,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037213,
+        "nash_conv": 0.026254768933759266,
+        "exploitability": 0.013127384466879633,
+        "sb_best_response_gain": 0.021429267094681105,
+        "bb_best_response_gain": 0.0048255018390781605,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 6.591949208711867e-17,
+          "exploitability": 3.2959746043559335e-17,
+          "sb_best_response_gain": 7.632783294297951e-17,
+          "bb_best_response_gain": 1.0408340855860843e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            30365724107251471337700809879365661885622544671911184757731468948719,
+            54813097585860525778224011724687183808125505021229071538762515742720
+          ],
+          "sb_best_response_value": [
+            2508060626803980180307,
+            4358691805760222557770
+          ],
+          "bb_best_response_value": [
+            -704370097325970604450559176400818799,
+            1282629159720526302505230768185278464
+          ],
+          "nash_conv": [
+            1026616887325577252608565661849612587876015762108107,
+            39102110931378975936111633464714670192298612720926720
+          ],
+          "sb_best_response_gain": [
+            116285846336968295446316114940683353780710112987200826012736719947667,
+            5426496661000192052044177160744031197004424997101678082337489058529280
+          ],
+          "bb_best_response_gain": [
+            7141518986565797029930069064939955595613766509750635417387522826623,
+            1479953634818234196012048316566553962819388635573184931546587925053440
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                45035996273705,
+                9007199254740992
+              ],
+              [
+                8962163258467287,
+                9007199254740992
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6314199443081396,
+                9007199254740993
+              ],
+              [
+                2692999811659597,
+                9007199254740993
+              ]
+            ],
+            "1:AsKh": [
+              [
+                240191980126427,
+                48038396025285291
+              ],
+              [
+                47798204045158864,
+                48038396025285291
+              ]
+            ],
+            "1:KdKs": [
+              [
+                6830768718322353,
+                36028797018963965
+              ],
+              [
+                29198028300641612,
+                36028797018963965
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.007124786289167462
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.1880407999851741,
+      "independent": {
+        "value_sb": 0.560616226975124,
+        "value_bb": -0.560616226975124,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465438,
+        "nash_conv": 0.00714121557790436,
+        "exploitability": 0.00357060778895218,
+        "sb_best_response_gain": 0.0011495769493241334,
+        "bb_best_response_gain": 0.005991638628580227,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0148132334464322e-16,
+          "exploitability": 5.074066167232161e-17,
+          "sb_best_response_gain": 8.413408858487514e-17,
+          "bb_best_response_gain": 1.734723475976807e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            296685186075602800525494357356756077106224421762643664263224843146145191,
+            529212626748971118287920571072456556258024535970614790904753546621616128
+          ],
+          "sb_best_response_value": [
+            1759905379543791162491,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -17851201496246723458367227562002040944,
+            32186098256957965473698017730128028157
+          ],
+          "nash_conv": [
+            517571382430462319068981439767410326054910285316609,
+            72476650058273032060917584668093597523526105679527936
+          ],
+          "sb_best_response_gain": [
+            55306421545626678587756339766860193274555968139379529336878944948897,
+            48110238795361010753447324642950596023456775997328617354977595147419648
+          ],
+          "bb_best_response_gain": [
+            1056950272387181565539613504956984777835046358554244513789388441969805,
+            176404208916323706095973523690818852086008178656871596968251182207205376
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                329406144173389,
+                658812288346769741
+              ],
+              [
+                658482882202596352,
+                658812288346769741
+              ]
+            ],
+            "0:QdQs": [
+              [
+                1494242373482216,
+                2001599834386887
+              ],
+              [
+                507357460904671,
+                2001599834386887
+              ]
+            ],
+            "1:AsKh": [
+              [
+                288230376151705,
+                576460752303423513
+              ],
+              [
+                576172521927271808,
+                576460752303423513
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2361753695488417,
+                9007199254740992
+              ],
+              [
+                6645445559252575,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.000495205656842912
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7246353999944404,
+      "independent": {
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021285,
+        "nash_conv": 0.004119489217347496,
+        "exploitability": 0.002059744608673748,
+        "sb_best_response_gain": 0.003308712287458493,
+        "bb_best_response_gain": 0.0008107769298890038,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.196959198423997e-16,
+          "exploitability": 5.984795992119984e-17,
+          "sb_best_response_gain": 5.551115123125783e-17,
+          "bb_best_response_gain": 6.385950795939621e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            74800372061695449182057722598462469263520181386483769474435167613805706721,
+            133361581940740685436710846203892346308202605665804906618295419835630223360
+          ],
+          "sb_best_response_value": [
+            45320725470395778421,
+            80328454753593851904
+          ],
+          "bb_best_response_value": [
+            -86311219411443131529878845105076362665986,
+            154107038454314716440939907974529761262695
+          ],
+          "nash_conv": [
+            1429537735096618664833915217363885431161937972855046987,
+            347018200479011227411598761133004515234001814721774223360
+          ],
+          "sb_best_response_gain": [
+            853491498727720203555550089432991586158659633684465409690381065191657,
+            257952769711297263900794673508495834251842564150493049551828665059246080
+          ],
+          "bb_best_response_gain": [
+            324379481913163652186705319012077594620794167224452067069661426491996579,
+            400084745822222056310132538611677038924607816997414719854886259506890670080
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3074457345618437,
+                18446744073709550085
+              ],
+              [
+                18443669616363931648,
+                18446744073709550085
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13158210827284400,
+                18014398509481983
+              ],
+              [
+                4856187682197583,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                96076792050575,
+                576460752303423439
+              ],
+              [
+                576364675511372864,
+                576460752303423439
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2245467407397929,
+                9007199254740992
+              ],
+              [
+                6761731847343063,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.00022747359994945704
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.027355699974577874,
+      "independent": {
+        "value_sb": 0.5596023883062572,
+        "value_bb": -0.5596023883062572,
+        "sb_best_response_value": 0.569864058448813,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707595,
+        "exploitability": 0.008678097605353798,
+        "sb_best_response_gain": 0.010261670142555785,
+        "bb_best_response_gain": 0.007094525068151809,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.5265566588595902e-16,
+          "exploitability": 7.632783294297951e-17,
+          "sb_best_response_gain": 7.112366251504909e-17,
+          "bb_best_response_gain": 8.239936510889834e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            104339547199672680799519768179722210162647805361203507477052408916283312768364694,
+            186453005526792179550704810374446585363848623344070701334293868010915838490165569
+          ],
+          "sb_best_response_value": [
+            57128821445036439031801,
+            100249911532485129958686
+          ],
+          "bb_best_response_value": [
+            -419177110283549413700604442868570656191073,
+            758680804698164827114570934613032159217477
+          ],
+          "nash_conv": [
+            316280287399105404179795261450550374147934660764370186139,
+            18222904476436284059894682722376194580813817699048198724142
+          ],
+          "sb_best_response_gain": [
+            31625111401720199491987691496898492837538703383586236997379202728259395343395,
+            3081867859946978174391815047511513807666919394116871096434609388610179148597778
+          ],
+          "bb_best_response_gain": [
+            188970788820296408764643012246650300378326708567362803035776567780345453436559,
+            26636143646684597078672115767778083623406946192010100190613409715845119784309367
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                1744630738462259,
+                1180591620717411313203
+              ],
+              [
+                1180589876086672850944,
+                1180591620717411313203
+              ]
+            ],
+            "0:QdQs": [
+              [
+                12417416793374822,
+                18014398509481983
+              ],
+              [
+                5596981716107161,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                6978522953849033,
+                4722366482869645252809
+              ],
+              [
+                4722359504346691403776,
+                4722366482869645252809
+              ]
+            ],
+            "1:KdKs": [
+              [
+                7894864119614609,
+                36028797018963969
+              ],
+              [
+                28133932899349360,
+                36028797018963969
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.0015090443257097519
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.31312959996284917,
+      "independent": {
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.001877140480880461,
+        "exploitability": 0.0009385702404402305,
+        "sb_best_response_gain": 0.0004124137794257228,
+        "bb_best_response_gain": 0.0014647267014547382,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 4.0549161250957866e-17,
+          "exploitability": 2.0274580625478933e-17,
+          "sb_best_response_gain": 7.925517880869037e-17,
+          "bb_best_response_gain": 3.881443777498106e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            18986653184225834336445582523492826751414267456433910539539384740921811072717737391109,
+            33838294625179893755867681230405909065062994361925228479755203905293381487575714364485
+          ],
+          "sb_best_response_value": [
+            9381921422772281749427,
+            16708318588747522123530
+          ],
+          "bb_best_response_value": [
+            -33912391391967480728957320210432777473375509230,
+            60597353232851815876008731809921394449749106743
+          ],
+          "nash_conv": [
+            4098266465911345364766898407706545772385953111997526260994389,
+            2183249739512878194065300619325253816368332294478086738801049710
+          ],
+          "sb_best_response_gain": [
+            5582151590276624372207886355248754093753351729302181813934104307720493048701609621,
+            13535317850071957502347072492162363626025197744770091391902081562117352595030285745794
+          ],
+          "bb_best_response_gain": [
+            148691561007580029840316501672436312814842237144477204602631773975255280839439905777,
+            101514883875539681267603043691217727195188983085775685439265611715880144462727143093455
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3621343632722983,
+                2417851639229258162146343
+              ],
+              [
+                2417851635607914529423360,
+                2417851639229258162146343
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13098604441430776,
+                18014398509481983
+              ],
+              [
+                4915794068051207,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                1810671816361493,
+                1208925819614629081073173
+              ],
+              [
+                1208925817803957264711680,
+                1208925819614629081073173
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4747829832480893,
+                18014398509481985
+              ],
+              [
+                13266568677001092,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.1844294633744923e-05
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7582399999955669,
+      "independent": {
+        "value_sb": 0.5611129487422215,
+        "value_bb": -0.5611129487422215,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974500941,
+        "exploitability": 0.0007776805987250471,
+        "sb_best_response_gain": 0.00014782375544250987,
+        "bb_best_response_gain": 0.0014075374420075843,
+        "scalar_absolute_gaps": {
+          "value_sb": 2.220446049250313e-16,
+          "value_bb": 2.220446049250313e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 5.0523821237824507e-17,
+          "exploitability": 2.5261910618912253e-17,
+          "sb_best_response_gain": 1.9868004810796869e-16,
+          "bb_best_response_gain": 2.491496592371689e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            674016921212397861356296965553279813526667151023620739102928800986877595740483453920103,
+            1201214341467719536121135403790510630874586224990792775520539080468554701061146535788544
+          ],
+          "sb_best_response_value": [
+            30231926477141539090579866599257927253652279115,
+            53864313984757175967658460314359416661949284352
+          ],
+          "bb_best_response_value": [
+            -144711110463563428730174614530513622961205617914,
+            258548707126834458997096986460324821317165542575
+          ],
+          "nash_conv": [
+            10778781787727646093897697795691976341875803827489145320780825327653518526978093222543,
+            6930082739236843477621935021868330562737997451869958320310802387318584813814306937241600
+          ],
+          "sb_best_response_gain": [
+            88784007523579862149811108977839605640637450576749665237273247766680077049509070401,
+            600607170733859768060567701895255315437293112495396387760269540234277350530573267894272
+          ],
+          "bb_best_response_gain": [
+            126806562111922419898198404997319751598289832170846439384559742094493729293288851332909,
+            90091075610078965209085155284288297315593966874309458164040431035141602579585990184140800
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                8592509096460847,
+                154742504910672531886473775
+              ],
+              [
+                154742504902080022790012928,
+                154742504910672531886473775
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13105348869866912,
+                18014398509481985
+              ],
+              [
+                4909049639615073,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                4296254548230425,
+                77371252455336265943236889
+              ],
+              [
+                77371252451040011395006464,
+                77371252455336265943236889
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2395689271561961,
+                9007199254740992
+              ],
+              [
+                6611509983179031,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.5161102545624416e-06
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.020741600019391626,
+      "independent": {
+        "value_sb": 0.5610974116743651,
+        "value_bb": -0.5610974116743651,
+        "sb_best_response_value": 0.5617868949155858,
+        "bb_best_response_value": -0.5600747244297385,
+        "nash_conv": 0.0017121704858472917,
+        "exploitability": 0.0008560852429236459,
+        "sb_best_response_gain": 0.0006894832412206803,
+        "bb_best_response_gain": 0.0010226872446266115,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 2.220446049250313e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 8.348356728138384e-17,
+          "exploitability": 4.174178364069192e-17,
+          "sb_best_response_gain": 7.600257229123386e-17,
+          "bb_best_response_gain": 7.37257477290143e-18
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            12666366269167654973222715667764570053,
+            22574273211081261670968167363996811264
+          ],
+          "sb_best_response_value": [
+            1759971453606156109895,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -1276078217628688080739,
+            2278407080283753016845
+          ],
+          "nash_conv": [
+            32209170276222089697578476617706861,
+            18811894342567718059140139469997342720
+          ],
+          "sb_best_response_gain": [
+            15564583061777482929320851908526577,
+            22574273211081261670968167363996811264
+          ],
+          "bb_best_response_gain": [
+            3119786658066084419969367571989413,
+            3050577460956927252833536130269839360
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13140655375642774,
+                18014398509481985
+              ],
+              [
+                4873743133839211,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2360743095124933,
+                9007199254740992
+              ],
+              [
+                6646456159616059,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4020957601834638e-05
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.4815914999926463,
+      "independent": {
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180446,
+        "nash_conv": 0.00012230723052058279,
+        "exploitability": 6.115361526029139e-05,
+        "sb_best_response_gain": 0.00010363293174125961,
+        "bb_best_response_gain": 1.8674298779323173e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.7452944471585408e-16,
+          "exploitability": 8.726472235792704e-17,
+          "sb_best_response_gain": 5.576864924722313e-17,
+          "bb_best_response_gain": 1.1876079546863094e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            479798557040590793232064189172454617,
+            855086106480350820870006339545333760
+          ],
+          "sb_best_response_value": [
+            850183703793594917,
+            1514898324656750592
+          ],
+          "bb_best_response_value": [
+            -4687457957767122388354,
+            8354159294373761061765
+          ],
+          "nash_conv": [
+            1725623023413957851597042586715321,
+            14108920756925788544355104602498007040
+          ],
+          "sb_best_response_gain": [
+            265845240317332952414484795239179,
+            2565258319441052462610019018636001280
+          ],
+          "bb_best_response_gain": [
+            58549822593028136292750269533297,
+            3135315723761286343190023244999557120
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13237976192575272,
+                18014398509481985
+              ],
+              [
+                4776422316906713,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                597036212597563,
+                2251799813685248
+              ],
+              [
+                1654763601087685,
+                2251799813685248
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 3.88151429886463e-08
+    },
+    {
+      "config_id": "equal-two-bb",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.1240975999971852,
+      "independent": {
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171448,
+        "nash_conv": 6.0383784025834484e-05,
+        "exploitability": 3.0191892012917242e-05,
+        "sb_best_response_gain": 1.5716116953202463e-05,
+        "bb_best_response_gain": 4.466766707263202e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0406985603145236e-16,
+          "exploitability": 5.203492801572618e-17,
+          "sb_best_response_gain": 3.413881590613732e-17,
+          "bb_best_response_gain": 6.993104012531504e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            42222274883258335898177061590247838721,
+            75247577370270863882401263506228309115
+          ],
+          "sb_best_response_value": [
+            28126472806134608260313,
+            50124955766242566370590
+          ],
+          "bb_best_response_value": [
+            -2343620505969275856559,
+            4177079647186879835259
+          ],
+          "nash_conv": [
+            27262400762362238309487550392052493,
+            451485464221625183294407581037369854690
+          ],
+          "sb_best_response_gain": [
+            645054396216178900146488584777987,
+            41044133111056834844946143730669986790
+          ],
+          "bb_best_response_gain": [
+            1120377911332459467104231997749702,
+            25082525790090287960800421168742769705
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6617746790959542,
+                9007199254740991
+              ],
+              [
+                2389452463781449,
+                9007199254740991
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4784712608406309,
+                18014398509481985
+              ],
+              [
+                13229685901075676,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4047749630208273e-08
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.022207300004083663,
+      "independent": {
+        "value_sb": 0.5539866463427995,
+        "value_bb": -0.5539866463427995,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037213,
+        "nash_conv": 0.026254768933759266,
+        "exploitability": 0.013127384466879633,
+        "sb_best_response_gain": 0.021429267094681105,
+        "bb_best_response_gain": 0.0048255018390781605,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 6.591949208711867e-17,
+          "exploitability": 3.2959746043559335e-17,
+          "sb_best_response_gain": 7.632783294297951e-17,
+          "bb_best_response_gain": 1.0408340855860843e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            30365724107251471337700809879365661885622544671911184757731468948719,
+            54813097585860525778224011724687183808125505021229071538762515742720
+          ],
+          "sb_best_response_value": [
+            2508060626803980180307,
+            4358691805760222557770
+          ],
+          "bb_best_response_value": [
+            -704370097325970604450559176400818799,
+            1282629159720526302505230768185278464
+          ],
+          "nash_conv": [
+            1026616887325577252608565661849612587876015762108107,
+            39102110931378975936111633464714670192298612720926720
+          ],
+          "sb_best_response_gain": [
+            116285846336968295446316114940683353780710112987200826012736719947667,
+            5426496661000192052044177160744031197004424997101678082337489058529280
+          ],
+          "bb_best_response_gain": [
+            7141518986565797029930069064939955595613766509750635417387522826623,
+            1479953634818234196012048316566553962819388635573184931546587925053440
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                45035996273705,
+                9007199254740992
+              ],
+              [
+                8962163258467287,
+                9007199254740992
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6314199443081396,
+                9007199254740993
+              ],
+              [
+                2692999811659597,
+                9007199254740993
+              ]
+            ],
+            "1:AsKh": [
+              [
+                240191980126427,
+                48038396025285291
+              ],
+              [
+                47798204045158864,
+                48038396025285291
+              ]
+            ],
+            "1:KdKs": [
+              [
+                6830768718322353,
+                36028797018963965
+              ],
+              [
+                29198028300641612,
+                36028797018963965
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.007124786289167462
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.2935204000095837,
+      "independent": {
+        "value_sb": 0.560616226975124,
+        "value_bb": -0.560616226975124,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465438,
+        "nash_conv": 0.00714121557790436,
+        "exploitability": 0.00357060778895218,
+        "sb_best_response_gain": 0.0011495769493241334,
+        "bb_best_response_gain": 0.005991638628580227,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0148132334464322e-16,
+          "exploitability": 5.074066167232161e-17,
+          "sb_best_response_gain": 8.413408858487514e-17,
+          "bb_best_response_gain": 1.734723475976807e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            296685186075602800525494357356756077106224421762643664263224843146145191,
+            529212626748971118287920571072456556258024535970614790904753546621616128
+          ],
+          "sb_best_response_value": [
+            1759905379543791162491,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -17851201496246723458367227562002040944,
+            32186098256957965473698017730128028157
+          ],
+          "nash_conv": [
+            517571382430462319068981439767410326054910285316609,
+            72476650058273032060917584668093597523526105679527936
+          ],
+          "sb_best_response_gain": [
+            55306421545626678587756339766860193274555968139379529336878944948897,
+            48110238795361010753447324642950596023456775997328617354977595147419648
+          ],
+          "bb_best_response_gain": [
+            1056950272387181565539613504956984777835046358554244513789388441969805,
+            176404208916323706095973523690818852086008178656871596968251182207205376
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                329406144173389,
+                658812288346769741
+              ],
+              [
+                658482882202596352,
+                658812288346769741
+              ]
+            ],
+            "0:QdQs": [
+              [
+                1494242373482216,
+                2001599834386887
+              ],
+              [
+                507357460904671,
+                2001599834386887
+              ]
+            ],
+            "1:AsKh": [
+              [
+                288230376151705,
+                576460752303423513
+              ],
+              [
+                576172521927271808,
+                576460752303423513
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2361753695488417,
+                9007199254740992
+              ],
+              [
+                6645445559252575,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.000495205656842912
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.6855257000424899,
+      "independent": {
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021285,
+        "nash_conv": 0.004119489217347496,
+        "exploitability": 0.002059744608673748,
+        "sb_best_response_gain": 0.003308712287458493,
+        "bb_best_response_gain": 0.0008107769298890038,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.196959198423997e-16,
+          "exploitability": 5.984795992119984e-17,
+          "sb_best_response_gain": 5.551115123125783e-17,
+          "bb_best_response_gain": 6.385950795939621e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            74800372061695449182057722598462469263520181386483769474435167613805706721,
+            133361581940740685436710846203892346308202605665804906618295419835630223360
+          ],
+          "sb_best_response_value": [
+            45320725470395778421,
+            80328454753593851904
+          ],
+          "bb_best_response_value": [
+            -86311219411443131529878845105076362665986,
+            154107038454314716440939907974529761262695
+          ],
+          "nash_conv": [
+            1429537735096618664833915217363885431161937972855046987,
+            347018200479011227411598761133004515234001814721774223360
+          ],
+          "sb_best_response_gain": [
+            853491498727720203555550089432991586158659633684465409690381065191657,
+            257952769711297263900794673508495834251842564150493049551828665059246080
+          ],
+          "bb_best_response_gain": [
+            324379481913163652186705319012077594620794167224452067069661426491996579,
+            400084745822222056310132538611677038924607816997414719854886259506890670080
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3074457345618437,
+                18446744073709550085
+              ],
+              [
+                18443669616363931648,
+                18446744073709550085
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13158210827284400,
+                18014398509481983
+              ],
+              [
+                4856187682197583,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                96076792050575,
+                576460752303423439
+              ],
+              [
+                576364675511372864,
+                576460752303423439
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2245467407397929,
+                9007199254740992
+              ],
+              [
+                6761731847343063,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.00022747359994945704
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.03193699999246746,
+      "independent": {
+        "value_sb": 0.5596023883062572,
+        "value_bb": -0.5596023883062572,
+        "sb_best_response_value": 0.569864058448813,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707595,
+        "exploitability": 0.008678097605353798,
+        "sb_best_response_gain": 0.010261670142555785,
+        "bb_best_response_gain": 0.007094525068151809,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.5265566588595902e-16,
+          "exploitability": 7.632783294297951e-17,
+          "sb_best_response_gain": 7.112366251504909e-17,
+          "bb_best_response_gain": 8.239936510889834e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            104339547199672680799519768179722210162647805361203507477052408916283312768364694,
+            186453005526792179550704810374446585363848623344070701334293868010915838490165569
+          ],
+          "sb_best_response_value": [
+            57128821445036439031801,
+            100249911532485129958686
+          ],
+          "bb_best_response_value": [
+            -419177110283549413700604442868570656191073,
+            758680804698164827114570934613032159217477
+          ],
+          "nash_conv": [
+            316280287399105404179795261450550374147934660764370186139,
+            18222904476436284059894682722376194580813817699048198724142
+          ],
+          "sb_best_response_gain": [
+            31625111401720199491987691496898492837538703383586236997379202728259395343395,
+            3081867859946978174391815047511513807666919394116871096434609388610179148597778
+          ],
+          "bb_best_response_gain": [
+            188970788820296408764643012246650300378326708567362803035776567780345453436559,
+            26636143646684597078672115767778083623406946192010100190613409715845119784309367
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                1744630738462259,
+                1180591620717411313203
+              ],
+              [
+                1180589876086672850944,
+                1180591620717411313203
+              ]
+            ],
+            "0:QdQs": [
+              [
+                12417416793374822,
+                18014398509481983
+              ],
+              [
+                5596981716107161,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                6978522953849033,
+                4722366482869645252809
+              ],
+              [
+                4722359504346691403776,
+                4722366482869645252809
+              ]
+            ],
+            "1:KdKs": [
+              [
+                7894864119614609,
+                36028797018963969
+              ],
+              [
+                28133932899349360,
+                36028797018963969
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.0015090443257097519
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.28945329994894564,
+      "independent": {
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.001877140480880461,
+        "exploitability": 0.0009385702404402305,
+        "sb_best_response_gain": 0.0004124137794257228,
+        "bb_best_response_gain": 0.0014647267014547382,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 4.0549161250957866e-17,
+          "exploitability": 2.0274580625478933e-17,
+          "sb_best_response_gain": 7.925517880869037e-17,
+          "bb_best_response_gain": 3.881443777498106e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            18986653184225834336445582523492826751414267456433910539539384740921811072717737391109,
+            33838294625179893755867681230405909065062994361925228479755203905293381487575714364485
+          ],
+          "sb_best_response_value": [
+            9381921422772281749427,
+            16708318588747522123530
+          ],
+          "bb_best_response_value": [
+            -33912391391967480728957320210432777473375509230,
+            60597353232851815876008731809921394449749106743
+          ],
+          "nash_conv": [
+            4098266465911345364766898407706545772385953111997526260994389,
+            2183249739512878194065300619325253816368332294478086738801049710
+          ],
+          "sb_best_response_gain": [
+            5582151590276624372207886355248754093753351729302181813934104307720493048701609621,
+            13535317850071957502347072492162363626025197744770091391902081562117352595030285745794
+          ],
+          "bb_best_response_gain": [
+            148691561007580029840316501672436312814842237144477204602631773975255280839439905777,
+            101514883875539681267603043691217727195188983085775685439265611715880144462727143093455
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3621343632722983,
+                2417851639229258162146343
+              ],
+              [
+                2417851635607914529423360,
+                2417851639229258162146343
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13098604441430776,
+                18014398509481983
+              ],
+              [
+                4915794068051207,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                1810671816361493,
+                1208925819614629081073173
+              ],
+              [
+                1208925817803957264711680,
+                1208925819614629081073173
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4747829832480893,
+                18014398509481985
+              ],
+              [
+                13266568677001092,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.1844294633744923e-05
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.6185975999687798,
+      "independent": {
+        "value_sb": 0.5611129487422215,
+        "value_bb": -0.5611129487422215,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974500941,
+        "exploitability": 0.0007776805987250471,
+        "sb_best_response_gain": 0.00014782375544250987,
+        "bb_best_response_gain": 0.0014075374420075843,
+        "scalar_absolute_gaps": {
+          "value_sb": 2.220446049250313e-16,
+          "value_bb": 2.220446049250313e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 5.0523821237824507e-17,
+          "exploitability": 2.5261910618912253e-17,
+          "sb_best_response_gain": 1.9868004810796869e-16,
+          "bb_best_response_gain": 2.491496592371689e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            674016921212397861356296965553279813526667151023620739102928800986877595740483453920103,
+            1201214341467719536121135403790510630874586224990792775520539080468554701061146535788544
+          ],
+          "sb_best_response_value": [
+            30231926477141539090579866599257927253652279115,
+            53864313984757175967658460314359416661949284352
+          ],
+          "bb_best_response_value": [
+            -144711110463563428730174614530513622961205617914,
+            258548707126834458997096986460324821317165542575
+          ],
+          "nash_conv": [
+            10778781787727646093897697795691976341875803827489145320780825327653518526978093222543,
+            6930082739236843477621935021868330562737997451869958320310802387318584813814306937241600
+          ],
+          "sb_best_response_gain": [
+            88784007523579862149811108977839605640637450576749665237273247766680077049509070401,
+            600607170733859768060567701895255315437293112495396387760269540234277350530573267894272
+          ],
+          "bb_best_response_gain": [
+            126806562111922419898198404997319751598289832170846439384559742094493729293288851332909,
+            90091075610078965209085155284288297315593966874309458164040431035141602579585990184140800
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                8592509096460847,
+                154742504910672531886473775
+              ],
+              [
+                154742504902080022790012928,
+                154742504910672531886473775
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13105348869866912,
+                18014398509481985
+              ],
+              [
+                4909049639615073,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                4296254548230425,
+                77371252455336265943236889
+              ],
+              [
+                77371252451040011395006464,
+                77371252455336265943236889
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2395689271561961,
+                9007199254740992
+              ],
+              [
+                6611509983179031,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.5161102545624416e-06
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.032850800023879856,
+      "independent": {
+        "value_sb": 0.5610974116743651,
+        "value_bb": -0.5610974116743651,
+        "sb_best_response_value": 0.5617868949155858,
+        "bb_best_response_value": -0.5600747244297385,
+        "nash_conv": 0.0017121704858472917,
+        "exploitability": 0.0008560852429236459,
+        "sb_best_response_gain": 0.0006894832412206803,
+        "bb_best_response_gain": 0.0010226872446266115,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 2.220446049250313e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 8.348356728138384e-17,
+          "exploitability": 4.174178364069192e-17,
+          "sb_best_response_gain": 7.600257229123386e-17,
+          "bb_best_response_gain": 7.37257477290143e-18
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            12666366269167654973222715667764570053,
+            22574273211081261670968167363996811264
+          ],
+          "sb_best_response_value": [
+            1759971453606156109895,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -1276078217628688080739,
+            2278407080283753016845
+          ],
+          "nash_conv": [
+            32209170276222089697578476617706861,
+            18811894342567718059140139469997342720
+          ],
+          "sb_best_response_gain": [
+            15564583061777482929320851908526577,
+            22574273211081261670968167363996811264
+          ],
+          "bb_best_response_gain": [
+            3119786658066084419969367571989413,
+            3050577460956927252833536130269839360
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13140655375642774,
+                18014398509481985
+              ],
+              [
+                4873743133839211,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2360743095124933,
+                9007199254740992
+              ],
+              [
+                6646456159616059,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4020957601834638e-05
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.3550715000019409,
+      "independent": {
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180446,
+        "nash_conv": 0.00012230723052058279,
+        "exploitability": 6.115361526029139e-05,
+        "sb_best_response_gain": 0.00010363293174125961,
+        "bb_best_response_gain": 1.8674298779323173e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.7452944471585408e-16,
+          "exploitability": 8.726472235792704e-17,
+          "sb_best_response_gain": 5.576864924722313e-17,
+          "bb_best_response_gain": 1.1876079546863094e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            479798557040590793232064189172454617,
+            855086106480350820870006339545333760
+          ],
+          "sb_best_response_value": [
+            850183703793594917,
+            1514898324656750592
+          ],
+          "bb_best_response_value": [
+            -4687457957767122388354,
+            8354159294373761061765
+          ],
+          "nash_conv": [
+            1725623023413957851597042586715321,
+            14108920756925788544355104602498007040
+          ],
+          "sb_best_response_gain": [
+            265845240317332952414484795239179,
+            2565258319441052462610019018636001280
+          ],
+          "bb_best_response_gain": [
+            58549822593028136292750269533297,
+            3135315723761286343190023244999557120
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13237976192575272,
+                18014398509481985
+              ],
+              [
+                4776422316906713,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                597036212597563,
+                2251799813685248
+              ],
+              [
+                1654763601087685,
+                2251799813685248
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 3.88151429886463e-08
+    },
+    {
+      "config_id": "sb-excess-refund",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.0493961000465788,
+      "independent": {
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171448,
+        "nash_conv": 6.0383784025834484e-05,
+        "exploitability": 3.0191892012917242e-05,
+        "sb_best_response_gain": 1.5716116953202463e-05,
+        "bb_best_response_gain": 4.466766707263202e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0406985603145236e-16,
+          "exploitability": 5.203492801572618e-17,
+          "sb_best_response_gain": 3.413881590613732e-17,
+          "bb_best_response_gain": 6.993104012531504e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            42222274883258335898177061590247838721,
+            75247577370270863882401263506228309115
+          ],
+          "sb_best_response_value": [
+            28126472806134608260313,
+            50124955766242566370590
+          ],
+          "bb_best_response_value": [
+            -2343620505969275856559,
+            4177079647186879835259
+          ],
+          "nash_conv": [
+            27262400762362238309487550392052493,
+            451485464221625183294407581037369854690
+          ],
+          "sb_best_response_gain": [
+            645054396216178900146488584777987,
+            41044133111056834844946143730669986790
+          ],
+          "bb_best_response_gain": [
+            1120377911332459467104231997749702,
+            25082525790090287960800421168742769705
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6617746790959542,
+                9007199254740991
+              ],
+              [
+                2389452463781449,
+                9007199254740991
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4784712608406309,
+                18014398509481985
+              ],
+              [
+                13229685901075676,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4047749630208273e-08
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.012729700014460832,
+      "independent": {
+        "value_sb": 0.5539866463427995,
+        "value_bb": -0.5539866463427995,
+        "sb_best_response_value": 0.5754159134374806,
+        "bb_best_response_value": -0.5491611445037213,
+        "nash_conv": 0.026254768933759266,
+        "exploitability": 0.013127384466879633,
+        "sb_best_response_gain": 0.021429267094681105,
+        "bb_best_response_gain": 0.0048255018390781605,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 6.591949208711867e-17,
+          "exploitability": 3.2959746043559335e-17,
+          "sb_best_response_gain": 7.632783294297951e-17,
+          "bb_best_response_gain": 1.0408340855860843e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            30365724107251471337700809879365661885622544671911184757731468948719,
+            54813097585860525778224011724687183808125505021229071538762515742720
+          ],
+          "sb_best_response_value": [
+            2508060626803980180307,
+            4358691805760222557770
+          ],
+          "bb_best_response_value": [
+            -704370097325970604450559176400818799,
+            1282629159720526302505230768185278464
+          ],
+          "nash_conv": [
+            1026616887325577252608565661849612587876015762108107,
+            39102110931378975936111633464714670192298612720926720
+          ],
+          "sb_best_response_gain": [
+            116285846336968295446316114940683353780710112987200826012736719947667,
+            5426496661000192052044177160744031197004424997101678082337489058529280
+          ],
+          "bb_best_response_gain": [
+            7141518986565797029930069064939955595613766509750635417387522826623,
+            1479953634818234196012048316566553962819388635573184931546587925053440
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                45035996273705,
+                9007199254740992
+              ],
+              [
+                8962163258467287,
+                9007199254740992
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6314199443081396,
+                9007199254740993
+              ],
+              [
+                2692999811659597,
+                9007199254740993
+              ]
+            ],
+            "1:AsKh": [
+              [
+                240191980126427,
+                48038396025285291
+              ],
+              [
+                47798204045158864,
+                48038396025285291
+              ]
+            ],
+            "1:KdKs": [
+              [
+                6830768718322353,
+                36028797018963965
+              ],
+              [
+                29198028300641612,
+                36028797018963965
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.007124786289167462
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.3110749999759719,
+      "independent": {
+        "value_sb": 0.560616226975124,
+        "value_bb": -0.560616226975124,
+        "sb_best_response_value": 0.5617658039244482,
+        "bb_best_response_value": -0.5546245883465438,
+        "nash_conv": 0.00714121557790436,
+        "exploitability": 0.00357060778895218,
+        "sb_best_response_gain": 0.0011495769493241334,
+        "bb_best_response_gain": 0.005991638628580227,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0148132334464322e-16,
+          "exploitability": 5.074066167232161e-17,
+          "sb_best_response_gain": 8.413408858487514e-17,
+          "bb_best_response_gain": 1.734723475976807e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            296685186075602800525494357356756077106224421762643664263224843146145191,
+            529212626748971118287920571072456556258024535970614790904753546621616128
+          ],
+          "sb_best_response_value": [
+            1759905379543791162491,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -17851201496246723458367227562002040944,
+            32186098256957965473698017730128028157
+          ],
+          "nash_conv": [
+            517571382430462319068981439767410326054910285316609,
+            72476650058273032060917584668093597523526105679527936
+          ],
+          "sb_best_response_gain": [
+            55306421545626678587756339766860193274555968139379529336878944948897,
+            48110238795361010753447324642950596023456775997328617354977595147419648
+          ],
+          "bb_best_response_gain": [
+            1056950272387181565539613504956984777835046358554244513789388441969805,
+            176404208916323706095973523690818852086008178656871596968251182207205376
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                329406144173389,
+                658812288346769741
+              ],
+              [
+                658482882202596352,
+                658812288346769741
+              ]
+            ],
+            "0:QdQs": [
+              [
+                1494242373482216,
+                2001599834386887
+              ],
+              [
+                507357460904671,
+                2001599834386887
+              ]
+            ],
+            "1:AsKh": [
+              [
+                288230376151705,
+                576460752303423513
+              ],
+              [
+                576172521927271808,
+                576460752303423513
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2361753695488417,
+                9007199254740992
+              ],
+              [
+                6645445559252575,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.000495205656842912
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "vanilla",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.265664000005927,
+      "independent": {
+        "value_sb": 0.5608839590320175,
+        "value_bb": -0.5608839590320175,
+        "sb_best_response_value": 0.564192671319476,
+        "bb_best_response_value": -0.5600731821021285,
+        "nash_conv": 0.004119489217347496,
+        "exploitability": 0.002059744608673748,
+        "sb_best_response_gain": 0.003308712287458493,
+        "bb_best_response_gain": 0.0008107769298890038,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.196959198423997e-16,
+          "exploitability": 5.984795992119984e-17,
+          "sb_best_response_gain": 5.551115123125783e-17,
+          "bb_best_response_gain": 6.385950795939621e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            74800372061695449182057722598462469263520181386483769474435167613805706721,
+            133361581940740685436710846203892346308202605665804906618295419835630223360
+          ],
+          "sb_best_response_value": [
+            45320725470395778421,
+            80328454753593851904
+          ],
+          "bb_best_response_value": [
+            -86311219411443131529878845105076362665986,
+            154107038454314716440939907974529761262695
+          ],
+          "nash_conv": [
+            1429537735096618664833915217363885431161937972855046987,
+            347018200479011227411598761133004515234001814721774223360
+          ],
+          "sb_best_response_gain": [
+            853491498727720203555550089432991586158659633684465409690381065191657,
+            257952769711297263900794673508495834251842564150493049551828665059246080
+          ],
+          "bb_best_response_gain": [
+            324379481913163652186705319012077594620794167224452067069661426491996579,
+            400084745822222056310132538611677038924607816997414719854886259506890670080
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3074457345618437,
+                18446744073709550085
+              ],
+              [
+                18443669616363931648,
+                18446744073709550085
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13158210827284400,
+                18014398509481983
+              ],
+              [
+                4856187682197583,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                96076792050575,
+                576460752303423439
+              ],
+              [
+                576364675511372864,
+                576460752303423439
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2245467407397929,
+                9007199254740992
+              ],
+              [
+                6761731847343063,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.00022747359994945704
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.023908199975267053,
+      "independent": {
+        "value_sb": 0.5596023883062572,
+        "value_bb": -0.5596023883062572,
+        "sb_best_response_value": 0.569864058448813,
+        "bb_best_response_value": -0.5525078632381054,
+        "nash_conv": 0.017356195210707595,
+        "exploitability": 0.008678097605353798,
+        "sb_best_response_gain": 0.010261670142555785,
+        "bb_best_response_gain": 0.007094525068151809,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 1.1102230246251565e-16,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 1.5265566588595902e-16,
+          "exploitability": 7.632783294297951e-17,
+          "sb_best_response_gain": 7.112366251504909e-17,
+          "bb_best_response_gain": 8.239936510889834e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            104339547199672680799519768179722210162647805361203507477052408916283312768364694,
+            186453005526792179550704810374446585363848623344070701334293868010915838490165569
+          ],
+          "sb_best_response_value": [
+            57128821445036439031801,
+            100249911532485129958686
+          ],
+          "bb_best_response_value": [
+            -419177110283549413700604442868570656191073,
+            758680804698164827114570934613032159217477
+          ],
+          "nash_conv": [
+            316280287399105404179795261450550374147934660764370186139,
+            18222904476436284059894682722376194580813817699048198724142
+          ],
+          "sb_best_response_gain": [
+            31625111401720199491987691496898492837538703383586236997379202728259395343395,
+            3081867859946978174391815047511513807666919394116871096434609388610179148597778
+          ],
+          "bb_best_response_gain": [
+            188970788820296408764643012246650300378326708567362803035776567780345453436559,
+            26636143646684597078672115767778083623406946192010100190613409715845119784309367
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                1744630738462259,
+                1180591620717411313203
+              ],
+              [
+                1180589876086672850944,
+                1180591620717411313203
+              ]
+            ],
+            "0:QdQs": [
+              [
+                12417416793374822,
+                18014398509481983
+              ],
+              [
+                5596981716107161,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                6978522953849033,
+                4722366482869645252809
+              ],
+              [
+                4722359504346691403776,
+                4722366482869645252809
+              ]
+            ],
+            "1:KdKs": [
+              [
+                7894864119614609,
+                36028797018963969
+              ],
+              [
+                28133932899349360,
+                36028797018963969
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 0.0015090443257097519
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.18188410002039745,
+      "independent": {
+        "value_sb": 0.5610995883373332,
+        "value_bb": -0.5610995883373332,
+        "sb_best_response_value": 0.561512002116759,
+        "bb_best_response_value": -0.5596348616358785,
+        "nash_conv": 0.001877140480880461,
+        "exploitability": 0.0009385702404402305,
+        "sb_best_response_gain": 0.0004124137794257228,
+        "bb_best_response_gain": 0.0014647267014547382,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 4.0549161250957866e-17,
+          "exploitability": 2.0274580625478933e-17,
+          "sb_best_response_gain": 7.925517880869037e-17,
+          "bb_best_response_gain": 3.881443777498106e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            18986653184225834336445582523492826751414267456433910539539384740921811072717737391109,
+            33838294625179893755867681230405909065062994361925228479755203905293381487575714364485
+          ],
+          "sb_best_response_value": [
+            9381921422772281749427,
+            16708318588747522123530
+          ],
+          "bb_best_response_value": [
+            -33912391391967480728957320210432777473375509230,
+            60597353232851815876008731809921394449749106743
+          ],
+          "nash_conv": [
+            4098266465911345364766898407706545772385953111997526260994389,
+            2183249739512878194065300619325253816368332294478086738801049710
+          ],
+          "sb_best_response_gain": [
+            5582151590276624372207886355248754093753351729302181813934104307720493048701609621,
+            13535317850071957502347072492162363626025197744770091391902081562117352595030285745794
+          ],
+          "bb_best_response_gain": [
+            148691561007580029840316501672436312814842237144477204602631773975255280839439905777,
+            101514883875539681267603043691217727195188983085775685439265611715880144462727143093455
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                3621343632722983,
+                2417851639229258162146343
+              ],
+              [
+                2417851635607914529423360,
+                2417851639229258162146343
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13098604441430776,
+                18014398509481983
+              ],
+              [
+                4915794068051207,
+                18014398509481983
+              ]
+            ],
+            "1:AsKh": [
+              [
+                1810671816361493,
+                1208925819614629081073173
+              ],
+              [
+                1208925817803957264711680,
+                1208925819614629081073173
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4747829832480893,
+                18014398509481985
+              ],
+              [
+                13266568677001092,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.1844294633744923e-05
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "dcfr",
+      "iterations": 3000,
+      "prepared_solve_seconds": 0.7738186999922618,
+      "independent": {
+        "value_sb": 0.5611129487422215,
+        "value_bb": -0.5611129487422215,
+        "sb_best_response_value": 0.561260772497664,
+        "bb_best_response_value": -0.5597054113002139,
+        "nash_conv": 0.0015553611974500941,
+        "exploitability": 0.0007776805987250471,
+        "sb_best_response_gain": 0.00014782375544250987,
+        "bb_best_response_gain": 0.0014075374420075843,
+        "scalar_absolute_gaps": {
+          "value_sb": 2.220446049250313e-16,
+          "value_bb": 2.220446049250313e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 0.0,
+          "nash_conv": 5.0523821237824507e-17,
+          "exploitability": 2.5261910618912253e-17,
+          "sb_best_response_gain": 1.9868004810796869e-16,
+          "bb_best_response_gain": 2.491496592371689e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            674016921212397861356296965553279813526667151023620739102928800986877595740483453920103,
+            1201214341467719536121135403790510630874586224990792775520539080468554701061146535788544
+          ],
+          "sb_best_response_value": [
+            30231926477141539090579866599257927253652279115,
+            53864313984757175967658460314359416661949284352
+          ],
+          "bb_best_response_value": [
+            -144711110463563428730174614530513622961205617914,
+            258548707126834458997096986460324821317165542575
+          ],
+          "nash_conv": [
+            10778781787727646093897697795691976341875803827489145320780825327653518526978093222543,
+            6930082739236843477621935021868330562737997451869958320310802387318584813814306937241600
+          ],
+          "sb_best_response_gain": [
+            88784007523579862149811108977839605640637450576749665237273247766680077049509070401,
+            600607170733859768060567701895255315437293112495396387760269540234277350530573267894272
+          ],
+          "bb_best_response_gain": [
+            126806562111922419898198404997319751598289832170846439384559742094493729293288851332909,
+            90091075610078965209085155284288297315593966874309458164040431035141602579585990184140800
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                8592509096460847,
+                154742504910672531886473775
+              ],
+              [
+                154742504902080022790012928,
+                154742504910672531886473775
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13105348869866912,
+                18014398509481985
+              ],
+              [
+                4909049639615073,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                4296254548230425,
+                77371252455336265943236889
+              ],
+              [
+                77371252451040011395006464,
+                77371252455336265943236889
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2395689271561961,
+                9007199254740992
+              ],
+              [
+                6611509983179031,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.5161102545624416e-06
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 100,
+      "prepared_solve_seconds": 0.04845400003250688,
+      "independent": {
+        "value_sb": 0.5610974116743651,
+        "value_bb": -0.5610974116743651,
+        "sb_best_response_value": 0.5617868949155858,
+        "bb_best_response_value": -0.5600747244297385,
+        "nash_conv": 0.0017121704858472917,
+        "exploitability": 0.0008560852429236459,
+        "sb_best_response_gain": 0.0006894832412206803,
+        "bb_best_response_gain": 0.0010226872446266115,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 2.220446049250313e-16,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 8.348356728138384e-17,
+          "exploitability": 4.174178364069192e-17,
+          "sb_best_response_gain": 7.600257229123386e-17,
+          "bb_best_response_gain": 7.37257477290143e-18
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            12666366269167654973222715667764570053,
+            22574273211081261670968167363996811264
+          ],
+          "sb_best_response_value": [
+            1759971453606156109895,
+            3132809735390160224256
+          ],
+          "bb_best_response_value": [
+            -1276078217628688080739,
+            2278407080283753016845
+          ],
+          "nash_conv": [
+            32209170276222089697578476617706861,
+            18811894342567718059140139469997342720
+          ],
+          "sb_best_response_gain": [
+            15564583061777482929320851908526577,
+            22574273211081261670968167363996811264
+          ],
+          "bb_best_response_gain": [
+            3119786658066084419969367571989413,
+            3050577460956927252833536130269839360
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13140655375642774,
+                18014398509481985
+              ],
+              [
+                4873743133839211,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                2360743095124933,
+                9007199254740992
+              ],
+              [
+                6646456159616059,
+                9007199254740992
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4020957601834638e-05
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 1000,
+      "prepared_solve_seconds": 0.36412740004016086,
+      "independent": {
+        "value_sb": 0.561111393816824,
+        "value_bb": -0.561111393816824,
+        "sb_best_response_value": 0.5612150267485653,
+        "bb_best_response_value": -0.5610927195180446,
+        "nash_conv": 0.00012230723052058279,
+        "exploitability": 6.115361526029139e-05,
+        "sb_best_response_gain": 0.00010363293174125961,
+        "bb_best_response_gain": 1.8674298779323173e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 0.0,
+          "value_bb": 0.0,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.7452944471585408e-16,
+          "exploitability": 8.726472235792704e-17,
+          "sb_best_response_gain": 5.576864924722313e-17,
+          "bb_best_response_gain": 1.1876079546863094e-16
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            479798557040590793232064189172454617,
+            855086106480350820870006339545333760
+          ],
+          "sb_best_response_value": [
+            850183703793594917,
+            1514898324656750592
+          ],
+          "bb_best_response_value": [
+            -4687457957767122388354,
+            8354159294373761061765
+          ],
+          "nash_conv": [
+            1725623023413957851597042586715321,
+            14108920756925788544355104602498007040
+          ],
+          "sb_best_response_gain": [
+            265845240317332952414484795239179,
+            2565258319441052462610019018636001280
+          ],
+          "bb_best_response_gain": [
+            58549822593028136292750269533297,
+            3135315723761286343190023244999557120
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                13237976192575272,
+                18014398509481985
+              ],
+              [
+                4776422316906713,
+                18014398509481985
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                597036212597563,
+                2251799813685248
+              ],
+              [
+                1654763601087685,
+                2251799813685248
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 3.88151429886463e-08
+    },
+    {
+      "config_id": "bb-excess-stack",
+      "algorithm": "cfrplus",
+      "iterations": 3000,
+      "prepared_solve_seconds": 1.3159263000125065,
+      "independent": {
+        "value_sb": 0.5611114185842173,
+        "value_bb": -0.5611114185842173,
+        "sb_best_response_value": 0.5611271347011706,
+        "bb_best_response_value": -0.5610667509171448,
+        "nash_conv": 6.0383784025834484e-05,
+        "exploitability": 3.0191892012917242e-05,
+        "sb_best_response_gain": 1.5716116953202463e-05,
+        "bb_best_response_gain": 4.466766707263202e-05,
+        "scalar_absolute_gaps": {
+          "value_sb": 1.1102230246251565e-16,
+          "value_bb": 1.1102230246251565e-16,
+          "sb_best_response_value": 0.0,
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.0406985603145236e-16,
+          "exploitability": 5.203492801572618e-17,
+          "sb_best_response_gain": 3.413881590613732e-17,
+          "bb_best_response_gain": 6.993104012531504e-17
+        },
+        "checked_information_sets": 4,
+        "checked_physical_boards": 5136912,
+        "exact_fraction_replay": {
+          "value_sb": [
+            42222274883258335898177061590247838721,
+            75247577370270863882401263506228309115
+          ],
+          "sb_best_response_value": [
+            28126472806134608260313,
+            50124955766242566370590
+          ],
+          "bb_best_response_value": [
+            -2343620505969275856559,
+            4177079647186879835259
+          ],
+          "nash_conv": [
+            27262400762362238309487550392052493,
+            451485464221625183294407581037369854690
+          ],
+          "sb_best_response_gain": [
+            645054396216178900146488584777987,
+            41044133111056834844946143730669986790
+          ],
+          "bb_best_response_gain": [
+            1120377911332459467104231997749702,
+            25082525790090287960800421168742769705
+          ],
+          "input_frequencies": "serialized binary64 fractions",
+          "normalization": "each action row normalized by its exact fraction sum",
+          "exact_normalized_action_frequencies": {
+            "0:AdAs": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "0:QdQs": [
+              [
+                6617746790959542,
+                9007199254740991
+              ],
+              [
+                2389452463781449,
+                9007199254740991
+              ]
+            ],
+            "1:AsKh": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "1:KdKs": [
+              [
+                4784712608406309,
+                18014398509481985
+              ],
+              [
+                13229685901075676,
+                18014398509481985
+              ]
+            ]
+          }
+        }
+      },
+      "value_error_against_certificate": 1.4047749630208273e-08
+    }
+  ],
+  "passed": true,
+  "failures": [],
+  "artifact_sha256": "bf78de722b0fcd1b838e56acc11d1c16984a397f2fd693f71816633b0157725e"
+}

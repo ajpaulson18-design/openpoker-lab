@@ -130,3 +130,52 @@ supplies the established information-set/average-strategy framework. This code i
 independently written using existing OpenPoker kernels and the standard library;
 no external source, dependency or proprietary solver output is incorporated.
 These references do not establish patent or legal clearance.
+
+## Measured acceptance result
+
+The [verified report](../benchmarks/results/preflop-push-fold-v1.json) passed
+all fixed gates at solver/harness source `4650d6591c88c25f1a04c28fcf4960efc6ec33de`
+on Python 3.12.14 / Windows 10, Intel Core i7-7500U (two physical cores,
+four logical processors). Three independent best-five workers matched every
+production integer count across 5,136,912 boards; their complete per-pair
+artifacts and the production report are retained beside the verified report.
+
+| SB hand | BB hand | Wins | Ties | Losses | Exact pair prior |
+| --- | --- | ---: | ---: | ---: | --- |
+| AdAs | KdKs | 1,410,336 | 9,308 | 292,660 | 8/13 |
+| QdQs | AsKh | 968,267 | 7,226 | 736,811 | 1/13 |
+| QdQs | KdKs | 292,846 | 9,336 | 1,410,122 | 4/13 |
+
+At 3,000 iterations, all three equal-effective-stack configurations met both
+0.005-chip gates. Values below are independently replayed for equal two-BB
+stacks; the asymmetric cases also passed the refund-invariance checks.
+Exploitability is half NashConv; each player's gain is separately in the report.
+
+| Algorithm | Exploitability (chips) | Error against known value (chips) | Prepared solve + diagnostics + JSON (seconds) |
+| --- | ---: | ---: | ---: |
+| vanilla | 0.00205974461 | 0.0002274736 | 0.724635 |
+| dcfr | 0.000777680599 | 1.51611025e-06 | 0.758240 |
+| cfrplus | 3.0191892e-05 | 1.40477496e-08 | 1.124098 |
+
+The ideal rational certificate gives QQ shove frequency `130762/493357`,
+KK call frequency `1449111/1973428`, and SB value
+`256757651065/457587630786`. Every reported policy was independently
+checked; maximum production/independent scalar difference was
+`2.491e-16` chips.
+
+Full preparation took 488.161 seconds; preparation plus the first 100-iteration
+vanilla solve/serialization took 488.206 seconds. These are single observed
+measurements, not speed comparisons or future runtime guarantees. A separate
+3,000-iteration CFR+ prepared-call trace peaked at 19,437 Python bytes, excluding
+the prebuilt table, equity preparation and RSS. No full-preparation allocation
+peak is claimed. Independent oracle workers overlapped, taking about
+3,468/3,485/3,468 seconds each; their summed worker times in the report are not
+total wall time or a production benchmark.
+
+The full local regression suite passed 773 tests in 358.547 seconds. Five final
+evidence/replay helper checks passed after CLI-only provenance refinements; the
+solver kernels were unchanged. GitHub validates the final published head on
+Python 3.11/3.12/3.13 plus frontend/documentation checks. Luna reviewed the core,
+independent replay, frozen harness and production artifact; the lead reviewed
+and ran all measurement phases. This finite three-pair result does not certify
+full-range preflop, missing actions or later-street equilibrium accuracy.

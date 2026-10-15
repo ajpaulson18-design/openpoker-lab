@@ -887,3 +887,25 @@ exact weighted update expectations, hidden information, sampler support,
 known-game legal BRs and admission/cleanup. This path remains experimental;
 previous delayed exact CFR+ remains the strongest fixed-flop accuracy result.
 See [method, all seeds, resource scope and provenance](preflop-chance-sampled.md).
+
+## Exact full-board restricted preflop shove/fold
+
+A separate SB fold/shove, BB fold/call API now prepares reusable full-board
+equities for up to four compatible private pairs, under explicit pre-enumeration
+rank/pair and full-requested training bounds. Existing selected-outcome preflop,
+shared turn/river and Coach implementations are unchanged.
+
+At frozen source `4650d65`, three weighted pairs covered 5,136,912 unordered
+final boards. Independent best-five enumeration matched every integer W/T/L
+count. Exact-fraction visible-information policy replay checked 27 checkpoints
+and a rational mixed-equilibrium anchor, with maximum scalar disagreement
+2.492e-16 chips. All fixed final accuracy gates passed: 3,000-iteration
+exploitability was 0.002060 vanilla, 0.0007777 DCFR and 0.00003019 CFR+, and
+CFR+ known-value error was 1.405e-8 chips. Both asymmetric stack directions
+passed refund checks at the same effective stack.
+
+One-time full preparation took 488.161 seconds on Python 3.12.14 / i7-7500U;
+a separate complete prepared-call trace peaked at 19,437 Python bytes and
+excludes equity preparation/RSS. No universal speed or full-call memory claim
+follows. All 773 local regressions passed; bounded Luna reviews and the final
+GitHub checks accompany the PR. See [scope, all results, provenance and limits](preflop-push-fold.md).
