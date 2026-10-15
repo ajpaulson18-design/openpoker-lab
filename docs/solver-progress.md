@@ -928,3 +928,26 @@ seconds, with ranking/enumeration disabled. A separate call trace peaks at
 The original physical counts remain pinned to five verified PR #125 Git blobs;
 this run adds no physical pair coverage or cold-call speed comparison.
 See [API, all cases, provenance and measured limits](preflop-equity-reweight.md).
+
+## Exact preflop suit-orbit transfers
+
+A separate opt-in API reuses trusted ordered-pair W/T/L counts through one
+global suit permutation. It preserves role and relative-suit relationships,
+rejects uncovered or inconsistent source orbits, and reports every source,
+target and suit map. Literal reweighting, default preparation and all caps stay
+unchanged.
+
+At frozen `695dd35`, 24 complete suit images and a four-pair/three-BB-hand
+split game preserve the original rational equilibrium value. All 25 trained
+2,000-iteration cases pass both 0.005-chip accuracy gates; exploitability is
+1.464e-5 and known-value error is 4.202e-9 chips. Independent checks cover
+76 pair transfers, exact matrix witnesses and serialized own-hand best responses,
+with maximum scalar disagreement 1.324e-16 chips. A separate toy oracle checks
+19,008 mapped boards; this is not new physical full-deck enumeration.
+
+Complete warm-call medians are 0.653–1.105 seconds across the suit images and
+1.215 seconds for the split game. A separate split-call trace peaks at 32,758
+Python bytes excluding the source table, original preparation and RSS.
+The four-pair request fits at 2,000 iterations, charges 493,147,312 modeled
+entries and remains rejected at 3,000 under the original 500-million guard.
+See [API, mathematical scope, sources and evidence](preflop-suit-remap.md).

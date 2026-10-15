@@ -124,17 +124,42 @@ mapped-board comparisons. It uses the separate numeric-rule oracle in
 bijection on its declared toy deck; it is not a fresh 52-card enumeration or a
 replacement for the historical physical full-board counts.
 
-The suit-remap report is
-`benchmarks/results/preflop-suit-remap-v1.json`.
-The frozen config sets 0.005-chip limits for exploitability and known-value
-error. At the time this document was drafted, the full benchmark report had not
-yet been produced; no measured result is asserted here. Once available, use the
-report's exact source hashes, platform, runtime and allocation-trace scope. A
-separate warm allocation trace covers only the split-game fixture; it is a
-Python-allocation measurement, not RSS. The harness makes no cold-call or
-cross-source speed comparison. The cases reuse historical source counts and
-are fixture-specific; they do not establish a speedup over fresh full-board
-enumeration, a full-range result, or broader solver quality.
+The [verified report](../benchmarks/results/preflop-suit-remap-v1.json) passes
+both fixed 0.005-chip gates for all 25 fixtures at frozen source
+`695dd35eec4439efec214afb3d15ce9578f37295` on Python 3.12.14 / Windows 10.
+Its working tree was clean; all 20 source/config hashes stayed unchanged.
+The 24 images check 72 ordered pair transfers, and the split game checks four,
+for 76 checked source/target mappings in total. The toy oracle gives
+W/T/L `(540, 4, 248)` on every image of its 792-board deal. These toy counts
+are distinct from the reused physical 52-card counts.
+
+| Fixture | Exploitability (chips) | Known-value error (chips) | Median complete warm call (seconds) |
+| --- | ---: | ---: | ---: |
+| Each of 24 global suit images | 1.46360565e-5 | 4.20180701e-9 | 0.653009–1.104554 |
+| Four pairs, three BB hands | 1.46360565e-5 | 4.20180701e-9 | 1.214929 |
+
+Every exact matrix witness has the known rational value and passes all pure
+unilateral-deviation inequalities. Independent replay of the serialized witness
+leaves at most 1.239e-17 chips of NashConv due to frequency conversion.
+Maximum production/replay scalar disagreement is 1.324e-16 chips. All three
+repeated payloads are identical within each fixture, and the source table is
+unchanged. The four-pair 2,000-iteration request charges 493,147,312 modeled
+loop entries under the unchanged 500-million cap.
+
+A separate complete split-game warm allocation trace peaks at 32,758 Python
+bytes. Timings include remapping, training, production exact diagnostics and
+JSON; independent toy enumeration, witness search and replay run outside them.
+The trace excludes the prebuilt source table, original full-board preparation,
+historical-file loading and RSS. The cases reuse historical source counts and
+are fixture-specific; they establish no cold-call speedup, full-range result
+or accuracy for missing betting actions.
+
+The local full suite passed 814 tests in 536.646 seconds. A metadata-only
+orientation correction was also checked with all 13 witness tests; it does not
+change the calculation. GitHub runs the final source on Python 3.11/3.12/3.13
+plus frontend/documentation contracts. Luna implemented and reviewed the
+bounded core, independent witness and toy proof; the lead reviewed integration
+and ran focused tests, the full suite and the frozen benchmark.
 
 Suit remapping is standard-library code in this repository. The source papers
 are cited as background only; no third-party implementation or solver output is
