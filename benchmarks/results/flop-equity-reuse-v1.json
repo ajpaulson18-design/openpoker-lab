@@ -1,0 +1,3267 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "flop-equity-reuse-v1",
+  "source_revision": "9af1e75ae57f5bcf0c0e7b8d30e388bc2038e5bc",
+  "generated_at_utc": "2026-10-16T00:26:31.543029+00:00",
+  "specification_sha256": "5983f14bd04225aba16300a2b464ee25c9d334376b76924fae74cd38c26ff79c",
+  "source_hashes_lf_normalized": {
+    "AGENTS.md": "a368891ef44d18c7c79133234f5bf1679470678f763edbd355954a0502fa0d6b",
+    "benchmarks/flop-equity-reuse-v1.json": "7531b8120333dee02c5a34e44d5050746ebeb638f237d014cf7f709c0c046497",
+    "benchmarks/flop-weighted-eight-hand-v1.json": "db1bf1f9498e58bcf74c28505567d21698356b127c121ce2593c41897d93b1db",
+    "pokerlab/__init__.py": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+    "pokerlab/analysis.py": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/coach_analysis.py": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+    "pokerlab/coach_conversation.py": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+    "pokerlab/coach_grounding.py": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+    "pokerlab/coach_provider.py": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+    "pokerlab/coach_teaching.py": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+    "pokerlab/contracts.py": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+    "pokerlab/current_study.py": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+    "pokerlab/decision_study.py": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+    "pokerlab/equilibrium.py": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+    "pokerlab/equity.py": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+    "pokerlab/explanations.py": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+    "pokerlab/exploit.py": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+    "pokerlab/flop_checkdown_equity.py": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+    "pokerlab/flop_checkdown_solver.py": "a6073d950424ba29676f3a4202eb95c4b59a6958e7aced8dbff58c5d102bdae0",
+    "pokerlab/flop_checkdown_worlds.py": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+    "pokerlab/game.py": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+    "pokerlab/matrix_free_river.py": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+    "pokerlab/matrix_free_turn.py": "40d25ab99274f42c9d3f7264bf0039b2589414391467a439d2792716598a8c83",
+    "pokerlab/models.py": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+    "pokerlab/personalities.py": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+    "pokerlab/practice.py": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_full_board_equity.py": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+    "pokerlab/preflop_future_groups.py": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_push_fold.py": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+    "pokerlab/preflop_sampled_cfr.py": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+    "pokerlab/preflop_sampled_storage.py": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+    "pokerlab/preflop_solver.py": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+    "pokerlab/preflop_suit_equity.py": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+    "pokerlab/public_cfr.py": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+    "pokerlab/public_diagnostics.py": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+    "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+    "pokerlab/restricted_solver.py": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/server.py": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+    "pokerlab/situation_teaching.py": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+    "pokerlab/solver.py": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+    "pokerlab/turn_range_kernel.py": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+    "pokerlab/turn_solver.py": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+    "scripts/benchmark_flop_equity_reuse.py": "f4dba41e2869d7d2529b50b9d6ca031008fb565f656c519ccdd26bdf4550b526",
+    "scripts/benchmark_flop_weighted_eight_hand.py": "448c57b7993c275851bf51c615ce48963c3e47512e69d454a2e76cfb8bc1834d",
+    "scripts/flop_checkdown_validation.py": "1c1a9e396f1e068389cfebfaae9ac99ec2d75d2c8d2634ef4b6a142bb4d688e1",
+    "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "tests/test_flop_checkdown_equity.py": "74505b803068db7df3e5bf86cbc8f5293fc379e6cf556a77c8166571f521e076",
+    "tests/test_flop_checkdown_solver.py": "f6930d29712fb2656a1079266bec72a4f7eaca55b0ca361cb2f041be7e3bf185",
+    "tests/test_flop_checkdown_worlds.py": "79ba09b235e3d147fce88512e571a1e1d51e3d6d09f21d0b0bdc36f305aec9c0",
+    "tests/test_flop_equity_reuse_benchmark.py": "87a474db872e8c4e75eceb43f187798a169b32729304568f8b8e93017447d637",
+    "tests/test_flop_weighted_eight_hand.py": "454babc3218b8cf349d863df4d9e664fd7ad4e4db5da24c5f57ce32028ede73b"
+  },
+  "worktree_clean_at_start_and_before_publication": true,
+  "python": "3.12.14",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "specification": {
+    "schema_version": 1,
+    "benchmark_id": "flop-equity-reuse-v1",
+    "baseline_main": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+    "algorithm": "cfrplus",
+    "iterations": 4000,
+    "timed_repeats": 3,
+    "allocation_iterations": 4000,
+    "target_nash_conv": 0.005,
+    "target_padding": 1e-09,
+    "scalar_tolerance": 1e-10,
+    "board": "2c3c4d",
+    "base_oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+    "base_ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+    "reversed_oop_range": "AsAd:.125,QhJh:.875,7s6s:.625,Tc9c:.375,KsQd:.75,Ac5c:.25,8h8d:.5,ThTs:1",
+    "reversed_ip_range": "KsKd:.125,AhKh:.875,8s7s:.625,QcQd:.375,AdJd:.25,6h5h:.5,9d8d:1,JcTc:.75",
+    "subset_oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75",
+    "subset_ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25",
+    "fixtures": [
+      {
+        "id": "base-8x8-stack12-raises1",
+        "oop_range": "base_oop_range",
+        "ip_range": "base_ip_range",
+        "effective_stack": 12,
+        "max_raises": 1,
+        "expected_compatible_pairs": 58,
+        "expected_ordered_worlds": 114840,
+        "expected_normalizer": "1185/64",
+        "expected_normalizer_units": 1185
+      },
+      {
+        "id": "base-8x8-stack24-raises2",
+        "oop_range": "base_oop_range",
+        "ip_range": "base_ip_range",
+        "effective_stack": 24,
+        "max_raises": 2,
+        "expected_compatible_pairs": 58,
+        "expected_ordered_worlds": 114840,
+        "expected_normalizer": "1185/64",
+        "expected_normalizer_units": 1185
+      },
+      {
+        "id": "reversed-weights-8x8-stack24-raises2",
+        "oop_range": "reversed_oop_range",
+        "ip_range": "reversed_ip_range",
+        "effective_stack": 24,
+        "max_raises": 2,
+        "expected_compatible_pairs": 58,
+        "expected_ordered_worlds": 114840,
+        "expected_normalizer": "1195/64",
+        "expected_normalizer_units": 1195
+      },
+      {
+        "id": "subset-4x4-stack12-raises1",
+        "oop_range": "subset_oop_range",
+        "ip_range": "subset_ip_range",
+        "effective_stack": 12,
+        "max_raises": 1,
+        "expected_compatible_pairs": 15,
+        "expected_ordered_worlds": 29700,
+        "expected_normalizer": "49/8",
+        "expected_normalizer_units": 392
+      }
+    ],
+    "expected_pair_census": {
+      "base_candidates": 64,
+      "base_compatible_pairs": 58,
+      "base_ordered_worlds": 114840,
+      "base_unordered_boards": 57420,
+      "base_normalizer": "1185/64",
+      "base_normalizer_units": 1185,
+      "reversed_normalizer": "1195/64",
+      "reversed_normalizer_units": 1195,
+      "subset_candidates": 16,
+      "subset_compatible_pairs": 15,
+      "subset_ordered_worlds": 29700,
+      "subset_unordered_boards": 14850,
+      "subset_normalizer": "49/8",
+      "subset_normalizer_units": 392
+    },
+    "historical_count_source": {
+      "commit": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+      "path": "benchmarks/results/flop-weighted-eight-hand-v1.json",
+      "blob": "610ac4e8d272db495936119c60f731b7a1061032"
+    },
+    "methodology": "Prepare the complete physical 8x8 pair-count table once; verify all 58 W/T/L rows against independent ordered-board replay and the pinned PR130 report. Before any oracle ranking, complete no-rank 4,000-iteration preflight for all four fixed fixtures. Compare three fresh solves to three reweighted prepared solves per fixture with exact serialized-result parity after removing only equity_preparation. Every measured profile receives independent visible-information replay. Warm calls guard all ranking boundaries. A separate tracemalloc call measures reweight, prepared solve and JSON serialization for the 8x8 stack-24 fixture, excluding source-table preparation, oracle and process RSS.",
+    "model_limits": "Fixed board 2c3c4d, heads-up finite flop betting followed by forced turn/river checkdown, full hidden future-deck W/T/L integration, four fixed weighted range/config fixtures. No later-street betting, preflop solving, rake, multiway play, unrestricted NLHE or general speed claim.",
+    "provenance": "New benchmark for the independently implemented immutable fixed-flop equity cache. Independent numeric-rule ordered-board replay and own-hand best responses are used for accuracy checks; a pinned previously published report corroborates physical pair counts. No third-party code or runtime dependencies are included."
+  },
+  "cold_source_preparation_seconds": 5.002073600015137,
+  "source_table": {
+    "compatible_pairs": 58,
+    "ordered_worlds": 114840,
+    "unordered_boards": 57420,
+    "rank_calls_upper_bound": 114840,
+    "pinned_historical_report_commit": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+    "pinned_historical_report_path": "benchmarks/results/flop-weighted-eight-hand-v1.json",
+    "pinned_historical_report_blob": "610ac4e8d272db495936119c60f731b7a1061032",
+    "counts_match_pinned_report": true,
+    "counts_match_independent_oracle": true
+  },
+  "preflights_complete_before_ranking": true,
+  "preflights": [
+    {
+      "fixture_id": "base-8x8-stack12-raises1",
+      "iterations": 4000,
+      "algorithm": "cfrplus",
+      "status": "admitted",
+      "solver_budget": {
+        "budget_version": "direct-flop-checkdown-budget-v1",
+        "vector_upper_bound": {
+          "budget_version": "preflop-public-vector-budget-v1",
+          "world_count": 174,
+          "iterations": 4000,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            8,
+            8
+          ],
+          "public_prefixes": 1,
+          "prefix_edges": 58,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 16,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 112,
+          "information_set_action_slots": 304,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 14,
+          "chance_nodes": 0,
+          "terminal_nodes": 25,
+          "action_edges": 38,
+          "chance_edges": 0,
+          "terminal_prefix_edge_visits": 1450,
+          "diagnostic_missing_policy_lookups": 0,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 2228,
+          "training_traversals_per_iteration": 3,
+          "visitor_loop_entries_per_traversal_upper_bound": 6292,
+          "training_loop_entries_upper_bound": 77173664,
+          "training_setup_loop_entries_upper_bound": 1664,
+          "diagnostics_loop_entries_upper_bound": 20012,
+          "diagnostics_setup_loop_entries_upper_bound": 1136,
+          "diagnostics_dense_fallback_slot_upper_bound": 0,
+          "diagnostics_uniform_fallback_slot_upper_bound": 0,
+          "total_loop_entries_upper_bound": 77195904,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+        },
+        "source_admission": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "source_bookkeeping_loop_entries_upper_bound": 3682688,
+        "total_loop_entries_upper_bound": 80878592,
+        "total_loop_entry_limit": 500000000,
+        "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+      },
+      "plan_budget": {
+        "candidate_pairs": 64,
+        "compatible_pairs": 58,
+        "physical_worlds": 114840,
+        "unordered_boards": 57420,
+        "rank_calls_upper_bound": 114840,
+        "grouped_rows_upper_bound": 174,
+        "candidate_pair_limit": 4096,
+        "compatible_pair_limit": 128,
+        "unordered_board_evaluation_limit": 126720,
+        "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+      },
+      "tree": {
+        "decision_nodes": 14,
+        "decision_states": 14,
+        "terminal_nodes": 25,
+        "public_states": 39,
+        "information_sets": 112,
+        "information_action_slots": 304
+      },
+      "ranking_started": false,
+      "boundary": "FlopCheckdownPlan.build before any board enumeration"
+    },
+    {
+      "fixture_id": "base-8x8-stack24-raises2",
+      "iterations": 4000,
+      "algorithm": "cfrplus",
+      "status": "admitted",
+      "solver_budget": {
+        "budget_version": "direct-flop-checkdown-budget-v1",
+        "vector_upper_bound": {
+          "budget_version": "preflop-public-vector-budget-v1",
+          "world_count": 174,
+          "iterations": 4000,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            8,
+            8
+          ],
+          "public_prefixes": 1,
+          "prefix_edges": 58,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 16,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 176,
+          "information_set_action_slots": 496,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 22,
+          "chance_nodes": 0,
+          "terminal_nodes": 41,
+          "action_edges": 62,
+          "chance_edges": 0,
+          "terminal_prefix_edge_visits": 2378,
+          "diagnostic_missing_policy_lookups": 0,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 2356,
+          "training_traversals_per_iteration": 3,
+          "visitor_loop_entries_per_traversal_upper_bound": 10228,
+          "training_loop_entries_upper_bound": 125302688,
+          "training_setup_loop_entries_upper_bound": 2688,
+          "diagnostics_loop_entries_upper_bound": 32524,
+          "diagnostics_setup_loop_entries_upper_bound": 1840,
+          "diagnostics_dense_fallback_slot_upper_bound": 0,
+          "diagnostics_uniform_fallback_slot_upper_bound": 0,
+          "total_loop_entries_upper_bound": 125337568,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+        },
+        "source_admission": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "source_bookkeeping_loop_entries_upper_bound": 3682688,
+        "total_loop_entries_upper_bound": 129020256,
+        "total_loop_entry_limit": 500000000,
+        "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+      },
+      "plan_budget": {
+        "candidate_pairs": 64,
+        "compatible_pairs": 58,
+        "physical_worlds": 114840,
+        "unordered_boards": 57420,
+        "rank_calls_upper_bound": 114840,
+        "grouped_rows_upper_bound": 174,
+        "candidate_pair_limit": 4096,
+        "compatible_pair_limit": 128,
+        "unordered_board_evaluation_limit": 126720,
+        "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+      },
+      "tree": {
+        "decision_nodes": 22,
+        "decision_states": 22,
+        "terminal_nodes": 41,
+        "public_states": 63,
+        "information_sets": 176,
+        "information_action_slots": 496
+      },
+      "ranking_started": false,
+      "boundary": "FlopCheckdownPlan.build before any board enumeration"
+    },
+    {
+      "fixture_id": "reversed-weights-8x8-stack24-raises2",
+      "iterations": 4000,
+      "algorithm": "cfrplus",
+      "status": "admitted",
+      "solver_budget": {
+        "budget_version": "direct-flop-checkdown-budget-v1",
+        "vector_upper_bound": {
+          "budget_version": "preflop-public-vector-budget-v1",
+          "world_count": 174,
+          "iterations": 4000,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            8,
+            8
+          ],
+          "public_prefixes": 1,
+          "prefix_edges": 58,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 16,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 176,
+          "information_set_action_slots": 496,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 22,
+          "chance_nodes": 0,
+          "terminal_nodes": 41,
+          "action_edges": 62,
+          "chance_edges": 0,
+          "terminal_prefix_edge_visits": 2378,
+          "diagnostic_missing_policy_lookups": 0,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 2356,
+          "training_traversals_per_iteration": 3,
+          "visitor_loop_entries_per_traversal_upper_bound": 10228,
+          "training_loop_entries_upper_bound": 125302688,
+          "training_setup_loop_entries_upper_bound": 2688,
+          "diagnostics_loop_entries_upper_bound": 32524,
+          "diagnostics_setup_loop_entries_upper_bound": 1840,
+          "diagnostics_dense_fallback_slot_upper_bound": 0,
+          "diagnostics_uniform_fallback_slot_upper_bound": 0,
+          "total_loop_entries_upper_bound": 125337568,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+        },
+        "source_admission": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "source_bookkeeping_loop_entries_upper_bound": 3682688,
+        "total_loop_entries_upper_bound": 129020256,
+        "total_loop_entry_limit": 500000000,
+        "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+      },
+      "plan_budget": {
+        "candidate_pairs": 64,
+        "compatible_pairs": 58,
+        "physical_worlds": 114840,
+        "unordered_boards": 57420,
+        "rank_calls_upper_bound": 114840,
+        "grouped_rows_upper_bound": 174,
+        "candidate_pair_limit": 4096,
+        "compatible_pair_limit": 128,
+        "unordered_board_evaluation_limit": 126720,
+        "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+      },
+      "tree": {
+        "decision_nodes": 22,
+        "decision_states": 22,
+        "terminal_nodes": 41,
+        "public_states": 63,
+        "information_sets": 176,
+        "information_action_slots": 496
+      },
+      "ranking_started": false,
+      "boundary": "FlopCheckdownPlan.build before any board enumeration"
+    },
+    {
+      "fixture_id": "subset-4x4-stack12-raises1",
+      "iterations": 4000,
+      "algorithm": "cfrplus",
+      "status": "admitted",
+      "solver_budget": {
+        "budget_version": "direct-flop-checkdown-budget-v1",
+        "vector_upper_bound": {
+          "budget_version": "preflop-public-vector-budget-v1",
+          "world_count": 45,
+          "iterations": 4000,
+          "algorithm": "cfrplus",
+          "hand_counts": [
+            4,
+            4
+          ],
+          "public_prefixes": 1,
+          "prefix_edges": 15,
+          "prefix_edge_limit": 250000,
+          "dense_prefix_slots": 8,
+          "dense_prefix_slot_limit": 2000000,
+          "information_sets": 56,
+          "information_set_action_slots": 152,
+          "information_set_action_slot_limit": 1000000,
+          "decision_nodes": 14,
+          "chance_nodes": 0,
+          "terminal_nodes": 25,
+          "action_edges": 38,
+          "chance_edges": 0,
+          "terminal_prefix_edge_visits": 375,
+          "diagnostic_missing_policy_lookups": 0,
+          "aggregation_count": 2,
+          "aggregation_loop_entries_upper_bound": 638,
+          "training_traversals_per_iteration": 3,
+          "visitor_loop_entries_per_traversal_upper_bound": 2678,
+          "training_loop_entries_upper_bound": 35460832,
+          "training_setup_loop_entries_upper_bound": 832,
+          "diagnostics_loop_entries_upper_bound": 8602,
+          "diagnostics_setup_loop_entries_upper_bound": 568,
+          "diagnostics_dense_fallback_slot_upper_bound": 0,
+          "diagnostics_uniform_fallback_slot_upper_bound": 0,
+          "total_loop_entries_upper_bound": 35470072,
+          "total_loop_entry_limit": 500000000,
+          "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+        },
+        "source_admission": {
+          "candidate_pairs": 16,
+          "compatible_pairs": 15,
+          "physical_worlds": 29700,
+          "unordered_boards": 14850,
+          "rank_calls_upper_bound": 29700,
+          "grouped_rows_upper_bound": 45,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "source_bookkeeping_loop_entries_upper_bound": 952512,
+        "total_loop_entries_upper_bound": 36422584,
+        "total_loop_entry_limit": 500000000,
+        "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+      },
+      "plan_budget": {
+        "candidate_pairs": 16,
+        "compatible_pairs": 15,
+        "physical_worlds": 29700,
+        "unordered_boards": 14850,
+        "rank_calls_upper_bound": 29700,
+        "grouped_rows_upper_bound": 45,
+        "candidate_pair_limit": 4096,
+        "compatible_pair_limit": 128,
+        "unordered_board_evaluation_limit": 126720,
+        "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+      },
+      "tree": {
+        "decision_nodes": 14,
+        "decision_states": 14,
+        "terminal_nodes": 25,
+        "public_states": 39,
+        "information_sets": 56,
+        "information_action_slots": 152
+      },
+      "ranking_started": false,
+      "boundary": "FlopCheckdownPlan.build before any board enumeration"
+    }
+  ],
+  "results": [
+    {
+      "fixture_id": "base-8x8-stack12-raises1",
+      "physical_pair_count": 58,
+      "physical_ordered_worlds": 114840,
+      "preflight": {
+        "fixture_id": "base-8x8-stack12-raises1",
+        "iterations": 4000,
+        "algorithm": "cfrplus",
+        "status": "admitted",
+        "solver_budget": {
+          "budget_version": "direct-flop-checkdown-budget-v1",
+          "vector_upper_bound": {
+            "budget_version": "preflop-public-vector-budget-v1",
+            "world_count": 174,
+            "iterations": 4000,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              8,
+              8
+            ],
+            "public_prefixes": 1,
+            "prefix_edges": 58,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 16,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 112,
+            "information_set_action_slots": 304,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 14,
+            "chance_nodes": 0,
+            "terminal_nodes": 25,
+            "action_edges": 38,
+            "chance_edges": 0,
+            "terminal_prefix_edge_visits": 1450,
+            "diagnostic_missing_policy_lookups": 0,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 2228,
+            "training_traversals_per_iteration": 3,
+            "visitor_loop_entries_per_traversal_upper_bound": 6292,
+            "training_loop_entries_upper_bound": 77173664,
+            "training_setup_loop_entries_upper_bound": 1664,
+            "diagnostics_loop_entries_upper_bound": 20012,
+            "diagnostics_setup_loop_entries_upper_bound": 1136,
+            "diagnostics_dense_fallback_slot_upper_bound": 0,
+            "diagnostics_uniform_fallback_slot_upper_bound": 0,
+            "total_loop_entries_upper_bound": 77195904,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+          },
+          "source_admission": {
+            "candidate_pairs": 64,
+            "compatible_pairs": 58,
+            "physical_worlds": 114840,
+            "unordered_boards": 57420,
+            "rank_calls_upper_bound": 114840,
+            "grouped_rows_upper_bound": 174,
+            "candidate_pair_limit": 4096,
+            "compatible_pair_limit": 128,
+            "unordered_board_evaluation_limit": 126720,
+            "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+          },
+          "source_bookkeeping_loop_entries_upper_bound": 3682688,
+          "total_loop_entries_upper_bound": 80878592,
+          "total_loop_entry_limit": 500000000,
+          "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+        },
+        "plan_budget": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "tree": {
+          "decision_nodes": 14,
+          "decision_states": 14,
+          "terminal_nodes": 25,
+          "public_states": 39,
+          "information_sets": 112,
+          "information_action_slots": 304
+        },
+        "ranking_started": false,
+        "boundary": "FlopCheckdownPlan.build before any board enumeration"
+      },
+      "fresh_calls": [
+        {
+          "repeat": 1,
+          "complete_solve_plus_json_seconds": 15.732201599981636,
+          "payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 2,
+          "complete_solve_plus_json_seconds": 14.785257900017314,
+          "payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 3,
+          "complete_solve_plus_json_seconds": 15.110666799999308,
+          "payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        }
+      ],
+      "prepared_calls": [
+        {
+          "repeat": 1,
+          "reweight_solve_plus_json_seconds": 9.788358799996786,
+          "complete_payload_sha256": "645e3056da8ee6f0cb35eaeceb8cf43461ad9a48f7ac6ebf655c9d5728c58413",
+          "comparison_payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 2,
+          "reweight_solve_plus_json_seconds": 11.942087100003846,
+          "complete_payload_sha256": "645e3056da8ee6f0cb35eaeceb8cf43461ad9a48f7ac6ebf655c9d5728c58413",
+          "comparison_payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 3,
+          "reweight_solve_plus_json_seconds": 10.212895600008778,
+          "complete_payload_sha256": "645e3056da8ee6f0cb35eaeceb8cf43461ad9a48f7ac6ebf655c9d5728c58413",
+          "comparison_payload_sha256": "ecafbf586c19322d4e43cea22a667e966a3b5ebf2656860dab6d6384a95b8e40",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.4397438455548833,
+              "value_ip": -0.4397438455548833,
+              "oop_best_response_value": 0.43974997203466853,
+              "ip_best_response_value": -0.43973557851169204,
+              "nash_conv": 1.4393522976496875e-05,
+              "exploitability": 7.196761488248438e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 5.551115123125783e-17,
+                "ip_best_response_value": 1.6653345369377348e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 112,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        }
+      ],
+      "fresh_median_seconds": 15.110666799999308,
+      "prepared_median_seconds": 10.212895600008778,
+      "oracle_pair_counts": [
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "KdKs",
+          "wins": 1782,
+          "ties": 48,
+          "losses": 150,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "AhKh",
+          "wins": 1634,
+          "ties": 340,
+          "losses": 6,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "7s8s",
+          "wins": 1902,
+          "ties": 16,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "QcQd",
+          "wins": 1698,
+          "ties": 44,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "8d9d",
+          "wins": 1832,
+          "ties": 46,
+          "losses": 102,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "JcTc",
+          "wins": 1232,
+          "ties": 24,
+          "losses": 724,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "KdKs",
+          "wins": 30,
+          "ties": 64,
+          "losses": 1886,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AhKh",
+          "wins": 378,
+          "ties": 56,
+          "losses": 1546,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "QcQd",
+          "wins": 6,
+          "ties": 60,
+          "losses": 1914,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AdJd",
+          "wins": 200,
+          "ties": 54,
+          "losses": 1726,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "8d9d",
+          "wins": 1404,
+          "ties": 60,
+          "losses": 516,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "KdKs",
+          "wins": 370,
+          "ties": 0,
+          "losses": 1610,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AhKh",
+          "wins": 718,
+          "ties": 0,
+          "losses": 1262,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "QcQd",
+          "wins": 350,
+          "ties": 0,
+          "losses": 1630,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AdJd",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "5h6h",
+          "wins": 240,
+          "ties": 18,
+          "losses": 1722,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "8d9d",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "JcTc",
+          "wins": 400,
+          "ties": 0,
+          "losses": 1580,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "KdKs",
+          "wins": 724,
+          "ties": 36,
+          "losses": 1220,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AhKh",
+          "wins": 1026,
+          "ties": 30,
+          "losses": 924,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "7s8s",
+          "wins": 1724,
+          "ties": 18,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "QcQd",
+          "wins": 614,
+          "ties": 36,
+          "losses": 1330,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AdJd",
+          "wins": 996,
+          "ties": 28,
+          "losses": 956,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 8,
+          "losses": 1252,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "8d9d",
+          "wins": 1732,
+          "ties": 32,
+          "losses": 216,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AhKh",
+          "wins": 216,
+          "ties": 56,
+          "losses": 1708,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AdJd",
+          "wins": 400,
+          "ties": 54,
+          "losses": 1526,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "8d9d",
+          "wins": 1422,
+          "ties": 60,
+          "losses": 498,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "JcTc",
+          "wins": 882,
+          "ties": 36,
+          "losses": 1062,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "KdKs",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AhKh",
+          "wins": 1776,
+          "ties": 204,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "7s8s",
+          "wins": 1944,
+          "ties": 18,
+          "losses": 18,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "QcQd",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AdJd",
+          "wins": 1704,
+          "ties": 186,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 138,
+          "losses": 1122,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "8d9d",
+          "wins": 1858,
+          "ties": 32,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "JcTc",
+          "wins": 1944,
+          "ties": 36,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "7s8s",
+          "wins": 1910,
+          "ties": 32,
+          "losses": 38,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AdJd",
+          "wins": 1158,
+          "ties": 54,
+          "losses": 768,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "JcTc",
+          "wins": 872,
+          "ties": 36,
+          "losses": 1072,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "7s8s",
+          "wins": 1886,
+          "ties": 32,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AdJd",
+          "wins": 1146,
+          "ties": 54,
+          "losses": 780,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "8d9d",
+          "wins": 1804,
+          "ties": 60,
+          "losses": 116,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        }
+      ],
+      "work_budget_matches_preflight": true
+    },
+    {
+      "fixture_id": "base-8x8-stack24-raises2",
+      "physical_pair_count": 58,
+      "physical_ordered_worlds": 114840,
+      "preflight": {
+        "fixture_id": "base-8x8-stack24-raises2",
+        "iterations": 4000,
+        "algorithm": "cfrplus",
+        "status": "admitted",
+        "solver_budget": {
+          "budget_version": "direct-flop-checkdown-budget-v1",
+          "vector_upper_bound": {
+            "budget_version": "preflop-public-vector-budget-v1",
+            "world_count": 174,
+            "iterations": 4000,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              8,
+              8
+            ],
+            "public_prefixes": 1,
+            "prefix_edges": 58,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 16,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 176,
+            "information_set_action_slots": 496,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 22,
+            "chance_nodes": 0,
+            "terminal_nodes": 41,
+            "action_edges": 62,
+            "chance_edges": 0,
+            "terminal_prefix_edge_visits": 2378,
+            "diagnostic_missing_policy_lookups": 0,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 2356,
+            "training_traversals_per_iteration": 3,
+            "visitor_loop_entries_per_traversal_upper_bound": 10228,
+            "training_loop_entries_upper_bound": 125302688,
+            "training_setup_loop_entries_upper_bound": 2688,
+            "diagnostics_loop_entries_upper_bound": 32524,
+            "diagnostics_setup_loop_entries_upper_bound": 1840,
+            "diagnostics_dense_fallback_slot_upper_bound": 0,
+            "diagnostics_uniform_fallback_slot_upper_bound": 0,
+            "total_loop_entries_upper_bound": 125337568,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+          },
+          "source_admission": {
+            "candidate_pairs": 64,
+            "compatible_pairs": 58,
+            "physical_worlds": 114840,
+            "unordered_boards": 57420,
+            "rank_calls_upper_bound": 114840,
+            "grouped_rows_upper_bound": 174,
+            "candidate_pair_limit": 4096,
+            "compatible_pair_limit": 128,
+            "unordered_board_evaluation_limit": 126720,
+            "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+          },
+          "source_bookkeeping_loop_entries_upper_bound": 3682688,
+          "total_loop_entries_upper_bound": 129020256,
+          "total_loop_entry_limit": 500000000,
+          "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+        },
+        "plan_budget": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "tree": {
+          "decision_nodes": 22,
+          "decision_states": 22,
+          "terminal_nodes": 41,
+          "public_states": 63,
+          "information_sets": 176,
+          "information_action_slots": 496
+        },
+        "ranking_started": false,
+        "boundary": "FlopCheckdownPlan.build before any board enumeration"
+      },
+      "fresh_calls": [
+        {
+          "repeat": 1,
+          "complete_solve_plus_json_seconds": 21.856759000045713,
+          "payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 2,
+          "complete_solve_plus_json_seconds": 20.174300600017887,
+          "payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 3,
+          "complete_solve_plus_json_seconds": 20.208847300033085,
+          "payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        }
+      ],
+      "prepared_calls": [
+        {
+          "repeat": 1,
+          "reweight_solve_plus_json_seconds": 16.960833700024523,
+          "complete_payload_sha256": "98c43ca6ba2e15112ff379a49f2b6a2d115deb27e6cdd467aefc378afb344d3c",
+          "comparison_payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 2,
+          "reweight_solve_plus_json_seconds": 17.06292699999176,
+          "complete_payload_sha256": "98c43ca6ba2e15112ff379a49f2b6a2d115deb27e6cdd467aefc378afb344d3c",
+          "comparison_payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 3,
+          "reweight_solve_plus_json_seconds": 16.77222610003082,
+          "complete_payload_sha256": "98c43ca6ba2e15112ff379a49f2b6a2d115deb27e6cdd467aefc378afb344d3c",
+          "comparison_payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 0.34903000223935904,
+              "value_ip": -0.34903000223935904,
+              "oop_best_response_value": 0.34909361991784454,
+              "ip_best_response_value": -0.34898870889447714,
+              "nash_conv": 0.00010491102336740443,
+              "exploitability": 5.2455511683702216e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 2.220446049250313e-16,
+                "ip_best_response_value": 1.1102230246251565e-16,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        }
+      ],
+      "fresh_median_seconds": 20.208847300033085,
+      "prepared_median_seconds": 16.960833700024523,
+      "oracle_pair_counts": [
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "KdKs",
+          "wins": 1782,
+          "ties": 48,
+          "losses": 150,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "AhKh",
+          "wins": 1634,
+          "ties": 340,
+          "losses": 6,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "7s8s",
+          "wins": 1902,
+          "ties": 16,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "QcQd",
+          "wins": 1698,
+          "ties": 44,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "8d9d",
+          "wins": 1832,
+          "ties": 46,
+          "losses": 102,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "JcTc",
+          "wins": 1232,
+          "ties": 24,
+          "losses": 724,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "KdKs",
+          "wins": 30,
+          "ties": 64,
+          "losses": 1886,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AhKh",
+          "wins": 378,
+          "ties": 56,
+          "losses": 1546,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "QcQd",
+          "wins": 6,
+          "ties": 60,
+          "losses": 1914,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AdJd",
+          "wins": 200,
+          "ties": 54,
+          "losses": 1726,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "8d9d",
+          "wins": 1404,
+          "ties": 60,
+          "losses": 516,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "KdKs",
+          "wins": 370,
+          "ties": 0,
+          "losses": 1610,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AhKh",
+          "wins": 718,
+          "ties": 0,
+          "losses": 1262,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "QcQd",
+          "wins": 350,
+          "ties": 0,
+          "losses": 1630,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AdJd",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "5h6h",
+          "wins": 240,
+          "ties": 18,
+          "losses": 1722,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "8d9d",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "JcTc",
+          "wins": 400,
+          "ties": 0,
+          "losses": 1580,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "KdKs",
+          "wins": 724,
+          "ties": 36,
+          "losses": 1220,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AhKh",
+          "wins": 1026,
+          "ties": 30,
+          "losses": 924,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "7s8s",
+          "wins": 1724,
+          "ties": 18,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "QcQd",
+          "wins": 614,
+          "ties": 36,
+          "losses": 1330,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AdJd",
+          "wins": 996,
+          "ties": 28,
+          "losses": 956,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 8,
+          "losses": 1252,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "8d9d",
+          "wins": 1732,
+          "ties": 32,
+          "losses": 216,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AhKh",
+          "wins": 216,
+          "ties": 56,
+          "losses": 1708,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AdJd",
+          "wins": 400,
+          "ties": 54,
+          "losses": 1526,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "8d9d",
+          "wins": 1422,
+          "ties": 60,
+          "losses": 498,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "JcTc",
+          "wins": 882,
+          "ties": 36,
+          "losses": 1062,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "KdKs",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AhKh",
+          "wins": 1776,
+          "ties": 204,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "7s8s",
+          "wins": 1944,
+          "ties": 18,
+          "losses": 18,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "QcQd",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AdJd",
+          "wins": 1704,
+          "ties": 186,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 138,
+          "losses": 1122,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "8d9d",
+          "wins": 1858,
+          "ties": 32,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "JcTc",
+          "wins": 1944,
+          "ties": 36,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "7s8s",
+          "wins": 1910,
+          "ties": 32,
+          "losses": 38,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AdJd",
+          "wins": 1158,
+          "ties": 54,
+          "losses": 768,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "JcTc",
+          "wins": 872,
+          "ties": 36,
+          "losses": 1072,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "7s8s",
+          "wins": 1886,
+          "ties": 32,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AdJd",
+          "wins": 1146,
+          "ties": 54,
+          "losses": 780,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "8d9d",
+          "wins": 1804,
+          "ties": 60,
+          "losses": 116,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        }
+      ],
+      "work_budget_matches_preflight": true
+    },
+    {
+      "fixture_id": "reversed-weights-8x8-stack24-raises2",
+      "physical_pair_count": 58,
+      "physical_ordered_worlds": 114840,
+      "preflight": {
+        "fixture_id": "reversed-weights-8x8-stack24-raises2",
+        "iterations": 4000,
+        "algorithm": "cfrplus",
+        "status": "admitted",
+        "solver_budget": {
+          "budget_version": "direct-flop-checkdown-budget-v1",
+          "vector_upper_bound": {
+            "budget_version": "preflop-public-vector-budget-v1",
+            "world_count": 174,
+            "iterations": 4000,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              8,
+              8
+            ],
+            "public_prefixes": 1,
+            "prefix_edges": 58,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 16,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 176,
+            "information_set_action_slots": 496,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 22,
+            "chance_nodes": 0,
+            "terminal_nodes": 41,
+            "action_edges": 62,
+            "chance_edges": 0,
+            "terminal_prefix_edge_visits": 2378,
+            "diagnostic_missing_policy_lookups": 0,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 2356,
+            "training_traversals_per_iteration": 3,
+            "visitor_loop_entries_per_traversal_upper_bound": 10228,
+            "training_loop_entries_upper_bound": 125302688,
+            "training_setup_loop_entries_upper_bound": 2688,
+            "diagnostics_loop_entries_upper_bound": 32524,
+            "diagnostics_setup_loop_entries_upper_bound": 1840,
+            "diagnostics_dense_fallback_slot_upper_bound": 0,
+            "diagnostics_uniform_fallback_slot_upper_bound": 0,
+            "total_loop_entries_upper_bound": 125337568,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+          },
+          "source_admission": {
+            "candidate_pairs": 64,
+            "compatible_pairs": 58,
+            "physical_worlds": 114840,
+            "unordered_boards": 57420,
+            "rank_calls_upper_bound": 114840,
+            "grouped_rows_upper_bound": 174,
+            "candidate_pair_limit": 4096,
+            "compatible_pair_limit": 128,
+            "unordered_board_evaluation_limit": 126720,
+            "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+          },
+          "source_bookkeeping_loop_entries_upper_bound": 3682688,
+          "total_loop_entries_upper_bound": 129020256,
+          "total_loop_entry_limit": 500000000,
+          "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+        },
+        "plan_budget": {
+          "candidate_pairs": 64,
+          "compatible_pairs": 58,
+          "physical_worlds": 114840,
+          "unordered_boards": 57420,
+          "rank_calls_upper_bound": 114840,
+          "grouped_rows_upper_bound": 174,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "tree": {
+          "decision_nodes": 22,
+          "decision_states": 22,
+          "terminal_nodes": 41,
+          "public_states": 63,
+          "information_sets": 176,
+          "information_action_slots": 496
+        },
+        "ranking_started": false,
+        "boundary": "FlopCheckdownPlan.build before any board enumeration"
+      },
+      "fresh_calls": [
+        {
+          "repeat": 1,
+          "complete_solve_plus_json_seconds": 23.941230099997483,
+          "payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 2,
+          "complete_solve_plus_json_seconds": 20.9726679000305,
+          "payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 3,
+          "complete_solve_plus_json_seconds": 22.47392860002583,
+          "payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        }
+      ],
+      "prepared_calls": [
+        {
+          "repeat": 1,
+          "reweight_solve_plus_json_seconds": 17.194747300003655,
+          "complete_payload_sha256": "3fcad74c88dea30701c062cfd9e1a868505ba7d9aa1e0fc86b40ed8fb4495cd9",
+          "comparison_payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 2,
+          "reweight_solve_plus_json_seconds": 17.842327999998815,
+          "complete_payload_sha256": "3fcad74c88dea30701c062cfd9e1a868505ba7d9aa1e0fc86b40ed8fb4495cd9",
+          "comparison_payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 3,
+          "reweight_solve_plus_json_seconds": 16.969798400008585,
+          "complete_payload_sha256": "3fcad74c88dea30701c062cfd9e1a868505ba7d9aa1e0fc86b40ed8fb4495cd9",
+          "comparison_payload_sha256": "b446d5042a8b4f36620cc7c82a384d88c8e99615ba932ea9a8e47a7f2e6e0944",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": -0.5040430175557904,
+              "value_ip": 0.5040430175557904,
+              "oop_best_response_value": -0.504027512984009,
+              "ip_best_response_value": 0.5040697408900181,
+              "nash_conv": 4.222790600905135e-05,
+              "exploitability": 2.1113953004525676e-05,
+              "scalar_absolute_gaps": {
+                "value_oop": 1.1102230246251565e-16,
+                "value_ip": 1.1102230246251565e-16,
+                "oop_best_response_value": 1.1102230246251565e-16,
+                "ip_best_response_value": 0.0,
+                "nash_conv": 1.1102230246251565e-16,
+                "exploitability": 5.551115123125783e-17
+              },
+              "checked_information_sets": 176,
+              "checked_physical_worlds": 114840
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        }
+      ],
+      "fresh_median_seconds": 22.47392860002583,
+      "prepared_median_seconds": 17.194747300003655,
+      "oracle_pair_counts": [
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "KdKs",
+          "wins": 1782,
+          "ties": 48,
+          "losses": 150,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "AhKh",
+          "wins": 1634,
+          "ties": 340,
+          "losses": 6,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "7s8s",
+          "wins": 1902,
+          "ties": 16,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "QcQd",
+          "wins": 1698,
+          "ties": 44,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "8d9d",
+          "wins": 1832,
+          "ties": 46,
+          "losses": 102,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "JcTc",
+          "wins": 1232,
+          "ties": 24,
+          "losses": 724,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "KdKs",
+          "wins": 30,
+          "ties": 64,
+          "losses": 1886,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AhKh",
+          "wins": 378,
+          "ties": 56,
+          "losses": 1546,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "QcQd",
+          "wins": 6,
+          "ties": 60,
+          "losses": 1914,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AdJd",
+          "wins": 200,
+          "ties": 54,
+          "losses": 1726,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "8d9d",
+          "wins": 1404,
+          "ties": 60,
+          "losses": 516,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "KdKs",
+          "wins": 370,
+          "ties": 0,
+          "losses": 1610,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AhKh",
+          "wins": 718,
+          "ties": 0,
+          "losses": 1262,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "QcQd",
+          "wins": 350,
+          "ties": 0,
+          "losses": 1630,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AdJd",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "5h6h",
+          "wins": 240,
+          "ties": 18,
+          "losses": 1722,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "8d9d",
+          "wins": 670,
+          "ties": 0,
+          "losses": 1310,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "JcTc",
+          "wins": 400,
+          "ties": 0,
+          "losses": 1580,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "KdKs",
+          "wins": 724,
+          "ties": 36,
+          "losses": 1220,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AhKh",
+          "wins": 1026,
+          "ties": 30,
+          "losses": 924,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "7s8s",
+          "wins": 1724,
+          "ties": 18,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "QcQd",
+          "wins": 614,
+          "ties": 36,
+          "losses": 1330,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AdJd",
+          "wins": 996,
+          "ties": 28,
+          "losses": 956,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 8,
+          "losses": 1252,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "8d9d",
+          "wins": 1732,
+          "ties": 32,
+          "losses": 216,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AhKh",
+          "wins": 216,
+          "ties": 56,
+          "losses": 1708,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "AdJd",
+          "wins": 400,
+          "ties": 54,
+          "losses": 1526,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "5h6h",
+          "wins": 0,
+          "ties": 18,
+          "losses": 1962,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "8d9d",
+          "wins": 1422,
+          "ties": 60,
+          "losses": 498,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "KsQd",
+          "ip_hand": "JcTc",
+          "wins": 882,
+          "ties": 36,
+          "losses": 1062,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "KdKs",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AhKh",
+          "wins": 1776,
+          "ties": 204,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "7s8s",
+          "wins": 1944,
+          "ties": 18,
+          "losses": 18,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "QcQd",
+          "wins": 1896,
+          "ties": 36,
+          "losses": 48,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "AdJd",
+          "wins": 1704,
+          "ties": 186,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "5h6h",
+          "wins": 720,
+          "ties": 138,
+          "losses": 1122,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "8d9d",
+          "wins": 1858,
+          "ties": 32,
+          "losses": 90,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "5cAc",
+          "ip_hand": "JcTc",
+          "wins": 1944,
+          "ties": 36,
+          "losses": 0,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "7s8s",
+          "wins": 1910,
+          "ties": 32,
+          "losses": 38,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "AdJd",
+          "wins": 1158,
+          "ties": 54,
+          "losses": 768,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "8d8h",
+          "ip_hand": "JcTc",
+          "wins": 872,
+          "ties": 36,
+          "losses": 1072,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "KdKs",
+          "wins": 166,
+          "ties": 64,
+          "losses": 1750,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AhKh",
+          "wins": 1214,
+          "ties": 56,
+          "losses": 710,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "7s8s",
+          "wins": 1886,
+          "ties": 32,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "QcQd",
+          "wins": 150,
+          "ties": 60,
+          "losses": 1770,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "AdJd",
+          "wins": 1146,
+          "ties": 54,
+          "losses": 780,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "5h6h",
+          "wins": 56,
+          "ties": 18,
+          "losses": 1906,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "8d9d",
+          "wins": 1804,
+          "ties": 60,
+          "losses": 116,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "ThTs",
+          "ip_hand": "JcTc",
+          "wins": 1032,
+          "ties": 36,
+          "losses": 912,
+          "ordered_outcomes": 1980
+        }
+      ],
+      "work_budget_matches_preflight": true
+    },
+    {
+      "fixture_id": "subset-4x4-stack12-raises1",
+      "physical_pair_count": 15,
+      "physical_ordered_worlds": 29700,
+      "preflight": {
+        "fixture_id": "subset-4x4-stack12-raises1",
+        "iterations": 4000,
+        "algorithm": "cfrplus",
+        "status": "admitted",
+        "solver_budget": {
+          "budget_version": "direct-flop-checkdown-budget-v1",
+          "vector_upper_bound": {
+            "budget_version": "preflop-public-vector-budget-v1",
+            "world_count": 45,
+            "iterations": 4000,
+            "algorithm": "cfrplus",
+            "hand_counts": [
+              4,
+              4
+            ],
+            "public_prefixes": 1,
+            "prefix_edges": 15,
+            "prefix_edge_limit": 250000,
+            "dense_prefix_slots": 8,
+            "dense_prefix_slot_limit": 2000000,
+            "information_sets": 56,
+            "information_set_action_slots": 152,
+            "information_set_action_slot_limit": 1000000,
+            "decision_nodes": 14,
+            "chance_nodes": 0,
+            "terminal_nodes": 25,
+            "action_edges": 38,
+            "chance_edges": 0,
+            "terminal_prefix_edge_visits": 375,
+            "diagnostic_missing_policy_lookups": 0,
+            "aggregation_count": 2,
+            "aggregation_loop_entries_upper_bound": 638,
+            "training_traversals_per_iteration": 3,
+            "visitor_loop_entries_per_traversal_upper_bound": 2678,
+            "training_loop_entries_upper_bound": 35460832,
+            "training_setup_loop_entries_upper_bound": 832,
+            "diagnostics_loop_entries_upper_bound": 8602,
+            "diagnostics_setup_loop_entries_upper_bound": 568,
+            "diagnostics_dense_fallback_slot_upper_bound": 0,
+            "diagnostics_uniform_fallback_slot_upper_bound": 0,
+            "total_loop_entries_upper_bound": 35470072,
+            "total_loop_entry_limit": 500000000,
+            "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards."
+          },
+          "source_admission": {
+            "candidate_pairs": 16,
+            "compatible_pairs": 15,
+            "physical_worlds": 29700,
+            "unordered_boards": 14850,
+            "rank_calls_upper_bound": 29700,
+            "grouped_rows_upper_bound": 45,
+            "candidate_pair_limit": 4096,
+            "compatible_pair_limit": 128,
+            "unordered_board_evaluation_limit": 126720,
+            "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+          },
+          "source_bookkeeping_loop_entries_upper_bound": 952512,
+          "total_loop_entries_upper_bound": 36422584,
+          "total_loop_entry_limit": 500000000,
+          "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."
+        },
+        "plan_budget": {
+          "candidate_pairs": 16,
+          "compatible_pairs": 15,
+          "physical_worlds": 29700,
+          "unordered_boards": 14850,
+          "rank_calls_upper_bound": 29700,
+          "grouped_rows_upper_bound": 45,
+          "candidate_pair_limit": 4096,
+          "compatible_pair_limit": 128,
+          "unordered_board_evaluation_limit": 126720,
+          "scope": "Logical exact ranking work and grouped output rows; not elapsed time, allocated bytes or RSS."
+        },
+        "tree": {
+          "decision_nodes": 14,
+          "decision_states": 14,
+          "terminal_nodes": 25,
+          "public_states": 39,
+          "information_sets": 56,
+          "information_action_slots": 152
+        },
+        "ranking_started": false,
+        "boundary": "FlopCheckdownPlan.build before any board enumeration"
+      },
+      "fresh_calls": [
+        {
+          "repeat": 1,
+          "complete_solve_plus_json_seconds": 5.79979399999138,
+          "payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 2,
+          "complete_solve_plus_json_seconds": 6.181643599993549,
+          "payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        },
+        {
+          "repeat": 3,
+          "complete_solve_plus_json_seconds": 5.926262900000438,
+          "payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "work_budget_matches_preflight": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          }
+        }
+      ],
+      "prepared_calls": [
+        {
+          "repeat": 1,
+          "reweight_solve_plus_json_seconds": 5.048768300039228,
+          "complete_payload_sha256": "d4ede2a997ae1f96378a96b624eca9301eb854f2bf4b9dd613d681749f753852",
+          "comparison_payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 2,
+          "reweight_solve_plus_json_seconds": 4.864859399967827,
+          "complete_payload_sha256": "d4ede2a997ae1f96378a96b624eca9301eb854f2bf4b9dd613d681749f753852",
+          "comparison_payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        },
+        {
+          "repeat": 3,
+          "reweight_solve_plus_json_seconds": 5.149479899962898,
+          "complete_payload_sha256": "d4ede2a997ae1f96378a96b624eca9301eb854f2bf4b9dd613d681749f753852",
+          "comparison_payload_sha256": "1be9dcec90f031e87dfba11e785a1509cee0a3d07a00d2941d482a5b68247642",
+          "comparison_payload_matches_fresh": true,
+          "verification": {
+            "replay": {
+              "value_oop": 1.953741962379528,
+              "value_ip": -1.953741962379528,
+              "oop_best_response_value": 1.9537478558911028,
+              "ip_best_response_value": -1.9537309842975183,
+              "nash_conv": 1.6871593584433242e-05,
+              "exploitability": 8.435796792216621e-06,
+              "scalar_absolute_gaps": {
+                "value_oop": 0.0,
+                "value_ip": 0.0,
+                "oop_best_response_value": 4.440892098500626e-16,
+                "ip_best_response_value": 2.220446049250313e-16,
+                "nash_conv": 2.220446049250313e-16,
+                "exploitability": 1.1102230246251565e-16
+              },
+              "checked_information_sets": 56,
+              "checked_physical_worlds": 29700
+            },
+            "target_met": true,
+            "target_limit_with_padding": 0.005,
+            "work_budget_matches_preflight": true
+          },
+          "ranking_guards": {
+            "rank_hand": 0,
+            "combinations": 0,
+            "plan_build": 0
+          },
+          "work_budget_matches_preflight": true,
+          "pair_rows_match_fresh": true
+        }
+      ],
+      "fresh_median_seconds": 5.926262900000438,
+      "prepared_median_seconds": 5.048768300039228,
+      "oracle_pair_counts": [
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "KdKs",
+          "wins": 1782,
+          "ties": 48,
+          "losses": 150,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "AhKh",
+          "wins": 1634,
+          "ties": 340,
+          "losses": 6,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "7s8s",
+          "wins": 1902,
+          "ties": 16,
+          "losses": 62,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "AdAs",
+          "ip_hand": "QcQd",
+          "wins": 1698,
+          "ties": 44,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "KdKs",
+          "wins": 30,
+          "ties": 64,
+          "losses": 1886,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "AhKh",
+          "wins": 378,
+          "ties": 56,
+          "losses": 1546,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "7s8s",
+          "wins": 1490,
+          "ties": 32,
+          "losses": 458,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "JhQh",
+          "ip_hand": "QcQd",
+          "wins": 6,
+          "ties": 60,
+          "losses": 1914,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "KdKs",
+          "wins": 370,
+          "ties": 0,
+          "losses": 1610,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "AhKh",
+          "wins": 718,
+          "ties": 0,
+          "losses": 1262,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "6s7s",
+          "ip_hand": "QcQd",
+          "wins": 350,
+          "ties": 0,
+          "losses": 1630,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "KdKs",
+          "wins": 724,
+          "ties": 36,
+          "losses": 1220,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "AhKh",
+          "wins": 1026,
+          "ties": 30,
+          "losses": 924,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "7s8s",
+          "wins": 1724,
+          "ties": 18,
+          "losses": 238,
+          "ordered_outcomes": 1980
+        },
+        {
+          "oop_hand": "9cTc",
+          "ip_hand": "QcQd",
+          "wins": 614,
+          "ties": 36,
+          "losses": 1330,
+          "ordered_outcomes": 1980
+        }
+      ],
+      "work_budget_matches_preflight": true
+    }
+  ],
+  "allocation": {
+    "fixture_id": "base-8x8-stack24-raises2",
+    "iterations": 4000,
+    "reweight_solve_plus_json_seconds_under_tracemalloc": 17910.516554200032,
+    "traced_peak_bytes": 418997,
+    "includes": "Reweight, prepared solve and complete JSON serialization.",
+    "excludes": "Cached source table, cold source preparation, independent oracle, and process RSS.",
+    "ranking_guards": {
+      "rank_hand": 0,
+      "combinations": 0,
+      "plan_build": 0
+    },
+    "complete_payload_sha256": "98c43ca6ba2e15112ff379a49f2b6a2d115deb27e6cdd467aefc378afb344d3c",
+    "comparison_payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271",
+    "matches_previously_verified_prepared_payload": true,
+    "verification_reference": {
+      "replay": {
+        "value_oop": 0.34903000223935904,
+        "value_ip": -0.34903000223935904,
+        "oop_best_response_value": 0.34909361991784454,
+        "ip_best_response_value": -0.34898870889447714,
+        "nash_conv": 0.00010491102336740443,
+        "exploitability": 5.2455511683702216e-05,
+        "scalar_absolute_gaps": {
+          "value_oop": 0.0,
+          "value_ip": 0.0,
+          "oop_best_response_value": 2.220446049250313e-16,
+          "ip_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 1.1102230246251565e-16,
+          "exploitability": 5.551115123125783e-17
+        },
+        "checked_information_sets": 176,
+        "checked_physical_worlds": 114840
+      },
+      "target_met": true,
+      "target_limit_with_padding": 0.005,
+      "work_budget_matches_preflight": true
+    }
+  },
+  "quality_misses": [],
+  "acceptance_gate_met": true,
+  "timing_scope": "Each timed fresh arm includes full source preparation, tree construction, training, diagnostics and JSON serialization. Each prepared arm includes reweighting, tree construction, training, diagnostics and JSON serialization. Three calls per arm are alternated in order; oracle replay is outside timed intervals.",
+  "allocation_scope": "Separate Python tracemalloc trace around reweighting, prepared solve and JSON serialization for the base 8x8 stack-24 case; excludes cached source counts, cold preparation, independent oracle and RSS.",
+  "accuracy_scope": "Every fresh and prepared payload is checked by independent ordered-board/best-five numeric-rule replay and own-hand information-set best responses. Exact payload parity is required after removing only equity_preparation from the prepared result. Target is independent NashConv plus 1e-9 at most 0.005 chips; misses are retained.",
+  "artifact_sha256": "963c2e0a2c39b2f64cbeb2b73713739f33b5b1b4bd2d419affa3c766ec2981f0"
+}

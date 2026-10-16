@@ -990,3 +990,22 @@ bytes, not RSS. This slice adds fixture, benchmark and regression evidence;
 production solver source and API remain unchanged. Future cards are integrated
 exactly but forced to check down; later-street betting and full ranges remain
 outside this result. See [all checkpoints, provenance and limits](flop-weighted-eight-hand.md).
+
+## Reuse exact fixed-flop counts across weighted betting games
+
+An immutable `FlopCheckdownEquities` table now separates bounded full-future
+equity preparation from repeated flop solves. Covered-pair reweighting preserves
+the fixed board, source counts, global collision conditioning and all existing
+caps. The separate prepared entry point retains source-inclusive admission and
+adds explicit zero-current-ranking metadata; the ordinary solver payload and
+shared kernels are unchanged. Structural validation is not count authentication.
+
+Frozen `9af1e75` passes all four predetermined fresh/prepared games, including
+eight weighted hands each, two flop raises, reversed weights and a four-hand
+subset. All 24 timed profiles have exact numerical-payload parity and pass
+independent full-physical-chance/visible-information BR replay. Cold preparation
+took 5.002 seconds; warm complete-call medians are 14.8%-32.4% below fresh calls
+in this matrix. A full 4,000-iteration warm trace peaks at 418,997 Python bytes,
+excluding cached inputs and RSS; its interrupted elapsed time remains recorded.
+All 843 tests pass in frozen-source CI on Python 3.11/3.12/3.13. See
+[API, every measurement and provenance](flop-equity-reuse.md).
