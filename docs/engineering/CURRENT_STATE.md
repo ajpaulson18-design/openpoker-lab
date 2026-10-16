@@ -85,3 +85,13 @@ training. See [the cache specification and measured evidence](../turn-terminal-c
 for exact parity, independent replay, concurrency/failure checks and the
 fixture-specific timing/resource limits. This adds no earlier-street, UI,
 general speed or RSS claim.
+
+## Exact normalized archived river certificates
+
+The development [river certificate audit](../river-rational-certificate.md)
+reconstructs all fifteen saved extension/long-budget river policies, including
+weighted raises. It records exact normalized EV/legal-response intervals,
+all five target meets and ten misses, normalization ledgers and pinned inputs.
+Saved-file verification freshly recomputes the mathematical rows. Its scope
+is the configured numeric model and separately normalized policies; it adds
+no production API, unrestricted equilibrium or raw-binary64 interval claim.
