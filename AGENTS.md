@@ -82,6 +82,15 @@ output construction. Keep target priors/caps from the existing plan, unchanged
 literal reweighting, rank-free transfers and full endpoint/permutation provenance.
 See [mathematical scope and validation](docs/flop-suit-equity.md).
 
+`native_preflop_equity.py` is a separate explicit source-built count adapter.
+Preserve ordinary Python preparation/callbacks/default payloads and all existing
+pre-enumeration caps. The project-owned C helper returns integer counts; Python
+retains exact priors and category-mass construction. Fail explicitly, with no
+silent fallback. Keep source/compiler/binary identities, independent best-five
+and full-board conformance, and complete-call measurements. Python allocation
+traces exclude native-process allocations and RSS. Source-only distribution does
+not establish compiled-binary packaging clearance. See [native preparation](docs/native-preflop-equity.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

@@ -36,6 +36,16 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+D014 (2026-10-16): engineering decision under the owner's authorized compiled
+backend development scope: implement bounded native preflop count preparation as
+a separate explicit source-built API. Preserve the default Python reference,
+progress callbacks, immutable table, all admission limits and solver payloads.
+This isolates compiler/protocol failures and permits complete-call comparison
+without implicit tool installation. Third-party evaluator reuse and a default
+backend switch were not selected. Implementation and evidence status are tracked
+in [native preparation](../native-preflop-equity.md); no toolchain distribution
+clearance or broader game coverage is implied. No earlier decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
