@@ -49,9 +49,9 @@ The result uses `solver_version="preflop-full-checkdown-v1"` and the existing `p
 
 The independent validation path reconstructs the legal numeric betting game and replays serialized strategies after exactly renormalizing each binary64 action row as a rational value. It computes profile value and maximizes over legal unilateral responses for each responding private hand, summing over hidden opponent hands and showdown categories before maximizing. It does not use the production betting tree, terminal utility, ranker or best-response implementation as the oracle. For weighted games, the two best responses give an equilibrium-value bracket `[-BR_BB, BR_SB]`; its width is NashConv. These bounds do not imply an exact game value when no separate certificate exists.
 
-## Planned frozen benchmark — evidence pending
+## Frozen benchmark evidence
 
-The planned specification is [`preflop-full-checkdown-v1.json`](../benchmarks/preflop-full-checkdown-v1.json), with the harness at [`benchmark_preflop_checkdown.py`](../scripts/benchmark_preflop_checkdown.py). The specification selects CFR+ at 100, 1,000 and 3,000 iterations, with three complete final repeats. Its four fixtures cover an AA/KK known-value game, two three-compatible-pair weighted games including a short BB stack, and a four-pair weighted game. The latter reuses three pinned physical count artifacts and derives its fourth pair through a recorded global suit bijection; this benchmark does not perform new physical board enumeration.
+The specification is [`preflop-full-checkdown-v1.json`](../benchmarks/preflop-full-checkdown-v1.json), with the harness at [`benchmark_preflop_checkdown.py`](../scripts/benchmark_preflop_checkdown.py). It selects CFR+ at 100, 1,000 and 3,000 iterations, with three complete final repeats. Its four fixtures cover an AA/KK known-value game, two three-compatible-pair weighted games including a short BB stack, and a four-pair weighted game. The latter reuses three pinned physical count artifacts and derives its fourth pair through a recorded global suit bijection; this benchmark performs no new physical board enumeration.
 
 Each prepared-counts request must be admitted before any betting tree or training allocation; source-inclusive admission or rejection is recorded as a comparison. The final independent NashConv limit is 0.005 chips. The AA/KK fixture also has a known SB value of +1 chip and a separate 0.005-chip value-error limit. Weighted-game values are reported only as best-response brackets, not as exact value claims. Checkpoints that miss the target remain in the report. A separate Python allocation trace covers a complete prepared solve and JSON serialization; it is not process RSS, and it is not mixed into the timed samples.
 
@@ -64,6 +64,47 @@ The SB fold pays -0.5 and the checked limp pays `u < 1`. These legal
 strategies give matching lower and upper bounds of +1 for this finite game;
 the counts and argument are independent of trained strategy probabilities.
 
-The benchmark's source/spec freeze and execution have not yet been verified. Runtime, allocation, NashConv, value-error, repeated-payload and final-gate results are pending and must be filled from the eventual hash-verified report. No measured performance or convergence result is claimed here.
+The [raw report](../benchmarks/results/preflop-full-checkdown-v1.json) was run
+on Python 3.12.14 / Windows at clean source
+`3386aa102fb983392149bc5b24047a94fa0deef8`, retaining 264 before/after source
+hashes. Its canonical SHA-256 (excluding its own checksum field) is
+`64ba54fd28c1c656543a7fd69c3a79fad62dd328f5618187a01e67d83ec33b25`;
+the frozen specification checksum is
+`561a4da35fac7b288b38638c96461dbbb41281c646853cdddea9fd9e990c9a3b`.
+All 20 timed complete calls and the separate trace passed independent numeric
+policy replay; the largest scalar discrepancy was `3.984e-16` chips. All
+three final repeats per case produced identical serialized payloads.
+
+| Fixture | Independent final NashConv, chips | SB equilibrium-value bracket | Median complete seconds |
+| --- | ---: | --- | ---: |
+| AA/KK, stacks `[3,3]`, two raises | 0.0000000173234 | `[0.999999997305, 1.000000014628]` | 1.84806 |
+| Three pairs, stacks `[4,3]`, two sizes/two raises | 0.0000450742 | `[0.767271690943, 0.767316765113]` | 6.48597 |
+| Three pairs, short BB `[4,2.5]`, three raises | 0.0000291152 | `[0.675670526014, 0.675699641184]` | 5.41432 |
+| Four pairs, stacks `[4,3]`, three raises | 0.0000921334 | `[0.767267133733, 0.767359267132]` | 7.48936 |
+
+The independently replayed AA/KK profile value differs from its exact +1
+anchor by `3.801e-10` chips. Weighted values above are approximate bracket
+endpoints; exact rational encodings are in the report. The four-pair
+100-iteration checkpoint missed the final target (`NashConv=0.005987775034`);
+it is retained, and all 1,000- and 3,000-iteration checkpoints pass. No samples
+were removed or adjusted. Timings are observations for this machine and fixture,
+with preparation excluded; there is no prior-backend speedup comparison.
+
+The complete three-pair 3,000-iteration allocation trace measured **53,615
+Python bytes**, taking 32.92918 seconds separately from untraced samples. It
+includes table validation, admission, tree/row construction, training, exact
+production diagnostics, output and JSON serialization. It excludes the input
+prepared table, independent replay and process RSS. It makes no memory-saving
+claim. The explicit prepared-counts 3,000-iteration modeled budgets are
+54,656,160 / 377,169,952 / 348,356,832 / 464,471,872 in table order. The last
+three would exceed the source-inclusive ceiling when historical preparation is
+charged; no requested iterations or existing caps were reduced.
+
+Focused validation: `python -B -m unittest tests.test_preflop_checkdown_solver
+tests.test_preflop_checkdown_oracle tests.test_benchmark_preflop_checkdown -q`
+passed 15 tests. The independent oracle test uses an exhaustive own-hand pure
+policy search on a manual weighted tree and shows that illegally revealing the
+opponent's hand strictly improves BB's response. Full CI/publication status is
+recorded in the associated pull request.
 
 This is a bounded heads-up preflop betting abstraction with forced hidden full-board checkdown. It does not solve later-street betting, unrestricted no-limit Hold'em, multiway games, antes or rake, and it makes no profitability claim.

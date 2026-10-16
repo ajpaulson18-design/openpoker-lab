@@ -1053,3 +1053,10 @@ checkdown and introduce no postflop decisions. Shared kernels and the existing
 selected-outcome APIs are unchanged. Complete requested work is forecast and
 admitted before tree construction, with explicit prepared-counts admission.
 See [API, independent replay, convergence and measured status](preflop-full-checkdown.md).
+
+The frozen four-case benchmark passes all final 3,000-CFR+ gates, with maximum
+independent NashConv 0.0000921334 chips and scalar replay discrepancy below
+4e-16. The early four-pair 100-sweep miss is retained. Three-repeat complete
+prepared-call medians range from 1.84806 to 7.48936 seconds; a separate full
+three-pair trace measures 53,615 Python bytes, excluding input tables/oracle/RSS.
+These measurements add game coverage, with no claimed backend speedup.
