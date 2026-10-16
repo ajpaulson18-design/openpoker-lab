@@ -65,6 +65,15 @@ the unchanged admission limits, independent policy replay and explicit flop
 re-raise histories. Preserve every rejection/target miss and publish generated
 policy artifacts only after the clean-source verification.
 
+`flop_checkdown_equity.py` provides immutable fixed-flop ordered W/T/L tables
+for `solve_prepared_flop_checkdown`. Reweight only physically covered compatible
+pairs and preserve the fixed board, exact global collision conditioning, original
+counts and all caps. Validate immutable structure and positive representable
+category support before tree allocation. Structural validation does not prove
+physical provenance. Keep the ordinary solver payload unchanged and retain
+source-inclusive admission for prepared solves; report zero current ranking
+separately. See [API and measured scope](docs/flop-equity-reuse.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

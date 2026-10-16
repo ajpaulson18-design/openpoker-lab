@@ -4,6 +4,7 @@ Only flop betting is optimized. Turn and river are hidden forced checkdown;
 this adapter does not change shared postflop, turn/river, or CFR kernels.
 """
 from .flop_checkdown_worlds import prepare_flop_worlds
+from .flop_checkdown_equity import FlopCheckdownEquities
 from .preflop_vector_budget import estimate_vector_budget, MAX_TOTAL_LOOP_ENTRIES, MAX_INFO_ACTION_SLOTS
 from .public_cfr import train_public_batched
 from .public_diagnostics import evaluate_profile
@@ -26,6 +27,36 @@ def solve_flop_checkdown(board, oop_range, ip_range, *, config=None,
     effective stacks exclude the existing pot. This is a zero-sum finite action
     abstraction, with no later-street betting, rake or multiway equilibrium.
     """
+    config = _validate_options(config, iterations, algorithm)
+    plan = prepare_flop_worlds(board, oop_range, ip_range)
+    return _solve_plan(plan, config, iterations, algorithm)
+
+
+def solve_prepared_flop_checkdown(equities, *, config=None, iterations=1000,
+                                  algorithm="cfrplus"):
+    """Solve using immutable fixed-flop counts without board enumeration.
+
+    Structural validation does not authenticate caller-supplied outcome counts.
+    Admission conservatively retains the ordinary source-inclusive work bound;
+    the additive preparation metadata describes the current call's avoided work.
+    The default solve API and its result payload remain unchanged.
+    """
+    config = _validate_options(config, iterations, algorithm)
+    if type(equities) is not FlopCheckdownEquities:
+        raise TypeError("equities must be FlopCheckdownEquities")
+    equities.validate()
+    result = _solve_plan(equities, config, iterations, algorithm)
+    result["equity_preparation"] = {
+        "mode": "prepared-counts",
+        "current_rank_calls": 0,
+        "current_unordered_board_evaluations": 0,
+        "source_inclusive_admission": True,
+        "validation": "Structural consistency only; supplied counts require trusted provenance.",
+    }
+    return result
+
+
+def _validate_options(config, iterations, algorithm):
     if type(iterations) is not int or not 10 <= iterations <= 10_000:
         raise ValueError("Iterations must be an integer from 10 to 10,000")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
@@ -36,7 +67,10 @@ def solve_flop_checkdown(board, oop_range, ip_range, *, config=None,
         config = RiverConfig.from_dict(config)
     elif not isinstance(config, RiverConfig):
         raise TypeError("config must be RiverConfig or its serialized mapping")
-    plan = prepare_flop_worlds(board, oop_range, ip_range)
+    return config
+
+
+def _solve_plan(plan, config, iterations, algorithm):
     counts = {"decision": 0, "terminal": 0}
 
     def reserve(kind):

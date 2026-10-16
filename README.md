@@ -323,6 +323,9 @@ Reuse full-board preflop pair counts for changed range weights without reranking
 A fixed matrix for eight weighted hands per player and richer flop betting:
 [scope, admission and independent validation](docs/flop-weighted-eight-hand.md).
 
+Reuse fixed-flop equity counts for changed weights and repeated betting games:
+[prepared API, provenance and limits](docs/flop-equity-reuse.md).
+
 Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
 
 An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
