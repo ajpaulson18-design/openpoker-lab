@@ -70,13 +70,50 @@ produce 12 distinct board images; the combined board-and-hand images can still
 be distinct. All games remain finite heads-up flop betting with hidden forced
 future checkdown and the existing pot-share utility convention.
 
-## Planned frozen evidence
+## Frozen measured evidence
 
-The benchmark fixes all 24 suit images of one pair, two eight-hand whole-game
-images with changed flop suits, and a two-hand mixed target assembled from one
-source pair. It requires independent full-physical-chance policy/BR replay,
-exact priors, full-deck mapping provenance, zero warm ranking guards and fixed
-admission limits. Whole-game images additionally map serialized labels back to
-the published source game and require exact complete numerical-payload parity.
-Measurements and acceptance status will be recorded only after a clean source
-freeze; unit coverage alone is not benchmark or general solver evidence.
+At clean frozen source `e6af9e41f52eb9438881f9942609bbf593fd3542`, the
+[specification](../benchmarks/flop-suit-equity-v1.json) fixes 27 cases: all 24
+suit images of `QhJh` versus `QcQd`, two eight-hand whole-game images with
+changed flop suits, and a two-pair mixed target assembled from one source pair.
+Each trains 4,000 CFR+ iterations in three complete warm calls. All 81 profiles
+pass independent ordered-future-deck, best-five numeric-rule policy and own-hand
+best-response replay, exact globally conditioned priors, full-deck provenance,
+deterministic payloads and zero ranking/enumeration/build guards. The independent
+single-pair count anchor is 6 wins, 60 ties and 1,914 losses out of 1,980 ordered
+future deals. Its 24 joint images cover 12 distinct flop boards.
+
+| Cases | Compatible pairs per case | Ordered future worlds per case | Independent NashConv, chips | Complete warm-call median, seconds |
+| --- | ---: | ---: | ---: | ---: |
+| 24 single-pair images | 1 | 1,980 | 0.00000834966 | 1.47835–12.49474 |
+| Eight-hand image A | 58 | 114,840 | 0.000104911 | 29.82636 |
+| Eight-hand image B | 58 | 114,840 | 0.000104911 | 26.14521 |
+| Mixed target | 2 | 3,960 | 0.00000834966 | 3.19387 |
+
+Every profile meets the predeclared `NashConv + 1e-9 <= 0.005` gate and
+`1e-10` scalar-agreement tolerance. Both whole-game images inverse-map to the
+exact complete numerical payload of the published source game, with only the
+prepared-count metadata removed. The mixed target uses priors `2/3` and `1/3`
+and different valid source-to-target suit maps; whole-game strategy equivalence
+is not asserted for arbitrary mixed transfers. All 27 no-ranking admission
+checks finish before cold preparation; the largest modeled work charge remains
+129,020,256 under the unchanged 500-million limit.
+
+Timings include remap, provenance, prepared solve and JSON serialization. They
+exclude independent verification and the 4.69336-second source preparation.
+Single-pair image 13 retains all three observations: 2.46482, **493.74158** and
+12.49474 seconds. The large elapsed-time variation is retained without trimming;
+its cause was not established. No comparative speedup is claimed by this run.
+A separate complete 4,000-iteration image-A call under `tracemalloc` peaks at
+**523,805 Python bytes**, takes 251.17780 seconds, and matches the verified
+timed payload exactly. This excludes the cached source table, cold preparation,
+independent oracle and process RSS. Traced elapsed time is not ordinary runtime.
+
+The [raw report](../benchmarks/results/flop-suit-equity-v1.json) records every
+repeat, count, exact prior, mapping, preflight, replay scalar and allocation
+guard. Its canonical artifact SHA-256 is
+`6b52f050387e2024659025a907d054a65e215d7a429129ba13f18d17dfa2c745`.
+It pins the prior source-count Git blob, specification hash and LF-normalized
+frozen source hashes. All 854 tests pass in frozen-source GitHub CI on Python
+3.11, 3.12 and 3.13. These results establish the stated finite model and suit
+images; they do not add later-street betting or arbitrary full-range coverage.
