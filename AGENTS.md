@@ -39,6 +39,18 @@ Use Python 3.11 or newer. There are no runtime dependencies.
 
 ## Completion standard
 
+`preflop_checkdown_solver.py` is a separate prepared-counts preflop betting
+adapter. Reuse the existing preflop builder and shared CFR/CFR+ kernels; every
+nonfolded closed betting line settles at matched contributions using hidden
+full-board categories. Preserve limps and the BB option, finite raise rules,
+short all-ins, refunds, private-own-hand/public-history keys and zero-decision
+blind-all-in handling. Admit the complete requested solve with independent
+configuration-derived tree and modeled-loop forecasts before building a tree.
+Source-inclusive bookkeeping remains default; prepared-counts is explicit.
+Do not change old APIs, expose future cards, or imply later-street decisions.
+Validate serialized policies with independent numeric rules and exact rational
+own-hand best responses. See [scope and evidence](docs/preflop-full-checkdown.md).
+
 Full-board preflop equity tables support `reweight_preflop_equities` for new
 weights and covered private-pair subsets. Preserve global collision conditioning,
 unchanged source counts and table immutability, and reject any uncovered compatible
