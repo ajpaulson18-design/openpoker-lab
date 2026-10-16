@@ -11,7 +11,11 @@ class BenchmarkTurnTerminalMemoizationTests(unittest.TestCase):
         # Exercise the actual matrix-free APIs and serialized results. Keeping
         # these tiny solves cached makes each mutation test deterministic and
         # avoids fabricated solver metadata.
-        benchmark._verify_parents()
+        # Keep immutable archive/policy/fixture checks in routine regression
+        # tests. The old timing CLI still applies its strict historical source
+        # gate through _verify_parents(); current solver edits must not rewrite
+        # or silently rebaseline that experiment.
+        benchmark._verify_parent_archive()
         cls.profiles = {}
         for case_id in (benchmark.SELECTED_ID, benchmark.FULL_ID):
             case = benchmark._frozen_case(case_id)

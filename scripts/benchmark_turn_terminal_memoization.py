@@ -201,7 +201,8 @@ def _validate_case(case):
     return case
 
 
-def _verify_parents():
+def _verify_parent_archive():
+    """Verify immutable parent reports/policies and their canonical fixtures."""
     reports = {}
     for case_id, parent in PARENTS.items():
         if _canonical_digest(parent["report"]) != parent["report_sha256"]:
@@ -227,6 +228,12 @@ def _verify_parents():
                 raise ValueError("Pinned parent report/policy metric differs: " + field)
         _frozen_case(case_id)
         reports[case_id] = report
+    return reports
+
+
+def _verify_parents():
+    """Strict historical experiment gate, including its original source pins."""
+    reports = _verify_parent_archive()
     _verify_parent_sources(reports)
     return reports
 

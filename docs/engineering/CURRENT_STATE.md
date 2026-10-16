@@ -72,3 +72,16 @@ retains that exact table and scope, with explicit compiler/binary provenance.
 Python remains the reference/default. Read its current validation and benchmark
 status before asserting performance; native-process memory is outside Python
 allocation tracing.
+
+## Optional turn terminal cache addition
+
+The separate matrix-free turn API accepts explicit `terminal_cache="ranked-lru"`
+for admitted fixed CFR+ calls with at most two original hands per player and
+48 reachable branches. Its default remains `"none"`. Per-solve branch proxies
+preserve the original outer kernel, exact root-fold paths, fallback limits and
+all legacy result fields, with separate full-request cache admission and
+cleanup accounting. Target mode and exceptional conditioning reject before
+training. See [the cache specification and measured evidence](../turn-terminal-cache.md)
+for exact parity, independent replay, concurrency/failure checks and the
+fixture-specific timing/resource limits. This adds no earlier-street, UI,
+general speed or RSS claim.

@@ -18,6 +18,12 @@ from .turn_range_kernel import (
     STABLE_ROOT_MAX_INTEGER_BITS,
     TurnRangePayoffs,
 )
+from .turn_terminal_cache import (
+    MAX_CACHE_BRANCHES,
+    MAX_CACHE_HANDS_PER_PLAYER,
+    admit_cache,
+    install_branch_cache,
+)
 
 MAX_HAND_STATE_PASS_WORK = 30_000_000
 MAX_INFO_ACTION_SLOTS = 1_000_000
@@ -52,12 +58,21 @@ def _config(value, label):
 def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
                            river_config=None, runouts=None, iterations=1000,
                            algorithm="cfrplus", target_exploitability=None,
-                           check_interval=100):
+                           check_interval=100, terminal_cache="none"):
     """Solve a configured turn start with exact matrix-free river payoffs.
 
     Target mode reports NashConv / 2 and checks only completed iterations at or
     after iteration 10. Resource admission always uses the full iteration cap.
     """
+    if type(terminal_cache) is not str or terminal_cache not in ("none", "ranked-lru"):
+        raise ValueError("terminal_cache must be 'none' or 'ranked-lru'.")
+    if terminal_cache == "ranked-lru":
+        if algorithm != "cfrplus":
+            raise ValueError("Ranked terminal caching supports CFR+ only.")
+        if target_exploitability is not None:
+            raise ValueError("Ranked terminal caching does not support target mode.")
+        if type(iterations) is not int or not 10 <= iterations <= 10_000:
+            raise ValueError("Ranked terminal caching requires 10 through 10000 fixed iterations.")
     board = cards(board)
     if len(board) != 4:
         raise ValueError("Matrix-free turn solving requires a four-card board.")
@@ -76,8 +91,14 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
     normalized_runouts = None if runouts is None else tuple(cards(runouts))
     expanded = (expand_range(oop_range, board), expand_range(ip_range, board))
     hands = (tuple(expanded[0]), tuple(expanded[1]))
+    if terminal_cache == "ranked-lru" and any(
+            len(side) > MAX_CACHE_HANDS_PER_PLAYER for side in hands):
+        raise ValueError("Ranked terminal caching supports at most two original hands per player.")
     weights = (tuple(expanded[0][hand] for hand in hands[0]),
                tuple(expanded[1][hand] for hand in hands[1]))
+    if (terminal_cache == "ranked-lru" and normalized_runouts is not None and
+            len(normalized_runouts) > MAX_CACHE_BRANCHES):
+        raise ValueError("Ranked terminal caching supports at most 48 selected runouts.")
     kernel = TurnRangePayoffs(
         board, hands, weights, pot=config.pot, runouts=normalized_runouts,
         fallback_pair_limit=MAX_FALLBACK_PAIR_CHECKS,
@@ -120,6 +141,7 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
 
     nodes = []
     turn_fold_terminals = 0
+    terminal_count = 0
     pending = [(root, ())]
     while pending:
         node, prefix = pending.pop()
@@ -129,8 +151,10 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
         elif isinstance(node, _Node):
             nodes.append(node)
             pending.extend((child, prefix) for child in reversed(node.children))
-        elif isinstance(node, _Terminal) and node.kind == "fold" and not prefix:
-            turn_fold_terminals += 1
+        elif isinstance(node, _Terminal):
+            terminal_count += 1
+            if node.kind == "fold" and not prefix:
+                turn_fold_terminals += 1
 
     root_marginals = kernel.joint_marginals()
     prefix_marginals = {(): root_marginals}
@@ -169,6 +193,13 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
                             exceptional_root_fold_pass_work)
     if hand_state_pass_work > MAX_HAND_STATE_PASS_WORK:
         raise ValueError("Matrix-free turn exceeds 30 million hand-state pass operations.")
+
+    cache_admission = None
+    if terminal_cache == "ranked-lru":
+        if kernel.exceptional_conditioning:
+            raise ValueError("Ranked terminal caching does not support exceptional conditioning.")
+        cache_admission = admit_cache(
+            terminal_count, len(kernel._branches), iterations)
 
     infos, metadata = {}, {}
     for node in nodes:
@@ -221,11 +252,19 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
         return target_reached
 
     if target is None:
-        averages = train_ranked_turn(
-            root, infos, iterations, algorithm, terminal_kernel=kernel,
-            chance_type=_Chance,
-        )
-        last_diagnostic = diagnose(averages)
+        if terminal_cache == "ranked-lru":
+            with install_branch_cache(kernel, cache_admission) as cache_runtime:
+                averages = train_ranked_turn(
+                    root, infos, iterations, algorithm, terminal_kernel=kernel,
+                    chance_type=_Chance,
+                )
+                last_diagnostic = diagnose(averages)
+        else:
+            averages = train_ranked_turn(
+                root, infos, iterations, algorithm, terminal_kernel=kernel,
+                chance_type=_Chance,
+            )
+            last_diagnostic = diagnose(averages)
         actual_iterations = iterations
     else:
         averages = train_ranked_turn(
@@ -338,4 +377,6 @@ def solve_matrix_free_turn(board, oop_range, ip_range, config=None, *,
             "stop_reason": "target-reached" if target_reached else "iteration-limit",
             "checkpoints": checkpoints,
         }
+    if terminal_cache == "ranked-lru":
+        result["terminal_cache"] = cache_runtime.to_dict()
     return result

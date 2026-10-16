@@ -108,9 +108,16 @@ class FullDeckRationalAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "fresh replay and exact recomputation"):
             auditor._verify_saved_row_matches_recomputation(altered, reference)
 
-    def test_gitattributes_pins_only_the_new_certificate_to_lf(self):
+    def test_gitattributes_keeps_this_certificate_rule_narrow(self):
         attrs = (auditor.ROOT / "benchmarks" / "results" / ".gitattributes").read_text()
-        self.assertEqual(attrs.strip(), "full-deck-turn-rational-certificate-v1.json text eol=lf")
+        rules = [line.strip() for line in attrs.splitlines()
+                 if line.strip() and not line.lstrip().startswith("#")]
+        expected = "full-deck-turn-rational-certificate-v1.json text eol=lf"
+        self.assertEqual(rules.count(expected), 1)
+        for rule in rules:
+            pattern = rule.split()[0]
+            self.assertNotIn("*", pattern, "broad wildcard attributes are not allowed")
+            self.assertNotIn("?", pattern, "glob attributes are not allowed")
 
 
 if __name__ == "__main__":
