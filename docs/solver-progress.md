@@ -1,5 +1,45 @@
 # Solver progress record
 
+## Exact normalized certificates cover both archived river games
+
+All fifteen saved extension/long-budget river records now have exact profile
+EV and legal own-information response bounds, including the weighted raised
+game. Mandatory independent physical replay precedes exact arithmetic, and
+the saved artifact is reloaded for complete fresh reconstruction. Every
+polarised row also exactly matches the separate five-history pure-response
+oracle and contains the known value 25.
+
+Five records meet exact NashConv 1/1000 and all ten misses remain recorded.
+The weighted raised 10k bounds span approximately 0.000279553443 chips;
+its equilibrium value remains unknown. Sol separately reconstructed all
+270 normalization rows, all eight metrics and 83 fingerprints, comparing
+with independent exact vectors computed before the final artifact. The
+13 focused tests pass normally and with Python optimization; 53 broader
+exact/replay tests pass. Production and earlier-street code is unchanged.
+See [certificate scope, results and reproduction](river-rational-certificate.md).
+
+## Optional per-solve turn terminal caching preserves complete policies
+
+The matrix-free turn API now accepts explicit `terminal_cache="ranked-lru"`
+for admitted fixed CFR+ calls with at most two original hands per player and
+48 branches. Private branch composition preserves original outer/root-fold
+arithmetic, fallback accounting and every legacy result field. Defaults remain
+unchanged. A separate full-request logical cache budget and 16,384-entry LRU
+apply; target mode and exceptional conditioning reject before training.
+
+Seven complete policies pass independent all-eight-metric replay and Sol's
+separate hash/counter/source/timing audit. Both 1k candidates and selected 3k
+exactly match archived legacy payloads. Selected 3k also recomputes its exact
+normalized rational certificate, with NashConv about 0.00047081005 below exact
+1/1000; both 1k misses and all four 300-sweep misses remain recorded.
+
+Three paired complete calls gave ratios of default median to cached median
+1.245519 selected / 1.373634 full deck, passing the predeclared 1.10 gate on
+both fixtures. These are shared-host observations, not a general speed or RSS
+claim. All 92 broader regression tests passed; the final 32 focused tests
+passed normally and with `python -O`. The 18 captured old default outputs
+also remain identical. See [API scope, limits and complete evidence](turn-terminal-cache.md).
+
 ## Exact normalized response bounds cover every remaining river
 
 All six archived full44 CFR+ policies now have exact rational EV/legal-response

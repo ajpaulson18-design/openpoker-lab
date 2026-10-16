@@ -24,6 +24,12 @@ This explicitly solves the selected-river conditioned game. Omit `runouts` for
 the full physical deck, subject to admission. A target is a stopping criterion,
 not a promised result; inspect `convergence.stop_reason` and the reported gap.
 
+Fixed CFR+ calls can explicitly request `terminal_cache="ranked-lru"` within
+the [optional cache's shape and full-request resource envelope](turn-terminal-cache.md).
+This mode preserves every legacy result field and adds cache accounting only.
+It supports ordinary conditioning and at most two original hands per player;
+target mode rejects. The default remains `terminal_cache="none"`.
+
 ## Physical chance law
 
 A four-card board leaves 48 possible public river cards. Each physically

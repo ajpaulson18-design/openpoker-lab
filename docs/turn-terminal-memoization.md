@@ -150,4 +150,13 @@ The complete machine-readable evidence is
 The [saved policies](../benchmarks/results/turn-terminal-memoization-policies-v1)
 retain both 300-sweep modes and both 1,000-sweep candidates. Reproduce with
 `python -m scripts.benchmark_turn_terminal_memoization --phase preflight` and
-then `--phase measure`; the latter runs the complete pinned comparison.
+then `--phase measure` from the archived experiment commit
+`acbce9707e217df306ea5d079c2dc65dbf567b54`; the latter runs the complete pinned
+comparison. The historical timing CLI deliberately rejects changed production
+sources. Current unit tests verify archive bytes and fixtures separately, then
+check actual current profiles for exact parity and independent replay.
+
+The later [optional production cache](turn-terminal-cache.md) uses private
+branch composition with no shared class patching, preserves ordinary exact
+root-fold paths, and has its own source-frozen benchmark and admission model.
+The measurements above remain evidence for this historical experiment only.
