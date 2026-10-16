@@ -1114,5 +1114,7 @@ The paired 96-call report observes median categorical/mean ratios of 2.0123 to
 3.1017 on one host, with scalar mode discrepancies below 1.706e-13. Mean mode's
 Python trace peak is 2,080 bytes higher. All CFR+ quality gates pass, while four
 vanilla/DCFR 3,000-sweep profiles miss in both modes and remain explicitly
-recorded. A separate predeclared 8,000-sweep quality follow-up is pending;
-see the dedicated record rather than treating speed as equilibrium accuracy.
+recorded. A separate predeclared 8,000-sweep follow-up passes all eight
+quality calls, with maximum independent NashConv 0.00464177 and unchanged
+original report/caps. See the dedicated record rather than treating speed as
+equilibrium accuracy.

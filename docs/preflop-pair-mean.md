@@ -105,7 +105,32 @@ quality and scalar-agreement gates. Both complete requested solves must fit
 the unchanged 500-million work ceiling before any tree/training work. It is a
 new experiment, not an alteration of the prior report. One complete call per
 mode/request is for quality validation, with no new comparative median or
-allocation claim. Its source freeze and results are pending.
+allocation claim.
+
+The [follow-up report](../benchmarks/results/preflop-pair-mean-quality-v1.json)
+passes all eight quality calls and all four paired comparisons at clean source
+`ae47a252b4c0d29508ed23323a9dd4a5af985d19`, with 281 verified source hashes.
+Its canonical SHA-256 is
+`079d0aa6f58923c4e867876fe176d2db53e50bfc5ef97d2b339d4e702ca3cef7`;
+follow-up specification checksum is
+`ef40b2d73ad3fef71cd93a57bcf98e5a87dda4d381de0a1fe6ae4a9aece83b78`.
+The pinned original report's blob and canonical checksum are rechecked before
+and after the calls and remain unchanged. The producer, budget, oracle and
+original paired harness/specification are unchanged from `07a1c4d`.
+
+| Retained miss retested at 8,000 | Categorical NashConv | Pair-mean NashConv |
+| --- | ---: | ---: |
+| Three-pair vanilla | 0.0042073800 | 0.0042073800 |
+| Three-pair DCFR | 0.0023680846 | 0.0023680846 |
+| Short-BB vanilla | 0.0035045959 | 0.0035045959 |
+| Four-pair vanilla | 0.0046417698 | 0.0046417698 |
+
+Maximum independent scalar replay gap is `3.331e-16` and cross-mode scalar gap
+`1.977e-14` chips. The largest complete requested modeled budget is 494,807,872
+for categorical and 246,907,968 for pair-mean, both below the unchanged
+500-million ceiling. No iteration ceiling, quality target or old report was
+changed. This follow-up establishes those specific higher-budget quality
+results; it does not turn the original 3,000-sweep failures into passes.
 
 CI initially caught a synthetic test demanding an exact floating-point sum of
 1.0: Python 3.11 produced `0.9999999999999999`. The assertion now permits
