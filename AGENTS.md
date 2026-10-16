@@ -74,6 +74,14 @@ physical provenance. Keep the ordinary solver payload unchanged and retain
 source-inclusive admission for prepared solves; report zero current ranking
 separately. See [API and measured scope](docs/flop-equity-reuse.md).
 
+`flop_suit_equity.py` explicitly transfers fixed-flop counts to covered joint
+suit orbits. Canonicalize the board and ordered OOP/IP hands under one global
+four-suit bijection per target pair; retain ranks, relative suits and player
+roles. Resolve all pairs and reject inconsistent source-orbit counts before
+output construction. Keep target priors/caps from the existing plan, unchanged
+literal reweighting, rank-free transfers and full endpoint/permutation provenance.
+See [mathematical scope and validation](docs/flop-suit-equity.md).
+
 Keep changes narrow and reviewable. For defects and model changes, add a reproducible case and externally meaningful regression test or measurable benchmark. Run the smallest relevant tests while working and the full applicable suite before completion. Record commands actually run and limitations. Surface ambiguous poker rules, statistical assumptions, security decisions, and architecture changes instead of guessing.
 
 The lead agent owns architecture, product judgment, difficult debugging and integration review. Delegate bounded implementation, research, documentation and validation to workers when authorized, following the owner's Sol/Luna preference in the task protocol. Copilot specialists provide support when a working account route is available; workflow configuration alone does not prove they run. Preserve the same model-neutral knowledge and calculation boundaries across agents.

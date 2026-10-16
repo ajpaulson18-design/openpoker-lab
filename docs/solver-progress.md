@@ -1009,3 +1009,20 @@ in this matrix. A full 4,000-iteration warm trace peaks at 418,997 Python bytes,
 excluding cached inputs and RSS; its interrupted elapsed time remains recorded.
 All 843 tests pass in frozen-source CI on Python 3.11/3.12/3.13. See
 [API, every measurement and provenance](flop-equity-reuse.md).
+
+## Transfer prepared fixed-flop counts through joint suit symmetry
+
+A separate opt-in API transfers trusted integer counts when one global suit
+bijection maps the flop and both role-ordered private hands together. It rejects
+uncovered and inconsistent orbits, preserves exact target weighting and all
+admission limits, and returns deterministic mapping provenance.
+
+At frozen `e6af9e4`, all 81 profiles across 24 single-pair images, two eight-hand
+whole-game images and a mixed two-pair target pass independent physical-board
+and own-hand best-response replay. Both whole-game images reproduce the exact
+published source payload after inverse label mapping. Maximum NashConv is
+0.000104911 chips; warm calls perform no ranking or future-board enumeration.
+A complete 4,000-iteration trace peaks at 523,805 Python bytes, excluding cached
+inputs and RSS. Every timing observation is retained, including a 493.742-second
+single-pair outlier; no comparative speedup is claimed. All 854 frozen-source CI
+tests pass on Python 3.11/3.12/3.13. See [scope, measurements and raw evidence](flop-suit-equity.md).

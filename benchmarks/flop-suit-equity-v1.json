@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "flop-suit-equity-v1",
+  "baseline_main": "65fb169961c65e64828c93fbd01f7811a3719e4f",
+  "algorithm": "cfrplus",
+  "iterations": 4000,
+  "timed_repeats": 3,
+  "allocation_iterations": 4000,
+  "target_nash_conv": 0.005,
+  "target_padding": 1e-09,
+  "scalar_tolerance": 1e-10,
+  "source_board": "2c3c4d",
+  "source_oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+  "source_ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+  "single_pair": {
+    "source_oop_hand": "QhJh",
+    "source_ip_hand": "QcQd",
+    "source_pair_count": 1,
+    "config": {
+      "pot": 6,
+      "effective_stack": 12,
+      "bet_sizes": [
+        0.5,
+        1
+      ],
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 1,
+      "include_all_in": true
+    },
+    "suit_maps": [
+      {
+        "c": "c",
+        "d": "d",
+        "h": "h",
+        "s": "s"
+      },
+      {
+        "c": "c",
+        "d": "d",
+        "h": "s",
+        "s": "h"
+      },
+      {
+        "c": "c",
+        "d": "h",
+        "h": "d",
+        "s": "s"
+      },
+      {
+        "c": "c",
+        "d": "h",
+        "h": "s",
+        "s": "d"
+      },
+      {
+        "c": "c",
+        "d": "s",
+        "h": "d",
+        "s": "h"
+      },
+      {
+        "c": "c",
+        "d": "s",
+        "h": "h",
+        "s": "d"
+      },
+      {
+        "c": "d",
+        "d": "c",
+        "h": "h",
+        "s": "s"
+      },
+      {
+        "c": "d",
+        "d": "c",
+        "h": "s",
+        "s": "h"
+      },
+      {
+        "c": "d",
+        "d": "h",
+        "h": "c",
+        "s": "s"
+      },
+      {
+        "c": "d",
+        "d": "h",
+        "h": "s",
+        "s": "c"
+      },
+      {
+        "c": "d",
+        "d": "s",
+        "h": "c",
+        "s": "h"
+      },
+      {
+        "c": "d",
+        "d": "s",
+        "h": "h",
+        "s": "c"
+      },
+      {
+        "c": "h",
+        "d": "c",
+        "h": "d",
+        "s": "s"
+      },
+      {
+        "c": "h",
+        "d": "c",
+        "h": "s",
+        "s": "d"
+      },
+      {
+        "c": "h",
+        "d": "d",
+        "h": "c",
+        "s": "s"
+      },
+      {
+        "c": "h",
+        "d": "d",
+        "h": "s",
+        "s": "c"
+      },
+      {
+        "c": "h",
+        "d": "s",
+        "h": "c",
+        "s": "d"
+      },
+      {
+        "c": "h",
+        "d": "s",
+        "h": "d",
+        "s": "c"
+      },
+      {
+        "c": "s",
+        "d": "c",
+        "h": "d",
+        "s": "h"
+      },
+      {
+        "c": "s",
+        "d": "c",
+        "h": "h",
+        "s": "d"
+      },
+      {
+        "c": "s",
+        "d": "d",
+        "h": "c",
+        "s": "h"
+      },
+      {
+        "c": "s",
+        "d": "d",
+        "h": "h",
+        "s": "c"
+      },
+      {
+        "c": "s",
+        "d": "h",
+        "h": "c",
+        "s": "d"
+      },
+      {
+        "c": "s",
+        "d": "h",
+        "h": "d",
+        "s": "c"
+      }
+    ]
+  },
+  "whole_range_images": [
+    {
+      "id": "whole8-map-a",
+      "suit_map": {
+        "c": "d",
+        "d": "c",
+        "h": "s",
+        "s": "h"
+      },
+      "effective_stack": 24,
+      "max_raises": 2
+    },
+    {
+      "id": "whole8-map-b",
+      "suit_map": {
+        "c": "h",
+        "d": "s",
+        "h": "d",
+        "s": "c"
+      },
+      "effective_stack": 24,
+      "max_raises": 2
+    }
+  ],
+  "mixed_same_board": {
+    "id": "mixed-two-pair-same-board",
+    "oop_range": "QhJh:.5,QsJs:.25",
+    "ip_range": "QcQd:1",
+    "expected_pair_priors": [
+      "2/3",
+      "1/3"
+    ],
+    "effective_stack": 12,
+    "max_raises": 1
+  },
+  "config_template": {
+    "pot": 6,
+    "bet_sizes": [
+      0.5,
+      1
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "include_all_in": true
+  },
+  "expected_case_count": 27,
+  "expected_single_pair_cases": 24,
+  "expected_distinct_single_pair_joint_images": 24,
+  "expected_distinct_single_pair_boards": 12,
+  "expected_single_pair_counts": {
+    "source_oop_hand": "QhJh",
+    "source_ip_hand": "QcQd",
+    "ordered_outcomes": 1980,
+    "wins": 6,
+    "ties": 60,
+    "losses": 1914
+  },
+  "expected_full_range_counts": {
+    "candidate_pairs": 64,
+    "compatible_pairs": 58,
+    "ordered_worlds": 114840,
+    "unordered_boards": 57420,
+    "compatible_prior_normalizer": "1185/64"
+  },
+  "expected_mixed_counts": {
+    "candidate_pairs": 2,
+    "compatible_pairs": 2,
+    "ordered_worlds": 3960,
+    "unordered_boards": 1980,
+    "compatible_prior_normalizer": "3/4",
+    "pair_priors": [
+      "2/3",
+      "1/3"
+    ]
+  },
+  "historical_source": {
+    "commit": "65fb169961c65e64828c93fbd01f7811a3719e4f",
+    "path": "benchmarks/results/flop-equity-reuse-v1.json",
+    "blob": "baee3c0cb2e0d0e89fbe35411ae540d886448aa9",
+    "source_revision": "9af1e75ae57f5bcf0c0e7b8d30e388bc2038e5bc",
+    "whole_stack24_payload_sha256": "2862026384f7fa27be751748742823e4e4eb580c24ee9fad01d8eeb20b7f5271"
+  },
+  "gate": "All 27 no-ranking 4,000-iteration preflights complete before cold count preparation or any independent ranking. Cold full 8x8 counts match both the pinned PR131 physical report and independent ordered-board numeric-rule replay. Every case has three timed remap+provenance+prepared-solve+complete-wrapper-JSON calls, independent physical count/policy replay, exact work-budget parity, and zero warm rank calls. Each full 8x8 global-image result, after inverse mapping board and hand labels and removing only equity_preparation, must reproduce the pinned PR131 complete policy payload hash. Target is independent NashConv plus 1e-9 <= 0.005 chips. Misses and expected resource rejections are preserved; there is no fallback.",
+  "model_limits": "Heads-up fixed flop, finite flop betting and forced hidden turn/river checkdown. Suit remaps transfer only exact 4-suit global images of a source board plus ordered OOP/IP private pair. No later-street betting, preflop solving, rake, multiway play or unrestricted NLHE.",
+  "provenance_note": "Independently developed exact suit-image benchmark. Production remap provenance is checked by separately applied 4-suit maps and a locally spelled 52-card deck bijection, including each source/target 45-card remaining deck. Independent best-five numeric-rule policy replay is the accuracy oracle. No external code or dependencies are used."
+}
