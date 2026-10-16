@@ -1,5 +1,27 @@
 # Solver progress record
 
+## Optional per-solve turn terminal caching preserves complete policies
+
+The matrix-free turn API now accepts explicit `terminal_cache="ranked-lru"`
+for admitted fixed CFR+ calls with at most two original hands per player and
+48 branches. Private branch composition preserves original outer/root-fold
+arithmetic, fallback accounting and every legacy result field. Defaults remain
+unchanged. A separate full-request logical cache budget and 16,384-entry LRU
+apply; target mode and exceptional conditioning reject before training.
+
+Seven complete policies pass independent all-eight-metric replay and Sol's
+separate hash/counter/source/timing audit. Both 1k candidates and selected 3k
+exactly match archived legacy payloads. Selected 3k also recomputes its exact
+normalized rational certificate, with NashConv about 0.00047081005 below exact
+1/1000; both 1k misses and all four 300-sweep misses remain recorded.
+
+Three paired complete calls gave ratios of default median to cached median
+1.245519 selected / 1.373634 full deck, passing the predeclared 1.10 gate on
+both fixtures. These are shared-host observations, not a general speed or RSS
+claim. All 92 broader regression tests passed; the final 32 focused tests
+passed normally and with `python -O`. The 18 captured old default outputs
+also remain identical. See [API scope, limits and complete evidence](turn-terminal-cache.md).
+
 ## Exact normalized response bounds cover every remaining river
 
 All six archived full44 CFR+ policies now have exact rational EV/legal-response

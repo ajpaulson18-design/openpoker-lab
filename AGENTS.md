@@ -6,6 +6,14 @@ Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifi
 
 ## Project
 
+For matrix-free turn `terminal_cache="ranked-lru"`, preserve the literal default
+path and all legacy payload fields. Keep caches private to a solve through
+branch composition, restore original references on every exit, validate before
+every lookup, and cache only successful zero-fallback vectors. Retain original
+root-fold arithmetic and full requested-work guards plus separate cache
+admission. No global patch, cross-river reuse, exceptional-conditioning support
+or RSS/general-speed claim follows. See [cache scope and evidence](docs/turn-terminal-cache.md).
+
 OpenPoker Lab is a standard-library Python research application with a plain JavaScript browser UI. It combines poker simulation, persistent opponent observations, transparent EV analysis, deterministic explanations, practice/review flows, and bounded heads-up preflop and postflop CFR solvers. It does not solve unrestricted no-limit Hold'em and makes no profitability claims.
 
 ## Setup and validation
