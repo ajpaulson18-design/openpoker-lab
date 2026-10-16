@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Exact normalized certificates cover both archived river games
+
+All fifteen saved extension/long-budget river records now have exact profile
+EV and legal own-information response bounds, including the weighted raised
+game. Mandatory independent physical replay precedes exact arithmetic, and
+the saved artifact is reloaded for complete fresh reconstruction. Every
+polarised row also exactly matches the separate five-history pure-response
+oracle and contains the known value 25.
+
+Five records meet exact NashConv 1/1000 and all ten misses remain recorded.
+The weighted raised 10k bounds span approximately 0.000279553443 chips;
+its equilibrium value remains unknown. Sol separately reconstructed all
+270 normalization rows, all eight metrics and 83 fingerprints, comparing
+with independent exact vectors computed before the final artifact. The
+13 focused tests pass normally and with Python optimization; 53 broader
+exact/replay tests pass. Production and earlier-street code is unchanged.
+See [certificate scope, results and reproduction](river-rational-certificate.md).
+
 ## Optional per-solve turn terminal caching preserves complete policies
 
 The matrix-free turn API now accepts explicit `terminal_cache="ranked-lru"`
