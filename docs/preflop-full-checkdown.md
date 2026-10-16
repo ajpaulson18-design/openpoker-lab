@@ -24,6 +24,11 @@ result = solve_prepared_preflop_checkdown(
 
 The button/SB acts first. A limp gives the BB its option to check or raise. Configured pot-fraction raises, reraises, the raise cap and the optional all-in action use the existing preflop betting builder. Short all-ins, effective-stack clipping, unmatched excess refunds and total-contribution action labels retain that builder's behavior. Each raise, including an incomplete all-in, consumes a raise in the cap. A fold settles the existing fold payoff; a call or check that closes betting goes directly to showdown at matched contributions. Histories contain public betting actions only. An information set is keyed by the acting player's own hand and public history, never the opponent's hand or the hidden final-board category.
 
+An explicit [`world_indexing="pair-mean"` option](preflop-pair-mean.md) can
+integrate each pair's hidden showdown categories before training. The default
+categorical representation and payload remain unchanged; see its separate proof,
+admission model and measured status.
+
 ## Admission and resource models
 
 `solve_prepared_preflop_checkdown` accepts `resource_model="source-inclusive"` by default or the explicit `"prepared-counts"` option. Both validate the table and admit the full requested iteration count before building the betting tree. Both retain a 500,000,000 modeled-loop-entry ceiling, a 10,000 decision-node ceiling, a 250,000 public-state ceiling, a 1,000,000 information-action-slot ceiling, the four-compatible-pair limit and the existing equity-preparation limits. This new API consumes an already prepared table; it does not itself enumerate boards or expose a combined prepare-and-solve entry point.

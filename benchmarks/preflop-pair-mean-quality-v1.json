@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-pair-mean-quality-v1",
+  "iterations": 8000,
+  "resource_model": "prepared-counts",
+  "base_spec_sha256": "60f1f06de20022a7e673916b11c375d59767c7ed7d08757af6ef18ec60582ee9",
+  "previous_report": {
+    "path": "benchmarks/results/preflop-pair-mean-v1.json",
+    "git_blob_sha1": "407c66affb60630642869497f41f28e2a1065aed",
+    "artifact_sha256": "c5a8582e1ff47b7c21f6c2487cb13618b1788cc3892019fc35aefb1ca6bff7dd"
+  },
+  "requests": [
+    {
+      "case": "weighted-three-pairs",
+      "algorithm": "vanilla"
+    },
+    {
+      "case": "weighted-three-pairs",
+      "algorithm": "dcfr"
+    },
+    {
+      "case": "weighted-short-bb",
+      "algorithm": "vanilla"
+    },
+    {
+      "case": "split-four-pairs",
+      "algorithm": "vanilla"
+    }
+  ],
+  "acceptance": {
+    "final_nash_conv_chip_limit": 0.005,
+    "final_known_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "gate_padding": 1e-10,
+    "cross_mode_scalar_absolute_tolerance": 1e-08
+  },
+  "method": "Separately predeclared follow-up selected in response to four original3000-iteration profiles missingNC.005 inbothmodes. Preserve originalreportandgates unchanged. Bothmodesfullyadmittedat8000 beforetree/training withunchanged500million ceiling. One complete timed quality call per mode per request, alternatingmodeorder across requests. No new speedup median or allocation claim from these single samples. Same independent replaytolerance1e-10, crossmodescalar1e-8, NC.005 plus1e-10padding. Allsamples/errors/missesretained. Physicalcount preparation excluded; no boardenumeration/nativeprocess. No sharedkernel/producer/algorithm changes."
+}
