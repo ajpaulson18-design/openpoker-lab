@@ -69,18 +69,68 @@ these build facts are not legal clearance.
 
 ## Validation and measured status
 
-Focused local MSVC checks pass independent best-five vectors, deterministic
-seven-card samples, malformed-input cases, published full-board counts and
-own-hand best-response replay. Dedicated CI builds with installed MSVC on Windows
-and `cc` on Linux; ordinary Python-only CI requires no compiler.
+At frozen `ee87737cccc34fd3ed47782f90ecb8b17f5bf5d2`, all fifteen measured
+complete calls pass: twelve native calls across four fixtures and three fresh
+Python calls on the paired base fixture. Every native table, work budget and
+complete solver dictionary exactly matches the reference assembled from the
+three pinned independently enumerated PR #125 physical-count artifacts. The
+fourth split-pair count uses a documented global suit bijection of the independent
+source count. Native preparation itself re-enumerates every physical board in
+each measured call; the independent oracle enumeration is reused.
 
-The planned frozen benchmark retains three complete cold Python/native samples
-for the same three-pair game, exact solver-payload equality, independent published
-counts and numeric-rule replay, separate four-pair coverage, unchanged admission
-and every timing observation. The exhaustive validator compares every five-card
-rank tuple with the independent oracle and known category totals; this does not
-exhaust six- or seven-card hands. Python allocation traces exclude native-process
-allocations and RSS. Exploratory results are not final measurements.
+All fixtures train 2,000 CFR+ iterations, including exact diagnostics and JSON.
+Numeric-rule own-hand best-response replay agrees within `1.324e-16` chips.
+Maximum exploitability is `0.0000146361` and known equilibrium-value error is
+`4.202e-9` chips; every profile passes both predeclared 0.005-chip gates with
+`1e-10` padding. Three-pair games charge 370,245,216 modeled entries; the
+four-pair split game charges 493,147,312. The original 500-million limit holds.
+
+| Fixture | Native complete-call samples, seconds | Native median, seconds |
+| --- | --- | ---: |
+| Three pairs, stacks 3/2 | 1.20543, 1.62903, 1.57198 | 1.57198 |
+| Three pairs, stacks 2/2 | 1.83905, 1.27280, 1.71972 | 1.71972 |
+| Three pairs, stacks 2/3 | 1.72948, 1.53367, 1.57731 | 1.57731 |
+| Four split pairs, stacks 3/2 | 2.31961, 1.80004, 2.22368 | 2.22368 |
+
+The paired fresh Python samples are **483.02199, 431.19727 and 664.05387**
+seconds, with median **483.02199**. Against the native median of **1.57198**,
+the recorded median ratio is **307.27× for this fixture and machine/build**.
+The selected [Windows Power-Troubleshooter event](../benchmarks/results/native-preflop-host-events-v1.json) records a sleep from `2026-10-16T15:04:42.0273515Z`
+to `2026-10-16T15:08:05.6345202Z` during the third Python call. Its entire raw
+664.05387-second observation is retained; no time is removed or sample discarded.
+The median is the first Python observation. These are observed wall times, not
+a universal solver or pure evaluator speed claim.
+
+Both intervals include preparation, training, diagnostics and serialization;
+compilation and independent verification are outside timing. Python uses no
+progress callback, and stage-level progress writes occur outside both intervals.
+Native calls additionally include Python ranking guards and preparation metadata
+serialization. A separate complete native call under `tracemalloc` takes 7.01317
+seconds and peaks at **347,984 Python bytes**, with payload identity matching the
+timed call. This excludes compiler work, native-process allocations and RSS;
+native memory and any memory saving are unmeasured.
+
+The [raw benchmark](../benchmarks/results/native-preflop-v1.json) retains every
+sample, exact prior, physical-count identity, witness/replay, work census and
+frozen source/build identity. Its canonical artifact SHA-256 is
+`f808a4a37c69c2511c514e23afeaad436ef055e1ae978bc178d38b2c3f89db10`.
+The [exhaustive native report](../benchmarks/results/native-preflop-evaluator-v1.json)
+checks all **2,598,960 five-card rank tuples** against the independent best-five
+oracle with **zero mismatches** and all nine known category totals. It took
+119.68088 seconds including validation; this is not native-only ranking time.
+Its canonical checksum is
+`bb2940c0eee02ea8743f3097bedcb627f2ee51e0186dbbebd1dd9ee07c699053`.
+This does not exhaust six- or seven-card hands; focused vectors and 1,000
+deterministic seven-card hands cover those paths.
+
+All 17 focused local tests pass, including real native full counts, role reversal,
+three stack configurations, malformed protocol responses and benchmark failure
+retention. Dedicated CI builds with installed MSVC on Windows and `cc` on Linux;
+ordinary Python-only CI requires no compiler. After measurement, test-only fixes
+remove a shallow-Git-history assumption and compare Windows file identity across
+temporary-path aliases. Evaluator, adapter, build, benchmark and fixture source
+remain identical to the measurement freeze. Final publication CI is recorded
+on [PR #135](https://github.com/ajpaulson18-design/openpoker-lab/pull/135).
 
 The game remains heads-up SB fold/shove and BB fold/call with forced showdown.
 Calculation speed adds no betting branches, multiway support or equilibrium

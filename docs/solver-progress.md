@@ -1026,3 +1026,20 @@ A complete 4,000-iteration trace peaks at 523,805 Python bytes, excluding cached
 inputs and RSS. Every timing observation is retained, including a 493.742-second
 single-pair outlier; no comparative speedup is claimed. All 854 frozen-source CI
 tests pass on Python 3.11/3.12/3.13. See [scope, measurements and raw evidence](flop-suit-equity.md).
+
+## Explicit native full-board preflop preparation
+
+The ordinary Python builder remains the reference/default. A separate locally
+compiled, project-owned C helper now prepares the same immutable W/T/L table
+under unchanged exact-prior and resource rules, with explicit source/compiler/
+binary provenance and no silent fallback or third-party evaluator dependency.
+
+Frozen `ee87737` passes all fifteen complete-call profiles against pinned
+independent physical counts, exact full solver-payload parity and own-hand
+best-response replay. Maximum exploitability is 0.0000146361 chips. For the
+three-pair, 2,000-CFR+ fixture, median complete time is 1.57198 seconds native
+versus 483.02199 seconds Python, a scoped observed 307.27× ratio. Every raw sample
+is retained, including a third Python call interrupted by recorded system sleep.
+All 2,598,960 five-card rank tuples independently agree; six/seven-card exhaustion
+is not claimed. A complete-call trace measures 347,984 Python bytes and excludes
+native-process memory and RSS. See [build, full evidence and limits](native-preflop-equity.md).

@@ -113,7 +113,7 @@ class NativePreparationBoundaryTests(unittest.TestCase):
                             'compiler_version': 'version', 'flags': ['-O3'], 'platform': 'test'}
                 path = root / 'native-preflop-manifest.json'
                 path.write_text(json.dumps(manifest), encoding='utf-8')
-                self.assertEqual(native._backend(root)[0], executable)
+                self.assertTrue(native._backend(root)[0].samefile(executable))
                 for key, value in [('source_sha256', 'changed'), ('executable_sha256', 'changed'),
                                    ('executable', '../other'), ('schema_version', True)]:
                     broken = dict(manifest); broken[key] = value

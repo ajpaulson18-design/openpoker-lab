@@ -15,7 +15,9 @@ class NativeBenchmarkTests(unittest.TestCase):
     def setUpClass(cls):
         cls.config = json.loads(benchmark.CONFIG.read_text(encoding='utf-8'))
         cls.preflights = benchmark.preflight_cases(cls.config)
-        cls.counts, cls.pinned = benchmark._load_pinned_oracles(cls.config)
+        cls.counts = {('AdAs', 'KdKs'): (1410336, 9308, 292660),
+                      ('QdQs', 'AsKh'): (968267, 7226, 736811),
+                      ('QdQs', 'KdKs'): (292846, 9336, 1410122)}
         cls.references = {}
         for item in cls.preflights:
             table, rows, _ = benchmark.reference_table(item, cls.counts)
@@ -33,6 +35,26 @@ class NativeBenchmarkTests(unittest.TestCase):
         split, _, derived = benchmark.reference_table(self.preflights[-1], self.counts)
         self.assertEqual(derived[0]['global_suit_map'], {'c': 'h', 'd': 'd', 'h': 'c', 's': 's'})
         self.assertEqual(split.counts[1], split.counts[2])
+
+    def test_pinned_loader_roles_blobs_and_checksums_without_git_history(self):
+        fixtures = {row['path']: (benchmark.ROOT / row['path']).read_bytes()
+                    for row in self.config['historical_source']['pairs']}
+        def invoke(args, **kwargs):
+            revision, path = args[-1].split(':', 1)
+            self.assertEqual(revision, benchmark.PINNED)
+            if args[1] == 'rev-parse':
+                return benchmark.PINNED_BLOBS[path] + '\n'
+            self.assertEqual(args[1], 'show')
+            return fixtures[path]
+        with patch.object(benchmark, 'subprocess', SimpleNamespace(check_output=invoke)):
+            counts, records = benchmark._load_pinned_oracles(self.config)
+            self.assertEqual(counts, self.counts)
+            self.assertEqual(len(records), 3)
+            first = next(iter(fixtures))
+            corrupted = json.loads(fixtures[first]); corrupted['counts']['wins'] += 1
+            fixtures[first] = json.dumps(corrupted).encode()
+            with self.assertRaisesRegex(ValueError, 'checksum failed'):
+                benchmark._load_pinned_oracles(self.config)
 
     def run_mock_pipeline(self, *, quality_miss=False):
         manifest = {'executable_sha256': 'pinned-test-build'}
@@ -58,6 +80,7 @@ class NativeBenchmarkTests(unittest.TestCase):
             root = Path(directory); build = root / 'local-build'; build.mkdir()
             stack.enter_context(patch.object(benchmark, 'git_snapshot', return_value={'revision': 'frozen-test', 'status': []}))
             stack.enter_context(patch.object(benchmark, 'source_hashes', return_value={'test': 'unchanged'}))
+            stack.enter_context(patch.object(benchmark, '_load_pinned_oracles', return_value=(self.counts, [])))
             stack.enter_context(patch.object(benchmark.native, '_backend', return_value=(build / 'native-test', manifest)))
             stack.enter_context(patch.object(benchmark, '_invoke_native', side_effect=native_call))
             stack.enter_context(patch.object(benchmark, '_invoke_python', side_effect=python_call))

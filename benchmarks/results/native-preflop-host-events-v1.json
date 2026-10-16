@@ -1,0 +1,21 @@
+{
+  "provider": "Microsoft-Windows-Power-Troubleshooter",
+  "event_recorded_utc": "2026-10-16T15:08:06.2891398Z",
+  "event_id": 1,
+  "event_record_id": 41631,
+  "schema_version": 1,
+  "sleep_utc": "2026-10-16T15:04:42.0273515Z",
+  "benchmark_id": "native-preflop-v1",
+  "scope": "Selected system sleep/wake event observed during the third Python sample. Raw benchmark observations remain unmodified.",
+  "wake_utc": "2026-10-16T15:08:05.6345202Z",
+  "timing_adjusted": false,
+  "benchmark_artifact_sha256": "f808a4a37c69c2511c514e23afeaad436ef055e1ae978bc178d38b2c3f89db10",
+  "affected_sample": {
+    "backend": "python",
+    "repeat": 3,
+    "case_id": "base-sb-deep",
+    "raw_complete_call_seconds": 664.0538711000117,
+    "observed_live_start_utc": "2026-10-16T15:02:45.014619+00:00"
+  },
+  "artifact_sha256": "f13f69795a8a2631855f75c98f9af89b93bf9e2a6beca17b81333af5ab059e89"
+}
