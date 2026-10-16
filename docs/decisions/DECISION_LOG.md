@@ -58,6 +58,17 @@ validation/publication status. This decision adds a model, not a claim of
 unrestricted NLHE or an exact finite-iteration equilibrium. No prior decision
 is superseded.
 
+D016 (2026-10-16): engineering decision under the owner's efficiency scope:
+provide explicit per-private-pair signed-mean world indexing for full-board
+preflop forced-checkdown. The hidden category is never available to a decision,
+and terminal payoff is linear in sign; retain hidden opponent-hand distinctions
+and full pair mass. Preserve the categorical default and independently validate
+floating-point and finite-iteration effects. Admit the complete requested P-world
+work with unchanged structural/source caps and retained category setup. See
+[proof, boundaries and measured status](../preflop-pair-mean.md). No default switch,
+third-party implementation or broader game model is authorized by this choice;
+no prior decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.

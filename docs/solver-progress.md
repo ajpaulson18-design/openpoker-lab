@@ -1100,3 +1100,12 @@ independent NashConv 0.0000921334 chips and scalar replay discrepancy below
 prepared-call medians range from 1.84806 to 7.48936 seconds; a separate full
 three-pair trace measures 53,615 Python bytes, excluding input tables/oracle/RSS.
 These measurements add game coverage, with no claimed backend speedup.
+
+## Opt-in preflop pair-mean worlds
+
+Full-board preflop forced-checkdown can explicitly integrate each private pair's
+hidden W/T/L categories into its signed conditional mean, while retaining all
+separate hidden opponent-hand pairs and the default categorical path. The opt-in
+budget charges P training/diagnostic worlds with original category validation,
+extra collapse setup, unchanged source charges and all existing caps. See
+[mathematical proof and paired measurement status](preflop-pair-mean.md).

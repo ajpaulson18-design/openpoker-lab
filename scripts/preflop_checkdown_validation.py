@@ -141,7 +141,16 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
     The input ``counts`` must come from an independent physical-board census;
     result equity rows are only checked against it, never treated as evidence.
     """
-    if type(result) is not dict or set(result)!=_RESULT_KEYS: raise ValueError("unexpected full-checkdown result schema")
+    if type(result) is not dict: raise ValueError("unexpected full-checkdown result schema")
+    result_keys=set(result)
+    if result_keys==_RESULT_KEYS:
+        world_indexing="category"
+    elif result_keys==_RESULT_KEYS|{"world_indexing"}:
+        if type(result["world_indexing"]) is not str or result["world_indexing"]!="pair-mean":
+            raise ValueError("unsupported world indexing mode")
+        world_indexing="pair-mean"
+    else:
+        raise ValueError("unexpected full-checkdown result schema")
     if result["solver_version"]!="preflop-full-checkdown-v1" or result["strategy_schema"]!="preflop-strategy-v1": raise ValueError("unsupported solver schema")
     if result["algorithm"] not in ("vanilla","dcfr","cfrplus"): raise ValueError("unsupported algorithm")
     if type(result["iterations"]) is not int or not 10<=result["iterations"]<=10000: raise ValueError("invalid requested iterations")
@@ -184,7 +193,8 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
     if result['training_iterations_completed']!=expected_completed: raise ValueError('invalid completed iterations')
     positive_rows=sum(sum(value>0 for value in row) for row in census.values())
     if any(type(result[field]) is not int for field in ('compatible_pairs','physical_boards','training_world_rows','info_sets')): raise ValueError('invalid game census types')
-    if (result["compatible_pairs"],result["physical_boards"],result["training_world_rows"])!=(len(priors),_BOARDS*len(priors),positive_rows): raise ValueError("physical game dimensions mismatch")
+    expected_world_rows=len(priors) if world_indexing=="pair-mean" else positive_rows
+    if (result["compatible_pairs"],result["physical_boards"],result["training_world_rows"])!=(len(priors),_BOARDS*len(priors),expected_world_rows): raise ValueError("physical game dimensions mismatch")
     if type(result["work_budget"]) is not dict: raise ValueError("missing work budget")
     eq={p:Fraction(w-l,_BOARDS) for p,(w,t,l) in census.items()}
     if type(result["strategy"]) is not list: raise ValueError("strategy must be a list")

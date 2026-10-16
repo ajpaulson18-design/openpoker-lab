@@ -59,6 +59,16 @@ Do not change old APIs, expose future cards, or imply later-street decisions.
 Validate serialized policies with independent numeric rules and exact rational
 own-hand best responses. See [scope and evidence](docs/preflop-full-checkdown.md).
 
+Opt-in preflop `world_indexing="pair-mean"` integrates hidden W/T/L categories
+within each ordered private pair. Retain separate hidden opponent hands and
+zero-mean pair mass, exact conditional Fraction means before binary64 conversion,
+unchanged default categorical payloads, full table/category validation and source
+charges, and all tree/action/rank caps. Admit P-world training/diagnostics with
+retained 3P setup plus separately disclosed included collapse work before building.
+Use independent physical-count policy/own-hand BR replay, declared cross-mode
+tolerances and paired complete calls/traces; changing summation order does not
+promise bitwise policies or a universal 3x speedup. See [pair means](docs/preflop-pair-mean.md).
+
 Full-board preflop equity tables support `reweight_preflop_equities` for new
 weights and covered private-pair subsets. Preserve global collision conditioning,
 unchanged source counts and table immutability, and reject any uncovered compatible

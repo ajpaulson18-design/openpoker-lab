@@ -32,14 +32,18 @@ def options(config, iterations, algorithm, resource_model):
     raise TypeError('Config must be a mapping or a PreflopConfig')
 
 
-def admit_prepared(equities, config, iterations, algorithm, resource_model):
+def admit_prepared(equities, config, iterations, algorithm, resource_model,
+                   *, world_indexing='categorical'):
     config = options(config, iterations, algorithm, resource_model)
+    if type(world_indexing) is not str or world_indexing not in ('categorical', 'pair-mean'):
+        raise ValueError('World indexing must be categorical or pair-mean')
     if type(equities) is not FullBoardEquities:
         raise TypeError('Equities must be an exact FullBoardEquities table with trusted counts')
     equities.validate()
     pairs = len(equities.pairs)
     candidates = len(equities.hands[0]) * len(equities.hands[1])
-    worlds = 3 * pairs
+    categorical_worlds = 3 * pairs
+    worlds = pairs if world_indexing == 'pair-mean' else categorical_worlds
     branches = len(config.raise_sizes) + int(config.include_all_in)
     # Every raise, including an incomplete all-in, increments raises_made.
     # Only the initial SB call can create a same-depth BB option node; all
@@ -69,17 +73,19 @@ def admit_prepared(equities, config, iterations, algorithm, resource_model):
     # serialization are reserved separately from iterative world traversal.
     setup = (4096 + 128 * candidates + 256 * pairs
              + 128 * sum(map(len, equities.hands)) + 128 * slots
-             + 64 * worlds + 64 * states)
+             + 64 * categorical_worlds + 64 * states)
+    pair_mean_setup = 256 * pairs if world_indexing == 'pair-mean' else 0
+    setup += pair_mean_setup
     source = (128 + 8 * candidates + 128 * pairs + 64 * BOARDS_PER_PAIR * pairs
               if resource_model == 'source-inclusive' else 0)
     total = source + setup + training + diagnostics
     if total > MAX_MODELED_LOOP_ENTRIES:
         raise ValueError('Full-requested preflop work exceeds 500,000,000 modeled loop entries')
-    return {
+    result = {
         'budget_version': 'preflop-full-checkdown-work-v1',
         'resource_model': resource_model, 'requested_iterations': iterations,
         'algorithm': algorithm, 'compatible_pairs': pairs,
-        'categorical_rows_upper_bound': worlds,
+        'categorical_rows_upper_bound': categorical_worlds,
         'tree_upper_bound': {'raise_branches': branches, 'decision_nodes': decisions,
                             'public_states': states, 'information_sets': infos,
                             'information_action_slots': slots},
@@ -105,3 +111,15 @@ def admit_prepared(equities, config, iterations, algorithm, resource_model):
                  'work only. No current ranking. Not bytecode, elapsed time, allocation '
                  'bytes or RSS bounds; trusted counts require independent provenance.',
     }
+    if world_indexing == 'pair-mean':
+        result.update({
+            'budget_version': 'preflop-full-checkdown-pair-mean-work-v1',
+            'world_indexing': 'pair-mean',
+            'training_world_rows_upper_bound': pairs,
+            'pair_mean_setup_loop_entries_upper_bound': pair_mean_setup,
+            'scope': result['scope'] + ' Pair-mean indexing aggregates each private pair\'s '
+                     'hidden W/T/L categories to a conditional signed mean computed as a '
+                     'Fraction before binary64 conversion; its setup charge is included above. '
+                     'Floating-point summation order may differ.',
+        })
+    return result

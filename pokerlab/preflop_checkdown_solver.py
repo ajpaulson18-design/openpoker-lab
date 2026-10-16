@@ -5,6 +5,8 @@ showdown worlds. Betting occurs only before any board cards are revealed; each
 nonfolded closed betting line settles immediately at the matched contribution.
 """
 
+from fractions import Fraction
+
 from . import cfr
 from .cfr_plus import train as train_cfrplus
 from .preflop_checkdown_budget import admit_prepared, options
@@ -19,7 +21,7 @@ _MAX_DECISION_NODES = 10_000
 
 def solve_prepared_preflop_checkdown(
         equities, *, config=None, iterations=1000, algorithm="cfrplus",
-        resource_model="source-inclusive"):
+        resource_model="source-inclusive", world_indexing="categorical"):
     """Solve finite preflop betting followed by hidden full-board checkdown.
 
     The equities argument must be a structurally valid prepared
@@ -28,9 +30,11 @@ def solve_prepared_preflop_checkdown(
     No board is revealed: each compatible private pair's positive W/T/L
     categories remain hidden weighted worlds at every preflop information set.
     """
+    if type(world_indexing) is not str or world_indexing not in ('categorical', 'pair-mean'):
+        raise ValueError('World indexing must be categorical or pair-mean')
     config = options(config, iterations, algorithm, resource_model)
     budget = admit_prepared(equities, config, iterations, algorithm,
-                            resource_model)
+                            resource_model, world_indexing=world_indexing)
     tree_bound = budget["tree_upper_bound"]
     decision_bound = tree_bound["decision_nodes"]
     public_state_bound = tree_bound["public_states"]
@@ -68,7 +72,15 @@ def solve_prepared_preflop_checkdown(
             or information_action_slots > tree_bound["information_action_slots"]):
         raise AssertionError("Constructed preflop tree exceeded its admitted envelope.")
 
-    worlds = equities.worlds
+    if world_indexing == 'pair-mean':
+        worlds = tuple(
+            (sb_index, bb_index, float(prior),
+             float(Fraction(wins - losses, BOARDS_PER_PAIR)))
+            for (sb_index, bb_index, prior), (wins, _, losses)
+            in zip(equities.pairs, equities.counts)
+        )
+    else:
+        worlds = equities.worlds
 
     def node_key(node, world):
         return node.player, world[node.player], node.history
@@ -131,7 +143,7 @@ def solve_prepared_preflop_checkdown(
             "pair_probability_fraction": [prior.numerator, prior.denominator],
         })
 
-    return {
+    result = {
         "solver_version": "preflop-full-checkdown-v1",
         "strategy_schema": "preflop-strategy-v1",
         "algorithm": algorithm,
@@ -163,3 +175,6 @@ def solve_prepared_preflop_checkdown(
             "and no postflop decisions, antes, rake or multiway play are modeled."
         ),
     }
+    if world_indexing == 'pair-mean':
+        result['world_indexing'] = 'pair-mean'
+    return result
