@@ -326,6 +326,9 @@ A fixed matrix for eight weighted hands per player and richer flop betting:
 Reuse fixed-flop equity counts for changed weights and repeated betting games:
 [prepared API, provenance and limits](docs/flop-equity-reuse.md).
 
+Transfer covered fixed-flop counts across joint suit-equivalent boards and hands:
+[explicit API, proof boundary and validation](docs/flop-suit-equity.md).
+
 Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
 
 An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
