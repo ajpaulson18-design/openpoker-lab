@@ -1109,3 +1109,10 @@ separate hidden opponent-hand pairs and the default categorical path. The opt-in
 budget charges P training/diagnostic worlds with original category validation,
 extra collapse setup, unchanged source charges and all existing caps. See
 [mathematical proof and paired measurement status](preflop-pair-mean.md).
+
+The paired 96-call report observes median categorical/mean ratios of 2.0123 to
+3.1017 on one host, with scalar mode discrepancies below 1.706e-13. Mean mode's
+Python trace peak is 2,080 bytes higher. All CFR+ quality gates pass, while four
+vanilla/DCFR 3,000-sweep profiles miss in both modes and remain explicitly
+recorded. A separate predeclared 8,000-sweep quality follow-up is pending;
+see the dedicated record rather than treating speed as equilibrium accuracy.

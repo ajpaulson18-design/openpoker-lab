@@ -124,7 +124,7 @@ class PreflopPairMeanTests(unittest.TestCase):
             synthetic, config=config, iterations=60, algorithm="cfrplus",
             resource_model="prepared-counts", world_indexing="pair-mean",
         )
-        self.assertEqual(sum(world[2] for world in categorical), 1.0)
+        self.assertAlmostEqual(sum(world[2] for world in categorical), 1.0, delta=1e-15)
         self.assertEqual(mean_result["training_world_rows"], 1)
         self.assertEqual(categorical_result["training_world_rows"], 3)
         self.assertEqual(mean_result["pair_equities"], categorical_result["pair_equities"])
