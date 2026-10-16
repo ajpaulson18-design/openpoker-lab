@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "native-preflop-v1",
+  "iterations": 2000,
+  "algorithm": "cfrplus",
+  "repeats": 3,
+  "small_blind": 0.5,
+  "big_blind": 1.0,
+  "sb_range": "AsAd:1,QsQd:0.5",
+  "bb_range": "AsKh:0.25,KsKd:1",
+  "case_definitions": [
+    {
+      "id": "base-sb-deep",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": [
+          3,
+          2
+        ]
+      },
+      "compatible_pairs": 3,
+      "candidate_pairs": 4
+    },
+    {
+      "id": "base-symmetric-two",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": [
+          2,
+          2
+        ]
+      },
+      "compatible_pairs": 3,
+      "candidate_pairs": 4
+    },
+    {
+      "id": "base-bb-deep",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": [
+          2,
+          3
+        ]
+      },
+      "compatible_pairs": 3,
+      "candidate_pairs": 4
+    },
+    {
+      "id": "split-four-pairs",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.125,AsKc:0.125,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1.0,
+        "starting_stack": [
+          3,
+          2
+        ]
+      },
+      "compatible_pairs": 4,
+      "candidate_pairs": 6
+    }
+  ],
+  "expected_pair_priors": {
+    "base": [
+      [
+        "AdAs|KdKs",
+        [
+          8,
+          13
+        ]
+      ],
+      [
+        "QdQs|AsKh",
+        [
+          1,
+          13
+        ]
+      ],
+      [
+        "QdQs|KdKs",
+        [
+          4,
+          13
+        ]
+      ]
+    ],
+    "split": [
+      [
+        "AdAs|KdKs",
+        [
+          8,
+          13
+        ]
+      ],
+      [
+        "QdQs|AsKh",
+        [
+          1,
+          26
+        ]
+      ],
+      [
+        "QdQs|AsKc",
+        [
+          1,
+          26
+        ]
+      ],
+      [
+        "QdQs|KdKs",
+        [
+          4,
+          13
+        ]
+      ]
+    ]
+  },
+  "pair_count": 1712304,
+  "limits": {
+    "candidate_pairs": 4096,
+    "compatible_pairs": 4,
+    "board_evaluations": 6849216,
+    "rank_calls": 13698432,
+    "modeled_loop_entries": 500000000
+  },
+  "acceptance": {
+    "final_exploitability_chip_limit": 0.005,
+    "final_known_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "gate_padding": 1e-10
+  },
+  "baseline_python_case": "base-sb-deep",
+  "baseline_interleaved_repeats": 3,
+  "traced_case": "base-sb-deep",
+  "traced_iterations": 2000,
+  "traced_algorithm": "cfrplus",
+  "trace_scope": "One complete native prepare + prepared solve + JSON serialization. Python tracemalloc excludes the native subprocess, compiler, and RSS; it measures Python-side allocations only. Native wall time includes Python guard-context setup and native metadata serialization; Python baseline serializes only the solver result.",
+  "historical_source": {
+    "commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+    "benchmark_id": "preflop-push-fold-v1",
+    "pairs": [
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-0.json",
+        "blob_sha1": "cc510379eed9484f30e59e428917a9e55ba027a7",
+        "artifact_sha256": "599c1360f321d845b335b798468c3c6af216951663e87b6812ecb56321895b40",
+        "sb_hand": "AdAs",
+        "bb_hand": "KdKs",
+        "wins": 1410336,
+        "ties": 9308,
+        "losses": 292660
+      },
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-1.json",
+        "blob_sha1": "d639fecaee1c9f1ca1eaec95bb29e3162ddd00ff",
+        "artifact_sha256": "61cecc13d773b26496a14ffee1612dfaf5149981e4fcdb12bdbad65db2660160",
+        "sb_hand": "QdQs",
+        "bb_hand": "AsKh",
+        "wins": 968267,
+        "ties": 7226,
+        "losses": 736811
+      },
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-2.json",
+        "blob_sha1": "864c80c32739f6665b6010c200ad31bcb32e439f",
+        "artifact_sha256": "fc6ae5898eac160de79ed4d9c652c632d000966867f1b296bc7dbae682e98e52",
+        "sb_hand": "QdQs",
+        "bb_hand": "KdKs",
+        "wins": 292846,
+        "ties": 9336,
+        "losses": 1410122
+      }
+    ],
+    "split_pair_derivation": {
+      "source_pair": [
+        "QdQs",
+        "AsKh"
+      ],
+      "target_pair": [
+        "QdQs",
+        "AsKc"
+      ],
+      "global_suit_map": {
+        "c": "h",
+        "h": "c",
+        "d": "d",
+        "s": "s"
+      },
+      "rationale": "One global suit bijection maps AsKh to AsKc and leaves QdQs unchanged; it gives a bijection of the 1,712,304 legal unordered boards and preserves all poker ranks. This is a derivation from the pinned physical count, not a fresh independent enumeration."
+    }
+  },
+  "method": {
+    "native_samples_per_case": 3,
+    "python_samples_base_case": 3,
+    "timing": "Complete prepare + solve_prepared_push_fold + JSON serialization; GC collection occurs before each timed call. Native calls include Python ranker guard instrumentation and serialize preparation metadata; Python baseline serializes only the solver result. Python baseline uses no progress callback; stage-level progress I/O runs outside both timed intervals.",
+    "comparison": "Exact native output dictionary equality against a reference immutable table assembled from pinned independent PR125 W/T/L rows and the current exact-preflight priors. Three additional fresh Python complete calls are interleaved with native base-case calls in alternating order.",
+    "oracle": "PR125 physical counts were independently produced with scripts.preflop_validation.independent_rank. Split AsKc uses the recorded global c<->h suit-bijection derivation. This benchmark re-enumerates native and reference production boards, but does not rerun the independent physical oracle.",
+    "quality": "Every result is replayed by scripts.preflop_push_fold_validation.replay and checked against an exact weighted equilibrium witness; all scalar replay gaps must be <= 1e-10 and final exploitability/value error plus 1e-10 padding must be <= 0.005 chips.",
+    "retention": "All measured call samples, parity comparisons, and quality misses are retained; expected quality misses do not abort later samples.",
+    "scope": "Optional native exact full-board equity preparation for the finite heads-up SB fold/shove and BB fold/call game only. No unrestricted NLHE, profitability, native training, or general ranker speed claim."
+  }
+}

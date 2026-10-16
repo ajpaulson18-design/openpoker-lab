@@ -329,6 +329,10 @@ Reuse fixed-flop equity counts for changed weights and repeated betting games:
 Transfer covered fixed-flop counts across joint suit-equivalent boards and hands:
 [explicit API, proof boundary and validation](docs/flop-suit-equity.md).
 
+Full-board preflop counting also has an explicit locally compiled helper. Python
+remains the default; the native adapter preserves counts, table shape and caps.
+See [build instructions, provenance and measured status](docs/native-preflop-equity.md).
+
 Non-all-in preflop raise coverage and retained structural admission limits: [probe evidence](docs/preflop-raised-coverage.md).
 
 An explicit preflop/flop betting model with hidden checkdown continuation: [API, verification and limits](docs/preflop-flop-checkdown.md).
