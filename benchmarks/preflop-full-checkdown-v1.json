@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-full-checkdown-v1",
+  "algorithm": "cfrplus",
+  "checkpoints": [
+    100,
+    1000,
+    3000
+  ],
+  "final_repeats": 3,
+  "resource_model": "prepared-counts",
+  "pair_count": 1712304,
+  "historical_source": {
+    "commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+    "benchmark_id": "preflop-push-fold-v1",
+    "pairs": [
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-0.json",
+        "blob_sha1": "cc510379eed9484f30e59e428917a9e55ba027a7",
+        "artifact_sha256": "599c1360f321d845b335b798468c3c6af216951663e87b6812ecb56321895b40",
+        "sb_hand": "AdAs",
+        "bb_hand": "KdKs",
+        "wins": 1410336,
+        "ties": 9308,
+        "losses": 292660
+      },
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-1.json",
+        "blob_sha1": "d639fecaee1c9f1ca1eaec95bb29e3162ddd00ff",
+        "artifact_sha256": "61cecc13d773b26496a14ffee1612dfaf5149981e4fcdb12bdbad65db2660160",
+        "sb_hand": "QdQs",
+        "bb_hand": "AsKh",
+        "wins": 968267,
+        "ties": 7226,
+        "losses": 736811
+      },
+      {
+        "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-2.json",
+        "blob_sha1": "864c80c32739f6665b6010c200ad31bcb32e439f",
+        "artifact_sha256": "fc6ae5898eac160de79ed4d9c652c632d000966867f1b296bc7dbae682e98e52",
+        "sb_hand": "QdQs",
+        "bb_hand": "KdKs",
+        "wins": 292846,
+        "ties": 9336,
+        "losses": 1410122
+      }
+    ],
+    "split_pair_derivation": {
+      "source_pair": [
+        "QdQs",
+        "AsKh"
+      ],
+      "target_pair": [
+        "QdQs",
+        "AsKc"
+      ],
+      "global_suit_map": {
+        "c": "h",
+        "h": "c",
+        "d": "d",
+        "s": "s"
+      },
+      "rationale": "One global suit bijection maps AsKh to AsKc and leaves QdQs unchanged; it gives a bijection of the 1,712,304 legal unordered boards and preserves all poker ranks. This is a derivation from the pinned physical count, not a fresh independent enumeration."
+    }
+  },
+  "case_definitions": [
+    {
+      "id": "aa-kk-three-chips",
+      "sb_range": "AsAd:1",
+      "bb_range": "KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          3,
+          3
+        ],
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 2,
+        "include_all_in": true
+      },
+      "compatible_pairs": 1,
+      "known_value_sb": 1
+    },
+    {
+      "id": "weighted-three-pairs",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          4,
+          3
+        ],
+        "raise_sizes": [
+          0.5,
+          1
+        ],
+        "max_raises": 2,
+        "include_all_in": true
+      },
+      "compatible_pairs": 3
+    },
+    {
+      "id": "weighted-short-bb",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.25,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          4,
+          2.5
+        ],
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 3,
+        "include_all_in": true
+      },
+      "compatible_pairs": 3
+    },
+    {
+      "id": "split-four-pairs",
+      "sb_range": "AsAd:1,QsQd:0.5",
+      "bb_range": "AsKh:0.125,AsKc:0.125,KsKd:1",
+      "config": {
+        "small_blind": 0.5,
+        "big_blind": 1,
+        "starting_stack": [
+          4,
+          3
+        ],
+        "raise_sizes": [
+          0.5
+        ],
+        "max_raises": 3,
+        "include_all_in": true
+      },
+      "compatible_pairs": 4
+    }
+  ],
+  "acceptance": {
+    "final_nash_conv_chip_limit": 0.005,
+    "final_known_value_error_chip_limit": 0.005,
+    "metric_absolute_tolerance": 1e-10,
+    "gate_padding": 1e-10
+  },
+  "traced_case": "weighted-three-pairs",
+  "trace_scope": "Complete prepared solve including table validation, admission, tree and rows, all requested training, exact production diagnostics, result construction and JSON serialization. Input prepared table and independent replay excluded. Python tracemalloc allocations only, not RSS or process-wide memory. Trace timing is separate from untraced samples. No physical enumeration or native subprocess.",
+  "method": {
+    "timing": "100 and 1000 sweeps once each; 3000 sweeps three complete calls. GC before timers; stage progress outside timer. All samples retained unchanged, including host sleep or scheduling outliers. No speedup baseline.",
+    "quality": "Independent numeric tree and exact Fraction serialized-policy replay with own-hand legal best responses. Serialized binary64 rows normalized exactly by rational row sums. Known AA/KK value +1 only; weighted game equilibrium value bracket is [-BR_BB,BR_SB], whose width is NashConv. Final NashConv and known value error plus padding must each be <=0.005 chips. Earlier checkpoints may miss and remain recorded.",
+    "provenance": "Reuses three pinned PR125 independently enumerated physical W/T/L artifacts; fourth split pair uses one recorded global c-h suit bijection. No new physical enumeration, count preparation timing or new cold-call/native speed claim.",
+    "admission": "Every prepared-counts request admitted before any tree/training. Record source-inclusive reference admission/rejection separately; requested iteration ceiling never reduced.",
+    "scope": "Finite heads-up preflop-only betting followed by hidden full-deck forced checkdown. No later-street decisions, unrestricted NLHE, rake, antes, multiway or profitability claim."
+  }
+}

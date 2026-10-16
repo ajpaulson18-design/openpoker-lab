@@ -1083,3 +1083,20 @@ is retained, including a third Python call interrupted by recorded system sleep.
 All 2,598,960 five-card rank tuples independently agree; six/seven-card exhaustion
 is not claimed. A complete-call trace measures 347,984 Python bytes and excludes
 native-process memory and RSS. See [build, full evidence and limits](native-preflop-equity.md).
+
+## Full-board finite preflop betting with forced checkdown
+
+A separate prepared-table adapter adds SB limps, the BB option, configured
+raises/reraises, short all-ins and matched-wager refunds to full-board
+preflop chance. All future cards remain hidden; closed betting lines force
+checkdown and introduce no postflop decisions. Shared kernels and the existing
+selected-outcome APIs are unchanged. Complete requested work is forecast and
+admitted before tree construction, with explicit prepared-counts admission.
+See [API, independent replay, convergence and measured status](preflop-full-checkdown.md).
+
+The frozen four-case benchmark passes all final 3,000-CFR+ gates, with maximum
+independent NashConv 0.0000921334 chips and scalar replay discrepancy below
+4e-16. The early four-pair 100-sweep miss is retained. Three-repeat complete
+prepared-call medians range from 1.84806 to 7.48936 seconds; a separate full
+three-pair trace measures 53,615 Python bytes, excluding input tables/oracle/RSS.
+These measurements add game coverage, with no claimed backend speedup.

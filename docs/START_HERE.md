@@ -76,3 +76,8 @@ four compatible private pairs. Its prepared equity tables can be reused. This
 does not expand the existing selected-outcome preflop API to a full-deck game,
 or add limps, non-all-in raises, later-street betting or multiway equilibrium.
 Read the dedicated specification for work admission and independent evidence.
+
+An additional [prepared preflop betting model](preflop-full-checkdown.md) uses
+the same full-board counts with finite limps, checks, raises and reraises, then
+forces hidden future checkdown. Read its separate scope and evidence; it does
+not add later-street decisions or change the selected-outcome preflop API.

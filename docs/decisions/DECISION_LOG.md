@@ -46,6 +46,18 @@ backend switch were not selected. Implementation and evidence status are tracked
 in [native preparation](../native-preflop-equity.md); no toolchain distribution
 clearance or broader game coverage is implied. No earlier decision is superseded.
 
+D015 (2026-10-16): engineering decision under the owner's ongoing preflop/flop
+solver scope: extend the reusable full-board preflop table through a separate
+finite preflop betting adapter with forced hidden future checkdown. Reuse the
+existing betting builder and scalar CFR/CFR+ kernels, with an independent
+configuration-derived pre-build admission envelope and numeric replay oracle.
+This adds limps and finite raises without changing selected-outcome APIs or
+later-street work. Full-deck postflop betting is deferred; the existing pair
+caps remain. See [scope and evidence](../preflop-full-checkdown.md) for actual
+validation/publication status. This decision adds a model, not a claim of
+unrestricted NLHE or an exact finite-iteration equilibrium. No prior decision
+is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
