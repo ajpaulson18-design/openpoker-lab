@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     env:
-      OPENPOKER_NATIVE_BUILD_DIR: ${{ runner.temp }}/openpoker-native
+      OPENPOKER_NATIVE_BUILD_DIR: build/native-preflop-ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
