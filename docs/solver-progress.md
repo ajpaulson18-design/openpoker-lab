@@ -1,5 +1,20 @@
 # Solver progress record
 
+## Exact rational equilibria establish both small river game values
+
+A bounded development sequence-form search now supplies rational equilibrium
+witnesses for the two archived river fixtures: polarised value 25 and weighted
+raised value -43339/2163, both with exactly zero NashConv. The weighted game
+uses 49/53 sequence coordinates instead of enumerating its millions of pure
+policies. This is a fixed configured numeric-model result, not a production
+solver/API change.
+
+An independent verifier reconstructs the payoff/flow model, validates primal
+and dual feasibility, checks normalization and complete own-information
+responses, and reproduces all eight exact metrics. The earlier trained
+policies and their target misses remain unchanged. See
+[proof, limits and reproducible evidence](river-sequence-equilibrium.md).
+
 ## Prepared-call profiling identifies training as the next bottleneck
 
 Pinned physical-count preflop and fixed-flop games now have a frozen coarse
@@ -22,7 +37,7 @@ oracle and contains the known value 25.
 
 Five records meet exact NashConv 1/1000 and all ten misses remain recorded.
 The weighted raised 10k bounds span approximately 0.000279553443 chips;
-its equilibrium value remains unknown. Sol separately reconstructed all
+the later witness above establishes its exact game value. Sol separately reconstructed all
 270 normalization rows, all eight metrics and 83 fingerprints, comparing
 with independent exact vectors computed before the final artifact. The
 13 focused tests pass normally and with Python optimization; 53 broader
