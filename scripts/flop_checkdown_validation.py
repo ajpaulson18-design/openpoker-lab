@@ -21,7 +21,42 @@ def _token(name, target):
     return name + "@" + format(target, ".9f").rstrip("0").rstrip(".")
 
 
-def prepare_oracle(board, oop_range, ip_range, config):
+def _validated_count_rows(count_rows, pairs):
+    """Validate trusted ordered physical W/T/L rows against the requested support."""
+    if type(count_rows) not in (list, tuple) or len(count_rows) != len(pairs):
+        raise ValueError("Trusted oracle counts must cover every compatible pair in order")
+    validated = []
+    for row, (oop_hand, ip_hand, _) in zip(count_rows, pairs):
+        if type(row) is not dict:
+            raise ValueError("Trusted oracle count rows must be mappings")
+        if (type(row.get("oop_hand")) is not str or type(row.get("ip_hand")) is not str
+                or row["oop_hand"] != "".join(oop_hand)
+                or row["ip_hand"] != "".join(ip_hand)):
+            raise ValueError("Trusted oracle counts have wrong pair identity or order")
+        values = tuple(row.get(key) for key in ("wins", "ties", "losses"))
+        if (any(type(value) is not int or value < 0 for value in values)
+                or type(row.get("ordered_outcomes")) is not int
+                or row["ordered_outcomes"] != 1980
+                or sum(values) != 1980):
+            raise ValueError("Trusted ordered W/T/L counts must be nonnegative integers totaling 1,980")
+        validated.append(values)
+    return tuple(validated)
+
+
+def prepare_oracle_from_counts(board, oop_range, ip_range, config, counts):
+    """Build independent configured replay state from caller-trusted W/T/L rows.
+
+    Counts must be independently sourced and in compatible-pair expansion
+    order. This helper performs no physical ranking; joint priors are recomputed
+    exactly from the requested represented input weights.
+    """
+    if type(counts) not in (list, tuple):
+        raise ValueError("Trusted oracle counts must be an ordered list or tuple")
+    return prepare_oracle(board, oop_range, ip_range, config,
+                          _trusted_counts=counts)
+
+
+def prepare_oracle(board, oop_range, ip_range, config, *, _trusted_counts=None):
     board = tuple(sorted(cards(board, 3), key=lambda c: ("23456789TJQKA".index(c[0]), "cdhs".index(c[1]))))
     ranges = [expand_range(r, board) for r in (oop_range, ip_range)]
     pairs = [(a, b, Fraction.from_float(x) * Fraction.from_float(y))
@@ -31,29 +66,39 @@ def prepare_oracle(board, oop_range, ip_range, config):
         raise ValueError("No compatible oracle pairs")
     total = sum((w for _, _, w in pairs), Fraction())
     deals, reports = [], []
-    # Deliberately enumerate ordered future deals from an independently spelled
-    # deck; cache only best-five ranks within the current pair, not its counts.
-    for a, b, weight in pairs:
-        dead = set(board + a + b)
-        deck = [r+s for r in "23456789TJQKA" for s in "cdhs" if r+s not in dead]
-        counts = {-1: 0, 0: 0, 1: 0}
-        cache = {}
-        for turn, river in permutations(deck, 2):
-            final = tuple(sorted(board + (turn, river)))
-            ranked = []
-            for player, hand in enumerate((a, b)):
-                key = player, final
-                if key not in cache:
-                    cache[key] = independent_rank(hand + final)
-                ranked.append(cache[key])
-            counts[(ranked[0] > ranked[1]) - (ranked[0] < ranked[1])] += 1
-        assert sum(counts.values()) == 1980
-        prior = weight / total
-        name_a, name_b = "".join(a), "".join(b)
-        deals.append((name_a, name_b, float(prior), (counts[1] - counts[-1]) / 1980))
-        reports.append({"oop_hand": name_a, "ip_hand": name_b, "wins": counts[1],
-                        "ties": counts[0], "losses": counts[-1], "ordered_outcomes": 1980,
-                        "pair_probability": float(prior)})
+    if _trusted_counts is None:
+        # Deliberately enumerate ordered future deals from an independently spelled
+        # deck; cache only best-five ranks within the current pair, not its counts.
+        for a, b, weight in pairs:
+            dead = set(board + a + b)
+            deck = [r+s for r in "23456789TJQKA" for s in "cdhs" if r+s not in dead]
+            counts = {-1: 0, 0: 0, 1: 0}
+            cache = {}
+            for turn, river in permutations(deck, 2):
+                final = tuple(sorted(board + (turn, river)))
+                ranked = []
+                for player, hand in enumerate((a, b)):
+                    key = player, final
+                    if key not in cache:
+                        cache[key] = independent_rank(hand + final)
+                    ranked.append(cache[key])
+                counts[(ranked[0] > ranked[1]) - (ranked[0] < ranked[1])] += 1
+            assert sum(counts.values()) == 1980
+            prior = weight / total
+            name_a, name_b = "".join(a), "".join(b)
+            deals.append((name_a, name_b, float(prior), (counts[1] - counts[-1]) / 1980))
+            reports.append({"oop_hand": name_a, "ip_hand": name_b, "wins": counts[1],
+                            "ties": counts[0], "losses": counts[-1], "ordered_outcomes": 1980,
+                            "pair_probability": float(prior)})
+    else:
+        validated = _validated_count_rows(_trusted_counts, pairs)
+        for (a, b, weight), (wins, ties, losses) in zip(pairs, validated):
+            prior = weight / total
+            name_a, name_b = "".join(a), "".join(b)
+            deals.append((name_a, name_b, float(prior), (wins - losses) / 1980))
+            reports.append({"oop_hand": name_a, "ip_hand": name_b, "wins": wins,
+                            "ties": ties, "losses": losses, "ordered_outcomes": 1980,
+                            "pair_probability": float(prior)})
     pot = float(config["pot"])
     raw_stacks = config["effective_stack"]
     stacks = tuple(map(float, raw_stacks)) if isinstance(raw_stacks, (tuple, list)) else (float(raw_stacks),)*2
