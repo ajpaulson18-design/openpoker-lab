@@ -128,10 +128,19 @@ class FixedStreetProfileTests(unittest.TestCase):
 
     def test_flop_table_loader_uses_pinned_counts_without_ranking(self):
         spec = json.loads(profile.SPEC_PATH.read_text(encoding="utf-8"))
-        with patch.object(oracle, "independent_rank", side_effect=AssertionError("rank called")), \
+        # Unit tests also run in shallow CI checkouts. Mock only historical Git
+        # retrieval with the checked-in report; formal profiling verifies the
+        # pinned historical Git blob itself before using these physical rows.
+        from scripts import benchmark_flop_equity_reuse as reuse
+        historical = json.loads((profile.ROOT / reuse.HISTORICAL_PATH).read_text(encoding="utf-8"))
+        rows = next(item["oracle_pair_counts"] for item in historical["results"]
+                    if item["fixture_id"] == "weighted-8x8-stack12-raises1")
+        with patch.object(reuse, "_historical_counts", return_value=rows) as load_counts, \
+             patch.object(oracle, "independent_rank", side_effect=AssertionError("rank called")), \
              patch.object(flop_checkdown_worlds, "combinations", side_effect=AssertionError("board enumeration called")), \
              patch.object(flop_checkdown_worlds.FlopCheckdownPlan, "build", side_effect=AssertionError("plan build called")):
             item = profile._load_flop_table(spec)
+        load_counts.assert_called_once_with()
         self.assertEqual(len(item["table"].pairs), 58)
         self.assertEqual(len(item["counts"]), 58)
         self.assertEqual(item["table"].budget["physical_worlds"], 114840)

@@ -35,4 +35,24 @@ python -m scripts.benchmark_fixed_street_profile --output ../fixed-street-profil
 Record all observations, source/input identities and failures. Instrumented
 phase fractions identify a bottleneck in these two cases; they do not establish
 a native speedup, general performance, allocation savings or process RSS.
-Measurement results and the resulting engineering decision are pending.
+The [saved report](../benchmarks/results/fixed-street-profile-v1.json) was measured
+on Python 3.12.14 from committed source `73e6636caae1989ca862a2d5c42480a41f7790c3`.
+Its clean before/after revision, source hashes and status match. All eight
+complete payloads pass their current-reference identity and independent replay
+checks, with zero guarded ranking calls. The largest independent scalar gap
+is 2.53e-16 chips. Raw samples, timestamps and policies remain in the artifact.
+
+| Prepared game | Three complete instrumented calls, seconds | Median, seconds | Training fraction in each call |
+| --- | --- | --- | --- |
+| Preflop weighted three-pair pair-mean, 3k CFR+ | 2.575649, 2.408508, 2.581133 | 2.575649 | 99.9182%, 99.9280%, 99.9459% |
+| Flop weighted eight-by-eight, 58 pairs, 4k CFR+ | 26.035567, 23.865632, 26.262805 | 26.035567 | 99.8931%, 99.8553%, 99.8482% |
+
+These coarse measurements identify training as the next optimization target
+for both fixtures. A separate explicit source-built native trainer is the next
+engineering experiment; Python will retain game construction and diagnostics.
+The experiment has not shipped and this report establishes no native speedup.
+
+The artifact canonical SHA-256 is
+`ecc20be10f163eb1b5e085b882ecba398f3e6493446d3c8bc713651f5ff74e78`.
+The frozen specification canonical SHA-256 is
+`8b905b854099cfb843e6479ce8ef1277e11e0c2af1ae31d39fd403da554f24b6`.
