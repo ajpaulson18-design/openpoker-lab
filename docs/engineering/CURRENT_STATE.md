@@ -73,6 +73,14 @@ Python remains the reference/default. Read its current validation and benchmark
 status before asserting performance; native-process memory is outside Python
 allocation tracing.
 
+The separate [prepared full-board preflop betting API](../preflop-full-checkdown.md)
+adds finite limps, checks, configured raises and reraises using those same
+immutable W/T/L tables. Future boards remain hidden and all postflop action is
+forced checkdown. Its own configuration-derived tree/work admission precedes
+building/training, and its independent replay rebuilds numeric rules and exact
+own-hand best responses. See the dedicated record for measured status; this
+does not enable full-deck later-street betting in the selected-outcome API.
+
 ## Optional turn terminal cache addition
 
 The separate matrix-free turn API accepts explicit `terminal_cache="ranked-lru"`

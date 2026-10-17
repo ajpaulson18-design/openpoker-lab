@@ -138,7 +138,7 @@ response intervals has floating views `[24.999640477379614, 25.00054845209176]`
 for the polarised game and `[-20.03656240193997, -20.03628284849715]` for
 weighted raises. These decimals are rounded views of the saved rational
 bounds, not outward-rounded binary64 certificates. The weighted game's
-equilibrium value remains unknown within those exact response bounds.
+equilibrium value was unknown at this audit's generation; the later witness establishes it exactly.
 
 The polarised model has two worlds, six information sets, four public
 decisions and nine total nodes at depth four. Weighted raises has four

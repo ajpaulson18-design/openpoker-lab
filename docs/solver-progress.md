@@ -15,6 +15,17 @@ responses, and reproduces all eight exact metrics. The earlier trained
 policies and their target misses remain unchanged. See
 [proof, limits and reproducible evidence](river-sequence-equilibrium.md).
 
+## Prepared-call profiling identifies training as the next bottleneck
+
+Pinned physical-count preflop and fixed-flop games now have a frozen coarse
+profiling artifact. Training accounts for more than 99.8% of every complete
+instrumented call in both fixtures; all eight payloads match their current
+unwrapped reference and pass independent policy/own-hand response replay.
+Guarded ranking calls remain zero. All raw times and source identities are
+retained. This supports a separate optional native-training experiment, with
+Python diagnostics preserved; no native result or broader game coverage follows.
+See [scope, measurements and reproduction](fixed-street-profile.md).
+
 ## Exact normalized certificates cover both archived river games
 
 All fifteen saved extension/long-budget river records now have exact profile
@@ -26,7 +37,7 @@ oracle and contains the known value 25.
 
 Five records meet exact NashConv 1/1000 and all ten misses remain recorded.
 The weighted raised 10k bounds span approximately 0.000279553443 chips;
-its equilibrium value remains unknown. Sol separately reconstructed all
+the later witness above establishes its exact game value. Sol separately reconstructed all
 270 normalization rows, all eight metrics and 83 fingerprints, comparing
 with independent exact vectors computed before the final artifact. The
 13 focused tests pass normally and with Python optimization; 53 broader
@@ -1098,3 +1109,38 @@ is retained, including a third Python call interrupted by recorded system sleep.
 All 2,598,960 five-card rank tuples independently agree; six/seven-card exhaustion
 is not claimed. A complete-call trace measures 347,984 Python bytes and excludes
 native-process memory and RSS. See [build, full evidence and limits](native-preflop-equity.md).
+
+## Full-board finite preflop betting with forced checkdown
+
+A separate prepared-table adapter adds SB limps, the BB option, configured
+raises/reraises, short all-ins and matched-wager refunds to full-board
+preflop chance. All future cards remain hidden; closed betting lines force
+checkdown and introduce no postflop decisions. Shared kernels and the existing
+selected-outcome APIs are unchanged. Complete requested work is forecast and
+admitted before tree construction, with explicit prepared-counts admission.
+See [API, independent replay, convergence and measured status](preflop-full-checkdown.md).
+
+The frozen four-case benchmark passes all final 3,000-CFR+ gates, with maximum
+independent NashConv 0.0000921334 chips and scalar replay discrepancy below
+4e-16. The early four-pair 100-sweep miss is retained. Three-repeat complete
+prepared-call medians range from 1.84806 to 7.48936 seconds; a separate full
+three-pair trace measures 53,615 Python bytes, excluding input tables/oracle/RSS.
+These measurements add game coverage, with no claimed backend speedup.
+
+## Opt-in preflop pair-mean worlds
+
+Full-board preflop forced-checkdown can explicitly integrate each private pair's
+hidden W/T/L categories into its signed conditional mean, while retaining all
+separate hidden opponent-hand pairs and the default categorical path. The opt-in
+budget charges P training/diagnostic worlds with original category validation,
+extra collapse setup, unchanged source charges and all existing caps. See
+[mathematical proof and paired measurement status](preflop-pair-mean.md).
+
+The paired 96-call report observes median categorical/mean ratios of 2.0123 to
+3.1017 on one host, with scalar mode discrepancies below 1.706e-13. Mean mode's
+Python trace peak is 2,080 bytes higher. All CFR+ quality gates pass, while four
+vanilla/DCFR 3,000-sweep profiles miss in both modes and remain explicitly
+recorded. A separate predeclared 8,000-sweep follow-up passes all eight
+quality calls, with maximum independent NashConv 0.00464177 and unchanged
+original report/caps. See the dedicated record rather than treating speed as
+equilibrium accuracy.
