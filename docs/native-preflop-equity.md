@@ -135,3 +135,10 @@ on [PR #135](https://github.com/ajpaulson18-design/openpoker-lab/pull/135).
 The game remains heads-up SB fold/shove and BB fold/call with forced showdown.
 Calculation speed adds no betting branches, multiway support or equilibrium
 guarantee.
+
+Windows protocol streams now explicitly use binary mode. A valid RANK prefix
+followed by Ctrl+Z and trailing bytes previously reached CRT text-mode EOF before
+complete-input validation. The regression now rejects it, while valid CRLF input
+continues to work. Card-evaluation/count logic is unchanged; source identity
+changes require an explicit rebuild. See the related
+[native training protocol review](native-fixed-street.md).
