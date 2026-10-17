@@ -1,5 +1,20 @@
 # Solver progress record
 
+## Exact rational equilibria establish both small river game values
+
+A bounded development sequence-form search now supplies rational equilibrium
+witnesses for the two archived river fixtures: polarised value 25 and weighted
+raised value -43339/2163, both with exactly zero NashConv. The weighted game
+uses 49/53 sequence coordinates instead of enumerating its millions of pure
+policies. This is a fixed configured numeric-model result, not a production
+solver/API change.
+
+An independent verifier reconstructs the payoff/flow model, validates primal
+and dual feasibility, checks normalization and complete own-information
+responses, and reproduces all eight exact metrics. The earlier trained
+policies and their target misses remain unchanged. See
+[proof, limits and reproducible evidence](river-sequence-equilibrium.md).
+
 ## Exact normalized certificates cover both archived river games
 
 All fifteen saved extension/long-budget river records now have exact profile

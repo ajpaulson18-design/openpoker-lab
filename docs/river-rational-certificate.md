@@ -1,5 +1,9 @@
 # Exact normalized certificates for saved river policies
 
+A later [exact equilibrium witness](river-sequence-equilibrium.md) establishes
+the weighted raised game value. The saved-policy certificates below retain
+their original profiles, nonzero gaps and historical audit context.
+
 ## Purpose and fixed games
 
 This audit applies the existing bounded exact arithmetic helper to the saved

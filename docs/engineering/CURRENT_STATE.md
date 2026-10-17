@@ -95,3 +95,13 @@ all five target meets and ten misses, normalization ledgers and pinned inputs.
 Saved-file verification freshly recomputes the mathematical rows. Its scope
 is the configured numeric model and separately normalized policies; it adds
 no production API, unrestricted equilibrium or raw-binary64 interval claim.
+
+## Exact fixed-river equilibrium reference
+
+The research [sequence-form witness](../river-sequence-equilibrium.md)
+establishes exact configured-game values 25 for the polarised fixture and
+-43339/2163 for weighted raises, with complete rational policies and zero
+legal-response gap. Independent saved-file verification rebuilds the physical
+numeric model, flow/payoff matrices and both responses. This supplies a
+stronger small-game validation anchor; it changes no production solver,
+earlier-street API or archived trained profile.
