@@ -33,7 +33,8 @@ def solve_flop_checkdown(board, oop_range, ip_range, *, config=None,
 
 
 def solve_prepared_flop_checkdown(equities, *, config=None, iterations=1000,
-                                  algorithm="cfrplus"):
+                                  algorithm="cfrplus", training_backend="python",
+                                  build_directory=None):
     """Solve using immutable fixed-flop counts without board enumeration.
 
     Structural validation does not authenticate caller-supplied outcome counts.
@@ -41,11 +42,17 @@ def solve_prepared_flop_checkdown(equities, *, config=None, iterations=1000,
     the additive preparation metadata describes the current call's avoided work.
     The default solve API and its result payload remain unchanged.
     """
+    from . import native_fixed_street as native
+    native.validate_backend(training_backend, build_directory)
     config = _validate_options(config, iterations, algorithm)
+    if training_backend == "native" and (max(config.stacks) > 1e12
+            or config.pot / 2 + min(config.stacks) > 1e12):
+        raise ValueError("Native terminal utility exceeds 1e12 chips")
     if type(equities) is not FlopCheckdownEquities:
         raise TypeError("equities must be FlopCheckdownEquities")
     equities.validate()
-    result = _solve_plan(equities, config, iterations, algorithm)
+    result = _solve_plan(equities, config, iterations, algorithm,
+                         native_build_directory=build_directory if training_backend == "native" else None)
     result["equity_preparation"] = {
         "mode": "prepared-counts",
         "current_rank_calls": 0,
@@ -70,7 +77,7 @@ def _validate_options(config, iterations, algorithm):
     return config
 
 
-def _solve_plan(plan, config, iterations, algorithm):
+def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=None):
     counts = {"decision": 0, "terminal": 0}
 
     def reserve(kind):
@@ -111,9 +118,34 @@ def _solve_plan(plan, config, iterations, algorithm):
               "total_loop_entries_upper_bound": total,
               "total_loop_entry_limit": MAX_TOTAL_LOOP_ENTRIES,
               "scope": "Full requested training and exact diagnostics, with at most three categorical rows per pair. Source bookkeeping excludes internal hand-ranking instructions; rank calls are independently bounded before ranking. Logical counts are not bytecode, elapsed time, allocation bytes or RSS bounds."}
+    native_admission = None
+    if native_build_directory is not None:
+        from . import native_fixed_street as native
+        shape = native.admit_native_shape(sum(counts.values()), len(plan.pairs),
+                                          slots, iterations, algorithm)
+        native_admission = native.complete_solve_admission(
+            shape, total, vector["training_loop_entries_upper_bound"])
     worlds, equity = plan.build()
-    averages = train_public_batched(root, worlds, infos, iterations, algorithm,
-                                    pot=config.pot, chance_type=_NoPublicChance)
+    native_metadata = None
+    if native_build_directory is not None:
+        # The Python public trainer already sums category mass and signed mass
+        # per hidden pair. Integrate only that hidden category for the scalar
+        # native traversal; retain zero means and each distinct opponent hand.
+        pairs = {}
+        for i, j, mass, sign in worlds:
+            row = pairs.setdefault((i, j), [0.0, 0.0])
+            row[0] += mass
+            row[1] += mass * sign
+        native_worlds = tuple((i, j, mass, signed / mass)
+                              for (i, j), (mass, signed) in pairs.items())
+        averages, native_metadata = native.train_native_fixed_street(
+            root, native_worlds, infos, iterations, algorithm,
+            pot=config.pot, build_directory=native_build_directory)
+        native_metadata["complete_solve_admission"] = native_admission
+        native_metadata["world_indexing"] = "hidden-category-pair-mean"
+    else:
+        averages = train_public_batched(root, worlds, infos, iterations, algorithm,
+                                        pot=config.pot, chance_type=_NoPublicChance)
     value, br0, br1 = evaluate_profile(root, worlds, averages, pot=config.pot,
                                       chance_type=_NoPublicChance)
     gap = max(0.0, br0 + br1)
@@ -128,7 +160,7 @@ def _solve_plan(plan, config, iterations, algorithm):
                                   "raise_to": a.raise_to, "history_key": a.token,
                                   "probability": probability}
                                  for a, probability in zip(node.actions, averages[key])]})
-    return {"solver_version": "direct-flop-checkdown-v1",
+    result = {"solver_version": "direct-flop-checkdown-v1",
             "strategy_schema": "postflop-strategy-v1", "algorithm": algorithm,
             "execution_backend": "public-batched-python",
             "board": list(plan.board), "config": config.to_dict(),
@@ -149,3 +181,8 @@ def _solve_plan(plan, config, iterations, algorithm):
                                 "simultaneous; quadratic own-reach average" if algorithm == "dcfr" else
                                 "simultaneous; uniform own-reach average"),
             "scope": "Finite heads-up fixed-flop betting abstraction with every legal turn/river integrated under forced checkdown. No later-street betting, full-deck preflop, rake or multiway equilibrium. Pot-share values split the existing pot symmetrically and include matched additional wagers."}
+
+    if native_metadata is not None:
+        result["execution_backend"] = "native-fixed-street-v1"
+        result["native_training"] = native_metadata
+    return result

@@ -143,6 +143,16 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
     """
     if type(result) is not dict: raise ValueError("unexpected full-checkdown result schema")
     result_keys=set(result)
+    native_fields={"training_backend","native_training"}
+    if result_keys & native_fields:
+        if (result_keys & native_fields != native_fields
+                or result["training_backend"]!="native"
+                or type(result["native_training"]) is not dict
+                or result["native_training"].get("backend")!="native-fixed-street-v1"):
+            raise ValueError("unexpected native training metadata")
+        # Metadata never supplies a payoff, chance weight or legal action to
+        # this independent oracle; only the declared extension is accepted.
+        result_keys-=native_fields
     if result_keys==_RESULT_KEYS:
         world_indexing="category"
     elif result_keys==_RESULT_KEYS|{"world_indexing"}:

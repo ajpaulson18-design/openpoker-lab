@@ -113,3 +113,8 @@ opponent's hand strictly improves BB's response. Full CI/publication status is
 recorded in the associated pull request.
 
 This is a bounded heads-up preflop betting abstraction with forced hidden full-board checkdown. It does not solve later-street betting, unrestricted no-limit Hold'em, multiway games, antes or rake, and it makes no profitability claim.
+
+Explicit prepared calls may select `training_backend="native"` with a separately
+source-built helper and `build_directory`. The Python default and its payload
+remain unchanged. See [native training](native-fixed-street.md) for the distinct
+work/storage admission, supported information boundary and actual evidence.
