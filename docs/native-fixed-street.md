@@ -137,3 +137,42 @@ regressions cover Ctrl+Z with trailing input and valid CRLF records. This change
 protocol byte handling; card ranking, physical counts and strategy rules remain
 unchanged. Existing build manifests require an explicit rebuild after source
 changes. Both refreshed helpers pass their focused conformance tests.
+
+## Initial six-profile result: policy compatibility remains open
+
+The [initial report](../benchmarks/results/native-fixed-street-v1-initial.json)
+retains all 36 paired timed calls and two separate allocation calls from clean
+source `59551ea5792d76fb7db1ba70b8d7d28c15ffb483`. Source and build snapshots
+match before/after. Its overall status is **error**, with three repeated misses
+of the frozen fixed-flop DCFR policy tolerance. The maximum probability difference
+is 1.1611351929952107e-6 against a declared 1e-6 gate. Scalar differences for that
+profile remain below 7.98e-11 chips and both independently replayed policies meet
+the 0.005 NashConv target. The gate is unchanged; this experiment is not yet
+qualified for merge as the proposed complete six-profile backend.
+
+| Profile | Python median seconds | Native median seconds | Observed ratio |
+| --- | --- | --- | --- |
+| Preflop vanilla 8k | 3.379034 | 0.046638 | 72.45 |
+| Preflop DCFR 8k | 3.474603 | 0.061344 | 56.64 |
+| Preflop CFR+ 3k | 2.218749 | 0.056410 | 39.33 |
+| Flop vanilla 4k | 15.173558 | 0.391529 | 38.75 |
+| Flop DCFR 4k | 16.539162 | 0.396431 | 41.72 |
+| Flop CFR+ 4k | 21.956447 | 0.648678 | 33.85 |
+
+Every speed gate passes in this run, all repeated payloads are deterministic,
+and both pinned Python CFR+ payloads exactly match the earlier profile report.
+All independent policy replays pass. Five profiles meet the declared cross-backend
+policy and scalar gates. Fixed-flop vanilla misses the 0.005 quality target in
+both backends (NashConv approximately 0.03954255); this was retained under the
+predeclared non-CFR+ reporting rule. The remaining five profiles meet that target.
+
+Separate 1k preflop traces measured 62,767 Python bytes / 3.924454 seconds for
+the Python backend and 318,330 Python bytes / 0.059786 seconds for the native
+backend. Native child-process allocations and RSS are excluded. The native call
+therefore uses more traced Python allocation in this fixture; no memory-saving
+claim follows. These traced times are excluded from paired medians.
+
+The complete initial artifact canonical SHA-256 is
+`9a664e07658d79b649d0c161d11e9f659b0f33b3319ced4162bfa1a022ef7cac`.
+Numerical transport/order analysis and independent audit are in progress. Any
+revised implementation will keep this initial report and its failed gate intact.
