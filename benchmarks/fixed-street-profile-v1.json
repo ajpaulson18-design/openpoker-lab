@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "fixed-street-profile-v1",
+  "algorithm": "cfrplus",
+  "timed_repeats": 3,
+  "phase_boundary": "Complete timer spans prepared solver invocation, canonical JSON UTF-8 encoding, and SHA-256 payload hashing. Rank guards and coarse phase wrappers are installed outside complete-call timing and restored in finally. Phase timers wrap only named top-level training/diagnostic functions; intervals are sequential and non-overlapping.",
+  "preflop": {
+    "case_id": "weighted-three-pairs-pair-mean-3000",
+    "source_benchmark_id": "preflop-pair-mean-v1",
+    "source_spec_sha256": "60f1f06de20022a7e673916b11c375d59767c7ed7d08757af6ef18ec60582ee9",
+    "iterations": 3000,
+    "resource_model": "prepared-counts",
+    "world_indexing": "pair-mean",
+    "fixture_id": "weighted-three-pairs",
+    "sb_range": "AsAd:1,QsQd:0.5",
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "config": {
+      "small_blind": 0.5,
+      "big_blind": 1,
+      "starting_stack": [
+        4,
+        3
+      ],
+      "raise_sizes": [
+        0.5,
+        1
+      ],
+      "max_raises": 2,
+      "include_all_in": true
+    },
+    "compatible_pairs": 3,
+    "world_rows": 3,
+    "historical_count_source_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706"
+  },
+  "flop": {
+    "case_id": "base-8x8-stack24-raises2-cfrplus-4000",
+    "source_benchmark_id": "flop-equity-reuse-v1",
+    "source_spec_sha256": "5983f14bd04225aba16300a2b464ee25c9d334376b76924fae74cd38c26ff79c",
+    "historical_count_source_commit": "8b06547beb0db2468af52730dd80a7ba02d6fc71",
+    "historical_count_source_path": "benchmarks/results/flop-weighted-eight-hand-v1.json",
+    "historical_count_source_blob": "610ac4e8d272db495936119c60f731b7a1061032",
+    "iterations": 4000,
+    "board": "2c3c4d",
+    "oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+    "ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+    "config": {
+      "pot": 6,
+      "effective_stack": 24,
+      "bet_sizes": [
+        0.5,
+        1
+      ],
+      "raise_sizes": [
+        0.5
+      ],
+      "max_raises": 2,
+      "include_all_in": true
+    },
+    "compatible_pairs": 58,
+    "ordered_worlds": 114840,
+    "exact_prior_normalizer": "1185/64"
+  },
+  "provenance": {
+    "count_loading": "Validated pinned Git reports only; no card ranking or board enumeration. Independent numeric-rule replay uses the pinned W/T/L rows outside all timed calls.",
+    "identity": "The runner records the clean Git revision, runtime, complete relevant tracked source/spec hashes and both pinned source report identities before and after the measured calls."
+  }
+}

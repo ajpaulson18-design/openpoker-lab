@@ -1,5 +1,16 @@
 # Solver progress record
 
+## Prepared-call profiling identifies training as the next bottleneck
+
+Pinned physical-count preflop and fixed-flop games now have a frozen coarse
+profiling artifact. Training accounts for more than 99.8% of every complete
+instrumented call in both fixtures; all eight payloads match their current
+unwrapped reference and pass independent policy/own-hand response replay.
+Guarded ranking calls remain zero. All raw times and source identities are
+retained. This supports a separate optional native-training experiment, with
+Python diagnostics preserved; no native result or broader game coverage follows.
+See [scope, measurements and reproduction](fixed-street-profile.md).
+
 ## Exact normalized certificates cover both archived river games
 
 All fifteen saved extension/long-budget river records now have exact profile
