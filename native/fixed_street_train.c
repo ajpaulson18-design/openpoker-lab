@@ -11,6 +11,10 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -604,6 +608,15 @@ static int output_policy(const double *policy, uint32_t slot_count) {
 }
 
 int main(void) {
+#ifdef _WIN32
+    /* Text-mode Ctrl+Z must never truncate a request before complete-input
+     * validation; binary output also keeps protocol bytes platform-neutral. */
+    if (_setmode(_fileno(stdin), _O_BINARY) == -1 ||
+        _setmode(_fileno(stdout), _O_BINARY) == -1) {
+        fprintf(stderr, "error: cannot select binary protocol streams\n");
+        return 2;
+    }
+#endif
     size_t input_length = 0u;
     Parser parser = {0u};
     Token token;

@@ -133,6 +133,7 @@ class NativeFixedStreetProtocolTests(unittest.TestCase):
                          b"0\n0 " + _f64(1).encode(), 1),
             good[:-5],
             good + b"extra\n",
+            good + b"\x1aTRAILING",
             good.replace(b"OPENPOKER_FIXED_TRAIN_V1", b"OPENPOKER_FIXED_TRAIN_V1\x00", 1),
             good + b"\xff",
             zero_mass,

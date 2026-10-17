@@ -10,6 +10,10 @@
  */
 #include <stdint.h>
 #include <stdio.h>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 #include <string.h>
 
 #define MAX_INPUT_BYTES (256u * 1024u)
@@ -356,6 +360,15 @@ static void print_rank_result(uint64_t request_count) {
 }
 
 int main(void) {
+#ifdef _WIN32
+    /* Text-mode Ctrl+Z must never truncate a request before complete-input
+     * validation; binary output also keeps protocol bytes platform-neutral. */
+    if (_setmode(_fileno(stdin), _O_BINARY) == -1 ||
+        _setmode(_fileno(stdout), _O_BINARY) == -1) {
+        fprintf(stderr, "error: cannot select binary protocol streams\n");
+        return 2;
+    }
+#endif
     Parser parser;
     char mode = 0;
     uint64_t request_count = 0u;

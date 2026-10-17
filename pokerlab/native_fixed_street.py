@@ -310,7 +310,13 @@ def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplu
     with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
         completed = subprocess.run([str(executable)], input=request, stdout=output,
                                    stderr=errors, timeout=NATIVE_TIMEOUT_SECONDS, check=False)
-        output.seek(0); payload = output.read(MAX_OUTPUT_BYTES + 1)
+        # The child has exited: reserve only its actual bounded output rather
+        # than allocating the 24 MiB maximum for a small valid policy.
+        output.seek(0, 2)
+        output_size = output.tell()
+        if output_size > MAX_OUTPUT_BYTES:
+            raise ValueError('Native training response exceeds its byte limit')
+        output.seek(0); payload = output.read(output_size)
         errors.seek(0); error = errors.read(4096)
     if completed.returncode:
         raise RuntimeError(f'Native training failed ({completed.returncode}): '

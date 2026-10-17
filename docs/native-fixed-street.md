@@ -118,3 +118,22 @@ and independent physical-count replay through both prepared solvers. Default
 omitted/explicit Python payloads match. Cross-platform CI and frozen paired
 complete-call/runtime and Python-allocation measurements are pending. No native
 speedup or memory saving has been established yet.
+
+The frozen [benchmark specification](../benchmarks/native-fixed-street-v1.json)
+compares three complete calls per backend on six profiles: preflop vanilla/DCFR
+at 8k and CFR+ at 3k; fixed flop all three algorithms at 4k. It declares scalar
+agreement 1e-8, policy agreement 1e-6, independent replay 1e-10 and an observed
+median ratio threshold of 1.5. CFR+ NashConv must meet 0.005 plus 1e-10 padding;
+other algorithms' quality targets are recorded, including any misses. Separate
+1k preflop allocation traces are excluded from timing medians. The
+[runner](../scripts/benchmark_native_fixed_street.py) retains raw observations
+and requires all admissions before build lookup, clean committed source and
+unchanged build/source identities. Formal measurements remain pending.
+
+Windows input hardening also applies to the existing native equity helper.
+A reproduced text-mode Ctrl+Z request accepted a valid prefix while ignoring
+trailing bytes. Both helpers now select binary stdin/stdout before parsing, and
+regressions cover Ctrl+Z with trailing input and valid CRLF records. This changes
+protocol byte handling; card ranking, physical counts and strategy rules remain
+unchanged. Existing build manifests require an explicit rebuild after source
+changes. Both refreshed helpers pass their focused conformance tests.

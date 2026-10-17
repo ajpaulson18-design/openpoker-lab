@@ -110,6 +110,7 @@ class NativePreflopProtocolTests(unittest.TestCase):
 
     def test_rank_protocol_rejects_malformed_input_without_partial_stdout(self):
         good = _rank_record(("As", "Kd", "Qc", "Jh", "9s", "7d", "4c"))
+        valid_prefix = b"OPENPOKER_NATIVE_V1 RANK 1\n" + good.encode("ascii") + b"\n"
         malformed = (
             b"OPENPOKER_NATIVE_V1 RANK 0\n",
             b"OPENPOKER_NATIVE_V1 RANK 4097\n",
@@ -129,6 +130,7 @@ class NativePreflopProtocolTests(unittest.TestCase):
             b"OPENPOKER_NATIVE_V1 RANK 1\n7 0 1 2 3 4 5",
             b"OPENPOKER_NATIVE_V1 RANK 1\n" + good.encode("ascii") + b"\n0\n",
             b"OPENPOKER_NATIVE_V1 RANK 1\n" + good.encode("ascii") + b"\ntrailing\n",
+            b"OPENPOKER_NATIVE_V1 RANK 1\n" + good.encode("ascii") + b"\n\x1aTRAILING\n",
         )
         for payload in malformed:
             with self.subTest(payload=payload[:80]):
@@ -136,6 +138,15 @@ class NativePreflopProtocolTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertEqual(result.stdout, b"")
 
+    def test_rank_protocol_accepts_crlf_records(self):
+        hand = ("As", "Kd", "Qc", "Jh", "9s")
+        record = _rank_record(hand)
+        payload = ("OPENPOKER_NATIVE_V1 RANK 1\r\n" + record + "\r\n").encode("ascii")
+        completed = self._run(payload)
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode("utf-8", errors="replace"))
+        response = json.loads(completed.stdout)
+        self.assertEqual(response["mode"], "rank")
+        self.assertEqual(response["ranks"], [list(_padded_rank(independent_rank(hand)))])
     def test_count_protocol_rejects_bad_shape_and_cards_without_result(self):
         malformed = (
             b"OPENPOKER_NATIVE_V1 COUNT 0\n",
