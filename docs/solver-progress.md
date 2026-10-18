@@ -1144,3 +1144,11 @@ recorded. A separate predeclared 8,000-sweep follow-up passes all eight
 quality calls, with maximum independent NashConv 0.00464177 and unchanged
 original report/caps. See the dedicated record rather than treating speed as
 equilibrium accuracy.
+
+## Blocker-correlated river witness
+
+A separate development fixture has independently proved exact value
+-43339/1751 and zero exact NashConv with blocker-correlated private hands.
+Six fixed-budget CFR+ policies retain full independent float/exact replay
+and all target misses. Production and earlier-street paths are unchanged.
+See [model, proof and executed evidence](river-blocker-equilibrium.md).
