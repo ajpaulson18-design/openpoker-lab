@@ -163,3 +163,11 @@ candidate separate from independent verification, retain failed feasibility
 observations and require clean-source saved-file verification before publishing
 formal proof. No production defaults, earlier/later-street model, range caps or
 frontend behavior are expanded by this certificate.
+
+The [exact-anchor trainer comparison](docs/preflop-exact-anchor-comparison.md)
+keeps the saved rational proof separate from finite-iteration production
+strategies. Preserve strict rational `-BR_BB <= V_exact <= BR_SB`, BB own-utility
+signs, pinned physical counts and full-request admission before build/training.
+Keep early target misses, final quality gates, backend agreement and timings
+separate; do not require policy equality to one chosen equilibrium or infer
+RSS/native memory from Python allocation traces.

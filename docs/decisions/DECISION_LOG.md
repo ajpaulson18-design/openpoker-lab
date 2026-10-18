@@ -94,6 +94,17 @@ target, not production behavior or broader equilibrium coverage. See
 [scope and publication status](../preflop-weighted-sequence.md). No earlier
 decision is superseded.
 
+D019 (2026-10-18): engineering decision under the owner's ongoing accuracy and
+efficiency scope: compare prepared Python/native preflop strategies to the
+separately certified weighted exact game value. Keep exact reference proof,
+finite-strategy legal best responses, quality targets, cross-backend agreement,
+complete-call timing and Python allocation traces distinct. A policy-distance
+gate to one LP equilibrium would penalize legitimate alternate or unreachable
+policies, so legal exploitability and exact value containment govern accuracy.
+No production algorithm or default changes are selected. See
+[protocol and measurement status](../preflop-exact-anchor-comparison.md).
+No earlier decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
