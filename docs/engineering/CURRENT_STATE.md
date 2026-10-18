@@ -145,3 +145,12 @@ normalized own-hand response checks against the proved weighted turn value.
 Both backends miss 0.001-chip NashConv at 1,000/3,000 iterations and meet it
 at 10,000 (about 0.000681). Every miss and full policy remains saved.
 See [experiment, independent reconstruction and scope](../turn-weighted-cfrplus.md).
+
+## Compact blocker-conditioned turn witness
+
+A separate six-world turn game with private blockers has exact value 115/7
+and zero NashConv, certified through original full primal/dual equations and
+independent legal responses. Fixing empty realization coordinates removes two
+LP columns while preserving all existing resource caps; the rejected legacy
+258-column admission and hidden-information controls remain recorded.
+See [model, affine reduction, proof and limits](../turn-blocker-sequence-equilibrium.md).
