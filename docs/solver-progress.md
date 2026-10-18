@@ -1,5 +1,21 @@
 # Solver progress record
 
+## Weighted preflop game has an independently verified exact value
+
+A frozen three-pair preflop/checkdown game with asymmetric stacks, limps, a BB
+option, finite raises and all-ins now has an exact sequence-form equilibrium
+witness at SB net-transfer value `100107990869/130471452826`. The physical count
+inputs represent all 5,136,912 hidden final boards across those compatible pairs.
+A separate numeric verifier reconstructs every flow/payoff and original
+primal/dual inequality; a second unrolled terminal-history oracle checks all 88
+own-hand pure responses. Both produce exact NashConv zero, and illegal private
+information controls change the value as expected. All LP limits are unchanged.
+
+The clean-source saved report, raw candidate and adversarial verification tests
+remain distinct. This is a fixed-game accuracy anchor; production defaults,
+later-street betting and private-range caps are unchanged. See
+[model, proof, source identities and limits](preflop-weighted-sequence.md).
+
 ## Explicit native training passes the fixed-street comparison
 
 Prepared preflop and forced-checkdown flop calls now have an explicit source-built

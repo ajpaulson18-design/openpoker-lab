@@ -98,8 +98,27 @@ candidate, verifier, pure-response and publication tests pass.
 The complete feasibility pipeline passes with stable source snapshots and zero
 forbidden production/ranking calls, including fresh saved-file verification.
 The candidate uses 41/61 pivots, 101,005/154,789 logical cell updates and a maximum
-92-bit intermediate Fraction, within every unchanged cap. Formal saved artifact
-generation, final CI and GitHub merge are pending at this source stage.
+92-bit intermediate Fraction, within every unchanged cap.
+
+The [formal report](../benchmarks/results/preflop-weighted-sequence-v1.json)
+passes from clean source `3857eb7f5cd67040511715f53fb078ad629b9e20`.
+All 447 recorded LF source hashes match its Git blob contents; source snapshots
+are unchanged and all ten production/ranking guards remain zero. Independent
+verification of the nested witness, a JSON-restored copy and the reopened saved
+artifact agrees, as does the 88-pure-response terminal-history oracle. Both
+fresh independent report audits pass. The separate feasibility observation is
+retained with its explicit nonformal phase.
+
+Formal report canonical SHA-256:
+`7bdffdf73df5950d73f9fab54e27b364babb4e00718249a44cafdf47c62415c6`.
+Nested rational witness canonical SHA-256:
+`59d294d41114756053419e0a69e4d3b043be9a900ec678a0668a0f9cf48300ed`.
+The [publication regression](../tests/test_preflop_sequence_publication.py)
+reconstructs both independent checks from the actual committed artifact rather
+than trusting its saved summary flags. Publication adds documentation and this
+regression; candidate, checker, numerical core, pinned inputs and frozen gates
+are unchanged from measurement. Final CI and GitHub merge status are recorded
+on the associated pull request.
 
 The method follows the published sequence-form representation and linear
 constraints described by [von Stengel (1996)](https://doi.org/10.1006/game.1996.0050)
