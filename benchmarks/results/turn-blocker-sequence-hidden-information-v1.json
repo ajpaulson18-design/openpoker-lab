@@ -1,0 +1,51 @@
+{
+  "fixture": {
+    "board": "2c7d9hJs",
+    "config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "effective_stack": [
+        100,
+        100
+      ],
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100,
+      "raise_sizes": []
+    },
+    "id": "turn-blocker-selected-sequence-equilibrium",
+    "ip": "QhQs:1,AdAs:1",
+    "oop": "AsAh:0.25,Th6h:0.75",
+    "runouts": [
+      "8d",
+      "Kd"
+    ]
+  },
+  "illegal_hidden_opponent_ip_lower": "-1725/56",
+  "illegal_ip_gain": "125/56",
+  "information_sets": 56,
+  "joint_pairs": [
+    {
+      "ip": "AdAs",
+      "oop": "6hTh",
+      "weight": "3/7",
+      "wrong_product_renormalized": "9/23"
+    },
+    {
+      "ip": "QhQs",
+      "oop": "6hTh",
+      "weight": "3/7",
+      "wrong_product_renormalized": "12/23"
+    },
+    {
+      "ip": "QhQs",
+      "oop": "AhAs",
+      "weight": "1/7",
+      "wrong_product_renormalized": "2/23"
+    }
+  ],
+  "product_mass_on_impossible_pair": "3/49",
+  "uniform_legal_ip_lower": "-200/7",
+  "worlds": 6
+}

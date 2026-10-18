@@ -1,0 +1,12 @@
+{
+  "status": "EXPECTED_BOUNDED_REJECTION",
+  "source_sha256": "aa9adeaf0e263115a1b1a20b953d7fbd891db5826815c3c0e91bd74232713262",
+  "old_limits": {
+    "rows": 96,
+    "columns": 256,
+    "cells": 25000
+  },
+  "candidate_search_run": false,
+  "payoff_matrix_allocation_reached": false,
+  "raw_exit_code": 1
+}
