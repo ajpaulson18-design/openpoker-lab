@@ -1185,3 +1185,11 @@ independent legal responses. Fixing empty realization coordinates removes two
 LP columns while preserving all existing resource caps; the rejected legacy
 258-column admission and hidden-information controls remain recorded.
 See [model, affine reduction, proof and limits](turn-blocker-sequence-equilibrium.md).
+
+## Production turn CFR+ with private blockers
+
+Six complete policies for the six-world blocker-conditioned turn game have
+independent numeric and exact normalized own-hand response checks against
+the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
+iterations and meet it at 10,000 (about 0.000414). All four misses and full
+policies remain saved. See [experiment, proof and limits](turn-blocker-cfrplus.md).
