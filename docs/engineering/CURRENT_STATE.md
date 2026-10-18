@@ -121,3 +121,11 @@ A separate development fixture has independently proved exact value
 Six fixed-budget CFR+ policies retain full independent float/exact replay
 and all target misses. Production and earlier-street paths are unchanged.
 See [model, proof and executed evidence](../river-blocker-equilibrium.md).
+
+## Exact selected-river turn witness
+
+A separate development-only two-street witness proves value 50 and zero exact
+NashConv in a four-world conditioned game, with independent payoff/flow and
+legal-response reconstruction. Literal negative controls detect future-card
+peeking and cumulative-wager mistakes. The equilibrium folds on the turn;
+river policies remain fully certified off-path. See [scope and evidence](../turn-sequence-equilibrium.md).
