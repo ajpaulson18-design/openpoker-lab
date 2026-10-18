@@ -1,5 +1,22 @@
 # Solver progress record
 
+## Explicit native training passes the fixed-street comparison
+
+Prepared preflop and forced-checkdown flop calls now have an explicit source-built
+C11 training backend. Python retains table/rule validation and exact diagnostics;
+default Python outputs remain unchanged. A public-hand-vector flop reduction
+resolves the initial scalar experiment's DCFR probability mismatch without
+loosening any frozen gate. The failed initial report remains published.
+
+The revised six-profile experiment retains 36 timed calls and two separate
+Python allocation traces. All three flop profiles exactly match Python policies
+and eight diagnostics; all 38 saved policies pass independent physical-count
+replay. Complete-call median ratios range from 40.13 to 103.06 on the two measured
+finite games. Both mandatory CFR+ quality targets pass; vanilla flop still misses
+the reported target. Native uses more traced Python allocation in the preflop
+trace, and no child-memory/RSS saving is established. Strict Windows/Linux native
+conformance passes. See [scope, failed evidence and followup](native-fixed-street.md).
+
 ## Exact rational equilibria establish both small river game values
 
 A bounded development sequence-form search now supplies rational equilibrium

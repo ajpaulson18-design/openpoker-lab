@@ -162,3 +162,16 @@ independent numeric and exact normalized own-hand response checks against
 the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
 iterations and meet it at 10,000 (about 0.000414). All four misses and full
 policies remain saved. See [experiment, proof and limits](../turn-blocker-cfrplus.md).
+
+## Explicit compiled training for prepared preflop and fixed flop
+
+The prepared full-board preflop betting and forced-checkdown flop APIs accept an
+explicit source-built native trainer. Python defaults, poker rules, physical
+counts, strategy formats and exact diagnostics remain unchanged. Preflop uses
+scalar traversal; flop uses public-hand-vector reduction with direct signed
+joint masses. The initial scalar flop DCFR parity miss is retained alongside
+the passing revised six-profile report. All 38 revised saved policies pass
+independent physical-count replay. Measured complete-call median ratios are
+40.13–103.06 on two finite prepared games; no general speedup or RSS saving
+follows. Native conformance passes on Windows/Linux. See
+[build, resource guards, quality misses and evidence](../native-fixed-street.md).

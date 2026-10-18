@@ -21,7 +21,8 @@ _MAX_DECISION_NODES = 10_000
 
 def solve_prepared_preflop_checkdown(
         equities, *, config=None, iterations=1000, algorithm="cfrplus",
-        resource_model="source-inclusive", world_indexing="categorical"):
+        resource_model="source-inclusive", world_indexing="categorical",
+        training_backend="python", build_directory=None):
     """Solve finite preflop betting followed by hidden full-board checkdown.
 
     The equities argument must be a structurally valid prepared
@@ -30,6 +31,8 @@ def solve_prepared_preflop_checkdown(
     No board is revealed: each compatible private pair's positive W/T/L
     categories remain hidden weighted worlds at every preflop information set.
     """
+    from . import native_fixed_street as native
+    native.validate_backend(training_backend, build_directory)
     if type(world_indexing) is not str or world_indexing not in ('categorical', 'pair-mean'):
         raise ValueError('World indexing must be categorical or pair-mean')
     config = options(config, iterations, algorithm, resource_model)
@@ -43,6 +46,17 @@ def solve_prepared_preflop_checkdown(
             or decision_bound > _MAX_DECISION_NODES
             or public_state_bound > _MAX_PUBLIC_STATES):
         raise ValueError("Prepared preflop tree forecast exceeds the existing structural limits.")
+
+    native_admission = None
+    if training_backend == "native":
+        if max(config.stacks) > 1e12:
+            raise ValueError("Native starting stacks exceed 1e12 chips")
+        shape = native.admit_native_shape(
+            public_state_bound, len(equities.pairs) * (1 if world_indexing == 'pair-mean' else 3),
+            tree_bound["information_action_slots"], iterations, algorithm)
+        native_admission = native.complete_solve_admission(
+            shape, budget["total_loop_entries_upper_bound"],
+            budget["training_loop_entries_upper_bound"])
 
     tree = build_preflop_tree(
         config,
@@ -88,7 +102,13 @@ def solve_prepared_preflop_checkdown(
     def payoff(node, world):
         return _terminal_value(node, world[3], 0.0)
 
-    if not infos:
+    native_metadata = None
+    if training_backend == "native":
+        averages, native_metadata = native.train_native_fixed_street(
+            tree.root, worlds, infos, iterations, algorithm,
+            pot=0.0, build_directory=build_directory)
+        native_metadata["complete_solve_admission"] = native_admission
+    elif not infos:
         averages = {}
     elif algorithm == "cfrplus":
         averages = train_cfrplus(
@@ -177,4 +197,7 @@ def solve_prepared_preflop_checkdown(
     }
     if world_indexing == 'pair-mean':
         result['world_indexing'] = 'pair-mean'
+    if native_metadata is not None:
+        result["training_backend"] = "native"
+        result["native_training"] = native_metadata
     return result

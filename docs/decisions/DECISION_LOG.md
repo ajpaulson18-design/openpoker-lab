@@ -69,6 +69,20 @@ work with unchanged structural/source caps and retained category setup. See
 third-party implementation or broader game model is authorized by this choice;
 no prior decision is superseded.
 
+D017 (2026-10-17): engineering decision under the owner's authorized compiled
+backend scope: provide separate explicit source-built fixed-public-tree native
+training for the prepared preflop and forced-checkdown flop models. The
+[measured prepared-call profile](../fixed-street-profile.md) identifies training
+as the dominant cost. Preserve Python rules/diagnostics/default payloads, all
+historical admission and a separate complete native work/storage envelope.
+A static C scalar traversal is the first experiment. Its fixed-flop DCFR policy
+gate miss is retained in the initial report. The followup uses compiled
+public-hand-vector reduction for flop, while preserving preflop scalar math,
+original acceptance gates and the failed evidence. A Python default switch,
+third-party solver implementation, public-chance support and compiled diagnostics
+were not selected. See [scope and evidence](../native-fixed-street.md) for actual
+validation/publication status. No earlier decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
