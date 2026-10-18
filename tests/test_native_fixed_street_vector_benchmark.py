@@ -32,7 +32,8 @@ class NativeVectorFollowupTests(unittest.TestCase):
                 patch.object(bench.subprocess, 'check_output', return_value=raw):
             identity = bench._initial_identity(SPEC)
             self.assertEqual(identity['artifact_sha256'], SPEC['initial_report_artifact_sha256'])
-        with patch.object(bench.base, '_git', return_value='wrong'):
+        with patch.object(bench.base, '_git', return_value='wrong'), \
+                patch.object(bench.subprocess, 'check_output', return_value=raw):
             with self.assertRaises(ValueError):
                 bench._initial_identity(SPEC)
 

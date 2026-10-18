@@ -121,9 +121,9 @@ strict floating-point settings and no fast-math option.
 Focused MSVC validation passes all three algorithms at 10/100/1000 iterations
 on weighted and refund trees, manual policy anchors, malformed protocol cases,
 and independent physical-count replay through both prepared solvers. Default
-omitted/explicit Python payloads match. Cross-platform CI and frozen paired
-complete-call/runtime and Python-allocation measurements are pending. No native
-speedup or memory saving has been established yet.
+omitted/explicit Python payloads match. The later sections retain the initial
+failed experiment and the revised paired complete-call measurements. Python
+allocation traces do not establish native child memory or RSS.
 
 The frozen [benchmark specification](../benchmarks/native-fixed-street-v1.json)
 compares three complete calls per backend on six profiles: preflop vanilla/DCFR
@@ -134,7 +134,8 @@ other algorithms' quality targets are recorded, including any misses. Separate
 1k preflop allocation traces are excluded from timing medians. The
 [runner](../scripts/benchmark_native_fixed_street.py) retains raw observations
 and requires all admissions before build lookup, clean committed source and
-unchanged build/source identities. Formal measurements remain pending.
+unchanged build/source identities. Initial and followup measurements are
+recorded below.
 
 Windows input hardening also applies to the existing native equity helper.
 A reproduced text-mode Ctrl+Z request accepted a valid prefix while ignoring
@@ -180,8 +181,8 @@ claim follows. These traced times are excluded from paired medians.
 
 The complete initial artifact canonical SHA-256 is
 `9a664e07658d79b649d0c161d11e9f659b0f33b3319ced4162bfa1a022ef7cac`.
-Numerical transport/order analysis and independent audit are in progress. Any
-revised implementation will keep this initial report and its failed gate intact.
+The public-batched followup below keeps this initial report and its failed gate
+intact. Independent replay of all 38 initial saved policies also passed.
 
 ## Public-batched reduction followup
 
@@ -214,5 +215,58 @@ unchanged. Local strict MSVC conformance and all-algorithm shared-hand checkpoin
 tests pass at 1/2/3/10/100/1000 iterations. In a separate untimed 100-iteration
 check on the full 8x8 fixture, all policy probabilities and eight diagnostics
 match Python exactly for vanilla, DCFR and CFR+. These checks are not the frozen
-4k complete-call experiment. Revised cross-platform conformance and formal
-measurements are pending; the followup has not yet qualified this implementation.
+4k complete-call experiment. Native conformance also passes on Windows and
+Linux in GitHub CI.
+
+## Revised six-profile result
+
+The [followup report](../benchmarks/results/native-fixed-street-vector-v1.json)
+passes every original gate from clean freeze
+`09c8ff93fd4621d5923586e82c3ef6b4adafef6a`. All 441 captured LF source hashes,
+source/build snapshots, 36 timed payloads and two allocation payloads are retained.
+All three fixed-flop profiles match every Python policy probability and all eight
+diagnostics exactly, resolving the initial DCFR policy mismatch. The maximum
+preflop cross-backend policy gap is 2.02e-14 and scalar gap 8.89e-16, below the
+unchanged 1e-6 / 1e-8 gates. Both pinned Python CFR+ payload hashes still match
+the earlier profiling artifact.
+
+| Profile | Python median seconds | Native median seconds | Observed ratio |
+| --- | --- | --- | --- |
+| Preflop vanilla 8k | 3.331243 | 0.063823 | 52.19 |
+| Preflop DCFR 8k | 3.683323 | 0.035739 | 103.06 |
+| Preflop CFR+ 3k | 2.609389 | 0.065021 | 40.13 |
+| Flop vanilla 4k | 18.211265 | 0.199623 | 91.23 |
+| Flop DCFR 4k | 18.894332 | 0.275348 | 68.62 |
+| Flop CFR+ 4k | 25.062828 | 0.359260 | 69.76 |
+
+No observation was removed. These are complete-call ratios on two finite
+prepared games using Python 3.12.14 and strict MSVC 19.44 on the measured Windows
+host, including process launch, Python diagnostics and canonical serialization.
+They do not establish general speedup, convergence improvement or broader game
+coverage. The largest native complete-solve reservation is 378,109,520 logical
+entries, below the retained 500-million ceiling.
+
+Independent replay of all 38 saved payloads against pinned physical counts and
+numeric betting/own-hand response rules reproduces the stored metrics; guarded
+ranking remains zero. Both CFR+ quality targets pass: preflop NashConv about
+0.0000450742 and flop about 0.0001049110. Vanilla flop still misses the reported
+0.005 target in both backends at 0.0395425569, retained under the original
+non-CFR+ reporting rule. DCFR flop is 0.0034382814. Faster fixed-iteration execution
+does not improve those policies by itself.
+
+Separate 1k preflop traces measure 62,767 Python bytes / 4.715325 seconds for
+Python and 318,585 Python bytes / 0.038618 seconds for native. Traced calls are
+excluded from medians; child-process allocation and RSS are excluded from the
+memory numbers. Native uses more traced Python allocation in this fixture.
+
+The followup canonical SHA-256 is
+`99007280279d577e01ca6764ec6b680a9ff491ce5d20ab44134ce1455f779773`.
+Source LF SHA-256 is
+`6929c78d336217a65d6fca9ec1c0d433b5a17fea439ee31020d200bf83eee4fa`;
+measured executable SHA-256 is
+`6f5573a8d24f645a3689ee3aeae05d09626677e88c518a8c71cbb327586265ef`.
+
+After measurement, one unit-test negative branch was corrected to mock historical
+Git retrieval in shallow CI checkouts. Solver, C source, runner, specification,
+build and measured artifact were unchanged. The initial failing CI run is retained
+in [PR #142](https://github.com/ajpaulson18-design/openpoker-lab/pull/142).
