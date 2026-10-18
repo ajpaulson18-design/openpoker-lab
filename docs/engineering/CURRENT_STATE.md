@@ -113,3 +113,11 @@ legal-response gap. Independent saved-file verification rebuilds the physical
 numeric model, flow/payoff matrices and both responses. This supplies a
 stronger small-game validation anchor; it changes no production solver,
 earlier-street API or archived trained profile.
+
+## Blocker-correlated river witness
+
+A separate development fixture has independently proved exact value
+-43339/1751 and zero exact NashConv with blocker-correlated private hands.
+Six fixed-budget CFR+ policies retain full independent float/exact replay
+and all target misses. Production and earlier-street paths are unchanged.
+See [model, proof and executed evidence](../river-blocker-equilibrium.md).
