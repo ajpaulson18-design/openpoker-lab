@@ -1168,3 +1168,11 @@ policies at value 30 and zero NashConv, with river decisions reached with
 probability 1. A hand-written policy was certified before the LP candidate;
 the separate verifier checks all payoff/flow data and both legal responses.
 See [fixed game, proof, reach and limits](turn-weighted-sequence-equilibrium.md).
+
+## Production turn CFR+ against the value-30 anchor
+
+Six complete production policies now have independent numeric and exact
+normalized own-hand response checks against the proved weighted turn value.
+Both backends miss 0.001-chip NashConv at 1,000/3,000 iterations and meet it
+at 10,000 (about 0.000681). Every miss and full policy remains saved.
+See [experiment, independent reconstruction and scope](turn-weighted-cfrplus.md).
