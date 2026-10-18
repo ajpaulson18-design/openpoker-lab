@@ -10,7 +10,7 @@ This is a priority map, not new approval to start features or a dated release pr
 | Bounded heads-up preflop | Implemented for finite trees and selected physical outcomes; optional training, diagnostics and admission paths are documented separately | Preserve exact conditioned probabilities, visible-information responses and each opt-in resource envelope; report misses rather than widening claims |
 | Fixed-flop complete future deck | Implemented as a separate fixed-flop game with forced turn/river checkdown | Treat the known-value and measured fixtures as model-specific; do not infer later-street or full-deck preflop solving |
 | Matrix-free river/turn and specialized river paths | Optional bounded library paths are implemented; existing defaults remain | Use their own contracts and source-frozen evidence; do not generalize one fixture's speed or accuracy |
-| Beyond current bounded solver models | Full-deck preflop beyond the restricted shove/fold API and multiway equilibrium remain unsupported; broader ranges and unrestricted no-limit are not certified | Establish tractable scope, independent validation and tooling/reuse audit before proposing implementation |
+| Beyond current bounded solver models | Full-board preflop supports restricted shove/fold and finite betting with forced later checkdown; full-deck future betting, multiway equilibrium, broader ranges and unrestricted no-limit are not certified | Establish tractable scope, independent validation and tooling/reuse audit before proposing implementation |
 | Contextual coach | Confirmed owner direction; existing slices documented in [coach architecture](../ai-coach-architecture.md) | Improve scenario understanding through trusted evidence; identify unsupported difficulty assessments explicitly |
 | Visual interface | Recorded approved baseline in [visual interface](../visual-interface.md) | Minor evidence-driven refinements; broader redesign requires owner direction |
 | Range inference, history import, model calibration | README development direction; not completed | Define opportunity semantics and held-out evaluation before predictive claims |
@@ -42,3 +42,11 @@ four compatible private pairs. Its prepared equity tables can be reused. This
 does not expand the existing selected-outcome preflop API to a full-deck game,
 or add limps, non-all-in raises, later-street betting or multiway equilibrium.
 Read the dedicated specification for work admission and independent evidence.
+
+## Exact preflop validation direction
+
+Finite [full-board preflop betting](../preflop-full-checkdown.md) also supports
+limps, finite non-all-in raises and all-ins under forced later checkdown. The
+[weighted exact-witness project](../preflop-weighted-sequence.md) establishes a
+model-specific equilibrium anchor with independent physical-count and response
+checks. It does not expand full-deck future betting or current range caps.

@@ -118,3 +118,12 @@ Explicit prepared calls may select `training_backend="native"` with a separately
 source-built helper and `build_directory`. The Python default and its payload
 remain unchanged. See [native training](native-fixed-street.md) for the distinct
 work/storage admission, supported information boundary and actual evidence.
+
+## Exact weighted validation anchor
+
+The separate [weighted sequence-form witness](preflop-weighted-sequence.md)
+reuses three independently enumerated physical-count pairs to certify one
+one-raise preflop/checkdown game. Exact primal/dual certificates, independently
+reconstructed legal responses and exhaustive own-hand pure responses agree.
+It is a model-specific research anchor, not a finite-iteration or broader-game
+accuracy claim for this API.

@@ -83,6 +83,17 @@ third-party solver implementation, public-chance support and compiled diagnostic
 were not selected. See [scope and evidence](../native-fixed-street.md) for actual
 validation/publication status. No earlier decision is superseded.
 
+D018 (2026-10-18): engineering decision under the owner's continuing independent
+solver-validation scope: establish an exact weighted preflop forced-checkdown
+equilibrium anchor before expanding private-pair or future-betting coverage.
+Reuse the project-owned bounded rational simplex without changing its limits;
+independently reconstruct physical-count payoffs, legal histories, primal/dual
+witnesses and own-information responses. A separate pure-response check guards
+hidden-information mistakes. This adds a research certificate and validation
+target, not production behavior or broader equilibrium coverage. See
+[scope and publication status](../preflop-weighted-sequence.md). No earlier
+decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
