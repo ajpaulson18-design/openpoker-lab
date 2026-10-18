@@ -175,3 +175,14 @@ independent physical-count replay. Measured complete-call median ratios are
 40.13–103.06 on two finite prepared games; no general speedup or RSS saving
 follows. Native conformance passes on Windows/Linux. See
 [build, resource guards, quality misses and evidence](../native-fixed-street.md).
+
+## Exact weighted preflop/checkdown anchor
+
+A three-compatible-pair finite preflop betting game with all final boards hidden
+has exact value `100107990869/130471452826` in SB net-transfer chips. Original
+sequence-form primal/dual certificates, independently reconstructed exact legal
+responses and exhaustive own-hand pure responses agree at NashConv zero. The
+19-state game retains limps, BB's option, configured raises, all-ins and refunds.
+This research adds a model-specific validation target while production defaults
+and broader full-deck future betting remain unchanged. See
+[frozen scope and reproducible proof](../preflop-weighted-sequence.md).

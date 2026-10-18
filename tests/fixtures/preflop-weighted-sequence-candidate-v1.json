@@ -1,0 +1,2732 @@
+{
+  "artifact_sha256": "59d294d41114756053419e0a69e4d3b043be9a900ec678a0668a0f9cf48300ed",
+  "caps": {
+    "bits": 4096,
+    "cells": 25000,
+    "columns": 256,
+    "exact_bits": 65536,
+    "exact_depth": 64,
+    "exact_work": 100000,
+    "pivots": 512,
+    "rows": 96,
+    "updates": 10000000
+  },
+  "census": {
+    "flow_constraints": [
+      {
+        "child_sequences": [],
+        "id": "sb:empty=1",
+        "kind": "root",
+        "parent_sequence": "sb:empty",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "1",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|AdAs|root|fold",
+          "sb|AdAs|root|call",
+          "sb|AdAs|root|raise@2",
+          "sb|AdAs|root|raise@3",
+          "sb|AdAs|root|all_in@4"
+        ],
+        "id": "sb:flow:AdAs:root",
+        "kind": "information_set",
+        "parent_sequence": "sb:empty",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|AdAs|call/all_in@3|fold",
+          "sb|AdAs|call/all_in@3|call"
+        ],
+        "id": "sb:flow:AdAs:call/all_in@3",
+        "kind": "information_set",
+        "parent_sequence": "sb|AdAs|root|call",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|AdAs|call/raise@2|fold",
+          "sb|AdAs|call/raise@2|call"
+        ],
+        "id": "sb:flow:AdAs:call/raise@2",
+        "kind": "information_set",
+        "parent_sequence": "sb|AdAs|root|call",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|QdQs|root|fold",
+          "sb|QdQs|root|call",
+          "sb|QdQs|root|raise@2",
+          "sb|QdQs|root|raise@3",
+          "sb|QdQs|root|all_in@4"
+        ],
+        "id": "sb:flow:QdQs:root",
+        "kind": "information_set",
+        "parent_sequence": "sb:empty",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|QdQs|call/all_in@3|fold",
+          "sb|QdQs|call/all_in@3|call"
+        ],
+        "id": "sb:flow:QdQs:call/all_in@3",
+        "kind": "information_set",
+        "parent_sequence": "sb|QdQs|root|call",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [
+          "sb|QdQs|call/raise@2|fold",
+          "sb|QdQs|call/raise@2|call"
+        ],
+        "id": "sb:flow:QdQs:call/raise@2",
+        "kind": "information_set",
+        "parent_sequence": "sb|QdQs|root|call",
+        "player": "sb",
+        "player_index": 0,
+        "rhs": "0",
+        "seat": "sb"
+      },
+      {
+        "child_sequences": [],
+        "id": "bb:empty=1",
+        "kind": "root",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "1",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|AsKh|all_in@4|fold",
+          "bb|AsKh|all_in@4|call"
+        ],
+        "id": "bb:flow:AsKh:all_in@4",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|AsKh|call|check",
+          "bb|AsKh|call|raise@2",
+          "bb|AsKh|call|all_in@3"
+        ],
+        "id": "bb:flow:AsKh:call",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|AsKh|raise@2|fold",
+          "bb|AsKh|raise@2|call"
+        ],
+        "id": "bb:flow:AsKh:raise@2",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|AsKh|raise@3|fold",
+          "bb|AsKh|raise@3|call"
+        ],
+        "id": "bb:flow:AsKh:raise@3",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|KdKs|all_in@4|fold",
+          "bb|KdKs|all_in@4|call"
+        ],
+        "id": "bb:flow:KdKs:all_in@4",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|KdKs|call|check",
+          "bb|KdKs|call|raise@2",
+          "bb|KdKs|call|all_in@3"
+        ],
+        "id": "bb:flow:KdKs:call",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|KdKs|raise@2|fold",
+          "bb|KdKs|raise@2|call"
+        ],
+        "id": "bb:flow:KdKs:raise@2",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      },
+      {
+        "child_sequences": [
+          "bb|KdKs|raise@3|fold",
+          "bb|KdKs|raise@3|call"
+        ],
+        "id": "bb:flow:KdKs:raise@3",
+        "kind": "information_set",
+        "parent_sequence": "bb:empty",
+        "player": "bb",
+        "player_index": 1,
+        "rhs": "0",
+        "seat": "bb"
+      }
+    ],
+    "independent_numeric_counts": {
+      "continuations": 6,
+      "decision_nodes": 7,
+      "fold_terminals": 6,
+      "public_states": 19
+    },
+    "information_sets": [
+      {
+        "action_tokens": [
+          "fold",
+          "call",
+          "raise@2",
+          "raise@3",
+          "all_in@4"
+        ],
+        "child_sequences": [
+          "sb|AdAs|root|fold",
+          "sb|AdAs|root|call",
+          "sb|AdAs|root|raise@2",
+          "sb|AdAs|root|raise@3",
+          "sb|AdAs|root|all_in@4"
+        ],
+        "hand": "AdAs",
+        "history": [],
+        "parent_sequence": "sb:empty",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "sb|AdAs|call/all_in@3|fold",
+          "sb|AdAs|call/all_in@3|call"
+        ],
+        "hand": "AdAs",
+        "history": [
+          "call",
+          "all_in@3"
+        ],
+        "parent_sequence": "sb|AdAs|root|call",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "sb|AdAs|call/raise@2|fold",
+          "sb|AdAs|call/raise@2|call"
+        ],
+        "hand": "AdAs",
+        "history": [
+          "call",
+          "raise@2"
+        ],
+        "parent_sequence": "sb|AdAs|root|call",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call",
+          "raise@2",
+          "raise@3",
+          "all_in@4"
+        ],
+        "child_sequences": [
+          "sb|QdQs|root|fold",
+          "sb|QdQs|root|call",
+          "sb|QdQs|root|raise@2",
+          "sb|QdQs|root|raise@3",
+          "sb|QdQs|root|all_in@4"
+        ],
+        "hand": "QdQs",
+        "history": [],
+        "parent_sequence": "sb:empty",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "sb|QdQs|call/all_in@3|fold",
+          "sb|QdQs|call/all_in@3|call"
+        ],
+        "hand": "QdQs",
+        "history": [
+          "call",
+          "all_in@3"
+        ],
+        "parent_sequence": "sb|QdQs|root|call",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "sb|QdQs|call/raise@2|fold",
+          "sb|QdQs|call/raise@2|call"
+        ],
+        "hand": "QdQs",
+        "history": [
+          "call",
+          "raise@2"
+        ],
+        "parent_sequence": "sb|QdQs|root|call",
+        "player": "sb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|AsKh|all_in@4|fold",
+          "bb|AsKh|all_in@4|call"
+        ],
+        "hand": "AsKh",
+        "history": [
+          "all_in@4"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "check",
+          "raise@2",
+          "all_in@3"
+        ],
+        "child_sequences": [
+          "bb|AsKh|call|check",
+          "bb|AsKh|call|raise@2",
+          "bb|AsKh|call|all_in@3"
+        ],
+        "hand": "AsKh",
+        "history": [
+          "call"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|AsKh|raise@2|fold",
+          "bb|AsKh|raise@2|call"
+        ],
+        "hand": "AsKh",
+        "history": [
+          "raise@2"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|AsKh|raise@3|fold",
+          "bb|AsKh|raise@3|call"
+        ],
+        "hand": "AsKh",
+        "history": [
+          "raise@3"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|KdKs|all_in@4|fold",
+          "bb|KdKs|all_in@4|call"
+        ],
+        "hand": "KdKs",
+        "history": [
+          "all_in@4"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "check",
+          "raise@2",
+          "all_in@3"
+        ],
+        "child_sequences": [
+          "bb|KdKs|call|check",
+          "bb|KdKs|call|raise@2",
+          "bb|KdKs|call|all_in@3"
+        ],
+        "hand": "KdKs",
+        "history": [
+          "call"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|KdKs|raise@2|fold",
+          "bb|KdKs|raise@2|call"
+        ],
+        "hand": "KdKs",
+        "history": [
+          "raise@2"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      },
+      {
+        "action_tokens": [
+          "fold",
+          "call"
+        ],
+        "child_sequences": [
+          "bb|KdKs|raise@3|fold",
+          "bb|KdKs|raise@3|call"
+        ],
+        "hand": "KdKs",
+        "history": [
+          "raise@3"
+        ],
+        "parent_sequence": "bb:empty",
+        "player": "bb"
+      }
+    ],
+    "lp_preflight": {
+      "ip_ceiling": {
+        "cells": 2349,
+        "columns": 80,
+        "rows": 28
+      },
+      "oop_guarantee": {
+        "cells": 2241,
+        "columns": 82,
+        "rows": 26
+      }
+    },
+    "payoff_matrix": {
+      "column_sequence_ids": [
+        "bb:empty",
+        "bb|AsKh|all_in@4|call",
+        "bb|AsKh|all_in@4|fold",
+        "bb|AsKh|call|all_in@3",
+        "bb|AsKh|call|check",
+        "bb|AsKh|call|raise@2",
+        "bb|AsKh|raise@2|call",
+        "bb|AsKh|raise@2|fold",
+        "bb|AsKh|raise@3|call",
+        "bb|AsKh|raise@3|fold",
+        "bb|KdKs|all_in@4|call",
+        "bb|KdKs|all_in@4|fold",
+        "bb|KdKs|call|all_in@3",
+        "bb|KdKs|call|check",
+        "bb|KdKs|call|raise@2",
+        "bb|KdKs|raise@2|call",
+        "bb|KdKs|raise@2|fold",
+        "bb|KdKs|raise@3|call",
+        "bb|KdKs|raise@3|fold"
+      ],
+      "fractions": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "558838/463749",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-8/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1117676/1391247",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-8/13",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "558838/463749",
+          "8/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "558838/1391247",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-4/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1117676/1391247",
+          "8/13",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "558838/463749",
+          "8/13"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "4822/154583",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-279319/463749",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "-1/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-4/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "9644/463749",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-558638/1391247",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-4/13",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "4822/154583",
+          "1/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-279319/463749",
+          "4/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "4822/463749",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-279319/1391247",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-5/26",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "9644/463749",
+          "1/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-558638/1391247",
+          "4/13",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "4822/154583",
+          "1/13",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-279319/463749",
+          "4/13"
+        ]
+      ],
+      "row_sequence_ids": [
+        "sb:empty",
+        "sb|AdAs|call/all_in@3|call",
+        "sb|AdAs|call/all_in@3|fold",
+        "sb|AdAs|call/raise@2|call",
+        "sb|AdAs|call/raise@2|fold",
+        "sb|AdAs|root|all_in@4",
+        "sb|AdAs|root|call",
+        "sb|AdAs|root|fold",
+        "sb|AdAs|root|raise@2",
+        "sb|AdAs|root|raise@3",
+        "sb|QdQs|call/all_in@3|call",
+        "sb|QdQs|call/all_in@3|fold",
+        "sb|QdQs|call/raise@2|call",
+        "sb|QdQs|call/raise@2|fold",
+        "sb|QdQs|root|all_in@4",
+        "sb|QdQs|root|call",
+        "sb|QdQs|root|fold",
+        "sb|QdQs|root|raise@2",
+        "sb|QdQs|root|raise@3"
+      ]
+    },
+    "public_tree": {
+      "actions": [
+        {
+          "amount": "0",
+          "name": "fold",
+          "raise_to": "0",
+          "token": "fold"
+        },
+        {
+          "amount": "1/2",
+          "name": "call",
+          "raise_to": "1",
+          "token": "call"
+        },
+        {
+          "amount": "3/2",
+          "name": "raise",
+          "raise_to": "2",
+          "token": "raise@2"
+        },
+        {
+          "amount": "5/2",
+          "name": "raise",
+          "raise_to": "3",
+          "token": "raise@3"
+        },
+        {
+          "amount": "7/2",
+          "name": "all_in",
+          "raise_to": "4",
+          "token": "all_in@4"
+        }
+      ],
+      "children": [
+        {
+          "contributions": [
+            "1/2",
+            "1"
+          ],
+          "kind": "fold",
+          "winner": "bb"
+        },
+        {
+          "actions": [
+            {
+              "amount": "0",
+              "name": "check",
+              "raise_to": "0",
+              "token": "check"
+            },
+            {
+              "amount": "1",
+              "name": "raise",
+              "raise_to": "2",
+              "token": "raise@2"
+            },
+            {
+              "amount": "2",
+              "name": "all_in",
+              "raise_to": "3",
+              "token": "all_in@3"
+            }
+          ],
+          "children": [
+            {
+              "contributions": [
+                "1",
+                "1"
+              ],
+              "kind": "showdown",
+              "winner": null
+            },
+            {
+              "actions": [
+                {
+                  "amount": "0",
+                  "name": "fold",
+                  "raise_to": "0",
+                  "token": "fold"
+                },
+                {
+                  "amount": "1",
+                  "name": "call",
+                  "raise_to": "2",
+                  "token": "call"
+                }
+              ],
+              "children": [
+                {
+                  "contributions": [
+                    "1",
+                    "2"
+                  ],
+                  "kind": "fold",
+                  "winner": "bb"
+                },
+                {
+                  "contributions": [
+                    "2",
+                    "2"
+                  ],
+                  "kind": "showdown",
+                  "winner": null
+                }
+              ],
+              "contributions": [
+                "1",
+                "2"
+              ],
+              "history": [
+                "call",
+                "raise@2"
+              ],
+              "kind": "decision",
+              "player": "sb"
+            },
+            {
+              "actions": [
+                {
+                  "amount": "0",
+                  "name": "fold",
+                  "raise_to": "0",
+                  "token": "fold"
+                },
+                {
+                  "amount": "2",
+                  "name": "call",
+                  "raise_to": "3",
+                  "token": "call"
+                }
+              ],
+              "children": [
+                {
+                  "contributions": [
+                    "1",
+                    "3"
+                  ],
+                  "kind": "fold",
+                  "winner": "bb"
+                },
+                {
+                  "contributions": [
+                    "3",
+                    "3"
+                  ],
+                  "kind": "showdown",
+                  "winner": null
+                }
+              ],
+              "contributions": [
+                "1",
+                "3"
+              ],
+              "history": [
+                "call",
+                "all_in@3"
+              ],
+              "kind": "decision",
+              "player": "sb"
+            }
+          ],
+          "contributions": [
+            "1",
+            "1"
+          ],
+          "history": [
+            "call"
+          ],
+          "kind": "decision",
+          "player": "bb"
+        },
+        {
+          "actions": [
+            {
+              "amount": "0",
+              "name": "fold",
+              "raise_to": "0",
+              "token": "fold"
+            },
+            {
+              "amount": "1",
+              "name": "call",
+              "raise_to": "2",
+              "token": "call"
+            }
+          ],
+          "children": [
+            {
+              "contributions": [
+                "2",
+                "1"
+              ],
+              "kind": "fold",
+              "winner": "sb"
+            },
+            {
+              "contributions": [
+                "2",
+                "2"
+              ],
+              "kind": "showdown",
+              "winner": null
+            }
+          ],
+          "contributions": [
+            "2",
+            "1"
+          ],
+          "history": [
+            "raise@2"
+          ],
+          "kind": "decision",
+          "player": "bb"
+        },
+        {
+          "actions": [
+            {
+              "amount": "0",
+              "name": "fold",
+              "raise_to": "0",
+              "token": "fold"
+            },
+            {
+              "amount": "2",
+              "name": "call",
+              "raise_to": "3",
+              "token": "call"
+            }
+          ],
+          "children": [
+            {
+              "contributions": [
+                "3",
+                "1"
+              ],
+              "kind": "fold",
+              "winner": "sb"
+            },
+            {
+              "contributions": [
+                "3",
+                "3"
+              ],
+              "kind": "showdown",
+              "winner": null
+            }
+          ],
+          "contributions": [
+            "3",
+            "1"
+          ],
+          "history": [
+            "raise@3"
+          ],
+          "kind": "decision",
+          "player": "bb"
+        },
+        {
+          "actions": [
+            {
+              "amount": "0",
+              "name": "fold",
+              "raise_to": "0",
+              "token": "fold"
+            },
+            {
+              "amount": "2",
+              "name": "call",
+              "raise_to": "3",
+              "token": "call"
+            }
+          ],
+          "children": [
+            {
+              "contributions": [
+                "4",
+                "1"
+              ],
+              "kind": "fold",
+              "winner": "sb"
+            },
+            {
+              "contributions": [
+                "4",
+                "3"
+              ],
+              "kind": "showdown",
+              "winner": null
+            }
+          ],
+          "contributions": [
+            "4",
+            "1"
+          ],
+          "history": [
+            "all_in@4"
+          ],
+          "kind": "decision",
+          "player": "bb"
+        }
+      ],
+      "contributions": [
+        "1/2",
+        "1"
+      ],
+      "history": [],
+      "kind": "decision",
+      "player": "sb"
+    },
+    "sequences": {
+      "bb": [
+        {
+          "action_token": null,
+          "hand": null,
+          "history": [],
+          "id": "bb:empty",
+          "parent": null,
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "AsKh",
+          "history": [
+            "all_in@4"
+          ],
+          "id": "bb|AsKh|all_in@4|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "AsKh",
+          "history": [
+            "all_in@4"
+          ],
+          "id": "bb|AsKh|all_in@4|fold",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "all_in@3",
+          "hand": "AsKh",
+          "history": [
+            "call"
+          ],
+          "id": "bb|AsKh|call|all_in@3",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "check",
+          "hand": "AsKh",
+          "history": [
+            "call"
+          ],
+          "id": "bb|AsKh|call|check",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "raise@2",
+          "hand": "AsKh",
+          "history": [
+            "call"
+          ],
+          "id": "bb|AsKh|call|raise@2",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "AsKh",
+          "history": [
+            "raise@2"
+          ],
+          "id": "bb|AsKh|raise@2|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "AsKh",
+          "history": [
+            "raise@2"
+          ],
+          "id": "bb|AsKh|raise@2|fold",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "AsKh",
+          "history": [
+            "raise@3"
+          ],
+          "id": "bb|AsKh|raise@3|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "AsKh",
+          "history": [
+            "raise@3"
+          ],
+          "id": "bb|AsKh|raise@3|fold",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "KdKs",
+          "history": [
+            "all_in@4"
+          ],
+          "id": "bb|KdKs|all_in@4|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "KdKs",
+          "history": [
+            "all_in@4"
+          ],
+          "id": "bb|KdKs|all_in@4|fold",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "all_in@3",
+          "hand": "KdKs",
+          "history": [
+            "call"
+          ],
+          "id": "bb|KdKs|call|all_in@3",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "check",
+          "hand": "KdKs",
+          "history": [
+            "call"
+          ],
+          "id": "bb|KdKs|call|check",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "raise@2",
+          "hand": "KdKs",
+          "history": [
+            "call"
+          ],
+          "id": "bb|KdKs|call|raise@2",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "KdKs",
+          "history": [
+            "raise@2"
+          ],
+          "id": "bb|KdKs|raise@2|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "KdKs",
+          "history": [
+            "raise@2"
+          ],
+          "id": "bb|KdKs|raise@2|fold",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "call",
+          "hand": "KdKs",
+          "history": [
+            "raise@3"
+          ],
+          "id": "bb|KdKs|raise@3|call",
+          "parent": "bb:empty",
+          "player": 1
+        },
+        {
+          "action_token": "fold",
+          "hand": "KdKs",
+          "history": [
+            "raise@3"
+          ],
+          "id": "bb|KdKs|raise@3|fold",
+          "parent": "bb:empty",
+          "player": 1
+        }
+      ],
+      "sb": [
+        {
+          "action_token": null,
+          "hand": null,
+          "history": [],
+          "id": "sb:empty",
+          "parent": null,
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "AdAs",
+          "history": [
+            "call",
+            "all_in@3"
+          ],
+          "id": "sb|AdAs|call/all_in@3|call",
+          "parent": "sb|AdAs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "AdAs",
+          "history": [
+            "call",
+            "all_in@3"
+          ],
+          "id": "sb|AdAs|call/all_in@3|fold",
+          "parent": "sb|AdAs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "AdAs",
+          "history": [
+            "call",
+            "raise@2"
+          ],
+          "id": "sb|AdAs|call/raise@2|call",
+          "parent": "sb|AdAs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "AdAs",
+          "history": [
+            "call",
+            "raise@2"
+          ],
+          "id": "sb|AdAs|call/raise@2|fold",
+          "parent": "sb|AdAs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "all_in@4",
+          "hand": "AdAs",
+          "history": [],
+          "id": "sb|AdAs|root|all_in@4",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "AdAs",
+          "history": [],
+          "id": "sb|AdAs|root|call",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "AdAs",
+          "history": [],
+          "id": "sb|AdAs|root|fold",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "raise@2",
+          "hand": "AdAs",
+          "history": [],
+          "id": "sb|AdAs|root|raise@2",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "raise@3",
+          "hand": "AdAs",
+          "history": [],
+          "id": "sb|AdAs|root|raise@3",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "QdQs",
+          "history": [
+            "call",
+            "all_in@3"
+          ],
+          "id": "sb|QdQs|call/all_in@3|call",
+          "parent": "sb|QdQs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "QdQs",
+          "history": [
+            "call",
+            "all_in@3"
+          ],
+          "id": "sb|QdQs|call/all_in@3|fold",
+          "parent": "sb|QdQs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "QdQs",
+          "history": [
+            "call",
+            "raise@2"
+          ],
+          "id": "sb|QdQs|call/raise@2|call",
+          "parent": "sb|QdQs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "QdQs",
+          "history": [
+            "call",
+            "raise@2"
+          ],
+          "id": "sb|QdQs|call/raise@2|fold",
+          "parent": "sb|QdQs|root|call",
+          "player": 0
+        },
+        {
+          "action_token": "all_in@4",
+          "hand": "QdQs",
+          "history": [],
+          "id": "sb|QdQs|root|all_in@4",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "call",
+          "hand": "QdQs",
+          "history": [],
+          "id": "sb|QdQs|root|call",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "fold",
+          "hand": "QdQs",
+          "history": [],
+          "id": "sb|QdQs|root|fold",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "raise@2",
+          "hand": "QdQs",
+          "history": [],
+          "id": "sb|QdQs|root|raise@2",
+          "parent": "sb:empty",
+          "player": 0
+        },
+        {
+          "action_token": "raise@3",
+          "hand": "QdQs",
+          "history": [],
+          "id": "sb|QdQs|root|raise@3",
+          "parent": "sb:empty",
+          "player": 0
+        }
+      ]
+    },
+    "tree_counts": {
+      "decision_nodes": 7,
+      "fold_terminals": 6,
+      "maximum_depth": 4,
+      "public_states": 19,
+      "showdown_terminals": 6
+    }
+  },
+  "certificate_id": "preflop-weighted-sequence-feasibility-v1",
+  "count_provenance": {
+    "physical_boards": 5136912,
+    "rows": [
+      {
+        "bb_hand": "KdKs",
+        "boards": 1712304,
+        "canonical_artifact_sha256": "599c1360f321d845b335b798468c3c6af216951663e87b6812ecb56321895b40",
+        "losses": 292660,
+        "pinned_git_blob_sha1": "cc510379eed9484f30e59e428917a9e55ba027a7",
+        "prior_fraction": "8/13",
+        "sb_hand": "AdAs",
+        "showdown_mean_fraction": "279419/428076",
+        "source_artifact": "benchmarks/results/preflop-push-fold-v1-oracle-pair-0.json",
+        "ties": 9308,
+        "wins": 1410336
+      },
+      {
+        "bb_hand": "AsKh",
+        "boards": 1712304,
+        "canonical_artifact_sha256": "61cecc13d773b26496a14ffee1612dfaf5149981e4fcdb12bdbad65db2660160",
+        "losses": 736811,
+        "pinned_git_blob_sha1": "d639fecaee1c9f1ca1eaec95bb29e3162ddd00ff",
+        "prior_fraction": "1/13",
+        "sb_hand": "QdQs",
+        "showdown_mean_fraction": "4822/35673",
+        "source_artifact": "benchmarks/results/preflop-push-fold-v1-oracle-pair-1.json",
+        "ties": 7226,
+        "wins": 968267
+      },
+      {
+        "bb_hand": "KdKs",
+        "boards": 1712304,
+        "canonical_artifact_sha256": "fc6ae5898eac160de79ed4d9c652c632d000966867f1b296bc7dbae682e98e52",
+        "losses": 1410122,
+        "pinned_git_blob_sha1": "864c80c32739f6665b6010c200ad31bcb32e439f",
+        "prior_fraction": "4/13",
+        "sb_hand": "QdQs",
+        "showdown_mean_fraction": "-279319/428076",
+        "source_artifact": "benchmarks/results/preflop-push-fold-v1-oracle-pair-2.json",
+        "ties": 9336,
+        "wins": 292846
+      }
+    ],
+    "source_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706"
+  },
+  "equilibrium": {
+    "complementary_slackness": {
+      "bb_realization_dot_oop_slack": "0",
+      "sb_realization_dot_ip_slack": "0"
+    },
+    "flow_residuals": [
+      [
+        {
+          "constraint": "sb:empty=1",
+          "lhs": "1",
+          "residual": "0",
+          "rhs": "1"
+        },
+        {
+          "constraint": "sb:flow:AdAs:root",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "sb:flow:AdAs:call/all_in@3",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "sb:flow:AdAs:call/raise@2",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "sb:flow:QdQs:root",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "sb:flow:QdQs:call/all_in@3",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "sb:flow:QdQs:call/raise@2",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        }
+      ],
+      [
+        {
+          "constraint": "bb:empty=1",
+          "lhs": "1",
+          "residual": "0",
+          "rhs": "1"
+        },
+        {
+          "constraint": "bb:flow:AsKh:all_in@4",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:AsKh:call",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:AsKh:raise@2",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:AsKh:raise@3",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:KdKs:all_in@4",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:KdKs:call",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:KdKs:raise@2",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        },
+        {
+          "constraint": "bb:flow:KdKs:raise@3",
+          "lhs": "0",
+          "residual": "0",
+          "rhs": "0"
+        }
+      ]
+    ],
+    "gap_fraction": "0",
+    "lower_bound_fraction": "100107990869/130471452826",
+    "nash_conv_fraction": "0",
+    "policy_normalization": "exact",
+    "profile_value_fraction": "100107990869/130471452826",
+    "upper_bound_fraction": "100107990869/130471452826",
+    "utility_perspective": "sb_net_transfer_chips"
+  },
+  "fixture": {
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "config": {
+      "big_blind": 1,
+      "include_all_in": true,
+      "max_raises": 1,
+      "raise_sizes": [
+        0.5,
+        1
+      ],
+      "small_blind": 0.5,
+      "starting_stack": [
+        4,
+        3
+      ]
+    },
+    "id": "preflop-weighted-three-pair-sequence-equilibrium",
+    "sb_range": "AsAd:1,QsQd:0.5"
+  },
+  "ip_lp": {
+    "constraint_labels": [
+      {
+        "id": "bb:empty=1",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:AsKh:all_in@4",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:AsKh:call",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:AsKh:raise@2",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:AsKh:raise@3",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:KdKs:all_in@4",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:KdKs:call",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:KdKs:raise@2",
+        "sense": "="
+      },
+      {
+        "id": "bb:flow:KdKs:raise@3",
+        "sense": "="
+      },
+      {
+        "id": "cover:sb:empty",
+        "sense": ">=",
+        "slack_variable": "surplus:sb:empty"
+      },
+      {
+        "id": "cover:sb|AdAs|call/all_in@3|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|call/all_in@3|call"
+      },
+      {
+        "id": "cover:sb|AdAs|call/all_in@3|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|call/all_in@3|fold"
+      },
+      {
+        "id": "cover:sb|AdAs|call/raise@2|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|call/raise@2|call"
+      },
+      {
+        "id": "cover:sb|AdAs|call/raise@2|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|call/raise@2|fold"
+      },
+      {
+        "id": "cover:sb|AdAs|root|all_in@4",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|root|all_in@4"
+      },
+      {
+        "id": "cover:sb|AdAs|root|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|root|call"
+      },
+      {
+        "id": "cover:sb|AdAs|root|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|root|fold"
+      },
+      {
+        "id": "cover:sb|AdAs|root|raise@2",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|root|raise@2"
+      },
+      {
+        "id": "cover:sb|AdAs|root|raise@3",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|AdAs|root|raise@3"
+      },
+      {
+        "id": "cover:sb|QdQs|call/all_in@3|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|call/all_in@3|call"
+      },
+      {
+        "id": "cover:sb|QdQs|call/all_in@3|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|call/all_in@3|fold"
+      },
+      {
+        "id": "cover:sb|QdQs|call/raise@2|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|call/raise@2|call"
+      },
+      {
+        "id": "cover:sb|QdQs|call/raise@2|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|call/raise@2|fold"
+      },
+      {
+        "id": "cover:sb|QdQs|root|all_in@4",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|root|all_in@4"
+      },
+      {
+        "id": "cover:sb|QdQs|root|call",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|root|call"
+      },
+      {
+        "id": "cover:sb|QdQs|root|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|root|fold"
+      },
+      {
+        "id": "cover:sb|QdQs|root|raise@2",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|root|raise@2"
+      },
+      {
+        "id": "cover:sb|QdQs|root|raise@3",
+        "sense": ">=",
+        "slack_variable": "surplus:sb|QdQs|root|raise@3"
+      }
+    ],
+    "dual_flow_values": {
+      "flow_labels": [
+        "sb:empty=1",
+        "sb:flow:AdAs:root",
+        "sb:flow:AdAs:call/all_in@3",
+        "sb:flow:AdAs:call/raise@2",
+        "sb:flow:QdQs:root",
+        "sb:flow:QdQs:call/all_in@3",
+        "sb:flow:QdQs:call/raise@2"
+      ],
+      "fractions": [
+        "100107990869/130471452826",
+        "62599327437/65235726413",
+        "376753148977632906029/672580105904600894286",
+        "0",
+        "-5/26",
+        "-5389/1854996",
+        "0"
+      ]
+    },
+    "inequality_slacks": {
+      "fractions": [
+        "0",
+        "186100767005457131926/336290052952300447143",
+        "2653542780695248276655/4708060741332206260002",
+        "0",
+        "0",
+        "0",
+        "0",
+        "82671858641/65235726413",
+        "6156610721979638/32184502275938441",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "sequence_labels": [
+        "sb:empty",
+        "sb|AdAs|call/all_in@3|call",
+        "sb|AdAs|call/all_in@3|fold",
+        "sb|AdAs|call/raise@2|call",
+        "sb|AdAs|call/raise@2|fold",
+        "sb|AdAs|root|all_in@4",
+        "sb|AdAs|root|call",
+        "sb|AdAs|root|fold",
+        "sb|AdAs|root|raise@2",
+        "sb|AdAs|root|raise@3",
+        "sb|QdQs|call/all_in@3|call",
+        "sb|QdQs|call/all_in@3|fold",
+        "sb|QdQs|call/raise@2|call",
+        "sb|QdQs|call/raise@2|fold",
+        "sb|QdQs|root|all_in@4",
+        "sb|QdQs|root|call",
+        "sb|QdQs|root|fold",
+        "sb|QdQs|root|raise@2",
+        "sb|QdQs|root|raise@3"
+      ]
+    },
+    "logical_cell_updates": 154789,
+    "lp": "ip_ceiling",
+    "maximum_fraction_bits": 92,
+    "objective": "-100107990869/130471452826",
+    "objective_bound_fraction": "100107990869/130471452826",
+    "own_realization": {
+      "fractions": [
+        "1",
+        "1",
+        "0",
+        "736282903/48113316636",
+        "47377033733/48113316636",
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "492681/844022",
+        "351341/844022",
+        "90066357/16037772212",
+        "15947705855/16037772212",
+        "0",
+        "1605285/1973428",
+        "368143/1973428",
+        "492681/844022",
+        "351341/844022"
+      ],
+      "sequence_labels": [
+        "bb:empty",
+        "bb|AsKh|all_in@4|call",
+        "bb|AsKh|all_in@4|fold",
+        "bb|AsKh|call|all_in@3",
+        "bb|AsKh|call|check",
+        "bb|AsKh|call|raise@2",
+        "bb|AsKh|raise@2|call",
+        "bb|AsKh|raise@2|fold",
+        "bb|AsKh|raise@3|call",
+        "bb|AsKh|raise@3|fold",
+        "bb|KdKs|all_in@4|call",
+        "bb|KdKs|all_in@4|fold",
+        "bb|KdKs|call|all_in@3",
+        "bb|KdKs|call|check",
+        "bb|KdKs|call|raise@2",
+        "bb|KdKs|raise@2|call",
+        "bb|KdKs|raise@2|fold",
+        "bb|KdKs|raise@3|call",
+        "bb|KdKs|raise@3|fold"
+      ]
+    },
+    "phase_one_objective": "0",
+    "pivots": 61,
+    "tableau_cells_including_rhs_and_objective": 2349,
+    "tableau_columns": 80,
+    "tableau_rows": 28,
+    "variable_labels": [
+      "y:bb:empty",
+      "y:bb|AsKh|all_in@4|call",
+      "y:bb|AsKh|all_in@4|fold",
+      "y:bb|AsKh|call|all_in@3",
+      "y:bb|AsKh|call|check",
+      "y:bb|AsKh|call|raise@2",
+      "y:bb|AsKh|raise@2|call",
+      "y:bb|AsKh|raise@2|fold",
+      "y:bb|AsKh|raise@3|call",
+      "y:bb|AsKh|raise@3|fold",
+      "y:bb|KdKs|all_in@4|call",
+      "y:bb|KdKs|all_in@4|fold",
+      "y:bb|KdKs|call|all_in@3",
+      "y:bb|KdKs|call|check",
+      "y:bb|KdKs|call|raise@2",
+      "y:bb|KdKs|raise@2|call",
+      "y:bb|KdKs|raise@2|fold",
+      "y:bb|KdKs|raise@3|call",
+      "y:bb|KdKs|raise@3|fold",
+      "p+:sb:empty=1",
+      "p+:sb:flow:AdAs:root",
+      "p+:sb:flow:AdAs:call/all_in@3",
+      "p+:sb:flow:AdAs:call/raise@2",
+      "p+:sb:flow:QdQs:root",
+      "p+:sb:flow:QdQs:call/all_in@3",
+      "p+:sb:flow:QdQs:call/raise@2",
+      "p-:sb:empty=1",
+      "p-:sb:flow:AdAs:root",
+      "p-:sb:flow:AdAs:call/all_in@3",
+      "p-:sb:flow:AdAs:call/raise@2",
+      "p-:sb:flow:QdQs:root",
+      "p-:sb:flow:QdQs:call/all_in@3",
+      "p-:sb:flow:QdQs:call/raise@2",
+      "surplus:sb:empty",
+      "surplus:sb|AdAs|call/all_in@3|call",
+      "surplus:sb|AdAs|call/all_in@3|fold",
+      "surplus:sb|AdAs|call/raise@2|call",
+      "surplus:sb|AdAs|call/raise@2|fold",
+      "surplus:sb|AdAs|root|all_in@4",
+      "surplus:sb|AdAs|root|call",
+      "surplus:sb|AdAs|root|fold",
+      "surplus:sb|AdAs|root|raise@2",
+      "surplus:sb|AdAs|root|raise@3",
+      "surplus:sb|QdQs|call/all_in@3|call",
+      "surplus:sb|QdQs|call/all_in@3|fold",
+      "surplus:sb|QdQs|call/raise@2|call",
+      "surplus:sb|QdQs|call/raise@2|fold",
+      "surplus:sb|QdQs|root|all_in@4",
+      "surplus:sb|QdQs|root|call",
+      "surplus:sb|QdQs|root|fold",
+      "surplus:sb|QdQs|root|raise@2",
+      "surplus:sb|QdQs|root|raise@3",
+      "artificial:bb:empty=1",
+      "artificial:bb:flow:AsKh:all_in@4",
+      "artificial:bb:flow:AsKh:call",
+      "artificial:bb:flow:AsKh:raise@2",
+      "artificial:bb:flow:AsKh:raise@3",
+      "artificial:bb:flow:KdKs:all_in@4",
+      "artificial:bb:flow:KdKs:call",
+      "artificial:bb:flow:KdKs:raise@2",
+      "artificial:bb:flow:KdKs:raise@3",
+      "artificial:cover:sb:empty",
+      "artificial:cover:sb|AdAs|call/all_in@3|call",
+      "artificial:cover:sb|AdAs|call/all_in@3|fold",
+      "artificial:cover:sb|AdAs|call/raise@2|call",
+      "artificial:cover:sb|AdAs|call/raise@2|fold",
+      "artificial:cover:sb|AdAs|root|all_in@4",
+      "artificial:cover:sb|AdAs|root|call",
+      "artificial:cover:sb|AdAs|root|fold",
+      "artificial:cover:sb|AdAs|root|raise@2",
+      "artificial:cover:sb|AdAs|root|raise@3",
+      "artificial:cover:sb|QdQs|call/all_in@3|call",
+      "artificial:cover:sb|QdQs|call/all_in@3|fold",
+      "artificial:cover:sb|QdQs|call/raise@2|call",
+      "artificial:cover:sb|QdQs|call/raise@2|fold",
+      "artificial:cover:sb|QdQs|root|all_in@4",
+      "artificial:cover:sb|QdQs|root|call",
+      "artificial:cover:sb|QdQs|root|fold",
+      "artificial:cover:sb|QdQs|root|raise@2",
+      "artificial:cover:sb|QdQs|root|raise@3"
+    ]
+  },
+  "oop_lp": {
+    "constraint_labels": [
+      {
+        "id": "sb:empty=1",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:AdAs:root",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:AdAs:call/all_in@3",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:AdAs:call/raise@2",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:QdQs:root",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:QdQs:call/all_in@3",
+        "sense": "="
+      },
+      {
+        "id": "sb:flow:QdQs:call/raise@2",
+        "sense": "="
+      },
+      {
+        "id": "cover:bb:empty",
+        "sense": ">=",
+        "slack_variable": "surplus:bb:empty"
+      },
+      {
+        "id": "cover:bb|AsKh|all_in@4|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|all_in@4|call"
+      },
+      {
+        "id": "cover:bb|AsKh|all_in@4|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|all_in@4|fold"
+      },
+      {
+        "id": "cover:bb|AsKh|call|all_in@3",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|call|all_in@3"
+      },
+      {
+        "id": "cover:bb|AsKh|call|check",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|call|check"
+      },
+      {
+        "id": "cover:bb|AsKh|call|raise@2",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|call|raise@2"
+      },
+      {
+        "id": "cover:bb|AsKh|raise@2|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|raise@2|call"
+      },
+      {
+        "id": "cover:bb|AsKh|raise@2|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|raise@2|fold"
+      },
+      {
+        "id": "cover:bb|AsKh|raise@3|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|raise@3|call"
+      },
+      {
+        "id": "cover:bb|AsKh|raise@3|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|AsKh|raise@3|fold"
+      },
+      {
+        "id": "cover:bb|KdKs|all_in@4|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|all_in@4|call"
+      },
+      {
+        "id": "cover:bb|KdKs|all_in@4|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|all_in@4|fold"
+      },
+      {
+        "id": "cover:bb|KdKs|call|all_in@3",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|call|all_in@3"
+      },
+      {
+        "id": "cover:bb|KdKs|call|check",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|call|check"
+      },
+      {
+        "id": "cover:bb|KdKs|call|raise@2",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|call|raise@2"
+      },
+      {
+        "id": "cover:bb|KdKs|raise@2|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|raise@2|call"
+      },
+      {
+        "id": "cover:bb|KdKs|raise@2|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|raise@2|fold"
+      },
+      {
+        "id": "cover:bb|KdKs|raise@3|call",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|raise@3|call"
+      },
+      {
+        "id": "cover:bb|KdKs|raise@3|fold",
+        "sense": ">=",
+        "slack_variable": "surplus:bb|KdKs|raise@3|fold"
+      }
+    ],
+    "dual_flow_values": {
+      "flow_labels": [
+        "bb:empty=1",
+        "bb:flow:AsKh:all_in@4",
+        "bb:flow:AsKh:call",
+        "bb:flow:AsKh:raise@2",
+        "bb:flow:AsKh:raise@3",
+        "bb:flow:KdKs:all_in@4",
+        "bb:flow:KdKs:call",
+        "bb:flow:KdKs:raise@2",
+        "bb:flow:KdKs:raise@3"
+      ],
+      "fractions": [
+        "100107990869/130471452826",
+        "1318595188/65235726413",
+        "0",
+        "0",
+        "0",
+        "4469904/5486143",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "inequality_slacks": {
+      "fractions": [
+        "0",
+        "0",
+        "1933046326/65235726413",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "sequence_labels": [
+        "bb:empty",
+        "bb|AsKh|all_in@4|call",
+        "bb|AsKh|all_in@4|fold",
+        "bb|AsKh|call|all_in@3",
+        "bb|AsKh|call|check",
+        "bb|AsKh|call|raise@2",
+        "bb|AsKh|raise@2|call",
+        "bb|AsKh|raise@2|fold",
+        "bb|AsKh|raise@3|call",
+        "bb|AsKh|raise@3|fold",
+        "bb|KdKs|all_in@4|call",
+        "bb|KdKs|all_in@4|fold",
+        "bb|KdKs|call|all_in@3",
+        "bb|KdKs|call|check",
+        "bb|KdKs|call|raise@2",
+        "bb|KdKs|raise@2|call",
+        "bb|KdKs|raise@2|fold",
+        "bb|KdKs|raise@3|call",
+        "bb|KdKs|raise@3|fold"
+      ]
+    },
+    "logical_cell_updates": 101005,
+    "lp": "oop_guarantee",
+    "maximum_fraction_bits": 92,
+    "objective": "100107990869/130471452826",
+    "objective_bound_fraction": "100107990869/130471452826",
+    "own_realization": {
+      "fractions": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "273454/422011",
+        "0",
+        "148557/422011",
+        "0",
+        "0"
+      ],
+      "sequence_labels": [
+        "sb:empty",
+        "sb|AdAs|call/all_in@3|call",
+        "sb|AdAs|call/all_in@3|fold",
+        "sb|AdAs|call/raise@2|call",
+        "sb|AdAs|call/raise@2|fold",
+        "sb|AdAs|root|all_in@4",
+        "sb|AdAs|root|call",
+        "sb|AdAs|root|fold",
+        "sb|AdAs|root|raise@2",
+        "sb|AdAs|root|raise@3",
+        "sb|QdQs|call/all_in@3|call",
+        "sb|QdQs|call/all_in@3|fold",
+        "sb|QdQs|call/raise@2|call",
+        "sb|QdQs|call/raise@2|fold",
+        "sb|QdQs|root|all_in@4",
+        "sb|QdQs|root|call",
+        "sb|QdQs|root|fold",
+        "sb|QdQs|root|raise@2",
+        "sb|QdQs|root|raise@3"
+      ]
+    },
+    "phase_one_objective": "0",
+    "pivots": 41,
+    "tableau_cells_including_rhs_and_objective": 2241,
+    "tableau_columns": 82,
+    "tableau_rows": 26,
+    "variable_labels": [
+      "x:sb:empty",
+      "x:sb|AdAs|call/all_in@3|call",
+      "x:sb|AdAs|call/all_in@3|fold",
+      "x:sb|AdAs|call/raise@2|call",
+      "x:sb|AdAs|call/raise@2|fold",
+      "x:sb|AdAs|root|all_in@4",
+      "x:sb|AdAs|root|call",
+      "x:sb|AdAs|root|fold",
+      "x:sb|AdAs|root|raise@2",
+      "x:sb|AdAs|root|raise@3",
+      "x:sb|QdQs|call/all_in@3|call",
+      "x:sb|QdQs|call/all_in@3|fold",
+      "x:sb|QdQs|call/raise@2|call",
+      "x:sb|QdQs|call/raise@2|fold",
+      "x:sb|QdQs|root|all_in@4",
+      "x:sb|QdQs|root|call",
+      "x:sb|QdQs|root|fold",
+      "x:sb|QdQs|root|raise@2",
+      "x:sb|QdQs|root|raise@3",
+      "q+:bb:empty=1",
+      "q+:bb:flow:AsKh:all_in@4",
+      "q+:bb:flow:AsKh:call",
+      "q+:bb:flow:AsKh:raise@2",
+      "q+:bb:flow:AsKh:raise@3",
+      "q+:bb:flow:KdKs:all_in@4",
+      "q+:bb:flow:KdKs:call",
+      "q+:bb:flow:KdKs:raise@2",
+      "q+:bb:flow:KdKs:raise@3",
+      "q-:bb:empty=1",
+      "q-:bb:flow:AsKh:all_in@4",
+      "q-:bb:flow:AsKh:call",
+      "q-:bb:flow:AsKh:raise@2",
+      "q-:bb:flow:AsKh:raise@3",
+      "q-:bb:flow:KdKs:all_in@4",
+      "q-:bb:flow:KdKs:call",
+      "q-:bb:flow:KdKs:raise@2",
+      "q-:bb:flow:KdKs:raise@3",
+      "surplus:bb:empty",
+      "surplus:bb|AsKh|all_in@4|call",
+      "surplus:bb|AsKh|all_in@4|fold",
+      "surplus:bb|AsKh|call|all_in@3",
+      "surplus:bb|AsKh|call|check",
+      "surplus:bb|AsKh|call|raise@2",
+      "surplus:bb|AsKh|raise@2|call",
+      "surplus:bb|AsKh|raise@2|fold",
+      "surplus:bb|AsKh|raise@3|call",
+      "surplus:bb|AsKh|raise@3|fold",
+      "surplus:bb|KdKs|all_in@4|call",
+      "surplus:bb|KdKs|all_in@4|fold",
+      "surplus:bb|KdKs|call|all_in@3",
+      "surplus:bb|KdKs|call|check",
+      "surplus:bb|KdKs|call|raise@2",
+      "surplus:bb|KdKs|raise@2|call",
+      "surplus:bb|KdKs|raise@2|fold",
+      "surplus:bb|KdKs|raise@3|call",
+      "surplus:bb|KdKs|raise@3|fold",
+      "artificial:sb:empty=1",
+      "artificial:sb:flow:AdAs:root",
+      "artificial:sb:flow:AdAs:call/all_in@3",
+      "artificial:sb:flow:AdAs:call/raise@2",
+      "artificial:sb:flow:QdQs:root",
+      "artificial:sb:flow:QdQs:call/all_in@3",
+      "artificial:sb:flow:QdQs:call/raise@2",
+      "artificial:cover:bb:empty",
+      "artificial:cover:bb|AsKh|all_in@4|call",
+      "artificial:cover:bb|AsKh|all_in@4|fold",
+      "artificial:cover:bb|AsKh|call|all_in@3",
+      "artificial:cover:bb|AsKh|call|check",
+      "artificial:cover:bb|AsKh|call|raise@2",
+      "artificial:cover:bb|AsKh|raise@2|call",
+      "artificial:cover:bb|AsKh|raise@2|fold",
+      "artificial:cover:bb|AsKh|raise@3|call",
+      "artificial:cover:bb|AsKh|raise@3|fold",
+      "artificial:cover:bb|KdKs|all_in@4|call",
+      "artificial:cover:bb|KdKs|all_in@4|fold",
+      "artificial:cover:bb|KdKs|call|all_in@3",
+      "artificial:cover:bb|KdKs|call|check",
+      "artificial:cover:bb|KdKs|call|raise@2",
+      "artificial:cover:bb|KdKs|raise@2|call",
+      "artificial:cover:bb|KdKs|raise@2|fold",
+      "artificial:cover:bb|KdKs|raise@3|call",
+      "artificial:cover:bb|KdKs|raise@3|fold"
+    ]
+  },
+  "pair_priors": [
+    {
+      "bb_hand": "KdKs",
+      "prior_fraction": "8/13",
+      "sb_hand": "AdAs",
+      "showdown_mean_fraction": "279419/428076"
+    },
+    {
+      "bb_hand": "AsKh",
+      "prior_fraction": "1/13",
+      "sb_hand": "QdQs",
+      "showdown_mean_fraction": "4822/35673"
+    },
+    {
+      "bb_hand": "KdKs",
+      "prior_fraction": "4/13",
+      "sb_hand": "QdQs",
+      "showdown_mean_fraction": "-279319/428076"
+    }
+  ],
+  "policies": [
+    {
+      "action_tokens": [
+        "fold",
+        "call",
+        "raise@2",
+        "raise@3",
+        "all_in@4"
+      ],
+      "hand": "AdAs",
+      "history": [],
+      "player": "sb",
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": "sb",
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ],
+      "zero_realization_fallback": true
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": "sb",
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ],
+      "zero_realization_fallback": true
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call",
+        "raise@2",
+        "raise@3",
+        "all_in@4"
+      ],
+      "hand": "QdQs",
+      "history": [],
+      "player": "sb",
+      "probabilities": [
+        "148557/422011",
+        "0",
+        "0",
+        "0",
+        "273454/422011"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": "sb",
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ],
+      "zero_realization_fallback": true
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": "sb",
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ],
+      "zero_realization_fallback": true
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "all_in@4"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "0",
+        "1"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "call"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "47377033733/48113316636",
+        "0",
+        "736282903/48113316636"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "raise@2"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "1",
+        "0"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "raise@3"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "0",
+        "1"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "all_in@4"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "351341/844022",
+        "492681/844022"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "call"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "15947705855/16037772212",
+        "0",
+        "90066357/16037772212"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "raise@2"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "368143/1973428",
+        "1605285/1973428"
+      ],
+      "zero_realization_fallback": false
+    },
+    {
+      "action_tokens": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "raise@3"
+      ],
+      "player": "bb",
+      "probabilities": [
+        "351341/844022",
+        "492681/844022"
+      ],
+      "zero_realization_fallback": false
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Exact equilibrium witness for one finite heads-up preflop betting game with all final boards hidden and forced later checkdown. No later-street betting, multiway, rake, unrestricted equilibrium or production-default change.",
+  "status": "exact-candidate-feasibility"
+}

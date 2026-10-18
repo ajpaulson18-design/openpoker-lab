@@ -25,3 +25,4 @@ turn-weighted-cfrplus-policies-v1/turn-weighted-matrix-free-3000.json text eol=l
 turn-weighted-cfrplus-policies-v1/turn-weighted-matrix-free-10000.json text eol=lf
 native-fixed-street-v1-initial.json text eol=lf
 native-fixed-street-vector-v1.json text eol=lf
+preflop-weighted-sequence-v1.json text eol=lf

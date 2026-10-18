@@ -154,3 +154,12 @@ and independent full-request native work/storage admission. Historical admission
 also remains mandatory; complete-solve bookkeeping replaces only the reference
 trainer charge. Do not equate modeled native storage or Python tracemalloc with
 RSS. See [native training scope and evidence](docs/native-fixed-street.md).
+
+The [weighted preflop exact witness](docs/preflop-weighted-sequence.md) is a
+separate fixed research game with forced full-board checkdown. Preserve its
+predeclared physical-count/spec hashes, independent legal-history/payoff/flow
+reconstruction, own-hand responses and unchanged rational LP limits. Keep the
+candidate separate from independent verification, retain failed feasibility
+observations and require clean-source saved-file verification before publishing
+formal proof. No production defaults, earlier/later-street model, range caps or
+frontend behavior are expanded by this certificate.
