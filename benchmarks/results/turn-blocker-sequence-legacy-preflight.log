@@ -1,0 +1,10 @@
+{"census": {"depth": 8, "information_sets": [28, 28], "public_chance_nodes": 3, "public_decisions": 28, "public_nodes": 63, "sequences": [57, 57]}, "lp": {"lower": {"cells_including_rhs_and_objective": 22533, "columns": 258, "rows": 86}, "upper": {"cells_including_rhs_and_objective": 22533, "columns": 258, "rows": 86}}, "status": "LEGACY_LP_PREFLIGHT"}
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-13\i-x20\work\turn_blocker_sequence_preflight.py", line 231, in <module>
+    result=model(FIXTURE)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-13\i-x20\work\turn_blocker_sequence_preflight.py", line 191, in model
+    require(item["rows"]<=96 and item["columns"]<=256
+  File "C:\Users\pauls\Documents\Codex\2026-10-13\i-x20\work\turn_blocker_sequence_preflight.py", line 13, in require
+    raise ValueError(message)
+ValueError: Unchanged LP admission failed

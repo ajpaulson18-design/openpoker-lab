@@ -103,3 +103,62 @@ all five target meets and ten misses, normalization ledgers and pinned inputs.
 Saved-file verification freshly recomputes the mathematical rows. Its scope
 is the configured numeric model and separately normalized policies; it adds
 no production API, unrestricted equilibrium or raw-binary64 interval claim.
+
+## Exact fixed-river equilibrium reference
+
+The research [sequence-form witness](../river-sequence-equilibrium.md)
+establishes exact configured-game values 25 for the polarised fixture and
+-43339/2163 for weighted raises, with complete rational policies and zero
+legal-response gap. Independent saved-file verification rebuilds the physical
+numeric model, flow/payoff matrices and both responses. This supplies a
+stronger small-game validation anchor; it changes no production solver,
+earlier-street API or archived trained profile.
+
+## Blocker-correlated river witness
+
+A separate development fixture has independently proved exact value
+-43339/1751 and zero exact NashConv with blocker-correlated private hands.
+Six fixed-budget CFR+ policies retain full independent float/exact replay
+and all target misses. Production and earlier-street paths are unchanged.
+See [model, proof and executed evidence](../river-blocker-equilibrium.md).
+
+## Exact selected-river turn witness
+
+A separate development-only two-street witness proves value 50 and zero exact
+NashConv in a four-world conditioned game, with independent payoff/flow and
+legal-response reconstruction. Literal negative controls detect future-card
+peeking and cumulative-wager mistakes. The equilibrium folds on the turn;
+river policies remain fully certified off-path. See [scope and evidence](../turn-sequence-equilibrium.md).
+
+## Weighted turn witness with on-path river play
+
+A separate four-world conditioned game has two independently validated exact
+policies at value 30 and zero NashConv, with river decisions reached with
+probability 1. A hand-written policy was certified before the LP candidate;
+the separate verifier checks all payoff/flow data and both legal responses.
+See [fixed game, proof, reach and limits](../turn-weighted-sequence-equilibrium.md).
+
+## Production turn CFR+ against the value-30 anchor
+
+Six complete production policies now have independent numeric and exact
+normalized own-hand response checks against the proved weighted turn value.
+Both backends miss 0.001-chip NashConv at 1,000/3,000 iterations and meet it
+at 10,000 (about 0.000681). Every miss and full policy remains saved.
+See [experiment, independent reconstruction and scope](../turn-weighted-cfrplus.md).
+
+## Compact blocker-conditioned turn witness
+
+A separate six-world turn game with private blockers has exact value 115/7
+and zero NashConv, certified through original full primal/dual equations and
+independent legal responses. Fixing empty realization coordinates removes two
+LP columns while preserving all existing resource caps; the rejected legacy
+258-column admission and hidden-information controls remain recorded.
+See [model, affine reduction, proof and limits](../turn-blocker-sequence-equilibrium.md).
+
+## Production turn CFR+ with private blockers
+
+Six complete policies for the six-world blocker-conditioned turn game have
+independent numeric and exact normalized own-hand response checks against
+the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
+iterations and meet it at 10,000 (about 0.000414). All four misses and full
+policies remain saved. See [experiment, proof and limits](../turn-blocker-cfrplus.md).

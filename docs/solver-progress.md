@@ -1,5 +1,20 @@
 # Solver progress record
 
+## Exact rational equilibria establish both small river game values
+
+A bounded development sequence-form search now supplies rational equilibrium
+witnesses for the two archived river fixtures: polarised value 25 and weighted
+raised value -43339/2163, both with exactly zero NashConv. The weighted game
+uses 49/53 sequence coordinates instead of enumerating its millions of pure
+policies. This is a fixed configured numeric-model result, not a production
+solver/API change.
+
+An independent verifier reconstructs the payoff/flow model, validates primal
+and dual feasibility, checks normalization and complete own-information
+responses, and reproduces all eight exact metrics. The earlier trained
+policies and their target misses remain unchanged. See
+[proof, limits and reproducible evidence](river-sequence-equilibrium.md).
+
 ## Prepared-call profiling identifies training as the next bottleneck
 
 Pinned physical-count preflop and fixed-flop games now have a frozen coarse
@@ -22,7 +37,7 @@ oracle and contains the known value 25.
 
 Five records meet exact NashConv 1/1000 and all ten misses remain recorded.
 The weighted raised 10k bounds span approximately 0.000279553443 chips;
-its equilibrium value remains unknown. Sol separately reconstructed all
+the later witness above establishes its exact game value. Sol separately reconstructed all
 270 normalization rows, all eight metrics and 83 fingerprints, comparing
 with independent exact vectors computed before the final artifact. The
 13 focused tests pass normally and with Python optimization; 53 broader
@@ -1129,3 +1144,52 @@ recorded. A separate predeclared 8,000-sweep follow-up passes all eight
 quality calls, with maximum independent NashConv 0.00464177 and unchanged
 original report/caps. See the dedicated record rather than treating speed as
 equilibrium accuracy.
+
+## Blocker-correlated river witness
+
+A separate development fixture has independently proved exact value
+-43339/1751 and zero exact NashConv with blocker-correlated private hands.
+Six fixed-budget CFR+ policies retain full independent float/exact replay
+and all target misses. Production and earlier-street paths are unchanged.
+See [model, proof and executed evidence](river-blocker-equilibrium.md).
+
+## Exact selected-river turn witness
+
+A separate development-only two-street witness proves value 50 and zero exact
+NashConv in a four-world conditioned game, with independent payoff/flow and
+legal-response reconstruction. Literal negative controls detect future-card
+peeking and cumulative-wager mistakes. The equilibrium folds on the turn;
+river policies remain fully certified off-path. See [scope and evidence](turn-sequence-equilibrium.md).
+
+## Weighted turn witness with on-path river play
+
+A separate four-world conditioned game has two independently validated exact
+policies at value 30 and zero NashConv, with river decisions reached with
+probability 1. A hand-written policy was certified before the LP candidate;
+the separate verifier checks all payoff/flow data and both legal responses.
+See [fixed game, proof, reach and limits](turn-weighted-sequence-equilibrium.md).
+
+## Production turn CFR+ against the value-30 anchor
+
+Six complete production policies now have independent numeric and exact
+normalized own-hand response checks against the proved weighted turn value.
+Both backends miss 0.001-chip NashConv at 1,000/3,000 iterations and meet it
+at 10,000 (about 0.000681). Every miss and full policy remains saved.
+See [experiment, independent reconstruction and scope](turn-weighted-cfrplus.md).
+
+## Compact blocker-conditioned turn witness
+
+A separate six-world turn game with private blockers has exact value 115/7
+and zero NashConv, certified through original full primal/dual equations and
+independent legal responses. Fixing empty realization coordinates removes two
+LP columns while preserving all existing resource caps; the rejected legacy
+258-column admission and hidden-information controls remain recorded.
+See [model, affine reduction, proof and limits](turn-blocker-sequence-equilibrium.md).
+
+## Production turn CFR+ with private blockers
+
+Six complete policies for the six-world blocker-conditioned turn game have
+independent numeric and exact normalized own-hand response checks against
+the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
+iterations and meet it at 10,000 (about 0.000414). All four misses and full
+policies remain saved. See [experiment, proof and limits](turn-blocker-cfrplus.md).
