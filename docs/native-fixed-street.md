@@ -40,11 +40,12 @@ trainer world census. Both APIs retain their existing strategy/model versions,
 physical counts, action descriptions and Python diagnostics. No later-street
 betting, selected-outcome API, server route or frontend changes follow.
 
-Fixed flop already integrates category mass and signed mass per private pair
-in its Python vector trainer. The native scalar path integrates only that hidden
-category, retaining full pair mass, zero means and separate hidden opponent
-hands. Different scalar/vector summation orders may change binary64 policies;
-bitwise cross-backend policy equality is not promised.
+Fixed flop integrates category mass and signed mass per private pair in both
+its Python trainer and the revised compiled public-batched trainer. It transports
+signed mass directly, retains zero means and separate hidden opponent hands,
+and aggregates hidden opponents before subtracting each own-hand regret.
+Preflop retains the scalar traversal. Bitwise policy equality across compilers
+and Python versions is not promised; declared finite tolerances remain required.
 
 ## Training and information boundary
 
@@ -74,9 +75,14 @@ bookkeeping; its ceiling remains 500 million modeled loop entries.
 
 The [adapter](../pokerlab/native_fixed_street.py) independently reserves all
 flattened tree/world/policy buffers and the full requested training work before
-launch. A rooted arborescence has exactly N-1 action edges, so eight world-state
-units per traversal conservatively cover node and action loops. Twenty-four
-slot units per sweep cover profiles, resets and regret updates. Separate setup
+launch. A rooted arborescence has exactly N-1 action edges. Scalar training
+reserves eight world-state units per traversal. Public-batched training reserves
+`8N + 4WN + 12(H0+H1)N` units per traversal, with N public states, W pair rows
+and H0/H1 active hand counts. CFR+ reserves three traversals per sweep; vanilla
+and DCFR reserve one. Twenty-four slot units per sweep cover profiles, resets
+and regret updates. The public-batched heap envelope additionally reserves
+`33 * (H0+H1) * 16 * 8 + 2 * (H0+H1) * 8` bytes for depth scratch and hand
+vectors. Separate setup
 and Python adapter reserves are included. These are explicit loop/element
 models, excluding internal library/compiler/OS instructions, not bytecode,
 runtime or RSS guarantees.
@@ -176,3 +182,37 @@ The complete initial artifact canonical SHA-256 is
 `9a664e07658d79b649d0c161d11e9f659b0f33b3319ced4162bfa1a022ef7cac`.
 Numerical transport/order analysis and independent audit are in progress. Any
 revised implementation will keep this initial report and its failed gate intact.
+
+## Public-batched reduction followup
+
+The initial scalar flop experiment evaluated mathematically equivalent pair
+updates in a different binary64 order. No equation or information-boundary defect
+was found in source review. The revised C path follows the public Python
+trainer's hand-vector reduction order, preserving represented signed masses
+without dividing and multiplying them again. Pair/marginal accumulation and
+average updates retain ordinary ordered additions; action expectations, positive
+regret normalization and final average normalization use an independently written
+compensated sum. This draws on
+[Neumaier's summation analysis](https://doi.org/10.1002/zamm.19740540106) and the
+[documented Python 3.12 floating sum change](https://docs.python.org/3.12/library/functions.html#sum).
+No external implementation is copied or added as a dependency.
+
+The wire/build protocol is `OPENPOKER_FIXED_TRAIN_V2`, with mode 0 for scalar
+signed equity and mode 1 for public-batched signed mass. The manifest uses
+`native-fixed-street-work-v2`. The stable engine family remains
+`native-fixed-street-v1` in result metadata; `reduction`, the build protocol and
+work model identify the actual execution. Old V1 builds require an explicit
+rebuild and are rejected by the revised adapter.
+
+The [followup plan](../benchmarks/native-fixed-street-vector-v1.json) and
+[runner](../scripts/benchmark_native_fixed_street_vector.py) pin the initial
+failed artifact's Git blob and canonical checksum before and after measurement.
+They reuse every original profile, repeat, timing boundary, quality target and
+agreement gate. All 18 native timed policies plus its separate allocation policy
+must identify their declared reduction and V2 build. The original report remains
+unchanged. Local strict MSVC conformance and all-algorithm shared-hand checkpoint
+tests pass at 1/2/3/10/100/1000 iterations. In a separate untimed 100-iteration
+check on the full 8x8 fixture, all policy probabilities and eight diagnostics
+match Python exactly for vanilla, DCFR and CFR+. These checks are not the frozen
+4k complete-call experiment. Revised cross-platform conformance and formal
+measurements are pending; the followup has not yet qualified this implementation.

@@ -62,6 +62,7 @@ def _source_hashes():
     hashes = profile._source_hashes()
     paths = (*sorted((ROOT / 'native').glob('*.c')),
              ROOT / 'scripts' / 'build_native_train.py', SPEC_PATH,
+             ROOT / 'benchmarks' / 'native-fixed-street-vector-v1.json',
              ROOT / PROFILE_ARTIFACT,
              ROOT / '.github' / 'workflows' / 'native-fixed-street.yml')
     for path in paths:
@@ -202,7 +203,9 @@ def _preflight_flop(item, algorithm, iterations):
                  'source_bookkeeping_loop_entries_upper_bound': source,
                  'total_loop_entries_upper_bound': total,
                  'total_loop_entry_limit': MAX_TOTAL_LOOP_ENTRIES}
-    shape = native.admit_native_shape(sum(counts.values()), pairs, slots, iterations, algorithm)
+    shape = native.admit_native_shape(
+        sum(counts.values()), pairs, slots, iterations, algorithm,
+        reduction='public-batched', hand_counts=tuple(map(len, active)))
     complete = native.complete_solve_admission(shape, total,
                                                  vector['training_loop_entries_upper_bound'])
     return {'python_complete_admission': reference, 'native_complete_admission': complete,

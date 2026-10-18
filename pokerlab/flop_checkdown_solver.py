@@ -122,27 +122,28 @@ def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=N
     if native_build_directory is not None:
         from . import native_fixed_street as native
         shape = native.admit_native_shape(sum(counts.values()), len(plan.pairs),
-                                          slots, iterations, algorithm)
+                                          slots, iterations, algorithm, reduction='public-batched',
+                                          hand_counts=tuple(map(len, active)))
         native_admission = native.complete_solve_admission(
             shape, total, vector["training_loop_entries_upper_bound"])
     worlds, equity = plan.build()
     native_metadata = None
     if native_build_directory is not None:
         # The Python public trainer already sums category mass and signed mass
-        # per hidden pair. Integrate only that hidden category for the scalar
-        # native traversal; retain zero means and each distinct opponent hand.
+        # per hidden pair. Preserve that signed mass directly for the compiled
+        # public traversal; retain zero means and distinct opponent hands.
         pairs = {}
         for i, j, mass, sign in worlds:
             row = pairs.setdefault((i, j), [0.0, 0.0])
             row[0] += mass
             row[1] += mass * sign
-        native_worlds = tuple((i, j, mass, signed / mass)
+        native_worlds = tuple((i, j, mass, signed)
                               for (i, j), (mass, signed) in pairs.items())
         averages, native_metadata = native.train_native_fixed_street(
             root, native_worlds, infos, iterations, algorithm,
-            pot=config.pot, build_directory=native_build_directory)
+            pot=config.pot, build_directory=native_build_directory, reduction='public-batched')
         native_metadata["complete_solve_admission"] = native_admission
-        native_metadata["world_indexing"] = "hidden-category-pair-mean"
+        native_metadata["world_indexing"] = "hidden-category-mass-and-signed-mass"
     else:
         averages = train_public_batched(root, worlds, infos, iterations, algorithm,
                                         pot=config.pot, chance_type=_NoPublicChance)

@@ -15,8 +15,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'native' / 'fixed_street_train.c'
-PROTOCOL = 'OPENPOKER_FIXED_TRAIN_V1'
-WORK_MODEL = 'native-fixed-street-work-v1'
+PROTOCOL = 'OPENPOKER_FIXED_TRAIN_V2'
+WORK_MODEL = 'native-fixed-street-work-v2'
 
 
 def _source_hashes():

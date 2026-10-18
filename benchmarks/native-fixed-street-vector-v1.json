@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "native-fixed-street-vector-v1",
+  "initial_report_commit": "12d83c9edf1b9f1f0e4b73847c5ed06a7b7e347f",
+  "initial_report_path": "benchmarks/results/native-fixed-street-v1-initial.json",
+  "initial_report_blob": "02346981dc5728517bc8c52a2368a9b594b24394",
+  "initial_report_artifact_sha256": "9a664e07658d79b649d0c161d11e9f659b0f33b3319ced4162bfa1a022ef7cac",
+  "paired_spec_path": "benchmarks/native-fixed-street-v1.json",
+  "paired_spec_sha256": "9eae5a9c620fa1bce94e0717c23a3ee8820b37bdfdbca815ce00c23e1f5b8a20",
+  "protocol": "OPENPOKER_FIXED_TRAIN_V2",
+  "work_model": "native-fixed-street-work-v2",
+  "reductions": {
+    "preflop": "scalar",
+    "flop": "public-batched"
+  },
+  "method": "Rerun all six original profiles, all three paired repeats, original complete-call boundary, allocation traces, physical-count replays and unchanged acceptance gates after a principled public-batched reduction change. Preserve the initial failed report unchanged. No timing samples or algorithm profiles may be removed."
+}

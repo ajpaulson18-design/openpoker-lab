@@ -17,8 +17,8 @@ from .native_preflop_equity import _json_object, _reject_constant, _sha
 from .river_tree import _Action, _Node, _Terminal
 
 SOURCE = Path(__file__).resolve().parents[1] / 'native' / 'fixed_street_train.c'
-PROTOCOL = 'OPENPOKER_FIXED_TRAIN_V1'
-WORK_MODEL = 'native-fixed-street-work-v1'
+PROTOCOL = 'OPENPOKER_FIXED_TRAIN_V2'
+WORK_MODEL = 'native-fixed-street-work-v2'
 MAX_INPUT_BYTES = 8 * 1024 * 1024
 MAX_OUTPUT_BYTES = 24 * 1024 * 1024
 MAX_NATIVE_HEAP_BYTES = 64 * 1024 * 1024
@@ -48,13 +48,15 @@ def _real(value, label, *, minimum=None, maximum=None):
     return value
 
 
-def admit_native_shape(states, worlds, slots, iterations, algorithm):
+def admit_native_shape(states, worlds, slots, iterations, algorithm, *,
+                       reduction='scalar', hand_counts=None):
     """Reserve the entire wire/heap/loop envelope before flattening or launch.
 
     Validated arborescences have exactly states-1 action edges. Each scalar
     pass visits every state and has at most four loops over its action edges.
-    Eight world-state units cover those loops; 24 slot units per sweep cover
-    profiles, delta resets/updates and averaging normalization. Logical units
+    Scalar passes reserve eight world-state units. Public-batched passes reserve
+    state, pair-edge and active-hand work plus bounded depth scratch. Twenty-four
+    slot units per sweep cover profiles, updates and normalization. Logical units
     and requested native allocations are separate from elapsed time and RSS.
     """
     for value, lower, upper, label in (
@@ -65,6 +67,16 @@ def admit_native_shape(states, worlds, slots, iterations, algorithm):
             raise ValueError('Native ' + label + ' exceeds its structural limit')
     if type(algorithm) is not str or algorithm not in ALGORITHMS:
         raise ValueError('Native algorithm must be vanilla, dcfr or cfrplus')
+    _reduction(reduction)
+    hand_sum = 0
+    if reduction == 'public-batched':
+        if (type(hand_counts) is not tuple or len(hand_counts) != 2
+                or any(type(count) is not int or not 1 <= count <= min(128, worlds)
+                       for count in hand_counts)):
+            raise ValueError('Public-batched native training requires bounded active hand counts')
+        hand_sum = sum(hand_counts)
+    elif hand_counts is not None:
+        raise ValueError('Scalar native admission does not accept hand counts')
     passes = 3 if algorithm == 'cfrplus' else 1
     # Header/unsigned IDs/16-hex binary64 tokens fit these per-record bounds.
     wire = 256 + 128 * states + 64 * worlds
@@ -72,15 +84,21 @@ def admit_native_shape(states, worlds, slots, iterations, algorithm):
     # covers its struct, and four double slot arrays are reserved separately.
     # Include the entire static input buffer and a 64 KiB stack/work margin.
     heap = MAX_INPUT_BYTES + 1 + 130 * states + 64 * worlds + 32 * slots + 65_536
+    if reduction == 'public-batched':
+        # Per-depth child/action/value/reach arena and two hand work vectors.
+        heap += 33 * hand_sum * 16 * 8 + 2 * hand_sum * 8
     if wire > MAX_INPUT_BYTES or heap > MAX_NATIVE_HEAP_BYTES:
         raise ValueError('Native wire or heap reservation exceeds its byte limit')
-    training = iterations * (8 * worlds * states * passes + 24 * slots)
+    traversal = (8 * worlds * states if reduction == 'scalar' else
+                 8 * states + 4 * worlds * states + 12 * hand_sum * states)
+    training = iterations * (traversal * passes + 24 * slots)
     native_setup = 16 * (states + worlds + slots) + wire
     adapter_setup = 4096 + 256 * (states + worlds + slots)
     total = training + native_setup + adapter_setup
     if total > MAX_NATIVE_WORK:
         raise ValueError('Full requested native training exceeds 500,000,000 modeled loop entries')
-    return {'budget_version': 'native-fixed-street-work-v1',
+    return {'budget_version': WORK_MODEL, 'reduction': reduction,
+            'active_hand_counts': list(hand_counts) if hand_counts is not None else None,
             'requested_iterations': iterations, 'algorithm': algorithm,
             'public_states': states, 'world_rows': worlds,
             'information_action_slots': slots, 'passes_per_iteration': passes,
@@ -157,20 +175,28 @@ def _backend(build_directory):
     return executable, manifest
 
 
-def _worlds(worlds):
+def _reduction(reduction):
+    if type(reduction) is not str or reduction not in ('scalar', 'public-batched'):
+        raise ValueError('Native reduction must be scalar or public-batched')
+
+
+def _worlds(worlds, reduction='scalar'):
+    _reduction(reduction)
     if type(worlds) not in (list, tuple) or not 1 <= len(worlds) <= 384:
         raise ValueError('Native training needs 1 to 384 fixed weighted worlds')
     active = [set(), set()]
     for world in worlds:
         if type(world) not in (list, tuple) or len(world) != 4:
-            raise ValueError('Native worlds contain two hand IDs, mass and signed equity only')
+            raise ValueError('Native worlds contain two hand IDs, mass and a signed measure only')
         for player in (0, 1):
             if type(world[player]) is not int or not 0 <= world[player] < 1326:
                 raise ValueError('Native private-hand index exceeds physical combo limits')
             active[player].add(world[player])
         if not 0 < _real(world[2], 'World mass', minimum=0, maximum=1):
             raise ValueError('Native world masses must be positive')
-        _real(world[3], 'Signed equity', minimum=-1, maximum=1)
+        limit = world[2] if reduction == 'public-batched' else 1
+        _real(world[3], 'Signed mass' if reduction == 'public-batched' else 'Signed equity',
+              minimum=-limit, maximum=limit)
     if (any(not 1 <= len(hands) <= 128 for hands in active)
             or abs(math.fsum(world[2] for world in worlds) - 1) > 1e-9):
         raise ValueError('Native worlds exceed active-hand or normalized-mass limits')
@@ -243,7 +269,7 @@ def _decode(token):
 
 
 def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplus',
-                              *, pot, build_directory):
+                              *, pot, build_directory, reduction='scalar'):
     """Return average policies and deterministic build/admission provenance.
 
     Caller-owned table/rule admission must precede this specialized trainer.
@@ -263,7 +289,7 @@ def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplu
                 or type(count) is not int or not 1 <= count <= 12):
             raise ValueError('Malformed native information-set key or action count')
     pot = _real(pot, 'Pot', minimum=0, maximum=1e12)
-    active = _worlds(worlds)
+    active = _worlds(worlds, reduction)
     expected_infos = slots = states = 0
     for node in _walk(root, pot):
         states += 1
@@ -279,9 +305,11 @@ def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplu
                     raise ValueError('Native policy keys must use only actor, own hand and public history')
     if len(infos) != expected_infos:
         raise ValueError('Native policy keys have missing or extra information sets')
-    admission = admit_native_shape(states, len(worlds), slots, iterations, algorithm)
+    admission = admit_native_shape(
+        states, len(worlds), slots, iterations, algorithm, reduction=reduction,
+        hand_counts=tuple(map(len, active)) if reduction == 'public-batched' else None)
     if not infos:
-        return {}, {'backend': 'native-fixed-street-v1', 'execution_skipped': 'no-information-sets',
+        return {}, {'backend': 'native-fixed-street-v1', 'reduction': reduction, 'execution_skipped': 'no-information-sets',
                     'admission': admission, 'native_world_rows': len(worlds),
                     'scope': 'No training or native process was required; Python evaluates the terminal game.'}
     # No tree/world/wire/policy arrays are flattened until the complete shape
@@ -289,7 +317,8 @@ def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplu
     nodes = list(_walk(root, pot))
     indices = {id(node): index for index, node in enumerate(nodes)}
     dense = [{hand: index for index, hand in enumerate(hands)} for hands in active]
-    lines = [f'{PROTOCOL} {ALGORITHMS[algorithm]} {iterations} {len(active[0])} {len(active[1])} '
+    mode = 1 if reduction == 'public-batched' else 0
+    lines = [f'{PROTOCOL} {mode} {ALGORITHMS[algorithm]} {iterations} {len(active[0])} {len(active[1])} '
              f'{states} {len(worlds)} {slots}']
     policy_rows = []
     for node in nodes:
@@ -340,11 +369,11 @@ def train_native_fixed_street(root, worlds, infos, iterations, algorithm='cfrplu
         offset += count
     if offset != slots:
         raise AssertionError('Native policy restoration exceeded its slot envelope')
-    return averages, {'backend': 'native-fixed-street-v1', 'build': manifest,
+    return averages, {'backend': 'native-fixed-street-v1', 'reduction': reduction, 'build': manifest,
                       'admission': admission, 'native_world_rows': len(worlds),
                       'input_sha256': hashlib.sha256(request).hexdigest(),
                       'output_sha256': hashlib.sha256(payload).hexdigest(),
-                      'scope': 'Source-built scalar full traversal with hidden pair worlds; '
+                      'scope': 'Source-built fixed-tree traversal using the recorded reduction; '
                                'Python retains poker rules and exact visible-information diagnostics. '
                                'Build identities and structural checks are not authentication; '
                                'native heap reservations do not measure RSS.'}

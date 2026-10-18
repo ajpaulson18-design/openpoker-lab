@@ -75,7 +75,10 @@ training for the prepared preflop and forced-checkdown flop models. The
 [measured prepared-call profile](../fixed-street-profile.md) identifies training
 as the dominant cost. Preserve Python rules/diagnostics/default payloads, all
 historical admission and a separate complete native work/storage envelope.
-A static C scalar traversal is the first experiment; a Python default switch,
+A static C scalar traversal is the first experiment. Its fixed-flop DCFR policy
+gate miss is retained in the initial report. The followup uses compiled
+public-hand-vector reduction for flop, while preserving preflop scalar math,
+original acceptance gates and the failed evidence. A Python default switch,
 third-party solver implementation, public-chance support and compiled diagnostics
 were not selected. See [scope and evidence](../native-fixed-street.md) for actual
 validation/publication status. No earlier decision is superseded.

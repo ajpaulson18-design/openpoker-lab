@@ -1,7 +1,7 @@
 """Direct protocol conformance tests for the optional fixed-street C trainer.
 
-Set OPENPOKER_NATIVE_TRAIN_BUILD_DIR to an existing native build directory to
-run process-level checks. These tests never build the executable themselves.
+Set OPENPOKER_NATIVE_TRAIN_BUILD_DIR to an existing V2 native build directory
+for process-level checks. These tests never build the executable themselves.
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = "OPENPOKER_FIXED_TRAIN_V1"
+PROTOCOL = "OPENPOKER_FIXED_TRAIN_V2"
 MAX_INPUT_BYTES = 8 * 1024 * 1024
 
 
@@ -21,7 +21,7 @@ def _f64(value: float) -> str:
     return struct.pack(">d", float(value)).hex()
 
 
-def _request(*, algorithm=2, iterations=1, hands=(1, 1), nodes=None,
+def _request(*, mode=0, algorithm=2, iterations=1, hands=(1, 1), nodes=None,
              worlds=None, slots=None, newline="\n") -> bytes:
     if nodes is None:
         nodes = ("D 0 2 1 2", "T " + _f64(0) + " " + _f64(0),
@@ -31,11 +31,11 @@ def _request(*, algorithm=2, iterations=1, hands=(1, 1), nodes=None,
     if slots is None:
         slots = sum(int(row.split()[2]) * hands[int(row.split()[1])]
                     for row in nodes if row.startswith("D "))
-    header = (f"{PROTOCOL} {algorithm} {iterations} {hands[0]} {hands[1]} "
+    header = (f"{PROTOCOL} {mode} {algorithm} {iterations} {hands[0]} {hands[1]} "
               f"{len(nodes)} {len(worlds)} {slots}{newline}")
     body = "".join(row + newline for row in nodes)
-    body += "".join(f"{h0} {h1} {_f64(mass)} {_f64(sign)}{newline}"
-                    for h0, h1, mass, sign in worlds)
+    body += "".join(f"{h0} {h1} {_f64(mass)} {_f64(sign_or_signed_mass)}{newline}"
+                    for h0, h1, mass, sign_or_signed_mass in worlds)
     return (header + body).encode("ascii")
 
 
@@ -104,28 +104,60 @@ class NativeFixedStreetProtocolTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr.decode("ascii", "replace"))
         self.assertEqual(_binary_policy(completed.stdout, 2), [0.5, 0.5])
 
-    def test_positive_worlds_with_zero_mean_sign_preserve_fold_and_showdown(self):
+    def test_scalar_and_public_mode_match_weighted_single_pair_for_all_algorithms(self):
         nodes = (
             "D 0 2 1 2",
-            "T " + _f64(0) + " " + _f64(0),  # constant fold-like payoff
-            "T " + _f64(0) + " " + _f64(1),  # sign-weighted showdown payoff
+            "T " + _f64(0) + " " + _f64(0),
+            "T " + _f64(0) + " " + _f64(1),
         )
-        worlds = ((0, 0, 0.5, 1.0), (0, 0, 0.5, -1.0))
-        completed = self.invoke(_request(algorithm=2, iterations=31, nodes=nodes, worlds=worlds))
-        self.assertEqual(completed.returncode, 0, completed.stderr.decode("ascii", "replace"))
-        self.assertEqual(_binary_policy(completed.stdout, 2), [0.5, 0.5])
+        for algorithm in range(3):
+            scalar = self.invoke(_request(mode=0, algorithm=algorithm, iterations=31,
+                                          nodes=nodes, worlds=((0, 0, 1.0, 0.625),)))
+            public = self.invoke(_request(mode=1, algorithm=algorithm, iterations=31,
+                                          nodes=nodes, worlds=((0, 0, 1.0, 0.625),)))
+            with self.subTest(algorithm=algorithm):
+                self.assertEqual(scalar.returncode, 0, scalar.stderr.decode("ascii", "replace"))
+                self.assertEqual(public.returncode, 0, public.stderr.decode("ascii", "replace"))
+                scalar_policy = _binary_policy(scalar.stdout, 2)
+                public_policy = _binary_policy(public.stdout, 2)
+                self.assertEqual(public_policy, scalar_policy)
+                self.assertGreater(public_policy[1], 0.5)
+
+    def test_public_mode_preserves_zero_mean_signed_mass_for_fold_and_showdown(self):
+        nodes = (
+            "D 0 2 1 2",
+            "T " + _f64(1) + " " + _f64(0),  # fixed fold-like payoff
+            "T " + _f64(0) + " " + _f64(1),  # signed-mass showdown payoff
+        )
+        # Same hand pair, positive world masses, cancelling signed masses.
+        scalar_worlds = ((0, 0, 0.5, 1.0), (0, 0, 0.5, -1.0))
+        public_worlds = ((0, 0, 0.5, 0.5), (0, 0, 0.5, -0.5))
+        for algorithm in range(3):
+            scalar = self.invoke(_request(mode=0, algorithm=algorithm, iterations=31,
+                                          nodes=nodes, worlds=scalar_worlds))
+            public = self.invoke(_request(mode=1, algorithm=algorithm, iterations=31,
+                                          nodes=nodes, worlds=public_worlds))
+            with self.subTest(algorithm=algorithm):
+                self.assertEqual(scalar.returncode, 0, scalar.stderr.decode("ascii", "replace"))
+                self.assertEqual(public.returncode, 0, public.stderr.decode("ascii", "replace"))
+                scalar_policy = _binary_policy(scalar.stdout, 2)
+                public_policy = _binary_policy(public.stdout, 2)
+                self.assertEqual(public_policy, scalar_policy)
+                self.assertGreater(public_policy[0], 0.5)
 
     def test_ascii_numeric_world_and_complete_input_errors_fail_closed(self):
         good = _request()
         zero_mass = _request(worlds=((0, 0, 0.0, 0.0),))
         invalid_sign = _request(worlds=((0, 0, 1.0, 2.0),))
+        invalid_signed_mass = _request(mode=1, worlds=((0, 0, 0.5, 0.5001), (0, 0, 0.5, 0.0)))
         nan_terminal = _request(nodes=("D 0 2 1 2", "T " + _f64(0) + " 7ff8000000000000",
                                        "T " + _f64(0) + " " + _f64(0)))
         malformed = [
-            b"NOT_OPENPOKER_V1\n",
-            good.replace(b"V1 2 1", b"V1 2 +1", 1),
-            good.replace(b"V1 2 1", b"V1 2 184467440737095516160000", 1),
-            good.replace(b"V1 2 1", b"V1\n2 1", 1),
+            b"NOT_OPENPOKER_V2\n",
+            good.replace(b"V2 0 2 1", b"V2 0 2 +1", 1),
+            good.replace(b"V2 0 2 1", b"V2 0 2 184467440737095516160000", 1),
+            good.replace(b"V2 0 2 1", b"V2\n0 2 1", 1),
+            good.replace(b"V2 0 2", b"V2 9 2", 1),
             good.replace(b"D 0 2", b"D 0\n2", 1),
             good.replace(b"T " + _f64(0).encode() + b" " + _f64(0).encode(),
                          b"T " + _f64(0).encode() + b"\n" + _f64(0).encode(), 1),
@@ -134,10 +166,11 @@ class NativeFixedStreetProtocolTests(unittest.TestCase):
             good[:-5],
             good + b"extra\n",
             good + b"\x1aTRAILING",
-            good.replace(b"OPENPOKER_FIXED_TRAIN_V1", b"OPENPOKER_FIXED_TRAIN_V1\x00", 1),
+            good.replace(b"OPENPOKER_FIXED_TRAIN_V2", b"OPENPOKER_FIXED_TRAIN_V2\x00", 1),
             good + b"\xff",
             zero_mass,
             invalid_sign,
+            invalid_signed_mass,
             nan_terminal,
             good + b" " * (MAX_INPUT_BYTES + 1),
         ]
@@ -166,20 +199,37 @@ class NativeFixedStreetProtocolTests(unittest.TestCase):
     def test_full_requested_work_cap_rejects_before_training(self):
         nodes, slots = _wide_tree(1000)
         worlds = tuple((0, 0, 1.0 / 384.0, 0.0) for _ in range(384))
-        payload = _request(algorithm=0, iterations=10_000, nodes=tuple(nodes),
+        payload = _request(mode=0, algorithm=0, iterations=10_000, nodes=tuple(nodes),
                            worlds=worlds, slots=slots)
         completed = self.invoke(payload)
         self.assertNotEqual(completed.returncode, 0)
         self.assertEqual(completed.stdout, b"")
         self.assertIn(b"500,000,000", completed.stderr)
 
+    def test_public_vector_work_cap_is_stricter_than_scalar_for_same_shape(self):
+        # C-modeled totals for this shape are 461,235,136 (mode 0) and
+        # 769,395,136 (mode 1). The scalar request passes work admission,
+        # allocates its bounded buffers, then reaches the truncated node table;
+        # public mode rejects at the work guard before allocation/training.
+        header = (f"{PROTOCOL} {{mode}} 0 10000 128 128 12 128 1408\n").encode("ascii")
+        scalar = self.invoke(header.replace(b"{mode}", b"0"))
+        public = self.invoke(header.replace(b"{mode}", b"1"))
+        self.assertNotEqual(scalar.returncode, 0)
+        self.assertEqual(scalar.stdout, b"")
+        self.assertIn(b"truncated node table", scalar.stderr.lower())
+        self.assertNotIn(b"500,000,000", scalar.stderr)
+        self.assertNotEqual(public.returncode, 0)
+        self.assertEqual(public.stdout, b"")
+        self.assertIn(b"500,000,000", public.stderr)
+
 
 class NativeFixedStreetProtocolEncodingTests(unittest.TestCase):
-    def test_builder_uses_binary64_hex_for_positive_zero_mean_worlds(self):
-        payload = _request(worlds=((0, 0, 0.5, 1.0), (0, 0, 0.5, -1.0)))
+    def test_builder_encodes_signed_mass_not_conditional_mean_for_public_mode(self):
+        worlds = ((0, 0, 0.5, 0.5), (0, 0, 0.5, -0.5))
+        payload = _request(mode=1, worlds=worlds)
         self.assertIn(_f64(0.5).encode("ascii"), payload)
-        self.assertIn(_f64(-1.0).encode("ascii"), payload)
-        self.assertEqual(0.5 * 1.0 + 0.5 * -1.0, 0.0)
+        self.assertIn(_f64(-0.5).encode("ascii"), payload)
+        self.assertNotIn(_f64(1.0).encode("ascii"), payload)
 
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@
 #define MAX_ITERATIONS 10000u
 #define MAX_MODELED_WORK UINT64_C(500000000)
 #define MAX_HEAP_BYTES (UINT64_C(64) * 1024u * 1024u)
-#define MODEL_HEADER "OPENPOKER_FIXED_TRAIN_V1"
+#define MODEL_HEADER "OPENPOKER_FIXED_TRAIN_V2"
 
 _Static_assert(CHAR_BIT == 8, "protocol requires 8-bit bytes");
 _Static_assert(sizeof(double) == 8, "protocol requires binary64 double");
@@ -49,7 +49,8 @@ typedef struct {
 
 typedef struct {
     double mass;
-    double sign;
+    /* Mode 0: sign. Mode 1: pair signed mass. */
+    double measure;
     uint8_t hand0;
     uint8_t hand1;
 } World;
@@ -266,35 +267,56 @@ static int add_product(uint64_t *total, uint64_t left, uint64_t right) {
     return checked_mul_u64(left, right, &product) && checked_add_u64(*total, product, total);
 }
 
-static int memory_fits(uint32_t node_count, uint32_t world_count, uint32_t slot_count) {
+static int memory_fits(uint32_t mode, uint32_t node_count, uint32_t world_count,
+                       uint32_t slot_count, uint32_t hand0_count, uint32_t hand1_count) {
     uint64_t bytes = (uint64_t)MAX_INPUT_BYTES + 1u;
+    uint64_t hand_sum = (uint64_t)hand0_count + hand1_count;
     if (!add_product(&bytes, node_count, (uint64_t)sizeof(Node)) ||
         !add_product(&bytes, world_count, (uint64_t)sizeof(World)) ||
         !add_product(&bytes, node_count, (uint64_t)sizeof(uint8_t)) ||
         !add_product(&bytes, node_count, (uint64_t)sizeof(uint32_t)) ||
         !add_product(&bytes, slot_count, (uint64_t)(4u * sizeof(double))) ||
+        (mode == 1u &&
+         (!add_product(&bytes, MAX_DEPTH + 1u,
+                       UINT64_C(16) * hand_sum * (uint64_t)sizeof(double)) ||
+          !add_product(&bytes, 2u, hand_sum * (uint64_t)sizeof(double))) ) ||
         !checked_add_u64(bytes, UINT64_C(65536), &bytes)) {
         return 0;
     }
     return bytes <= MAX_HEAP_BYTES;
 }
 
-static int work_fits(uint32_t iterations, uint32_t algorithm, uint32_t node_count,
-                     uint32_t world_count, uint32_t slot_count, size_t input_length) {
+static int work_fits(uint32_t mode, uint32_t iterations, uint32_t algorithm,
+                     uint32_t node_count, uint32_t world_count, uint32_t slot_count,
+                     uint32_t hand0_count, uint32_t hand1_count, size_t input_length) {
     uint64_t per_iteration = 0u;
     uint64_t work = 0u;
-    uint64_t setup = (uint64_t)input_length;
+    uint64_t setup = UINT64_C(4352);
     uint64_t pass_count = algorithm == 2u ? 3u : 1u;
-    if (!add_product(&per_iteration, 8u * (uint64_t)world_count,
-                     (uint64_t)node_count * pass_count) ||
-        !add_product(&per_iteration, 24u, (uint64_t)slot_count) ||
-        !add_product(&setup, 16u, (uint64_t)node_count) ||
-        !add_product(&setup, 16u, (uint64_t)world_count) ||
-        !add_product(&setup, 16u, (uint64_t)slot_count) ||
+    if (mode == 0u) {
+        if (!add_product(&per_iteration, 8u * (uint64_t)world_count,
+                         (uint64_t)node_count * pass_count)) {
+            return 0;
+        }
+    } else {
+        uint64_t one_public_pass = 0u;
+        uint64_t hand_sum = (uint64_t)hand0_count + hand1_count;
+        if (!add_product(&one_public_pass, 8u, node_count) ||
+            !add_product(&one_public_pass, 4u * (uint64_t)world_count, node_count) ||
+            !add_product(&one_public_pass, 12u * hand_sum, node_count) ||
+            !checked_mul_u64(one_public_pass, pass_count, &per_iteration)) {
+            return 0;
+        }
+    }
+    if (!add_product(&per_iteration, 24u, (uint64_t)slot_count) ||
+        !add_product(&setup, 400u, (uint64_t)node_count) ||
+        !add_product(&setup, 336u, (uint64_t)world_count) ||
+        !add_product(&setup, 272u, (uint64_t)slot_count) ||
         !checked_mul_u64((uint64_t)iterations, per_iteration, &work) ||
         !checked_add_u64(work, setup, &work)) {
         return 0;
     }
+    (void)input_length;
     return work <= MAX_MODELED_WORK;
 }
 
@@ -337,22 +359,43 @@ static int validate_tree(Node *nodes, uint8_t *indegree, uint32_t *stack,
     return visited == node_count;
 }
 
-static double regret_match_sum(const double *regrets, uint32_t base, uint32_t count) {
+static double compensated_sum_add(double value, double *sum, double *correction) {
+    double next = *sum + value;
+    if (fabs(*sum) >= fabs(value)) {
+        *correction += (*sum - next) + value;
+    } else {
+        *correction += (value - next) + *sum;
+    }
+    *sum = next;
+    return *sum + *correction;
+}
+
+static double compensated_sum_finish(double sum, double correction) {
+    return sum + correction;
+}
+
+static double regret_match_sum(const double *regrets, uint32_t base, uint32_t count,
+                               int compensated) {
     double sum = 0.0;
+    double correction = 0.0;
     for (uint32_t action = 0u; action < count; ++action) {
         double regret = regrets[base + action];
         if (!isfinite(regret)) {
             return NAN;
         }
         if (regret > 0.0) {
-            sum += regret;
+            if (compensated) {
+                (void)compensated_sum_add(regret, &sum, &correction);
+            } else {
+                sum += regret;
+            }
         }
     }
-    return sum;
+    return compensated_sum_finish(sum, correction);
 }
 
 static int rematch(const Node *nodes, uint32_t node_count, const uint32_t hands[2],
-                   const double *regrets, double *current) {
+                   const double *regrets, double *current, int compensated) {
     for (uint32_t index = 0u; index < node_count; ++index) {
         const Node *node = &nodes[index];
         if (node->kind != 0u) {
@@ -362,7 +405,7 @@ static int rematch(const Node *nodes, uint32_t node_count, const uint32_t hands[
         uint32_t action_count = (uint32_t)node->action_count;
         for (uint32_t hand = 0u; hand < hand_count; ++hand) {
             uint32_t base = node->slot_base + hand * action_count;
-            double total = regret_match_sum(regrets, base, action_count);
+            double total = regret_match_sum(regrets, base, action_count, compensated);
             if (!isfinite(total)) {
                 return 0;
             }
@@ -382,14 +425,14 @@ static int rematch(const Node *nodes, uint32_t node_count, const uint32_t hands[
     return 1;
 }
 
-static double traverse_train(uint32_t node_id, const Node *nodes, const World *world,
+static double traverse_train_scalar(uint32_t node_id, const Node *nodes, const World *world,
                              const uint32_t hands[2], const double *current,
                              double *deltas, double *sums, int algorithm,
                              int target_player, int accumulate_average,
                              double iteration_weight, double reach0, double reach1) {
     const Node *node = &nodes[node_id];
     if (node->kind == 1u) {
-        return node->constant + node->coefficient * world->sign;
+        return node->constant + node->coefficient * world->measure;
     }
     uint32_t action_count = (uint32_t)node->action_count;
     uint32_t hand = (uint32_t)(node->player == 0u ? world->hand0 : world->hand1);
@@ -400,7 +443,7 @@ static double traverse_train(uint32_t node_id, const Node *nodes, const World *w
         double probability = current[base + action];
         double next0 = reach0 * (node->player == 0u ? probability : 1.0);
         double next1 = reach1 * (node->player == 1u ? probability : 1.0);
-        action_values[action] = traverse_train(node->children[action], nodes, world, hands,
+        action_values[action] = traverse_train_scalar(node->children[action], nodes, world, hands,
                                                current, deltas, sums, algorithm,
                                                target_player, accumulate_average,
                                                iteration_weight, next0, next1);
@@ -433,7 +476,7 @@ static double traverse_train(uint32_t node_id, const Node *nodes, const World *w
     return expected;
 }
 
-static void traverse_average(uint32_t node_id, const Node *nodes, const World *world,
+static void traverse_average_scalar(uint32_t node_id, const Node *nodes, const World *world,
                              const double *current, double *sums, double iteration_weight,
                              double reach0, double reach1) {
     const Node *node = &nodes[node_id];
@@ -452,7 +495,7 @@ static void traverse_average(uint32_t node_id, const Node *nodes, const World *w
         double probability = current[base + action];
         double next0 = reach0 * (node->player == 0u ? probability : 1.0);
         double next1 = reach1 * (node->player == 1u ? probability : 1.0);
-        traverse_average(node->children[action], nodes, world, current, sums,
+        traverse_average_scalar(node->children[action], nodes, world, current, sums,
                          iteration_weight, next0, next1);
     }
 }
@@ -486,7 +529,7 @@ static int update_regrets(const Node *nodes, uint32_t node_count, const uint32_t
     return 1;
 }
 
-static int train(Node *nodes, uint32_t node_count, const World *worlds,
+static int train_scalar(Node *nodes, uint32_t node_count, const World *worlds,
                  uint32_t world_count, const uint32_t hands[2], uint32_t slot_count,
                  uint32_t iterations, int algorithm, double *regrets, double *current,
                  double *deltas, double *sums) {
@@ -503,7 +546,7 @@ static int train(Node *nodes, uint32_t node_count, const World *worlds,
             iteration_weight = 1.0;
         }
         if (!isfinite(iteration_weight) || !isfinite(positive_discount) ||
-            !rematch(nodes, node_count, hands, regrets, current)) {
+            !rematch(nodes, node_count, hands, regrets, current, 0)) {
             return 0;
         }
         if (algorithm == 2) {
@@ -512,18 +555,18 @@ static int train(Node *nodes, uint32_t node_count, const World *worlds,
                     memset(deltas, 0, (size_t)slot_count * sizeof(double));
                 }
                 for (uint32_t world_index = 0u; world_index < world_count; ++world_index) {
-                    (void)traverse_train(0u, nodes, &worlds[world_index], hands, current,
+                    (void)traverse_train_scalar(0u, nodes, &worlds[world_index], hands, current,
                                          deltas, sums, algorithm, player, 0,
                                          iteration_weight, 1.0, 1.0);
                 }
                 if (!update_regrets(nodes, node_count, hands, regrets, deltas,
                                     algorithm, player, positive_discount) ||
-                    !rematch(nodes, node_count, hands, regrets, current)) {
+                    !rematch(nodes, node_count, hands, regrets, current, 0)) {
                     return 0;
                 }
             }
             for (uint32_t world_index = 0u; world_index < world_count; ++world_index) {
-                traverse_average(0u, nodes, &worlds[world_index], current, sums,
+                traverse_average_scalar(0u, nodes, &worlds[world_index], current, sums,
                                  iteration_weight, 1.0, 1.0);
             }
         } else {
@@ -531,7 +574,7 @@ static int train(Node *nodes, uint32_t node_count, const World *worlds,
                 memset(deltas, 0, (size_t)slot_count * sizeof(double));
             }
             for (uint32_t world_index = 0u; world_index < world_count; ++world_index) {
-                (void)traverse_train(0u, nodes, &worlds[world_index], hands, current,
+                (void)traverse_train_scalar(0u, nodes, &worlds[world_index], hands, current,
                                      deltas, sums, algorithm, -1, 1,
                                      iteration_weight, 1.0, 1.0);
             }
@@ -544,9 +587,200 @@ static int train(Node *nodes, uint32_t node_count, const World *worlds,
     return 1;
 }
 
+/* The public-batched layout keeps a bounded frame at every tree depth. Each
+ * frame contains returned player values, both reach vectors, up to twelve
+ * actor-action value vectors, and compensation for action-value summation. */
+#define PUBLIC_FRAME_VECTORS 16u
+
+static double *public_frame(double *arena, uint32_t depth, uint32_t hand_sum) {
+    return arena + (size_t)depth * PUBLIC_FRAME_VECTORS * (size_t)hand_sum;
+}
+
+static int traverse_public(uint32_t node_id, uint32_t depth, const Node *nodes,
+                           const World *worlds, uint32_t world_count,
+                           const uint32_t hands[2], const double *current,
+                           double *deltas, double *averages, const double *marginals,
+                           double *arena, uint32_t hand_sum, int target_player,
+                           int average_only, double average_factor,
+                           const double *reach0, const double *reach1,
+                           int compensate_other_sum) {
+    const Node *node = &nodes[node_id];
+    double *frame = public_frame(arena, depth, hand_sum);
+    double *value0 = frame;
+    double *value1 = value0 + hands[0];
+    double *next_reach0 = frame + hand_sum;
+    double *next_reach1 = next_reach0 + hands[0];
+    double *action_values = frame + (size_t)2u * hand_sum;
+    double *other_correction = action_values + (size_t)MAX_ACTIONS * hand_sum;
+    memset(value0, 0, (size_t)hands[0] * sizeof(double));
+    memset(value1, 0, (size_t)hands[1] * sizeof(double));
+    if (average_only && node->kind == 1u) {
+        return 1;
+    }
+    if (node->kind == 1u) {
+        for (uint32_t world_index = 0u; world_index < world_count; ++world_index) {
+            const World *world = &worlds[world_index];
+            uint32_t hand0 = (uint32_t)world->hand0;
+            uint32_t hand1 = (uint32_t)world->hand1;
+            double scale0 = reach1[hand1];
+            double scale1 = reach0[hand0];
+            if (node->constant != 0.0) {
+                value0[hand0] += world->mass * scale0 * node->constant;
+                value1[hand1] -= world->mass * scale1 * node->constant;
+            }
+            if (node->coefficient != 0.0) {
+                value0[hand0] += world->measure * scale0 * node->coefficient;
+                value1[hand1] -= world->measure * scale1 * node->coefficient;
+            }
+        }
+        return 1;
+    }
+
+    uint32_t actor = (uint32_t)node->player;
+    uint32_t opponent = 1u - actor;
+    uint32_t action_count = (uint32_t)node->action_count;
+    uint32_t actor_hands = hands[actor];
+    uint32_t actor_base = node->slot_base;
+    double *actor_values = actor == 0u ? value0 : value1;
+    double *other_values = actor == 0u ? value1 : value0;
+    double *actor_child_values = action_values;
+    memset(other_correction, 0, (size_t)hands[opponent] * sizeof(double));
+    for (uint32_t hand = 0u; hand < actor_hands; ++hand) {
+        uint32_t row = actor_base + hand * action_count;
+        if (average_factor != 0.0) {
+            double own_reach = actor == 0u ? reach0[hand] : reach1[hand];
+            uint32_t marginal_base = actor == 0u ? 0u : hands[0];
+            for (uint32_t action = 0u; action < action_count; ++action) {
+                /* Match Python public_cfr's ordinary ordered += averaging. */
+                averages[row + action] += marginals[marginal_base + hand] * own_reach *
+                                          current[row + action] * average_factor;
+            }
+        }
+    }
+
+    for (uint32_t action = 0u; action < action_count; ++action) {
+        for (uint32_t hand = 0u; hand < hands[0]; ++hand) {
+            double probability = actor == 0u ? current[actor_base + hand * action_count + action] : 1.0;
+            next_reach0[hand] = reach0[hand] * probability;
+        }
+        for (uint32_t hand = 0u; hand < hands[1]; ++hand) {
+            double probability = actor == 1u ? current[actor_base + hand * action_count + action] : 1.0;
+            next_reach1[hand] = reach1[hand] * probability;
+        }
+        if (!traverse_public(node->children[action], depth + 1u, nodes, worlds,
+                             world_count, hands, current, deltas, averages, marginals,
+                             arena, hand_sum, target_player, average_only,
+                             average_factor, next_reach0, next_reach1,
+                             compensate_other_sum)) {
+            return 0;
+        }
+        double *child = public_frame(arena, depth + 1u, hand_sum);
+        const double *child0 = child;
+        const double *child1 = child0 + hands[0];
+        const double *child_actor = actor == 0u ? child0 : child1;
+        const double *child_other = actor == 0u ? child1 : child0;
+        for (uint32_t hand = 0u; hand < actor_hands; ++hand) {
+            actor_child_values[(size_t)action * actor_hands + hand] = child_actor[hand];
+        }
+        if (compensate_other_sum) {
+            for (uint32_t hand = 0u; hand < hands[opponent]; ++hand) {
+                (void)compensated_sum_add(child_other[hand], &other_values[hand],
+                                          &other_correction[hand]);
+            }
+        } else {
+            for (uint32_t hand = 0u; hand < hands[opponent]; ++hand) {
+                other_values[hand] += child_other[hand];
+            }
+        }
+    }
+    if (compensate_other_sum) {
+        for (uint32_t hand = 0u; hand < hands[opponent]; ++hand) {
+            other_values[hand] = compensated_sum_finish(other_values[hand],
+                                                         other_correction[hand]);
+        }
+    }
+    if (average_only) {
+        return 1;
+    }
+
+    for (uint32_t hand = 0u; hand < actor_hands; ++hand) {
+        uint32_t row = actor_base + hand * action_count;
+        double expected = 0.0;
+        double correction = 0.0;
+        for (uint32_t action = 0u; action < action_count; ++action) {
+            (void)compensated_sum_add(current[row + action] *
+                                      actor_child_values[(size_t)action * actor_hands + hand],
+                                      &expected, &correction);
+        }
+        actor_values[hand] = compensated_sum_finish(expected, correction);
+        if (target_player < 0 || target_player == (int)actor) {
+            for (uint32_t action = 0u; action < action_count; ++action) {
+                deltas[row + action] +=
+                    actor_child_values[(size_t)action * actor_hands + hand] - actor_values[hand];
+            }
+        }
+    }
+    return 1;
+}
+
+static int train_public(Node *nodes, uint32_t node_count, const World *worlds,
+                        uint32_t world_count, const uint32_t hands[2],
+                        uint32_t slot_count, uint32_t iterations, int algorithm,
+                        double *regrets, double *current, double *deltas,
+                        double *sums, double *arena, double *marginals) {
+    uint32_t hand_sum = hands[0] + hands[1];
+    memset(marginals, 0, (size_t)hand_sum * sizeof(double));
+    for (uint32_t index = 0u; index < world_count; ++index) {
+        const World *world = &worlds[index];
+        marginals[(size_t)world->hand0] += world->mass;
+        marginals[(size_t)hands[0] + world->hand1] += world->mass;
+    }
+    double reach0[MAX_HANDS];
+    double reach1[MAX_HANDS];
+    for (uint32_t hand = 0u; hand < hands[0]; ++hand) reach0[hand] = 1.0;
+    for (uint32_t hand = 0u; hand < hands[1]; ++hand) reach1[hand] = 1.0;
+    for (uint32_t iteration = 1u; iteration <= iterations; ++iteration) {
+        double average_factor = algorithm == 1 ? (double)iteration * (double)iteration :
+                                (algorithm == 2 ? (double)iteration : 1.0);
+        double positive_discount = 1.0;
+        if (algorithm == 1) {
+            double t15 = pow((double)iteration, 1.5);
+            positive_discount = t15 / (t15 + 1.0);
+        }
+        if (!isfinite(average_factor) || !isfinite(positive_discount) ||
+            !rematch(nodes, node_count, hands, regrets, current, 1)) return 0;
+        if (algorithm == 2) {
+            for (int player = 0; player <= 1; ++player) {
+                if (slot_count != 0u) memset(deltas, 0, (size_t)slot_count * sizeof(double));
+                if (!traverse_public(0u, 0u, nodes, worlds, world_count, hands,
+                                     current, deltas, sums, marginals, arena, hand_sum,
+                                     player, 0, 0.0, reach0, reach1, 0) ||
+                    !update_regrets(nodes, node_count, hands, regrets, deltas,
+                                   algorithm, player, positive_discount) ||
+                    !rematch(nodes, node_count, hands, regrets, current, 1)) return 0;
+            }
+            if (slot_count != 0u) memset(deltas, 0, (size_t)slot_count * sizeof(double));
+            if (!traverse_public(0u, 0u, nodes, worlds, world_count, hands,
+                                 current, deltas, sums, marginals, arena, hand_sum,
+                                 -1, 1, average_factor, reach0, reach1, 0)) return 0;
+        } else {
+            if (slot_count != 0u) memset(deltas, 0, (size_t)slot_count * sizeof(double));
+            if (!traverse_public(0u, 0u, nodes, worlds, world_count, hands,
+                                 current, deltas, sums, marginals, arena, hand_sum,
+                                 -1, 0, average_factor, reach0, reach1, 1) ||
+                !update_regrets(nodes, node_count, hands, regrets, deltas,
+                               algorithm, -1, positive_discount)) return 0;
+        }
+        for (uint32_t slot = 0u; slot < slot_count; ++slot) {
+            if (!isfinite(regrets[slot]) || !isfinite(sums[slot])) return 0;
+        }
+    }
+    return 1;
+}
+
 static int normalize_and_validate(const Node *nodes, uint32_t node_count,
                                   const uint32_t hands[2], const double *sums,
-                                  double *output, uint32_t slot_count) {
+                                  double *output, uint32_t slot_count, int compensated) {
     for (uint32_t index = 0u; index < node_count; ++index) {
         const Node *node = &nodes[index];
         if (node->kind != 0u) {
@@ -556,13 +790,19 @@ static int normalize_and_validate(const Node *nodes, uint32_t node_count,
         for (uint32_t hand = 0u; hand < hands[node->player]; ++hand) {
             uint32_t base = node->slot_base + hand * action_count;
             double total = 0.0;
+            double total_correction = 0.0;
             for (uint32_t action = 0u; action < action_count; ++action) {
                 double value = sums[base + action];
                 if (!isfinite(value) || value < 0.0) {
                     return 0;
                 }
-                total += value;
+                if (compensated) {
+                    (void)compensated_sum_add(value, &total, &total_correction);
+                } else {
+                    total += value;
+                }
             }
+            if (compensated) total = compensated_sum_finish(total, total_correction);
             if (!isfinite(total)) {
                 return 0;
             }
@@ -577,13 +817,19 @@ static int normalize_and_validate(const Node *nodes, uint32_t node_count,
                 }
             }
             double check = 0.0;
+            double check_correction = 0.0;
             for (uint32_t action = 0u; action < action_count; ++action) {
                 double probability = output[base + action];
                 if (!isfinite(probability) || probability < 0.0 || probability > 1.0) {
                     return 0;
                 }
-                check += probability;
+                if (compensated) {
+                    (void)compensated_sum_add(probability, &check, &check_correction);
+                } else {
+                    check += probability;
+                }
             }
+            if (compensated) check = compensated_sum_finish(check, check_correction);
             if (!isfinite(check) || fabs(check - 1.0) > 1e-9) {
                 return 0;
             }
@@ -620,7 +866,7 @@ int main(void) {
     size_t input_length = 0u;
     Parser parser = {0u};
     Token token;
-    uint32_t algorithm_u32, iterations, hand0_count, hand1_count;
+    uint32_t mode_u32, algorithm_u32, iterations, hand0_count, hand1_count;
     uint32_t node_count, world_count, slot_count;
     uint32_t hands[2];
     Node *nodes = NULL;
@@ -628,6 +874,7 @@ int main(void) {
     uint8_t *indegree = NULL;
     uint32_t *stack = NULL;
     double *regrets = NULL, *current = NULL, *deltas = NULL, *sums = NULL;
+    double *arena = NULL, *marginals = NULL;
     uint64_t slot_total = 0u;
     uint8_t active0[MAX_HANDS] = {0u};
     uint8_t active1[MAX_HANDS] = {0u};
@@ -638,6 +885,7 @@ int main(void) {
         return fail("input must be ASCII, NUL-free, complete and at most 8 MiB");
     }
     if (!next_field(&parser, input_length, &token) || !token_equals(token, MODEL_HEADER) ||
+        !read_u32(&parser, input_length, 1u, &mode_u32) ||
         !read_u32(&parser, input_length, 2u, &algorithm_u32) ||
         !read_u32(&parser, input_length, MAX_ITERATIONS, &iterations) || iterations == 0u ||
         !read_u32(&parser, input_length, MAX_HANDS, &hand0_count) || hand0_count == 0u ||
@@ -650,10 +898,12 @@ int main(void) {
     }
     hands[0] = hand0_count;
     hands[1] = hand1_count;
-    if (!memory_fits(node_count, world_count, slot_count)) {
+    if (!memory_fits(mode_u32, node_count, world_count, slot_count,
+                     hand0_count, hand1_count)) {
         return fail("bounded memory estimate exceeds 64 MiB");
     }
-    if (!work_fits(iterations, algorithm_u32, node_count, world_count, slot_count, input_length)) {
+    if (!work_fits(mode_u32, iterations, algorithm_u32, node_count, world_count,
+                   slot_count, hand0_count, hand1_count, input_length)) {
         return fail("full requested training exceeds the 500,000,000 modeled-work limit");
     }
 
@@ -667,8 +917,15 @@ int main(void) {
         deltas = (double *)malloc((size_t)slot_count * sizeof(double));
         sums = (double *)calloc((size_t)slot_count, sizeof(double));
     }
+    if (mode_u32 == 1u) {
+        uint32_t hand_sum = hand0_count + hand1_count;
+        size_t arena_count = ((size_t)MAX_DEPTH + 1u) * PUBLIC_FRAME_VECTORS * hand_sum;
+        arena = (double *)calloc(arena_count, sizeof(double));
+        marginals = (double *)calloc((size_t)hand_sum, sizeof(double));
+    }
     if (nodes == NULL || worlds == NULL || indegree == NULL || stack == NULL ||
-        (slot_count != 0u && (regrets == NULL || current == NULL || deltas == NULL || sums == NULL))) {
+        (slot_count != 0u && (regrets == NULL || current == NULL || deltas == NULL || sums == NULL)) ||
+        (mode_u32 == 1u && (arena == NULL || marginals == NULL))) {
         status = fail("bounded allocation failed");
         goto cleanup;
     }
@@ -750,9 +1007,11 @@ int main(void) {
         if (!read_u32(&parser, input_length, (uint64_t)hand0_count - 1u, &hand0) ||
             !read_u32(&parser, input_length, (uint64_t)hand1_count - 1u, &hand1) ||
             !read_hex_value(&parser, input_length, &world->mass) ||
-            !read_hex_value(&parser, input_length, &world->sign) ||
-            world->mass <= 0.0 || world->mass > 1.0 || world->sign < -1.0 || world->sign > 1.0) {
-            status = fail("invalid world hand, positive mass, or showdown sign");
+            !read_hex_value(&parser, input_length, &world->measure) ||
+            world->mass <= 0.0 || world->mass > 1.0 ||
+            (mode_u32 == 0u && (world->measure < -1.0 || world->measure > 1.0)) ||
+            (mode_u32 == 1u && fabs(world->measure) > world->mass)) {
+            status = fail("invalid world hand, positive mass, or mode-specific terminal measure");
             goto cleanup;
         }
         world->hand0 = (uint8_t)hand0;
@@ -786,12 +1045,18 @@ int main(void) {
         goto cleanup;
     }
 
-    if (!train(nodes, node_count, worlds, world_count, hands, slot_count,
-               iterations, (int)algorithm_u32, regrets, current, deltas, sums)) {
+    int trained = mode_u32 == 0u ?
+        train_scalar(nodes, node_count, worlds, world_count, hands, slot_count,
+                     iterations, (int)algorithm_u32, regrets, current, deltas, sums) :
+        train_public(nodes, node_count, worlds, world_count, hands, slot_count,
+                     iterations, (int)algorithm_u32, regrets, current, deltas,
+                     sums, arena, marginals);
+    if (!trained) {
         status = fail("training produced non-finite strategy or regret values");
         goto cleanup;
     }
-    if (!normalize_and_validate(nodes, node_count, hands, sums, current, slot_count)) {
+    if (!normalize_and_validate(nodes, node_count, hands, sums, current, slot_count,
+                                mode_u32 == 1u)) {
         status = fail("average policy is not finite and normalized");
         goto cleanup;
     }
@@ -802,6 +1067,8 @@ int main(void) {
     status = 0;
 
 cleanup:
+    free(marginals);
+    free(arena);
     free(sums);
     free(deltas);
     free(current);

@@ -60,6 +60,21 @@ def _payoff(pot):
     return value
 
 
+def _vector_fixture():
+    """Public vector input plus categorical worlds for the Python reference."""
+    root, _, infos, pot = _trees()[0]
+    # Pair (7, 20) deliberately has positive mass with zero signed mass, while
+    # player-1 hand 20 faces two different hidden opponent hands.
+    vector_worlds = ((3, 20, 0.25, 0.15),
+                     (7, 20, 0.25, 0.0),
+                     (7, 41, 0.50, -0.20))
+    # Expand each pair into sign categories, preserving each pair's M and S.
+    reference_worlds = ((3, 20, 0.15, 1.0), (3, 20, 0.10, 0.0),
+                        (7, 20, 0.25, 0.0),
+                        (7, 41, 0.20, -1.0), (7, 41, 0.30, 0.0))
+    return root, vector_worlds, reference_worlds, infos, pot
+
+
 def _python_train(root, worlds, infos, iterations, algorithm, pot):
     node_key = lambda node, world: (node.player, world[node.player], node.history)
     terminal_value = _payoff(pot)
@@ -213,6 +228,83 @@ class NativeFixedStreetAdapterTests(unittest.TestCase):
                         self.assertTrue(metadata["build"]["source_lf_sha256"])
                         self.assertTrue(metadata["input_sha256"])
                         self.assertTrue(metadata["output_sha256"])
+
+    @unittest.skipUnless(NATIVE_AVAILABLE, "Set OPENPOKER_NATIVE_TRAIN_BUILD_DIR to an explicit source-built trainer")
+    def test_public_batched_reduction_matches_hidden_hand_reference_at_checkpoints(self):
+        from pokerlab.public_cfr import train_public_batched
+
+        root, vector_worlds, reference_worlds, infos, pot = _vector_fixture()
+
+        class NoChance:
+            pass
+
+        checkpoints = (1, 2, 3, 10, 100, 1000)
+        for algorithm in ("vanilla", "dcfr", "cfrplus"):
+            snapshots = {}
+
+            def collect(iteration, policy):
+                if iteration in checkpoints:
+                    snapshots[iteration] = policy
+                return False
+
+            train_public_batched(
+                root, reference_worlds, infos, max(checkpoints), algorithm,
+                pot=pot, chance_type=NoChance, checkpoint_interval=1,
+                checkpoint_callback=collect)
+            self.assertEqual(set(snapshots), set(checkpoints))
+            for iterations in checkpoints:
+                with self.subTest(algorithm=algorithm, iterations=iterations):
+                    actual, metadata = train_native_fixed_street(
+                        root, vector_worlds, infos, iterations, algorithm,
+                        pot=pot, build_directory=BUILD_DIRECTORY,
+                        reduction="public-batched")
+                    expected = snapshots[iterations]
+                    self.assertEqual(set(actual), set(expected))
+                    self.assertEqual(metadata["reduction"], "public-batched")
+                    self.assertEqual(metadata["native_world_rows"], len(vector_worlds))
+                    self.assertEqual(metadata["admission"]["active_hand_counts"], [2, 2])
+                    for key in infos:
+                        self.assertEqual(len(actual[key]), infos[key])
+                        self.assertTrue(all(math.isfinite(p) and 0 <= p <= 1 for p in actual[key]))
+                        self.assertAlmostEqual(sum(actual[key]), 1.0, delta=1e-10)
+                        for got, want in zip(actual[key], expected[key]):
+                            self.assertAlmostEqual(got, want, delta=1e-10)
+                    direct_native = _independent_metrics(root, reference_worlds, actual, pot)
+                    direct_reference = _independent_metrics(root, reference_worlds, expected, pot)
+                    for got, want in zip(direct_native, direct_reference):
+                        self.assertAlmostEqual(got, want, delta=1e-10)
+
+    def test_public_batched_signed_mass_and_reduction_validation_precede_backend(self):
+        from pokerlab.native_fixed_street import admit_native_shape
+
+        admitted = admit_native_shape(5, 3, 8, 100, "vanilla",
+                                      reduction="public-batched", hand_counts=(2, 2))
+        self.assertEqual(admitted["reduction"], "public-batched")
+        self.assertEqual(admitted["active_hand_counts"], [2, 2])
+        with self.assertRaises(ValueError):
+            admit_native_shape(5, 3, 8, 100, "vanilla",
+                               reduction="public-batched", hand_counts=(True, 2))
+        with self.assertRaises(ValueError):
+            admit_native_shape(5, 3, 8, 100, "vanilla",
+                               reduction="public-batched", hand_counts=[2, 2])
+
+        root, vector_worlds, _, infos, pot = _vector_fixture()
+        invalid_worlds = (
+            ((3, 20, 0.25, 0.250001), (7, 20, 0.25, 0.0), (7, 41, 0.50, -0.20)),
+            ((3, 20, 0.25, float("nan")), (7, 20, 0.25, 0.0), (7, 41, 0.50, -0.20)),
+        )
+        with patch("pokerlab.native_fixed_street._backend",
+                   side_effect=AssertionError("invalid vector input reached native lookup")) as backend:
+            with self.assertRaises(ValueError):
+                train_native_fixed_street(root, vector_worlds, infos, 10, "vanilla",
+                                          pot=pot, build_directory=BUILD_DIRECTORY,
+                                          reduction="unsupported")
+            for worlds in invalid_worlds:
+                with self.subTest(worlds=worlds), self.assertRaises((ValueError, TypeError)):
+                    train_native_fixed_street(root, worlds, infos, 10, "vanilla",
+                                              pot=pot, build_directory=BUILD_DIRECTORY,
+                                              reduction="public-batched")
+        backend.assert_not_called()
 
 
 class PreparedSolverNativeIntegrationTests(unittest.TestCase):
@@ -376,7 +468,10 @@ class NativeFixedStreetClientProtocolTests(unittest.TestCase):
     """Exercise the Python response boundary without executing native code."""
 
     @staticmethod
-    def _response(tokens, *, header="OPENPOKER_FIXED_TRAIN_V1 POLICY 8"):
+    def _response(tokens, *, header=None):
+        if header is None:
+            from pokerlab import native_fixed_street
+            header = f"{native_fixed_street.PROTOCOL} POLICY 8"
         return (header + "\n" + "\n".join(tokens) + "\n").encode("ascii")
 
     def _invoke_stubbed(self, payload, *, backend_side_effect=None,
@@ -410,7 +505,7 @@ class NativeFixedStreetClientProtocolTests(unittest.TestCase):
         half = "3fe0000000000000"
         cases = {
             "wrong header": self._response([half] * 8, header="WRONG POLICY 8"),
-            "wrong slot census": self._response([half] * 8, header="OPENPOKER_FIXED_TRAIN_V1 POLICY 7"),
+            "wrong slot census": self._response([half] * 8, header="OPENPOKER_FIXED_TRAIN_V2 POLICY 7"),
             "trailing token": self._response([half] * 8 + [half]),
             "nonfinite probability": self._response(["7ff0000000000000"] + [half] * 7),
             "negative probability": self._response(["bfe0000000000000"] + [half] * 7),
