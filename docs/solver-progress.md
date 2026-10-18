@@ -1160,3 +1160,11 @@ NashConv in a four-world conditioned game, with independent payoff/flow and
 legal-response reconstruction. Literal negative controls detect future-card
 peeking and cumulative-wager mistakes. The equilibrium folds on the turn;
 river policies remain fully certified off-path. See [scope and evidence](turn-sequence-equilibrium.md).
+
+## Weighted turn witness with on-path river play
+
+A separate four-world conditioned game has two independently validated exact
+policies at value 30 and zero NashConv, with river decisions reached with
+probability 1. A hand-written policy was certified before the LP candidate;
+the separate verifier checks all payoff/flow data and both legal responses.
+See [fixed game, proof, reach and limits](turn-weighted-sequence-equilibrium.md).
