@@ -1367,3 +1367,11 @@ It preserves old APIs and all full-request guards, adds bounded dense admission,
 and keeps all state local. Eleven focused tests cover exact zero-discard parity,
 independent positive-tail flows and legal responses, blockers, work limits and
 Kuhn quality. Fixed full-deck 1500-sweep quality evidence is a separate experiment.
+
+The [fixed direct-tail experiment](direct-turn-tail-experiment.md) freezes a
+single full-deck T=1500,D=1000 call and saves the raw profile with independent
+numeric, full-physical exact and checked chance-class audits. Quality outcomes
+are recorded separately from validity. The raw trained policy now has exact
+NashConv zero and OOP value -400/21 in this fixed 176-world game, with no
+probability cleanup. Both independent exact auditors agree on all eight metrics;
+older policies retain their original bytes and results.

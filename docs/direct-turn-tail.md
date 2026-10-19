@@ -84,3 +84,6 @@ The eleven integrated tests passed normal Python (3.431 seconds) and optimized
 Python (3.178 seconds). Four older saved-proof regressions also passed with
 the new module present (56.579 seconds), reconstructing the original numeric
 tails, exact tails, clean witnesses and full-physical report without training.
+
+The [full-deck direct-tail experiment](direct-turn-tail-experiment.md) separately
+records the raw T=1500,D=1000 profile and its independent exact quality outcome.
