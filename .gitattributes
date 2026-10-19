@@ -6,3 +6,6 @@
 /benchmarks/results/turn-blocker-sequence-equilibrium-v1.json -text
 /benchmarks/results/turn-blocker-cfrplus-profiles-v1.json -text
 /benchmarks/results/turn-blocker-cfrplus-policies-v1/*.json -text
+
+# Preserve the full mixed physical range observation byte for byte.
+/benchmarks/results/preflop-mixed-physical-range-v1.json -text

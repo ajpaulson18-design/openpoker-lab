@@ -55,5 +55,32 @@ No memory, general performance or exact equilibrium claim follows.
 Nine focused [boundary/reference checks](../tests/test_preflop_mixed_range_reference.py)
 pass locally, including actual native/Python ten-iteration replay/parity,
 physical priors, source tampering, constructive bounds and dirty-source guards.
-Formal frozen measurements and GitHub publication have not yet run at this
-source revision; this section will be updated from retained evidence.
+The [formal raw report](../benchmarks/results/preflop-mixed-physical-range-v1.json)
+passes at clean source `1af4c5610bc197f028e19e151b32f644ed95c363` on Python
+3.12.14 / Windows with the recorded MSVC V2 native trainer. All ten saved
+policies and five paired comparisons pass fresh independent replay; source
+and build identities remain unchanged. The final repeated payloads are
+deterministic in each backend. Ranking/enumeration guards remain zero.
+
+| CFR+ iterations | Independent Python NashConv, chips | SB value BR interval, chips | Quality target |
+| --- | ---: | --- | --- |
+| 10 | 0.137131091172 | [0.708429678754, 0.845560769927] | Miss, retained |
+| 100 | 0.004577156103 | [0.810366038058, 0.814943194161] | Pass |
+| 400 | 0.000974381175 | [0.814263776213, 0.815238157388] | Pass |
+
+Displayed interval endpoints are rounded; checks use exact rational values.
+Its width is exact NashConv, not an error from a known mixed-game value. Both
+backends pass the same quality conclusion. Final median complete calls are
+6.633940 / 0.117617 seconds Python/native on this fixture. Maximum retained
+scalar/action-probability differences are below `5e-16` / `1.2e-15`; all gates
+remain unchanged. No RSS/allocation or general speedup measurement is claimed.
+
+Canonical report SHA-256:
+`907bccab88fff5e58d41c404ecd20aa4fcd5a5e9dd70fe2cb10b571244210930`.
+Raw report SHA-256:
+`b9fa38e916d63fe1fadcc5fe8d466bde57ca56bde0581d867f9a75fc0e1f47a1`.
+A [publication regression](../tests/test_preflop_mixed_range_publication.py)
+reconstructs all assessments and rejects re-signed algorithm, count and physical
+census tampering. A bounded Luna read-only audit found no blocking math or
+source-provenance issue; its error-report-status finding was fixed before the
+formal measurement. GitHub CI and merge status will be verified at publication.
