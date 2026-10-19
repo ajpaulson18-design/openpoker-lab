@@ -41,8 +41,9 @@ strict.
 
 ## Reproduction
 
-The six integrated focused tests passed in normal Python (149.080 seconds)
-and optimized Python (148.936 seconds). They include complete synthetic
+The seven integrated focused tests passed in normal Python (166.621 seconds)
+and optimized Python (167.739 seconds). They include acceptance of all six real
+input profiles with their distinct backend version labels, complete synthetic
 six-profile publication/replay without training, explicit exact rejection,
 numeric diagnostic tolerance versus strict certificate/ledger checks,
 late accepted-input/source/HEAD drift, and rollback preserving unrelated files.

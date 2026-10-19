@@ -55,7 +55,8 @@ class TurnTailExactAuditTests(unittest.TestCase):
                 if profile == "full":
                     payload.update({
                         "iterations": audit.TOTAL,
-                        "solver_version": "configured-postflop-v1",
+                        "solver_version": ("configured-postflop-v1" if backend == "materialized"
+                                           else "matrix-free-turn-v1"),
                         "strategy_schema": "postflop-strategy-v1",
                         "average_schedule": "linear-post-sweep-own-reach",
                     })
@@ -149,6 +150,16 @@ class TurnTailExactAuditTests(unittest.TestCase):
             (root / name).unlink(missing_ok=True)
         (root / "unrelated.txt").unlink(missing_ok=True)
         root.rmdir()
+
+    def test_actual_six_profile_inputs_accept_distinct_backend_versions(self):
+        inputs = audit._load_inputs(audit.NUMERIC_REPORT, audit.NUMERIC_POLICIES,
+                                    audit.NUMERIC_REPORT_SHA256)
+        self.assertEqual(len(inputs['policies']), 6)
+        for backend, version in (('materialized', 'configured-postflop-v1'),
+                                 ('matrix-free', 'matrix-free-turn-v1')):
+            full = json.loads(inputs['policies'][backend, 'full'])
+            self.assertEqual(full['solver_version'], version)
+        audit._guard_inputs(inputs)
 
     def test_six_fixed_profiles_generate_and_verify_without_training(self):
         root = self._scratch()

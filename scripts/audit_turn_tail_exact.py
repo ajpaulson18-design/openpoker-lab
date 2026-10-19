@@ -187,7 +187,10 @@ def _validate_profile_row(row, policy, backend, profile):
     if profile == "full":
         _require(policy.get("iterations") == TOTAL and
                  policy.get("algorithm") == "cfrplus" and
-                 policy.get("solver_version") == "configured-postflop-v1" and
+                 policy.get("solver_version") == {
+                     "materialized": "configured-postflop-v1",
+                     "matrix-free": "matrix-free-turn-v1",
+                 }[backend] and
                  policy.get("strategy_schema") == "postflop-strategy-v1" and
                  policy.get("average_schedule") == "linear-post-sweep-own-reach" and
                  "research_profile" not in policy,
