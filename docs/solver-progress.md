@@ -1,5 +1,19 @@
 # Solver progress record
 
+## Prepared full-board preflop coverage extends beyond four private pairs
+
+A separate bounded suit-covered count pool and explicit solve entry now reuse
+trusted ordinary source counts across more compatible private pairs. The
+original four-pair enumeration and solver APIs retain their limits and payloads;
+the new entry shares their betting/training body and full-request admission.
+
+A frozen six-pair weighted physical fixture with five BB hands, limps and actual
+reraises passes independent own-hand best-response replay in Python/native at
+about 0.000000189-chip NashConv after 3,000 CFR+ iterations. Three pinned count
+rows cover 10,273,824 represented boards through verified joint suit maps with
+zero new ranking. The 10-iteration miss remains visible. Synthetic 36-pair tests
+are separately labeled. See [limits, raw evidence and provenance](preflop-covered-counts.md).
+
 ## Python/native preflop trainers checked against the proved weighted value
 
 The same weighted one-raise full-board checkdown game now has a frozen

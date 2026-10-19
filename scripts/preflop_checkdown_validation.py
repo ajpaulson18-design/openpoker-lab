@@ -135,7 +135,7 @@ def _build(parts):
     finally:
         build=None; terminal=None; reserve=None
 
-def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
+def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10,covered_counts=False):
     """Validate serialized policy against trusted physical W/T/L rows.
 
     The input ``counts`` must come from an independent physical-board census;
@@ -143,6 +143,16 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
     """
     if type(result) is not dict: raise ValueError("unexpected full-checkdown result schema")
     result_keys=set(result)
+    if type(covered_counts) is not bool:
+        raise ValueError('covered_counts must be an explicit boolean')
+    if covered_counts:
+        fields={'equity_coverage','count_provenance'}
+        if (not fields <= result_keys or result['equity_coverage'] != 'joint-suit-covered-counts-v1'
+                or type(result['count_provenance']) is not list
+                or not 1 <= len(result['count_provenance']) <= 128):
+            raise ValueError('unsupported covered-counts result metadata')
+        # Provenance never supplies counts, priors or legal actions to replay.
+        result_keys -= fields
     native_fields={"training_backend","native_training"}
     if result_keys & native_fields:
         if (result_keys & native_fields != native_fields
@@ -171,13 +181,15 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
     if _config(result["config"])[0]!=canon or result["config"]!=canon: raise ValueError("serialized config differs from requested config")
     ranges=(expand_range(sb_range),expand_range(bb_range)); hands=tuple(tuple(sorted(r)) for r in ranges)
     if len(hands[0])*len(hands[1])>4096: raise ValueError("independent private-candidate limit exceeded")
+    if covered_counts and any(len(row)>128 for row in hands):
+        raise ValueError('independent covered private-hand limit exceeded')
     candidate=[]
     for h0 in hands[0]:
         for h1 in hands[1]:
             w=Fraction.from_float(float(ranges[0][h0]))*Fraction.from_float(float(ranges[1][h1]))
             if w and not (set(h0)&set(h1)):
                 candidate.append((h0,h1,w))
-                if len(candidate)>4: raise ValueError("independent compatible-pair limit exceeded")
+                if len(candidate)>(128 if covered_counts else 4): raise ValueError("independent compatible-pair limit exceeded")
     norm=sum((x[2] for x in candidate),Fraction())
     if not candidate or norm<=0: raise ValueError("no compatible private hand pairs")
     priors={(a,b):w/norm for a,b,w in candidate}
@@ -197,6 +209,38 @@ def replay(result,sb_range,bb_range,config,counts,*,tolerance=1e-10):
         # trusted source row's optional pair_probability metadata.
         census[key]=(w,t,l)
     if set(census)!=set(priors): raise ValueError("trusted census misses a compatible pair")
+    if covered_counts:
+        records = result['count_provenance']
+        fields = {'target_sb_hand','target_bb_hand','source_identity_sha256',
+                  'source_sb_hand','source_bb_hand','suit_permutation'}
+        seen_provenance = set()
+        def explicit_hand(text):
+            if (type(text) is not str or len(text) != 4
+                    or any(text[k] not in '23456789TJQKA' or text[k+1] not in 'cdhs'
+                           for k in (0,2)) or text[:2] == text[2:]):
+                raise ValueError('invalid covered provenance hand')
+            return tuple(sorted((text[:2],text[2:])))
+        for row in records:
+            if type(row) is not dict or set(row) != fields:
+                raise ValueError('invalid covered provenance fields')
+            target=(row['target_sb_hand'],row['target_bb_hand'])
+            if target not in labels or target in seen_provenance:
+                raise ValueError('invalid or duplicate covered target provenance')
+            digest=row['source_identity_sha256']; mapping=row['suit_permutation']
+            if (type(digest) is not str or len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest)
+                    or type(mapping) is not dict or set(mapping)!=set('cdhs')
+                    or any(type(value) is not str for value in mapping.values())
+                    or set(mapping.values())!=set('cdhs')):
+                raise ValueError('invalid covered source identity or joint suit map')
+            source=(explicit_hand(row['source_sb_hand']),explicit_hand(row['source_bb_hand']))
+            if set(source[0]) & set(source[1]):
+                raise ValueError('covered source private hands collide')
+            mapped=tuple(tuple(sorted(card[0]+mapping[card[1]] for card in hand)) for hand in source)
+            if mapped != labels[target]:
+                raise ValueError('covered suit map does not preserve ordered pair endpoints')
+            seen_provenance.add(target)
+        if seen_provenance != set(labels):
+            raise ValueError('covered provenance misses a compatible pair')
     parts=(canon,sb,bb,stacks,sizes,mr,ia); root,tree=_build(parts)
     if type(result["tree"]) is not dict or result["tree"]!=tree or any(type(v) is not int for v in result['tree'].values()): raise ValueError("public tree counts mismatch")
     expected_completed=result['iterations'] if tree['decision_nodes'] else 0
