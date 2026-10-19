@@ -92,8 +92,41 @@ bounds.
 The next experiment is fixed before training: iteration-major 100, 1,000, 1,500,
 materialized then matrix-free, CFR+, full-deck chance, no stopping target.
 Keep all six complete policies and every miss of 0.001-chip NashConv. This
-reference contains zero training calls and does not claim that experiment has
-completed or met its quality target.
+reference itself contains zero training calls. The separate completed experiment
+below retains the original grid and every quality miss.
+
+## Completed fixed-budget experiment
+
+The [immutable numeric report](../benchmarks/results/full-deck-raised-turn-benchmark-v1.json)
+retains all six actual complete CFR+ calls and their full policies. Generation
+ran from committed revision `6541f3da4bc1d71954febb4c0ad70d4a91e2f617`;
+all 71 source pins match that Git revision. Report SHA256 is
+`4381b2fbb7008572ff0993d005ee6d2d8dd00c6f9a38621d65b9621b469a9669`.
+Each saved policy contains all 2,404 information rows and independently replays
+all 176 physical worlds, four compatible pairs and 1,254 public decisions.
+
+| Iterations | Materialized NashConv | Matrix-free NashConv | Target met |
+| ---: | ---: | ---: | --- |
+| 100 | 0.36976882289238944 | 0.3697688228924001 | Neither |
+| 1000 | 0.0037309341770424 | 0.0037309341770424 | Neither |
+| 1500 | 0.001658745330324507 | 0.001658745330324507 | Neither |
+
+All six miss the unchanged 0.001-chip reporting target. No stopping target was
+configured; every call completed its full requested budget. Independent replay
+checks all eight profile/response metrics before and after serialization; maximum
+production/replay disagreement is 1.4210854715202004e-14 chips. The source and
+HEAD guards stayed fixed through training, conversion and final saved replay.
+Staged and published report verification both passed. A separate Sol review
+imports neither this candidate runner nor a production trainer, checks generation
+pins against Git, replays every policy and retains every miss.
+
+Complete call plus canonical JSON took 7.962 / 34.356 / 89.668 / 269.588 /
+137.473 / 454.208 seconds in grid order on this shared host. Independent initial
+and saved replay took 1.725–2.579 seconds per case. These are uncontrolled single
+observations, with no RSS or general speed/convergence claim. The generic exact
+auditor also rejects the saved materialized 100-iteration policy at its unchanged
+100,000-work cap. Numeric replay is not an arbitrary-policy exact certificate;
+the separate exact check/call anchors do not certify trained equilibria.
 
 ## Reproduction and verification
 
@@ -111,3 +144,12 @@ and repeat with `python -O`. The tests cover rank-free census, original work
 boundaries, independent physics/tree agreement, carried contributions, legal
 information, changed source/data/HEAD and byte admission. Production defaults,
 previous proofs, preflop/flop, Coach and frontend remain unchanged.
+
+`python -m scripts.benchmark_full_deck_raised_turn --verify` checks the immutable
+numeric report and all six saved policies without training. `--generate` returns
+saved verification when the accepted report already exists and rejects a partial
+immutable policy set before training. Each policy has a 2,000,000-byte admission
+cap and the report a 1,000,000-byte cap, both checked before reads. Sources,
+current HEAD, report and policy bytes must remain stable across verification.
+The standalone `tests.test_full_deck_raised_saved_policy` replays the committed
+experiment with production solver/trainer and exact-auditor entry points disabled.

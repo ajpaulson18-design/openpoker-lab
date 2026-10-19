@@ -13,3 +13,5 @@
 /benchmarks/results/turn-suit-equivariance-v1.json -text
 /benchmarks/results/turn-suit-equivariance-policies-v1/*.json -text
 /benchmarks/results/full-deck-raised-turn-reference-v1.json -text
+/benchmarks/results/full-deck-raised-turn-benchmark-v1.json -text
+/benchmarks/results/full-deck-raised-turn-policies-v1/*.json -text
