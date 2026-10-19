@@ -190,3 +190,10 @@ and unchanged build identities. Compilation or consistent category totals alone
 do not certify new counts. Keep binary data/builds outside Git and preserve
 all failure observations. No production rank/board limit or backend changes
 follow from this reference.
+
+The [physical AA/KK range experiment](docs/preflop-aa-kk-physical-range.md)
+retains all 36 private pairs and uses only the independently checked three-class
+count basis. Verify the constructive +1-chip lower/upper bounds from independent
+numeric rules before comparing trained policies. Preserve strict rational value
+containment, legal own-hand responses and full-request admission. The fixed
+AA/KK result does not establish mixed-range or later-street equilibrium accuracy.

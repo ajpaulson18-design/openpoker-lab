@@ -1,5 +1,19 @@
 # Solver progress record
 
+## Full physical AA-versus-KK range reaches a checked exact anchor
+
+All 36 physical AA/KK private pairs and 61,642,944 represented boards now have
+an independently verified constructive +1-chip value in the finite preflop
+checkdown game. Source counts come from all three exhaustively checked relative
+suit classes; no new ranking occurs in the solve. The hidden own-hand model
+retains six hands per player, limps and finite reraises under existing budgets.
+
+All ten saved Python/native CFR+ profiles pass strict rational exact-value
+containment and independent own-hand best-response replay. At 500 iterations
+NashConv is about 0.000000608 chips and value error about 0.0000000146 chips.
+This validates a full physical rank-pair range, not arbitrary starting ranges
+or later-street play. See [proof, raw observations and limits](preflop-aa-kk-physical-range.md).
+
 ## Physical preflop source basis independently expanded
 
 A separate project-owned C best-five reference agrees with the independent
