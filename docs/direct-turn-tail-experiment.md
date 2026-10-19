@@ -55,5 +55,45 @@ to reconstruct the saved result without training.
 
 ## Recorded result
 
-Pending the frozen full run. No quality outcome is inferred from the small
-adapter tests or the preceding subtraction-based experiment.
+The completed run at generation commit
+`c64dc02694388c9ff0b1101f4b4cae57802af3e9` saved the unmodified adapter result.
+Both exact auditors agree on all eight metrics:
+
+| Metric | Exact value |
+| --- | ---: |
+| OOP / IP profile value | -400/21 / 400/21 |
+| OOP / IP best-response value | -400/21 / 400/21 |
+| OOP / IP response gain | 0 / 0 |
+| NashConv / exploitability | 0 / 0 |
+
+The exact 1/1000-chip target is met. This is a new raw trained-policy result;
+the earlier subtraction-based tails retain their positive exact gaps and the
+separately derived clean witnesses remain separate artifacts. Direct averaging
+is not guaranteed to reach exact equilibrium for another game or window.
+
+The [complete policy](../benchmarks/results/full-deck-raised-turn-direct-tail-v1-materialized.json)
+is 1,690,215 bytes, SHA256
+`18553678c7d6cda7d8425d268bd79cdcb8e7add31f8d36a35ede8b1a67ba4d5c`.
+The [independent report](../benchmarks/results/full-deck-raised-turn-direct-tail-v1.json)
+is 392,804 bytes, SHA256
+`ea7b5c9d8eafbec0aa99ebaf8c6f2e4e76cf9d9d93cea57226a0ad9f8d7c46b3`.
+It pins 63 producer files, 16 verification files (77 distinct files in their
+union), and eight accepted historical input files. Separate parent verification
+matched all source pins against committed generation bytes and current files,
+recomputed full-physical exact metrics, and independently reconstructed the
+maximum own-realization flow error, about 1.72752e-15, below 1e-11.
+
+The complete adapter call took 87.456834 seconds on this host. JSON encoding,
+audits and publication are outside that interval. This observation does not
+establish a controlled speed comparison. The physical audit visits 18,234
+structural nodes and 3,756 weighted rows; maximum stored Fraction size is 392
+bits. It exactly normalizes 708 probability rows without modifying the policy
+file. The full physical and checked quotient audits keep their existing limits.
+
+Nine focused runner tests passed in normal/optimized Python (3.997 / 4.074
+seconds). They include a genuine ten-sweep adapter call, the real eight-file
+input guard, exact-certificate disagreement, strict metadata, finite timing,
+staging failure, late byte drift and preservation of a foreign replacement.
+The accepted-bundle hash regression disables seven producer/trainer entry
+points and reconstructs the complete report without training; it passed in
+normal/optimized Python (7.556 / 7.414 seconds).

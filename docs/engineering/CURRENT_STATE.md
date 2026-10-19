@@ -240,4 +240,7 @@ tests bound this addition; broader quality depends on recorded experiments.
 
 The separate [fixed direct-tail experiment](../direct-turn-tail-experiment.md)
 defines a frozen full-deck call and complete independent saved-policy audits.
-Its quality result remains pending generation.
+The raw T=1500,D=1000 profile now has exact normalized-policy NashConv zero and
+OOP value -400/21, with all eight metrics matched by both exact auditors. This
+is fixed 176-world game evidence; the saved result receives no cleanup and
+does not establish a general direct-tail convergence guarantee.
