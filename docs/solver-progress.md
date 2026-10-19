@@ -1337,3 +1337,15 @@ passes complete physical replay plus the unchanged checked chance-class audit.
 The declared cleanup changes no action probability by more than 6.364e-20;
 it is not a general rounding guarantee or a production/default change.
 Both original tail policies and their positive exact gaps remain immutable.
+
+## Independent full-physical exact raised-turn replay
+
+A separate [physical exact oracle and immutable report](full-physical-audit-wrapper.md)
+replay both original numeric tails and both clean witnesses with all 48 river
+cards separate. Its own Fraction normalization, showdown ranking, terminal
+arithmetic and legal own-hand responses agree on every exact metric with the
+preceding chance-class audit. Both witnesses retain zero NashConv and OOP value
+`-400/21`; the original tails retain positive gaps. The handwritten check/call
+anchor, illegal future-aware responses and a legal single-card policy deviation
+provide distinct arithmetic, information and physical-chance controls. This is
+fixed-game research evidence; production defaults and earlier streets are unchanged.

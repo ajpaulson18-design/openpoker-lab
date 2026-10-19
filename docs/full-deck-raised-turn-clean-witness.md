@@ -87,3 +87,7 @@ Run `python -m unittest tests.test_build_raised_turn_witness -v` and repeat with
 `python -O`. After source freeze, `python -m scripts.build_raised_turn_witness --generate`
 creates the immutable bundle; `--verify` replays it without training.
 Production/default behavior, preflop/flop and earlier proofs remain unchanged.
+
+A later [independent full-physical exact replay](full-physical-audit-wrapper.md)
+now checks both saved witnesses without chance grouping or the generic Fraction
+certificate helper, with all eight exact metrics agreeing.
