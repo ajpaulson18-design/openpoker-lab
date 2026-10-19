@@ -1349,3 +1349,12 @@ preceding chance-class audit. Both witnesses retain zero NashConv and OOP value
 anchor, illegal future-aware responses and a legal single-card policy deviation
 provide distinct arithmetic, information and physical-chance controls. This is
 fixed-game research evidence; production defaults and earlier streets are unchanged.
+
+## Value-only false-positive control
+
+A [deterministic negative control](raised-turn-argmax-control.md) now preserves the
+proved -400/21 profile value while having exact NashConv 325/33. It comes from
+choosing each clean witness row's most likely action with a fixed tie-break.
+A single legal KhKs root bet gains 200/21; direct physical terminal sums and
+independent numeric replay confirm the deviation. This guards the distinction
+between matching a known game value and having no profitable unilateral response.
