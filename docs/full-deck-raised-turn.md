@@ -128,6 +128,13 @@ auditor also rejects the saved materialized 100-iteration policy at its unchange
 100,000-work cap. Numeric replay is not an arbitrary-policy exact certificate;
 the separate exact check/call anchors do not certify trained equilibria.
 
+The later [checked chance-quotient audit](full-deck-raised-exact.md) separately
+certifies all six explicitly normalized policies for this fixed full-deck game,
+retaining all original physical mass and all six target misses. Its strict
+information-equivalence and policy-equality requirements do not turn the numeric
+report into a generic arbitrary-policy certificate or remove the unreduced
+auditor's recorded work-limit rejection.
+
 ## Reproduction and verification
 
 `python -m scripts.full_deck_raised_fixture` prints the advisory census.

@@ -2,8 +2,8 @@
 
 This development auditor is restricted to the [fixed raised turn/river
 game](full-deck-raised-turn.md). It executes no training and changes neither
-production solvers nor the generic exact auditor. Certificate publication and
-the complete six-policy audit are pending at this source-preparation checkpoint.
+production solvers nor the generic exact auditor. The complete six-policy audit
+below certifies explicitly normalized policies for this fixed model.
 
 ## Physical and information equivalence
 
@@ -66,6 +66,40 @@ recorded work-limit rejection remains valid and unchanged.
 The audit pins the accepted numeric report, all six complete policy hashes,
 the physical reference and proof sources. All target misses must remain in the
 new exact report. The original numeric policies and report are immutable.
+
+## Recorded exact audit
+
+The [immutable audit](../benchmarks/results/full-deck-raised-turn-exact-audit-v1.json)
+is 3,195,784 bytes with SHA256
+`6a2b1b66631bdb892856cae38b9378b16bfb702ed84d8563cf56a90dc6f9f1ed`.
+Generation was frozen at `25fe7a5be7900acdef25f9f8ada45134823f6521`;
+all ten proof/source pins match committed Git bytes. Every policy retains all
+eight exact metrics, legal-response bounds, Fraction normalization adjustments,
+canonical normalized quotient rows and detailed work counters.
+
+| Iterations | Materialized exact NashConv, rounded | Matrix-free exact NashConv, rounded |
+| ---: | ---: | ---: |
+| 100 | 0.3697688228923919 | 0.3697688228923921 |
+| 1000 | 0.0037309341770361214 | 0.003730934177036123 |
+| 1500 | 0.0016587453303189687 | 0.0016587453303189693 |
+
+All six exact Fractions miss the unchanged 1/1000-chip target. All use 13,708
+modeled exact-work units. Maximum observed fraction size is 6,423 bits; largest
+input-row probability adjustment is 1.4236712691430153e-16. Maximum difference
+between an exact normalized metric converted to binary64 and full physical
+numeric replay is 8.256850064780608e-15 chips. Numeric observations replay with
+1e-12 tolerance across supported platforms; Fraction certificates and ledgers
+must reconstruct exactly.
+
+Staged and published verification passed without training. Separate Sol review
+used another projection constructor and a literal 12-world mass table, checked
+all ten generation pins against Git, and matched all eight exact metrics for
+every profile. That review shares the generic Fraction evaluator; the original
+full physical numeric-rule replay and independent closed-form check/call anchors
+provide separate diagnostic checks. The 12 focused tests passed in normal and
+optimized Python, including physical-law, information, policy, tree and immutable
+artifact failure cases. This establishes fixed-policy accuracy evidence, not
+convergence to an exact equilibrium or a broader-game certificate.
 
 ## Reproduction
 
