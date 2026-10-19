@@ -181,3 +181,12 @@ separate private identities. Source fingerprints and structural validation do
 not authenticate counts. Never describe synthetic range tests as physical
 accuracy evidence or infer permission for more enumeration from represented
 board coverage. Shared kernels/defaults and later-street work remain unchanged.
+
+The [best-five physical reference](docs/preflop-five-card-reference.md) is an
+isolated fixed research executable. Require exhaustive five-card tuple parity
+before its full-board census, exact actual call counts, the old full-board
+anchor, independent production seven-card count agreement, clean frozen source
+and unchanged build identities. Compilation or consistent category totals alone
+do not certify new counts. Keep binary data/builds outside Git and preserve
+all failure observations. No production rank/board limit or backend changes
+follow from this reference.
