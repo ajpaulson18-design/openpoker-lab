@@ -10,7 +10,7 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 SOURCE=ROOT/'native/preflop_five_card_reference.c'
-PROTOCOL='PREFLOP_FIVE_REFERENCE_V1'
+PROTOCOL='PREFLOP_FIVE_REFERENCE_V2'
 
 def source_hashes():
     raw=SOURCE.read_bytes()

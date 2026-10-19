@@ -125,6 +125,16 @@ fixed finite modes and no solver/backend/default integration. See
 [method, work units and publication status](../preflop-five-card-reference.md).
 No prior decision is superseded.
 
+D022 (2026-10-18): engineering decision under the owner's independent validation
+and broader-range scope: extend the project-owned best-five reference with a
+strictly bounded explicit private-pair argv mode. Require current-build exhaustive
+conformance before each source query, retain all original production query caps,
+and physically verify missing QQ/KK suit classes for later mixed-range work.
+Source/evaluator/solver defaults remain separate; generic unbounded enumeration
+and imported evaluators were not selected. See
+[method, caps and publication status](../preflop-generic-five-reference.md).
+No prior decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.

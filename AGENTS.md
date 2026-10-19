@@ -197,3 +197,11 @@ count basis. Verify the constructive +1-chip lower/upper bounds from independent
 numeric rules before comparing trained policies. Preserve strict rational value
 containment, legal own-hand responses and full-request admission. The fixed
 AA/KK result does not establish mixed-range or later-street equilibrium accuracy.
+
+The [generic best-five reference](docs/preflop-generic-five-reference.md) accepts
+only one-to-four explicitly admitted private pairs after current-build exhaustive
+conformance. Validate the whole argv before output/work; preserve ordered roles,
+full board/call censuses and complete failed stdout/stderr. No source-count
+query may bypass original production preparation caps. Keep raw independent and
+native values, old physical anchors and source/both-build identity checks.
+This research extension adds no production backend/default or equilibrium claim.

@@ -14,8 +14,11 @@ sorts five card ranks, classifies five-card multiplicity/straight/flush patterns
 and encodes category and descending kickers as six ordered nibbles. A seven-card
 value takes the best of all 21 five-card subsets by excluding every distinct
 pair of positions. It shares no production evaluator implementation or lookup
-table. Its two command-line modes are fixed: every five-card hand, or three
-full-board AA/KK pairs. It accepts no arbitrary count request or card stream.
+table. The initial two fixed modes enumerate every five-card hand or three
+full-board AA/KK pairs. A subsequent [explicit bounded-pair extension](preflop-generic-five-reference.md)
+retains those numerical modes and requires current-build conformance before
+counting additional source pairs; the original observations below remain pinned
+to their stated source/build.
 
 The [frozen specification](../benchmarks/preflop-five-basis-v1.json) requires
 exact comparison of every one of the 2,598,960 five-card category/kicker tuples
