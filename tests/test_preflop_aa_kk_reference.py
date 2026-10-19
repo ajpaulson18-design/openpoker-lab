@@ -47,6 +47,10 @@ class PhysicalRangeReferenceTests(unittest.TestCase):
               patch.object(bench.core.native,'_build_identity') as lookup):
             report=bench.run(self.spec,'unused')
         self.assertEqual(report['status'],'error');inputs.assert_not_called();lookup.assert_not_called()
+        self.assertTrue(report['created_at_utc'])
+        self.assertTrue(report['runtime']['python'])
+        self.assertTrue(report['runtime']['executable'])
+        self.assertTrue(report['runtime']['platform'])
 
     def test_saved_metadata_addition_updates_the_actual_checksum(self):
         with tempfile.TemporaryDirectory() as folder:

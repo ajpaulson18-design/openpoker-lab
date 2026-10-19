@@ -1,5 +1,7 @@
 """Frozen 36-pair physical AA/KK strategy validation against an exact value."""
 import argparse
+from datetime import datetime, timezone
+import sys
 from fractions import Fraction
 import hashlib
 import json
@@ -39,6 +41,8 @@ def anchor_assessment(payload,counts,spec):
 def run(spec,build):
     if core.checksum(spec)!=reference.SPEC_SHA:raise ValueError('Requires the exact frozen physical AA/KK specification')
     report={'schema_version':1,'benchmark_id':spec['benchmark_id'],'specification':spec,
+            'created_at_utc':datetime.now(timezone.utc).isoformat(),
+            'runtime':{'python':sys.version,'executable':sys.executable,'platform':__import__('platform').platform()},
             'spec_sha256':core.checksum(spec),'profiles':[],'preflights':[],'errors':[]}
     before=after=build_before=build_after=None
     try:
