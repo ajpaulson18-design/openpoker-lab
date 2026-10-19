@@ -1,0 +1,77 @@
+{
+  "baseline": "13fe57b2fd59ee3d0532c959f9ecda90acf974f8",
+  "candidate_training_run": false,
+  "kind": "PREDECLARED_ONE_SIDED_SUIT_NEGATIVE",
+  "new_pair_showdown_signs": [
+    0,
+    0
+  ],
+  "newly_compatible_aa_pair_mass": "1/8",
+  "oop_only_target": "sdhc",
+  "original_fixture": {
+    "board": "2c7d9hJs",
+    "config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "effective_stack": [
+        100,
+        100
+      ],
+      "include_all_in": false,
+      "max_raises": 0,
+      "pot": 100,
+      "raise_sizes": []
+    },
+    "id": "turn-blocker-selected-sequence-equilibrium",
+    "ip": "QhQs:1,AdAs:1",
+    "oop": "AsAh:0.25,Th6h:0.75",
+    "runouts": [
+      "8d",
+      "Kd"
+    ]
+  },
+  "original_pairs": [
+    {
+      "ip": "AdAs",
+      "mass": "3/7",
+      "oop": "6hTh"
+    },
+    {
+      "ip": "QhQs",
+      "mass": "3/7",
+      "oop": "6hTh"
+    },
+    {
+      "ip": "QhQs",
+      "mass": "1/7",
+      "oop": "AhAs"
+    }
+  ],
+  "original_worlds": 6,
+  "source_suits": "cdhs",
+  "wrong_oop": "AcAh:0.25,Th6h:0.75",
+  "wrong_pairs": [
+    {
+      "ip": "AdAs",
+      "mass": "3/8",
+      "oop": "6hTh"
+    },
+    {
+      "ip": "QhQs",
+      "mass": "3/8",
+      "oop": "6hTh"
+    },
+    {
+      "ip": "AdAs",
+      "mass": "1/8",
+      "oop": "AcAh"
+    },
+    {
+      "ip": "QhQs",
+      "mass": "1/8",
+      "oop": "AcAh"
+    }
+  ],
+  "wrong_worlds": 8
+}
