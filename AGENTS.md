@@ -205,3 +205,10 @@ full board/call censuses and complete failed stdout/stderr. No source-count
 query may bypass original production preparation caps. Keep raw independent and
 native values, old physical anchors and source/both-build identity checks.
 This research extension adds no production backend/default or equilibrium claim.
+
+The [mixed physical preflop benchmark](docs/preflop-mixed-physical-range.md)
+retains all 72 AA/QQ-versus-KK pairs and independently authenticates both
+three-class physical bases. Preserve exact global priors, own-hand legal BRs,
+constructive [1/2,1] value bounds and interval-intersection semantics. There is
+no exact mixed-game value anchor. Keep final quality gates, complete-call
+admission and all raw policies/failures; no solver default or work-cap change.

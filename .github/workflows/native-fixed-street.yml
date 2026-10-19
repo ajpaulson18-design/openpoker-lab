@@ -36,4 +36,4 @@ jobs:
           python -m scripts.build_native_train --output-dir "$env:OPENPOKER_NATIVE_TRAIN_BUILD_DIR"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Independent policies, diagnostics and protocol conformance
-        run: python -m unittest tests.test_native_fixed_street_protocol tests.test_native_fixed_street tests.test_preflop_covered_equity tests.test_preflop_aa_kk_reference -v
+        run: python -m unittest tests.test_native_fixed_street_protocol tests.test_native_fixed_street tests.test_preflop_covered_equity tests.test_preflop_aa_kk_reference tests.test_preflop_mixed_range_reference -v

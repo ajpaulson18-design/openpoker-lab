@@ -404,7 +404,7 @@ shared defaults retain their previous arithmetic.
 Small complete calls are slower, not a claimed speedup. Full two-river random
 ranges now admit 2,140,380 compatible outcomes without world lists (4.48s,
 45.12 MB traced at ten iterations); the 12.158-chip gap explicitly shows this
-probe is not converged. Prepared fold calls improve 17–22x. Investigation of
+probe is not converged. Prepared fold calls improve 17â€“22x. Investigation of
 finite-iteration differences traced them to exact-tie regret roundoff; all
 candidate policy metrics pass materialized replay. A bounded small-pair phase
 experiment found a narrow crossover, insufficient for broad dispatch. See
@@ -420,7 +420,7 @@ game. Full random ranges now admit all 1,081 holdings per player (1,070,190
 compatible deals), without materialized worlds. Independent review caught an
 extreme joint-product underflow; the backend now explicitly rejects it.
 
-Complete-call median improvements are 1.54–2.43x on 128/256-hand fixtures, with
+Complete-call median improvements are 1.54â€“2.43x on 128/256-hand fixtures, with
 256-hand traced allocation reduced from 25.59 MB to 1.75 MB. Full-range CFR+
 exploitability fell to 0.0404 chips at 100 iterations on the pot-100 fixture.
 Fourteen default result dictionaries match merged base exactly; the shared
@@ -436,8 +436,8 @@ summation on ill-conditioned cases preserve physical range products and
 short-stack refunds. Rational pair-loop tests caught and prevented two
 cancellation defects. No earlier-street or Coach behavior is changed.
 
-Cached-sparse terminal phase comparisons show 1.22–15.19x speedups across
-64–512 hands per player, with increased working allocation. Complete-call
+Cached-sparse terminal phase comparisons show 1.22â€“15.19x speedups across
+64â€“512 hands per player, with increased working allocation. Complete-call
 results are mixed: small/preparation-heavy cases can slow down, while the
 256-hand/40-iteration probe improved median time by 1.40x DCFR / 1.72x CFR+.
 That CFR+ probe uses 96% of the existing world-node guard; no limits were
@@ -452,7 +452,7 @@ Branch `solver/turn-river-accuracy-20261009`, base `b7bf525`: added optional
 absolute-chip exploitability targets with exact completed-iteration checkpoints
 and explicit budget misses. Existing training schedules and default results
 remain unchanged; target mode rejects earlier streets and unsupported backends.
-All four CFR+ benchmark fixtures reached 0.1 chips in 100–240 iterations;
+All four CFR+ benchmark fixtures reached 0.1 chips in 100â€“240 iterations;
 same-iteration policy comparisons were identical. DCFR missed three targets.
 Six rational poker equilibria and independent pure-policy best responses extend
 validation beyond Kuhn. The full suite passed **436 tests in 114.951 seconds**.
@@ -476,7 +476,7 @@ unchanged; source-based vanilla/DCFR comparisons on six turn/river/flop cases
 matched the base exactly. All **352 tests passed in 70.236 seconds**.
 
 Target-only CFR+ regret vectors reduce measured complete-call runtime by
-21–28% across eight synthetic fixture/checkpoint comparisons with pre-optimization
+21â€“28% across eight synthetic fixture/checkpoint comparisons with pre-optimization
 source `7553734`; maximum frequency/value differences are `5.42e-13`/`7.11e-14`.
 Diagnostics-only turn evaluation is 2.17x faster on a 352-world uniform-policy
 fixture with higher memory consumption. The completed 36-row algorithm report
@@ -498,7 +498,7 @@ and its contracts remain separate. GitHub is the delivery source of truth.
   bet sizes, stack cap, rake or range inference in this entry point.
 - Tree: four public decision nodes, eight decision edges, five terminal
   lines per compatible private-hand pair. Two information sets per hand.
-- Work limits: 10–10,000 iterations and at most three million nominal
+- Work limits: 10â€“10,000 iterations and at most three million nominal
   hand-pair iterations. Exact traversal; no sampling or card abstraction.
 - Algorithms: vanilla simultaneous CFR (default); opt-in DCFR(1.5,0,2), with
   sign-split cumulative-regret discounts and quadratic own-reach averaging.
@@ -578,7 +578,7 @@ explicit configurations use the finite public tree. Both expose
 vanilla CFR and optional DCFR, and exact information-set best responses.
 
 Supported: two players, fixed river board, weighted exact private ranges,
-up to eight configured opening sizes and eight raise sizes, 0–8 raises per
+up to eight configured opening sizes and eight raise sizes, 0â€“8 raises per
 betting sequence, positive shared or asymmetric stack caps, optional shoves,
 minimum full raises, short-all-in non-reopening, capped calls and uncalled-chip
 refunds. There is no blind-sized minimum opening bet, rake, multiway tree or
@@ -611,7 +611,7 @@ Each has four compatible weighted deals. The 500-iteration measurements were:
 | Stack 120, short raise branches | 8 / 20 | 16 | 134.75 | 245.18 | 0.957332 | 0.174692 |
 
 Traced peak memory for vanilla/DCFR was approximately 5.3/5.3 KB for the
-optimized fixture and 24.9–44.0/24.9–44.1 KB for the configured fixtures.
+optimized fixture and 24.9â€“44.0/24.9â€“44.1 KB for the configured fixtures.
 These narrow two-hand examples quantify tree growth and solution quality in
 their exact abstractions; they do not establish realistic full-range speed.
 DCFR improves these measured gaps while costing more time on several trees.
@@ -1109,7 +1109,7 @@ split game preserve the original rational equilibrium value. All 25 trained
 with maximum scalar disagreement 1.324e-16 chips. A separate toy oracle checks
 19,008 mapped boards; this is not new physical full-deck enumeration.
 
-Complete warm-call medians are 0.653–1.105 seconds across the suit images and
+Complete warm-call medians are 0.653â€“1.105 seconds across the suit images and
 1.215 seconds for the split game. A separate split-call trace peaks at 32,758
 Python bytes excluding the source table, original preparation and RSS.
 The four-pair request fits at 2,000 iterations, charges 493,147,312 modeled
@@ -1202,7 +1202,7 @@ Frozen `ee87737` passes all fifteen complete-call profiles against pinned
 independent physical counts, exact full solver-payload parity and own-hand
 best-response replay. Maximum exploitability is 0.0000146361 chips. For the
 three-pair, 2,000-CFR+ fixture, median complete time is 1.57198 seconds native
-versus 483.02199 seconds Python, a scoped observed 307.27× ratio. Every raw sample
+versus 483.02199 seconds Python, a scoped observed 307.27Ã— ratio. Every raw sample
 is retained, including a third Python call interrupted by recorded system sleep.
 All 2,598,960 five-card rank tuples independently agree; six/seven-card exhaustion
 is not claimed. A complete-call trace measures 347,984 Python bytes and excludes
@@ -1291,3 +1291,11 @@ independent numeric and exact normalized own-hand response checks against
 the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
 iterations and meet it at 10,000 (about 0.000414). All four misses and full
 policies remain saved. See [experiment, proof and limits](turn-blocker-cfrplus.md).
+
+## Mixed physical AA/QQ-versus-KK validation
+
+A frozen 72-pair trainer comparison combines both independently checked physical
+count bases, preserves weighted own-hand uncertainty and legal reraises, and
+requires independent exact replay plus final NashConv at most 0.005 chips.
+Constructive value bounds are [1/2,1], not an exact equilibrium value.
+See [method, evidence and publication status](preflop-mixed-physical-range.md).
