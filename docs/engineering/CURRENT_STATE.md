@@ -171,14 +171,18 @@ fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
 all eight still miss the unchanged 0.001-chip NashConv target. Full policies
 and misses remain saved. See [experiment and scope](../turn-suit-equivariance.md).
 
-## Full-deck raised turn pretraining reference
+## Full-deck raised turn reference and fixed-budget accuracy
 
 Independent numeric rules and exhaustive best-five signs now establish a fixed
 176-world game with finite turn/river raises. A complete hand-written check/call
 policy has independently derived exact value -2500/231 and legal-response
 NashConv 75. Production structure matches the complete independent tree hash;
-all production defaults and guards stay unchanged. No new training is claimed.
-See [reference, hidden-information controls and frozen next grid](../full-deck-raised-turn.md).
+all production defaults and guards stay unchanged. Six actual full-deck CFR+
+calls at 100/1000/1500 iterations independently replay all 2,404 policy rows.
+Both backends reach NashConv 0.001658745330324507 at 1,500; all six profiles
+still miss 0.001 chips. Complete policies and misses are retained. Numeric
+trained-policy replay is separate from the hand-written exact anchors.
+See [reference, completed experiment and limits](../full-deck-raised-turn.md).
 
 ## Explicit compiled training for prepared preflop and fixed flop
 
