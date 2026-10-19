@@ -163,6 +163,14 @@ the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
 iterations and meet it at 10,000 (about 0.000414). All four misses and full
 policies remain saved. See [experiment, proof and limits](../turn-blocker-cfrplus.md).
 
+## Global suit symmetry of blocker-conditioned turn policies
+
+Independent reconstruction preserves the exact 115/7 equilibrium through all
+24 global suit bijections and replays 144 archived policy transports. Eight
+fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
+all eight still miss the unchanged 0.001-chip NashConv target. Full policies
+and misses remain saved. See [experiment and scope](../turn-suit-equivariance.md).
+
 ## Explicit compiled training for prepared preflop and fixed flop
 
 The prepared full-board preflop betting and forced-checkdown flop APIs accept an

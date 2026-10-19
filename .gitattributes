@@ -6,3 +6,9 @@
 /benchmarks/results/turn-blocker-sequence-equilibrium-v1.json -text
 /benchmarks/results/turn-blocker-cfrplus-profiles-v1.json -text
 /benchmarks/results/turn-blocker-cfrplus-policies-v1/*.json -text
+
+# Preserve frozen suit references and complete validation policies.
+/benchmarks/results/turn-suit-exact-reference-v1.json -text
+/benchmarks/results/turn-suit-negative-reference-v1.json -text
+/benchmarks/results/turn-suit-equivariance-v1.json -text
+/benchmarks/results/turn-suit-equivariance-policies-v1/*.json -text
