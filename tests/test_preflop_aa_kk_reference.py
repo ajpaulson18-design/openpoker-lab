@@ -59,3 +59,19 @@ class PhysicalRangeReferenceTests(unittest.TestCase):
             report['saved_verification']={'status':'test-only'};bench.save_report(path,report)
             data=json.loads(path.read_bytes());digest=data.pop('artifact_sha256')
             self.assertEqual(digest,bench.core.checksum(data))
+
+    def test_native_full_range_strategies_pass_independent_reference_when_built(self):
+        import os
+        build=os.environ.get('OPENPOKER_NATIVE_TRAIN_BUILD_DIR')
+        if not build or not Path(build).is_dir():self.skipTest('Explicit native build not selected')
+        from pokerlab.preflop_checkdown_solver import solve_covered_preflop_checkdown
+        results={}
+        for backend in ('python','native'):
+            results[backend]=solve_covered_preflop_checkdown(self.table,config=self.spec['config'],
+                            iterations=10,algorithm='cfrplus',training_backend=backend,
+                            build_directory=build if backend=='native' else None)
+            checked=bench.anchor_assessment(results[backend],self.counts,self.spec)
+            self.assertTrue(checked['exact_anchor_contained'])
+            self.assertTrue(checked['quality_pass'])
+        parity=bench.core.compare(results['python'],results['native'],self.spec)
+        self.assertTrue(parity['meets_metric_gate']);self.assertTrue(parity['meets_policy_gate'])

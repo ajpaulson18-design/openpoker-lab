@@ -118,7 +118,9 @@ def verify_saved(path):
             payload=sample['payload'];encoded=core.canonical(payload)
             if (hashlib.sha256(encoded).hexdigest()!=sample['payload_sha256'] or len(encoded)!=sample['serialized_bytes_utf8']
                     or anchor_assessment(payload,counts,spec)!=sample['assessment']
-                    or payload['iterations']!=row['iterations'] or any(sample['rank_guard_calls'].values())
+                    or payload['iterations']!=row['iterations'] or payload['algorithm']!=spec['algorithm']
+                    or payload.get('world_indexing')!=spec['world_indexing']
+                    or any(sample['rank_guard_calls'].values())
                     or not core.native._phase_count_passed('preflop',sample['backend'],'cfrplus',sample)):
                 raise ValueError('AA/KK saved policy/digest/replay/execution census changed')
             pairs.setdefault(sample['repeat'],{})[sample['backend']]=payload;checked+=1

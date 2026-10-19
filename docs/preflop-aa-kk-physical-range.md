@@ -59,5 +59,43 @@ observed per fixture; no general speedup, allocation or RSS claim follows.
 [Reference tests](../tests/test_preflop_aa_kk_reference.py) check physical pair
 coverage, exact bounds and their failure cases, admission before lookup,
 unchanged ordinary preparation rejection, dirty-source isolation and saved-file
-checksums. Formal clean-source measurement and final publication are pending
-at this source stage.
+checksums.
+
+## Formal physical-range observations
+
+The [raw report](../benchmarks/results/preflop-aa-kk-physical-range-v1.json)
+passes at clean source `d7b8883b1fa1b5f94ccb32dd5160ed073e609019` on Python
+3.12.14 / Windows with the recorded MSVC native V2 trainer. All 484 normalized
+source hashes independently match frozen Git blob contents. Source/native
+identities remain unchanged. All three full requested admissions precede build
+lookup/training; maximum Python/native modeled budgets are 302,343,744 /
+115,189,552 under the unchanged 500-million limit.
+
+The constructed game has 22 public states, eight betting decisions and 48
+own-hand policy rows. Every one of the ten saved Python/native policies passes
+independent exact numeric-rule replay, strict one-chip value containment and
+the exact profile-error/NashConv bound. All five paired backend comparisons
+pass unchanged gates. Final three repeated payloads are deterministic within
+each backend.
+
+| CFR+ iterations | Independent Python NashConv, chips | Absolute error from exact +1, chips | Both quality targets met |
+| --- | ---: | ---: | --- |
+| 10 | 0.00138372241649 | 0.0000321915590270 | Yes |
+| 100 | 0.0000150702441400 | 0.0000003632111560 | Yes |
+| 500 | 0.0000006076226180 | 0.0000000146498144 | Yes |
+
+Both backends have the same displayed NashConv. Maximum retained scalar and
+action-probability gaps are `2.221e-16` and `1.111e-16`. All ranking/enumeration
+guards are zero. Final median complete calls are 1.701691 / 0.037504 seconds
+for Python/native on this fixture. This is not a general speedup or memory
+claim. Every checkpoint passes its target; there is no hidden early miss.
+
+Canonical report SHA-256:
+`324e7b011e06c56ee6b7c9caf78e59e85ffa40fb0e3d9fa2c96974a5eeeccacd`.
+Raw report SHA-256:
+`4708b767516847d0e95d99fb197cd6d66531485f28fdfc130f784afb49c56979`.
+The earlier observation is retained outside Git; the followup records explicit
+interpreter/platform context and reproduces every policy payload byte-for-byte.
+A [publication regression](../tests/test_preflop_aa_kk_publication.py) freshly
+reconstructs all saved policy assessments, proof, physical provenance and backend
+comparisons. Final cross-platform CI and merge status are recorded on the PR.
