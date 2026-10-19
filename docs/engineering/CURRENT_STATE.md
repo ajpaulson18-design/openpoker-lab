@@ -171,6 +171,15 @@ fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
 all eight still miss the unchanged 0.001-chip NashConv target. Full policies
 and misses remain saved. See [experiment and scope](../turn-suit-equivariance.md).
 
+## Full-deck raised turn pretraining reference
+
+Independent numeric rules and exhaustive best-five signs now establish a fixed
+176-world game with finite turn/river raises. A complete hand-written check/call
+policy has independently derived exact value -2500/231 and legal-response
+NashConv 75. Production structure matches the complete independent tree hash;
+all production defaults and guards stay unchanged. No new training is claimed.
+See [reference, hidden-information controls and frozen next grid](../full-deck-raised-turn.md).
+
 ## Explicit compiled training for prepared preflop and fixed flop
 
 The prepared full-board preflop betting and forced-checkdown flop APIs accept an

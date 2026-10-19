@@ -1,0 +1,135 @@
+{
+  "baseline_git_commit": "e7fdf7942f6e270bc1f4c3e0d508d23ed707c43b",
+  "reference": {
+    "action_tokens": [
+      "all_in@220",
+      "bet@150",
+      "bet@50",
+      "call",
+      "check",
+      "fold",
+      "raise@150"
+    ],
+    "all_check_call_exact_metrics": {
+      "exploitability": "75/2",
+      "ip_best_response_gain": "12475/231",
+      "ip_best_response_value": "14975/231",
+      "nash_conv": "75",
+      "oop_best_response_gain": "4850/231",
+      "oop_best_response_value": "2350/231",
+      "value_ip": "2500/231",
+      "value_oop": "-2500/231"
+    },
+    "all_check_float_replay": {
+      "exploitability": 37.5,
+      "ip_best_response_gain": 54.00432900432901,
+      "ip_best_response_value": 64.82683982683983,
+      "nash_conv": 75.0,
+      "oop_best_response_gain": 20.99567099567099,
+      "oop_best_response_value": 10.17316017316017,
+      "value_ip": 10.822510822510822,
+      "value_oop": -10.822510822510822
+    },
+    "all_check_policy_value_fraction": "-2500/231",
+    "best_five_checked_worlds": 176,
+    "carried_raise_witness": {
+      "cumulative_target": 220,
+      "history": [
+        "bet@50",
+        "raise@150",
+        "call",
+        "river@2c"
+      ],
+      "matched_showdown_contributions": [
+        220,
+        220
+      ],
+      "river_wager": 70,
+      "winning_oop_terminal_value_fraction": "270"
+    },
+    "compatible_pairs": 4,
+    "depth": 9,
+    "fixture": {
+      "board": "Js8d4c2h",
+      "config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "effective_stack": 220.0,
+        "include_all_in": false,
+        "max_raises": 1,
+        "pot": 100.0,
+        "raise_sizes": [
+          0.5
+        ]
+      },
+      "id": "full-deck-raised-turn-v1",
+      "ip": "AcAd:1,KcKd:0.75",
+      "oop": "AsAh:0.5,KsKh:1"
+    },
+    "global_mass_fraction": "1",
+    "information_rows": 2404,
+    "kind": "PRETRAINING_FULL_DECK_RAISED_TURN_REFERENCE",
+    "physical_pairs": [
+      {
+        "ip": "AcAd",
+        "losses": 0,
+        "mass_fraction": "4/21",
+        "oop": "AhAs",
+        "rivers": 44,
+        "ties": 44,
+        "wins": 0,
+        "world_mass_fraction": "1/231"
+      },
+      {
+        "ip": "KcKd",
+        "losses": 2,
+        "mass_fraction": "1/7",
+        "oop": "AhAs",
+        "rivers": 44,
+        "ties": 0,
+        "wins": 42,
+        "world_mass_fraction": "1/308"
+      },
+      {
+        "ip": "AcAd",
+        "losses": 42,
+        "mass_fraction": "8/21",
+        "oop": "KhKs",
+        "rivers": 44,
+        "ties": 0,
+        "wins": 2,
+        "world_mass_fraction": "2/231"
+      },
+      {
+        "ip": "KcKd",
+        "losses": 0,
+        "mass_fraction": "2/7",
+        "oop": "KhKs",
+        "rivers": 44,
+        "ties": 44,
+        "wins": 0,
+        "world_mass_fraction": "1/154"
+      }
+    ],
+    "public_candidates": 48,
+    "public_decisions": 1254,
+    "public_nodes": 3039,
+    "public_tree_sha256": "70d87064c6d7048b75784b6623a2dc6249f57ac61384a27d1724c3d53563bd61",
+    "reachable_rivers": 48,
+    "rivers_per_pair": 44,
+    "scope": "One fixed full-deck configured turn/river game; no equilibrium value or trained-policy certificate.",
+    "training_calls": 0,
+    "worlds": 176
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "scripts/full_deck_raised_reference.py": "c0028a879aaf42a3b9c7c06819315a4c4a5547d37c4df5637da550187f85d704",
+    "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "scripts/turn_blocker_sequence_fixture.py": "7ad2acc8a8eebeb8f3913cbf798ddad928441bd6e860e5836a2046064e18b0c6",
+    "scripts/turn_river_validation.py": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+    "scripts/verify_turn_blocker_sequence.py": "2cb229d6a4aba97dca363196ee387d57272aebcb1be2c3a8aa44f5b700256428",
+    "tests/test_full_deck_raised_reference.py": "5bfd7c67245c2c92b09df41eb1d0ad3b771bc6df2fdd103de2ffbfdac7685a05"
+  }
+}
