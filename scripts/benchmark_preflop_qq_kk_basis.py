@@ -111,7 +111,12 @@ def verify_saved(path):
         raise ValueError('Saved QQ/KK specification changed')
     if report['status']!='passed':return {'status':'recorded-failed-observation'}
     spec=report['specification'];pairs,admission=pair_admission(spec['sb_range'],spec['bb_range'])
-    if report['query_admission']!=admission:raise ValueError('Saved QQ/KK admission changed')
+    if report['query_admission']!=admission or report['reference_metadata']['admission']!=admission:
+        raise ValueError('Saved QQ/KK admission changed')
+    if report['reference_build_before']['manifest']['protocol']!=spec['reference_protocol']:
+        raise ValueError('Saved generic reference protocol differs from frozen source specification')
+    if report['candidate_metadata']['build']!=report['candidate_build_before']['manifest']:
+        raise ValueError('Saved native query and candidate build provenance disagree')
     with tempfile.TemporaryDirectory() as temp:
         conformance=Path(temp)/'conformance.json';conformance.write_text(json.dumps(report['current_build_conformance']),encoding='utf-8')
         checked=five.verify_saved(conformance)

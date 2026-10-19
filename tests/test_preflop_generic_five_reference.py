@@ -105,3 +105,18 @@ class GenericNativeProtocolTests(unittest.TestCase):
             row=data['pairs'][0];values.append((row['wins'],row['ties'],row['losses']))
         self.assertEqual(values[0],(1410336,9308,292660))
         self.assertEqual(values[1],(292660,9308,1410336))
+
+    def test_valid_four_pair_boundary_matches_independent_pinned_and_suit_mapped_counts(self):
+        pairs=[(('Ad','As'),('Kd','Ks')),(('Qd','Qs'),('Ad','Kc')),
+               (('Qd','Qs'),('As','Kh')),(('Qd','Qs'),('Kd','Ks'))]
+        ids={card:n for n,card in enumerate(base.DECK)}
+        args=[str(self.executable),'--count-pairs',*[str(ids[card]) for a,b in pairs for card in a+b]]
+        process=subprocess.run(args,capture_output=True,timeout=120,check=False)
+        self.assertEqual(process.returncode,0)
+        data=json.loads(process.stdout);rows=ref.verify_rows(data,pairs)
+        self.assertEqual(data['boards_total'],6849216)
+        self.assertEqual(data['seven_card_rank_calls'],13698432)
+        self.assertEqual(data['five_card_rank_calls'],287667072)
+        # The AdKc pair is the same QQ/AK source under d<->s and h<->c.
+        self.assertEqual([x[2:5] for x in rows],[(1410336,9308,292660),
+                    (968267,7226,736811),(968267,7226,736811),(292846,9336,1410122)])

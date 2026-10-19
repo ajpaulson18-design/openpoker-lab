@@ -65,7 +65,48 @@ validation totals are not a solver work-budget or speed claim.
 cover admission before lookup, blockers, exact raw counters, rejected input,
 current-build mismatch, detached metadata, complete raw-failure retention and
 actual native role reversal. Dedicated Windows/Linux CI runs full conformance,
-the QQ/KK basis and protocol tests. Formal clean-source observations and
-publication are pending at this source stage. Additional verified rows will
-support mixed strong/weak covered ranges; they alone do not establish wider
-range equilibrium accuracy.
+the QQ/KK basis and protocol tests.
+
+## Frozen physical QQ/KK observations
+
+The [raw report](../benchmarks/results/preflop-qq-kk-basis-v1.json) passes from
+clean source `b37939b01c3cbfe1c22f2d39cc06207078aaddfb`. All 489 normalized
+source hashes independently match frozen Git blob contents; source and both
+counter identities remain unchanged. Before the QQ/KK query, the current v2
+build reproduces all 2,598,960 five-card tuples with zero mismatches, all nine
+category totals and the exact same fixed dump SHA-256
+`7dfd1ff4ed2761fef77db70b170fdae750cf7c162932087e30163037e4e78e52`.
+The fixed full-board AA/KK basis also passes in that build.
+
+| SB | BB | Shared suits | Wins | Ties | Losses |
+| --- | --- | ---: | ---: | ---: | ---: |
+| QdQs | KdKs | 2 | 292,846 | 9,336 | 1,410,122 |
+| QdQs | KcKd | 1 | 305,351 | 7,960 | 1,398,993 |
+| QdQs | KcKh | 0 | 317,856 | 6,584 | 1,387,864 |
+
+Each row covers exactly 1,712,304 boards. All three rows match the separately
+saved native-seven-card counts, and the shared-suits row exactly reproduces
+the original independently enumerated anchor. Actual generic-reference counters
+are 5,136,912 boards, 10,273,824 seven-card rankings and 215,750,304 five-card
+subset calls. Fresh saved-file verification reconstructs the raw independent /
+native count equality, old anchor, matching current-build conformance and all
+source/build identities. Raw stdout/stderr and the binary dump remain outside
+Git and were reopened for checksum/data verification.
+
+The reference C source SHA-256 is
+`68993c237e4092a9ddb8c0e2432a2cac8030486fd2b16904bf519fca024e6288`;
+MSVC executable SHA-256 is
+`a3037e43df3fe857fde62cd31d3caeeaf625e3605cc6332663d7d1b785f216e6`.
+The QQ/KK reference/native calls took 11.869431 / 0.724779 seconds on the
+recorded Python 3.12.14 / Windows runtime. These are distinct validation calls,
+not paired performance or memory measurements.
+
+Canonical report SHA-256:
+`d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8`.
+Raw report SHA-256:
+`44e750b135a97dc98dc8246c6c0881e5c775a697fdc9f4e1d803b995b6aa5118`.
+A [publication regression](../tests/test_preflop_qq_kk_publication.py) freshly
+rechecks the actual saved report and rejects re-signed raw-count tampering.
+Final cross-platform CI and merge status are recorded on the PR. These extra
+verified source rows support subsequent mixed strong/weak range work; they do
+not themselves establish wider-range equilibrium accuracy.

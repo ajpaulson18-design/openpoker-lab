@@ -1,5 +1,20 @@
 # Solver progress record
 
+## Independent physical source rows for mixed-range work
+
+The project-owned best-five reference now supports strictly bounded one-to-four
+explicit private-pair queries after current-build exhaustive conformance. Whole
+requests are admitted before binary lookup, malformed input rejects before any
+output/counting, and raw failed stdout/stderr are retained. Original production
+preparation caps and evaluator/solver defaults remain unchanged.
+
+All three QQ/KK relative-suit classes now have exact full-board counts agreeing
+with the separate native seven-card counter and the original independent
+shared-suits anchor. The current v2 build also reproduces every five-card rank
+tuple and the previous AA/KK basis. Together these source rows support later
+mixed strong/weak covered ranges; wider equilibrium accuracy is still separately
+measured. See [raw counts, conformance and limits](preflop-generic-five-reference.md).
+
 ## Full physical AA-versus-KK range reaches a checked exact anchor
 
 All 36 physical AA/KK private pairs and 61,642,944 represented boards now have
