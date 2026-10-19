@@ -69,6 +69,72 @@ work with unchanged structural/source caps and retained category setup. See
 third-party implementation or broader game model is authorized by this choice;
 no prior decision is superseded.
 
+D017 (2026-10-17): engineering decision under the owner's authorized compiled
+backend scope: provide separate explicit source-built fixed-public-tree native
+training for the prepared preflop and forced-checkdown flop models. The
+[measured prepared-call profile](../fixed-street-profile.md) identifies training
+as the dominant cost. Preserve Python rules/diagnostics/default payloads, all
+historical admission and a separate complete native work/storage envelope.
+A static C scalar traversal is the first experiment. Its fixed-flop DCFR policy
+gate miss is retained in the initial report. The followup uses compiled
+public-hand-vector reduction for flop, while preserving preflop scalar math,
+original acceptance gates and the failed evidence. A Python default switch,
+third-party solver implementation, public-chance support and compiled diagnostics
+were not selected. See [scope and evidence](../native-fixed-street.md) for actual
+validation/publication status. No earlier decision is superseded.
+
+D018 (2026-10-18): engineering decision under the owner's continuing independent
+solver-validation scope: establish an exact weighted preflop forced-checkdown
+equilibrium anchor before expanding private-pair or future-betting coverage.
+Reuse the project-owned bounded rational simplex without changing its limits;
+independently reconstruct physical-count payoffs, legal histories, primal/dual
+witnesses and own-information responses. A separate pure-response check guards
+hidden-information mistakes. This adds a research certificate and validation
+target, not production behavior or broader equilibrium coverage. See
+[scope and publication status](../preflop-weighted-sequence.md). No earlier
+decision is superseded.
+
+D019 (2026-10-18): engineering decision under the owner's ongoing accuracy and
+efficiency scope: compare prepared Python/native preflop strategies to the
+separately certified weighted exact game value. Keep exact reference proof,
+finite-strategy legal best responses, quality targets, cross-backend agreement,
+complete-call timing and Python allocation traces distinct. A policy-distance
+gate to one LP equilibrium would penalize legitimate alternate or unreachable
+policies, so legal exploitability and exact value containment govern accuracy.
+No production algorithm or default changes are selected. See
+[protocol and measurement status](../preflop-exact-anchor-comparison.md).
+No earlier decision is superseded.
+
+D020 (2026-10-18): engineering decision under the owner's ongoing broader-range
+solver scope: pool already covered full-board count sources through joint suit
+bijections into a separately bounded prepared table and explicit solving entry.
+This removes the enumeration cap from the prepared-data representation without
+changing enumeration itself, and reuses the existing betting/training body.
+All full-request solve limits remain; missing or conflicting source coverage
+rejects. Raising global preparation limits or merging private information sets
+was not selected. See [scope and evidence](../preflop-covered-counts.md).
+No prior decision is superseded.
+
+D021 (2026-10-18): engineering decision under the owner's independent validation
+and compiled-computation scope: add an isolated project-owned exhaustive best-five
+reference to establish new physical preflop source rows without reusing the
+production direct-seven-card evaluator. Require complete five-card tuple parity,
+known category totals, fixed full-board counters, the existing independently
+enumerated anchor and independent production count agreement. The tool has only
+fixed finite modes and no solver/backend/default integration. See
+[method, work units and publication status](../preflop-five-card-reference.md).
+No prior decision is superseded.
+
+D022 (2026-10-18): engineering decision under the owner's independent validation
+and broader-range scope: extend the project-owned best-five reference with a
+strictly bounded explicit private-pair argv mode. Require current-build exhaustive
+conformance before each source query, retain all original production query caps,
+and physically verify missing QQ/KK suit classes for later mixed-range work.
+Source/evaluator/solver defaults remain separate; generic unbounded enumeration
+and imported evaluators were not selected. See
+[method, caps and publication status](../preflop-generic-five-reference.md).
+No prior decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.

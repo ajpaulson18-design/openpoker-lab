@@ -144,3 +144,64 @@ The lead agent owns architecture, product judgment, difficult debugging and inte
 - `flop_checkdown_solver.py` is a separate direct fixed-flop betting adapter with full hidden future-deck integration and forced turn/river checkdown. It does not change shared postflop or preflop APIs. Preserve exact binary64-input rational pair normalization after board/private blockers, 990 unordered boards/1,980 ordered outcomes per pair, categorical sign rows (at most three per pair), matched-wager refunds and symmetric existing-pot share values. Never reveal future cards in information sets or describe this as later-street/full-deck preflop solving. `flop_checkdown_worlds.py` admits candidate/pair/rank-call caps before ranking; the solver reserves tree/action and full requested vector/diagnostic work using a three-row-per-pair structural upper bound before calling build. Ranking instructions are outside bookkeeping-loop counts and have their own bounded call count. Positive probability underflow must reject rather than discard support. Keep independent ordered-deck, best-five numeric-rule/visible-information BR replay and constructive known-value coverage. Complete-call timings and separate allocation traces establish only recorded model-specific evidence, not RSS or general speed gains.
 
 - `preflop_full_board_equity.py` prepares bounded exact full-board showdown categories for the separate `preflop_push_fold.py` API. Preserve exact binary64-input rational private-pair conditioning, all 1,712,304 unordered boards per compatible pair, hidden-board own-hand policies, nonzero category support and pre-enumeration pair/rank caps. The restricted SB fold/shove, BB fold/call game uses total stacks/blinds, refund-aware net transfers and full requested work admission. Structural table validation is not proof that caller-supplied counts came from real boards. Independent best-five full enumeration and numeric-rule own-hand best responses in `scripts/preflop_push_fold_validation.py` remain the oracle. No limps, non-all-in raises, later-street betting, full-range or multiway claim follows.
+
+Optional prepared fixed-street `training_backend="native"` requires an explicit
+source build and retains Python rules, defaults and exact diagnostics. Preserve
+actor/own-hand/public-node policy indexing, affine matched-wager utilities,
+simultaneous CFR/DCFR versus alternating CFR+ schedules, zero-mean pair mass,
+strict complete-input protocol checks, source/compiler/executable provenance,
+and independent full-request native work/storage admission. Historical admission
+also remains mandatory; complete-solve bookkeeping replaces only the reference
+trainer charge. Do not equate modeled native storage or Python tracemalloc with
+RSS. See [native training scope and evidence](docs/native-fixed-street.md).
+
+The [weighted preflop exact witness](docs/preflop-weighted-sequence.md) is a
+separate fixed research game with forced full-board checkdown. Preserve its
+predeclared physical-count/spec hashes, independent legal-history/payoff/flow
+reconstruction, own-hand responses and unchanged rational LP limits. Keep the
+candidate separate from independent verification, retain failed feasibility
+observations and require clean-source saved-file verification before publishing
+formal proof. No production defaults, earlier/later-street model, range caps or
+frontend behavior are expanded by this certificate.
+
+The [exact-anchor trainer comparison](docs/preflop-exact-anchor-comparison.md)
+keeps the saved rational proof separate from finite-iteration production
+strategies. Preserve strict rational `-BR_BB <= V_exact <= BR_SB`, BB own-utility
+signs, pinned physical counts and full-request admission before build/training.
+Keep early target misses, final quality gates, backend agreement and timings
+separate; do not require policy equality to one chosen equilibrium or infer
+RSS/native memory from Python allocation traces.
+
+The [covered preflop count pool](docs/preflop-covered-counts.md) is a separate
+explicit prepared-data path. Keep ordinary four-pair enumeration/solver admission
+literal. Admit covered target candidates/pairs before orbit work, reject every
+missing or conflicting joint suit orbit, and keep full requested solve budgets
+before tree/native invocation. Preserve exact global blocker conditioning and
+separate private identities. Source fingerprints and structural validation do
+not authenticate counts. Never describe synthetic range tests as physical
+accuracy evidence or infer permission for more enumeration from represented
+board coverage. Shared kernels/defaults and later-street work remain unchanged.
+
+The [best-five physical reference](docs/preflop-five-card-reference.md) is an
+isolated fixed research executable. Require exhaustive five-card tuple parity
+before its full-board census, exact actual call counts, the old full-board
+anchor, independent production seven-card count agreement, clean frozen source
+and unchanged build identities. Compilation or consistent category totals alone
+do not certify new counts. Keep binary data/builds outside Git and preserve
+all failure observations. No production rank/board limit or backend changes
+follow from this reference.
+
+The [physical AA/KK range experiment](docs/preflop-aa-kk-physical-range.md)
+retains all 36 private pairs and uses only the independently checked three-class
+count basis. Verify the constructive +1-chip lower/upper bounds from independent
+numeric rules before comparing trained policies. Preserve strict rational value
+containment, legal own-hand responses and full-request admission. The fixed
+AA/KK result does not establish mixed-range or later-street equilibrium accuracy.
+
+The [generic best-five reference](docs/preflop-generic-five-reference.md) accepts
+only one-to-four explicitly admitted private pairs after current-build exhaustive
+conformance. Validate the whole argv before output/work; preserve ordered roles,
+full board/call censuses and complete failed stdout/stderr. No source-count
+query may bypass original production preparation caps. Keep raw independent and
+native values, old physical anchors and source/both-build identity checks.
+This research extension adds no production backend/default or equilibrium claim.

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-weighted-sequence-v1",
+  "baseline_commit": "26a3b28bfe566019b3d44b281a24f9497d578ca8",
+  "scope": "Exact equilibrium witness for one finite heads-up preflop betting game with all final boards hidden and forced later checkdown. No later-street betting, multiway, rake, unrestricted equilibrium or production-default change.",
+  "fixture": {
+    "id": "preflop-weighted-three-pair-sequence-equilibrium",
+    "sb_range": "AsAd:1,QsQd:0.5",
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "config": {
+      "small_blind": 0.5,
+      "big_blind": 1,
+      "starting_stack": [
+        4,
+        3
+      ],
+      "raise_sizes": [
+        0.5,
+        1
+      ],
+      "max_raises": 1,
+      "include_all_in": true
+    }
+  },
+  "chance": {
+    "boards_per_pair": 1712304,
+    "compatible_pairs": 3,
+    "physical_boards": 5136912,
+    "pair_priors": [
+      "8/13",
+      "1/13",
+      "4/13"
+    ],
+    "source_commit": "a5e1b75ab424c97673f5126796b9d7eae14b0706",
+    "source_files": [
+      "benchmarks/results/preflop-push-fold-v1-oracle-pair-0.json",
+      "benchmarks/results/preflop-push-fold-v1-oracle-pair-1.json",
+      "benchmarks/results/preflop-push-fold-v1-oracle-pair-2.json"
+    ],
+    "canonical_artifact_sha256": [
+      "599c1360f321d845b335b798468c3c6af216951663e87b6812ecb56321895b40",
+      "61cecc13d773b26496a14ffee1612dfaf5149981e4fcdb12bdbad65db2660160",
+      "fc6ae5898eac160de79ed4d9c652c632d000966867f1b296bc7dbae682e98e52"
+    ]
+  },
+  "structural_census": {
+    "decision_nodes": 7,
+    "fold_terminals": 6,
+    "showdown_terminals": 6,
+    "public_states": 19,
+    "information_sets": [
+      6,
+      8
+    ],
+    "sequences": [
+      19,
+      19
+    ],
+    "original_lower_lp": {
+      "rows": 26,
+      "columns": 82,
+      "cells": 2241
+    },
+    "original_upper_lp": {
+      "rows": 28,
+      "columns": 80,
+      "cells": 2349
+    }
+  },
+  "unchanged_lp_caps": {
+    "rows": 96,
+    "columns": 256,
+    "cells": 25000,
+    "pivots": 512,
+    "updates": 10000000,
+    "bits": 4096
+  },
+  "acceptance": {
+    "exact_primal_dual_gap": "0",
+    "exact_flow_residuals": "0",
+    "exact_policy_normalization_residuals": "0",
+    "exact_nash_conv": "0",
+    "matrix_and_recursive_value_agreement": "exact",
+    "independent_reconstruction": "Original physical counts, conditioned priors, all legal histories, information sets, sequence flows, payoff matrix, both primal/dual witnesses and legal own-hand best responses must be reconstructed without LP/search/candidate-builder/production trainer/tree/evaluation/BR imports.",
+    "rank_calls": 0,
+    "board_enumerations": 0
+  },
+  "method": "Reuse project-owned bounded exact simplex unchanged for the candidate, independently represent the fixed preflop game, and verify the saved rational witness through separate numeric rules and original primal/dual inequalities. Preserve every feasibility failure; freeze clean committed source before the formal witness. No production training or default changes in this milestone.",
+  "primary_references": [
+    "https://doi.org/10.1006/game.1996.0050",
+    "https://ai.stanford.edu/~koller/Papers/Koller%2Bal%3AGEB96.pdf"
+  ]
+}

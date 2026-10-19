@@ -1,5 +1,103 @@
 # Solver progress record
 
+## Independent physical source rows for mixed-range work
+
+The project-owned best-five reference now supports strictly bounded one-to-four
+explicit private-pair queries after current-build exhaustive conformance. Whole
+requests are admitted before binary lookup, malformed input rejects before any
+output/counting, and raw failed stdout/stderr are retained. Original production
+preparation caps and evaluator/solver defaults remain unchanged.
+
+All three QQ/KK relative-suit classes now have exact full-board counts agreeing
+with the separate native seven-card counter and the original independent
+shared-suits anchor. The current v2 build also reproduces every five-card rank
+tuple and the previous AA/KK basis. Together these source rows support later
+mixed strong/weak covered ranges; wider equilibrium accuracy is still separately
+measured. See [raw counts, conformance and limits](preflop-generic-five-reference.md).
+
+## Full physical AA-versus-KK range reaches a checked exact anchor
+
+All 36 physical AA/KK private pairs and 61,642,944 represented boards now have
+an independently verified constructive +1-chip value in the finite preflop
+checkdown game. Source counts come from all three exhaustively checked relative
+suit classes; no new ranking occurs in the solve. The hidden own-hand model
+retains six hands per player, limps and finite reraises under existing budgets.
+
+All ten saved Python/native CFR+ profiles pass strict rational exact-value
+containment and independent own-hand best-response replay. At 500 iterations
+NashConv is about 0.000000608 chips and value error about 0.0000000146 chips.
+This validates a full physical rank-pair range, not arbitrary starting ranges
+or later-street play. See [proof, raw observations and limits](preflop-aa-kk-physical-range.md).
+
+## Physical preflop source basis independently expanded
+
+A separate project-owned C best-five reference agrees with the independent
+Python oracle on every 2,598,960 five-card rank tuple, then checks all boards
+of three AA/KK relative-suit classes using all 21 five-card subsets per hand.
+All integer counts agree with the independent original anchor and separately
+retained production seven-card counts. This supplies two additional physically
+checked source rows for broader suit-covered ranges, without changing any
+production enumeration cap or solver default. See
+[raw counts, exhaustive evidence and limits](preflop-five-card-reference.md).
+
+## Prepared full-board preflop coverage extends beyond four private pairs
+
+A separate bounded suit-covered count pool and explicit solve entry now reuse
+trusted ordinary source counts across more compatible private pairs. The
+original four-pair enumeration and solver APIs retain their limits and payloads;
+the new entry shares their betting/training body and full-request admission.
+
+A frozen six-pair weighted physical fixture with five BB hands, limps and actual
+reraises passes independent own-hand best-response replay in Python/native at
+about 0.000000189-chip NashConv after 3,000 CFR+ iterations. Three pinned count
+rows cover 10,273,824 represented boards through verified joint suit maps with
+zero new ranking. The 10-iteration miss remains visible. Synthetic 36-pair tests
+are separately labeled. See [limits, raw evidence and provenance](preflop-covered-counts.md).
+
+## Python/native preflop trainers checked against the proved weighted value
+
+The same weighted one-raise full-board checkdown game now has a frozen
+finite-iteration comparison for vanilla CFR, DCFR and CFR+. All 38 retained
+Python/native policies pass independent physical-count replay and strict exact
+best-response containment of the separately proved value. At 8,000 iterations,
+CFR+ reaches about 0.0000402-chip NashConv in each backend; earlier misses remain
+visible. Complete-call timings and Python allocator traces are reported
+separately, including higher native traced allocation and low-iteration process
+overhead. See [protocol, raw observations and limits](preflop-exact-anchor-comparison.md).
+
+## Weighted preflop game has an independently verified exact value
+
+A frozen three-pair preflop/checkdown game with asymmetric stacks, limps, a BB
+option, finite raises and all-ins now has an exact sequence-form equilibrium
+witness at SB net-transfer value `100107990869/130471452826`. The physical count
+inputs represent all 5,136,912 hidden final boards across those compatible pairs.
+A separate numeric verifier reconstructs every flow/payoff and original
+primal/dual inequality; a second unrolled terminal-history oracle checks all 88
+own-hand pure responses. Both produce exact NashConv zero, and illegal private
+information controls change the value as expected. All LP limits are unchanged.
+
+The clean-source saved report, raw candidate and adversarial verification tests
+remain distinct. This is a fixed-game accuracy anchor; production defaults,
+later-street betting and private-range caps are unchanged. See
+[model, proof, source identities and limits](preflop-weighted-sequence.md).
+
+## Explicit native training passes the fixed-street comparison
+
+Prepared preflop and forced-checkdown flop calls now have an explicit source-built
+C11 training backend. Python retains table/rule validation and exact diagnostics;
+default Python outputs remain unchanged. A public-hand-vector flop reduction
+resolves the initial scalar experiment's DCFR probability mismatch without
+loosening any frozen gate. The failed initial report remains published.
+
+The revised six-profile experiment retains 36 timed calls and two separate
+Python allocation traces. All three flop profiles exactly match Python policies
+and eight diagnostics; all 38 saved policies pass independent physical-count
+replay. Complete-call median ratios range from 40.13 to 103.06 on the two measured
+finite games. Both mandatory CFR+ quality targets pass; vanilla flop still misses
+the reported target. Native uses more traced Python allocation in the preflop
+trace, and no child-memory/RSS saving is established. Strict Windows/Linux native
+conformance passes. See [scope, failed evidence and followup](native-fixed-street.md).
+
 ## Exact rational equilibria establish both small river game values
 
 A bounded development sequence-form search now supplies rational equilibrium

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-qq-kk-basis-v1",
+  "reference_protocol": "PREFLOP_FIVE_REFERENCE_V2",
+  "sb_range": "QdQs",
+  "bb_range": "KdKs,KcKd,KcKh",
+  "compatible_pairs": 3,
+  "boards_per_pair": 1712304,
+  "physical_boards": 5136912,
+  "reference_seven_card_rank_calls": 10273824,
+  "reference_five_card_rank_calls": 215750304,
+  "old_shared_suits_anchor": {
+    "path": "benchmarks/results/preflop-push-fold-v1-oracle-pair-2.json",
+    "artifact_sha256": "fc6ae5898eac160de79ed4d9c652c632d000966867f1b296bc7dbae682e98e52",
+    "sb_hand": "QdQs",
+    "bb_hand": "KdKs",
+    "wins": 292846,
+    "ties": 9336,
+    "losses": 1410122
+  },
+  "acceptance": {
+    "current_build_exhaustive_five_card_conformance": true,
+    "all_physical_source_counts": "exact integer equality to separately prepared production native counts",
+    "existing_shared_suits_source": "exact equality to pinned independent original full-board oracle",
+    "full_request_admission": "original production candidate/four-pair/board/rank caps before build or counting",
+    "source_build_integrity": "clean committed source and unchanged reference/candidate identities"
+  },
+  "method": "Validate every five-card rank tuple and the fixed AA/KK basis on the current source build, then count one QQ-vs-KK three-pair request through bounded decimal argv. Preserve ordered endpoints, complete board censuses, actual 7/5-card counters, old source anchor and raw candidate/reference counts. No count is accepted from source tags alone. All observations/failures retained.",
+  "scope": "Independent physical source rows for three QQ/KK suit classes only; no production evaluator/default/cap change, dynamic solver backend, wider-range equilibrium or memory/performance claim."
+}

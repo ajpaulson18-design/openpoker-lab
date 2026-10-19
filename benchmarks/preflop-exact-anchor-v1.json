@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-exact-anchor-v1",
+  "baseline_commit": "a67c0a29631cd20615c77d71a985b4d3d817d53c",
+  "scope": "Finite weighted three-pair preflop betting with hidden full-board forced checkdown, exactly the max_raises=1 game independently certified in PR152. No later-street betting, full-range, multiway or unrestricted accuracy claim.",
+  "reference": {
+    "spec_path": "benchmarks/preflop-weighted-sequence-v1.json",
+    "spec_sha256": "5b4a79d0239a42c3911928b0ca5d0f53a54be228e68c62ad9a5f8a2925719fb3",
+    "report_path": "benchmarks/results/preflop-weighted-sequence-v1.json",
+    "report_sha256": "7bdffdf73df5950d73f9fab54e27b364babb4e00718249a44cafdf47c62415c6",
+    "witness_sha256": "59d294d41114756053419e0a69e4d3b043be9a900ec678a0668a0f9cf48300ed",
+    "value_sb_fraction": "100107990869/130471452826"
+  },
+  "fixture": {
+    "sb_range": "AsAd:1,QsQd:0.5",
+    "bb_range": "AsKh:0.25,KsKd:1",
+    "config": {
+      "small_blind": 0.5,
+      "big_blind": 1,
+      "starting_stack": [
+        4,
+        3
+      ],
+      "raise_sizes": [
+        0.5,
+        1
+      ],
+      "max_raises": 1,
+      "include_all_in": true
+    },
+    "compatible_pairs": 3,
+    "physical_boards": 5136912,
+    "public_states": 19,
+    "resource_model": "prepared-counts",
+    "world_indexing": "pair-mean"
+  },
+  "algorithms": [
+    "vanilla",
+    "dcfr",
+    "cfrplus"
+  ],
+  "checkpoints": [
+    10,
+    100,
+    1000,
+    8000
+  ],
+  "early_repeats": 1,
+  "final_repeats": 3,
+  "paired_orders": [
+    [
+      "python",
+      "native"
+    ],
+    [
+      "native",
+      "python"
+    ],
+    [
+      "python",
+      "native"
+    ]
+  ],
+  "traces": {
+    "algorithm": "cfrplus",
+    "iterations": 1000,
+    "backends": [
+      "python",
+      "native"
+    ],
+    "scope": "Separate complete-call Python tracemalloc, excludes native child allocation and RSS; no memory-saving gate."
+  },
+  "acceptance": {
+    "independent_metric_absolute_tolerance": 1e-10,
+    "cross_backend_metric_absolute_tolerance": 1e-08,
+    "cross_backend_policy_probability_absolute_tolerance": 1e-06,
+    "final_nash_conv_chip_limit": 0.005,
+    "final_quality_algorithm": "cfrplus",
+    "bracket_contains_exact_value": "exact rational; no numeric padding",
+    "absolute_value_error_at_most_nash_conv": "exact rational",
+    "deterministic_final_payloads": true,
+    "earlier_and_non_cfrplus_target_misses": "retained nonfatal observations",
+    "minimum_speed_ratio": null,
+    "policy_distance_to_single_equilibrium": null
+  },
+  "timing_boundary": "Complete prepared solver call plus canonical JSON UTF-8 serialization and SHA256. Input loading, source/build checks, wrappers and independent validation remain outside timing. Every raw policy and failed observation is retained. No general speedup, monotonic convergence or process memory claim.",
+  "admission": "All twelve full-request Python/reference and native preflights, including both trace requests, finish before native executable lookup or training. Existing complete-solve, structural and source guards stay unchanged.",
+  "method": "Independently reverify the saved exact rational witness, replay every saved finite strategy using independent numeric rules and pinned physical counts, and check exact best-response brackets against that proved value. No rowwise policy match to one chosen equilibrium is required."
+}

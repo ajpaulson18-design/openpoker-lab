@@ -170,3 +170,37 @@ Independent reconstruction preserves the exact 115/7 equilibrium through all
 fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
 all eight still miss the unchanged 0.001-chip NashConv target. Full policies
 and misses remain saved. See [experiment and scope](../turn-suit-equivariance.md).
+
+## Explicit compiled training for prepared preflop and fixed flop
+
+The prepared full-board preflop betting and forced-checkdown flop APIs accept an
+explicit source-built native trainer. Python defaults, poker rules, physical
+counts, strategy formats and exact diagnostics remain unchanged. Preflop uses
+scalar traversal; flop uses public-hand-vector reduction with direct signed
+joint masses. The initial scalar flop DCFR parity miss is retained alongside
+the passing revised six-profile report. All 38 revised saved policies pass
+independent physical-count replay. Measured complete-call median ratios are
+40.13–103.06 on two finite prepared games; no general speedup or RSS saving
+follows. Native conformance passes on Windows/Linux. See
+[build, resource guards, quality misses and evidence](../native-fixed-street.md).
+
+## Exact weighted preflop/checkdown anchor
+
+A three-compatible-pair finite preflop betting game with all final boards hidden
+has exact value `100107990869/130471452826` in SB net-transfer chips. Original
+sequence-form primal/dual certificates, independently reconstructed exact legal
+responses and exhaustive own-hand pure responses agree at NashConv zero. The
+19-state game retains limps, BB's option, configured raises, all-ins and refunds.
+This research adds a model-specific validation target while production defaults
+and broader full-deck future betting remain unchanged. See
+[frozen scope and reproducible proof](../preflop-weighted-sequence.md).
+
+## Covered prepared preflop count pool
+
+An explicit covered-table path can reuse ordinary source counts across joint
+suit-equivalent private pairs while retaining the original four-pair enumeration
+limits. The separate table is bounded to 128 compatible pairs and 32 source
+tables; all ordinary solver work/state/action/native caps still apply. The
+physical six-pair weighted benchmark independently replays full-board hidden
+checkdown with limps and actual reraises. Wider synthetic tests establish
+routing/guard behavior only. See [API, provenance and measured scope](../preflop-covered-counts.md).

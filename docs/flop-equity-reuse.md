@@ -129,3 +129,8 @@ incorporated. All decisions occur on the fixed flop, with later cards hidden and
 forced to check down. Full private ranges, later-street betting, full-deck
 preflop and multiway equilibrium remain outside this finite game. Pot-share
 values retain the convention in the [direct solver](direct-flop-checkdown.md).
+
+Explicit prepared calls may select `training_backend="native"` with a separately
+source-built helper and `build_directory`. The Python default and its payload
+remain unchanged. See [native training](native-fixed-street.md) for the distinct
+work/storage admission, supported information boundary and actual evidence.

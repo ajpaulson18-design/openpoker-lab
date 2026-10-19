@@ -1,0 +1,73 @@
+name: Independent preflop best-five reference
+on:
+  push:
+    paths: &reference_paths
+      - 'native/preflop_five_card_reference.c'
+      - 'scripts/build_preflop_five_reference.py'
+      - 'scripts/validate_preflop_five_reference.py'
+      - 'scripts/preflop_five_count_reference.py'
+      - 'scripts/benchmark_preflop_qq_kk_basis.py'
+      - 'tests/test_preflop_generic_five_reference.py'
+      - 'benchmarks/preflop-qq-kk-basis-v1.json'
+      - 'scripts/preflop_validation.py'
+      - 'tests/test_preflop_five_reference.py'
+      - 'benchmarks/preflop-five-basis-v1.json'
+      - '.github/workflows/preflop-five-reference.yml'
+  pull_request:
+    paths: *reference_paths
+permissions:
+  contents: read
+jobs:
+  reference:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      OPENPOKER_FIVE_REFERENCE_BUILD_DIR: ../five-reference-ci
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build both independent and candidate counters
+        if: runner.os != 'Windows'
+        run: |
+          python -B -m scripts.build_preflop_five_reference --output-dir ../five-reference-ci
+          python -B -m scripts.build_native_preflop --output-dir ../equity-reference-ci
+      - name: Build both counters with installed MSVC
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstall = & $vswherePath -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vsInstall) { throw 'Installed MSVC unavailable' }
+          $nativeDevCmd = Join-Path $vsInstall 'Common7\Tools\VsDevCmd.bat'
+          $nativeEnvironment = & cmd.exe /d /c "call `"$nativeDevCmd`" -arch=x64 -host_arch=x64 >nul && set"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($environmentLine in $nativeEnvironment) {
+            if ($environmentLine -match '^([^=]+)=(.*)$') {
+              [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
+            }
+          }
+          python -B -m scripts.build_preflop_five_reference --output-dir ../five-reference-ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -B -m scripts.build_native_preflop --output-dir ../equity-reference-ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Exhaustive five-card conformance and physical AA/KK plus QQ/KK bases
+        run: python -B -m scripts.benchmark_preflop_qq_kk_basis --reference-build ../five-reference-ci --candidate-build ../equity-reference-ci --output-dir "${{ runner.temp }}/five-reference-observation"
+      - name: Generic bounded protocol and role conformance
+        run: python -B -m unittest tests.test_preflop_generic_five_reference -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preflop-five-reference-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/five-reference-observation/report.json
+            ${{ runner.temp }}/five-reference-observation/conformance/report.json
+            ${{ runner.temp }}/five-reference-observation/conformance/basis-counts.json
+            ${{ runner.temp }}/five-reference-observation/qq-reference-raw/stdout.json
+            ${{ runner.temp }}/five-reference-observation/qq-reference-raw/stderr.txt
+          if-no-files-found: warn

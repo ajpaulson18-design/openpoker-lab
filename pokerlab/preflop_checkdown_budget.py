@@ -34,10 +34,27 @@ def options(config, iterations, algorithm, resource_model):
 
 def admit_prepared(equities, config, iterations, algorithm, resource_model,
                    *, world_indexing='categorical'):
+    return _admit_prepared(equities, config, iterations, algorithm, resource_model,
+                           world_indexing=world_indexing)
+
+
+def admit_covered_prepared(equities, config, iterations, algorithm,
+                           *, world_indexing='pair-mean'):
+    """Admit covered counts only; never authorize additional board enumeration."""
+    return _admit_prepared(equities, config, iterations, algorithm, 'prepared-counts',
+                           world_indexing=world_indexing, covered=True)
+
+
+def _admit_prepared(equities, config, iterations, algorithm, resource_model,
+                    *, world_indexing='categorical', covered=False):
     config = options(config, iterations, algorithm, resource_model)
     if type(world_indexing) is not str or world_indexing not in ('categorical', 'pair-mean'):
         raise ValueError('World indexing must be categorical or pair-mean')
-    if type(equities) is not FullBoardEquities:
+    if covered:
+        from .preflop_covered_equity import CoveredPreflopEquities
+        if type(equities) is not CoveredPreflopEquities or resource_model != 'prepared-counts':
+            raise TypeError('Covered solves require an exact covered-count table and prepared admission')
+    elif type(equities) is not FullBoardEquities:
         raise TypeError('Equities must be an exact FullBoardEquities table with trusted counts')
     equities.validate()
     pairs = len(equities.pairs)
@@ -122,4 +139,10 @@ def admit_prepared(equities, config, iterations, algorithm, resource_model,
                      'Fraction before binary64 conversion; its setup charge is included above. '
                      'Floating-point summation order may differ.',
         })
+    if covered:
+        result['budget_version'] = ('preflop-covered-pair-mean-work-v1'
+                                    if world_indexing == 'pair-mean' else 'preflop-covered-work-v1')
+        result['equity_coverage'] = 'joint-suit-covered-counts-v1'
+        result['scope'] += (' Covered tables pool bounded source counts through joint suit '
+                            'bijections; no additional physical enumeration is authorized.')
     return result
