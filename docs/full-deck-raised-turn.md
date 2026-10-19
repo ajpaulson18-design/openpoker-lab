@@ -3,8 +3,9 @@
 This development reference combines two previously separate validation dimensions:
 the full remaining river deck and finite raises on both turn and river. It runs
 no production training and changes no production solver, earlier-street source,
-default, payoff convention or admission limit. The configured equilibrium value
-and finite-iteration training quality remain unknown.
+default, payoff convention or admission limit. The later [fixed-budget experiment](full-deck-raised-turn-tail.md) records
+finite-iteration quality; separately derived [exact witnesses](full-deck-raised-turn-clean-witness.md)
+now establish the configured game value, with [independent full-physical replay](full-physical-audit-wrapper.md).
 
 ## Fixed game and physical evidence
 

@@ -91,3 +91,31 @@ Python (171.831 seconds), including full generation and historical-HEAD replay,
 metric/counter tampering, late accepted-input drift, owned rollback and a
 foreign path replacement after publication. The replacement regression failed
 before the ownership fix and passed afterward.
+
+## Immutable report
+
+The [saved report](../benchmarks/results/full-deck-raised-turn-full-physical-v1.json)
+is 39,230 bytes, SHA256
+`b84527caeced27674d136479cc6700929309ed6677e8ee6bd10c9e93f35cbd11`.
+Its generation HEAD is `7db92fea948a65b78b609f285cfb63e1ea6216d3`;
+all ten source fingerprints match committed Git bytes. Staged and published
+full reconstruction passed with no training.
+
+| Profile | Exact NashConv | Weighted row visits | Maximum stored Fraction bits |
+| --- | ---: | ---: | ---: |
+| Handwritten check/call | 75 | 2,816 | 15 |
+| Single-card row control | 75 | 2,820 | 15 |
+| Original materialized tail | positive, about 2.290e-19 | 8,476 | 4,554 |
+| Clean materialized witness | 0 | 3,756 | 399 |
+| Original matrix-free tail | positive, about 4.367e-19 | 9,264 | 5,035 |
+| Clean matrix-free witness | 0 | 3,756 | 395 |
+
+Both clean witnesses have exact value OOP `-400/21`, IP `400/21` and both legal
+response gains zero. All six cases retain 18,234 structural node visits and all
+48 physical river cards. Original saved policies and input reports are unchanged.
+The exact metrics agree with the preceding checked chance-class audit, while
+this implementation uses its own full-physical arithmetic and best responses.
+
+The accepted-report regression binds this report hash and disables the five
+production capture/solve/trainer entry points. Complete saved reconstruction
+passed in normal Python (16.779 seconds) and optimized Python (14.262 seconds).

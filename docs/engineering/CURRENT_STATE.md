@@ -221,3 +221,11 @@ tables; all ordinary solver work/state/action/native caps still apply. The
 physical six-pair weighted benchmark independently replays full-board hidden
 checkdown with limps and actual reraises. Wider synthetic tests establish
 routing/guard behavior only. See [API, provenance and measured scope](../preflop-covered-counts.md).
+
+## Full-physical raised-turn exact verification
+
+A separate [independent physical oracle](../full-physical-audit-wrapper.md) verifies
+both saved equilibrium witnesses at exact NashConv zero and OOP value -400/21.
+All 48 river cards remain separate; the original numeric tails keep their positive
+exact gaps. This fixed-game research leaves production defaults and earlier
+streets unchanged. See the linked immutable report, controls and scope.
