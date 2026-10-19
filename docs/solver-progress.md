@@ -1312,3 +1312,7 @@ Both backends reach NashConv 0.001658745330324507 at 1,500; all six profiles
 still miss 0.001 chips. Complete policies and misses are retained. Numeric
 trained-policy replay is separate from the hand-written exact anchors.
 See [reference, completed experiment and limits](full-deck-raised-turn.md).
+A separate [checked chance-quotient audit](full-deck-raised-exact.md) certifies
+all six explicitly normalized policies without changing the generic exact cap.
+All six exact gaps still miss 1/1000 chips; this is fixed-policy evidence for
+that full-deck game, not an equilibrium or arbitrary-policy certificate.
