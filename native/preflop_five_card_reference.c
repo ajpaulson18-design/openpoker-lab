@@ -109,24 +109,20 @@ static int all_five(void) {
     return fflush(stdout) == 0 ? 0 : 3;
 }
 
-static int count_pairs(void) {
-    /* Deck ids: rank-major 23456789TJQKA, suits cdhs. Fixed AA/KK suit basis. */
-    static const unsigned int holes[3][4] = {{49u,51u,45u,47u},
-                                           {49u,51u,44u,45u},
-                                           {49u,51u,44u,46u}};
+static int count_pairs(const unsigned int *holes, unsigned int pair_count, const char *reference) {
     unsigned int pair, k, deck[48], size, a, b, c, d, e, sb[7], bb[7];
     uint64_t boards_total = UINT64_C(0);
-    if (printf("{\"schema_version\":1,\"reference\":\"preflop-five-card-basis-v1\",\"pairs\":[") < 0) return 3;
-    for (pair = 0u; pair < 3u; ++pair) {
+    if (printf("{\"schema_version\":1,\"reference\":\"%s\",\"pairs\":[", reference) < 0) return 3;
+    for (pair = 0u; pair < pair_count; ++pair) {
         uint64_t wins = 0u, ties = 0u, losses = 0u;
         size = 0u;
         for (k = 0u; k < 52u; ++k) {
-            if (k != holes[pair][0] && k != holes[pair][1] &&
-                k != holes[pair][2] && k != holes[pair][3]) deck[size++] = k;
+            if (k != holes[4u * pair + 0u] && k != holes[4u * pair + 1u] &&
+                k != holes[4u * pair + 2u] && k != holes[4u * pair + 3u]) deck[size++] = k;
         }
         if (size != 48u) return 4;
-        sb[0] = holes[pair][0]; sb[1] = holes[pair][1];
-        bb[0] = holes[pair][2]; bb[1] = holes[pair][3];
+        sb[0] = holes[4u * pair + 0u]; sb[1] = holes[4u * pair + 1u];
+        bb[0] = holes[4u * pair + 2u]; bb[1] = holes[4u * pair + 3u];
         for (a = 0u; a < 44u; ++a) for (b = a + 1u; b < 45u; ++b)
         for (c = b + 1u; c < 46u; ++c) for (d = c + 1u; d < 47u; ++d)
         for (e = d + 1u; e < 48u; ++e) {
@@ -150,12 +146,53 @@ static int count_pairs(void) {
     return fflush(stdout) == 0 ? 0 : 3;
 }
 
+static int parse_card_id(const char *text, unsigned int *value) {
+    size_t length = strlen(text);
+    unsigned int n;
+    if (length < 1u || length > 2u || text[0] < '0' || text[0] > '9') return 0;
+    n = (unsigned int)(text[0] - '0');
+    if (length == 2u) {
+        if (text[1] < '0' || text[1] > '9') return 0;
+        n = n * 10u + (unsigned int)(text[1] - '0');
+    }
+    if (n >= 52u) return 0;
+    *value = n; return 1;
+}
+
+static int explicit_pairs(int argc, char **argv) {
+    unsigned int selected[16], canonical[16], pairs, p, k, j;
+    if (argc < 6 || argc > 18 || (argc - 2) % 4 != 0) return 2;
+    pairs = (unsigned int)(argc - 2) / 4u;
+    for (p = 0u; p < pairs; ++p) {
+        for (k = 0u; k < 4u; ++k) {
+            if (!parse_card_id(argv[2u + 4u * p + k], &selected[4u * p + k])) return 2;
+            for (j = 0u; j < k; ++j)
+                if (selected[4u * p + k] == selected[4u * p + j]) return 2;
+        }
+        for (k = 0u; k < 4u; k += 2u) {
+            unsigned int a = selected[4u * p + k], b = selected[4u * p + k + 1u];
+            canonical[4u * p + k] = a < b ? a : b;
+            canonical[4u * p + k + 1u] = a < b ? b : a;
+        }
+        for (j = 0u; j < p; ++j) {
+            int duplicate = 1;
+            for (k = 0u; k < 4u; ++k)
+                if (canonical[4u * p + k] != canonical[4u * j + k]) duplicate = 0;
+            if (duplicate != 0) return 2;
+        }
+    }
+    return count_pairs(selected, pairs, "preflop-five-card-pairs-v2");
+}
+
 int main(int argc, char **argv) {
+    static const unsigned int basis[12] = {49u,51u,45u,47u,49u,51u,44u,45u,49u,51u,44u,46u};
 #ifdef _WIN32
     if (_setmode(_fileno(stdout), _O_BINARY) == -1) return 3;
 #endif
+    if (argc < 2) return 2;
+    if (strcmp(argv[1], "--count-pairs") == 0) return explicit_pairs(argc, argv);
     if (argc != 2) return 2;
     if (strcmp(argv[1], "--all-five") == 0) return all_five();
-    if (strcmp(argv[1], "--count-basis") == 0) return count_pairs();
+    if (strcmp(argv[1], "--count-basis") == 0) return count_pairs(basis, 3u, "preflop-five-card-basis-v1");
     return 2;
 }
