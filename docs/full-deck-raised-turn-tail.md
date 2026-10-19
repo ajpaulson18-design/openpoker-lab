@@ -5,7 +5,7 @@ game](full-deck-raised-turn.md). The window is declared before training:
 discard D=1,000, complete T=1,500 sweeps, retain original CFR+ weights t on
 sweeps 1,001–1,500. Run both materialized and matrix-free backends with no
 stopping target. The reporting target remains NashConv <=0.001 chips; retain
-every miss. The actual two-call experiment is pending at this source checkpoint.
+every miss. Both actual calls completed at the source checkpoint below.
 
 ## Capture and realization identity
 
@@ -74,7 +74,7 @@ verification reconstructs complete derived payloads and ledgers without training
 and without repairing stored metrics. The accepted baseline is immutable.
 
 Cheap ten-sweep probes and synthetic publication fixtures test the harness;
-they are not completed 1,000/1,500-sweep experiments. Numeric tail replay is not
+they are separate from the completed 1,000/1,500-sweep experiment. Numeric tail replay is not
 an exact certificate. The [separate checked quotient auditor](full-deck-raised-exact.md)
 may audit a later class-constant tail under its own validation requirements.
 Production averaging/defaults, earlier streets and all existing proofs remain
@@ -87,8 +87,48 @@ Python (235.691 seconds). They include cheap real ten-sweep captures, an exact
 turn/chance realization oracle, complete synthetic publication fixtures with zero
 new long training, saved-data mutation checks and owned-file rollback. Separate
 read-only review found no remaining blocker in the artifact guards, file ownership
-or provenance checks. These preflight results do not claim that the two long calls
-have completed.
+or provenance checks. These preflight checks preceded the two long calls.
+
+## Recorded numeric experiment
+
+Generation was frozen at `0040b6fb5ee936ac1c18d10e5a48e2f3b7d4c4cf`.
+Both production calls completed all 1,500 sweeps without a stopping target.
+All 75 source fingerprints match that committed revision. The
+[immutable report](../benchmarks/results/full-deck-raised-turn-tail-v1.json)
+is 4,556,002 bytes with SHA256
+`9e51cbcf9f031f371806be06e6a23589e0dd27d5e3ffffcf36fc545eed5d6998`.
+All six complete policies remain saved, each below the unchanged 2,000,000-byte cap.
+
+| Profile | Averaged sweeps | Materialized numeric NashConv | Matrix-free numeric NashConv | Target met |
+| --- | ---: | ---: | ---: | --- |
+| Prefix | 1–1,000 | 0.0037309341770424 | 0.0037309341770424 | No |
+| Full | 1–1,500 | 0.001658745330324507 | 0.001658745330324507 | No |
+| Tail | 1,001–1,500 | 0 | 0 | Yes |
+
+All four prefix/full misses are retained. Numeric zero is not a formal exact-zero
+claim. Full policies match the immutable original 1,500-sweep bytes; prefix
+strategies match their original 1,000-sweep anchors. Each backend performed
+exactly one trainer call with completed-sweep callbacks at 1,000 and 1,500.
+Complete calls with observations took 159.226 and 594.151 seconds respectively;
+tail conversion took 1.940 and 2.028 seconds. These uncontrolled observations
+provide no general runtime or RSS claim.
+
+Exact subtraction records small negative raw child flows caused by serialized
+input rounding: 935 materialized and 814 matrix-free, with largest magnitude
+4.402e-20 and 2.485e-20 respectively. Existing helper projection/fallback rules
+remain unchanged, and complete correction ledgers are saved. A separate Sol
+reconstruction of the serialized own-sequence flows, without importing the
+candidate capture or conversion modules, found maximum discrepancies of
+1.613e-17 and 2.169e-17, below its predeclared 1e-11 check. It independently
+replayed all six complete physical policies; the largest production/replay
+metric difference was 3.553e-15 chips.
+
+Staged, published and separate saved replay passed with no further training.
+The accepted-report test binds the complete report hash and disables production
+training entry points. The separate exact audit remains necessary for stronger
+claims about explicitly normalized policies.
+The accepted-report test passed in normal Python (19.165 seconds) and optimized
+Python (18.483 seconds), with all capture/training entry points disabled.
 
 Run `python -m unittest tests.test_turn_tail_capture tests.test_turn_tail_realization tests.test_benchmark_turn_tail tests.test_turn_tail_artifacts -v`
 and repeat with `python -O`. After source freeze,

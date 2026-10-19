@@ -1316,3 +1316,10 @@ A separate [checked chance-quotient audit](full-deck-raised-exact.md) certifies
 all six explicitly normalized policies without changing the generic exact cap.
 All six exact gaps still miss 1/1000 chips; this is fixed-policy evidence for
 that full-deck game, not an equilibrium or arbitrary-policy certificate.
+
+A separate [same-run averaging experiment](full-deck-raised-turn-tail.md)
+completed one 1,500-sweep call per backend and reconstructed original-weight
+tails over sweeps 1,001–1,500. Both tails meet the numeric 0.001-chip target;
+all four prefix/full averages still miss and remain saved. Complete physical
+replay and separate serialized-flow reconstruction passed. Numeric zero is
+not an exact-equilibrium certificate, and the full training cost remains charged.
