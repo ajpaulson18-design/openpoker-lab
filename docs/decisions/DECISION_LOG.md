@@ -115,6 +115,16 @@ rejects. Raising global preparation limits or merging private information sets
 was not selected. See [scope and evidence](../preflop-covered-counts.md).
 No prior decision is superseded.
 
+D021 (2026-10-18): engineering decision under the owner's independent validation
+and compiled-computation scope: add an isolated project-owned exhaustive best-five
+reference to establish new physical preflop source rows without reusing the
+production direct-seven-card evaluator. Require complete five-card tuple parity,
+known category totals, fixed full-board counters, the existing independently
+enumerated anchor and independent production count agreement. The tool has only
+fixed finite modes and no solver/backend/default integration. See
+[method, work units and publication status](../preflop-five-card-reference.md).
+No prior decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.

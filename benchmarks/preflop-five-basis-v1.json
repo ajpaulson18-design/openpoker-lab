@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-five-basis-v1",
+  "basis_pairs": [
+    [
+      "AdAs",
+      "KdKs"
+    ],
+    [
+      "AdAs",
+      "KcKd"
+    ],
+    [
+      "AdAs",
+      "KcKh"
+    ]
+  ],
+  "five_card_conformance": {
+    "hands": 2598960,
+    "tuple_width_bytes": 6,
+    "dump_bytes": 15593760,
+    "required_mismatches": 0,
+    "category_counts": {
+      "0": 1302540,
+      "1": 1098240,
+      "2": 123552,
+      "3": 54912,
+      "4": 10200,
+      "5": 5108,
+      "6": 3744,
+      "7": 624,
+      "8": 40
+    }
+  },
+  "full_board_reference": {
+    "pairs": 3,
+    "boards_per_pair": 1712304,
+    "boards_total": 5136912,
+    "seven_card_rank_calls": 10273824,
+    "five_card_rank_calls": 215750304
+  },
+  "acceptance": {
+    "all_five_rank_tuples": "exact equality to project-owned independent Python five-card oracle",
+    "existing_AA_KK_anchor": "exact integer W/T/L equality to pinned independent original enumeration",
+    "new_basis_counts": "exact integer W/T/L equality between exhaustive best-five reference and production native seven-card counter",
+    "source_and_build": "clean committed source and unchanged source/manifest/executable identities"
+  },
+  "scope": "Fixed three-pair physical count reference; no new solver API, changed enumeration caps, later-street decisions, range-wide equilibrium claim, binary distribution or copied third-party code.",
+  "method": "Source-built reference sorts only five ranks and enumerates all 21 five-card subsets for every seven-card hand, independent of production direct seven-card classification. Validate every five-card category/kicker tuple first. Keep binary dump/raw counts/reports outside checkout; publish textual provenance/results only. Existing production three-pair preparation limits remain mandatory. Runtime is validation duration, not a speed benchmark or RSS measurement."
+}
