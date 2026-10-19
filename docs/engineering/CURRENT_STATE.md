@@ -237,3 +237,7 @@ an explicit completed-sweep CFR+ window with original iteration weights. Old
 solver APIs and earlier streets are unchanged. Full-request admission, additional
 dense/slot guards, exact zero-discard parity and independent small-game quality
 tests bound this addition; broader quality depends on recorded experiments.
+
+The separate [fixed direct-tail experiment](../direct-turn-tail-experiment.md)
+defines a frozen full-deck call and complete independent saved-policy audits.
+Its quality result remains pending generation.
