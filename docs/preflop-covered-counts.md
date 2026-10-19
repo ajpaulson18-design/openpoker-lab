@@ -89,5 +89,48 @@ and meet 0.005-chip NashConv. Backend metric/probability gates remain `1e-8` /
 `1e-6`, replay tolerance `1e-10`. Early misses and all failures are retained.
 The changed weighted game has no separately claimed exact equilibrium value.
 Complete-call timings include canonical serialization/hash and have no speed
-gate. Memory is unmeasured. Formal measurement and final CI/publication are
-pending at this source stage.
+gate. Memory is unmeasured.
+
+## Clean-source physical evidence
+
+The [raw report](../benchmarks/results/preflop-covered-counts-v1.json) passes
+from clean source `e5dea4ea0193b682bb856c9b3eb7df9f3a53891c` on Python 3.12.14 /
+Windows and the identified strict MSVC native V2 build. Source/build identities
+remain unchanged. All 471 LF source hashes independently match normalized Git
+blob contents at that freeze. All four full-request Python/native preflights
+pass before build lookup, with maximum modeled totals 301,442,176 / 113,217,104
+under the unchanged 500-million ceiling.
+
+The six priors are exactly `4/11`, `1/22`, `1/11`, `3/22`, `2/11`, `2/11` in
+the report's retained pair order. There are 25 actual public states, nine betting
+decisions and 33 own-hand information rows. Histories include both
+`call / raise@2 / all_in@4` and `raise@2 / all_in@3`, demonstrating actual
+reraises rather than only a configured cap.
+
+| CFR+ iterations | Independent Python NashConv, chips | Target met by both backends | Final median complete Python / native seconds |
+| --- | ---: | --- | ---: |
+| 10 | 0.0154701572 | No, retained early miss | unavailable, one sample |
+| 100 | 0.000168486861 | Yes | unavailable, one sample |
+| 1,000 | 0.00000170001727 | Yes | unavailable, one sample |
+| 3,000 | 0.000000189016694 | Yes | 3.529355 / 0.040915 |
+
+All 12 complete-call payloads pass fresh saved-file exact numeric-rule replay;
+all six paired comparisons pass unchanged gates. Final payload hashes are
+identical within each backend across three repeats. Maximum scalar gap is zero
+in the retained binary64 metrics; maximum action-probability gap is `4.441e-16`.
+Every measured ranking/enumeration guard is zero. The final independently
+replayed SB equilibrium-value bracket is approximately
+`[0.540488844470152, 0.5404890334868454]`, with exact fractions in the report.
+No exact equilibrium-value certificate for the changed weighted game is claimed.
+
+Native complete calls are faster at the final checkpoint on this fixture; at
+10 iterations the measured native process overhead makes it slower. Allocation
+and RSS were not measured. No general performance claim follows.
+
+Canonical report SHA-256:
+`a0a8644de32cead9f081c88ae50e980bc958bc4b611f175b887676b4463984eb`.
+Raw saved-file SHA-256:
+`0f436faa5c7909617db2ead4ec39a23fafe1876ae56c6365f37283af0489eaf6`.
+The numerical source/specification were committed before measurement. Publication
+adds only this evidence, documentation and a saved-artifact regression; final
+cross-platform CI and GitHub merge state are recorded on the pull request.

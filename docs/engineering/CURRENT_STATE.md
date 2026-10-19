@@ -186,3 +186,13 @@ responses and exhaustive own-hand pure responses agree at NashConv zero. The
 This research adds a model-specific validation target while production defaults
 and broader full-deck future betting remain unchanged. See
 [frozen scope and reproducible proof](../preflop-weighted-sequence.md).
+
+## Covered prepared preflop count pool
+
+An explicit covered-table path can reuse ordinary source counts across joint
+suit-equivalent private pairs while retaining the original four-pair enumeration
+limits. The separate table is bounded to 128 compatible pairs and 32 source
+tables; all ordinary solver work/state/action/native caps still apply. The
+physical six-pair weighted benchmark independently replays full-board hidden
+checkdown with limps and actual reraises. Wider synthetic tests establish
+routing/guard behavior only. See [API, provenance and measured scope](../preflop-covered-counts.md).
