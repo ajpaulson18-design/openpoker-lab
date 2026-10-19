@@ -1358,3 +1358,12 @@ choosing each clean witness row's most likely action with a fixed tie-break.
 A single legal KhKs root bet gains 200/21; direct physical terminal sums and
 independent numeric replay confirm the deviation. This guards the distinction
 between matching a known game value and having no profitable unilateral response.
+
+## Optional direct original-weight turn tail API
+
+A separate [turn tail adapter](direct-turn-tail.md) directly accumulates completed
+CFR+ sweeps after an explicit discard point using the original iteration weights.
+It preserves old APIs and all full-request guards, adds bounded dense admission,
+and keeps all state local. Eleven focused tests cover exact zero-discard parity,
+independent positive-tail flows and legal responses, blockers, work limits and
+Kuhn quality. Fixed full-deck 1500-sweep quality evidence is a separate experiment.

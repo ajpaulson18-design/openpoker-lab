@@ -229,3 +229,11 @@ both saved equilibrium witnesses at exact NashConv zero and OOP value -400/21.
 All 48 river cards remain separate; the original numeric tails keep their positive
 exact gaps. This fixed-game research leaves production defaults and earlier
 streets unchanged. See the linked immutable report, controls and scope.
+
+## Optional direct turn tail averaging
+
+The separate [turn tail research API](../direct-turn-tail.md) directly averages
+an explicit completed-sweep CFR+ window with original iteration weights. Old
+solver APIs and earlier streets are unchanged. Full-request admission, additional
+dense/slot guards, exact zero-discard parity and independent small-game quality
+tests bound this addition; broader quality depends on recorded experiments.
