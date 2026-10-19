@@ -59,7 +59,8 @@ The [formal raw report](../benchmarks/results/preflop-mixed-physical-range-v1.js
 passes at clean source `1af4c5610bc197f028e19e151b32f644ed95c363` on Python
 3.12.14 / Windows with the recorded MSVC V2 native trainer. All ten saved
 policies and five paired comparisons pass fresh independent replay; source
-and build identities remain unchanged. The final repeated payloads are
+and build identities remain unchanged. All 495 LF-normalized source hashes
+independently match frozen Git contents. The final repeated payloads are
 deterministic in each backend. Ranking/enumeration guards remain zero.
 
 | CFR+ iterations | Independent Python NashConv, chips | SB value BR interval, chips | Quality target |
@@ -72,7 +73,7 @@ Displayed interval endpoints are rounded; checks use exact rational values.
 Its width is exact NashConv, not an error from a known mixed-game value. Both
 backends pass the same quality conclusion. Final median complete calls are
 6.633940 / 0.117617 seconds Python/native on this fixture. Maximum retained
-scalar/action-probability differences are below `5e-16` / `1.2e-15`; all gates
+scalar/action-probability differences are below `6e-16` / `1.2e-15`; all gates
 remain unchanged. No RSS/allocation or general speedup measurement is claimed.
 
 Canonical report SHA-256:
