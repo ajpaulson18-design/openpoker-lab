@@ -1,5 +1,16 @@
 # Solver progress record
 
+## Python/native preflop trainers checked against the proved weighted value
+
+The same weighted one-raise full-board checkdown game now has a frozen
+finite-iteration comparison for vanilla CFR, DCFR and CFR+. All 38 retained
+Python/native policies pass independent physical-count replay and strict exact
+best-response containment of the separately proved value. At 8,000 iterations,
+CFR+ reaches about 0.0000402-chip NashConv in each backend; earlier misses remain
+visible. Complete-call timings and Python allocator traces are reported
+separately, including higher native traced allocation and low-iteration process
+overhead. See [protocol, raw observations and limits](preflop-exact-anchor-comparison.md).
+
 ## Weighted preflop game has an independently verified exact value
 
 A frozen three-pair preflop/checkdown game with asymmetric stacks, limps, a BB
