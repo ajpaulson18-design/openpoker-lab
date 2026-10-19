@@ -76,7 +76,8 @@ and without repairing stored metrics. The accepted baseline is immutable.
 Cheap ten-sweep probes and synthetic publication fixtures test the harness;
 they are separate from the completed 1,000/1,500-sweep experiment. Numeric tail replay is not
 an exact certificate. The [separate checked quotient auditor](full-deck-raised-exact.md)
-may audit a later class-constant tail under its own validation requirements.
+audits all six class-constant profiles under its own validation requirements;
+see the [recorded exact tail audit](full-deck-raised-turn-tail-exact.md).
 Production averaging/defaults, earlier streets and all existing proofs remain
 unchanged.
 
@@ -127,6 +128,9 @@ Staged, published and separate saved replay passed with no further training.
 The accepted-report test binds the complete report hash and disables production
 training entry points. The separate exact audit remains necessary for stronger
 claims about explicitly normalized policies.
+That [completed separate audit](full-deck-raised-turn-tail-exact.md) records small
+positive exact tail gaps of about 2.290e-19 and 4.368e-19 chips. Both meet 1/1000;
+neither original tail is an exact-zero witness.
 The accepted-report test passed in normal Python (19.165 seconds) and optimized
 Python (18.483 seconds), with all capture/training entry points disabled.
 

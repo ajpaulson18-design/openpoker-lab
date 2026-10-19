@@ -1323,3 +1323,7 @@ tails over sweeps 1,001–1,500. Both tails meet the numeric 0.001-chip target;
 all four prefix/full averages still miss and remain saved. Complete physical
 replay and separate serialized-flow reconstruction passed. Numeric zero is
 not an exact-equilibrium certificate, and the full training cost remains charged.
+The [separate exact tail audit](full-deck-raised-turn-tail-exact.md) now accepts
+all six normalized policies: both tails meet exact 1/1000 with small positive
+gaps (about 2.290e-19 and 4.368e-19), while all four prefix/full profiles miss.
+Every exact gap remains positive; no exact-zero witness follows for these tails.

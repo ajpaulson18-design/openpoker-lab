@@ -39,6 +39,37 @@ Only the two recorded floating diagnostic maps allow 1e-12 cross-platform
 replay tolerance; exact certificates, ledgers and threshold decisions remain
 strict.
 
+## Recorded audit
+
+The [immutable six-policy audit](../benchmarks/results/full-deck-raised-turn-tail-exact-v1.json)
+is 7,858,950 bytes with SHA256
+`f4901675fcb026fbac6713baf604650fd48f510c5ae4dc6be2c776c0a780c0c7`,
+below the unchanged 8,000,000-byte cap. Generation was frozen at
+`a9004d891a26f02f01f7e0ba56780f2304f488c3`; all 15 source pins match
+committed Git bytes. All six profiles were accepted, with no training calls.
+
+| Profile | Materialized exact NashConv, rounded | Matrix-free exact NashConv, rounded | Exact 1/1000 target met |
+| --- | ---: | ---: | --- |
+| Prefix | 0.0037309341770361214 | 0.003730934177036123 | No |
+| Full | 0.0016587453303189687 | 0.0016587453303189693 | No |
+| Tail | 2.2898589442074785e-19 | 4.367065158111689e-19 | Yes |
+
+Every gap is strictly positive. Both tails meet the exact target but neither is
+an exact-zero equilibrium witness. All four prefix/full misses remain saved.
+Prefix/full certificates use 13,708 modeled exact-work units; materialized and
+matrix-free tails use 12,458 and 12,782. The largest fraction encountered is
+6,423 bits; the largest row-normalization adjustment is 1.424e-16. Maximum
+exact-metric versus full physical numeric replay difference is 8.257e-15 chips.
+
+Staged, published and saved verification passed. A separate Sol reconstruction
+imported neither candidate exact auditor, used its own projection constructor
+and a literal 12-world mass table, and matched all eight exact metrics for every
+profile. That reconstruction shares the generic Fraction evaluator; full
+physical numeric rules and the independent hand-written check/call anchors
+remain separate checks. The accepted-report test binds the complete report
+hash and disables production capture/training entry points.
+It passed in normal Python (14.433 seconds) and optimized Python (14.263 seconds).
+
 ## Reproduction
 
 The seven integrated focused tests passed in normal Python (166.621 seconds)
