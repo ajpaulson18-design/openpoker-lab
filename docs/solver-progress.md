@@ -1327,3 +1327,13 @@ The [separate exact tail audit](full-deck-raised-turn-tail-exact.md) now accepts
 all six normalized policies: both tails meet exact 1/1000 with small positive
 gaps (about 2.290e-19 and 4.368e-19), while all four prefix/full profiles miss.
 Every exact gap remains positive; no exact-zero witness follows for these tails.
+
+## Derived full-deck raised turn equilibrium witnesses
+
+Two separately saved [cleanup candidates](full-deck-raised-turn-clean-witness.md)
+now have exact normalized-policy NashConv zero and value OOP -400/21 in that
+same fixed 176-world finite raised game. Each retains all 2,404 policy rows and
+passes complete physical replay plus the unchanged checked chance-class audit.
+The declared cleanup changes no action probability by more than 6.364e-20;
+it is not a general rounding guarantee or a production/default change.
+Both original tail policies and their positive exact gaps remain immutable.

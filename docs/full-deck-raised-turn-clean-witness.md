@@ -45,6 +45,36 @@ and rereads all report/input/output bytes after the last audit. Exact certificat
 cleanup ledgers, strategy probabilities and metadata are strict. Only numeric
 replay observations allow 1e-12 tolerance; stored metrics are not repaired.
 
+## Recorded witnesses
+
+The [immutable witness report](../benchmarks/results/full-deck-raised-turn-clean-witness-v1.json)
+is 1,709,045 bytes with SHA256
+`e9e44108b1158840383cd025dcd995b21d3fc35d902a59ab2bae3a5060bf88e6`.
+Generation was frozen at `eb8b228e2f298bdffab74d5a547b619a88ec2eb8`;
+all 26 proof/capture/test source fingerprints match committed Git bytes.
+Both complete policies retain all 2,404 rows and are below 2,000,000 bytes.
+
+| Source backend | Changed rows | Changed actions | Maximum probability change | Exact NashConv | Exact value OOP |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Materialized | 243 | 246 | 6.363731946721238e-20 | 0 | -400/21 |
+| Matrix-free | 165 | 167 | 3.28454299504272e-20 | 0 | -400/21 |
+
+Each certificate uses 9,444 modeled exact-work units. Maximum fraction sizes
+are 439 and 432 bits respectively. Both legal-response gains are exactly zero;
+the opponent's exact value is 400/21. These are equilibrium witnesses for this
+fixed full-deck finite raised game, not for unrestricted Hold'em. Original tail
+gaps remain positive and are preserved in the preceding audit.
+
+Staged, published and saved verification passed without training. Separate Sol
+review independently reconstructed every cleanup probability and non-probability
+row/action identity, replayed complete physical policies, checked all 26 source
+pins against Git, and matched all eight exact metrics through a separately
+constructed chance projection. That review shares the generic Fraction
+evaluator; the full numeric rules and handwritten anchors remain separate checks.
+The accepted-report test binds the report hash, disables all production training
+entry points, and passed in normal Python (9.010 seconds) and optimized Python
+(9.134 seconds).
+
 ## Reproduction
 
 The 13 integrated focused tests passed in normal Python (46.629 seconds) and
