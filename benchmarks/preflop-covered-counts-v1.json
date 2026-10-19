@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-covered-counts-v1",
+  "baseline_commit": "49816ef524703a9c3909a06943cdd114395d3939",
+  "source_report_sha256": "7bdffdf73df5950d73f9fab54e27b364babb4e00718249a44cafdf47c62415c6",
+  "sb_range": "AdAs:1,QdQs:.5",
+  "bb_range": "AsKh:.25,AsKc:.5,AdKh:.75,AdKc:1,KdKs:1",
+  "config": {
+    "small_blind": 0.5,
+    "big_blind": 1,
+    "starting_stack": [
+      4,
+      3
+    ],
+    "raise_sizes": [
+      0.5,
+      1
+    ],
+    "max_raises": 2,
+    "include_all_in": true
+  },
+  "compatible_pairs": 6,
+  "physical_boards": 10273824,
+  "source_pairs": 3,
+  "world_indexing": "pair-mean",
+  "algorithm": "cfrplus",
+  "checkpoints": [
+    10,
+    100,
+    1000,
+    3000
+  ],
+  "final_repeats": 3,
+  "backends": [
+    "python",
+    "native"
+  ],
+  "acceptance": {
+    "final_nash_conv_chip_limit": 0.005,
+    "independent_metric_absolute_tolerance": 1e-10,
+    "backend_metric_absolute_tolerance": 1e-08,
+    "backend_policy_probability_absolute_tolerance": 1e-06
+  },
+  "scope": "Six compatible weighted private pairs with full-board hidden forced checkdown, limps and two-raise betting; no fresh enumeration, four-pair preparation-cap change, later-street, full-range, multiway, RSS or general speed claim.",
+  "method": "Admit target coverage and all full requested solves before native build/training; reuse pinned physical counts only through one joint suit bijection. Replay every retained strategy through independent numeric rules and legal own-hand best responses. Keep all early misses and failures; final CFR+ .005 mandatory. No exact equilibrium-value claim for these changed priors. Time complete calls plus canonical serialization/hash; no timing gate."
+}

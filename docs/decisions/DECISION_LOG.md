@@ -105,6 +105,16 @@ No production algorithm or default changes are selected. See
 [protocol and measurement status](../preflop-exact-anchor-comparison.md).
 No earlier decision is superseded.
 
+D020 (2026-10-18): engineering decision under the owner's ongoing broader-range
+solver scope: pool already covered full-board count sources through joint suit
+bijections into a separately bounded prepared table and explicit solving entry.
+This removes the enumeration cap from the prepared-data representation without
+changing enumeration itself, and reuses the existing betting/training body.
+All full-request solve limits remain; missing or conflicting source coverage
+rejects. Raising global preparation limits or merging private information sets
+was not selected. See [scope and evidence](../preflop-covered-counts.md).
+No prior decision is superseded.
+
 Record ID, date, authority, source, rationale, considered alternatives where known,
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.

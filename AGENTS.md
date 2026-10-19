@@ -171,3 +171,13 @@ signs, pinned physical counts and full-request admission before build/training.
 Keep early target misses, final quality gates, backend agreement and timings
 separate; do not require policy equality to one chosen equilibrium or infer
 RSS/native memory from Python allocation traces.
+
+The [covered preflop count pool](docs/preflop-covered-counts.md) is a separate
+explicit prepared-data path. Keep ordinary four-pair enumeration/solver admission
+literal. Admit covered target candidates/pairs before orbit work, reject every
+missing or conflicting joint suit orbit, and keep full requested solve budgets
+before tree/native invocation. Preserve exact global blocker conditioning and
+separate private identities. Source fingerprints and structural validation do
+not authenticate counts. Never describe synthetic range tests as physical
+accuracy evidence or infer permission for more enumeration from represented
+board coverage. Shared kernels/defaults and later-street work remain unchanged.
