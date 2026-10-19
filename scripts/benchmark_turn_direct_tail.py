@@ -116,7 +116,7 @@ def _guard(root, training, verification, initial_head, inputs):
           "A direct-tail producer source changed during operation")
     _need(_fingerprints(root, tuple(verification)) == verification,
           "A direct-tail verification source changed during operation")
-    fixed._guard_inputs(root, inputs)
+    fixed._guard_inputs(root, inputs["accepted"])
 
 
 def _read_capped(path, cap, label):

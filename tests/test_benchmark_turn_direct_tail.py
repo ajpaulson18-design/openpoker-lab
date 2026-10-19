@@ -17,6 +17,13 @@ from scripts import benchmark_turn_direct_tail as runner
 
 
 class DirectTailRunnerTests(unittest.TestCase):
+    def test_real_pinned_input_container_passes_source_and_input_guard(self):
+        inputs, old_tail = runner._load_old_tail(ROOT)
+        fingerprints = runner._fingerprints(ROOT, runner._verification_paths())
+        self.assertEqual(len(inputs["accepted"]), 8)
+        self.assertEqual(len(old_tail["strategy"]), 2404)
+        runner._guard(ROOT, fingerprints, fingerprints, runner._head(ROOT), inputs)
+
     def test_actual_full_deck_ten_sweep_adapter_metadata_and_required_resource_keys(self):
         fixture = reference.FIXTURE
         policy = solve_turn_tail(
