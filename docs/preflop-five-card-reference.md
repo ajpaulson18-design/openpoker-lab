@@ -58,6 +58,53 @@ measurement. Successful compilation is feasibility evidence only.
 censuses, malformed/truncated observations, dirty-source rejection before any
 executable or ranking, and preservation of previous build/output data.
 
-Formal exhaustive conformance, full-board comparison and publication are pending
-at this source stage. No new physical count row is certified until those checks
-pass from a frozen revision and the saved report is verified.
+## Frozen full conformance and source-count observations
+
+The [published report](../benchmarks/results/preflop-five-basis-v1.json) passes
+from clean source `293e61357497f39ae02a8e0c3f75207f8e455eb7`. All 478 recorded
+normalized source hashes independently match normalized Git blob contents at
+that revision. Source/reference build identities remain unchanged. All
+2,598,960 five-card category/kicker tuples agree with zero mismatches and all
+nine category totals agree. The fixed dump is 15,593,760 bytes, SHA-256
+`7dfd1ff4ed2761fef77db70b170fdae750cf7c162932087e30163037e4e78e52`.
+It is retained outside Git; no generated executable is distributed.
+
+| SB | BB | Suit overlap | Wins | Ties | Losses |
+| --- | --- | ---: | ---: | ---: | ---: |
+| AdAs | KdKs | 2 | 1,410,336 | 9,308 | 292,660 |
+| AdAs | KcKd | 1 | 1,399,204 | 7,923 | 305,177 |
+| AdAs | KcKh | 0 | 1,388,072 | 6,538 | 317,694 |
+
+Each row covers all 1,712,304 boards. Actual reference counters are exactly
+5,136,912 boards, 10,273,824 seven-card rankings and 215,750,304 five-card
+subset calls. The first row reproduces the original independent physical
+anchor; all three rows exactly match separately retained production-native
+seven-card counts. Fresh saved-file verification compares the raw candidate
+and reference values, not a saved success flag. The final binary dump and
+count JSON were reopened and their digest/data independently checked again.
+
+The MSVC reference source SHA-256 is
+`5deeeb861d70a333963afc0cb01435d87cc930e864f0e6e11e244050f61ffc05`;
+executable SHA-256 is
+`0d9ddc9af391553b8b859baf2742e8a8c19dd6a6f148cf5dcca8b2a4aa4a199e`.
+The report retains compiler version/options and both counter build identities.
+Five-card dump generation took 0.274110 seconds; full-board reference and
+production count calls took 10.185131 / 0.605814 seconds. The Python exhaustive
+comparison duration is not separately recorded. These are validation durations,
+not paired speed or memory benchmarks.
+
+Report canonical SHA-256:
+`2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7`.
+Raw report SHA-256:
+`bb906c0dac2deca79753e48548b5c3c1b7b9cedd92ba3574da934154713b5419`.
+The earlier successful observation is retained separately; the followup keeps
+raw candidate values for independent saved-file comparison. Numerical C code,
+acceptance gates and the three observed count rows are unchanged.
+
+Both Linux and Windows CI execute the exhaustive five-card and full-board
+comparisons. Initial CI computations passed but artifact upload rejected its
+relative parent path; publication changes the report upload/output path to an
+absolute runner-temp location. The initial jobs remain as evidence. Final CI
+and GitHub merge status are recorded on the associated pull request. These
+source rows can support broader covered ranges; they do not by themselves
+establish an equilibrium strategy for those ranges.

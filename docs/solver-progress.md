@@ -1,5 +1,16 @@
 # Solver progress record
 
+## Physical preflop source basis independently expanded
+
+A separate project-owned C best-five reference agrees with the independent
+Python oracle on every 2,598,960 five-card rank tuple, then checks all boards
+of three AA/KK relative-suit classes using all 21 five-card subsets per hand.
+All integer counts agree with the independent original anchor and separately
+retained production seven-card counts. This supplies two additional physically
+checked source rows for broader suit-covered ranges, without changing any
+production enumeration cap or solver default. See
+[raw counts, exhaustive evidence and limits](preflop-five-card-reference.md).
+
 ## Prepared full-board preflop coverage extends beyond four private pairs
 
 A separate bounded suit-covered count pool and explicit solve entry now reuse

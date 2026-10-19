@@ -51,12 +51,12 @@ jobs:
           python -B -m scripts.build_native_preflop --output-dir ../equity-reference-ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Exhaustive five-card oracle and full-board source-basis agreement
-        run: python -B -m scripts.validate_preflop_five_reference --reference-build ../five-reference-ci --candidate-build ../equity-reference-ci --output-dir ../five-reference-observation
+        run: python -B -m scripts.validate_preflop_five_reference --reference-build ../five-reference-ci --candidate-build ../equity-reference-ci --output-dir "${{ runner.temp }}/five-reference-observation"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: preflop-five-reference-${{ runner.os }}
           path: |
-            ../five-reference-observation/report.json
-            ../five-reference-observation/basis-counts.json
+            ${{ runner.temp }}/five-reference-observation/report.json
+            ${{ runner.temp }}/five-reference-observation/basis-counts.json
           if-no-files-found: warn
