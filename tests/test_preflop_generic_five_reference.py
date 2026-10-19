@@ -72,7 +72,7 @@ class GenericReferenceTests(unittest.TestCase):
             self.assertEqual((target/'stdout.json').read_bytes(),b'{malformed raw result')
             self.assertEqual((target/'stderr.txt').read_bytes(),b'raw diagnostic retained')
             self.assertEqual(caught.exception.observation['returncode'],0)
-            self.assertEqual(caught.exception.observation['stdout_path'],str(target/'stdout.json'))
+            self.assertTrue(Path(caught.exception.observation['stdout_path']).samefile(target/'stdout.json'))
 
 
 class GenericNativeProtocolTests(unittest.TestCase):
