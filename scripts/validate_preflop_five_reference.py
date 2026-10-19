@@ -160,6 +160,7 @@ def run(reference_build,candidate_build,output_directory):
         started=perf_counter();candidate=prepare_native_preflop_equities('AdAs','KdKs,KcKd,KcKh',build_directory=candidate_build)
         report['candidate_full_board_seconds']=perf_counter()-started
         report['candidate_metadata']=candidate.metadata
+        report['candidate_equity_table']=candidate.equities.metadata()
         actual={(''.join(candidate.equities.hands[0][i]),''.join(candidate.equities.hands[1][j])):counts
                 for (i,j,_),counts in zip(candidate.equities.pairs,candidate.equities.counts)}
         for row in rows:
@@ -174,14 +175,50 @@ def run(reference_build,candidate_build,output_directory):
                    'reference_build_after':reference_after,'source_unchanged':before is not None and before==after,
                    'reference_build_unchanged':reference_before is not None and reference_before==reference_after})
     report['status']='passed' if not report['errors'] else 'error';save(path,report)
-    restored=json.loads(path.read_bytes());unsigned=dict(restored);digest=unsigned.pop('artifact_sha256')
-    if checksum(unsigned)!=digest:raise ValueError('Saved reference report checksum failed')
-    if report['status']=='passed':
-        if verify_count_result(restored['reference_raw_counts'])!=restored['independent_physical_count_rows']:
-            raise ValueError('Saved physical rows changed')
-        if snapshot()!=after or backend(reference_build)[1]!=reference_after:
+    try:
+        report['saved_verification']=verify_saved(path)
+        if report['status']=='passed' and (snapshot()!=after or backend(reference_build)[1]!=reference_after):
             raise ValueError('Final source/reference identity changed')
+    except Exception as exc:
+        report['errors'].append({'phase':'saved-verification','type':type(exc).__name__,'message':str(exc)})
+        report['status']='error'
+    save(path,report)
+    if report['status']=='passed':verify_saved(path)
     return path,report
+
+
+def verify_saved(path):
+    restored=json.loads(Path(path).read_bytes());unsigned=dict(restored);digest=unsigned.pop('artifact_sha256')
+    if checksum(unsigned)!=digest:raise ValueError('Saved reference report checksum failed')
+    if checksum(restored.get('specification'))!=SPEC_SHA256 or restored.get('spec_sha256')!=SPEC_SHA256:
+        raise ValueError('Saved reference specification changed')
+    if restored['status']!='passed':return {'status':'recorded-failed-observation'}
+    rows=verify_count_result(restored['reference_raw_counts'])
+    if rows!=restored['independent_physical_count_rows'] or rows[0]!=load_old_anchor():
+        raise ValueError('Saved independent physical rows or old anchor changed')
+    candidate=restored['candidate_equity_table']
+    actual={}
+    for row in candidate['counts']:
+        key=(row['sb_hand'],row['bb_hand'])
+        if key in actual or row['board_outcomes']!=1712304:
+            raise ValueError('Saved candidate has duplicate or incomplete count rows')
+        if any(type(row[k]) is not int or row[k]<0 for k in ('wins','ties','losses')):
+            raise ValueError('Saved candidate integer count types changed')
+        actual[key]=(row['wins'],row['ties'],row['losses'])
+    if actual!={(x['sb_hand'],x['bb_hand']):(x['wins'],x['ties'],x['losses']) for x in rows}:
+        raise ValueError('Saved candidate and independent physical counts disagree')
+    five=restored['five_card_exhaustive']
+    if (five['status']!='passed' or five['rank_tuples_checked']!=FIVE_TOTAL
+            or five['dump_bytes']!=FIVE_BYTES or five['mismatches_first_ten']!=[]
+            or five['category_counts']!={str(k):v for k,v in EXPECTED_CATEGORIES.items()}):
+        raise ValueError('Saved five-card exhaustive witness census failed')
+    if (restored['errors'] or not restored['source_unchanged'] or not restored['reference_build_unchanged']
+            or restored['source_before']!=restored['source_after'] or restored['source_before']['status']
+            or restored['reference_build_before']!=restored['reference_build_after']
+            or restored.get('all_three_physical_censuses_agree') is not True):
+        raise ValueError('Saved source/build or count agreement failed')
+    return {'status':'passed','physical_pairs_rechecked':3,'five_card_rank_tuples_recorded':FIVE_TOTAL,
+            'raw_candidate_and_reference_counts_rechecked':True}
 
 
 def load_old_anchor():
