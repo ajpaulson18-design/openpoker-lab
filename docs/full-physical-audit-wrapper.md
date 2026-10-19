@@ -119,3 +119,8 @@ this implementation uses its own full-physical arithmetic and best responses.
 The accepted-report regression binds this report hash and disables the five
 production capture/solve/trainer entry points. Complete saved reconstruction
 passed in normal Python (16.779 seconds) and optimized Python (14.262 seconds).
+
+A later [value-only negative control](raised-turn-argmax-control.md) keeps the
+known equilibrium value but has positive exact response gains. Its direct
+176-world payoff table and one-row legal improvement are separate regression
+checks for the need to evaluate responses as well as profile value.
