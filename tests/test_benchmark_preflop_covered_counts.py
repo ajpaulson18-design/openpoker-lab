@@ -41,8 +41,22 @@ class CoveredBenchmarkTests(unittest.TestCase):
         report=json.loads((bench.ROOT/'benchmarks/results/preflop-exact-anchor-v1.json').read_bytes())
         row=next(x for x in report['profiles'] if x['algorithm']=='cfrplus' and x['iterations']==10)
         pinned=next(x for x in row['samples'] if x['backend']=='python')
-        self.assertEqual(bench.checksum(got),pinned['payload_sha256'])
-        self.assertEqual(got,pinned['payload'])
+        import hashlib, sys
+        frozen=(bench.ROOT/'tests/fixtures/preflop_checkdown_solver_before_covered.py.txt').read_bytes()
+        self.assertEqual(hashlib.sha256(frozen).hexdigest(), '377433bb3fd0a276be24f54d3249c6e573cb2930df63a27cfaba0c098063659d')
+        reference={'__name__':'pokerlab._legacy_checkdown_reference','__package__':'pokerlab'}
+        exec(compile(frozen,'frozen_pre_covered_checkdown','exec'),reference)
+        same_interpreter=reference['solve_prepared_preflop_checkdown'](
+            item['table'],config=item['case']['config'],iterations=10,algorithm='cfrplus',
+            resource_model='prepared-counts',world_indexing='pair-mean')
+        self.assertEqual(got,same_interpreter)
+        self.assertEqual(bench.checksum(got),bench.checksum(same_interpreter))
+        # The recorded raw hash is specifically a Python 3.12 observation.
+        # 3.11 uses the earlier summation behavior; production code is compared
+        # exactly to the untouched old body above on every interpreter.
+        if sys.version_info[:2]==(3,12):
+            self.assertEqual(bench.checksum(got),pinned['payload_sha256'])
+            self.assertEqual(got,pinned['payload'])
 
     def test_failed_assessment_keeps_raw_candidate_payload(self):
         payload={'raw':'retained'}
