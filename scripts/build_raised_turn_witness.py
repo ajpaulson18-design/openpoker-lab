@@ -359,7 +359,9 @@ def _reconstruct(*, generation_git_commit=None):
             "policy_file": policy_name,
             "policy_sha256": sha(payload),
             "cleanup": change_ledger,
-            "full_physical_numeric_metrics": replay_metrics,
+            "full_physical_numeric_metrics": {
+                name: replay_metrics[name] for name in reference.METRICS
+            },
             "physical_worlds": audit["physical_worlds"],
             "physical_rows": audit["physical_rows"],
             "quotient_worlds": audit["quotient_worlds"],

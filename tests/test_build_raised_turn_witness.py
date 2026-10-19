@@ -2,7 +2,7 @@ import copy
 import json
 import os
 import uuid
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 import unittest
 from fractions import Fraction
 from pathlib import Path
@@ -53,6 +53,31 @@ def synthetic_audit(metrics):
 
 
 class RaisedTurnWitnessTests(unittest.TestCase):
+    def test_actual_two_policy_bundle_publishes_and_replays_under_later_head(self):
+        with scratch_directory() as tmp, ExitStack() as stack:
+            for target in ('scripts.benchmark_turn_tail.capture',
+                           'pokerlab.postflop_solver.solve_postflop',
+                           'pokerlab.matrix_free_turn.solve_matrix_free_turn',
+                           'pokerlab.postflop_solver.train_public_batched',
+                           'pokerlab.matrix_free_turn.train_ranked_turn'):
+                stack.enter_context(patch(target, side_effect=AssertionError('Production training called')))
+            report, policies = Path(tmp) / 'report.json', Path(tmp) / 'policies'
+            generated = witness.generate(report, policies)
+            saved_bytes = report.read_bytes()
+            rows = json.loads(saved_bytes)['results']
+            self.assertEqual((generated['profiles'], generated['training_calls']), (2, 0))
+            for row in rows:
+                metrics = row['exact_certificate']['metrics']
+                self.assertEqual(Fraction(metrics['nash_conv']), 0)
+                self.assertEqual(Fraction(metrics['value_oop']), Fraction(-400, 21))
+                self.assertEqual(set(row['full_physical_numeric_metrics']), set(witness.reference.METRICS))
+            historical = json.loads(saved_bytes)['generation_git_commit']
+            later = 'c' * 40 if historical != 'c' * 40 else 'd' * 40
+            with patch.object(witness, 'current_head', return_value=later):
+                replayed = witness.verify_saved(report, policies)
+            self.assertEqual(replayed['report_sha256'], generated['report_sha256'])
+            self.assertEqual(report.read_bytes(), saved_bytes)
+
     def load_materialized(self):
         raw = witness.capped(SOURCE, witness.MAX_POLICY_BYTES, "test input")
         return raw, json.loads(raw)

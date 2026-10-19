@@ -47,9 +47,10 @@ replay observations allow 1e-12 tolerance; stored metrics are not repaired.
 
 ## Reproduction
 
-The 12 integrated focused tests passed in normal Python (5.926 seconds) and
-optimized Python (5.596 seconds), including both actual read-only cleanup
-candidates, exact-zero rejection, historical generation replay, strict
+The 13 integrated focused tests passed in normal Python (46.629 seconds) and
+optimized Python (46.833 seconds), including complete real two-policy bundle
+publication and replay under a later current HEAD with training disabled,
+both read-only cleanup candidates, exact-zero rejection, strict
 policy/certificate tampering, late drift and owned-file rollback.
 
 Run `python -m unittest tests.test_build_raised_turn_witness -v` and repeat with
