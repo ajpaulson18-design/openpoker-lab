@@ -19,3 +19,5 @@
 /benchmarks/results/full-deck-raised-turn-tail-v1.json -text
 /benchmarks/results/full-deck-raised-turn-tail-policies-v1/*.json -text
 /benchmarks/results/full-deck-raised-turn-tail-exact-v1.json -text
+/benchmarks/results/full-deck-raised-turn-clean-witness-v1.json -text
+/benchmarks/results/full-deck-raised-turn-clean-witness-policies-v1/*.json -text
