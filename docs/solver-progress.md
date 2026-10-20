@@ -1495,3 +1495,14 @@ The full-future flop CFR+ experiment is complete: all 20 candidate policies and
 observations (~0.012538) still miss the original 0.005-chip gate. Raw repeats,
 separate allocation calls and exact source identities remain immutable. See
 [completed evidence](flop-cfrplus.md#completed-evidence-and-quality-misses).
+
+
+## Flop-start public diagnostics independently checked
+
+Final profile value and both own-hand legal best responses can use the existing
+public-vector evaluator across both future-card reveals. Independent physical/
+numeric-action replay passes on 5,940-world and weighted raised games; a separate
+two-reveal pure-response oracle checks legal information and zero-marginal rows.
+All 22 focused compatibility tests pass, including exact diagnostic-only policy
+parity, prefix-cap boundaries and historical defaults. Flop target stopping
+remains unsupported. See [validation and limits](flop-public-diagnostics.md).

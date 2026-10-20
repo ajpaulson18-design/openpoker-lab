@@ -5,8 +5,9 @@ exact integer `d < iterations` for flop starts. Both recursive and public-batche
 training keep every requested regret sweep; only the completed-sweep average
 weight becomes `max(t-d, 0)`. The default `d=0` retains the established dispatch
 and payload. Positive delay is rejected for other algorithms, turn/river starts,
-and planned traversal before physical-world enumeration. Flop public diagnostics
-and target stopping remain unsupported.
+and planned traversal before physical-world enumeration. Flop target stopping
+remains unsupported. Final [public diagnostics](flop-public-diagnostics.md) are
+separately opt-in; the frozen delay experiment retains recursive diagnostics.
 
 The recursive path reuses the existing CFR+ delay argument. The public path
 reuses the isolated [delayed public trainer](../pokerlab/preflop_delayed_cfrplus.py),

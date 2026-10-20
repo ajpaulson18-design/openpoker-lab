@@ -80,7 +80,7 @@ class TurnRiverQualityIntegrationTests(unittest.TestCase):
         _assert_profiles_equal(self, recursive, public)
         _assert_metrics_equal(self, recursive, public)
 
-    def test_unsupported_cfrplus_and_diagnostic_starts_are_rejected(self):
+    def test_flop_resource_guards_and_planned_cfrplus_scope(self):
         flop = "Js8d4c"
         config = RiverConfig(pot=10, effective_stack=10, bet_sizes=(0.5,))
         common = (flop, "AsAh", "KcKd", config)
@@ -91,8 +91,13 @@ class TurnRiverQualityIntegrationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "10,000"):
                 solve_postflop(*common, iterations=10, algorithm="cfrplus")
         trainer.assert_not_called()
-        with self.assertRaisesRegex(ValueError, "only for turn and river"):
-            solve_postflop(*common, iterations=10, diagnostics="public-batched")
+        # Public flop diagnostics are also supported. This larger tree still
+        # rejects at the same resource guard, before ordinary CFR training.
+        with patch("pokerlab.postflop_solver.train",
+                   side_effect=AssertionError("training before admission")) as trainer:
+            with self.assertRaisesRegex(ValueError, "10,000"):
+                solve_postflop(*common, iterations=10, diagnostics="public-batched")
+        trainer.assert_not_called()
         with self.assertRaisesRegex(ValueError, "requires recursive or public-batched"):
             _solve(_turn_case(), algorithm="cfrplus", traversal="planned")
 
