@@ -220,3 +220,11 @@ retain own-hand information boundaries, enumerate all 792 legal pure responses
 and require exact value agreement and zero NashConv. Disable candidate/tree/LP
 calls during independent replay; never promote reduced-LP output alone to a
 physical-game certificate. Preserve unchanged LP caps and every failed artifact.
+
+The [native fixed-flop preparer](docs/native-flop-preparation.md) is explicit:
+normal range/blocker/preparation admission precedes executable lookup, and
+only a source-built FLOP count mode feeds the existing immutable table. Keep
+COUNT/RANK semantics and original preparation/solve caps, raw board/ordered
+pair echoes, even 1,980-outcome counts and separate actual 990-board/1,980-rank
+censuses. Defaults remain Python. Require independent physical counts, complete
+policy replay and measured cold/full-call evidence before performance claims.
