@@ -212,3 +212,11 @@ three-class physical bases. Preserve exact global priors, own-hand legal BRs,
 constructive [1/2,1] value bounds and interval-intersection semantics. There is
 no exact mixed-game value anchor. Keep final quality gates, complete-call
 admission and all raw policies/failures; no solver default or work-cap change.
+
+The [mixed physical exact witness](docs/preflop-mixed-exact-witness.md) keeps
+rank-type sequence-form search solely in the candidate lane. The certificate
+must authenticate physical counts independently, rebuild all 72 private pairs,
+retain own-hand information boundaries, enumerate all 792 legal pure responses
+and require exact value agreement and zero NashConv. Disable candidate/tree/LP
+calls during independent replay; never promote reduced-LP output alone to a
+physical-game certificate. Preserve unchanged LP caps and every failed artifact.
