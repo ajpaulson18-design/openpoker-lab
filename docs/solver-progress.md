@@ -1447,3 +1447,12 @@ slot, native-envelope and combined requested-work guards run before executable
 lookup or count preparation. Its cold-count provenance is separate from native
 training metadata; the existing Python and prepared-count APIs retain their
 payloads and defaults. See [usage and guard order](native-flop-preparation.md).
+
+
+## Native CFR+ policy refresh experiment
+
+The public native trainer now has a bounded candidate that refreshes only the
+updated player's CFR+ policy rows, retaining first-sweep initialization and all
+original admission charges. Checkpoint parity passes; the separately frozen
+paired full-call experiment must establish timing and exact old/new wire parity.
+See [method and publication evidence](native-cfrplus-rematch.md).
