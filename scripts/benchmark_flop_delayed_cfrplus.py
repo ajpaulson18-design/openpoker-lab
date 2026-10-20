@@ -408,6 +408,13 @@ def _summarize(directory, samples, spec, oracle):
     return summary, quality
 
 
+def _compare_physical_worlds(spec, oracle):
+    # The legacy comparator accepts a checkpoint sequence; this study freezes
+    # one sweep count. Adapt the helper input without changing the protocol.
+    legacy_spec = dict(spec, iterations=[spec['iterations']])
+    return base.compare_physical_worlds(legacy_spec, oracle)
+
+
 def _store_physical(directory, filename, payload):
     return base.store_payload(directory, filename, payload)
 
@@ -598,7 +605,7 @@ def run(directory, baseline_directory, *, execution_state=None):
             {'worlds': base._world_projection(oracle['worlds'])})
         report['production_physical_evidence'] = _store_physical(
             directory, 'production-physical-worlds.json.gz',
-            base.compare_physical_worlds(spec, oracle))
+            _compare_physical_worlds(spec, oracle))
         for delay in spec['delays']:
             for repeat, order in enumerate(spec['pair_orders'], 1):
                 for traversal in order:

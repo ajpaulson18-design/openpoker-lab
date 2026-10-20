@@ -55,3 +55,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 /benchmarks/results/weighted-full-deck-flop-cfrplus-v1/index.json -text
 /benchmarks/results/weighted-full-deck-flop-cfrplus-v1/*.json.gz binary
+
+# Preserve the first delayed-study startup failure and independent physical record.
+/benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1/index.json -text
+/benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1/*.json.gz binary
