@@ -41,3 +41,6 @@
 /benchmarks/results/preflop-mixed-exact-witness-v1.json -text
 /benchmarks/results/preflop-mixed-exact-witness-v1-initial.json -text
 /benchmarks/results/preflop-mixed-training-exact-anchor-v1.json -text
+
+# Preserve complete native cold-flop preparation evidence bytes.
+/benchmarks/results/native-flop-preparation-v1.json -text

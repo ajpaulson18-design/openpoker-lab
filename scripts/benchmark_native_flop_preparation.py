@@ -164,6 +164,23 @@ def measure(case,spec,backend,stage,count_build,train_build):
     return row
 
 
+def validate_native_metadata(meta,table,manifest=None):
+    p=len(table.pairs);ids={card:i for i,card in enumerate(worlds.DECK)}
+    response={'schema_version':1,'mode':'flop','board':[ids[c] for c in table.board],
+        'pairs':[[ids[c] for c in table.hands[0][i]+table.hands[1][j]] for i,j,_ in table.pairs],
+        'counts':[list(c) for c in table.counts],'unordered_boards_per_pair':990,
+        'ordered_outcomes_per_pair':1980,'board_evaluations':990*p,'rank_calls':1980*p}
+    expected={'backend':'native-fixed-flop-counts-v1','compatible_pairs':p,'board_evaluations':990*p,
+              'rank_calls':1980*p,'ordered_outcomes':1980*p,'source_inclusive_admission':True}
+    if (type(meta) is not dict or set(meta)!=set(expected)|{'build','scope','response'}
+            or canonical({k:meta[k] for k in expected})!=canonical(expected)
+            or canonical(meta['response'])!=canonical(response) or type(meta['scope']) is not str):
+        raise ValueError('Native physical count metadata, echoes or execution census changed')
+    if manifest is not None and canonical(meta['build'])!=canonical(manifest):
+        raise ValueError('Native physical count metadata build identity changed')
+    return True
+
+
 def validate_sample(row,case,spec,table,oracle):
     if row.get('error') or row.get('payload') is None:raise ValueError('Measurement contains a failed raw call')
     encoded=canonical(row['payload'])
@@ -174,16 +191,7 @@ def validate_sample(row,case,spec,table,oracle):
     expected={'python_rank_calls':2*990*p if py else 0,'python_board_combination_calls':p if py else 0,
               'python_plan_build_calls':1 if py else 0}
     if row['preparation_calls']!=expected:raise ValueError('Preparation execution census changed')
-    if not py:
-        meta=row['native_preparation'];response=meta['response']
-        ids={card:i for i,card in enumerate(worlds.DECK)}
-        expected_response={'schema_version':1,'mode':'flop','board':[ids[c] for c in table.board],
-            'pairs':[[ids[c] for c in table.hands[0][i]+table.hands[1][j]] for i,j,_ in table.pairs],
-            'counts':[list(c) for c in table.counts],'unordered_boards_per_pair':990,
-            'ordered_outcomes_per_pair':1980,'board_evaluations':990*p,'rank_calls':1980*p}
-        if (canonical(response)!=canonical(expected_response) or meta['board_evaluations']!=990*p or meta['rank_calls']!=1980*p
-                or meta['ordered_outcomes']!=1980*p or not meta['source_inclusive_admission']):
-            raise ValueError('Raw native counts or physical counters changed')
+    if not py:validate_native_metadata(row['native_preparation'],table)
     if row['stage']=='complete_call':
         if (row['payload']['iterations']!=spec['iterations'] or row['payload']['algorithm']!=spec['algorithm']
                 or not training._phase_count_passed('flop','native',spec['algorithm'],row)):
@@ -276,6 +284,11 @@ def verify_saved(path):
     if (not data['source_unchanged'] or data['source_before']!=data['source_after'] or data['source_before']['status']
             or not data['builds_before'] or data['builds_before']!=data['builds_after']):
         raise ValueError('Native flop source/build integrity census failed')
+    for key,name in (('counts','native/preflop_equity.c'),('training','native/fixed_street_train.c')):
+        build=data['builds_before'][key];manifest=build['manifest'];source=data['source_before']['source_hashes'][name]
+        if (manifest['source_sha256']!=source['raw_sha256'] or manifest['source_lf_sha256']!=source['lf_sha256']
+                or manifest['executable_sha256']!=build['executable_sha256']):
+            raise ValueError('Saved native source/executable build correspondence changed')
     if data['preflights']!=preflights(spec):raise ValueError('Native flop complete admission records changed')
     counts=historical_counts(spec)
     if data['trusted_count_rows']!=counts:raise ValueError('Native flop trusted physical rows changed')
@@ -294,10 +307,9 @@ def verify_saved(path):
         table=FlopCheckdownEquities(tuple(plan.board),tuple(tuple(tuple(h) for h in seat) for seat in plan.hands),tuple(plan.pairs),
             tuple(mapping[(''.join(plan.hands[0][i]),''.join(plan.hands[1][j]))] for i,j,_ in plan.pairs),tuple(plan.budget.items()))
         table.validate()
-        if saved['native_table']!=projection(table) or saved['native_metadata']['response']['counts']!=[list(c) for c in table.counts]:
+        if canonical(saved['native_table'])!=canonical(projection(table)):
             raise ValueError('Fresh raw independent/native count agreement changed')
-        if saved['native_metadata']['build']!=data['builds_before']['counts']['manifest']:
-            raise ValueError('Fresh physical check build identity changed')
+        validate_native_metadata(saved['native_metadata'],table,data['builds_before']['counts']['manifest'])
     parity=data['legacy_protocol_parity']
     if (parity['historical_build']!=data['builds_before']['historical'] or parity['current_build']!=data['builds_before']['counts']
             or [q['mode'] for q in parity['queries']]!=['rank','count']):

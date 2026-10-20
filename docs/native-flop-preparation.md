@@ -75,5 +75,45 @@ policy identity, original caps, weighted blockers and admission before lookup.
 Original native preflop protocol/count checks also pass on the extended build.
 The [Windows/Linux conformance workflow](../.github/workflows/native-preflop.yml)
 now builds both explicit helpers and exercises complete-call integration.
-Formal frozen measurements and GitHub publication are pending at this source
-revision. Keep observations and planned performance benefits distinct.
+The [formal report](../benchmarks/results/native-flop-preparation-v1.json)
+passes at clean source `1cee10d63dc7abc39139d38fee7a23cdd1fe56c3` on Windows /
+Python 3.12.14 with the recorded MSVC count helper and qualified native V2
+trainer. All 571 LF-normalized source hashes independently match frozen Git
+contents. Source plus count/training/historical build identities are unchanged.
+All 24 raw calls pass exact table/policy parity and deterministic repeat checks;
+all 12 full policies pass independent numeric-rule and legal response replay.
+
+| Weighted range case | Python/native cold preparation median, seconds | Python/native complete-call median, seconds | Complete-call observed ratio |
+| --- | --- | --- | ---: |
+| Base eight-by-eight | 7.482584 / 0.049970 | 8.158832 / 0.597332 | 13.66 |
+| Reversed weights | 7.717378 / 0.063052 | 7.847729 / 0.796039 | 9.86 |
+
+Ratios include instrumentation and apply only to these paired fixtures. Complete
+calls use native training on both sides. Cold-preparation ratios are 149.74 /
+122.40, respectively; source-validation/independent checks outside measurement
+are not hidden inside those boundaries. There is no RSS/allocation claim.
+Independent final NashConv is 0.0001049110234 / 0.0000422279060 chips, below
+the unchanged 0.005 target. Every complete policy is exactly the same between
+preparers, including all returned training metadata and diagnostics.
+
+Both fresh independent physical checks match every count: dry AA/KK returns
+`1782 / 48 / 150`; the wet `TsJs2s`, `AsKd` versus `AhAd` case returns
+`914 / 12 / 1054`. Old/new bounded `COUNT` and `RANK` outputs are byte-identical.
+The source-built evaluator classification code itself remains unchanged.
+
+A Luna code/harness review found no blocking admission or count issue. Its
+narrow fresh-check metadata recommendation was integrated after the frozen
+measurement: saved verification now checks every echoed board/private pair,
+raw counter, top-level count field and source/build correspondence, with
+re-signed tampering regressions. The original raw observations remain unchanged
+and pass that stronger verifier; no performance sample, quality gate or work
+limit was changed.
+
+Canonical report SHA-256:
+`86d0215733529b20a174506ccd7ca41c78f4734d43aa49a48d0a07c8b31691b4`.
+Raw report SHA-256:
+`9fee8bf0162d60e16f3f53a6ec93e585ea8b55cc8f271738961a92b834385dab`.
+[Publication regressions](../tests/test_native_flop_preparation_publication.py)
+reconstruct all 24 observations, median summaries, full policy replays, fresh
+physical counts and provenance checks. GitHub matrix checks and merge are
+verified separately at publication.
