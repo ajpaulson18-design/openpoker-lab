@@ -54,3 +54,37 @@ CFR+ uses established regret-matching-plus and strategy averaging concepts from
 existing project kernels. No external source, solver dependency or proprietary
 result is incorporated. This adapter change does not itself establish improved
 convergence, broad stack/range coverage, sampling, native chance traversal or RSS.
+
+## Historical turn evidence
+
+The adapter's new bytes differ from the source recorded in three immutable
+turn-proof bundles. Their policies, reports, original source identities and
+quality gates remain byte-for-byte preserved. Historical replay admits only the
+four exact old/current SHA256 pairs in
+[the transition registry](../scripts/historical_turn_sources.py): the flop-only
+adapter admission and the three verifier edits needed to compare that explicit
+transition. Other mismatches still reject, including a re-signed unknown adapter
+hash, missing sources and a reverse transition. New measurements and operation
+guards retain actual current hashes; historical compatibility does not assert
+source byte equality. Complete no-training replay and witness reconstruction
+remain required. [Regression tests](../tests/test_historical_turn_sources.py)
+authenticate the current files and reject unregistered changes.
+
+## Frozen candidate protocol
+
+[The CFR+ protocol](../benchmarks/weighted-full-deck-flop-cfrplus-v1.json) freezes
+10/50/140 sweeps, three alternating recursive/public-batched pairs, separate
+10-sweep allocation calls, and the original 0.005-chip final gate. Its canonical
+SHA256 is `035b8c8732741311a7166163516cd710c4471c1fe4776c67b0c00441db618461`.
+[The runner](../scripts/benchmark_flop_cfrplus.py) requires the completed baseline
+bundle first, authenticates its 3963e3c source revision and full 584-file source
+manifest, independently replays all 38 baseline policies, and pins its immutable
+index and final quality observations. A baseline quality miss is retained and
+allowed; incomplete or altered evidence refuses before candidate ranking.
+
+The runner admits 29,937,600 charged world-node units and 6,078 public prefix/
+private-pair edges before ranking. It retains 18 timed policies, two separate
+allocation policies and two physical-world records, with lossless hashes and
+source-before/source-after identity. Saved reconstruction repeats the independent
+physical/action/own-hand response checks for every policy and reauthenticates the
+baseline bundle. No candidate measurements have been reported yet.

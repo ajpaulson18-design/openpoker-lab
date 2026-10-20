@@ -260,3 +260,12 @@ unchanged. Planned CFR+, flop public diagnostics and target stopping remain
 unsupported. Require the independent weighted physical/action/own-hand response
 validator and a frozen quality experiment; adapter support alone is not a
 convergence claim. See [flop CFR+ scope](docs/flop-cfrplus.md).
+
+
+Historical turn-proof compatibility for flop CFR+ uses only the four exact
+old/current source pairs in `scripts/historical_turn_sources.py`. Preserve old
+reports/policies and generation fingerprints. Unknown, reversed or omitted
+source identities must reject; new measurements and source guards use actual
+current hashes. Keep complete independent no-training replay and witness
+reconstruction. The CFR+ comparison must first authenticate and reconstruct the
+completed 3963e3c baseline, pin all misses, and preserve its 0.005-chip gate.

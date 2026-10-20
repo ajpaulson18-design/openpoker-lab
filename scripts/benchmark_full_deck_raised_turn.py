@@ -15,6 +15,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from scripts.historical_turn_sources import compatible_source
 from scripts import full_deck_raised_fixture as fixture
 from scripts import full_deck_raised_reference as reference
 from scripts.benchmark_turn_river_independent import ROOT, solve
@@ -106,7 +107,8 @@ def _validate_fingerprint_map(saved, current, strict):
         _require(set(saved) == required, "Generation source fingerprint set changed")
     for name in required:
         digest = current[name]
-        _require(saved.get(name) == digest, "Current source differs from report: " + name)
+        _require(saved.get(name) == digest or (not strict and compatible_source(name, saved.get(name), digest)),
+                 "Current source differs from report: " + name)
 
 
 def frozen_case():

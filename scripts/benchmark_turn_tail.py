@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
 
+from scripts.historical_turn_sources import compatible_source
 from scripts import full_deck_raised_fixture as fixture
 from scripts import full_deck_raised_reference as reference
 from scripts import river_tail_realization as realization
@@ -291,7 +292,8 @@ def _check_report_envelope(report, sources, current_head, baseline):
     saved_sources = report.get("source_sha256")
     _require(type(saved_sources) is dict and set(REQUIRED_SOURCES).issubset(saved_sources),
              "Saved source fingerprints omit required proof sources")
-    _require(all(saved_sources[name] == sources[name] for name in REQUIRED_SOURCES),
+    _require(all(compatible_source(name, saved_sources[name], sources[name])
+                 for name in REQUIRED_SOURCES),
              "A required proof source fingerprint differs")
     for name, digest in saved_sources.items():
         _require(type(name) is str and (name in REQUIRED_SOURCES or
