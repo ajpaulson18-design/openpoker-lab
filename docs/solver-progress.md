@@ -1386,3 +1386,11 @@ indices, an actual dense-limit boundary, finite diagnostics and concurrency.
 The exact one-bet response interval contains the known value 25, while the
 T=1000,D=500 tail still misses 0.001 and has a larger gap than its full average.
 Direct accumulation therefore carries no general convergence-improvement claim.
+
+The separate [fixed river experiment](direct-river-tail-experiment.md) freezes
+two T=10000,D=3000 calls, independent numeric/exact audits and comparison with
+the preceding saved realization tails. The actual raw polarized profile misses
+0.001 at exact NashConv about 0.0068727141; weighted raises meets it at about
+0.0002232345. Both positive gaps and raw policies are retained. Independent
+exact audits contain the known game values, and own-action flows agree with
+the old tails within 1e-11. Direct accumulation shows no quality advantage here.
