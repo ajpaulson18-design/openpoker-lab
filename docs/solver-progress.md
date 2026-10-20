@@ -1415,3 +1415,11 @@ policy. The actual raw profile meets 0.001 at exact NashConv about
 All eight metrics agree across independent exact audits, and the known value
 25 lies inside the legal response interval. The 10k miss is preserved; the
 positive 100k gap does not certify exact equilibrium or general convergence.
+
+## Mixed physical AA/QQ-versus-KK validation
+
+A frozen 72-pair trainer comparison combines both independently checked physical
+count bases, preserves weighted own-hand uncertainty and legal reraises, and
+requires independent exact replay plus final NashConv at most 0.005 chips.
+Constructive value bounds are [1/2,1], not an exact equilibrium value.
+See [method, evidence and publication status](preflop-mixed-physical-range.md).

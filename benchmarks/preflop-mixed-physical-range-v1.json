@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-mixed-physical-range-v1",
+  "sb_range": "AA:1,QQ:0.5",
+  "bb_range": "KK",
+  "compatible_pairs": 72,
+  "physical_boards": 123285888,
+  "config": {
+    "small_blind": 0.5,
+    "big_blind": 1,
+    "starting_stack": [
+      3,
+      3
+    ],
+    "raise_sizes": [
+      0.5,
+      1
+    ],
+    "max_raises": 2,
+    "include_all_in": true
+  },
+  "algorithm": "cfrplus",
+  "world_indexing": "pair-mean",
+  "checkpoints": [
+    10,
+    100,
+    400
+  ],
+  "final_repeats": 3,
+  "backends": [
+    "python",
+    "native"
+  ],
+  "acceptance": {
+    "final_nash_conv_chip_limit": 0.005,
+    "independent_metric_absolute_tolerance": 1e-10,
+    "backend_metric_absolute_tolerance": 1e-08,
+    "backend_policy_probability_absolute_tolerance": 1e-06,
+    "constructive_value_interval_sb_fraction": [
+      "1/2",
+      "1"
+    ],
+    "bracket_consistency": "Exact replayed legal BR interval must intersect constructive value interval; neither interval is an exact value certificate."
+  },
+  "method": "Pool six fully verified physical source classes into all 72 AA/QQ-versus-KK pairs with exact global priors. Independently verify joint endpoint maps, physical row census and legal constructive value bounds before training. Preflight every profile before build lookup. Retain all ten raw policies, five paired comparisons and early misses. Final NashConv <= .005 mandatory; no known equilibrium value assumed. Final400 chosen by existing full-request admission before measurement; no cap/gate change. Complete-call JSON/hash timings, no RSS or general speed claim.",
+  "scope": "Mixed full physical AA/QQ versus KK ranges only, finite preflop betting with hidden full-board forced checkdown; no later-street betting, multiway or unrestricted equilibrium claim.",
+  "basis_reports": [
+    {
+      "path": "benchmarks/results/preflop-five-basis-v1.json",
+      "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7"
+    },
+    {
+      "path": "benchmarks/results/preflop-qq-kk-basis-v1.json",
+      "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8"
+    }
+  ]
+}

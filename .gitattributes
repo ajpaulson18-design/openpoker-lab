@@ -33,3 +33,6 @@
 # The historical tail report was fingerprinted from its CRLF checkout bytes.
 # Keep its existing LF Git blob, with deterministic historical bytes on all OSes.
 /benchmarks/results/river-cfrplus-tail-realization-v1.json text eol=crlf
+
+# Preserve the full mixed physical range observation byte for byte.
+/benchmarks/results/preflop-mixed-physical-range-v1.json -text
