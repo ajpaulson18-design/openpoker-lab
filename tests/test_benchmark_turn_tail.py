@@ -8,6 +8,7 @@ import unittest
 from fractions import Fraction
 from unittest.mock import patch
 
+from scripts.historical_turn_sources import TRANSITIONS
 from scripts import benchmark_turn_tail as runner
 from scripts.benchmark_turn_river_independent import solve
 
@@ -81,7 +82,9 @@ class TurnTailRunnerSafetyTests(unittest.TestCase):
 
     def test_report_generation_head_is_historical_and_source_pins_are_strict(self):
         baseline = {"report_sha256": "b" * 64}
-        source_pins = {name: "d" * 64 for name in runner.REQUIRED_SOURCES}
+        current_pins = {name: TRANSITIONS[name][1] if name in TRANSITIONS else "d" * 64
+                        for name in runner.REQUIRED_SOURCES}
+        source_pins = dict(current_pins)
         source_pins["pokerlab/unrelated-historical.py"] = "a" * 64
         report = {
             "schema_version": runner.SCHEMA_VERSION,
@@ -94,13 +97,11 @@ class TurnTailRunnerSafetyTests(unittest.TestCase):
             "reference_sha256": runner.REFERENCE_SHA256,
             "source_sha256": source_pins,
         }
-        runner._check_report_envelope(report, {name: "d" * 64
-                                                for name in runner.REQUIRED_SOURCES},
+        runner._check_report_envelope(report, current_pins,
                                       "e" * 40, baseline)
         report["source_sha256"][runner.REQUIRED_SOURCES[0]] = "f" * 64
         with self.assertRaisesRegex(ValueError, "fingerprint"):
-            runner._check_report_envelope(report, {name: "d" * 64
-                                                    for name in runner.REQUIRED_SOURCES},
+            runner._check_report_envelope(report, current_pins,
                                           "e" * 40, baseline)
 
     def test_saved_metric_mutation_is_not_repaired_during_replay(self):
@@ -129,6 +130,9 @@ class TurnTailRunnerSafetyTests(unittest.TestCase):
                 name: hashlib.sha256(("synthetic:" + name).encode()).hexdigest()
                 for name in runner.REQUIRED_SOURCES
             }
+            # Synthetic observations still need authenticated protected source endpoints.
+            source_map.update({name: TRANSITIONS[name][1] for name in runner.REQUIRED_SOURCES
+                               if name in TRANSITIONS})
             fake_head = "a" * 40
             calls = []
 

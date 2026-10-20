@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class HistoricalTurnSourceTests(unittest.TestCase):
     def test_transition_current_files_have_the_exact_reviewed_bytes(self):
-        self.assertEqual(len(provenance.TRANSITIONS),5)
+        self.assertEqual(len(provenance.TRANSITIONS),7)
         for name,(old,new) in provenance.TRANSITIONS.items():
             with self.subTest(name=name):
                 raw=(ROOT/name).read_bytes().replace(b'\r\n',b'\n')
