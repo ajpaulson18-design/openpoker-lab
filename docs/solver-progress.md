@@ -1466,3 +1466,12 @@ policies with real later-street decisions, including weighted blockers and
 hidden-future legal responses. A frozen 5,940-world recursive/planned vanilla/DCFR
 experiment fits all unchanged admission caps; measurement and final quality
 status remain separate. See [method and evidence](weighted-full-deck-flop.md).
+
+
+## Full-future flop CFR+ adapter candidate
+
+The flop start can now select the existing recursive/public-batched CFR+
+trainers under the unchanged full-request three-pass bound. Independent
+full-deck and raised conditioned validation plus legacy payload comparisons
+are required; convergence evidence remains separate from the adapter change.
+See [scope and validation plan](flop-cfrplus.md).

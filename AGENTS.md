@@ -252,3 +252,11 @@ replay. Preserve ordered future cards, globally conditioned exact priors and
 own-hand/visible-history response grouping, including zero-reach rows. Keep all
 raw lossless policies and quality misses; validated replay is separate from the
 unchanged final 0.005-chip gate. No later-street kernel or resource cap changes.
+
+
+For full-future flop CFR+, retain all old caps and charge three full training
+passes before dispatch. Keep recursive/vanilla defaults and later-street payloads
+unchanged. Planned CFR+, flop public diagnostics and target stopping remain
+unsupported. Require the independent weighted physical/action/own-hand response
+validator and a frozen quality experiment; adapter support alone is not a
+convergence claim. See [flop CFR+ scope](docs/flop-cfrplus.md).

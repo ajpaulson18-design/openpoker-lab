@@ -128,3 +128,13 @@ coaching regression suite. No evaluator or coaching source changed.
 After incorporating GitHub main `f32dc71` and its separate coaching/interface
 changes, all 323 integrated repository tests passed in 92.403 seconds. JavaScript
 syntax validation and all eight frontend contract checks also passed.
+
+
+## Opt-in flop CFR+ adapter
+
+The existing alternating CFR+ kernels are now available for flop starts with
+recursive or public-batched traversal, retaining three-pass full-request
+admission and all existing caps. Defaults, turn/river paths and recursive
+flop diagnostics remain unchanged. Planned CFR+, flop public diagnostics and
+flop target-based early stopping remain unsupported. Read the separate
+[scope, independent checks and pending convergence plan](flop-cfrplus.md).
