@@ -1457,3 +1457,12 @@ original admission charges. The separately frozen experiment passes all 28
 policy replays and exact old/new wire checks; complete-call median observed
 ratios are 1.44 / 1.30 on the two weighted eight-by-eight games.
 See [method and publication evidence](native-cfrplus-rematch.md).
+
+
+## Weighted full-deck flop validation experiment
+
+An independent literal-world/numeric-action validator now checks flop-start
+policies with real later-street decisions, including weighted blockers and
+hidden-future legal responses. A frozen 5,940-world recursive/planned vanilla/DCFR
+experiment fits all unchanged admission caps; measurement and final quality
+status remain separate. See [method and evidence](weighted-full-deck-flop.md).

@@ -243,3 +243,12 @@ refresh every row of the updated player after each alternating update, and
 retain the completed-sweep averaging order. Keep scalar/vanilla/DCFR arithmetic
 and old conservative work charges intact. Require exact old/new wire evidence
 and independent legal-response replay; see [experiment](docs/native-cfrplus-rematch.md).
+
+
+The [weighted full-deck flop validator](docs/weighted-full-deck-flop.md) must own
+literal parsing, deck/chance normalization and numeric betting/action coverage.
+Disable production grammar/rank/tree/train/value/BR helpers during independent
+replay. Preserve ordered future cards, globally conditioned exact priors and
+own-hand/visible-history response grouping, including zero-reach rows. Keep all
+raw lossless policies and quality misses; validated replay is separate from the
+unchanged final 0.005-chip gate. No later-street kernel or resource cap changes.
