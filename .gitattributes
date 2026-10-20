@@ -24,3 +24,6 @@
 /benchmarks/results/full-deck-raised-turn-full-physical-v1.json -text
 /benchmarks/results/full-deck-raised-turn-direct-tail-v1.json -text
 /benchmarks/results/full-deck-raised-turn-direct-tail-v1-materialized.json -text
+/benchmarks/results/river-direct-tail-v1.json -text
+/benchmarks/results/river-direct-tail-v1-polarised.json -text
+/benchmarks/results/river-direct-tail-v1-weighted-raises.json -text

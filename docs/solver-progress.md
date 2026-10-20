@@ -1386,3 +1386,9 @@ indices, an actual dense-limit boundary, finite diagnostics and concurrency.
 The exact one-bet response interval contains the known value 25, while the
 T=1000,D=500 tail still misses 0.001 and has a larger gap than its full average.
 Direct accumulation therefore carries no general convergence-improvement claim.
+
+The separate [fixed river experiment](direct-river-tail-experiment.md) freezes
+two T=10000,D=3000 calls, independent numeric/exact audits and comparison with
+the preceding saved realization tails. Cheap T10/D5 probes pass both full
+mathematical audits; they make no full-budget quality claim. The complete
+experiment awaits committed sources and actual full-budget generation.

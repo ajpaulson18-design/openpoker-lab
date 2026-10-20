@@ -102,3 +102,6 @@ Run `python -m unittest tests.test_river_tail_adapter -v` and repeat with
 `python -O`. This source/API slice adds no frozen larger river quality
 experiment; such an experiment must separately pin and save the raw policy,
 independent audit, complete-call observations and every target outcome.
+
+The subsequent [fixed river experiment](direct-river-tail-experiment.md) defines
+that separate evidence bundle for the two historical configured river games.

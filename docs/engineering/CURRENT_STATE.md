@@ -252,3 +252,8 @@ local original-weight accumulator with full requested admission, independent
 flow/response checks and fresh diagnostics. Its known one-bet test retains a
 quality miss, and zero-reach conditional fallbacks are compared by realization
 flow. Existing solver defaults, shared kernels and earlier streets are unchanged.
+
+The [fixed river experiment](../direct-river-tail-experiment.md) defines separate
+T=10000,D=3000 calls for the historical polarized and weighted raised fixtures,
+with raw-policy exact audits and prior-tail realization comparison. Its reviewed
+source must be committed before training; results remain pending that run.
