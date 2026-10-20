@@ -390,8 +390,6 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     if diagnostics == "public-batched" and len(board) == 3:
         raise ValueError("Public-batched diagnostics are enabled only for turn and river starts.")
     if algorithm == "cfrplus":
-        if len(board) == 3:
-            raise ValueError("CFR+ is currently enabled only for turn and river starts.")
         if traversal == "planned":
             raise ValueError("CFR+ requires recursive or public-batched traversal.")
     if type(iterations) is not int or not 10 <= iterations <= 10_000:

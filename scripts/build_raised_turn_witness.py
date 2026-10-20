@@ -5,6 +5,7 @@ No training occurs. Both accepted input reports are pinned before publication.
 from copy import deepcopy
 from fractions import Fraction
 from hashlib import sha256
+from scripts.historical_turn_sources import compatible_source_maps
 import argparse
 import json
 import math
@@ -298,6 +299,10 @@ def _compare_report(saved, expected):
     require(type(saved) is dict and type(expected) is dict and set(saved) == set(expected),
             "Saved witness report fields differ")
     left, right = deepcopy(saved), deepcopy(expected)
+    require(compatible_source_maps(left.get("source_sha256"), right.get("source_sha256")),
+            "Saved witness source differs from authenticated historical transition")
+    # Preserve historical source identities in the immutable saved report.
+    right["source_sha256"] = left["source_sha256"]
     require(type(left.get("results")) is list and type(right.get("results")) is list and
             len(left["results"]) == len(right["results"]) == len(BACKENDS),
             "Saved witness report profile count differs")

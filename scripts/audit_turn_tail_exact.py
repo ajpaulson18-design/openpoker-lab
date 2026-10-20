@@ -16,6 +16,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 
+from scripts.historical_turn_sources import compatible_source_maps
 from scripts import audit_full_deck_raised_exact as quotient
 
 
@@ -360,7 +361,7 @@ def verify_saved_artifact(path=REPORT, *, numeric_report_path=NUMERIC_REPORT,
              "Historical exact generation HEAD is invalid")
     inputs = _load_inputs(numeric_report_path, policies_dir, numeric_report_sha256)
     source_map, head = fingerprints(), _head()
-    _require(saved.get("source_sha256") == source_map,
+    _require(compatible_source_maps(saved.get("source_sha256"), source_map),
              "Exact audit source fingerprints differ")
     _require(saved.get("numeric_report_sha256") == inputs["report_sha256"] and
              saved.get("reference_sha256") == REFERENCE_SHA256,

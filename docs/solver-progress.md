@@ -1470,3 +1470,19 @@ reconstruction and exact repeated/cross-backend agreement. Both 400-sweep algori
 missed the original 0.005-chip target (vanilla 0.155975, DCFR 0.036804); every miss
 and the interrupted timing outlier is retained. These timings support no controlled
 speed claim. See [method and immutable evidence](weighted-full-deck-flop.md).
+
+
+## Full-future flop CFR+ adapter candidate
+
+The flop start can now select the existing recursive/public-batched CFR+
+trainers under the unchanged full-request three-pass bound. Independent
+full-deck and raised conditioned validation plus legacy payload comparisons
+are required; convergence evidence remains separate from the adapter change.
+See [scope and validation plan](flop-cfrplus.md).
+
+
+The full-future flop CFR+ experiment is complete: all 20 candidate policies and
+38 baseline policies reconstruct independently; both CFR+140 final NashConv
+observations (~0.012538) still miss the original 0.005-chip gate. Raw repeats,
+separate allocation calls and exact source identities remain immutable. See
+[completed evidence](flop-cfrplus.md#completed-evidence-and-quality-misses).

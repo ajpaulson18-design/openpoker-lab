@@ -261,3 +261,27 @@ fail. Authenticate the immutable index with
 identities, interruption notes and misses. Re-signed metadata is not authority.
 Exact row/action keys and numeric pot/stack mirrors are required during replay.
 The interrupted elapsed times cannot support a controlled speed comparison.
+
+
+For full-future flop CFR+, retain all old caps and charge three full training
+passes before dispatch. Keep recursive/vanilla defaults and later-street payloads
+unchanged. Planned CFR+, flop public diagnostics and target stopping remain
+unsupported. Require the independent weighted physical/action/own-hand response
+validator and a frozen quality experiment; adapter support alone is not a
+convergence claim. See [flop CFR+ scope](docs/flop-cfrplus.md).
+
+
+Historical turn-proof compatibility for flop CFR+ uses only the seven exact
+old/current source pairs in `scripts/historical_turn_sources.py`. Preserve old
+reports/policies and generation fingerprints. Unknown, reversed or omitted
+source identities must reject; new measurements and source guards use actual
+current hashes. Keep complete independent no-training replay and witness
+reconstruction. The CFR+ comparison must first authenticate and reconstruct the
+completed 3963e3c baseline, pin all misses, and preserve its 0.005-chip gate.
+
+
+The frozen full-future flop CFR+ v1 corpus is `quality-miss`: all 20 candidate
+policies reconstruct, but both CFR+140 observations fail the original 0.005-chip
+gate. Authenticate scripts.verify_flop_cfrplus_publication, preserve all 23 raw
+files and the 38-policy baseline receipt. CFR+140 and baseline400 have different
+charged work; finite replay and uncontrolled times do not prove general quality.

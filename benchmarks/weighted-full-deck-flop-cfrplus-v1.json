@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "weighted-full-deck-flop-cfrplus-v1",
+  "baseline_commit": "3963e3c366275ec31863049992acc1830ba17d4a",
+  "board": "2c3d4h",
+  "oop_range": "AsAd:1,QsQd:0.5",
+  "ip_range": "AsKh:0.25,KsKd:1",
+  "literal_oop_hands": [
+    [
+      "AdAs",
+      "1"
+    ],
+    [
+      "QdQs",
+      "1/2"
+    ]
+  ],
+  "literal_ip_hands": [
+    [
+      "AsKh",
+      "1/4"
+    ],
+    [
+      "KdKs",
+      "1"
+    ]
+  ],
+  "config": {
+    "pot": 10,
+    "effective_stack": 5,
+    "bet_sizes": [
+      0.5
+    ],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "algorithms": [
+    "cfrplus"
+  ],
+  "traversals": [
+    "recursive",
+    "public-batched"
+  ],
+  "iterations": [
+    10,
+    50,
+    140
+  ],
+  "timed_repeats": 3,
+  "pair_orders": [
+    [
+      "recursive",
+      "public-batched"
+    ],
+    [
+      "public-batched",
+      "recursive"
+    ],
+    [
+      "recursive",
+      "public-batched"
+    ]
+  ],
+  "separate_allocation_calls": {
+    "algorithm": "cfrplus",
+    "iterations": 10,
+    "traversals": [
+      "recursive",
+      "public-batched"
+    ],
+    "measure": "Python tracemalloc complete call; not RSS; independent replay and serialization outside tracing"
+  },
+  "expected": {
+    "compatible_pairs": 3,
+    "worlds": 5940,
+    "public_nodes": 9512,
+    "public_states": 30812,
+    "chance_nodes": 248,
+    "terminal_nodes": 21052,
+    "world_traversal_nodes": 12,
+    "plan_operations": 148500,
+    "max_world_iterations": 831600,
+    "max_world_node_iterations": 29937600,
+    "pair_priors": [
+      [
+        "AdAs",
+        "KdKs",
+        "8/13"
+      ],
+      [
+        "QdQs",
+        "AsKh",
+        "1/13"
+      ],
+      [
+        "QdQs",
+        "KdKs",
+        "4/13"
+      ]
+    ],
+    "raw_joint_weight_normalizer": "13/8",
+    "training_passes_per_iteration": 3,
+    "public_prefix_hand_edges": 6078
+  },
+  "acceptance": {
+    "independent_metric_absolute_tolerance": 1e-10,
+    "cross_backend_policy_absolute_tolerance": 1e-08,
+    "cross_backend_metric_absolute_tolerance": 1e-08,
+    "final_nash_conv_chip_limit": 0.005,
+    "exact_per_profile_repeat_payload": true,
+    "ordered_physical_signs_exact": true,
+    "complete_action_coverage": true
+  },
+  "method": "Independently verify and pin the completed baseline report, preserving any quality misses, before candidate measurement. Run complete rank-free geometry, three-pass world-node and public prefix-edge admission before ranking. Retain 18 paired complete calls plus canonical serialization/hash, two separate 10-sweep allocation calls, and independent physical/action/own-hand response replay. Freeze clean candidate source and retain every raw observation and unchanged 0.005-chip quality miss. Do not claim equal charged work with the 400-iteration baseline or cross-host speed comparisons.",
+  "baseline_spec_sha256": "b72039785e46ba7a30850831ce0e420d1775a2b34ed7dbcbeaf8080cec88ca05"
+}

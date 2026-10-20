@@ -84,8 +84,13 @@ class TurnRiverQualityIntegrationTests(unittest.TestCase):
         flop = "Js8d4c"
         config = RiverConfig(pot=10, effective_stack=10, bet_sizes=(0.5,))
         common = (flop, "AsAh", "KcKd", config)
-        with self.assertRaisesRegex(ValueError, "only for turn and river"):
-            solve_postflop(*common, iterations=10, algorithm="cfrplus")
+        # Full flop CFR+ is supported, but this deeper full-deck tree still
+        # exceeds the unchanged public-node guard before training.
+        with patch("pokerlab.postflop_solver.train_plus",
+                   side_effect=AssertionError("training before admission")) as trainer:
+            with self.assertRaisesRegex(ValueError, "10,000"):
+                solve_postflop(*common, iterations=10, algorithm="cfrplus")
+        trainer.assert_not_called()
         with self.assertRaisesRegex(ValueError, "only for turn and river"):
             solve_postflop(*common, iterations=10, diagnostics="public-batched")
         with self.assertRaisesRegex(ValueError, "requires recursive or public-batched"):
