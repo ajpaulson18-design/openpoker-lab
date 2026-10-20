@@ -1,5 +1,6 @@
 """Independent full-deck and conditioned flop CFR+ capability checks."""
 import hashlib
+import gzip
 from pathlib import Path
 import sys
 import types
@@ -19,6 +20,18 @@ IP_HANDS = [['AsKh','1/4'],['KdKs','1']]
 SMALL = dict(pot=10,effective_stack=5,bet_sizes=[.5],raise_sizes=[],max_raises=0,include_all_in=False)
 METRICS = ('value_oop','value_ip','oop_best_response_value','ip_best_response_value',
            'oop_best_response_gain','ip_best_response_gain','nash_conv','exploitability')
+
+
+def frozen_cf_adapter_source():
+    path=ROOT/'benchmarks/sources/postflop-before-delayed-flop-cfrplus-v1.py.gz'
+    if path.stat().st_size>64*1024:
+        raise ValueError('Frozen adapter compressed source exceeds bound')
+    with gzip.open(path,'rb') as stream:
+        raw=stream.read(256*1024+1)
+    if (len(raw)>256*1024 or b'\r' in raw or hashlib.sha256(raw).hexdigest()!=
+            'e0af827215f4731ac249345f067d8d18d9721ddcf43f563c15991eefa9c37b6f'):
+        raise ValueError('Frozen pre-delay adapter source changed')
+    return raw.decode('utf-8')
 
 
 class ReachedAdmittedTrainer(Exception):
@@ -115,7 +128,7 @@ class FlopCFRPlusTests(unittest.TestCase):
                 worlds.assert_not_called()
 
     def test_actual_legacy_source_preserves_defaults_and_turn_river_payloads(self):
-        source=(ROOT/'pokerlab/postflop_solver.py').read_text(encoding='utf-8')
+        source=frozen_cf_adapter_source()
         current='''    if algorithm == "cfrplus":
         if traversal == "planned":'''
         prior='''    if algorithm == "cfrplus":
@@ -143,6 +156,30 @@ class FlopCFRPlusTests(unittest.TestCase):
             options=dict(config=SMALL,runouts=cases[0][1],iterations=10)
             self.assertEqual(old.solve_postflop(BOARD,OOP,IP,**options),
                              solver.solve_postflop(BOARD,OOP,IP,**options))
+
+
+class FlopDelayDefaultParityTests(unittest.TestCase):
+    def test_actual_pre_delay_source_preserves_omitted_and_explicit_zero_payloads(self):
+        source=frozen_cf_adapter_source()
+        old=types.ModuleType('pokerlab._actual_pre_flop_delay_adapter');old.__package__='pokerlab'
+        with patch.dict(sys.modules,{old.__name__:old}):
+            exec(compile(source,'frozen-0661603-postflop','exec'),old.__dict__)
+            cases=[(BOARD,[('5c','9h'),('9h','5c')]),
+                   ('2c3d4h5c',['9h','Tc']),('2c3d4h5c9h',None)]
+            for board,runouts in cases:
+                for algorithm in ('vanilla','dcfr','cfrplus'):
+                    for traversal in ('recursive','public-batched'):
+                        options=dict(config=SMALL,runouts=runouts,iterations=10,
+                                     algorithm=algorithm,traversal=traversal)
+                        with self.subTest(board=board,algorithm=algorithm,traversal=traversal):
+                            expected=old.solve_postflop(board,OOP,IP,**options)
+                            self.assertEqual(solver.solve_postflop(board,OOP,IP,**options),expected)
+                            self.assertEqual(solver.solve_postflop(board,OOP,IP,
+                                             averaging_delay=0,**options),expected)
+            options=dict(config=SMALL,runouts=cases[0][1],iterations=10)
+            expected=old.solve_postflop(BOARD,OOP,IP,**options)
+            self.assertEqual(solver.solve_postflop(BOARD,OOP,IP,**options),expected)
+            self.assertEqual(solver.solve_postflop(BOARD,OOP,IP,averaging_delay=0,**options),expected)
 
 
 if __name__=='__main__':
