@@ -1,0 +1,1815 @@
+{
+  "benchmark_id": "river-direct-tail-v1",
+  "completed_training_calls": 2,
+  "discard": 3000,
+  "fixtures": {
+    "river-polarised-bluffcatcher": {
+      "board": "2c7d9hJsKd",
+      "config": {
+        "bet_sizes": [
+          1.0
+        ],
+        "effective_stack": 100,
+        "include_all_in": false,
+        "pot": 100
+      },
+      "id": "river-polarised-bluffcatcher",
+      "ip": "QsQh",
+      "oop": "AsAh,3c4c",
+      "purpose": "Nuts/air versus bluffcatcher, pot-size bet, finite tree"
+    },
+    "river-weighted-raises": {
+      "board": "Js8d4c2h2s",
+      "config": {
+        "bet_sizes": [
+          0.33,
+          0.75
+        ],
+        "effective_stack": [
+          220,
+          120
+        ],
+        "include_all_in": true,
+        "max_raises": 2,
+        "pot": 100,
+        "raise_sizes": [
+          0.5,
+          1.0
+        ]
+      },
+      "id": "river-weighted-raises",
+      "ip": "AcAd:1,KcKd:0.75",
+      "oop": "AsAh:0.5,KsKh:1",
+      "purpose": "Weighted river range, two opening sizes, raises and unequal stacks"
+    }
+  },
+  "historical_producer_head": "3ba950acb96f3b37206251ab82ae230ed0240a78",
+  "historical_producer_source_sha256": {
+    "pokerlab/__init__.py": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+    "pokerlab/analysis.py": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/coach_analysis.py": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+    "pokerlab/coach_conversation.py": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+    "pokerlab/coach_grounding.py": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+    "pokerlab/coach_provider.py": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+    "pokerlab/coach_teaching.py": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+    "pokerlab/contracts.py": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+    "pokerlab/current_study.py": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+    "pokerlab/decision_study.py": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+    "pokerlab/equilibrium.py": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+    "pokerlab/equity.py": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+    "pokerlab/explanations.py": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+    "pokerlab/exploit.py": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+    "pokerlab/flop_checkdown_equity.py": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+    "pokerlab/flop_checkdown_solver.py": "68d554e7318f03df3f2409a5e588b04d253906a3b5544c4750acd899706decad",
+    "pokerlab/flop_checkdown_worlds.py": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+    "pokerlab/flop_suit_equity.py": "7649fc037d7ed530a1b27b9467543a77a91d3fda87a29a6fd4fe42af214c01ec",
+    "pokerlab/game.py": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+    "pokerlab/matrix_free_river.py": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+    "pokerlab/matrix_free_turn.py": "0fd5fa336a7c0ca10a0d12c8a7dbc7be404a86638a93b39497b3f32eb18dc92a",
+    "pokerlab/models.py": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+    "pokerlab/native_fixed_street.py": "d6e58addca737af57e309b003c93cc0de2d1551f05665a4bfd24548b11dd78d5",
+    "pokerlab/native_preflop_equity.py": "d36de170d91e918f1e19166d4d9f2239ea418c327303efb20db641cfc1de42bd",
+    "pokerlab/personalities.py": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+    "pokerlab/practice.py": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+    "pokerlab/preflop_checkdown_budget.py": "c2e6bfce1d5d5df6a7531d8a9ba39ad9b921124a3a984a9a6fd43107ee3d243c",
+    "pokerlab/preflop_checkdown_solver.py": "894a2d46423d5dcf1c46e2c1310e621f283bba51958687bfb2256a70c3ecde60",
+    "pokerlab/preflop_covered_equity.py": "927cb84dfa20102e69f65f5d737a2d45ea69c92901c4d5cb91f89691d196b729",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_full_board_equity.py": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+    "pokerlab/preflop_future_groups.py": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_push_fold.py": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+    "pokerlab/preflop_sampled_cfr.py": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+    "pokerlab/preflop_sampled_storage.py": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+    "pokerlab/preflop_solver.py": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+    "pokerlab/preflop_suit_equity.py": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+    "pokerlab/public_cfr.py": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+    "pokerlab/public_diagnostics.py": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+    "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+    "pokerlab/restricted_solver.py": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tail_adapter.py": "42cde1771cf477e65652bf912f0877661ebb267c029e7fc281492d0234ebc778",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/server.py": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+    "pokerlab/situation_teaching.py": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+    "pokerlab/solver.py": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+    "pokerlab/turn_range_kernel.py": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+    "pokerlab/turn_solver.py": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+    "pokerlab/turn_tail_adapter.py": "ecd183dedbaa967d691b8467a176203b9cb827a513425bdf660a4088813193c2",
+    "pokerlab/turn_terminal_cache.py": "cea7df6db83b65b7b7de403271ff4a55be708d8b983de3aa29d97af16a495092",
+    "scripts/benchmark_river_direct_tail.py": "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+    "tests/test_benchmark_river_direct_tail.py": "5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71",
+    "tests/test_river_tail_adapter.py": "6a518357222925c4d573774470e0b44f165ff65a3909138679a3785ef2858f0c"
+  },
+  "iterations": 10000,
+  "policy_sha256": {
+    "river-polarised-bluffcatcher": "2f558f363f716c0dc67794d329d167254b7b65bcf339cd8480d61e7e8fe53117",
+    "river-weighted-raises": "905c2cb42bfb1fbb69117ae2dda07f502935b657f3871f536dffe34363cbfacf"
+  },
+  "prior_tail_policy_sha256": {
+    "river-polarised-bluffcatcher": "67761d6b0c37b0edce22984583c14aaeabd36507ab426939e58753be050a1344",
+    "river-weighted-raises": "cfff9bba2fd253e0701d37eb5c845399c6643f344cf11565a7a2e5b598514b62"
+  },
+  "prior_tail_report_sha256": "44c17cced492a5bcf7a9f2622bde060bb98a47f60539ee2ca997ebd1e421b1ce",
+  "results": {
+    "river-polarised-bluffcatcher": {
+      "actual_complete_call_seconds": 2.2384234000001015,
+      "average_weight_sum": 45503500,
+      "averaged_sweeps": 7000,
+      "compatible_pairs": 2,
+      "dense_hand_state_pass_work": 540054,
+      "discard": 3000,
+      "exact_certificate": {
+        "depth_limit": 64,
+        "fraction_bit_limit": 65536,
+        "max_row_adjustment": "4504557581817341/81129638414606690702988259885056",
+        "maximum_fraction_bits": 109,
+        "normalization_ledger": [
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "2251659751858015/4503599627370496",
+                "name": "check",
+                "normalized_fraction": "2251659751858015/4503599627370496"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@100",
+                "index": 1,
+                "input_fraction": "2251939875512481/4503599627370496",
+                "name": "all_in",
+                "normalized_fraction": "2251939875512481/4503599627370496"
+              }
+            ],
+            "hand": "3c4c",
+            "history": [],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "3c4c",
+            "history": [
+              "check",
+              "all_in@100"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "check",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@100",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "all_in",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "check",
+              "all_in@100"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": -5.549934353106879e-17,
+                "adjustment_fraction": "-1125660418230913/20282409603651672675747064971264",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1125660418230913/2251799813685248",
+                "name": "fold",
+                "normalized_fraction": "4502641672923652/9007199254740993"
+              },
+              {
+                "adjustment_float": -5.552295893144686e-17,
+                "adjustment_fraction": "-4504557581817341/81129638414606690702988259885056",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "4504557581817341/9007199254740992",
+                "name": "call",
+                "normalized_fraction": "4504557581817341/9007199254740993"
+              }
+            ],
+            "hand": "QhQs",
+            "history": [
+              "all_in@100"
+            ],
+            "input_row_sum_fraction": "9007199254740993/9007199254740992",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "check",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@100",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "QhQs",
+            "history": [
+              "check"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          }
+        ],
+        "tree_depth": 4,
+        "tree_nodes": 9,
+        "work": 282,
+        "work_by_kind": {
+          "best_response_node_group_visits": 20,
+          "fraction_operations": 125,
+          "opponent_action_group_slots": 12,
+          "opponent_group_entries_copied": 14,
+          "opponent_group_entries_scanned": 14,
+          "own_action_slots": 8,
+          "own_hand_group_entries_copied": 6,
+          "own_hand_group_entries_scanned": 6,
+          "own_hand_setup": 4,
+          "policy_sort_entries": 6,
+          "profile_node_world_visits": 18,
+          "row_normalization_entries": 12,
+          "serialized_strategy_row_index_entries": 6,
+          "terminal_group_entries_scanned": 12,
+          "tree_preflight_edges": 8,
+          "tree_preflight_nodes": 9,
+          "world_setup_entries": 2
+        },
+        "work_limit": 100000,
+        "worlds": 2
+      },
+      "exact_float_replay_deltas": {
+        "exploitability": -6.110563444128303e-16,
+        "ip_best_response_gain": -4.575333167888829e-16,
+        "ip_best_response_value": 3.552713678800501e-15,
+        "nash_conv": -1.2221126888256606e-15,
+        "oop_best_response_gain": -7.641456911677835e-16,
+        "oop_best_response_value": -3.552713678800501e-15,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "exact_metrics_fractions": {
+        "exploitability": "139395201892938478386711556025/40564819207303345351494129942528",
+        "ip_best_response_gain": "3941551375532116502646343225/2535301200456459084468383121408",
+        "ip_best_response_value": "-56291493796450375/2251799813685248",
+        "nash_conv": "139395201892938478386711556025/20282409603651672675747064971264",
+        "oop_best_response_gain": "35954263629560515455180270075/6760803201217224225249021657088",
+        "oop_best_response_value": "225227879090867050/9007199254740993",
+        "value_ip": "-507060233382649305342754573468175/20282409603651672675747064971264",
+        "value_oop": "507060233382649305342754573468175/20282409603651672675747064971264"
+      },
+      "exact_nash_conv_zero": false,
+      "exact_threshold": "1/1000",
+      "exact_threshold_met": false,
+      "fixture": "river-polarised-bluffcatcher",
+      "info_action_slots": 12,
+      "info_sets": 6,
+      "known_game_reference_fraction": "25",
+      "known_game_reference_in_response_interval": true,
+      "lower_value_bound_fraction": "56291493796450375/2251799813685248",
+      "numeric_replay_deltas": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "old_tail_flow_scope": "Exact row-normalized binary64 probabilities and own-action reach only; opponent and chance reach excluded.",
+      "own_action_flow_max_error": 1.4432899320127035e-15,
+      "own_action_flow_max_error_fraction": "13/9007199254740992",
+      "polarized_16x4_witness": {
+        "ip_br_fraction": "-56291493796450375/2251799813685248",
+        "known_game_value_fraction": "25",
+        "known_value_in_interval": true,
+        "max_probability_normalization_adjustment": 5.552295893144686e-17,
+        "nash_conv_fraction": "139395201892938478386711556025/20282409603651672675747064971264",
+        "oop_br_fraction": "225227879090867050/9007199254740993",
+        "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+        "target_met": false,
+        "value_lower_fraction": "56291493796450375/2251799813685248",
+        "value_oop_fraction": "507060233382649305342754573468175/20282409603651672675747064971264",
+        "value_upper_fraction": "225227879090867050/9007199254740993"
+      },
+      "prefix_hand_edges": 2,
+      "prior_tail_nash_conv": 0.006872714071683106,
+      "prior_tail_policy_sha256": "67761d6b0c37b0edce22984583c14aaeabd36507ab426939e58753be050a1344",
+      "prior_tail_report_sha256": "44c17cced492a5bcf7a9f2622bde060bb98a47f60539ee2ca997ebd1e421b1ce",
+      "public_nodes": 4,
+      "public_states": 9,
+      "requested_average_passes": 7000,
+      "requested_iterations": 10000,
+      "requested_regret_passes": 20000,
+      "requested_total_traversal_passes": 27000,
+      "training_calls": 1,
+      "tree_actions": 8,
+      "upper_value_bound_fraction": "225227879090867050/9007199254740993",
+      "visited_nodes": 4,
+      "world_node_work": 240000,
+      "worlds": 2
+    },
+    "river-weighted-raises": {
+      "actual_complete_call_seconds": 15.166745099999844,
+      "average_weight_sum": 45503500,
+      "averaged_sweeps": 7000,
+      "compatible_pairs": 4,
+      "dense_hand_state_pass_work": 3060306,
+      "discard": 3000,
+      "exact_certificate": {
+        "depth_limit": 64,
+        "fraction_bit_limit": 65536,
+        "max_row_adjustment": "858106932811208249/10384593717069656130759320368316416",
+        "maximum_fraction_bits": 334,
+        "normalization_ledger": [
+          {
+            "actions": [
+              {
+                "adjustment_float": -2.6947571789280176e-17,
+                "adjustment_fraction": "-1748997404332765/64903710731685348959510906011648",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "8744987021663825/18014398509481984",
+                "name": "check",
+                "normalized_fraction": "1748997404332765/3602879701896397"
+              },
+              {
+                "adjustment_float": -2.8563579441977654e-17,
+                "adjustment_fraction": "-115867643597727/4056481920730334309969431625728",
+                "history_key": "bet@33",
+                "index": 1,
+                "input_fraction": "579338217988635/1125899906842624",
+                "name": "bet",
+                "normalized_fraction": "1853882297563632/3602879701896397"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "bet@75",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "bet",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@220",
+                "index": 3,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [],
+            "input_row_sum_fraction": "18014398509481985/18014398509481984",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "bet@33",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 5.368732091887206e-18,
+                "adjustment_fraction": "6969012693755263/1298074214633706871103827063341056",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "6969012693755263/36028797018963968",
+                "name": "call",
+                "normalized_fraction": "6969012693755263/36028797018963967"
+              },
+              {
+                "adjustment_float": 2.2386843523741707e-17,
+                "adjustment_fraction": "227029565040693/10141204801825834930498648932352",
+                "history_key": "all_in@220",
+                "index": 2,
+                "input_fraction": "227029565040693/281474976710656",
+                "name": "all_in",
+                "normalized_fraction": "29059784325208704/36028797018963967"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "bet@33",
+              "raise@116"
+            ],
+            "input_row_sum_fraction": "36028797018963967/36028797018963968",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "bet@75",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "check",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": -2.312435882536826e-17,
+                "adjustment_fraction": "-577252575406691/24962965666032826522888810004480",
+                "history_key": "raise@116",
+                "index": 2,
+                "input_fraction": "7504283480286983/18014398509481984",
+                "name": "raise",
+                "normalized_fraction": "577252575406691/1385722962267845"
+              },
+              {
+                "adjustment_float": -1.6193396202944786e-17,
+                "adjustment_fraction": "-404235193430577/24962965666032826522888810004480",
+                "history_key": "raise@199",
+                "index": 3,
+                "input_fraction": "5255057514597501/18014398509481984",
+                "name": "raise",
+                "normalized_fraction": "404235193430577/1385722962267845"
+              },
+              {
+                "adjustment_float": -1.6193396202944786e-17,
+                "adjustment_fraction": "-404235193430577/24962965666032826522888810004480",
+                "history_key": "all_in@220",
+                "index": 4,
+                "input_fraction": "5255057514597501/18014398509481984",
+                "name": "all_in",
+                "normalized_fraction": "404235193430577/1385722962267845"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "check",
+              "bet@33"
+            ],
+            "input_row_sum_fraction": "18014398509481985/18014398509481984",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@116",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "raise@200",
+                "index": 2,
+                "input_fraction": "1/2",
+                "name": "raise",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@220",
+                "index": 3,
+                "input_fraction": "1/2",
+                "name": "all_in",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "AhAs",
+            "history": [
+              "check",
+              "bet@75"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "3344926680047855/4503599627370496",
+                "name": "check",
+                "normalized_fraction": "3344926680047855/4503599627370496"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "bet@33",
+                "index": 1,
+                "input_fraction": "1158672947322641/4503599627370496",
+                "name": "bet",
+                "normalized_fraction": "1158672947322641/4503599627370496"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "bet@75",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "bet",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@220",
+                "index": 3,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "bet@33",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@220",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "bet@33",
+              "raise@116"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "bet@75",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": -4.3538495851757717e-17,
+                "adjustment_fraction": "-7064524851137913/162259276829213372398777265029120",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "7064524851137913/9007199254740992",
+                "name": "fold",
+                "normalized_fraction": "14129049702275826/18014398509481985"
+              },
+              {
+                "adjustment_float": -1.1972655379500114e-17,
+                "adjustment_fraction": "-3885348807206159/324518553658426744797554530058240",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "3885348807206159/18014398509481984",
+                "name": "call",
+                "normalized_fraction": "3885348807206159/18014398509481985"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "check",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "18014398509481985/18014398509481984",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": -5.987004991821023e-18,
+                "adjustment_fraction": "-7771576802766157/1298074214633706943161421101268992",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "7771576802766157/36028797018963968",
+                "name": "fold",
+                "normalized_fraction": "7771576802766157/36028797018963969"
+              },
+              {
+                "adjustment_float": -2.176857062380789e-17,
+                "adjustment_fraction": "-7064305054049453/324518553658426735790355275317248",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "7064305054049453/9007199254740992",
+                "name": "call",
+                "normalized_fraction": "28257220216197812/36028797018963969"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "raise@116",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "raise",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "raise@199",
+                "index": 3,
+                "input_fraction": "0",
+                "name": "raise",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@220",
+                "index": 4,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "check",
+              "bet@33"
+            ],
+            "input_row_sum_fraction": "36028797018963969/36028797018963968",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@116",
+              "all_in@120"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": -5.3279454122449084e-17,
+                "adjustment_fraction": "-22513243999385/422550200076076496485877809152",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "13507946399631/17592186044416",
+                "name": "fold",
+                "normalized_fraction": "18442849484296192/24019198012642647"
+              },
+              {
+                "adjustment_float": -3.772011985595013e-18,
+                "adjustment_fraction": "-19585405983160705/5192296858534827988818466518859776",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "3917081196632141/72057594037927936",
+                "name": "call",
+                "normalized_fraction": "3917081196632141/72057594037927941"
+              },
+              {
+                "adjustment_float": -6.168736465514092e-18,
+                "adjustment_fraction": "-8007477742754515/1298074214633706997204616629714944",
+                "history_key": "raise@200",
+                "index": 2,
+                "input_fraction": "1601495548550903/18014398509481984",
+                "name": "raise",
+                "normalized_fraction": "6405982194203612/72057594037927941"
+              },
+              {
+                "adjustment_float": -6.168736465514092e-18,
+                "adjustment_fraction": "-8007477742754515/1298074214633706997204616629714944",
+                "history_key": "all_in@220",
+                "index": 3,
+                "input_fraction": "1601495548550903/18014398509481984",
+                "name": "all_in",
+                "normalized_fraction": "6405982194203612/72057594037927941"
+              }
+            ],
+            "hand": "KhKs",
+            "history": [
+              "check",
+              "bet@75"
+            ],
+            "input_row_sum_fraction": "72057594037927941/72057594037927936",
+            "player": "oop"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": -2.1056722970620717e-32,
+                "adjustment_fraction": "-8662233402601628932545510233137/411376139330301532897607277512281226358792694920839662223228928",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "7857776595387911/20282409603651670423947251286016",
+                "name": "call",
+                "normalized_fraction": "7857776595387911/20282409603651671526324405618183"
+              },
+              {
+                "adjustment_float": -2.4816608090982992e-17,
+                "adjustment_fraction": "-377807430812197703100172884005/15223975388863572892065940586143791700275888128",
+                "history_key": "raise@116",
+                "index": 2,
+                "input_fraction": "1028161993363545/2251799813685248",
+                "name": "raise",
+                "normalized_fraction": "3086953313459045095527289978880/6760803201217223842108135206061"
+              },
+              {
+                "adjustment_float": -2.9534781900356755e-17,
+                "adjustment_fraction": "-5395641513197814378612781485103/182687704666362874704791287033725500403310657536",
+                "history_key": "all_in@120",
+                "index": 3,
+                "input_fraction": "4894551281286809/9007199254740992",
+                "name": "all_in",
+                "normalized_fraction": "11021549663274528381965940293632/20282409603651671526324405618183"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "bet@33"
+            ],
+            "input_row_sum_fraction": "20282409603651671526324405618183/20282409603651670423947251286016",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "bet@33",
+              "raise@116",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1351367731180029/4503599627370496",
+                "name": "call",
+                "normalized_fraction": "1351367731180029/4503599627370496"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@120",
+                "index": 2,
+                "input_fraction": "3152231896190467/4503599627370496",
+                "name": "all_in",
+                "normalized_fraction": "3152231896190467/4503599627370496"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "bet@75"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "check",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 1.7059719303118065e-17,
+                "adjustment_fraction": "11072390868133235/649037107316853442307312972726272",
+                "history_key": "bet@33",
+                "index": 1,
+                "input_fraction": "2214478173626647/2251799813685248",
+                "name": "bet",
+                "normalized_fraction": "283453206224210816/288230376151711739"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "bet@75",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "bet",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 2.8751545665000714e-19,
+                "adjustment_fraction": "23885849637504615/83076749736557240615336060508962816",
+                "history_key": "all_in@120",
+                "index": 3,
+                "input_fraction": "4777169927500923/288230376151711744",
+                "name": "all_in",
+                "normalized_fraction": "4777169927500923/288230376151711739"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check"
+            ],
+            "input_row_sum_fraction": "288230376151711739/288230376151711744",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check",
+              "bet@33",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1083645038318251/2251799813685248",
+                "name": "call",
+                "normalized_fraction": "1083645038318251/2251799813685248"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@120",
+                "index": 2,
+                "input_fraction": "1168154775366997/2251799813685248",
+                "name": "all_in",
+                "normalized_fraction": "1168154775366997/2251799813685248"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@116"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1",
+                "name": "call",
+                "normalized_fraction": "1"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@199"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check",
+              "bet@75",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "AcAd",
+            "history": [
+              "check",
+              "bet@75",
+              "raise@200"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "3636528709511823/4503599627370496",
+                "name": "fold",
+                "normalized_fraction": "3636528709511823/4503599627370496"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "867070917858673/4503599627370496",
+                "name": "call",
+                "normalized_fraction": "867070917858673/4503599627370496"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "0",
+                "name": "fold",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": -7.455834151076399e-17,
+                "adjustment_fraction": "-24195565150244169/324518553658426751552953971113984",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "2199596831840379/2251799813685248",
+                "name": "call",
+                "normalized_fraction": "140774197237784256/144115188075855883"
+              },
+              {
+                "adjustment_float": -1.769491432215527e-18,
+                "adjustment_fraction": "-36750899218787897/20769187434139312099389054151294976",
+                "history_key": "raise@116",
+                "index": 2,
+                "input_fraction": "3340990838071627/144115188075855872",
+                "name": "raise",
+                "normalized_fraction": "3340990838071627/144115188075855883"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@120",
+                "index": 3,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "bet@33"
+            ],
+            "input_row_sum_fraction": "144115188075855883/144115188075855872",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "bet@33",
+              "raise@116",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": -8.263269186936959e-17,
+                "adjustment_fraction": "-858106932811208249/10384593717069656130759320368316416",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "8846463224857817/9007199254740992",
+                "name": "fold",
+                "normalized_fraction": "1132347292781800576/1152921504606847073"
+              },
+              {
+                "adjustment_float": -3.3364371455679097e-19,
+                "adjustment_fraction": "-443488566006557835/1329227995784915984737193007144501248",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "4572047072232555/1152921504606846976",
+                "name": "call",
+                "normalized_fraction": "4572047072232555/1152921504606847073"
+              },
+              {
+                "adjustment_float": -1.1677530009487683e-18,
+                "adjustment_fraction": "-776104990511476187/664613997892457992368596503572250624",
+                "history_key": "all_in@120",
+                "index": 2,
+                "input_fraction": "8001082376406971/576460752303423488",
+                "name": "all_in",
+                "normalized_fraction": "16002164752813942/1152921504606847073"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "bet@75"
+            ],
+            "input_row_sum_fraction": "1152921504606847073/1152921504606846976",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 5.656753018832743e-19,
+                "adjustment_fraction": "5874308185838531/10384593717069655185003398620512256",
+                "history_key": "check",
+                "index": 0,
+                "input_fraction": "5874308185838531/72057594037927936",
+                "name": "check",
+                "normalized_fraction": "11748616371677062/144115188075855871"
+              },
+              {
+                "adjustment_float": 6.0052048441695116e-18,
+                "adjustment_fraction": "7795201561809871/1298074214633706898125424827564032",
+                "history_key": "bet@33",
+                "index": 1,
+                "input_fraction": "7795201561809871/9007199254740992",
+                "name": "bet",
+                "normalized_fraction": "124723224988957936/144115188075855871"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "bet@75",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "bet",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 3.6801375785444244e-19,
+                "adjustment_fraction": "7643346715220873/20769187434139310370006797241024512",
+                "history_key": "all_in@120",
+                "index": 3,
+                "input_fraction": "7643346715220873/144115188075855872",
+                "name": "all_in",
+                "normalized_fraction": "7643346715220873/144115188075855871"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check"
+            ],
+            "input_row_sum_fraction": "144115188075855871/144115188075855872",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check",
+              "bet@33",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "all_in@120",
+                "index": 2,
+                "input_fraction": "0",
+                "name": "all_in",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@116"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1",
+                "name": "fold",
+                "normalized_fraction": "1"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "0",
+                "name": "call",
+                "normalized_fraction": "0"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check",
+              "bet@33",
+              "raise@199"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check",
+              "bet@75",
+              "all_in@220"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          },
+          {
+            "actions": [
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "fold",
+                "index": 0,
+                "input_fraction": "1/2",
+                "name": "fold",
+                "normalized_fraction": "1/2"
+              },
+              {
+                "adjustment_float": 0.0,
+                "adjustment_fraction": "0",
+                "history_key": "call",
+                "index": 1,
+                "input_fraction": "1/2",
+                "name": "call",
+                "normalized_fraction": "1/2"
+              }
+            ],
+            "hand": "KcKd",
+            "history": [
+              "check",
+              "bet@75",
+              "raise@200"
+            ],
+            "input_row_sum_fraction": "1",
+            "player": "ip"
+          }
+        ],
+        "tree_depth": 6,
+        "tree_nodes": 51,
+        "work": 2526,
+        "work_by_kind": {
+          "best_response_node_group_visits": 164,
+          "fraction_operations": 1185,
+          "opponent_action_group_slots": 88,
+          "opponent_group_entries_copied": 172,
+          "opponent_group_entries_scanned": 172,
+          "own_action_slots": 82,
+          "own_hand_group_entries_copied": 16,
+          "own_hand_group_entries_scanned": 16,
+          "own_hand_setup": 8,
+          "policy_sort_entries": 36,
+          "profile_node_world_visits": 204,
+          "row_normalization_entries": 100,
+          "serialized_strategy_row_index_entries": 36,
+          "terminal_group_entries_scanned": 142,
+          "tree_preflight_edges": 50,
+          "tree_preflight_nodes": 51,
+          "world_setup_entries": 4
+        },
+        "work_limit": 100000,
+        "worlds": 4
+      },
+      "exact_float_replay_deltas": {
+        "exploitability": -9.189833139258696e-16,
+        "ip_best_response_gain": -7.717371392542555e-15,
+        "ip_best_response_value": -3.552713678800501e-15,
+        "nash_conv": -1.8379666278517393e-15,
+        "oop_best_response_gain": 5.8794115409543934e-15,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "exact_metrics_fractions": {
+        "exploitability": "126487306599514239833257230214509343176980985944696659397358340025862243227563717/1133223520465008715131173891714823346110650331703128153449325220006141664162800992256",
+        "ip_best_response_gain": "101943061003688497985299401664889535313886610026723097500365978901819973128033629210131029821863/4082868019594956144608470383977947997514451882985665807651875934675001676380360223632342916511301632",
+        "ip_best_response_value": "5689452720791136215183022039023785/283953734451123393816560865902592",
+        "nash_conv": "126487306599514239833257230214509343176980985944696659397358340025862243227563717/566611760232504357565586945857411673055325165851564076724662610003070832081400496128",
+        "oop_best_response_gain": "73590367089653051697622393575037654898698158437376105245988821499116132455829102236509370057585/371169819963177831328042762179813454319495625725969618877443266788636516034578202148394810591936512",
+        "oop_best_response_value": "-2518817014862064654711678346066438849072835512890968222/125712524836654951954502196324806394264985697739867267",
+        "value_ip": "22310858294482147924161029366179857985616030895709204136152597536460118219825955053924239594881550931/1113509459889533493984128286539440362958486877177908856632329800365909548103734606445184431775809536",
+        "value_oop": "-22310858294482147924161029366179857985616030895709204136152597536460118219825955053924239594881550931/1113509459889533493984128286539440362958486877177908856632329800365909548103734606445184431775809536"
+      },
+      "exact_nash_conv_zero": false,
+      "exact_threshold": "1/1000",
+      "exact_threshold_met": true,
+      "fixture": "river-weighted-raises",
+      "info_action_slots": 100,
+      "info_sets": 36,
+      "known_game_reference_fraction": "-43339/2163",
+      "known_game_reference_in_response_interval": true,
+      "lower_value_bound_fraction": "-5689452720791136215183022039023785/283953734451123393816560865902592",
+      "numeric_replay_deltas": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "old_tail_flow_scope": "Exact row-normalized binary64 probabilities and own-action reach only; opponent and chance reach excluded.",
+      "own_action_flow_max_error": 9.914898159697525e-16,
+      "own_action_flow_max_error_fraction": "5796255957746835820280948649363377/5846006549323611571402691312606779958887473741824",
+      "polarized_16x4_witness": null,
+      "prefix_hand_edges": 4,
+      "prior_tail_nash_conv": 0.00022323452402162047,
+      "prior_tail_policy_sha256": "cfff9bba2fd253e0701d37eb5c845399c6643f344cf11565a7a2e5b598514b62",
+      "prior_tail_report_sha256": "44c17cced492a5bcf7a9f2622bde060bb98a47f60539ee2ca997ebd1e421b1ce",
+      "public_nodes": 18,
+      "public_states": 51,
+      "requested_average_passes": 7000,
+      "requested_iterations": 10000,
+      "requested_regret_passes": 20000,
+      "requested_total_traversal_passes": 27000,
+      "training_calls": 1,
+      "tree_actions": 50,
+      "upper_value_bound_fraction": "-2518817014862064654711678346066438849072835512890968222/125712524836654951954502196324806394264985697739867267",
+      "visited_nodes": 18,
+      "world_node_work": 2160000,
+      "worlds": 4
+    }
+  },
+  "schema_version": 1,
+  "scope": "Two fixed configured river games; exact audits apply to each serialized binary64 policy after exact row normalization and do not certify general solver convergence.",
+  "target_meet_count": 1,
+  "target_miss_count": 1,
+  "target_nash_conv_fraction": "1/1000",
+  "verification_source_sha256": {
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "scripts/benchmark_river_direct_tail.py": "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+    "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "scripts/replay_river_accuracy_extension.py": "305c2d93bbccc020a75b479a9ec449521a96ca79f07c835f0e92ee3898388cb3",
+    "scripts/river_analytical.py": "bb4fa8fee9def0b84e20433069d311f603415482fdb5f89bb90f1894e05770f6",
+    "scripts/river_tail_realization.py": "a52558fc741d32d3ef519e6e7f9cf458832a9196a34ddc5a0140a7bd1ec698ca",
+    "scripts/turn_rational_certificate.py": "0c94bee344871a47d34a1291f65f85ac3e80a1a9389d7785e4baf6695b3967fb",
+    "scripts/turn_river_validation.py": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+    "tests/test_benchmark_river_direct_tail.py": "5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71"
+  }
+}

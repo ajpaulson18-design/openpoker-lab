@@ -1389,6 +1389,8 @@ Direct accumulation therefore carries no general convergence-improvement claim.
 
 The separate [fixed river experiment](direct-river-tail-experiment.md) freezes
 two T=10000,D=3000 calls, independent numeric/exact audits and comparison with
-the preceding saved realization tails. Cheap T10/D5 probes pass both full
-mathematical audits; they make no full-budget quality claim. The complete
-experiment awaits committed sources and actual full-budget generation.
+the preceding saved realization tails. The actual raw polarized profile misses
+0.001 at exact NashConv about 0.0068727141; weighted raises meets it at about
+0.0002232345. Both positive gaps and raw policies are retained. Independent
+exact audits contain the known game values, and own-action flows agree with
+the old tails within 1e-11. Direct accumulation shows no quality advantage here.

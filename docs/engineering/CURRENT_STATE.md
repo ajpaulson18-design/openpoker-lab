@@ -255,5 +255,8 @@ flow. Existing solver defaults, shared kernels and earlier streets are unchanged
 
 The [fixed river experiment](../direct-river-tail-experiment.md) defines separate
 T=10000,D=3000 calls for the historical polarized and weighted raised fixtures,
-with raw-policy exact audits and prior-tail realization comparison. Its reviewed
-source must be committed before training; results remain pending that run.
+with raw-policy exact audits and prior-tail realization comparison. Both actual
+calls are saved: polarized NashConv 0.0068727141 misses 0.001; weighted raised
+NashConv 0.0002232345 meets it. Both are positive exact gaps and reproduce prior
+tail flows within 1e-11. This is correctness evidence, with no general quality
+or speed improvement claim.

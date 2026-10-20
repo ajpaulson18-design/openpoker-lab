@@ -74,5 +74,40 @@ generation, outside the pinned source sets to avoid a circular hash.
 
 ## Recorded results
 
-Pending reviewed source freeze and actual full-budget calls. The genuine
-T10/D5 probes validate integration only and make no T10,000 quality claim.
+The committed generation source is
+`3ba950acb96f3b37206251ab82ae230ed0240a78`. Exactly two complete API calls ran,
+with no probability cleanup. The exact normalized-policy results are:
+
+| Game | Exact NashConv (decimal approximation) | 0.001 target | Exact zero | Complete call seconds | Maximum own-flow error |
+| --- | ---: | --- | --- | ---: | ---: |
+| Polarized | 0.006872714071795571 | Miss | No | 2.2384234 | 1.44329e-15 |
+| Weighted raises | 0.0002232345240197825 | Meet | No | 15.1667451 | 9.91490e-16 |
+
+The polarized exact response interval is approximately
+`[24.99844500134535,25.005317715417146]`, containing 25. The weighted interval is
+approximately `[-20.03654831935466,-20.03632508483064]`, containing -43339/2163.
+Neither trained profile is an exact equilibrium. Both reproduce the preceding
+realization tails within the predeclared 1e-11 flow tolerance. This experiment
+establishes direct-tail correctness for these fixtures; it establishes no
+quality improvement over their earlier saved tails.
+
+The [complete report](../benchmarks/results/river-direct-tail-v1.json) is
+69,831 bytes, SHA256
+`68a0fe3ff150c37c47784cc22cfe928f19974f27208ee16dee61c53ee81a35a5`.
+The [polarized raw policy](../benchmarks/results/river-direct-tail-v1-polarised.json)
+is 6,647 bytes, SHA256
+`2f558f363f716c0dc67794d329d167254b7b65bcf339cd8480d61e7e8fe53117`.
+The [weighted raw policy](../benchmarks/results/river-direct-tail-v1-weighted-raises.json)
+is 30,144 bytes, SHA256
+`905c2cb42bfb1fbb69117ae2dda07f502935b657f3871f536dffe34363cbfacf`.
+The report binds 64 producer files and nine verification files (70 distinct
+paths). Separate lead verification matched every fingerprint against committed
+generation bytes and working files. The three prior input hashes remain intact.
+
+The generic exact auditors used 282 and 2,526 work units, depths four/six and
+maximum Fraction sizes 109/334 bits under unchanged limits. The polarized
+five-history 16/4-response oracle agrees strictly on all eight exact metrics.
+Normal/optimized focused adapter and runner tests passed (26 tests, 1.207/1.084
+seconds). A separate accepted-file regression pins all three hashes and disables
+nine producer/trainer entry points during complete saved reconstruction. It is
+outside the pinned source sets to avoid a circular hash.
