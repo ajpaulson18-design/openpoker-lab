@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "native-flop-preparation-v1",
+  "baseline_commit": "9634fdf5ce343299e735521b2bcf958538d4f161",
+  "board": "2c3c4d",
+  "algorithm": "cfrplus",
+  "iterations": 4000,
+  "paired_repeats": 3,
+  "preparation_backends": [
+    "python",
+    "native"
+  ],
+  "full_call_training_backend": "native",
+  "source_count_report_path": "benchmarks/results/flop-weighted-eight-hand-v1.json",
+  "source_count_report_canonical_sha256": "40add7ec02ca559a1ca2e35dce82913f1df9b6fa3b527047e44f2addbb33ceb5",
+  "source_count_git_blob": "610ac4e8d272db495936119c60f731b7a1061032",
+  "fixtures": [
+    {
+      "id": "base-8x8-stack24-raises2",
+      "oop_range": "AsAd:1,QhJh:.5,7s6s:.25,Tc9c:.75,KsQd:.375,Ac5c:.625,8h8d:.875,ThTs:.125",
+      "ip_range": "KsKd:.75,AhKh:1,8s7s:.5,QcQd:.25,AdJd:.375,6h5h:.625,9d8d:.875,JcTc:.125",
+      "expected_normalizer": "1185/64",
+      "expected_compatible_pairs": 58
+    },
+    {
+      "id": "reversed-8x8-stack24-raises2",
+      "oop_range": "AsAd:.125,QhJh:.875,7s6s:.625,Tc9c:.375,KsQd:.75,Ac5c:.25,8h8d:.5,ThTs:1",
+      "ip_range": "KsKd:.125,AhKh:.875,8s7s:.625,QcQd:.375,AdJd:.25,6h5h:.5,9d8d:1,JcTc:.75",
+      "expected_normalizer": "1195/64",
+      "expected_compatible_pairs": 58
+    }
+  ],
+  "config": {
+    "pot": 6,
+    "effective_stack": 24,
+    "bet_sizes": [
+      0.5,
+      1
+    ],
+    "raise_sizes": [
+      0.5
+    ],
+    "max_raises": 2,
+    "include_all_in": true
+  },
+  "fresh_independent_count_checks": [
+    {
+      "board": "2c3c4d",
+      "oop_range": "AsAd",
+      "ip_range": "KsKd"
+    },
+    {
+      "board": "TsJs2s",
+      "oop_range": "AsKd",
+      "ip_range": "AhAd"
+    }
+  ],
+  "acceptance": {
+    "exact_counts_and_priors": true,
+    "exact_prepared_table_payload": true,
+    "exact_full_policy_payload_between_preparers": true,
+    "independent_metric_absolute_tolerance": 1e-10,
+    "final_nash_conv_chip_limit": 0.005,
+    "legacy_count_rank_stdout_byte_identical": true,
+    "source_build_unchanged": true
+  },
+  "report_input_max_bytes": 16777216,
+  "method": "Before native lookup, ranking or oracle enumeration, finish both full requested admissions plus all preparation admissions. Compare three alternating paired cold preparations and three alternating paired complete calls per fixture, including canonical JSON/hash. Complete calls use the same qualified native trainer and Python diagnostics on both sides, isolating preparation. Retain every raw table/native count response/full policy/failure and all single-call timings; medians require all three samples. Compare all 58 physical rows to the full checksum-pinned independently enumerated source report; fresh best-five ordered-board oracle counts cover two extra flops outside timing. Replay every policy by independent numeric rules and legal own-hand best responses. Existing COUNT/RANK raw bytes are compared on historical/new built helpers with explicit identities. No memory/RSS or general speed claim. Saved-file verification freshly repeats both small independent physical enumerations outside measured calls. Python rank-call instrumentation adds per-call counter overhead inside timing; ratios describe these instrumented complete calls only.",
+  "scope": "Bounded heads-up fixed-flop betting followed by hidden full-future checkdown; no later-street betting, full-deck preflop, multiway, or unrestricted equilibrium claim."
+}

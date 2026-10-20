@@ -6,7 +6,9 @@
  * runtime dependencies, or generated lookup data are used.
  *
  * Input is fully parsed and validated before ranking. COUNT accepts at most
- * four ordered private-hand pairs and emits exact C(48,5) W/T/L counts.
+ * four ordered private-hand pairs and emits exact C(48,5) W/T/L counts. FLOP
+ * accepts at most 128 ordered OOP/IP pairs on one fixed flop and counts all
+ * 990 unordered final boards as 1,980 ordered future outcomes per pair.
  */
 #include <stdint.h>
 #include <stdio.h>
@@ -18,9 +20,12 @@
 
 #define MAX_INPUT_BYTES (256u * 1024u)
 #define MAX_COUNT_PAIRS 4u
+#define MAX_FLOP_COUNT_PAIRS 128u
 #define MAX_RANK_REQUESTS 4096u
 #define MAX_HAND_CARDS 7u
 #define COUNT_BOARDS_PER_PAIR UINT64_C(1712304)
+#define FLOP_BOARDS_PER_PAIR UINT64_C(990)
+#define FLOP_OUTCOMES_PER_PAIR UINT64_C(1980)
 
 static unsigned char input_buffer[MAX_INPUT_BYTES + 1u];
 
@@ -103,8 +108,16 @@ static int cards_are_distinct(const uint8_t *cards, unsigned int count) {
     return 1;
 }
 
+static int same_unordered_hand(const uint8_t *left, const uint8_t *right) {
+    return (left[0] == right[0] && left[1] == right[1])
+        || (left[0] == right[1] && left[1] == right[0]);
+}
+
 static int parse_input(char *mode, uint64_t *request_count,
-                       uint8_t count_pairs[MAX_COUNT_PAIRS][4], Parser *parser) {
+                       uint8_t count_pairs[MAX_COUNT_PAIRS][4],
+                       uint8_t flop_board[3],
+                       uint8_t flop_pairs[MAX_FLOP_COUNT_PAIRS][4],
+                       Parser *parser) {
     const unsigned char *token;
     size_t length;
     uint64_t parsed_count, request_index;
@@ -114,10 +127,12 @@ static int parse_input(char *mode, uint64_t *request_count,
             || !token_is(token, length, "OPENPOKER_NATIVE_V1")) return 0;
     if (!next_token(parser, &token, &length)) return 0;
     if (token_is(token, length, "COUNT")) *mode = 'C';
+    else if (token_is(token, length, "FLOP")) *mode = 'F';
     else if (token_is(token, length, "RANK")) *mode = 'R';
     else return 0;
     if (!next_decimal(parser, &parsed_count)) return 0;
     if ((*mode == 'C' && (parsed_count < 1u || parsed_count > MAX_COUNT_PAIRS))
+            || (*mode == 'F' && (parsed_count < 1u || parsed_count > MAX_FLOP_COUNT_PAIRS))
             || (*mode == 'R'
                 && (parsed_count < 1u || parsed_count > MAX_RANK_REQUESTS))) return 0;
     *request_count = parsed_count;
@@ -128,6 +143,28 @@ static int parse_input(char *mode, uint64_t *request_count,
             for (card_index = 0u; card_index < 4u; ++card_index)
                 if (!next_card(parser, &count_pairs[request_index][card_index])) return 0;
             if (!cards_are_distinct(count_pairs[request_index], 4u)) return 0;
+        }
+    } else if (*mode == 'F') {
+        if (!next_card(parser, &flop_board[0])
+                || !next_card(parser, &flop_board[1])
+                || !next_card(parser, &flop_board[2])
+                || !cards_are_distinct(flop_board, 3u)) return 0;
+        for (request_index = 0u; request_index < parsed_count; ++request_index) {
+            uint8_t seven_cards[MAX_HAND_CARDS];
+            uint64_t previous;
+            unsigned int card_index;
+            for (card_index = 0u; card_index < 4u; ++card_index)
+                if (!next_card(parser, &flop_pairs[request_index][card_index])) return 0;
+            for (card_index = 0u; card_index < 3u; ++card_index)
+                seven_cards[card_index] = flop_board[card_index];
+            for (card_index = 0u; card_index < 4u; ++card_index)
+                seven_cards[card_index + 3u] = flop_pairs[request_index][card_index];
+            if (!cards_are_distinct(seven_cards, 7u)) return 0;
+            for (previous = 0u; previous < request_index; ++previous) {
+                if (same_unordered_hand(flop_pairs[previous], flop_pairs[request_index])
+                        && same_unordered_hand(flop_pairs[previous] + 2u,
+                                               flop_pairs[request_index] + 2u)) return 0;
+            }
         }
     } else {
         for (request_index = 0u; request_index < parsed_count; ++request_index) {
@@ -320,6 +357,62 @@ static int run_count(uint64_t pair_count,
     return 1;
 }
 
+static int count_flop_pair(const uint8_t board[3], const uint8_t pair[4],
+                           OutcomeCounts *counts, uint64_t *board_evaluations,
+                           uint64_t *rank_calls) {
+    uint8_t remaining[45], player_one[7], player_two[7];
+    unsigned int remaining_count = 0u, card, first;
+    uint64_t boards_seen = 0u;
+    RankValue rank_one, rank_two;
+    memset(counts, 0, sizeof(*counts));
+    for (card = 0u; card < 52u; ++card) {
+        if (card != board[0] && card != board[1] && card != board[2]
+                && card != pair[0] && card != pair[1]
+                && card != pair[2] && card != pair[3])
+            remaining[remaining_count++] = (uint8_t)card;
+    }
+    if (remaining_count != 45u) return 0;
+
+    for (first = 0u; first < 44u; ++first) {
+        unsigned int second;
+        for (second = first + 1u; second < 45u; ++second) {
+            int comparison;
+            player_one[0] = pair[0]; player_one[1] = pair[1];
+            player_two[0] = pair[2]; player_two[1] = pair[3];
+            player_one[2] = player_two[2] = board[0];
+            player_one[3] = player_two[3] = board[1];
+            player_one[4] = player_two[4] = board[2];
+            player_one[5] = player_two[5] = remaining[first];
+            player_one[6] = player_two[6] = remaining[second];
+            rank_hand(player_one, 7u, &rank_one);
+            ++(*rank_calls);
+            rank_hand(player_two, 7u, &rank_two);
+            ++(*rank_calls);
+            comparison = compare_ranks(&rank_one, &rank_two);
+            if (comparison > 0) counts->wins += 2u;
+            else if (comparison < 0) counts->losses += 2u;
+            else counts->ties += 2u;
+            ++boards_seen;
+            ++(*board_evaluations);
+        }
+    }
+    return boards_seen == FLOP_BOARDS_PER_PAIR
+        && counts->wins + counts->ties + counts->losses == FLOP_OUTCOMES_PER_PAIR;
+}
+
+static int run_flop_count(uint64_t pair_count, const uint8_t board[3],
+                          uint8_t pairs[MAX_FLOP_COUNT_PAIRS][4],
+                          OutcomeCounts counts[MAX_FLOP_COUNT_PAIRS],
+                          uint64_t *board_evaluations, uint64_t *rank_calls) {
+    uint64_t pair_index;
+    *board_evaluations = 0u;
+    *rank_calls = 0u;
+    for (pair_index = 0u; pair_index < pair_count; ++pair_index)
+        if (!count_flop_pair(board, pairs[pair_index], &counts[pair_index],
+                             board_evaluations, rank_calls)) return 0;
+    return 1;
+}
+
 static void run_rank(uint64_t request_count) {
     uint64_t request_index;
     for (request_index = 0u; request_index < request_count; ++request_index)
@@ -341,6 +434,33 @@ static void print_count_result(uint64_t pair_count,
     printf("],\"boards_per_pair\":%llu,\"rank_calls\":%llu}\n",
            (unsigned long long)COUNT_BOARDS_PER_PAIR,
            (unsigned long long)rank_calls);
+}
+
+static void print_flop_count_result(uint64_t pair_count, const uint8_t board[3],
+                                    uint8_t pairs[MAX_FLOP_COUNT_PAIRS][4],
+                                    const OutcomeCounts counts[MAX_FLOP_COUNT_PAIRS],
+                                    uint64_t board_evaluations, uint64_t rank_calls) {
+    uint64_t pair_index;
+    printf("{\"schema_version\":1,\"mode\":\"flop\",\"board\":[%u,%u,%u],\"pairs\":[",
+           (unsigned int)board[0], (unsigned int)board[1], (unsigned int)board[2]);
+    for (pair_index = 0u; pair_index < pair_count; ++pair_index) {
+        if (pair_index != 0u) putchar(',');
+        printf("[%u,%u,%u,%u]", (unsigned int)pairs[pair_index][0],
+               (unsigned int)pairs[pair_index][1], (unsigned int)pairs[pair_index][2],
+               (unsigned int)pairs[pair_index][3]);
+    }
+    printf("],\"counts\":[");
+    for (pair_index = 0u; pair_index < pair_count; ++pair_index) {
+        if (pair_index != 0u) putchar(',');
+        printf("[%llu,%llu,%llu]", (unsigned long long)counts[pair_index].wins,
+               (unsigned long long)counts[pair_index].ties,
+               (unsigned long long)counts[pair_index].losses);
+    }
+    printf("],\"unordered_boards_per_pair\":%llu,\"ordered_outcomes_per_pair\":%llu,"
+           "\"board_evaluations\":%llu,\"rank_calls\":%llu}\n",
+           (unsigned long long)FLOP_BOARDS_PER_PAIR,
+           (unsigned long long)FLOP_OUTCOMES_PER_PAIR,
+           (unsigned long long)board_evaluations, (unsigned long long)rank_calls);
 }
 
 static void print_rank_result(uint64_t request_count) {
@@ -373,8 +493,13 @@ int main(void) {
     char mode = 0;
     uint64_t request_count = 0u;
     uint8_t count_pairs[MAX_COUNT_PAIRS][4] = {{0u}};
+    uint8_t flop_board[3] = {0u, 0u, 0u};
+    uint8_t flop_pairs[MAX_FLOP_COUNT_PAIRS][4] = {{0u}};
     OutcomeCounts counts[MAX_COUNT_PAIRS];
-    if (!read_input() || !parse_input(&mode, &request_count, count_pairs, &parser)) {
+    OutcomeCounts flop_counts[MAX_FLOP_COUNT_PAIRS];
+    uint64_t board_evaluations = 0u, rank_calls = 0u;
+    if (!read_input() || !parse_input(&mode, &request_count, count_pairs,
+                                      flop_board, flop_pairs, &parser)) {
         fputs("invalid input\n", stderr);
         return 2;
     }
@@ -384,6 +509,14 @@ int main(void) {
             return 3;
         }
         print_count_result(request_count, counts);
+    } else if (mode == 'F') {
+        if (!run_flop_count(request_count, flop_board, flop_pairs, flop_counts,
+                            &board_evaluations, &rank_calls)) {
+            fputs("flop count failure\n", stderr);
+            return 3;
+        }
+        print_flop_count_result(request_count, flop_board, flop_pairs, flop_counts,
+                                board_evaluations, rank_calls);
     } else {
         run_rank(request_count);
         print_rank_result(request_count);

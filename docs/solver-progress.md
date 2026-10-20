@@ -1431,3 +1431,11 @@ checked against fourteen independently written terminal paths and 792 legal
 own-hand pure responses across all 72 AA/QQ-versus-KK pairs. Candidate LP output
 is separate from the physical certificate. See
 [method, evidence and publication status](preflop-mixed-exact-witness.md).
+
+## Explicit native cold fixed-flop preparation
+
+A separate source-built count producer fills the existing immutable fixed-flop
+table under unchanged preparation caps. The frozen comparison isolates cold
+Python versus native preparation while retaining the same native trainer,
+independent physical counts and complete legal best-response checks. See
+[method, evidence and publication status](native-flop-preparation.md).

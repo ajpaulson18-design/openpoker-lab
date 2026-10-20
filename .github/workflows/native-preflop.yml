@@ -10,6 +10,8 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     env:
       OPENPOKER_NATIVE_BUILD_DIR: build/native-preflop-ci
+      OPENPOKER_NATIVE_EQUITY_BUILD_DIR: build/native-preflop-ci
+      OPENPOKER_NATIVE_TRAIN_BUILD_DIR: ../native-train-flop-ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -17,7 +19,9 @@ jobs:
           python-version: '3.12'
       - name: Build with installed C compiler
         if: runner.os != 'Windows'
-        run: python -m scripts.build_native_preflop --output-dir "$OPENPOKER_NATIVE_BUILD_DIR"
+        run: |
+          python -m scripts.build_native_preflop --output-dir "$OPENPOKER_NATIVE_BUILD_DIR"
+          python -m scripts.build_native_train --output-dir "$OPENPOKER_NATIVE_TRAIN_BUILD_DIR"
       - name: Build with installed MSVC
         if: runner.os == 'Windows'
         shell: pwsh
@@ -35,5 +39,7 @@ jobs:
           }
           python -m scripts.build_native_preflop --output-dir "$env:OPENPOKER_NATIVE_BUILD_DIR"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m scripts.build_native_train --output-dir "$env:OPENPOKER_NATIVE_TRAIN_BUILD_DIR"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Independent rank, full-board count and protocol conformance
-        run: python -m unittest tests.test_native_preflop_protocol tests.test_native_preflop_equity -v
+        run: python -m unittest tests.test_native_preflop_protocol tests.test_native_preflop_equity tests.test_native_flop_equity tests.test_benchmark_native_flop_preparation -v
