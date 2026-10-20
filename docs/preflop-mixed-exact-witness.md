@@ -56,7 +56,62 @@ incorporated; this is not a commercial licensing clearance claim.
 
 ## Evidence status
 
-The exploratory candidate has a rational value and fits the unchanged LP caps.
-Independent physical response verification, a clean formal report and GitHub
-publication are still pending at this source revision. Do not present the
-candidate value as an exact game value until those checks pass.
+The [formal certificate](../benchmarks/results/preflop-mixed-exact-witness-v1.json)
+passes from clean source `009e4626b9a365b330b1b36ec1ea113113c7c20a` on Python
+3.12.14 / Windows. All 557 LF-normalized source hashes independently match
+frozen Git contents. Every forbidden production call counter is zero. Source
+identities remain unchanged across the run and actual saved-file replays.
+
+The exact SB game value is **`61612/75655` chips**, with exact SB best-response
+value `61612/75655`, BB own-utility best-response value `-61612/75655`, both
+unilateral gains zero and **exact NashConv `0`**. This is a mathematical
+mutual-response certificate for the full 72-pair finite game. It does not
+certify unrestricted Hold'em or identify every equilibrium policy.
+
+The recorded candidate shoves each own AA hand. Each own QQ hand folds with
+probability `28086/75655` and shoves with `47569/75655`. All 72 physical own-hand
+rows, including off-path histories, are explicitly normalized and checked.
+The independent oracle still permits arbitrary suit-dependent legal deviations;
+it does not assume that an optimum response shares the candidate's symmetry.
+Illegal pair-conditioned controls strictly improve both players' own utilities,
+showing why conditioning on the hidden opponent would change the game.
+
+The [initial report](../benchmarks/results/preflop-mixed-exact-witness-v1-initial.json)
+is preserved with status `error`: its mathematical response check passed, but
+saved-summary comparison failed when JSON converted integer suit-class keys to
+strings. The followup uses explicit string keys and a roundtrip regression,
+adds declared-game identity validation, and reproduces the identical candidate
+artifact `e68870a26e6bfa5426edf9dd945293e4da2c369accba17a06c83dd8fe656fd05`.
+No mathematical acceptance gate or LP cap changed.
+
+Canonical passing report SHA-256:
+`ed3512d35f03e2e7ed9e7440b73923670ca2412779a3e2dee97e79ad478d1ebb`.
+Raw passing report SHA-256:
+`1c5427b4cca145b4931913599ee244f044deac9fac5d0a94521902ec3371726f`.
+[Publication tests](../tests/test_preflop_mixed_sequence_publication.py) freshly
+replay the actual proof and reject re-signed false values, game labels and
+missing guards. The source includes eight independent adversarial boundary
+checks and three candidate/formal-source checks. A separate Luna read-only
+review checked the physical response proof and found no blocking math issue;
+its game-metadata hardening was integrated before the passing formal run.
+GitHub checks and merge are verified separately at publication.
+
+## Existing trained policies checked against the exact value
+
+A separate [derived anchor report](../benchmarks/results/preflop-mixed-training-exact-anchor-v1.json)
+freshly replays all ten unchanged policies from the prior mixed-range benchmark
+and reauthenticates this exact physical witness. Every strict rational legal-BR
+interval contains `61612/75655`, and every absolute profile-value error is no
+greater than its independently computed NashConv. This is a new logical
+comparison of immutable policies, not new training or a retroactive benchmark
+gate. The ten-iteration quality miss remains a miss.
+
+| CFR+ iterations | Python absolute error from exact value, chips |
+| --- | ---: |
+| 10 | 0.0505019135142 |
+| 100 | 0.00101637336991 |
+| 400 | 6.49277230399e-05 |
+
+The [independent comparison script](../scripts/verify_preflop_mixed_anchor.py)
+and [regression](../tests/test_preflop_mixed_exact_anchor.py) reconstruct all
+rows, input identities and exact inequalities from published evidence.
