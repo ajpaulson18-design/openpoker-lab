@@ -200,6 +200,24 @@ class FlopMultistreetValidationTests(unittest.TestCase):
             with self.subTest(mutation=label), self.assertRaises(ValueError):
                 independent.replay(altered, self.oracle)
 
+        # Extra hidden-card channels must reject even with unchanged policies and metrics.
+        for scope in ("row", "action"):
+            for field in ("opponent_hand", "future_card", "unknown_metadata"):
+                altered = deepcopy(result)
+                target = altered["strategy"][0]
+                if scope == "action":
+                    target = target["actions"][0]
+                target[field] = "AsKh"
+                with self.subTest(scope=scope, field=field), self.assertRaisesRegex(ValueError, "exactly"):
+                    self._replay_under_production_guard(altered)
+        for field, value in (("pot", 11), ("pot", "10"), ("pot", True),
+                             ("effective_stack", [5, 6]), ("effective_stack", "5"),
+                             ("effective_stack", [5, "5"]), ("effective_stack", [5, True]),
+                             ("effective_stack", None)):
+            altered = dict(result, **{field: value})
+            with self.subTest(mirror=field, value=value), self.assertRaisesRegex(ValueError, "mirrors"):
+                self._replay_under_production_guard(altered)
+
 
 class OracleInformationBoundaryTests(unittest.TestCase):
     def test_best_response_sums_hidden_future_before_maximizing(self):

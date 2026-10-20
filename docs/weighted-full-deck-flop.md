@@ -81,3 +81,15 @@ and the cleanup applied only when a fresh street starts. [Harness tests](../test
 cover rank-free admission, dirty-source rejection, disabled producer aliases and
 bounded lossless evidence. No presentation, coaching or later-street solver kernel
 is changed by this validation slice.
+
+## Serialized information boundary
+
+Policy rows have exactly `player`, `hand`, `street`, `board`, `history`, and
+`actions`; serialized actions have exactly `name`, `amount`, `raise_to`,
+`history_key`, and `probability`. The independent checker rejects extra fields,
+including hidden opponent or future-card metadata, even when probabilities and
+reported metrics are unchanged. Top-level `pot` and `effective_stack` mirrors
+must contain JSON numbers and agree with the independently validated starting
+config. Equal stacks may retain the producer's scalar or two-element list form.
+These schema checks supplement complete own-hand/public-history coverage and
+legal best-response replay; they do not replace either check.
