@@ -111,3 +111,11 @@ Normal/optimized focused adapter and runner tests passed (26 tests, 1.207/1.084
 seconds). A separate accepted-file regression pins all three hashes and disables
 nine producer/trainer entry points during complete saved reconstruction. It is
 outside the pinned source sets to avoid a circular hash.
+
+The first Linux full-suite run exposed a checkout-byte mismatch in the pinned
+historical report: its committed blob uses LF while its generation-time Windows
+fingerprint uses CRLF. An exact-path Git attribute now checks out that historical
+report with CRLF on every OS. Its Git blob, all saved fingerprints, new raw
+policies and mathematical verification sources remain unchanged. The policies
+continue to use their existing LF attributes. This fixes reproducible historical
+input bytes without weakening the hash checks or rerunning training.
