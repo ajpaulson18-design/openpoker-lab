@@ -27,6 +27,8 @@
 /benchmarks/results/river-direct-tail-v1.json -text
 /benchmarks/results/river-direct-tail-v1-polarised.json -text
 /benchmarks/results/river-direct-tail-v1-weighted-raises.json -text
+/benchmarks/results/river-direct-long-tail-v1.json -text
+/benchmarks/results/river-direct-long-tail-v1-polarised.json -text
 
 # The historical tail report was fingerprinted from its CRLF checkout bytes.
 # Keep its existing LF Git blob, with deterministic historical bytes on all OSes.

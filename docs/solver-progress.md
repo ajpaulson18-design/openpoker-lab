@@ -1406,3 +1406,12 @@ match the frozen pre-change API byte-for-byte on the same interpreter, a genuine
 response replay, and the real weighted 100k request rejects before training.
 The turn API retains its 10,000 ceiling. A 100k direct-tail quality experiment
 remains separate and has not run in this source slice.
+
+The [fixed longer river experiment](direct-river-long-tail-experiment.md) defines
+one actual T=100000,D=3000 call with no cleanup, unchanged exact 0.001 target,
+strict generic/16x4 exact agreement and reconstruction of the preceding 10k
+policy. The actual raw profile meets 0.001 at exact NashConv about
+0.0008944742; OOP/IP response gains are about 0.0005500202/0.0003444540.
+All eight metrics agree across independent exact audits, and the known value
+25 lies inside the legal response interval. The 10k miss is preserved; the
+positive 100k gap does not certify exact equilibrium or general convergence.

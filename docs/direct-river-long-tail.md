@@ -67,3 +67,7 @@ strict within-runtime equality and the independent mathematical checks; it
 does not assume identical floating-point output across Python versions.
 The revised 31-test set passed locally in 2.344 seconds; all 14 adapter tests
 also passed under optimized Python in 1.898 seconds.
+
+The separate [fixed 100k experiment](direct-river-long-tail-experiment.md) defines
+the committed-source call, raw-policy storage and independent exact quality
+gates. Its actual result remains separate from this admission/API evidence.
