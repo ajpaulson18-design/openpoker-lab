@@ -1453,6 +1453,7 @@ payloads and defaults. See [usage and guard order](native-flop-preparation.md).
 
 The public native trainer now has a bounded candidate that refreshes only the
 updated player's CFR+ policy rows, retaining first-sweep initialization and all
-original admission charges. Checkpoint parity passes; the separately frozen
-paired full-call experiment must establish timing and exact old/new wire parity.
+original admission charges. The separately frozen experiment passes all 28
+policy replays and exact old/new wire checks; complete-call median observed
+ratios are 1.44 / 1.30 on the two weighted eight-by-eight games.
 See [method and publication evidence](native-cfrplus-rematch.md).

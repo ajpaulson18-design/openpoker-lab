@@ -44,3 +44,5 @@
 
 # Preserve complete native cold-flop preparation evidence bytes.
 /benchmarks/results/native-flop-preparation-v1.json -text
+
+benchmarks/results/native-cfrplus-rematch-v1.json -text
