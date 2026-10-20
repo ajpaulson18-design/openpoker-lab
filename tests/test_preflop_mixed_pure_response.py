@@ -15,6 +15,8 @@ def signed_candidate(rows, value="-1/2"):
         "schema_version": 1,
         "certificate_id": "preflop-mixed-physical-exact-v1",
         "status": "candidate-only",
+        "spec_sha256": oracle.SPEC_SHA256,
+        "physical_game_spec_sha256": oracle.PHYSICAL_GAME_SHA256,
         "value_candidate_fraction": value,
         "policies": rows,
     }
@@ -74,6 +76,16 @@ class MixedPureResponseTests(unittest.TestCase):
                          {"sb": 576, "bb": 216, "total": 792})
         self.assertTrue(summary["illegal_clairvoyant_control"]["sb_at_least_legal_response"])
         self.assertTrue(summary["illegal_clairvoyant_control"]["bb_at_least_legal_response"])
+
+    def test_replay_summary_survives_actual_json_file_roundtrip(self):
+        summary=self.verify_cached_game(self.candidate)
+        self.assertEqual(json.loads(json.dumps(summary)),summary)
+
+    def test_resigned_misleading_game_metadata_is_rejected(self):
+        wrong=deepcopy(self.candidate);wrong['physical_game_spec_sha256']='0'*64
+        wrong.pop('artifact_sha256');wrong['artifact_sha256']=hashlib.sha256(oracle._canonical(wrong)).hexdigest()
+        with self.assertRaisesRegex(ValueError,'specification identity'):
+            self.verify_cached_game(wrong)
 
     def test_rejects_candidate_hash_row_menu_and_rational_tampering(self):
         wrong_hash = deepcopy(self.candidate)

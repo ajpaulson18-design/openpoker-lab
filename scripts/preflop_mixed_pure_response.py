@@ -23,6 +23,8 @@ FIVE_REPORT = ROOT / "benchmarks/results/preflop-five-basis-v1.json"
 QQ_REPORT = ROOT / "benchmarks/results/preflop-qq-kk-basis-v1.json"
 FIVE_SHA256 = "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7"
 QQ_SHA256 = "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8"
+SPEC_SHA256 = "4307f9590e2f34d568cab929c0401eab572a7c0af0725f6181299a5b6636aa19"
+PHYSICAL_GAME_SHA256 = "12debaea49eb6d9ac4b9ab6f49767e1dc25f00e4de6f163e69af5690f51653ca"
 BOARD_COUNT = 1_712_304
 MAX_SOURCE_BYTES = 1_000_000
 MAX_CANDIDATE_BYTES = 512 * 1024
@@ -285,6 +287,9 @@ def _policy(candidate, game):
             or candidate.get("certificate_id") != "preflop-mixed-physical-exact-v1"
             or candidate.get("status") != "candidate-only"):
         raise ValueError("Unsupported mixed candidate identity")
+    if (candidate.get('spec_sha256') != SPEC_SHA256
+            or candidate.get('physical_game_spec_sha256') != PHYSICAL_GAME_SHA256):
+        raise ValueError('Candidate declared game specification identity changed')
     rows = candidate.get("policies")
     if type(rows) is not list or len(rows) != 72:
         raise ValueError("Candidate must contain exactly 72 policy rows")
@@ -469,7 +474,8 @@ def verify_candidate(data):
         "physical_pair_count": len(game["pairs"]),
         "physical_board_count": len(game["pairs"]) * BOARD_COUNT,
         "raw_compatible_pair_weight_normalizer": str(game["raw_weight_normalizer"]),
-        "overlap_class_pair_counts": game["class_counts"],
+        "overlap_class_pair_counts": {rank: {str(k): v for k, v in counts.items()}
+                                      for rank, counts in game["class_counts"].items()},
         "pair_priors": [{"sb_hand": pair["sb_hand"], "bb_hand": pair["bb_hand"],
                          "prior_fraction": str(pair["prior"]),
                          "showdown_mean_fraction": str(pair["showdown_mean"])}
