@@ -135,6 +135,7 @@ syntax validation and all eight frontend contract checks also passed.
 The existing alternating CFR+ kernels are now available for flop starts with
 recursive or public-batched traversal, retaining three-pass full-request
 admission and all existing caps. Defaults, turn/river paths and recursive
-flop diagnostics remain unchanged. Planned CFR+, flop public diagnostics and
-flop target-based early stopping remain unsupported. Read the separate
-[scope, independent checks and pending convergence plan](flop-cfrplus.md).
+flop diagnostics remain unchanged. Planned CFR+ and flop target-based early
+stopping remain unsupported. Final [flop public diagnostics](flop-public-diagnostics.md)
+are separately opt-in. Read the separate
+[CFR+ scope, independent checks and convergence observations](flop-cfrplus.md).
