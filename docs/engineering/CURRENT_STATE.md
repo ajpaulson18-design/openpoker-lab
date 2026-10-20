@@ -244,3 +244,11 @@ The raw T=1500,D=1000 profile now has exact normalized-policy NashConv zero and
 OOP value -400/21, with all eight metrics matched by both exact auditors. This
 is fixed 176-world game evidence; the saved result receives no cleanup and
 does not establish a general direct-tail convergence guarantee.
+
+## Optional direct river tail averaging
+
+A separate [five-card river research API](../direct-river-tail.md) reuses the
+local original-weight accumulator with full requested admission, independent
+flow/response checks and fresh diagnostics. Its known one-bet test retains a
+quality miss, and zero-reach conditional fallbacks are compared by realization
+flow. Existing solver defaults, shared kernels and earlier streets are unchanged.
