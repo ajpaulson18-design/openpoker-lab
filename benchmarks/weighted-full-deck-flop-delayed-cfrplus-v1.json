@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "weighted-full-deck-flop-delayed-cfrplus-v1",
+  "baseline": {
+    "commit": "06616039f4fea3904614132f31c91c406ca90c1a",
+    "publication_index_sha256": "6308cf6c9f5636123014355a328279fbc037c5ab0366ba3378909d52086ddaef",
+    "publication_spec_sha256": "035b8c8732741311a7166163516cd710c4471c1fe4776c67b0c00441db618461",
+    "measured_source_revision": "06616039f4fea3904614132f31c91c406ca90c1a",
+    "measured_source_manifest_sha256": "411777c7df5f78623ce760e14d384c9e5f451e5527205662ea0be3ee666a64b7",
+    "measured_source_files": 593,
+    "quality_gate_met": false,
+    "policies_replayed": 20,
+    "original_baseline_policies_replayed": 38,
+    "zero_delay_140_payload_sha256": {
+      "recursive": "713d3cd5db83978d100c81830c547b21612e6d6c58aa272dab4dc027f27eb8c3",
+      "public-batched": "db80b4bd394d935ac3fd6b7fea9fd7ca4530fb3766102433ae7e5fef9908c41b"
+    }
+  },
+  "board": "2c3d4h",
+  "oop_range": "AsAd:1,QsQd:0.5",
+  "ip_range": "AsKh:0.25,KsKd:1",
+  "literal_oop_hands": [
+    [
+      "AdAs",
+      "1"
+    ],
+    [
+      "QdQs",
+      "1/2"
+    ]
+  ],
+  "literal_ip_hands": [
+    [
+      "AsKh",
+      "1/4"
+    ],
+    [
+      "KdKs",
+      "1"
+    ]
+  ],
+  "config": {
+    "pot": 10,
+    "effective_stack": 5,
+    "bet_sizes": [
+      0.5
+    ],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "algorithm": "cfrplus",
+  "traversals": [
+    "recursive",
+    "public-batched"
+  ],
+  "iterations": 140,
+  "delays": [
+    0,
+    70,
+    100
+  ],
+  "timed_repeats": 3,
+  "pair_orders": [
+    [
+      "recursive",
+      "public-batched"
+    ],
+    [
+      "public-batched",
+      "recursive"
+    ],
+    [
+      "recursive",
+      "public-batched"
+    ]
+  ],
+  "separate_allocation_calls": {
+    "algorithm": "cfrplus",
+    "iterations": 10,
+    "averaging_delay": 1,
+    "traversals": [
+      "recursive",
+      "public-batched"
+    ],
+    "measure": "Python tracemalloc complete call; not RSS; serialization and replay are outside tracing"
+  },
+  "expected": {
+    "compatible_pairs": 3,
+    "worlds": 5940,
+    "public_nodes": 9512,
+    "public_states": 30812,
+    "chance_nodes": 248,
+    "terminal_nodes": 21052,
+    "world_traversal_nodes": 12,
+    "plan_operations": 148500,
+    "max_world_iterations": 831600,
+    "max_world_node_iterations": 29937600,
+    "public_prefix_hand_edges": 6078,
+    "training_passes_per_iteration": 3,
+    "pair_priors": [
+      [
+        "AdAs",
+        "KdKs",
+        "8/13"
+      ],
+      [
+        "QdQs",
+        "AsKh",
+        "1/13"
+      ],
+      [
+        "QdQs",
+        "KdKs",
+        "4/13"
+      ]
+    ],
+    "raw_joint_weight_normalizer": "13/8"
+  },
+  "acceptance": {
+    "independent_metric_absolute_tolerance": 1e-10,
+    "cross_backend_scalar_absolute_tolerance": 1e-08,
+    "cross_backend_action_realization_absolute_tolerance": 1e-08,
+    "final_nash_conv_chip_limit": 0.005,
+    "exact_per_profile_repeat_payload": true,
+    "zero_delay_control_payload_exact": true,
+    "raw_conditional_probability_diagnostics": "maximum, nonzero count, and at most ten largest full-row/action examples; complete payloads retain every probability",
+    "conditional_probability_gap_is_diagnostic_only": true,
+    "action_realization_comparison_includes_every_row": true
+  },
+  "method": "Authenticate the immutable measured CFR+ publication before measuring. Rank-free preflight charges all requested 140-sweep jobs at three passes regardless of averaging delay. Retain 18 paired complete calls, two separate delay-one allocation calls, canonical serialization/hash inside timed calls, two independent physical-world records, strict independent policy replay, every scalar cross-backend gap, all-row action realization comparison, and bounded examples plus maximum/count for raw conditional-probability differences. Preserve the original zero-delay 0.005-chip quality miss; no convergence improvement or speed claim is assumed.",
+  "scope": "One weighted 5,940-world full-future fixed-flop heads-up game with configured betting decisions on flop, turn and river. CFR+ averaging delay is opt-in and limited to recursive/public-batched flop starts. No unrestricted NLHE, multiway, full-deck preflop, universal delay benefit, equal-work cross-model or RSS claim.",
+  "candidate_source_identity": "A clean Git revision and complete source-hash snapshot are captured before and after measurement; baseline source is separate."
+}

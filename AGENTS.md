@@ -292,3 +292,11 @@ policies reconstruct, but both CFR+140 observations fail the original 0.005-chip
 gate. Authenticate scripts.verify_flop_cfrplus_publication, preserve all 23 raw
 files and the 38-policy baseline receipt. CFR+140 and baseline400 have different
 charged work; finite replay and uncontrolled times do not prove general quality.
+
+
+The delayed flop study has a separate immutable protocol. Preserve all zero-delay
+control hashes and original quality misses; admit every full requested three-pass
+call before ranking. Independently compare all physical action realization weights
+and record raw conditional gaps without dropping valid rows or changing the old
+study's policy gate. Freeze clean source before measuring; see
+[protocol](docs/flop-delayed-study.md).

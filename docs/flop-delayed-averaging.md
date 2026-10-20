@@ -54,3 +54,7 @@ existing completed-sweep own-reach convention and incorporates no external code.
 Historical turn artifacts retain their generation hashes; only the adapter's
 reviewed current endpoint changes in the
 [exact source transition registry](../scripts/historical_turn_sources.py).
+
+
+[The separately frozen follow-up study](flop-delayed-study.md) compares delays
+0/70/100 without changing the original CFR+ evidence or quality target.
