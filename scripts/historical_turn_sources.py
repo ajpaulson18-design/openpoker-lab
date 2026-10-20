@@ -7,7 +7,7 @@ not attest that historical source and current source are byte-identical.
 """
 
 TRANSITIONS = {'pokerlab/postflop_solver.py': ('a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085',
-                                 'e0af827215f4731ac249345f067d8d18d9721ddcf43f563c15991eefa9c37b6f'),
+                                 '40746d48a650dc1ab07b82d2ee4c1e74c3d1c677509a4b6de91f9dcea0564c74'),
  'scripts/audit_turn_tail_exact.py': ('721dd285b18af62b5de96a08ca2b27926dfd95a1f788f479c972258ae1dec5ba',
                                       '952737851f2264866ad59cdd0af27d3a90d1000d6ce59ebc84e791e37371a9ab'),
  'scripts/benchmark_full_deck_raised_turn.py': ('3d061307b4ebdff1e8ac718df73ae0c8155f52ecebec5757a9fb7bbef9f53b52',

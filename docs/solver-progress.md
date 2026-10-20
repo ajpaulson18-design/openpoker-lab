@@ -1479,3 +1479,13 @@ trainers under the unchanged full-request three-pass bound. Independent
 full-deck and raised conditioned validation plus legacy payload comparisons
 are required; convergence evidence remains separate from the adapter change.
 See [scope and validation plan](flop-cfrplus.md).
+
+
+## Opt-in delayed averaging for flop CFR+
+
+A bounded candidate reuses existing delayed trainers for positive flop-start
+averaging delays, preserving all regret sweeps and the full three-pass admission.
+Zero delay keeps the established payload and dispatch. Independent replay,
+hand-computed averaging controls and original-source default comparisons are
+required; conditional differences at zero/tiny reach remain explicit. No new
+convergence result is claimed. See [scope and evidence](flop-delayed-averaging.md).

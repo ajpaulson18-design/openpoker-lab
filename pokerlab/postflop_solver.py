@@ -356,8 +356,13 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                    river_config=None, runouts=None, iterations=1000,
                    algorithm="vanilla", traversal="recursive",
                    diagnostics="recursive", target_exploitability=None,
-                   check_interval=100, terminal_backend="sparse"):
+                   check_interval=100, terminal_backend="sparse",
+                   averaging_delay=0):
     """Solve an exact configured heads-up game from flop, turn, or river.
+
+    Positive ``averaging_delay`` is opt-in for flop-start CFR+ only. It keeps
+    all regret sweeps and averages completed profiles with weight max(t-delay,0).
+    Omitted or zero delay retains the established path and result fields.
 
     The initial ``config`` applies to the first unresolved street. For a flop
     start, ``turn_config`` and ``river_config`` may change street sizing. For a
@@ -378,6 +383,19 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         raise ValueError("Postflop board must contain exactly three, four, or five cards.")
     if algorithm not in ("vanilla", "dcfr", "cfrplus"):
         raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
+    if type(averaging_delay) is not int:
+        raise ValueError("CFR+ averaging delay must be an integer in [0, iterations).")
+    if averaging_delay < 0:
+        raise ValueError("CFR+ averaging delay must be an integer in [0, iterations).")
+    if type(iterations) is int and averaging_delay >= iterations:
+        raise ValueError("CFR+ averaging delay must be an integer in [0, iterations).")
+    if averaging_delay > 0:
+        if algorithm != "cfrplus":
+            raise ValueError("Positive averaging delay requires the cfrplus algorithm.")
+        if len(board) != 3:
+            raise ValueError("Positive averaging delay is supported only for flop starts.")
+        if traversal == "planned":
+            raise ValueError("Positive averaging delay requires recursive or public-batched traversal.")
     if traversal not in ("recursive", "planned", "public-batched"):
         raise ValueError("Traversal must be recursive, planned, or public-batched.")
     if diagnostics not in ("recursive", "public-batched"):
@@ -520,7 +538,13 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         target_reached = exploitability <= target_exploitability
         return target_reached
 
-    if traversal == "public-batched":
+    if traversal == "public-batched" and algorithm == "cfrplus" and averaging_delay > 0:
+        from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
+        averages = train_delayed_public_cfrplus(
+            root, worlds, infos, iterations, averaging_delay=averaging_delay,
+            pot=config.pot, chance_type=_Chance,
+        )
+    elif traversal == "public-batched":
         averages = train_public_batched(root, worlds, infos, iterations, algorithm,
                                         pot=config.pot, chance_type=_Chance,
                                         checkpoint_interval=(check_interval if target_exploitability is not None else None),
@@ -529,8 +553,12 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     else:
         trainer = train_plus if algorithm == "cfrplus" else (
             train_planned if traversal == "planned" else train)
-        averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
-                           _node_key, _chance_child)
+        if algorithm == "cfrplus" and averaging_delay > 0:
+            averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
+                               _node_key, _chance_child, delay=averaging_delay)
+        else:
+            averages = trainer(root, worlds, infos, iterations, algorithm, payoff,
+                               _node_key, _chance_child)
     if target_exploitability is not None:
         if last_convergence is None:
             raise RuntimeError("Target diagnostics did not produce a final checkpoint.")
@@ -618,8 +646,15 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     }
     if algorithm == "cfrplus":
         result["update_schedule"] = "alternating-oop-then-ip"
-        result["average_schedule"] = "linear-post-sweep-own-reach"
+        result["average_schedule"] = (
+            "delayed-linear-post-sweep-own-reach" if averaging_delay > 0 else
+            "linear-post-sweep-own-reach")
         result["training_passes_per_iteration"] = passes
+    if averaging_delay > 0:
+        result["averaging_delay"] = averaging_delay
+        result["averaging_positive_sweeps"] = iterations - averaging_delay
+        if traversal == "public-batched":
+            result["cfrplus_kernel"] = "delayed-public-batched-cfrplus-python"
     if diagnostics != "recursive":
         result["diagnostics_backend"] = "public-batched-python"
     if terminal_backend == "ranked":

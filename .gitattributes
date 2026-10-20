@@ -49,3 +49,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 /benchmarks/results/weighted-full-deck-flop-v1/index.json -text
 /benchmarks/results/weighted-full-deck-flop-v1/*.json.gz binary
+
+# Authenticated project adapter source used only for default compatibility tests.
+/benchmarks/sources/postflop-before-delayed-flop-cfrplus-v1.py.gz binary
