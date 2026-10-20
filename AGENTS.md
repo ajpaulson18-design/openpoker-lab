@@ -265,8 +265,8 @@ The interrupted elapsed times cannot support a controlled speed comparison.
 
 For full-future flop CFR+, retain all old caps and charge three full training
 passes before dispatch. Keep recursive/vanilla defaults and later-street payloads
-unchanged. Planned CFR+, flop public diagnostics and target stopping remain
-unsupported. Require the independent weighted physical/action/own-hand response
+unchanged. Planned CFR+ and flop target stopping remain unsupported. Final
+flop public diagnostics are separately opt-in; see [scope](docs/flop-public-diagnostics.md). Require the independent weighted physical/action/own-hand response
 validator and a frozen quality experiment; adapter support alone is not a
 convergence claim. See [flop CFR+ scope](docs/flop-cfrplus.md).
 
@@ -300,3 +300,11 @@ call before ranking. Independently compare all physical action realization weigh
 and record raw conditional gaps without dropping valid rows or changing the old
 study's policy gate. Freeze clean source before measuring; see
 [protocol](docs/flop-delayed-study.md).
+
+
+Flop public diagnostics must sum hidden future branches before a legal responder
+maximizes at its visible information set. Keep defaults and flop target stopping
+unchanged. Reserve the existing prefix/private-pair cap before training without
+claiming this precedes initial ranking, and require independent physical/action/
+own-hand replay plus two-reveal pure-response controls. See
+[scope](docs/flop-public-diagnostics.md).

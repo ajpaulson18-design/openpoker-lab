@@ -352,6 +352,21 @@ def _public_reveals(history):
     return tuple(reveals)
 
 
+def _reserve_flop_diagnostic_prefix_edges(worlds):
+    """Count joint private-pair/public-prefix coordinates under the public cap."""
+    edges = set()
+    for world in worlds:
+        pair = (world[0], world[1])
+        future = tuple(world[4:])
+        for length in range(len(future) + 1):
+            edge = (pair[0], pair[1], future[:length])
+            if edge not in edges:
+                if len(edges) >= MAX_PREFIX_EDGES:
+                    raise ValueError("Public diagnostics exceed 250,000 prefix/hand edges.")
+                edges.add(edge)
+    return len(edges)
+
+
 def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
                    river_config=None, runouts=None, iterations=1000,
                    algorithm="vanilla", traversal="recursive",
@@ -368,6 +383,8 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     start, ``turn_config`` and ``river_config`` may change street sizing. For a
     turn start, only ``river_config`` may override sizing. All configs preserve
     the starting pot and total stack caps. This excludes preflop and multiway.
+    Flop diagnostics may opt into the exact public-batched evaluator; it uses
+    the same bounded prefix/private-pair edge cap as public-batched training.
     Optional ``target_exploitability`` is an absolute chip-denominated target
     for NashConv/2. It is supported only for turn or river starts with
     ``traversal="public-batched"``. The solver checks at completed
@@ -405,8 +422,6 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     if terminal_backend == "ranked" and (len(board) != 5 or
                                            traversal != "public-batched"):
         raise ValueError("The ranked terminal backend requires a river start and public-batched traversal.")
-    if diagnostics == "public-batched" and len(board) == 3:
-        raise ValueError("Public-batched diagnostics are enabled only for turn and river starts.")
     if algorithm == "cfrplus":
         if traversal == "planned":
             raise ValueError("CFR+ requires recursive or public-batched traversal.")
@@ -458,6 +473,9 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
 
     hands, worlds, selected, pair_count = _enumerate_worlds(
         board, oop_range, ip_range, runouts, iterations)
+    diagnostic_prefix_edges = None
+    if diagnostics == "public-batched" and len(board) == 3:
+        diagnostic_prefix_edges = _reserve_flop_diagnostic_prefix_edges(worlds)
     terminal_kernel = None
     if terminal_backend == "ranked":
         expanded_ranges = (expand_range(oop_range, board),
@@ -657,6 +675,9 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
             result["cfrplus_kernel"] = "delayed-public-batched-cfrplus-python"
     if diagnostics != "recursive":
         result["diagnostics_backend"] = "public-batched-python"
+        if len(board) == 3:
+            result["diagnostics_prefix_hand_edges"] = diagnostic_prefix_edges
+            result["diagnostics_prefix_edge_limit"] = MAX_PREFIX_EDGES
     if terminal_backend == "ranked":
         result["terminal_backend"] = "ranked-river-python"
     if target_exploitability is not None:

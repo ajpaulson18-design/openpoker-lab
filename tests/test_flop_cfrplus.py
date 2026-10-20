@@ -119,7 +119,6 @@ class FlopCFRPlusTests(unittest.TestCase):
 
     def test_planned_diagnostics_and_early_stopping_scopes_remain_explicit(self):
         for options,message in (({'algorithm':'cfrplus','traversal':'planned'},'requires recursive'),
-                                ({'diagnostics':'public-batched'},'only for turn and river'),
                                 ({'traversal':'public-batched','target_exploitability':.01},'only for turn and river')):
             with self.subTest(options=options),patch.object(solver,'_enumerate_worlds',
                     side_effect=AssertionError('ranked before option rejection')) as worlds:

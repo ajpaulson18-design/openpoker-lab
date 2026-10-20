@@ -14,8 +14,9 @@ The original 30-million world-node admission already reserves three training
 passes per requested CFR+ sweep: OOP update, IP update, and completed-sweep
 linear own-reach averaging. Every old world/candidate/tree/public-state guard
 remains, as does the public trainer's separate prefix-edge guard. No new request
-is admitted by weakening any cap. Planned CFR+ traversal, flop public diagnostics
-and flop target-based early stopping remain explicitly unsupported.
+is admitted by weakening any cap. Planned CFR+ traversal and flop target-based
+early stopping remain unsupported. Final [flop public diagnostics](flop-public-diagnostics.md)
+are separately opt-in; this frozen experiment retains recursive diagnostics.
 
 For the independently checked weighted 5,940-world fixture in
 [the baseline experiment](weighted-full-deck-flop.md), the public tree has 12
