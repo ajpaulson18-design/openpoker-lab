@@ -269,5 +269,7 @@ no actual 100k direct-tail quality result.
 
 The [fixed longer river experiment](../direct-river-long-tail-experiment.md)
 defines one polarized T=100000,D=3000 call, exact old/new response-gain
-comparison and immutable raw output. Its full-budget result awaits the
-reviewed source freeze and actual call.
+comparison and immutable raw output. The actual raw policy meets exact 0.001
+at NashConv about 0.0008944742, with both response gains reduced from the
+preserved 10k miss. Its gap remains positive; independent exact audits and
+known-value containment apply to this fixed game only.

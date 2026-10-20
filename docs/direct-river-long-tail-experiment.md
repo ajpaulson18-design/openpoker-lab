@@ -76,5 +76,58 @@ normalized serialized rows; it proves no unrestricted solver convergence.
 
 ## Recorded results
 
-Pending reviewed source freeze and the actual fixed 100k call. Cheap T10/D5
-probes verify integration only and supply no 100k quality evidence.
+The actual complete call ran from committed generation source
+`0450ff9fbfa434f1ad59b88606e7ed347cd90ab6`. No probabilities were cleaned up.
+The exact normalized-policy outcomes are:
+
+| Quantity | Earlier T=10000,D=3000 | New T=100000,D=3000 |
+| --- | ---: | ---: |
+| OOP value | 24.999999669238388 | 25.000000007578205 |
+| OOP legal response gain | 0.005318046178756876 | 0.0005500202430588356 |
+| IP legal response gain | 0.0015546678930386947 | 0.0003444539581166081 |
+| NashConv | 0.006872714071795571 | 0.0008944742011754436 |
+| Exploitability | 0.0034363570358977853 | 0.0004472371005877218 |
+| Exact 0.001 target | Miss | Meet |
+| Exact zero | No | No |
+
+The printed decimals approximate exact Fraction strings in the report. New
+NashConv is exactly
+`72568368512557894921003008575/81129638414606677192189377773568`.
+Its legal response interval is approximately
+`[24.999655553620087,25.000550027821262]`, containing 25. The observed gap
+decreases by about 0.005978239870620127 chips; the old miss remains immutable.
+More sweeps and a longer averaging window are different work, so this is no
+equal-cost algorithm or speed comparison.
+
+The [raw policy](../benchmarks/results/river-direct-long-tail-v1-polarised.json)
+is 6,664 bytes, SHA256
+`b82aad9c8eeaeb1fa475c7501f3d9665aedc26d5051231bb273bf2973f068442`.
+The [complete report](../benchmarks/results/river-direct-long-tail-v1.json)
+is 20,451 bytes, SHA256
+`94542aa030f36aac4e84fbaa24e0261c1b3556e701033dab31b7eff97308bbdf`.
+Both exact auditors agree on all eight metrics. The generic auditor used 282
+work units, depth four and a maximum 110-bit Fraction, under unchanged limits.
+Its exact normalization ledger remains separate from the unmodified raw file.
+
+The complete API call took 18.2794134 seconds on this host. It includes the lazy
+producer import after preflight; JSON, audits and publication are outside this
+interval. Separate lead verification matched all 65 producer and 11 verifier
+fingerprints (73 distinct paths) to working files and committed generation
+bytes, and checked both accepted input hashes. A third standalone terminal-sum
+and backward-response calculation, importing no repository math helpers,
+matched all eight exact metrics for both the old and new policies.
+
+All 19 integrated focused tests passed in normal/optimized Python (0.610/0.512
+seconds). They include genuine cheap math probes plus explicitly synthetic
+source-drift, timing, serialization, publication and rollback faults. The actual
+100k report also reconstructed in a fresh read-only process without training.
+An accepted-file hash and trainer-disabled replay regression is added outside
+the pinned source sets after generation, avoiding a circular hash.
+
+The integrated accepted-file test disables nine solver/trainer entry points
+and also derives all eight exact metrics directly from the six serialized rows
+using terminal sums, OOP own-hand backward maxima and IP hidden-world weighted
+minima. Both old and new policy metrics agree exactly; the independent gains
+are checked without clipping. Together with the preceding saved river and turn
+regressions, three no-training reconstructions passed in 26.775 seconds. The
+new test also passed alone under optimized Python in 17.049 seconds.
