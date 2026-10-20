@@ -286,3 +286,9 @@ without changing shared kernels. Preserve conditional policy differences at zero
 reach; compare all action realization weights and independent legal responses,
 without dropping rows or claiming full conditional agreement. Require a frozen
 quality experiment before convergence claims; see [delay scope](docs/flop-delayed-averaging.md).
+
+The frozen full-future flop CFR+ v1 corpus is `quality-miss`: all 20 candidate
+policies reconstruct, but both CFR+140 observations fail the original 0.005-chip
+gate. Authenticate scripts.verify_flop_cfrplus_publication, preserve all 23 raw
+files and the 38-policy baseline receipt. CFR+140 and baseline400 have different
+charged work; finite replay and uncontrolled times do not prove general quality.

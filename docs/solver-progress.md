@@ -1489,3 +1489,9 @@ Zero delay keeps the established payload and dispatch. Independent replay,
 hand-computed averaging controls and original-source default comparisons are
 required; conditional differences at zero/tiny reach remain explicit. No new
 convergence result is claimed. See [scope and evidence](flop-delayed-averaging.md).
+
+The full-future flop CFR+ experiment is complete: all 20 candidate policies and
+38 baseline policies reconstruct independently; both CFR+140 final NashConv
+observations (~0.012538) still miss the original 0.005-chip gate. Raw repeats,
+separate allocation calls and exact source identities remain immutable. See
+[completed evidence](flop-cfrplus.md#completed-evidence-and-quality-misses).
