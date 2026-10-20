@@ -1,0 +1,919 @@
+{
+  "candidate_training_run": false,
+  "kind": "PRESEARCH_24_GLOBAL_SUIT_EXACT_REFERENCE",
+  "results": [
+    {
+      "fixture": {
+        "board": "2c7d9hJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQs:1,AdAs:1",
+        "oop": "AsAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "80f7f47aa713bddb68ecb28696b9e03160a01191521e53deef0e2833680dae22",
+      "target": "cdhs",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2c7d9sJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQh:1,AdAh:1",
+        "oop": "AhAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "d1805108f104de1f1e274b42af01928c4d05468c171971172b1a120d6598cc96",
+      "target": "cdsh",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2c7h9dJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQs:1,AhAs:1",
+        "oop": "AsAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "3a48e7ff239aa8fee283ed6dfd4468967ac3ae90ae6cc44a98422a25d46cf0b6",
+      "target": "chds",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2c7h9sJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQd:1,AhAd:1",
+        "oop": "AdAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "68cdf439c6482b3eaebf7a0c7b2b03e30eda383872d5f49c7c74daad2c086d7d",
+      "target": "chsd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2c7s9dJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQh:1,AsAh:1",
+        "oop": "AhAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "341bd38fb09471aecadb17c9691954edd56861ea490c28f189a6b167f272926f",
+      "target": "csdh",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2c7s9hJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQd:1,AsAd:1",
+        "oop": "AdAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "a09047deee61bfaf4ff09647b6bc0f5db248280fe5ca53c12267f562387b33f4",
+      "target": "cshd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7c9hJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQs:1,AcAs:1",
+        "oop": "AsAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "dfa5e568c15a0a7c005fe45ac1a4b6aadaabb0aecaad793264de265534d6ec14",
+      "target": "dchs",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7c9sJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQh:1,AcAh:1",
+        "oop": "AhAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "a3f6acdf6a83529e783927ae5d721854591ed26b7cdbde7d8112f3c90c14f1d1",
+      "target": "dcsh",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7h9cJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQs:1,AhAs:1",
+        "oop": "AsAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "e3b85b9f0f3e496b9aa81478c5d86aae6ef3c9c126ede803302f38fd7ae35156",
+      "target": "dhcs",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7h9sJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQc:1,AhAc:1",
+        "oop": "AcAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "751f0689f0c8ca315b0c9ac75c89b7473479b73a05b9319ceafad95b9862da83",
+      "target": "dhsc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7s9cJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQh:1,AsAh:1",
+        "oop": "AhAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "b9a99fc3aeea57eb77125ffbec3368c5d048052c5090309aae5ee57b094dacec",
+      "target": "dsch",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2d7s9hJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQc:1,AsAc:1",
+        "oop": "AcAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "effd01c53432e84b912e26bc25961ee37ba7bcc2231ebd5b6820b73a1d1becbf",
+      "target": "dshc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7c9dJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQs:1,AcAs:1",
+        "oop": "AsAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "2d2a7c8ab44621cc3e3c45aad0a4f38b22c9e4a4382e81d380c31e90018f4c1b",
+      "target": "hcds",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7c9sJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQd:1,AcAd:1",
+        "oop": "AdAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "e24929fd11ba93dd18dcf5419b57816dca25fb0456f493d9b4731fe7d31ed180",
+      "target": "hcsd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7d9cJs",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQs:1,AdAs:1",
+        "oop": "AsAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "ee812a254a54f510e6bbd1cdabefd523e4e9cf209cadceed661a98804639d4ba",
+      "target": "hdcs",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7d9sJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QsQc:1,AdAc:1",
+        "oop": "AcAs:0.25,Ts6s:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "49ac8b9679714a957bc52351ec987cdab35383c3a8b3397928b50d7fc78ddd13",
+      "target": "hdsc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7s9cJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQd:1,AsAd:1",
+        "oop": "AdAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "675026e0e9b08aa22c3e5f21bc9ebb28c8018261043983f6355567e83a75e2f0",
+      "target": "hscd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2h7s9dJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQc:1,AsAc:1",
+        "oop": "AcAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8s",
+          "Ks"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "d7f94497f1be61decbb44d4649949eee92190b6ad1f5dfae0c24b900ee44ec40",
+      "target": "hsdc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7c9dJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQh:1,AcAh:1",
+        "oop": "AhAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "618613c7a3ad5cee41f2d80d66101fe1ab5e74d164655441d44fa11fc6b92064",
+      "target": "scdh",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7c9hJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQd:1,AcAd:1",
+        "oop": "AdAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8c",
+          "Kc"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "1fcc74babf51ed26dc3b6a37807f9c92714ffefe7e305239b5689c9f7a23aaf6",
+      "target": "schd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7d9cJh",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQh:1,AdAh:1",
+        "oop": "AhAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "45ce97bb6813cf15c5fa0060a52374390a510dbd977dc2f82e9bb6f8d6a4cb33",
+      "target": "sdch",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7d9hJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QhQc:1,AdAc:1",
+        "oop": "AcAh:0.25,Th6h:0.75",
+        "runouts": [
+          "8d",
+          "Kd"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "d9f308e35498f648399c5a7622a334bd67f5c917dd90b0031ffe3ef58f91a6fb",
+      "target": "sdhc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7h9cJd",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QcQd:1,AhAd:1",
+        "oop": "AdAc:0.25,Tc6c:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "0fd46b75e3d0e03e5ae0c165e660ee43263209404b36437a7d11f6616967ed03",
+      "target": "shcd",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    },
+    {
+      "fixture": {
+        "board": "2s7h9dJc",
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": [
+            100,
+            100
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "pot": 100,
+          "raise_sizes": []
+        },
+        "id": "turn-blocker-selected-sequence-equilibrium",
+        "ip": "QdQc:1,AhAc:1",
+        "oop": "AcAd:0.25,Td6d:0.75",
+        "runouts": [
+          "8h",
+          "Kh"
+        ]
+      },
+      "metrics": {
+        "exploitability": "0",
+        "ip_best_response_gain": "0",
+        "ip_best_response_value": "-115/7",
+        "nash_conv": "0",
+        "oop_best_response_gain": "0",
+        "oop_best_response_value": "115/7",
+        "value_ip": "-115/7",
+        "value_oop": "115/7"
+      },
+      "rational_strategy_sha256": "a7e51f590d54c678b1c276f608144be9087665c1eac9d230899c09c2f30d0133",
+      "target": "shdc",
+      "world_law_sha256": "d2c9de0b6647c5f122187f1c48c3fd7b96c0cf14d65e4959bfe3af4fd8661e9d"
+    }
+  ],
+  "source_witness_sha256": "1da6f053f308aae7e6804c7c543c7c5f79d572d5104617d8368486e3704deaf4"
+}

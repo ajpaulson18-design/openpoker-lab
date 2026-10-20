@@ -1,0 +1,1709 @@
+{
+  "baseline_git_commit": "6541f3da4bc1d71954febb4c0ad70d4a91e2f617",
+  "benchmark_id": "full-deck-raised-turn-benchmark-v1",
+  "census": {
+    "action_tokens": [
+      "all_in@220",
+      "bet@150",
+      "bet@50",
+      "call",
+      "check",
+      "fold",
+      "raise@150"
+    ],
+    "board": "Js8d4c2h",
+    "decisions": 1254,
+    "depth": 9,
+    "fixture_id": "full-deck-raised-turn-v1",
+    "forecasts": [
+      {
+        "backend": "materialized",
+        "iterations": 100,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 1689600
+      },
+      {
+        "backend": "matrix-free",
+        "iterations": 100,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 1841634
+      },
+      {
+        "backend": "materialized",
+        "iterations": 1000,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 16896000
+      },
+      {
+        "backend": "matrix-free",
+        "iterations": 1000,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 18252234
+      },
+      {
+        "backend": "materialized",
+        "iterations": 1500,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 25344000
+      },
+      {
+        "backend": "matrix-free",
+        "iterations": 1500,
+        "reference_cap": 30000000,
+        "reference_cap_label": "WITHIN_REFERENCE_CAP",
+        "within_reference_cap": true,
+        "work": 27369234
+      }
+    ],
+    "global_physical_mass": "1",
+    "information_rows": 2404,
+    "max_private_hands": 2,
+    "pairs": 4,
+    "physical_pair_masses": [
+      [
+        "AhAs",
+        "AcAd",
+        "4/21",
+        "1/231"
+      ],
+      [
+        "AhAs",
+        "KcKd",
+        "1/7",
+        "1/308"
+      ],
+      [
+        "KhKs",
+        "AcAd",
+        "8/21",
+        "2/231"
+      ],
+      [
+        "KhKs",
+        "KcKd",
+        "2/7",
+        "1/154"
+      ]
+    ],
+    "public_candidates": 48,
+    "public_nodes": 3039,
+    "public_tree_sha256": "70d87064c6d7048b75784b6623a2dc6249f57ac61384a27d1724c3d53563bd61",
+    "reachable_rivers": 48,
+    "rivers_per_pair": [
+      44,
+      44,
+      44,
+      44
+    ],
+    "visited_decisions_per_world": 32,
+    "worlds": 176
+  },
+  "created_at_utc": "2026-10-19T05:43:53.442991+00:00",
+  "fixture": {
+    "board": "Js8d4c2h",
+    "config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "effective_stack": 220.0,
+      "include_all_in": false,
+      "max_raises": 1,
+      "pot": 100.0,
+      "raise_sizes": [
+        0.5
+      ]
+    },
+    "id": "full-deck-raised-turn-v1",
+    "ip": "AcAd:1,KcKd:0.75",
+    "oop": "AsAh:0.5,KsKh:1",
+    "river_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "effective_stack": 220.0,
+      "include_all_in": false,
+      "max_raises": 1,
+      "pot": 100.0,
+      "raise_sizes": [
+        0.5
+      ]
+    }
+  },
+  "methodology": {
+    "conditioning": "Full-deck chance with omitted runouts: four compatible private pairs, 44 legal rivers per pair, 176 physical worlds.",
+    "design": "Six fixed CFR+ calls in iteration-major materialized then matrix-free order at 100, 1000, and 1500 iterations; no stopping target.",
+    "limitations": "Numeric independent replay is not an arbitrary-policy exact certificate. Generic exact audit remains rejected at its existing work limit; no equilibrium or general convergence claim is made.",
+    "resources": "Forecasts are advisory and use the unchanged 30,000,000 work caps; the production guards remain authoritative.",
+    "threshold": "0.001 NashConv is report-only; every miss is retained.",
+    "timing": "Complete solver call plus canonical JSON encoding and independent replay are timed separately; uncontrolled observations with no memory or RSS claim.",
+    "validation": "Complete policy metadata is checked and all eight metrics independently replayed before and after canonical LF serialization."
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.12.14",
+  "reference_sha256": "bff6aaf4d2bf6038503645787d66cff9f57bcb1385e334364f72126a67211165",
+  "results": [
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_pairs": 4,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "public-batched-python",
+        "info_sets": 2404,
+        "iterations": 100,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "world_traversal_nodes": 32,
+        "worlds": 176
+      },
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 7.961597000001348,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 2.479762800001481,
+      "information_rows": 2404,
+      "iterations_completed": 100,
+      "iterations_requested": 100,
+      "metrics": {
+        "exploitability": 0.18488441144619472,
+        "ip_best_response_gain": 0.16055765142860423,
+        "ip_best_response_value": 19.310227296185595,
+        "nash_conv": 0.36976882289238944,
+        "oop_best_response_gain": 0.2092111714637852,
+        "oop_best_response_value": -18.940458473293205,
+        "value_ip": 19.14966964475699,
+        "value_oop": -19.14966964475699
+      },
+      "oracle_metrics": {
+        "exploitability": 0.18488441144619472,
+        "ip_best_response_gain": 0.16055765142860423,
+        "ip_best_response_value": 19.310227296185595,
+        "nash_conv": 0.36976882289238944,
+        "oop_best_response_gain": 0.2092111714637852,
+        "oop_best_response_value": -18.940458473293205,
+        "value_ip": 19.14966964475699,
+        "value_oop": -19.14966964475699
+      },
+      "policy_file": "full-deck-raised-turn-v1-materialized-100.json",
+      "policy_sha256": "9143f54d0d064259d3a2712e146c300cc10fd5e526ed54740c0a1e2a3ed23d15",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": -7.105427357601002e-15,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 7.105427357601002e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 1689600,
+      "work_limit": 30000000,
+      "worlds": 176
+    },
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_world_count": 176,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "matrix-free-ranked-python",
+        "info_sets": 2404,
+        "iterations": 100,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts"
+        ],
+        "resource_usage": {
+          "compatible_world_count": 176,
+          "fallback_pair_checks": 0,
+          "hand_counts": [
+            2,
+            2
+          ],
+          "hand_slots": 184,
+          "hand_state_pass_work": 1841634,
+          "info_action_slots": 5364,
+          "kernel_public_states": 3039,
+          "limits": {
+            "fallback_pair_checks": 30000000,
+            "hand_slots": 120000,
+            "hand_state_pass_work": 30000000,
+            "info_action_slots": 1000000,
+            "public_nodes": 10000,
+            "public_states": 250000
+          },
+          "turn_fold_terminals": 4
+        },
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "terminal_backend": "ranked-turn-python",
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "worlds_materialized": 0
+      },
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 34.35640210000565,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 2.3541937000045436,
+      "information_rows": 2404,
+      "iterations_completed": 100,
+      "iterations_requested": 100,
+      "metrics": {
+        "exploitability": 0.18488441144620005,
+        "ip_best_response_gain": 0.16055765142861844,
+        "ip_best_response_value": 19.310227296185598,
+        "nash_conv": 0.3697688228924001,
+        "oop_best_response_gain": 0.20921117146378165,
+        "oop_best_response_value": -18.940458473293198,
+        "value_ip": 19.14966964475698,
+        "value_oop": -19.14966964475698
+      },
+      "oracle_metrics": {
+        "exploitability": 0.18488441144620005,
+        "ip_best_response_gain": 0.16055765142861844,
+        "ip_best_response_value": 19.310227296185598,
+        "nash_conv": 0.3697688228924001,
+        "oop_best_response_gain": 0.20921117146378165,
+        "oop_best_response_value": -18.940458473293198,
+        "value_ip": 19.14966964475698,
+        "value_oop": -19.14966964475698
+      },
+      "policy_file": "full-deck-raised-turn-v1-matrix-free-100.json",
+      "policy_sha256": "4ba3b03d7485069118b13ce0222e3192a52d64faa50043ba65e400b2beaef5a2",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": -5.329070518200751e-15,
+        "ip_best_response_gain": -7.105427357601002e-15,
+        "ip_best_response_value": -1.0658141036401503e-14,
+        "nash_conv": -1.0658141036401503e-14,
+        "oop_best_response_gain": -3.552713678800501e-15,
+        "oop_best_response_value": 0.0,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 1841634,
+      "work_limit": 30000000,
+      "worlds": 176
+    },
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_pairs": 4,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "public-batched-python",
+        "info_sets": 2404,
+        "iterations": 1000,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "world_traversal_nodes": 32,
+        "worlds": 176
+      },
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 89.66843200000585,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 1.7804564000034588,
+      "information_rows": 2404,
+      "iterations_completed": 1000,
+      "iterations_requested": 1000,
+      "metrics": {
+        "exploitability": 0.0018654670885212,
+        "ip_best_response_gain": 0.0015516684819516513,
+        "ip_best_response_value": 19.050268741235953,
+        "nash_conv": 0.0037309341770424,
+        "oop_best_response_gain": 0.0021792656950907485,
+        "oop_best_response_value": -19.04653780705891,
+        "value_ip": 19.048717072754002,
+        "value_oop": -19.048717072754002
+      },
+      "oracle_metrics": {
+        "exploitability": 0.0018654670885212,
+        "ip_best_response_gain": 0.0015516684819516513,
+        "ip_best_response_value": 19.050268741235953,
+        "nash_conv": 0.0037309341770424,
+        "oop_best_response_gain": 0.0021792656950907485,
+        "oop_best_response_value": -19.04653780705891,
+        "value_ip": 19.048717072754002,
+        "value_oop": -19.048717072754002
+      },
+      "policy_file": "full-deck-raised-turn-v1-materialized-1000.json",
+      "policy_sha256": "b19c3212dbbcd7efe1858c45c0b2ff2b7ee46cf555e49e3809d2d65a8e75ce89",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": 3.552713678800501e-15,
+        "ip_best_response_gain": 1.4210854715202004e-14,
+        "ip_best_response_value": 3.552713678800501e-15,
+        "nash_conv": 7.105427357601002e-15,
+        "oop_best_response_gain": -7.105427357601002e-15,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": -1.0658141036401503e-14,
+        "value_oop": 1.0658141036401503e-14
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 16896000,
+      "work_limit": 30000000,
+      "worlds": 176
+    },
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_world_count": 176,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "matrix-free-ranked-python",
+        "info_sets": 2404,
+        "iterations": 1000,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts"
+        ],
+        "resource_usage": {
+          "compatible_world_count": 176,
+          "fallback_pair_checks": 0,
+          "hand_counts": [
+            2,
+            2
+          ],
+          "hand_slots": 184,
+          "hand_state_pass_work": 18252234,
+          "info_action_slots": 5364,
+          "kernel_public_states": 3039,
+          "limits": {
+            "fallback_pair_checks": 30000000,
+            "hand_slots": 120000,
+            "hand_state_pass_work": 30000000,
+            "info_action_slots": 1000000,
+            "public_nodes": 10000,
+            "public_states": 250000
+          },
+          "turn_fold_terminals": 4
+        },
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "terminal_backend": "ranked-turn-python",
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "worlds_materialized": 0
+      },
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 269.5882072999957,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 1.7252358999976423,
+      "information_rows": 2404,
+      "iterations_completed": 1000,
+      "iterations_requested": 1000,
+      "metrics": {
+        "exploitability": 0.0018654670885212,
+        "ip_best_response_gain": 0.0015516684819516513,
+        "ip_best_response_value": 19.050268741235953,
+        "nash_conv": 0.0037309341770424,
+        "oop_best_response_gain": 0.0021792656950907485,
+        "oop_best_response_value": -19.04653780705891,
+        "value_ip": 19.048717072754002,
+        "value_oop": -19.048717072754002
+      },
+      "oracle_metrics": {
+        "exploitability": 0.0018654670885212,
+        "ip_best_response_gain": 0.0015516684819516513,
+        "ip_best_response_value": 19.050268741235953,
+        "nash_conv": 0.0037309341770424,
+        "oop_best_response_gain": 0.0021792656950907485,
+        "oop_best_response_value": -19.04653780705891,
+        "value_ip": 19.048717072754002,
+        "value_oop": -19.048717072754002
+      },
+      "policy_file": "full-deck-raised-turn-v1-matrix-free-1000.json",
+      "policy_sha256": "aa356bca5b17f10165ce4ed6ef1b73aa3a384df6fd4a7cea157da8d1e5186e96",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": -3.552713678800501e-15,
+        "ip_best_response_gain": 3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": -7.105427357601002e-15,
+        "oop_best_response_gain": -1.0658141036401503e-14,
+        "oop_best_response_value": -7.105427357601002e-15,
+        "value_ip": -3.552713678800501e-15,
+        "value_oop": 3.552713678800501e-15
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 18252234,
+      "work_limit": 30000000,
+      "worlds": 176
+    },
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_pairs": 4,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "public-batched-python",
+        "info_sets": 2404,
+        "iterations": 1500,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "world_traversal_nodes": 32,
+        "worlds": 176
+      },
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 137.47303909999755,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 2.227709600003436,
+      "information_rows": 2404,
+      "iterations_completed": 1500,
+      "iterations_requested": 1500,
+      "metrics": {
+        "exploitability": 0.0008293726651622535,
+        "ip_best_response_gain": 0.0006896881458295923,
+        "ip_best_response_value": 19.04879708151224,
+        "nash_conv": 0.001658745330324507,
+        "oop_best_response_gain": 0.0009690571844949147,
+        "oop_best_response_value": -19.047138336181916,
+        "value_ip": 19.04810739336641,
+        "value_oop": -19.04810739336641
+      },
+      "oracle_metrics": {
+        "exploitability": 0.0008293726651622535,
+        "ip_best_response_gain": 0.0006896881458295923,
+        "ip_best_response_value": 19.04879708151224,
+        "nash_conv": 0.001658745330324507,
+        "oop_best_response_gain": 0.0009690571844949147,
+        "oop_best_response_value": -19.047138336181916,
+        "value_ip": 19.04810739336641,
+        "value_oop": -19.04810739336641
+      },
+      "policy_file": "full-deck-raised-turn-v1-materialized-1500.json",
+      "policy_sha256": "1b149b5c3764ac792a443698efb7c33bd42f07d05ea0127811f689daca3a8360",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": -3.552713678800501e-15,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 3.552713678800501e-15,
+        "oop_best_response_value": 3.552713678800501e-15,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 25344000,
+      "work_limit": 30000000,
+      "worlds": 176
+    },
+    {
+      "actual_metadata": {
+        "algorithm": "cfrplus",
+        "average_schedule": "linear-post-sweep-own-reach",
+        "board": [
+          "Js",
+          "8d",
+          "4c",
+          "2h"
+        ],
+        "compatible_world_count": 176,
+        "config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "diagnostics_backend": "public-batched-python",
+        "execution_backend": "matrix-free-ranked-python",
+        "info_sets": 2404,
+        "iterations": 1500,
+        "public_nodes": 1254,
+        "public_state_limit": 250000,
+        "public_states": 3039,
+        "reachable_runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts"
+        ],
+        "resource_usage": {
+          "compatible_world_count": 176,
+          "fallback_pair_checks": 0,
+          "hand_counts": [
+            2,
+            2
+          ],
+          "hand_slots": 184,
+          "hand_state_pass_work": 27369234,
+          "info_action_slots": 5364,
+          "kernel_public_states": 3039,
+          "limits": {
+            "fallback_pair_checks": 30000000,
+            "hand_slots": 120000,
+            "hand_state_pass_work": 30000000,
+            "info_action_slots": 1000000,
+            "public_nodes": 10000,
+            "public_states": 250000
+          },
+          "turn_fold_terminals": 4
+        },
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "runout_mode": "full-deck",
+        "runouts": [
+          "2c",
+          "2d",
+          "2s",
+          "3c",
+          "3d",
+          "3h",
+          "3s",
+          "4d",
+          "4h",
+          "4s",
+          "5c",
+          "5d",
+          "5h",
+          "5s",
+          "6c",
+          "6d",
+          "6h",
+          "6s",
+          "7c",
+          "7d",
+          "7h",
+          "7s",
+          "8c",
+          "8h",
+          "8s",
+          "9c",
+          "9d",
+          "9h",
+          "9s",
+          "Tc",
+          "Td",
+          "Th",
+          "Ts",
+          "Jc",
+          "Jd",
+          "Jh",
+          "Qc",
+          "Qd",
+          "Qh",
+          "Qs",
+          "Kc",
+          "Kd",
+          "Kh",
+          "Ks",
+          "Ac",
+          "Ad",
+          "Ah",
+          "As"
+        ],
+        "street_configs": {
+          "river": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          },
+          "turn": {
+            "bet_sizes": [
+              0.5
+            ],
+            "effective_stack": 220.0,
+            "include_all_in": false,
+            "max_raises": 1,
+            "pot": 100.0,
+            "raise_sizes": [
+              0.5
+            ]
+          }
+        },
+        "terminal_backend": "ranked-turn-python",
+        "training_passes_per_iteration": 3,
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "effective_stack": 220.0,
+          "include_all_in": false,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.5
+          ]
+        },
+        "update_schedule": "alternating-oop-then-ip",
+        "worlds_materialized": 0
+      },
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "compatible_pairs": 4,
+      "complete_call_seconds_uncontrolled": 454.20753830000467,
+      "independent_public_decisions": 1254,
+      "independent_replay_seconds": 2.5786894999982906,
+      "information_rows": 2404,
+      "iterations_completed": 1500,
+      "iterations_requested": 1500,
+      "metrics": {
+        "exploitability": 0.0008293726651622535,
+        "ip_best_response_gain": 0.0006896881458295923,
+        "ip_best_response_value": 19.04879708151224,
+        "nash_conv": 0.001658745330324507,
+        "oop_best_response_gain": 0.0009690571844949147,
+        "oop_best_response_value": -19.047138336181916,
+        "value_ip": 19.04810739336641,
+        "value_oop": -19.04810739336641
+      },
+      "oracle_metrics": {
+        "exploitability": 0.0008293726651622535,
+        "ip_best_response_gain": 0.0006896881458295923,
+        "ip_best_response_value": 19.04879708151224,
+        "nash_conv": 0.001658745330324507,
+        "oop_best_response_gain": 0.0009690571844949147,
+        "oop_best_response_value": -19.047138336181916,
+        "value_ip": 19.04810739336641,
+        "value_oop": -19.04810739336641
+      },
+      "policy_file": "full-deck-raised-turn-v1-matrix-free-1500.json",
+      "policy_sha256": "b7f0ce449c9f48d7062710dbc6515a26181b64b92d4ea4d749d2bcbb389b8427",
+      "public_states": 3039,
+      "saved_policy_replayed": true,
+      "scalar_differences": {
+        "exploitability": -1.7763568394002505e-15,
+        "ip_best_response_gain": -3.552713678800501e-15,
+        "ip_best_response_value": 0.0,
+        "nash_conv": -3.552713678800501e-15,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": -3.552713678800501e-15,
+        "value_ip": 3.552713678800501e-15,
+        "value_oop": -3.552713678800501e-15
+      },
+      "target_exploitability": null,
+      "threshold": 0.001,
+      "threshold_met": false,
+      "work_charge": 27369234,
+      "work_limit": 30000000,
+      "worlds": 176
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256": {
+    "pokerlab/__init__.py": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+    "pokerlab/analysis.py": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/coach_analysis.py": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+    "pokerlab/coach_conversation.py": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+    "pokerlab/coach_grounding.py": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+    "pokerlab/coach_provider.py": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+    "pokerlab/coach_teaching.py": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+    "pokerlab/contracts.py": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+    "pokerlab/current_study.py": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+    "pokerlab/decision_study.py": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+    "pokerlab/equilibrium.py": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+    "pokerlab/equity.py": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+    "pokerlab/explanations.py": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+    "pokerlab/exploit.py": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+    "pokerlab/flop_checkdown_equity.py": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+    "pokerlab/flop_checkdown_solver.py": "68d554e7318f03df3f2409a5e588b04d253906a3b5544c4750acd899706decad",
+    "pokerlab/flop_checkdown_worlds.py": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+    "pokerlab/flop_suit_equity.py": "7649fc037d7ed530a1b27b9467543a77a91d3fda87a29a6fd4fe42af214c01ec",
+    "pokerlab/game.py": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+    "pokerlab/matrix_free_river.py": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+    "pokerlab/matrix_free_turn.py": "0fd5fa336a7c0ca10a0d12c8a7dbc7be404a86638a93b39497b3f32eb18dc92a",
+    "pokerlab/models.py": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+    "pokerlab/native_fixed_street.py": "d6e58addca737af57e309b003c93cc0de2d1551f05665a4bfd24548b11dd78d5",
+    "pokerlab/native_preflop_equity.py": "d36de170d91e918f1e19166d4d9f2239ea418c327303efb20db641cfc1de42bd",
+    "pokerlab/personalities.py": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+    "pokerlab/practice.py": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+    "pokerlab/preflop_checkdown_budget.py": "c2e6bfce1d5d5df6a7531d8a9ba39ad9b921124a3a984a9a6fd43107ee3d243c",
+    "pokerlab/preflop_checkdown_solver.py": "894a2d46423d5dcf1c46e2c1310e621f283bba51958687bfb2256a70c3ecde60",
+    "pokerlab/preflop_covered_equity.py": "927cb84dfa20102e69f65f5d737a2d45ea69c92901c4d5cb91f89691d196b729",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_full_board_equity.py": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+    "pokerlab/preflop_future_groups.py": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_push_fold.py": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+    "pokerlab/preflop_sampled_cfr.py": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+    "pokerlab/preflop_sampled_storage.py": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+    "pokerlab/preflop_solver.py": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+    "pokerlab/preflop_suit_equity.py": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+    "pokerlab/public_cfr.py": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+    "pokerlab/public_diagnostics.py": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+    "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+    "pokerlab/restricted_solver.py": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/server.py": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+    "pokerlab/situation_teaching.py": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+    "pokerlab/solver.py": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+    "pokerlab/turn_range_kernel.py": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+    "pokerlab/turn_solver.py": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+    "pokerlab/turn_terminal_cache.py": "cea7df6db83b65b7b7de403271ff4a55be708d8b983de3aa29d97af16a495092",
+    "scripts/benchmark_full_deck_raised_turn.py": "3d061307b4ebdff1e8ac718df73ae0c8155f52ecebec5757a9fb7bbef9f53b52",
+    "scripts/benchmark_turn_river_independent.py": "07365596b1c69a070e34bfa89aafedceca3ea9e305078927039fe1d086383f71",
+    "scripts/full_deck_raised_fixture.py": "8f4003806ab2c0a5b13bb10822c9b4a71fc9d756f1928bc91fa4832beb1951ce",
+    "scripts/full_deck_raised_reference.py": "c0028a879aaf42a3b9c7c06819315a4c4a5547d37c4df5637da550187f85d704",
+    "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "scripts/turn_blocker_sequence_fixture.py": "7ad2acc8a8eebeb8f3913cbf798ddad928441bd6e860e5836a2046064e18b0c6",
+    "scripts/turn_river_validation.py": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+    "scripts/verify_turn_blocker_sequence.py": "2cb229d6a4aba97dca363196ee387d57272aebcb1be2c3a8aa44f5b700256428",
+    "tests/test_benchmark_full_deck_raised_turn.py": "38f6d7210e7ed899e55c80ecd10a8590e9ddc4b05a6d4c05599be652c43c191e",
+    "tests/test_full_deck_raised_diagnostics.py": "b11913120b1ff05fe976ecd3bb635b6b0abd5bd40ac8b6e81f11c48194a4fa0c",
+    "tests/test_full_deck_raised_fixture.py": "f7fb2ed179e35b43ba19c45117fa6e7ae60affaf26cbf6fd58e2dbcafca9ad2c",
+    "tests/test_full_deck_raised_reference.py": "5bfd7c67245c2c92b09df41eb1d0ad3b771bc6df2fdd103de2ffbfdac7685a05"
+  }
+}

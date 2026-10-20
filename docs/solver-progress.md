@@ -1292,6 +1292,130 @@ the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
 iterations and meet it at 10,000 (about 0.000414). All four misses and full
 policies remain saved. See [experiment, proof and limits](turn-blocker-cfrplus.md).
 
+## Global suit symmetry of blocker-conditioned turn policies
+
+Independent reconstruction preserves the exact 115/7 equilibrium through all
+24 global suit bijections and replays 144 archived policy transports. Eight
+fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
+all eight still miss the unchanged 0.001-chip NashConv target. Full policies
+and misses remain saved. See [experiment and scope](turn-suit-equivariance.md).
+
+## Full-deck raised turn reference and fixed-budget accuracy
+
+Independent numeric rules and exhaustive best-five signs now establish a fixed
+176-world game with finite turn/river raises. A complete hand-written check/call
+policy has independently derived exact value -2500/231 and legal-response
+NashConv 75. Production structure matches the complete independent tree hash;
+all production defaults and guards stay unchanged. Six actual full-deck CFR+
+calls at 100/1000/1500 iterations independently replay all 2,404 policy rows.
+Both backends reach NashConv 0.001658745330324507 at 1,500; all six profiles
+still miss 0.001 chips. Complete policies and misses are retained. Numeric
+trained-policy replay is separate from the hand-written exact anchors.
+See [reference, completed experiment and limits](full-deck-raised-turn.md).
+A separate [checked chance-quotient audit](full-deck-raised-exact.md) certifies
+all six explicitly normalized policies without changing the generic exact cap.
+All six exact gaps still miss 1/1000 chips; this is fixed-policy evidence for
+that full-deck game, not an equilibrium or arbitrary-policy certificate.
+
+A separate [same-run averaging experiment](full-deck-raised-turn-tail.md)
+completed one 1,500-sweep call per backend and reconstructed original-weight
+tails over sweeps 1,001–1,500. Both tails meet the numeric 0.001-chip target;
+all four prefix/full averages still miss and remain saved. Complete physical
+replay and separate serialized-flow reconstruction passed. Numeric zero is
+not an exact-equilibrium certificate, and the full training cost remains charged.
+The [separate exact tail audit](full-deck-raised-turn-tail-exact.md) now accepts
+all six normalized policies: both tails meet exact 1/1000 with small positive
+gaps (about 2.290e-19 and 4.368e-19), while all four prefix/full profiles miss.
+Every exact gap remains positive; no exact-zero witness follows for these tails.
+
+## Derived full-deck raised turn equilibrium witnesses
+
+Two separately saved [cleanup candidates](full-deck-raised-turn-clean-witness.md)
+now have exact normalized-policy NashConv zero and value OOP -400/21 in that
+same fixed 176-world finite raised game. Each retains all 2,404 policy rows and
+passes complete physical replay plus the unchanged checked chance-class audit.
+The declared cleanup changes no action probability by more than 6.364e-20;
+it is not a general rounding guarantee or a production/default change.
+Both original tail policies and their positive exact gaps remain immutable.
+
+## Independent full-physical exact raised-turn replay
+
+A separate [physical exact oracle and immutable report](full-physical-audit-wrapper.md)
+replay both original numeric tails and both clean witnesses with all 48 river
+cards separate. Its own Fraction normalization, showdown ranking, terminal
+arithmetic and legal own-hand responses agree on every exact metric with the
+preceding chance-class audit. Both witnesses retain zero NashConv and OOP value
+`-400/21`; the original tails retain positive gaps. The handwritten check/call
+anchor, illegal future-aware responses and a legal single-card policy deviation
+provide distinct arithmetic, information and physical-chance controls. This is
+fixed-game research evidence; production defaults and earlier streets are unchanged.
+
+## Value-only false-positive control
+
+A [deterministic negative control](raised-turn-argmax-control.md) now preserves the
+proved -400/21 profile value while having exact NashConv 325/33. It comes from
+choosing each clean witness row's most likely action with a fixed tie-break.
+A single legal KhKs root bet gains 200/21; direct physical terminal sums and
+independent numeric replay confirm the deviation. This guards the distinction
+between matching a known game value and having no profitable unilateral response.
+
+## Optional direct original-weight turn tail API
+
+A separate [turn tail adapter](direct-turn-tail.md) directly accumulates completed
+CFR+ sweeps after an explicit discard point using the original iteration weights.
+It preserves old APIs and all full-request guards, adds bounded dense admission,
+and keeps all state local. Eleven focused tests cover exact zero-discard parity,
+independent positive-tail flows and legal responses, blockers, work limits and
+Kuhn quality. Fixed full-deck 1500-sweep quality evidence is a separate experiment.
+
+The [fixed direct-tail experiment](direct-turn-tail-experiment.md) freezes a
+single full-deck T=1500,D=1000 call and saves the raw profile with independent
+numeric, full-physical exact and checked chance-class audits. Quality outcomes
+are recorded separately from validity. The raw trained policy now has exact
+NashConv zero and OOP value -400/21 in this fixed 176-world game, with no
+probability cleanup. Both independent exact auditors agree on all eight metrics;
+older policies retain their original bytes and results.
+
+## Optional direct original-weight river tail API
+
+The separate [river tail adapter](direct-river-tail.md) exposes the same local
+direct accumulator for complete five-card boards, with full requested work
+admission and fresh legal-response diagnostics. Nine tests cover literal
+zero-discard parity, independent tail flows and all eight metrics, dead-hand
+indices, an actual dense-limit boundary, finite diagnostics and concurrency.
+The exact one-bet response interval contains the known value 25, while the
+T=1000,D=500 tail still misses 0.001 and has a larger gap than its full average.
+Direct accumulation therefore carries no general convergence-improvement claim.
+
+The separate [fixed river experiment](direct-river-tail-experiment.md) freezes
+two T=10000,D=3000 calls, independent numeric/exact audits and comparison with
+the preceding saved realization tails. The actual raw polarized profile misses
+0.001 at exact NashConv about 0.0068727141; weighted raises meets it at about
+0.0002232345. Both positive gaps and raw policies are retained. Independent
+exact audits contain the known game values, and own-action flows agree with
+the old tails within 1e-11. Direct accumulation shows no quality advantage here.
+
+## Longer explicit direct river budgets
+
+The [river-only admission extension](direct-river-long-tail.md) permits up to
+100,000 requested sweeps under all original candidate/world, tree, prefix,
+slot and full-request work guards. Requests through 10,000 retain literal
+v1 output; longer requests use a separate version. Three complete payloads
+match the frozen pre-change API byte-for-byte on the same interpreter, a genuine
+10,001-sweep profile passes independent numeric/exact
+response replay, and the real weighted 100k request rejects before training.
+The turn API retains its 10,000 ceiling. A 100k direct-tail quality experiment
+remains separate and has not run in this source slice.
+
+The [fixed longer river experiment](direct-river-long-tail-experiment.md) defines
+one actual T=100000,D=3000 call with no cleanup, unchanged exact 0.001 target,
+strict generic/16x4 exact agreement and reconstruction of the preceding 10k
+policy. The actual raw profile meets 0.001 at exact NashConv about
+0.0008944742; OOP/IP response gains are about 0.0005500202/0.0003444540.
+All eight metrics agree across independent exact audits, and the known value
+25 lies inside the legal response interval. The 10k miss is preserved; the
+positive 100k gap does not certify exact equilibrium or general convergence.
+
 ## Mixed physical AA/QQ-versus-KK validation
 
 A frozen 72-pair trainer comparison combines both independently checked physical

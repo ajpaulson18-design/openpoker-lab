@@ -163,6 +163,31 @@ the proved 115/7 value. Both backends miss 0.001-chip NashConv at 1,000/3,000
 iterations and meet it at 10,000 (about 0.000414). All four misses and full
 policies remain saved. See [experiment, proof and limits](../turn-blocker-cfrplus.md).
 
+## Global suit symmetry of blocker-conditioned turn policies
+
+Independent reconstruction preserves the exact 115/7 equilibrium through all
+24 global suit bijections and replays 144 archived policy transports. Eight
+fresh 1,000-iteration production calls pass the fixed 1e-9-chip symmetry gate;
+all eight still miss the unchanged 0.001-chip NashConv target. Full policies
+and misses remain saved. See [experiment and scope](../turn-suit-equivariance.md).
+
+## Full-deck raised turn reference and fixed-budget accuracy
+
+Independent numeric rules and exhaustive best-five signs now establish a fixed
+176-world game with finite turn/river raises. A complete hand-written check/call
+policy has independently derived exact value -2500/231 and legal-response
+NashConv 75. Production structure matches the complete independent tree hash;
+all production defaults and guards stay unchanged. Six actual full-deck CFR+
+calls at 100/1000/1500 iterations independently replay all 2,404 policy rows.
+Both backends reach NashConv 0.001658745330324507 at 1,500; all six profiles
+still miss 0.001 chips. Complete policies and misses are retained. Numeric
+trained-policy replay is separate from the hand-written exact anchors.
+See [reference, completed experiment and limits](../full-deck-raised-turn.md).
+A separate [checked chance-quotient audit](../full-deck-raised-exact.md) certifies
+all six explicitly normalized policies without changing the generic exact cap.
+All six exact gaps still miss 1/1000 chips; this is fixed-policy evidence for
+that full-deck game, not an equilibrium or arbitrary-policy certificate.
+
 ## Explicit compiled training for prepared preflop and fixed flop
 
 The prepared full-board preflop betting and forced-checkdown flop APIs accept an
@@ -196,3 +221,55 @@ tables; all ordinary solver work/state/action/native caps still apply. The
 physical six-pair weighted benchmark independently replays full-board hidden
 checkdown with limps and actual reraises. Wider synthetic tests establish
 routing/guard behavior only. See [API, provenance and measured scope](../preflop-covered-counts.md).
+
+## Full-physical raised-turn exact verification
+
+A separate [independent physical oracle](../full-physical-audit-wrapper.md) verifies
+both saved equilibrium witnesses at exact NashConv zero and OOP value -400/21.
+All 48 river cards remain separate; the original numeric tails keep their positive
+exact gaps. This fixed-game research leaves production defaults and earlier
+streets unchanged. See the linked immutable report, controls and scope.
+
+## Optional direct turn tail averaging
+
+The separate [turn tail research API](../direct-turn-tail.md) directly averages
+an explicit completed-sweep CFR+ window with original iteration weights. Old
+solver APIs and earlier streets are unchanged. Full-request admission, additional
+dense/slot guards, exact zero-discard parity and independent small-game quality
+tests bound this addition; broader quality depends on recorded experiments.
+
+The separate [fixed direct-tail experiment](../direct-turn-tail-experiment.md)
+defines a frozen full-deck call and complete independent saved-policy audits.
+The raw T=1500,D=1000 profile now has exact normalized-policy NashConv zero and
+OOP value -400/21, with all eight metrics matched by both exact auditors. This
+is fixed 176-world game evidence; the saved result receives no cleanup and
+does not establish a general direct-tail convergence guarantee.
+
+## Optional direct river tail averaging
+
+A separate [five-card river research API](../direct-river-tail.md) reuses the
+local original-weight accumulator with full requested admission, independent
+flow/response checks and fresh diagnostics. Its known one-bet test retains a
+quality miss, and zero-reach conditional fallbacks are compared by realization
+flow. Existing solver defaults, shared kernels and earlier streets are unchanged.
+
+The [fixed river experiment](../direct-river-tail-experiment.md) defines separate
+T=10000,D=3000 calls for the historical polarized and weighted raised fixtures,
+with raw-policy exact audits and prior-tail realization comparison. Both actual
+calls are saved: polarized NashConv 0.0068727141 misses 0.001; weighted raised
+NashConv 0.0002232345 meets it. Both are positive exact gaps and reproduce prior
+tail flows within 1e-11. This is correctness evidence, with no general quality
+or speed improvement claim.
+
+The [longer direct river budget](../direct-river-long-tail.md) admits explicit
+requests up to 100,000 with a distinct result version above 10,000. Existing
+v1 payloads and the turn ceiling remain unchanged; the weighted 100k fixture
+still rejects under the original dense-work cap. This API extension supplies
+no actual 100k direct-tail quality result.
+
+The [fixed longer river experiment](../direct-river-long-tail-experiment.md)
+defines one polarized T=100000,D=3000 call, exact old/new response-gain
+comparison and immutable raw output. The actual raw policy meets exact 0.001
+at NashConv about 0.0008944742, with both response gains reduced from the
+preserved 10k miss. Its gap remains positive; independent exact audits and
+known-value containment apply to this fixed game only.

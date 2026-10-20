@@ -1,0 +1,409 @@
+{
+  "accepted_input_sha256": {
+    "policy": "2f558f363f716c0dc67794d329d167254b7b65bcf339cd8480d61e7e8fe53117",
+    "report": "68a0fe3ff150c37c47784cc22cfe928f19974f27208ee16dee61c53ee81a35a5"
+  },
+  "actual_complete_call_seconds": 18.27941340000052,
+  "average_weight_sum": 4995548500,
+  "averaged_sweeps": 97000,
+  "benchmark_id": "river-direct-long-tail-v1",
+  "completed_training_calls": 1,
+  "discard": 3000,
+  "fixture": {
+    "board": "2c7d9hJsKd",
+    "config": {
+      "bet_sizes": [
+        1.0
+      ],
+      "effective_stack": 100,
+      "include_all_in": false,
+      "pot": 100
+    },
+    "id": "river-polarised-bluffcatcher",
+    "ip": "QsQh",
+    "oop": "AsAh,3c4c",
+    "purpose": "Nuts/air versus bluffcatcher, pot-size bet, finite tree"
+  },
+  "fixture_id": "river-polarised-bluffcatcher",
+  "generation_head": "0450ff9fbfa434f1ad59b88606e7ed347cd90ab6",
+  "historical_producer_source_sha256": {
+    "pokerlab/__init__.py": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+    "pokerlab/analysis.py": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+    "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+    "pokerlab/coach_analysis.py": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+    "pokerlab/coach_conversation.py": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+    "pokerlab/coach_grounding.py": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+    "pokerlab/coach_provider.py": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+    "pokerlab/coach_teaching.py": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+    "pokerlab/contracts.py": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+    "pokerlab/current_study.py": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+    "pokerlab/decision_study.py": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+    "pokerlab/equilibrium.py": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+    "pokerlab/equity.py": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+    "pokerlab/explanations.py": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+    "pokerlab/exploit.py": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+    "pokerlab/flop_checkdown_equity.py": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+    "pokerlab/flop_checkdown_solver.py": "68d554e7318f03df3f2409a5e588b04d253906a3b5544c4750acd899706decad",
+    "pokerlab/flop_checkdown_worlds.py": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+    "pokerlab/flop_suit_equity.py": "7649fc037d7ed530a1b27b9467543a77a91d3fda87a29a6fd4fe42af214c01ec",
+    "pokerlab/game.py": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+    "pokerlab/matrix_free_river.py": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+    "pokerlab/matrix_free_turn.py": "0fd5fa336a7c0ca10a0d12c8a7dbc7be404a86638a93b39497b3f32eb18dc92a",
+    "pokerlab/models.py": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+    "pokerlab/native_fixed_street.py": "d6e58addca737af57e309b003c93cc0de2d1551f05665a4bfd24548b11dd78d5",
+    "pokerlab/native_preflop_equity.py": "d36de170d91e918f1e19166d4d9f2239ea418c327303efb20db641cfc1de42bd",
+    "pokerlab/personalities.py": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+    "pokerlab/planned_cfr.py": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+    "pokerlab/postflop_solver.py": "a9d54a39a558ef1e72dea0b84f2b1df83bd4d36bf21820f2fb8f01cb1764f085",
+    "pokerlab/practice.py": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+    "pokerlab/preflop_checkdown_budget.py": "c2e6bfce1d5d5df6a7531d8a9ba39ad9b921124a3a984a9a6fd43107ee3d243c",
+    "pokerlab/preflop_checkdown_solver.py": "894a2d46423d5dcf1c46e2c1310e621f283bba51958687bfb2256a70c3ecde60",
+    "pokerlab/preflop_covered_equity.py": "927cb84dfa20102e69f65f5d737a2d45ea69c92901c4d5cb91f89691d196b729",
+    "pokerlab/preflop_delayed_cfrplus.py": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+    "pokerlab/preflop_full_board_equity.py": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+    "pokerlab/preflop_future_groups.py": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+    "pokerlab/preflop_private_indices.py": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+    "pokerlab/preflop_push_fold.py": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+    "pokerlab/preflop_runout_index.py": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+    "pokerlab/preflop_sampled_budget.py": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+    "pokerlab/preflop_sampled_cfr.py": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+    "pokerlab/preflop_sampled_storage.py": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+    "pokerlab/preflop_solver.py": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+    "pokerlab/preflop_suit_equity.py": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+    "pokerlab/preflop_tree.py": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+    "pokerlab/preflop_vector_budget.py": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+    "pokerlab/public_cfr.py": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+    "pokerlab/public_diagnostics.py": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+    "pokerlab/ranked_river.py": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+    "pokerlab/restricted_solver.py": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+    "pokerlab/river_config.py": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+    "pokerlab/river_tail_adapter.py": "0963a8df65d432415157a164618923bd2fcfede98ef0ed328ea8f1867e384e7d",
+    "pokerlab/river_tree.py": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+    "pokerlab/server.py": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+    "pokerlab/situation_teaching.py": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+    "pokerlab/solver.py": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+    "pokerlab/turn_range_kernel.py": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+    "pokerlab/turn_solver.py": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+    "pokerlab/turn_tail_adapter.py": "ecd183dedbaa967d691b8467a176203b9cb827a513425bdf660a4088813193c2",
+    "pokerlab/turn_terminal_cache.py": "cea7df6db83b65b7b7de403271ff4a55be708d8b983de3aa29d97af16a495092",
+    "scripts/benchmark_river_direct_long_tail.py": "cf79a69df6c3e71643a882359c074c7d825574d9b1b769ac9e6b377f182ca576",
+    "tests/reference_river_tail_v1.py": "42cde1771cf477e65652bf912f0877661ebb267c029e7fc281492d0234ebc778",
+    "tests/test_benchmark_river_direct_long_tail.py": "9aa292830ba25d2d39f84bfec2737e8198c1774866c83e0338cd97d6f010bf75",
+    "tests/test_river_tail_adapter.py": "21e4b83dc0403c23658e224c37d0efcd7b413a3d242595b5c90bc2d3d4833a3d"
+  },
+  "iterations": 100000,
+  "policy_file": "river-direct-long-tail-v1-polarised.json",
+  "policy_metadata": {
+    "average_weight_sum": 4995548500,
+    "averaged_sweeps": 97000,
+    "compatible_pairs": 2,
+    "discard": 3000,
+    "info_sets": 6,
+    "iterations": 100000,
+    "public_nodes": 4,
+    "public_states": 9,
+    "requested_average_passes": 97000,
+    "requested_iterations": 100000,
+    "requested_regret_passes": 200000,
+    "requested_total_traversal_passes": 297000,
+    "resource_usage": {
+      "full_requested_dense_hand_state_pass_work": 5400054,
+      "full_requested_dense_hand_state_pass_work_limit": 30000000,
+      "full_requested_world_node_work": 2400000,
+      "full_requested_world_node_work_limit": 30000000,
+      "info_action_slots": 12,
+      "info_action_slots_limit": 1000000,
+      "prefix_hand_edge_limit": 250000,
+      "prefix_hand_edges": 2
+    },
+    "solver_version": "research-river-long-tail-adapter-v1",
+    "source_iteration_window": [
+      3001,
+      100000
+    ],
+    "tree_actions": 8,
+    "world_traversal_nodes": 4,
+    "worlds": 2
+  },
+  "policy_sha256": "b82aad9c8eeaeb1fa475c7501f3d9665aedc26d5051231bb273bf2973f068442",
+  "results": {
+    "exact_certificate": {
+      "depth_limit": 64,
+      "fraction_bit_limit": 65536,
+      "max_row_adjustment": "4503698711574131/162259276829213354384378755547136",
+      "maximum_fraction_bits": 110,
+      "normalization_ledger": [
+        {
+          "actions": [
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "check",
+              "index": 0,
+              "input_fraction": "4503537577426967/9007199254740992",
+              "name": "check",
+              "normalized_fraction": "4503537577426967/9007199254740992"
+            },
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "all_in@100",
+              "index": 1,
+              "input_fraction": "4503661677314025/9007199254740992",
+              "name": "all_in",
+              "normalized_fraction": "4503661677314025/9007199254740992"
+            }
+          ],
+          "hand": "3c4c",
+          "history": [],
+          "input_row_sum_fraction": "1",
+          "player": "oop"
+        },
+        {
+          "actions": [
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "fold",
+              "index": 0,
+              "input_fraction": "1",
+              "name": "fold",
+              "normalized_fraction": "1"
+            },
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "call",
+              "index": 1,
+              "input_fraction": "0",
+              "name": "call",
+              "normalized_fraction": "0"
+            }
+          ],
+          "hand": "3c4c",
+          "history": [
+            "check",
+            "all_in@100"
+          ],
+          "input_row_sum_fraction": "1",
+          "player": "oop"
+        },
+        {
+          "actions": [
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "check",
+              "index": 0,
+              "input_fraction": "0",
+              "name": "check",
+              "normalized_fraction": "0"
+            },
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "all_in@100",
+              "index": 1,
+              "input_fraction": "1",
+              "name": "all_in",
+              "normalized_fraction": "1"
+            }
+          ],
+          "hand": "AhAs",
+          "history": [],
+          "input_row_sum_fraction": "1",
+          "player": "oop"
+        },
+        {
+          "actions": [
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "fold",
+              "index": 0,
+              "input_fraction": "1/2",
+              "name": "fold",
+              "normalized_fraction": "1/2"
+            },
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "call",
+              "index": 1,
+              "input_fraction": "1/2",
+              "name": "call",
+              "normalized_fraction": "1/2"
+            }
+          ],
+          "hand": "AhAs",
+          "history": [
+            "check",
+            "all_in@100"
+          ],
+          "input_row_sum_fraction": "1",
+          "player": "oop"
+        },
+        {
+          "actions": [
+            {
+              "adjustment_float": 2.775618626918026e-17,
+              "adjustment_fraction": "4503698711574131/162259276829213354384378755547136",
+              "history_key": "fold",
+              "index": 0,
+              "input_fraction": "4503698711574131/9007199254740992",
+              "name": "fold",
+              "normalized_fraction": "9007397423148262/18014398509481983"
+            },
+            {
+              "adjustment_float": 2.7754964962077562e-17,
+              "adjustment_fraction": "9007001086333721/324518553658426708768757511094272",
+              "history_key": "call",
+              "index": 1,
+              "input_fraction": "9007001086333721/18014398509481984",
+              "name": "call",
+              "normalized_fraction": "9007001086333721/18014398509481983"
+            }
+          ],
+          "hand": "QhQs",
+          "history": [
+            "all_in@100"
+          ],
+          "input_row_sum_fraction": "18014398509481983/18014398509481984",
+          "player": "ip"
+        },
+        {
+          "actions": [
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "check",
+              "index": 0,
+              "input_fraction": "1",
+              "name": "check",
+              "normalized_fraction": "1"
+            },
+            {
+              "adjustment_float": 0.0,
+              "adjustment_fraction": "0",
+              "history_key": "all_in@100",
+              "index": 1,
+              "input_fraction": "0",
+              "name": "all_in",
+              "normalized_fraction": "0"
+            }
+          ],
+          "hand": "QhQs",
+          "history": [
+            "check"
+          ],
+          "input_row_sum_fraction": "1",
+          "player": "ip"
+        }
+      ],
+      "tree_depth": 4,
+      "tree_nodes": 9,
+      "work": 282,
+      "work_by_kind": {
+        "best_response_node_group_visits": 20,
+        "fraction_operations": 125,
+        "opponent_action_group_slots": 12,
+        "opponent_group_entries_copied": 14,
+        "opponent_group_entries_scanned": 14,
+        "own_action_slots": 8,
+        "own_hand_group_entries_copied": 6,
+        "own_hand_group_entries_scanned": 6,
+        "own_hand_setup": 4,
+        "policy_sort_entries": 6,
+        "profile_node_world_visits": 18,
+        "row_normalization_entries": 12,
+        "serialized_strategy_row_index_entries": 6,
+        "terminal_group_entries_scanned": 12,
+        "tree_preflight_edges": 8,
+        "tree_preflight_nodes": 9,
+        "world_setup_entries": 2
+      },
+      "work_limit": 100000,
+      "worlds": 2
+    },
+    "exact_metrics_fractions": {
+      "exploitability": "72568368512557894921003008575/162259276829213354384378755547136",
+      "ip_best_response_gain": "998050895445731740168743925/2897487086235952756863906349056",
+      "ip_best_response_value": "-112588439435674175/4503599627370496",
+      "nash_conv": "72568368512557894921003008575/81129638414606677192189377773568",
+      "oop_best_response_gain": "44622943440077406196278178675/81129638414606677192189377773568",
+      "oop_best_response_value": "450369871157413100/18014398509481983",
+      "value_ip": "-289748708711426264831864906531275/11589948344943811027455625396224",
+      "value_oop": "289748708711426264831864906531275/11589948344943811027455625396224"
+    },
+    "exact_nash_conv_zero": false,
+    "exact_numeric_replay_deltas": {
+      "exploitability": 2.498001805406602e-16,
+      "ip_best_response_gain": 2.719775359788512e-15,
+      "ip_best_response_value": 0.0,
+      "nash_conv": 4.996003610813204e-16,
+      "oop_best_response_gain": -2.2201207885985674e-15,
+      "oop_best_response_value": 0.0,
+      "value_ip": -3.552713678800501e-15,
+      "value_oop": 3.552713678800501e-15
+    },
+    "exact_threshold_fraction": "1/1000",
+    "exact_threshold_met": true,
+    "ip_gain_delta_fraction": "-10528152663150621327198635510338559322187525/8699414507922041662698352662636641120510017536",
+    "known_value_fraction": "25",
+    "known_value_in_response_interval": true,
+    "lower_value_bound_fraction": "112588439435674175/4503599627370496",
+    "nash_conv_delta_fraction": "-1456201226544700275563681531265496779960726725/243583606221817166555553874553825951374280491008",
+    "new_ip_gain_fraction": "998050895445731740168743925/2897487086235952756863906349056",
+    "new_nash_conv_fraction": "72568368512557894921003008575/81129638414606677192189377773568",
+    "new_oop_gain_fraction": "44622943440077406196278178675/81129638414606677192189377773568",
+    "new_value_oop_fraction": "289748708711426264831864906531275/11589948344943811027455625396224",
+    "numeric_replay_deltas": {
+      "exploitability": 0.0,
+      "ip_best_response_gain": 7.105427357601002e-15,
+      "ip_best_response_value": 0.0,
+      "nash_conv": 0.0,
+      "oop_best_response_gain": -7.105427357601002e-15,
+      "oop_best_response_value": 0.0,
+      "value_ip": -7.105427357601002e-15,
+      "value_oop": 7.105427357601002e-15
+    },
+    "old_ip_gain_fraction": "3941551375532116502646343225/2535301200456459084468383121408",
+    "old_nash_conv_fraction": "139395201892938478386711556025/20282409603651672675747064971264",
+    "old_oop_gain_fraction": "35954263629560515455180270075/6760803201217224225249021657088",
+    "old_value_oop_fraction": "507060233382649305342754573468175/20282409603651672675747064971264",
+    "oop_gain_delta_fraction": "-1161412951976482878402119736976017118939476025/243583606221817166555553874553825951374280491008",
+    "polarized_16x4_witness": {
+      "ip_br_fraction": "-112588439435674175/4503599627370496",
+      "known_game_value_fraction": "25",
+      "known_value_in_interval": true,
+      "max_probability_normalization_adjustment": 2.775618626918026e-17,
+      "nash_conv_fraction": "72568368512557894921003008575/81129638414606677192189377773568",
+      "oop_br_fraction": "450369871157413100/18014398509481983",
+      "scope": "Exact binary64 probabilities normalized per row as Fractions; five independent terminal histories and 16/4 legal pure responses.",
+      "target_met": true,
+      "value_lower_fraction": "112588439435674175/4503599627370496",
+      "value_oop_fraction": "289748708711426264831864906531275/11589948344943811027455625396224",
+      "value_upper_fraction": "450369871157413100/18014398509481983"
+    },
+    "upper_value_bound_fraction": "450369871157413100/18014398509481983",
+    "value_oop_delta_fraction": "11773433231489559760086037464257584790975/34797658031688166650793410650546564482040070144"
+  },
+  "schema_version": 1,
+  "scope": "One fixed configured river CFR+ direct-tail profile; exact evidence applies to the exact row-normalized interpretation of this serialized binary64 policy and does not establish general convergence.",
+  "target_nash_conv_fraction": "1/1000",
+  "verification_source_sha256": {
+    "pokerlab/cards.py": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+    "scripts/benchmark_river_direct_long_tail.py": "cf79a69df6c3e71643a882359c074c7d825574d9b1b769ac9e6b377f182ca576",
+    "scripts/benchmark_river_direct_tail.py": "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+    "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "scripts/replay_river_accuracy_extension.py": "305c2d93bbccc020a75b479a9ec449521a96ca79f07c835f0e92ee3898388cb3",
+    "scripts/river_analytical.py": "bb4fa8fee9def0b84e20433069d311f603415482fdb5f89bb90f1894e05770f6",
+    "scripts/river_tail_realization.py": "a52558fc741d32d3ef519e6e7f9cf458832a9196a34ddc5a0140a7bd1ec698ca",
+    "scripts/turn_rational_certificate.py": "0c94bee344871a47d34a1291f65f85ac3e80a1a9389d7785e4baf6695b3967fb",
+    "scripts/turn_river_validation.py": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+    "tests/test_benchmark_river_direct_long_tail.py": "9aa292830ba25d2d39f84bfec2737e8198c1774866c83e0338cd97d6f010bf75",
+    "tests/test_benchmark_river_direct_tail.py": "5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71"
+  }
+}
