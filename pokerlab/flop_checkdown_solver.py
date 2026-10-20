@@ -32,6 +32,30 @@ def solve_flop_checkdown(board, oop_range, ip_range, *, config=None,
     return _solve_plan(plan, config, iterations, algorithm)
 
 
+def solve_native_flop_checkdown(board, oop_range, ip_range, *,
+                                 count_build_directory, training_build_directory,
+                                 config=None, iterations=1000, algorithm="cfrplus"):
+    """Admit a complete cold native flop solve before counting any boards.
+
+    Both source-built helpers are explicit. All historical tree, source and
+    diagnostic bounds plus the native trainer envelope precede executable
+    lookup and ranking. Only flop betting is optimized; future cards settle
+    through hidden forced checkdown. No implicit compilation or fallback.
+    """
+    from . import native_fixed_street as native
+    if count_build_directory is None:
+        raise ValueError("An explicit native count build directory is required")
+    native.validate_backend("native", training_build_directory)
+    config = _validate_options(config, iterations, algorithm)
+    if (max(config.stacks) > 1e12
+            or config.pot / 2 + min(config.stacks) > 1e12):
+        raise ValueError("Native terminal utility exceeds 1e12 chips")
+    plan = prepare_flop_worlds(board, oop_range, ip_range)
+    return _solve_plan(plan, config, iterations, algorithm,
+                       native_build_directory=training_build_directory,
+                       native_count_build_directory=count_build_directory)
+
+
 def solve_prepared_flop_checkdown(equities, *, config=None, iterations=1000,
                                   algorithm="cfrplus", training_backend="python",
                                   build_directory=None):
@@ -77,7 +101,8 @@ def _validate_options(config, iterations, algorithm):
     return config
 
 
-def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=None):
+def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=None,
+                native_count_build_directory=None):
     counts = {"decision": 0, "terminal": 0}
 
     def reserve(kind):
@@ -126,7 +151,13 @@ def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=N
                                           hand_counts=tuple(map(len, active)))
         native_admission = native.complete_solve_admission(
             shape, total, vector["training_loop_entries_upper_bound"])
-    worlds, equity = plan.build()
+    preparation = None
+    if native_count_build_directory is not None:
+        from .native_flop_equity import _prepare_admitted_plan
+        preparation = _prepare_admitted_plan(plan, build_directory=native_count_build_directory)
+        worlds, equity = preparation.equities.build()
+    else:
+        worlds, equity = plan.build()
     native_metadata = None
     if native_build_directory is not None:
         # The Python public trainer already sums category mass and signed mass
@@ -186,4 +217,15 @@ def _solve_plan(plan, config, iterations, algorithm, *, native_build_directory=N
     if native_metadata is not None:
         result["execution_backend"] = "native-fixed-street-v1"
         result["native_training"] = native_metadata
+    if preparation is not None:
+        preparation_metadata = preparation.metadata
+        result["equity_preparation"] = {
+            "mode": "native-cold-counts",
+            "current_rank_calls": preparation_metadata["rank_calls"],
+            "current_unordered_board_evaluations": preparation_metadata["board_evaluations"],
+            "source_inclusive_admission": True,
+            "native_preparation": preparation_metadata,
+            "validation": "Source-built count preparation with structural and build identity checks; "
+                          "build hashes do not authenticate untrusted executables.",
+        }
     return result

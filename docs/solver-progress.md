@@ -1439,3 +1439,11 @@ table under unchanged preparation caps. The frozen comparison isolates cold
 Python versus native preparation while retaining the same native trainer,
 independent physical counts and complete legal best-response checks. See
 [method, evidence and publication status](native-flop-preparation.md).
+
+
+The single-call `solve_native_flop_checkdown` entry point now composes both
+explicit helpers through the same source-inclusive admission path. All tree,
+slot, native-envelope and combined requested-work guards run before executable
+lookup or count preparation. Its cold-count provenance is separate from native
+training metadata; the existing Python and prepared-count APIs retain their
+payloads and defaults. See [usage and guard order](native-flop-preparation.md).
