@@ -228,3 +228,11 @@ COUNT/RANK semantics and original preparation/solve caps, raw board/ordered
 pair echoes, even 1,980-outcome counts and separate actual 990-board/1,980-rank
 censuses. Defaults remain Python. Require independent physical counts, complete
 policy replay and measured cold/full-call evidence before performance claims.
+
+
+For `solve_native_flop_checkdown`, preserve the single no-ranking plan and run
+all historical source/tree/slot plus native trainer/combined-work admissions
+before count or training executable lookup. The cold count branch belongs after
+these guards in `_solve_plan`; keep Python/default and prepared-count outputs
+unchanged. Report current cold preparation work separately from immutable-table
+reuse and native training provenance. See [API contract](docs/native-flop-preparation.md).

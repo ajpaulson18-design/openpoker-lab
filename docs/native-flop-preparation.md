@@ -39,6 +39,62 @@ validates every returned work unit before constructing the ordinary table.
 Build hashes identify local bytes; they do not authenticate untrusted binaries.
 No evaluator or third-party code was imported.
 
+## Single-call native solving
+
+`solve_native_flop_checkdown` in
+[`flop_checkdown_solver.py`](../pokerlab/flop_checkdown_solver.py) composes the
+explicit count helper and native trainer in one cold call. Supply both build
+directories, which must have been built explicitly from the current source:
+
+```python
+from pokerlab.flop_checkdown_solver import solve_native_flop_checkdown
+
+result = solve_native_flop_checkdown(
+    "2c3c4d", "AsAd", "KsKd",
+    count_build_directory="../native-counts-local",
+    training_build_directory="../native-training-local",
+    config={"pot": 2, "effective_stack": 1, "bet_sizes": [1],
+            "raise_sizes": [], "max_raises": 0, "include_all_in": True},
+    iterations=1000, algorithm="cfrplus",
+)
+```
+
+This entry point first validates options and chip limits, expands/blocks ranges,
+reserves the entire public tree and information-action slots, and admits both
+historical source-inclusive work and the native trainer/combined work envelope.
+Only then does it look up either executable or count future cards. The same
+admitted no-ranking plan feeds the count producer; ranges are not expanded a
+second time. The two-step preparation API remains useful for reuse, but cannot
+admit a future solve whose config and iterations it has not received.
+
+The output has the existing policy, exact diagnostic fields and native
+training metadata, plus `equity_preparation.mode="native-cold-counts"`. This
+section reports current count/rank work and detached count build/response
+metadata. The source charge remains in complete admission even though counting
+is accelerated. Missing/stale helpers, malformed responses and training failures
+propagate; there is no compilation or Python fallback. This composition adds no
+new timing or memory claim to the frozen experiment below.
+
+[Integration regressions](../tests/test_native_flop_solver.py) use real oversized
+requests to isolate historical, native-shape and combined-work rejection before
+both build lookups. The combined case separately admits 179,341,952 historical
+units and 499,643,488 native units, then rejects the 503,772,568 combined total.
+Small accepted calls match the same-process two-step payload exactly across all
+three algorithms after removing preparation metadata. The 58-pair/4,000-sweep
+case also matches that composition exactly and passes independent physical-count
+policy replay and the unchanged 0.005 NashConv target. Comparison to the frozen
+historical build ignores host-specific build identity and allows at most 1e-8
+binary64 drift; same-process parity remains exact. Invalid options/ranges and
+count failures are covered without lookup or Python fallback.
+
+Sixteen focused native preparation, full-call, benchmark and saved-publication
+tests passed locally with explicit builds; documentation checks passed. The
+unchanged default solver was separately compared with its pre-API source on
+one-pair ten-sweep games across vanilla, DCFR and CFR+: all three complete
+payloads were identical. Final cross-platform and full Python matrix status is
+recorded on the publication PR. These checks establish guarded composition,
+not a new performance measurement.
+
 ## Frozen full-call experiment
 
 The [specification](../benchmarks/native-flop-preparation-v1.json) fixes two

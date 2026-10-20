@@ -56,6 +56,11 @@ class NativeFlopPreparation:
 def prepare_native_flop_checkdown_equities(board,oop_range,ip_range,*,build_directory):
     """Rank admitted complete future cards through an explicitly built helper."""
     plan=prepare_flop_worlds(board,oop_range,ip_range)
+    return _prepare_admitted_plan(plan,build_directory=build_directory)
+
+
+def _prepare_admitted_plan(plan,*,build_directory):
+    """Count an internal no-ranking plan after its caller's work admission."""
     ids={card:index for index,card in enumerate(DECK)}
     board_ids=[ids[card] for card in plan.board]
     rows=[tuple(ids[card] for card in plan.hands[0][i]+plan.hands[1][j]) for i,j,_ in plan.pairs]
