@@ -11,7 +11,7 @@ jobs:
     env:
       OPENPOKER_NATIVE_BUILD_DIR: build/native-preflop-ci
       OPENPOKER_NATIVE_EQUITY_BUILD_DIR: build/native-preflop-ci
-      OPENPOKER_NATIVE_TRAIN_BUILD_DIR: build/native-train-ci
+      OPENPOKER_NATIVE_TRAIN_BUILD_DIR: ../native-train-flop-ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
