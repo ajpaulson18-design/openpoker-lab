@@ -29,6 +29,10 @@ class HistoricalTurnSourceTests(unittest.TestCase):
         new={name:row[1] for name,row in provenance.TRANSITIONS.items()}
         self.assertTrue(provenance.compatible_source_maps(old,new))
         self.assertTrue(provenance.compatible_source_maps(new,new))
+        for name in provenance.TRANSITIONS:
+            unknown_old = dict(old, **{name:'0'*64})
+            unknown_new = dict(new, **{name:'0'*64})
+            self.assertFalse(provenance.compatible_source_maps(unknown_old,unknown_new))
         for changed in (dict(new,extra='0'*64),{k:v for k,v in new.items() if k!=next(iter(new))},
                         dict(new,**{'pokerlab/postflop_solver.py':'0'*64})):
             self.assertFalse(provenance.compatible_source_maps(old,changed))
