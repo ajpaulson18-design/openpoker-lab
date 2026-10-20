@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "weighted-full-deck-flop-v1",
+  "baseline_commit": "3918deb181c17c973f30585d6a944942fbe5c309",
+  "board": "2c3d4h",
+  "oop_range": "AsAd:1,QsQd:0.5",
+  "ip_range": "AsKh:0.25,KsKd:1",
+  "literal_oop_hands": [
+    [
+      "AdAs",
+      "1"
+    ],
+    [
+      "QdQs",
+      "1/2"
+    ]
+  ],
+  "literal_ip_hands": [
+    [
+      "AsKh",
+      "1/4"
+    ],
+    [
+      "KdKs",
+      "1"
+    ]
+  ],
+  "config": {
+    "pot": 10,
+    "effective_stack": 5,
+    "bet_sizes": [
+      0.5
+    ],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "algorithms": [
+    "vanilla",
+    "dcfr"
+  ],
+  "traversals": [
+    "recursive",
+    "planned"
+  ],
+  "iterations": [
+    10,
+    100,
+    400
+  ],
+  "timed_repeats": 3,
+  "pair_orders": [
+    [
+      "recursive",
+      "planned"
+    ],
+    [
+      "planned",
+      "recursive"
+    ],
+    [
+      "recursive",
+      "planned"
+    ]
+  ],
+  "separate_allocation_calls": {
+    "algorithm": "vanilla",
+    "iterations": 10,
+    "traversals": [
+      "recursive",
+      "planned"
+    ],
+    "measure": "Python tracemalloc complete call; not RSS; independent replay and serialization outside tracing"
+  },
+  "expected": {
+    "compatible_pairs": 3,
+    "worlds": 5940,
+    "public_nodes": 9512,
+    "public_states": 30812,
+    "chance_nodes": 248,
+    "terminal_nodes": 21052,
+    "world_traversal_nodes": 12,
+    "plan_operations": 148500,
+    "max_world_iterations": 2376000,
+    "max_world_node_iterations": 28512000,
+    "pair_priors": [
+      [
+        "AdAs",
+        "KdKs",
+        "8/13"
+      ],
+      [
+        "QdQs",
+        "AsKh",
+        "1/13"
+      ],
+      [
+        "QdQs",
+        "KdKs",
+        "4/13"
+      ]
+    ],
+    "raw_joint_weight_normalizer": "13/8"
+  },
+  "acceptance": {
+    "independent_metric_absolute_tolerance": 1e-10,
+    "cross_backend_policy_absolute_tolerance": 1e-08,
+    "cross_backend_metric_absolute_tolerance": 1e-08,
+    "final_nash_conv_chip_limit": 0.005,
+    "exact_per_profile_repeat_payload": true,
+    "ordered_physical_signs_exact": true,
+    "complete_action_coverage": true
+  },
+  "method": "All requested source/tree/world-node/planned admissions finish using unranked physical geometry before independent or production ranking. Measure 36 complete calls plus canonical UTF-8 serialization/hash in frozen paired order; retain each policy losslessly compressed with raw and compressed digests. Two separate short allocation calls are excluded from timing medians. Independent spelled-deck/best-five/rational-prior/numeric-action/visible-history own-hand response replay is outside timing/tracing. Keep every miss and raw observation; final quality failures remain quality-miss and may not be relabeled an equilibrium success. No cap or backend changes. No general speed or RSS claim."
+}

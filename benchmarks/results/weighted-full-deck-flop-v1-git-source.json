@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "source_revision": "3963e3c366275ec31863049992acc1830ba17d4a",
+  "source_files_checked": 584,
+  "source_manifest_sha256": "8a482058567a779d3c781cb7a72f795c918898ecc01cdffe5fd91093582006b5",
+  "git_lf_manifest_sha256": "9c6e0706f75f9bbd2f8e05296a4d94a187c37184f8fb7cad0e2dd55dbb7064f2",
+  "all_captured_lf_hashes_match_git": true,
+  "published_index_raw_sha256": "8d259315fcc280020bf59039d5557620f0115efd05ee2996627dad14c28d7b88"
+}

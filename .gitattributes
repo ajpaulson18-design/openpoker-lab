@@ -46,3 +46,6 @@
 /benchmarks/results/native-flop-preparation-v1.json -text
 
 benchmarks/results/native-cfrplus-rematch-v1.json -text
+
+/benchmarks/results/weighted-full-deck-flop-v1/index.json -text
+/benchmarks/results/weighted-full-deck-flop-v1/*.json.gz binary
