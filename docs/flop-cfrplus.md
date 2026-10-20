@@ -60,9 +60,9 @@ convergence, broad stack/range coverage, sampling, native chance traversal or RS
 The adapter's new bytes differ from the source recorded in three immutable
 turn-proof bundles. Their policies, reports, original source identities and
 quality gates remain byte-for-byte preserved. Historical replay admits only the
-four exact old/current SHA256 pairs in
+five exact old/current SHA256 pairs in
 [the transition registry](../scripts/historical_turn_sources.py): the flop-only
-adapter admission and the three verifier edits needed to compare that explicit
+adapter admission and the four verifier edits needed to compare that explicit
 transition. Other mismatches still reject, including a re-signed unknown adapter
 hash, missing sources and a reverse transition. New measurements and operation
 guards retain actual current hashes; historical compatibility does not assert

@@ -262,7 +262,7 @@ validator and a frozen quality experiment; adapter support alone is not a
 convergence claim. See [flop CFR+ scope](docs/flop-cfrplus.md).
 
 
-Historical turn-proof compatibility for flop CFR+ uses only the four exact
+Historical turn-proof compatibility for flop CFR+ uses only the five exact
 old/current source pairs in `scripts/historical_turn_sources.py`. Preserve old
 reports/policies and generation fingerprints. Unknown, reversed or omitted
 source identities must reject; new measurements and source guards use actual
