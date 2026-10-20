@@ -11,6 +11,7 @@ import subprocess
 import traceback
 
 from scripts import benchmark_weighted_full_deck_flop as base
+from scripts import verify_weighted_flop_publication as baseline_publication
 from scripts.benchmark_preflop_covered_counts import checksum
 from pokerlab.public_cfr import MAX_PREFIX_EDGES
 
@@ -74,7 +75,7 @@ def verify_baseline(directory, spec):
     raw = path.read_bytes()
     report = json.loads(raw)
     check_baseline_identity(report, spec)
-    verified = base.verify_saved(directory, require_quality=False)
+    verified = baseline_publication.verify_saved(directory, require_quality=False)
     if (directory / 'index.json').read_bytes() != raw:
         raise ValueError('Baseline index changed during independent reconstruction')
     return {'index_raw_sha256': hashlib.sha256(raw).hexdigest(),

@@ -89,3 +89,9 @@ allocation policies and two physical-world records, with lossless hashes and
 source-before/source-after identity. Saved reconstruction repeats the independent
 physical/action/own-hand response checks for every policy and reauthenticates the
 baseline bundle. No candidate measurements have been reported yet.
+
+The baseline prerequisite also binds the published raw index SHA256
+`8d259315fcc280020bf59039d5557620f0115efd05ee2996627dad14c28d7b88`
+through the [publication verifier](../scripts/verify_weighted_flop_publication.py).
+A re-signed replacement observation still refuses before candidate ranking; the
+candidate cannot quietly substitute a different baseline timing or quality record.

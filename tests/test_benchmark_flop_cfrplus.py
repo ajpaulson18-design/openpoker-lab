@@ -1,6 +1,7 @@
 """CFR+ experiment admission, source identity and failure retention boundaries."""
 from copy import deepcopy
 from pathlib import Path
+import json
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -41,6 +42,16 @@ class FlopCFRPlusBenchmarkTests(unittest.TestCase):
         report={'spec_sha256':spec['baseline_spec_sha256'],'source_before':source,'source_after':source}
         with self.assertRaisesRegex(ValueError,'authenticated frozen'):
             bench.check_baseline_identity(report,spec)
+
+    def test_resigned_baseline_observation_refuses_before_candidate_ranking(self):
+        original=json.loads((bench.baseline_publication.PUBLICATION/'index.json').read_bytes())
+        original['runtime']['platform']='forged-platform'
+        with tempfile.TemporaryDirectory() as temp:
+            directory=Path(temp)
+            bench.base._write_index(directory,original)
+            with patch.object(bench.base,'prepare_reference',side_effect=AssertionError('ranking')), \
+                 self.assertRaisesRegex(ValueError,'Immutable published index'):
+                bench.verify_baseline(directory,bench.load_spec())
 
     def test_backend_and_three_pass_identity_cannot_be_resigned(self):
         row={'traversal':'public-batched','iterations':140}
