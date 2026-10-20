@@ -1464,8 +1464,12 @@ See [method and publication evidence](native-cfrplus-rematch.md).
 An independent literal-world/numeric-action validator now checks flop-start
 policies with real later-street decisions, including weighted blockers and
 hidden-future legal responses. A frozen 5,940-world recursive/planned vanilla/DCFR
-experiment fits all unchanged admission caps; measurement and final quality
-status remain separate. See [method and evidence](weighted-full-deck-flop.md).
+experiment completed 36 timed calls and two separate allocation calls under all
+unchanged caps. All 38 policies pass independent physical/action/legal-response
+reconstruction and exact repeated/cross-backend agreement. Both 400-sweep algorithms
+missed the original 0.005-chip target (vanilla 0.155975, DCFR 0.036804); every miss
+and the interrupted timing outlier is retained. These timings support no controlled
+speed claim. See [method and immutable evidence](weighted-full-deck-flop.md).
 
 
 ## Full-future flop CFR+ adapter candidate
