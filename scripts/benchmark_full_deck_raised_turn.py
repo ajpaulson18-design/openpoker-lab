@@ -107,8 +107,9 @@ def _validate_fingerprint_map(saved, current, strict):
         _require(set(saved) == required, "Generation source fingerprint set changed")
     for name in required:
         digest = current[name]
-        _require(saved.get(name) == digest or (not strict and compatible_source(name, saved.get(name), digest)),
-                 "Current source differs from report: " + name)
+        accepted = (saved.get(name) == digest if strict else
+                    compatible_source(name, saved.get(name), digest))
+        _require(accepted, "Current source differs from report: " + name)
 
 
 def frozen_case():

@@ -24,6 +24,16 @@ class HistoricalTurnSourceTests(unittest.TestCase):
                 self.assertFalse(provenance.compatible_source(name,old,'0'*64))
                 self.assertFalse(provenance.compatible_source('unknown/'+name,old,new))
 
+    def test_saved_benchmark_cannot_bypass_protected_check_with_equal_unknown_hashes(self):
+        from scripts import benchmark_full_deck_raised_turn as benchmark
+        current = benchmark.fingerprints()
+        historical = dict(current)
+        benchmark._validate_fingerprint_map(historical,current,strict=False)
+        current["pokerlab/postflop_solver.py"] = "0"*64
+        historical["pokerlab/postflop_solver.py"] = "0"*64
+        with self.assertRaisesRegex(ValueError,"Current source differs"):
+            benchmark._validate_fingerprint_map(historical,current,strict=False)
+
     def test_maps_do_not_drop_extra_missing_or_unknown_mismatched_sources(self):
         old={name:row[0] for name,row in provenance.TRANSITIONS.items()}
         new={name:row[1] for name,row in provenance.TRANSITIONS.items()}
