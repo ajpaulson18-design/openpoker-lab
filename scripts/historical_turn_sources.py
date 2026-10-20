@@ -19,9 +19,11 @@ TRANSITIONS = {'pokerlab/postflop_solver.py': ('a9d54a39a558ef1e72dea0b84f2b1df8
 
 
 def compatible_source(name, historical, current):
-    if historical == current:
-        return True
-    return TRANSITIONS.get(name) == (historical, current)
+    endpoints = TRANSITIONS.get(name)
+    if endpoints is None:
+        return historical == current
+    old, new = endpoints
+    return (historical, current) in ((old, old), (old, new), (new, new))
 
 
 def compatible_source_maps(historical, current):
