@@ -252,3 +252,12 @@ replay. Preserve ordered future cards, globally conditioned exact priors and
 own-hand/visible-history response grouping, including zero-reach rows. Keep all
 raw lossless policies and quality misses; validated replay is separate from the
 unchanged final 0.005-chip gate. No later-street kernel or resource cap changes.
+
+
+The published weighted full-deck flop v1 corpus is intentionally `quality-miss`:
+38 independent policy replays pass, while all four final 0.005-chip decisions
+fail. Authenticate the immutable index with
+`scripts.verify_weighted_flop_publication` and keep all raw policies, source
+identities, interruption notes and misses. Re-signed metadata is not authority.
+Exact row/action keys and numeric pot/stack mirrors are required during replay.
+The interrupted elapsed times cannot support a controlled speed comparison.

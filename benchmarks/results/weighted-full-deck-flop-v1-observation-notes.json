@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "experiment_id": "weighted-full-deck-flop-v1",
+  "frozen_source_revision": "3963e3c366275ec31863049992acc1830ba17d4a",
+  "observations": [
+    {
+      "observed_at_utc": "2026-10-20T14:00:34Z",
+      "kind": "host-interruption",
+      "wait_requested_milliseconds": 45000,
+      "wait_reported_wall_seconds": 1576.9567,
+      "affected_completed_observation": {
+        "algorithm": "dcfr",
+        "iterations": 100,
+        "traversal": "planned",
+        "repeat": 1,
+        "elapsed_seconds": 1610.7817226999978
+      },
+      "interpretation": "An extended host or transport pause coincided with this full-call elapsed-time outlier. Preserve the sample and preregistered summaries. These timings do not support a controlled speed comparison.",
+      "run_action": "Resumed observation of the original session20421/PID19832; no restart, source mutation, sample removal or gate change."
+    }
+  ],
+  "published_index_raw_sha256": "8d259315fcc280020bf59039d5557620f0115efd05ee2996627dad14c28d7b88"
+}

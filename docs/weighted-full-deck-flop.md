@@ -93,3 +93,54 @@ must contain JSON numbers and agree with the independently validated starting
 config. Equal stacks may retain the producer's scalar or two-element list form.
 These schema checks supplement complete own-hand/public-history coverage and
 legal best-response replay; they do not replace either check.
+
+## Completed evidence, 2026-10-20
+
+The [immutable index](../benchmarks/results/weighted-full-deck-flop-v1/index.json)
+retains all 36 timed policies, two separate allocation policies and both physical
+world records. All 38 policies independently reconstruct 5,940 physical worlds
+and 16,912 own-hand/public-history rows, with no validation errors. Each profile's
+three complete payload hashes agree exactly; every recursive/planned action
+probability and reported metric agrees exactly at all six checkpoints. Fresh
+physical enumeration matches every producer showdown sign and normalized mass.
+
+All four final quality decisions remain **misses** against the unchanged
+0.005-chip NashConv target. The run's status is `quality-miss`, and its exit code
+is 1 for that reason. It establishes independent rules/chance/response agreement
+for this finite game; it does not certify equilibrium accuracy.
+
+| Algorithm | Sweeps | Independent NashConv, chips | Recursive median, seconds | Planned median, seconds |
+| --- | ---: | ---: | ---: | ---: |
+| Vanilla | 10 | 0.751529864668 | 13.891 | 10.239 |
+| Vanilla | 100 | 0.304270452473 | 93.061 | 54.658 |
+| Vanilla | 400 | 0.155975017590 | 438.734 | 262.684 |
+| DCFR | 10 | 3.205247031125 | 14.688 | 10.727 |
+| DCFR | 100 | 0.119318938069 | 77.829 | 58.116 |
+| DCFR | 400 | 0.036804132454 | 209.521 | 119.452 |
+
+These are descriptive, uncontrolled elapsed-time medians. A long host/transport
+interruption coincided with the DCFR/100/planned/repeat-1 observation of
+1,610.782 seconds. It remains in the raw observations and preregistered median;
+no call was removed or rerun. [The interruption record](../benchmarks/results/weighted-full-deck-flop-v1-observation-notes.json)
+disqualifies controlled speed-comparison claims from this run. Interpreter and
+platform identity are retained in the index. The separate ten-sweep complete-call
+Python traced peaks were 36,321,918 bytes recursive and 46,980,789 bytes planned;
+these are not RSS or high-iteration bounds.
+
+The source stayed clean and unchanged at
+[`3963e3c366275ec31863049992acc1830ba17d4a`](https://github.com/ajpaulson18-design/openpoker-lab/commit/3963e3c366275ec31863049992acc1830ba17d4a).
+All 584 captured LF source hashes were independently matched to that Git commit;
+[the source attestation](../benchmarks/results/weighted-full-deck-flop-v1-git-source.json)
+retains the manifest identity. The complete bundle has 41 files and 5,036,268
+stored bytes. The raw index SHA256 is
+`8d259315fcc280020bf59039d5557620f0115efd05ee2996627dad14c28d7b88`;
+its canonical unsigned artifact SHA256 is
+`c9d6f19d7345ec53b41f696f7cde717a572cdac41f58888fc54f5b6e1f1dd2b8`.
+
+Run `python -B -m scripts.verify_weighted_flop_publication` to authenticate the
+immutable published index/source identities and reconstruct all saved policies
+without production training or ranking. `--require-quality` rejects the retained
+miss. [Publication regressions](../tests/test_weighted_flop_publication.py) also
+reject re-signed source/gate/status changes, physical signs and numeric actions.
+The post-run exact-key/mirror hardening is replayed against the original frozen
+bytes; it does not rewrite the experiment's captured source identity or evidence.
