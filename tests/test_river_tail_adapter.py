@@ -1,17 +1,22 @@
 """Independent flow, metric and admission tests for the river tail adapter."""
 from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
+import hashlib
+import json
 import math
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
 from pokerlab import postflop_solver, public_cfr
+from pokerlab import turn_tail_adapter
 from pokerlab.postflop_solver import _Chance, solve_postflop
 from pokerlab.river_config import RiverConfig
 from pokerlab.turn_tail_adapter import _train_original_weight_tail
 from scripts import river_analytical, river_tail_realization
 from scripts import turn_river_validation as numeric_rules
 from pokerlab import river_tail_adapter as adapter
+from tests import reference_river_tail_v1 as reference_v1
 
 
 BOARD = "2c7d9hJsKd"
@@ -19,12 +24,20 @@ OOP = "AsAh:1,3c4c:1"
 IP = "QsQh:1"
 ONE_BET = RiverConfig(pot=100, effective_stack=300, bet_sizes=(1,),
                       raise_sizes=(), max_raises=0, include_all_in=False)
+POLARIZED_FROZEN = RiverConfig(pot=100, effective_stack=100, bet_sizes=(1,),
+                               raise_sizes=(), max_raises=0, include_all_in=False)
 RAISED_WEIGHTED = RiverConfig(pot=100, effective_stack=(240, 300),
                               bet_sizes=(0.5,), raise_sizes=(0.5,),
                               max_raises=1, include_all_in=False)
 BLOCKER_BOARD = "2c7d9hJs5s"
 BLOCKER_OOP = "AcKc:1,AsAh:0.5,KsKh:1"
 BLOCKER_IP = "AcAd:1,KcKd:0.75"
+LONG_WEIGHTED_BOARD = "Js8d4c2h2s"
+LONG_WEIGHTED_OOP = "AsAh:0.5,KsKh:1"
+LONG_WEIGHTED_IP = "AcAd:1,KcKd:0.75"
+LONG_WEIGHTED = RiverConfig(pot=100, effective_stack=(220, 120),
+                             bet_sizes=(0.33, 0.75), raise_sizes=(0.5, 1),
+                             max_raises=2, include_all_in=True)
 METRICS = (
     "value_oop", "value_ip", "oop_best_response_value", "ip_best_response_value",
     "oop_best_response_gain", "ip_best_response_gain", "nash_conv", "exploitability",
@@ -113,7 +126,8 @@ def _fraction_one_bet_profile(rows):
     for row in rows:
         player = 0 if row["player"] == "oop" else 1
         hand = labels[frozenset((row["hand"][:2], row["hand"][2:]))]
-        history = tuple(token.split("@")[0] for token in row["history"])
+        history = tuple("bet" if token.split("@")[0] == "all_in"
+                         else token.split("@")[0] for token in row["history"])
         by_name = {action["name"]: Fraction.from_float(float(action["probability"]))
                    for action in row["actions"]}
         if "all_in" in by_name:
@@ -146,6 +160,11 @@ def _one_bet_metrics(rows):
         "ip_best_response_gain": gain_ip,
         "nash_conv": gap, "exploitability": gap / 2,
     }
+
+
+def _canonical_bytes(payload):
+    return (json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False,
+                       allow_nan=False) + "\n").encode("utf-8")
 
 
 class RiverTailAdapterTests(unittest.TestCase):
@@ -191,6 +210,26 @@ class RiverTailAdapterTests(unittest.TestCase):
                 self._assert_metadata(actual, 10, 0)
                 self._assert_matches_numeric_replay(actual, oop, ip, board, config)
 
+    def test_all_existing_small_v1_payloads_remain_byte_identical(self):
+        # Exact pre-change source from 0740199; compare on the same interpreter.
+        frozen_source = Path(reference_v1.__file__).read_bytes().replace(b"\r\n", b"\n")
+        self.assertEqual(hashlib.sha256(frozen_source).hexdigest(),
+                         "42cde1771cf477e65652bf912f0877661ebb267c029e7fc281492d0234ebc778")
+        fixtures = (
+            (BOARD, OOP, IP, ONE_BET, 20, 0),
+            (BOARD, OOP, IP, RAISED_WEIGHTED, 20, 10),
+            (BLOCKER_BOARD, BLOCKER_OOP, BLOCKER_IP, RAISED_WEIGHTED, 20, 19),
+        )
+        self.assertEqual(adapter.SOLVER_VERSION, "research-river-tail-adapter-v1")
+        for board, oop, ip, config, total, discard in fixtures:
+            with self.subTest(board=board, config=config, discard=discard):
+                original = reference_v1.solve_river_tail(
+                    board, oop, ip, config, iterations=total, discard=discard)
+                result = adapter.solve_river_tail(
+                    board, oop, ip, config, iterations=total, discard=discard)
+                self.assertEqual(result["solver_version"], adapter.SOLVER_VERSION)
+                self.assertEqual(_canonical_bytes(result), _canonical_bytes(original))
+
     def _assert_positive_tail_reconstruction(self, board, oop, ip, config,
                                              total=20, discard=10):
         snapshots = _same_run_prefix_full(board, oop, ip, config, total, discard)
@@ -233,6 +272,27 @@ class RiverTailAdapterTests(unittest.TestCase):
         self.assertGreater(exact["nash_conv"], 0)
         self._assert_metadata(result, 1000, 500)
 
+    def test_10001_sweep_long_version_has_independent_numeric_and_exact_replay(self):
+        total, discard = 10_001, 3_000
+        result = adapter.solve_river_tail(
+            BOARD, OOP, IP, POLARIZED_FROZEN, iterations=total, discard=discard)
+        self.assertEqual(result["solver_version"], adapter.LONG_SOLVER_VERSION)
+        self.assertEqual(adapter.LONG_SOLVER_VERSION,
+                         "research-river-long-tail-adapter-v1")
+        self._assert_metadata(result, total, discard)
+        self._assert_matches_numeric_replay(
+            result, OOP, IP, BOARD, POLARIZED_FROZEN)
+        exact = _one_bet_metrics(result["strategy"])
+        for name in METRICS:
+            self.assertAlmostEqual(result[name], float(exact[name]), delta=1e-9)
+        self.assertLessEqual(-exact["ip_best_response_value"], Fraction(25))
+        self.assertLessEqual(Fraction(25), exact["oop_best_response_value"])
+        self.assertEqual(result["resource_usage"]["full_requested_world_node_work"],
+                         2 * result["world_traversal_nodes"] * total * 3)
+        self.assertEqual(
+            result["resource_usage"]["full_requested_dense_hand_state_pass_work"],
+            2 * result["public_states"] * (3 * total + 3))
+
     def test_zero_own_tail_reach_fallback_preserves_flow_not_conditional_row(self):
         total, discard = 1000, 500
         snapshots = _same_run_prefix_full(BOARD, OOP, IP, ONE_BET, total, discard)
@@ -270,7 +330,7 @@ class RiverTailAdapterTests(unittest.TestCase):
             ((BOARD, OOP, IP), {"iterations": True, "discard": 0}, "iterations"),
             ((BOARD, OOP, IP), {"iterations": 9, "discard": 0}, "iterations"),
             ((BOARD, OOP, IP), {"iterations": 10.0, "discard": 0}, "iterations"),
-            ((BOARD, OOP, IP), {"iterations": 10001, "discard": 0}, "iterations"),
+            ((BOARD, OOP, IP), {"iterations": 100001, "discard": 0}, "iterations"),
             ((BOARD, OOP, IP), {"iterations": 10, "discard": True}, "discard"),
             ((BOARD, OOP, IP), {"iterations": 10, "discard": 10}, "discard"),
             ((BOARD[:-2], OOP, IP), {"iterations": 10, "discard": 0}, "five board cards"),
@@ -305,7 +365,63 @@ class RiverTailAdapterTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "dense hand-state-pass"):
                 adapter.solve_river_tail(
                     BOARD, OOP, IP, dense_fixture, iterations=6915, discard=6914)
+            with self.assertRaisesRegex(ValueError, "iterations"):
+                adapter.solve_river_tail(BOARD, OOP, IP, ONE_BET,
+                                         iterations=100001, discard=100000)
         trainer.assert_not_called()
+
+    def test_100k_weighted_fixture_fails_dense_guard_before_trainer(self):
+        context = _prepare(LONG_WEIGHTED_BOARD, LONG_WEIGHTED_OOP,
+                           LONG_WEIGHTED_IP, LONG_WEIGHTED, 100_000)
+        world_charge = (len(context["worlds"]) * context["visited"] * 100_000 * 3)
+        dense_charge = (max(map(len, context["hands"])) * 51 * (3 * 100_000 + 3))
+        self.assertEqual(world_charge, 21_600_000)
+        self.assertLess(world_charge, 30_000_000)
+        self.assertEqual(dense_charge, 30_600_306)
+        with patch.object(adapter, "_train_original_weight_tail",
+                          side_effect=AssertionError("over-cap request trained")) as trainer:
+            with self.assertRaisesRegex(ValueError, "dense hand-state-pass"):
+                adapter.solve_river_tail(
+                    LONG_WEIGHTED_BOARD, LONG_WEIGHTED_OOP, LONG_WEIGHTED_IP,
+                    LONG_WEIGHTED, iterations=100_000, discard=99_999)
+        trainer.assert_not_called()
+
+    def test_turn_api_keeps_its_10000_iteration_ceiling(self):
+        with patch.object(turn_tail_adapter, "_train_original_weight_tail",
+                          side_effect=AssertionError("turn request trained")) as trainer:
+            with self.assertRaisesRegex(ValueError, "iterations"):
+                turn_tail_adapter.solve_turn_tail(
+                    "2c7d9hJs", OOP, IP, ONE_BET,
+                    iterations=10_001, discard=10_000)
+        trainer.assert_not_called()
+
+    def test_100k_one_bet_admission_passes_full_request_without_running_trainer(self):
+        captured = {}
+
+        def no_training(root, worlds, infos, iterations, discard, **kwargs):
+            captured["iterations"] = iterations
+            captured["discard"] = discard
+            captured["worlds"] = len(worlds)
+            captured["infos"] = len(infos)
+            return {key: [1.0 / count] * count for key, count in infos.items()}
+
+        with patch.object(adapter, "_train_original_weight_tail",
+                          side_effect=no_training) as trainer:
+            result = adapter.solve_river_tail(
+                BOARD, OOP, IP, ONE_BET, iterations=100_000, discard=99_999)
+
+        trainer.assert_called_once()
+        self.assertEqual(captured, {"iterations": 100_000, "discard": 99_999,
+                                    "worlds": 2, "infos": 6})
+        self.assertEqual(result["solver_version"], adapter.LONG_SOLVER_VERSION)
+        self.assertEqual(result["average_weight_sum"], 100_000)
+        self.assertEqual(result["requested_average_passes"], 1)
+        self.assertEqual(result["requested_total_traversal_passes"], 200_001)
+        self.assertEqual(result["resource_usage"]["full_requested_world_node_work"],
+                         2_400_000)
+        self.assertEqual(
+            result["resource_usage"]["full_requested_dense_hand_state_pass_work"],
+            5_400_054)
 
     def test_finite_inputs_must_not_overflow_derived_diagnostics(self):
         with patch.object(adapter, "evaluate_profile",

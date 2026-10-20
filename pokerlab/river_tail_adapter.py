@@ -22,13 +22,15 @@ from pokerlab.river_config import RiverConfig
 from pokerlab.turn_tail_adapter import (
     MAX_DENSE_HAND_STATE_PASS_WORK,
     MAX_INFO_ACTION_SLOTS,
-    MAX_ITERATIONS,
     _config,
     _train_original_weight_tail,
 )
 
 
 SOLVER_VERSION = "research-river-tail-adapter-v1"
+LONG_SOLVER_VERSION = "research-river-long-tail-adapter-v1"
+STANDARD_MAX_ITERATIONS = 10_000
+MAX_ITERATIONS = 100_000
 MAX_WORLD_NODE_WORK = _MAX_WORLD_NODE_WORK
 
 
@@ -42,12 +44,16 @@ def solve_river_tail(board, oop_range, ip_range, config=None, *,
     """Train a configured fixed-board river CFR+ original-weight tail.
 
     This research-only API supports materialized public-vector CFR+ on an
-    exactly five-card board. `iterations` is the full requested budget and
-    `discard` excludes earlier completed sweeps from the returned average.
-    Each retained sweep uses its original linear weight `t`, not `t-discard`.
+    exactly five-card board. `iterations` is the full requested budget in
+    [10, 100,000], admitted under the existing full-request resource guards.
+    Requests through 10,000 retain the literal v1 payload; longer explicit
+    requests use a distinct long-tail version. `discard` excludes earlier
+    completed sweeps from the returned average. Each retained sweep uses its
+    original linear weight `t`, not `t-discard`. This API makes no accuracy
+    promise.
     """
     if type(iterations) is not int or not 10 <= iterations <= MAX_ITERATIONS:
-        raise ValueError("iterations must be an integer from 10 through 10,000.")
+        raise ValueError("iterations must be an integer from 10 through 100,000.")
     if type(discard) is not int or not 0 <= discard < iterations:
         raise ValueError("discard must be an integer in [0, iterations).")
     board = cards(board)
@@ -130,7 +136,8 @@ def solve_river_tail(board, oop_range, ip_range, config=None, *,
     return {
         "method": "Direct original-weight CFR+ river tail averaging",
         "algorithm": "cfrplus",
-        "solver_version": SOLVER_VERSION,
+        "solver_version": (SOLVER_VERSION if iterations <= STANDARD_MAX_ITERATIONS
+                            else LONG_SOLVER_VERSION),
         "strategy_schema": "postflop-strategy-v1",
         "backend": "exact-public-chance-tree",
         "execution_backend": "direct-original-weight-river-tail-python",
