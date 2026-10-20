@@ -1375,3 +1375,14 @@ are recorded separately from validity. The raw trained policy now has exact
 NashConv zero and OOP value -400/21 in this fixed 176-world game, with no
 probability cleanup. Both independent exact auditors agree on all eight metrics;
 older policies retain their original bytes and results.
+
+## Optional direct original-weight river tail API
+
+The separate [river tail adapter](direct-river-tail.md) exposes the same local
+direct accumulator for complete five-card boards, with full requested work
+admission and fresh legal-response diagnostics. Nine tests cover literal
+zero-discard parity, independent tail flows and all eight metrics, dead-hand
+indices, an actual dense-limit boundary, finite diagnostics and concurrency.
+The exact one-bet response interval contains the known value 25, while the
+T=1000,D=500 tail still misses 0.001 and has a larger gap than its full average.
+Direct accumulation therefore carries no general convergence-improvement claim.
