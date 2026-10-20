@@ -154,6 +154,10 @@ class DelayedCFRPlusBenchmarkTests(unittest.TestCase):
             comparison = bench._cross_compare(*payloads,spec,oracle)
         self.assertEqual(len(oracle["worlds"]),5940)
         self.assertEqual(len(payloads[0]["strategy"]),16912)
+        self.assertGreater(comparison["nonzero_raw_conditional_probability_gap_count"],10)
+        self.assertEqual(len(comparison["largest_raw_conditional_probability_gap_examples"]),10)
+        self.assertEqual(comparison["largest_raw_conditional_probability_gap_examples"][0]["absolute_gap"],
+                         comparison["maximum_raw_conditional_probability_gap"])
         self.assertLessEqual(comparison["maximum_action_realization_absolute_gap"],1e-8)
         self.assertLessEqual(comparison["maximum_raw_conditional_probability_gap"],1e-8)
         self.assertFalse(any(guard["delayed_trainer_calls"].values()))

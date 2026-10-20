@@ -316,6 +316,9 @@ def _cross_compare(left, right, spec, oracle):
     nonzero_raw_gaps = 0
     max_realization_gap = 0.0
     examples = []
+    def example_order(row):
+        return (-row['absolute_gap'], row['row']['player'], row['row']['hand'],
+                row['row']['history'], row['action_index'])
     for key in sorted(left_rows):
         a, b = left_rows[key], right_rows[key]
         if {field: value for field, value in a.items() if field != 'actions'} != {
@@ -341,14 +344,16 @@ def _cross_compare(left, right, spec, oracle):
                     'left_probability': x['probability'], 'right_probability': y['probability'],
                     'absolute_gap': raw_gap,
                 })
+                # Scan/count every action, while retaining only the top ten
+                # examples. Scratch holds at most one additional candidate.
+                examples.sort(key=example_order)
+                del examples[MAX_RAW_GAP_EXAMPLES:]
             realization_gap = abs(reach_a * x['probability'] - reach_b * y['probability'])
             max_realization_gap = max(max_realization_gap, realization_gap)
     if scalar_gap > acceptance['cross_backend_scalar_absolute_tolerance']:
         raise ValueError('Cross-backend scalar metric tolerance missed')
     if max_realization_gap > acceptance['cross_backend_action_realization_absolute_tolerance']:
         raise ValueError('Cross-backend all-row action realization tolerance missed')
-    examples.sort(key=lambda row: (-row['absolute_gap'], row['row']['player'],
-                                   row['row']['hand'], row['row']['history'], row['action_index']))
     return {
         'maximum_scalar_absolute_gap': scalar_gap,
         'maximum_action_realization_absolute_gap': max_realization_gap,
