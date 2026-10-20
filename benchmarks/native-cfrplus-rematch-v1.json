@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "native-cfrplus-rematch-v1",
+  "baseline_commit": "efe5dfc5a6d6f05c82977b72b410976787a01fce",
+  "paired_spec_path": "benchmarks/native-flop-preparation-v1.json",
+  "paired_spec_sha256": "7dee0d6e7b77686224741fcd9face6f1b508fd8ac4519464e40ffd1ff9230ed9",
+  "timed_algorithm": "cfrplus",
+  "timed_iterations": 4000,
+  "paired_repeats": 3,
+  "control_algorithms": [
+    "vanilla",
+    "dcfr"
+  ],
+  "control_iterations": [
+    10,
+    100
+  ],
+  "acceptance": {
+    "exact_policy_wire": true,
+    "same_payload_except_build": true,
+    "independent_metric_tolerance": 1e-10,
+    "cfrplus_nash_conv_limit": 0.005,
+    "minimum_complete_call_median_ratio": 1.02
+  },
+  "method": "Three alternating old/new complete cold native API pairs per weighted 58-pair fixture. Time full call plus canonical serialization/hash; helper provenance, source checks, GC, independent replay outside. Historical trainer source comes from pinned Git with exact LF/CRLF/raw identity and ordinary backend checks, never runtime fallback. Keep every sample, control and miss. No allocation/RSS claim. No work cap relaxation.",
+  "baseline_source_lf_sha256": "6929c78d336217a65d6fca9ec1c0d433b5a17fea439ee31020d200bf83eee4fa",
+  "baseline_source_raw_sha256_allowed": [
+    "6929c78d336217a65d6fca9ec1c0d433b5a17fea439ee31020d200bf83eee4fa",
+    "7915f981e59ff08bab5aa02073c4209276bb92049237224521dec5a813bc4fac"
+  ]
+}

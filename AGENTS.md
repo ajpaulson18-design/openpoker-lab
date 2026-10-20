@@ -236,3 +236,10 @@ before count or training executable lookup. The cold count branch belongs after
 these guards in `_solve_plan`; keep Python/default and prepared-count outputs
 unchanged. Report current cold preparation work separately from immutable-table
 reuse and native training provenance. See [API contract](docs/native-flop-preparation.md).
+
+
+Native public CFR+ targeted rematch must initialize every policy row on sweep1,
+refresh every row of the updated player after each alternating update, and
+retain the completed-sweep averaging order. Keep scalar/vanilla/DCFR arithmetic
+and old conservative work charges intact. Require exact old/new wire evidence
+and independent legal-response replay; see [experiment](docs/native-cfrplus-rematch.md).

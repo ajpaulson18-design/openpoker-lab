@@ -425,6 +425,38 @@ static int rematch(const Node *nodes, uint32_t node_count, const uint32_t hands[
     return 1;
 }
 
+static int rematch_player(const Node *nodes, uint32_t node_count,
+                          const uint32_t hands[2], const double *regrets,
+                          double *current, int compensated, uint32_t player) {
+    for (uint32_t index = 0u; index < node_count; ++index) {
+        const Node *node = &nodes[index];
+        if (node->kind != 0u || (uint32_t)node->player != player) {
+            continue;
+        }
+        uint32_t hand_count = hands[player];
+        uint32_t action_count = (uint32_t)node->action_count;
+        for (uint32_t hand = 0u; hand < hand_count; ++hand) {
+            uint32_t base = node->slot_base + hand * action_count;
+            double total = regret_match_sum(regrets, base, action_count, compensated);
+            if (!isfinite(total)) {
+                return 0;
+            }
+            if (total > 0.0) {
+                for (uint32_t action = 0u; action < action_count; ++action) {
+                    double regret = regrets[base + action];
+                    current[base + action] = regret > 0.0 ? regret / total : 0.0;
+                }
+            } else {
+                double uniform = 1.0 / (double)action_count;
+                for (uint32_t action = 0u; action < action_count; ++action) {
+                    current[base + action] = uniform;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
 static double traverse_train_scalar(uint32_t node_id, const Node *nodes, const World *world,
                              const uint32_t hands[2], const double *current,
                              double *deltas, double *sums, int algorithm,
@@ -748,7 +780,8 @@ static int train_public(Node *nodes, uint32_t node_count, const World *worlds,
             positive_discount = t15 / (t15 + 1.0);
         }
         if (!isfinite(average_factor) || !isfinite(positive_discount) ||
-            !rematch(nodes, node_count, hands, regrets, current, 1)) return 0;
+            ((algorithm != 2 || iteration == 1u) &&
+             !rematch(nodes, node_count, hands, regrets, current, 1))) return 0;
         if (algorithm == 2) {
             for (int player = 0; player <= 1; ++player) {
                 if (slot_count != 0u) memset(deltas, 0, (size_t)slot_count * sizeof(double));
@@ -757,7 +790,8 @@ static int train_public(Node *nodes, uint32_t node_count, const World *worlds,
                                      player, 0, 0.0, reach0, reach1, 0) ||
                     !update_regrets(nodes, node_count, hands, regrets, deltas,
                                    algorithm, player, positive_discount) ||
-                    !rematch(nodes, node_count, hands, regrets, current, 1)) return 0;
+                    !rematch_player(nodes, node_count, hands, regrets, current, 1,
+                                    (uint32_t)player)) return 0;
             }
             if (slot_count != 0u) memset(deltas, 0, (size_t)slot_count * sizeof(double));
             if (!traverse_public(0u, 0u, nodes, worlds, world_count, hands,
