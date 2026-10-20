@@ -32,7 +32,8 @@ rejects with D=99999. These modeled charges are not runtime or RSS bounds.
 
 The source change only makes the river ceiling local and selects a distinct
 long-request version. Three whole canonical v1 payloads captured before this
-change remain byte-identical: one-bet zero-discard, weighted raises with a
+change remain byte-identical to the frozen original on the same interpreter:
+one-bet zero-discard, weighted raises with a
 positive tail, and a dead-hand-index blocker case retaining the final sweep.
 
 A genuine T=10001,D=3000 call on the frozen stack-100 polarized fixture passes
@@ -57,3 +58,12 @@ validation passed (140 files, 658 local links, 12 entry points).
 Existing longer full-average matrix-free
 river evidence is [separate](river-long-budget.md): a different backend and
 averaging window do not predict the direct-tail outcome.
+
+The first Python 3.11 CI run rejected two output hashes captured under local
+Python 3.12.14. Parity now compares entire canonical payload bytes against
+the exact pre-change API source from `0740199bd64bc9ef661e8fa1634972472fca405c`
+on each interpreter. The reference source itself is SHA256 pinned. This keeps
+strict within-runtime equality and the independent mathematical checks; it
+does not assume identical floating-point output across Python versions.
+The revised 31-test set passed locally in 2.344 seconds; all 14 adapter tests
+also passed under optimized Python in 1.898 seconds.

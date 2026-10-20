@@ -1400,8 +1400,9 @@ the old tails within 1e-11. Direct accumulation shows no quality advantage here.
 The [river-only admission extension](direct-river-long-tail.md) permits up to
 100,000 requested sweeps under all original candidate/world, tree, prefix,
 slot and full-request work guards. Requests through 10,000 retain literal
-v1 output; longer requests use a separate version. Three prior complete payload
-hashes match, a genuine 10,001-sweep profile passes independent numeric/exact
+v1 output; longer requests use a separate version. Three complete payloads
+match the frozen pre-change API byte-for-byte on the same interpreter, a genuine
+10,001-sweep profile passes independent numeric/exact
 response replay, and the real weighted 100k request rejects before training.
 The turn API retains its 10,000 ceiling. A 100k direct-tail quality experiment
 remains separate and has not run in this source slice.

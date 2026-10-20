@@ -4,6 +4,7 @@ from fractions import Fraction
 import hashlib
 import json
 import math
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
@@ -15,6 +16,7 @@ from pokerlab.turn_tail_adapter import _train_original_weight_tail
 from scripts import river_analytical, river_tail_realization
 from scripts import turn_river_validation as numeric_rules
 from pokerlab import river_tail_adapter as adapter
+from tests import reference_river_tail_v1 as reference_v1
 
 
 BOARD = "2c7d9hJsKd"
@@ -160,10 +162,9 @@ def _one_bet_metrics(rows):
     }
 
 
-def _canonical_sha256(payload):
-    raw = (json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False,
-                      allow_nan=False) + "\n").encode("utf-8")
-    return hashlib.sha256(raw).hexdigest()
+def _canonical_bytes(payload):
+    return (json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False,
+                       allow_nan=False) + "\n").encode("utf-8")
 
 
 class RiverTailAdapterTests(unittest.TestCase):
@@ -210,21 +211,24 @@ class RiverTailAdapterTests(unittest.TestCase):
                 self._assert_matches_numeric_replay(actual, oop, ip, board, config)
 
     def test_all_existing_small_v1_payloads_remain_byte_identical(self):
+        # Exact pre-change source from 0740199; compare on the same interpreter.
+        frozen_source = Path(reference_v1.__file__).read_bytes().replace(b"\r\n", b"\n")
+        self.assertEqual(hashlib.sha256(frozen_source).hexdigest(),
+                         "42cde1771cf477e65652bf912f0877661ebb267c029e7fc281492d0234ebc778")
         fixtures = (
-            (BOARD, OOP, IP, ONE_BET, 20, 0,
-             "b364156aba22b62ef5f0a549f4489fe1d84cf028d215af70e18ac266ae140aec"),
-            (BOARD, OOP, IP, RAISED_WEIGHTED, 20, 10,
-             "957dd2898cbd1dab3776eef8f1def63d06f58de5e2996dd8a7d373c2e4eef939"),
-            (BLOCKER_BOARD, BLOCKER_OOP, BLOCKER_IP, RAISED_WEIGHTED, 20, 19,
-             "09aa4f3393f5db0d3a2c3a8f2d8d41ea3224aa6ce22d7bb169aba8cea5ffdac0"),
+            (BOARD, OOP, IP, ONE_BET, 20, 0),
+            (BOARD, OOP, IP, RAISED_WEIGHTED, 20, 10),
+            (BLOCKER_BOARD, BLOCKER_OOP, BLOCKER_IP, RAISED_WEIGHTED, 20, 19),
         )
         self.assertEqual(adapter.SOLVER_VERSION, "research-river-tail-adapter-v1")
-        for board, oop, ip, config, total, discard, expected_hash in fixtures:
+        for board, oop, ip, config, total, discard in fixtures:
             with self.subTest(board=board, config=config, discard=discard):
+                original = reference_v1.solve_river_tail(
+                    board, oop, ip, config, iterations=total, discard=discard)
                 result = adapter.solve_river_tail(
                     board, oop, ip, config, iterations=total, discard=discard)
                 self.assertEqual(result["solver_version"], adapter.SOLVER_VERSION)
-                self.assertEqual(_canonical_sha256(result), expected_hash)
+                self.assertEqual(_canonical_bytes(result), _canonical_bytes(original))
 
     def _assert_positive_tail_reconstruction(self, board, oop, ip, config,
                                              total=20, discard=10):
