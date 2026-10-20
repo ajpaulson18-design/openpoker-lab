@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "preflop-mixed-exact-witness-v1",
+  "certificate_id": "preflop-mixed-physical-exact-v1",
+  "baseline_commit": "524ea6a899e265e2218d7b48b6518faec5f4421b",
+  "physical_game_spec_path": "benchmarks/preflop-mixed-physical-range-v1.json",
+  "physical_game_spec_sha256": "12debaea49eb6d9ac4b9ab6f49767e1dc25f00e4de6f163e69af5690f51653ca",
+  "candidate_rank_types": [
+    2,
+    1
+  ],
+  "physical_private_pairs": 72,
+  "physical_policy_rows": 72,
+  "physical_action_slots": 192,
+  "public_tree": {
+    "decision_nodes": 8,
+    "fold_terminals": 7,
+    "continuations": 7,
+    "public_states": 22
+  },
+  "candidate_lp_shapes": {
+    "oop": [
+      20,
+      64,
+      1365
+    ],
+    "ip": [
+      28,
+      80,
+      2349
+    ]
+  },
+  "lp_caps": {
+    "rows": 96,
+    "columns": 256,
+    "cells": 25000,
+    "pivots": 512,
+    "updates": 10000000,
+    "bits": 4096
+  },
+  "independent_pure_policy_census": {
+    "sb_per_hand": 48,
+    "bb_per_hand": 36,
+    "sb_total": 576,
+    "bb_total": 216,
+    "total": 792
+  },
+  "method": "Candidate only: average all exact physical prior-weighted payoffs within rank types, solve existing bounded Fraction sequence-form LP without cap changes, and lift own-type behavior onto all physical own hands. Independent certificate: authenticate physical source reports directly, rebuild 72 pairs by shared-suit class, reconstruct fourteen literal terminal paths, enumerate 792 legal own-hand pure responses with hidden opponents summed before maximization/minimization, require exact profile value agreement and NashConv zero. The proof depends on full physical responses, not a symmetry assertion or candidate LP output.",
+  "scope": "Exact mutual-response witness for the fixed mixed AA:1,QQ:0.5-versus-KK finite preflop/checkdown game only. No later-street betting, general ranges, multiway or unrestricted equilibrium claim."
+}

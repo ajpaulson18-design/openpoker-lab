@@ -1423,3 +1423,11 @@ count bases, preserves weighted own-hand uncertainty and legal reraises, and
 requires independent exact replay plus final NashConv at most 0.005 chips.
 Constructive value bounds are [1/2,1], not an exact equilibrium value.
 See [method, evidence and publication status](preflop-mixed-physical-range.md).
+
+## Exact mixed physical preflop witness
+
+A bounded rank-type candidate is lifted onto every physical own hand, then
+checked against fourteen independently written terminal paths and 792 legal
+own-hand pure responses across all 72 AA/QQ-versus-KK pairs. Candidate LP output
+is separate from the physical certificate. See
+[method, evidence and publication status](preflop-mixed-exact-witness.md).
