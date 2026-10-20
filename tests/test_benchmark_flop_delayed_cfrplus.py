@@ -151,6 +151,13 @@ class DelayedCFRPlusBenchmarkTests(unittest.TestCase):
                               if row["iterations"] == 140 and row["repeat"] == 1
                               and row["traversal"] == traversal)
                 payloads.append(bench.base.read_payload(bench.baseline_publication.PUBLICATION,record))
+            frozen = deepcopy(spec)
+            physical = bench._compare_physical_worlds(spec,oracle)
+            self.assertEqual(physical['worlds'],5940)
+            self.assertEqual(physical['pairs'],3)
+            self.assertLessEqual(physical['maximum_mass_absolute_gap'],1e-15)
+            bench.base._check_physical_record(physical,oracle,spec)
+            self.assertEqual(spec,frozen)
             comparison = bench._cross_compare(*payloads,spec,oracle)
         self.assertEqual(len(oracle["worlds"]),5940)
         self.assertEqual(len(payloads[0]["strategy"]),16912)
@@ -175,6 +182,26 @@ class DelayedCFRPlusBenchmarkTests(unittest.TestCase):
                      if action["history_key"] == "check")
         self.assertAlmostEqual(reaches[(0,"AdAs",("check","check","turn@5c"))],
                                4/13*check,delta=1e-15)
+
+    def test_first_startup_failure_is_immutable_and_rejected_as_completed_study(self):
+        import hashlib
+        import json
+        directory = bench.ROOT/'benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1'
+        raw = (directory/'index.json').read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),'bdecdfad71411b776360d94680e9c1f4fd109ffb3c11f24fe4c8c05ab818c740')
+        report = json.loads(raw)
+        self.assertEqual(report['status'],'error')
+        self.assertEqual(report['samples'],[])
+        self.assertEqual(report['separate_allocation_calls'],[])
+        self.assertEqual(report['source_before'],report['source_after'])
+        self.assertEqual(report['source_before']['revision'],'4f1f23be294012fac072f9e38fc40e4e5c9eb2ef')
+        self.assertEqual(report['validation_errors'],["TypeError: 'int' object is not iterable"])
+        self.assertEqual({p.name for p in directory.iterdir()},
+                         {'index.json','independent-physical-worlds.json.gz'})
+        physical = bench.base.read_payload(directory,report['oracle_physical_evidence'])
+        self.assertEqual(len(physical['worlds']),5940)
+        with self.assertRaisesRegex(ValueError,'checksum/specification/validation'):
+            bench.verify_saved(directory,bench.baseline_publication.PUBLICATION)
 
     def test_candidate_metadata_and_finite_values_are_strict(self):
         spec = bench.load_spec()

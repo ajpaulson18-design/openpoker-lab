@@ -63,3 +63,29 @@ admission, independent selected-runout replay, known rational chance/reach masse
 zero-reach diagnostics and reached-action tampering, finite metadata guards, and
 all blocked public prefixes of both full saved 140-sweep controls without training.
 No unrestricted NLHE, multiway, general delay benefit or RSS claim is established.
+
+
+## Preserved startup failure
+
+The first attempt at source `4f1f23be294012fac072f9e38fc40e4e5c9eb2ef`
+terminated before production physical enumeration or any timed/allocation solve.
+The legacy physical-world comparator called `max(iterations)` on this protocol's
+single integer, producing `TypeError: 'int' object is not iterable`. The
+[original index](../benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1/index.json)
+and independent physical-world record are preserved unchanged. Its raw index
+SHA256 is `bdecdfad71411b776360d94680e9c1f4fd109ffb3c11f24fe4c8c05ab818c740`;
+canonical unsigned artifact SHA256 is
+`07a3188f632a356587cfae7904870ffe7e8603e17e86fd94ab601c9d4616010e`.
+Before/after source snapshots are identical and clean; the
+[602-file Git/LF source attestation](../benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1-git-source.json)
+authenticates the measured revision. Strict baseline reconstruction completed,
+but this failed attempt contains zero candidate policies and no convergence or
+runtime result. The saved-study verifier correctly rejects it as incomplete.
+
+The runner now adapts the single count to a checkpoint list only when calling
+that legacy helper. The frozen protocol, solver, requested work, delay matrix,
+quality decisions and original evidence remain unchanged. A full 5,940-world
+physical-record regression executes the production/independent comparison and
+checks that the original protocol is not mutated. The seven-test focused suite
+passes. The replacement run must use a clean validated revision and a new output
+directory; the failed attempt must never be overwritten or counted as a timed call.
