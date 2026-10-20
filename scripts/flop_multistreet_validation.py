@@ -597,6 +597,15 @@ def _validate_policy(result, oracle, tolerance):
     parsed_result_runouts = tuple(tuple(_card(c) for c in row) for row in got_runouts)
     if parsed_result_runouts != oracle["runouts"]:
         raise ValueError("Result runouts differ from the independent physical selection.")
+    mirror_pot = result.get("pot")
+    mirror_stack = result.get("effective_stack")
+    mirror_stacks = mirror_stack if type(mirror_stack) is list else [mirror_stack, mirror_stack]
+    if (type(mirror_pot) not in (int, float) or mirror_pot != oracle["config"]["pot"] or
+            len(mirror_stacks) != 2 or any(type(value) not in (int, float) for value in mirror_stacks) or
+            tuple(mirror_stacks) != tuple(oracle["config"]["effective_stack"])):
+        raise ValueError("Result pot/stack mirrors differ from the independent configuration.")
+    row_fields = {"player", "hand", "street", "board", "history", "actions"}
+    action_fields = {"name", "amount", "raise_to", "history_key", "probability"}
     rows = {}
     expected_rows = set()
     for (player, history), node in oracle["nodes"].items():
@@ -604,8 +613,8 @@ def _validate_policy(result, oracle, tolerance):
             expected_rows.add((player, hand, history))
 
     for row in result["strategy"]:
-        if type(row) is not dict:
-            raise ValueError("Strategy rows must be mappings.")
+        if type(row) is not dict or set(row) != row_fields:
+            raise ValueError("Strategy rows must contain exactly the public policy fields.")
         player_name = row.get("player")
         if player_name not in ("oop", "ip"):
             raise ValueError("Strategy row has an invalid player.")
@@ -636,8 +645,8 @@ def _validate_policy(result, oracle, tolerance):
             raise ValueError("Strategy row has a missing, extra, or reordered legal action.")
         probabilities = []
         for actual, expected in zip(actual_actions, node.actions):
-            if type(actual) is not dict:
-                raise ValueError("Strategy actions must be mappings.")
+            if type(actual) is not dict or set(actual) != action_fields:
+                raise ValueError("Strategy actions must contain exactly the serialized action fields.")
             for field in ("name", "history_key"):
                 if actual.get(field) != expected[field]:
                     raise ValueError("Serialized action differs from independent numeric rules.")
