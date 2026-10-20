@@ -278,3 +278,10 @@ source identities must reject; new measurements and source guards use actual
 current hashes. Keep complete independent no-training replay and witness
 reconstruction. The CFR+ comparison must first authenticate and reconstruct the
 completed 3963e3c baseline, pin all misses, and preserve its 0.005-chip gate.
+
+
+The frozen full-future flop CFR+ v1 corpus is `quality-miss`: all 20 candidate
+policies reconstruct, but both CFR+140 observations fail the original 0.005-chip
+gate. Authenticate scripts.verify_flop_cfrplus_publication, preserve all 23 raw
+files and the 38-policy baseline receipt. CFR+140 and baseline400 have different
+charged work; finite replay and uncontrolled times do not prove general quality.

@@ -4,8 +4,8 @@ The flop adapter now permits the existing alternating CFR+ kernels through
 `solve_postflop(..., algorithm="cfrplus", traversal="recursive")` or
 `traversal="public-batched"`. It uses the existing physical ordered future
 worlds, blocker-conditioned joint weights and own-hand/public-history keys.
-This is an opt-in capability candidate; independent full-deck convergence and
-full-call evidence must be completed before reporting a quality improvement.
+All 20 saved full-deck candidate policies pass independent replay; both final
+140-sweep backends still miss the original 0.005-chip NashConv target.
 It does not change the default vanilla algorithm or recursive diagnostics.
 
 The implementation removes the flop-only rejection from the adapter. Shared
@@ -33,9 +33,9 @@ unsupported options; and compare sixteen legacy flop/turn/river payloads plus th
 default invocation against checksum-authenticated pre-change adapter source.
 An updated prior rejection test retains the unchanged deeper full-deck tree cap.
 
-## Validation plan
+## Frozen validation design
 
-The next frozen comparison will retain the same weighted full-deck game and
+The completed frozen comparison retains the same weighted full-deck game and
 0.005-chip final NashConv target, with CFR+ checkpoints 10/50/140 and three paired
 recursive/public-batched repeats. Full profiles require independent physical
 sign/prior/action/own-hand response replay. Complete-call time includes setup,
@@ -88,10 +88,63 @@ private-pair edges before ranking. It retains 18 timed policies, two separate
 allocation policies and two physical-world records, with lossless hashes and
 source-before/source-after identity. Saved reconstruction repeats the independent
 physical/action/own-hand response checks for every policy and reauthenticates the
-baseline bundle. No candidate measurements have been reported yet.
+baseline bundle. Completed measurements and their original quality misses are retained below.
 
 The baseline prerequisite also binds the published raw index SHA256
 `8d259315fcc280020bf59039d5557620f0115efd05ee2996627dad14c28d7b88`
 through the [publication verifier](../scripts/verify_weighted_flop_publication.py).
 A re-signed replacement observation still refuses before candidate ranking; the
 candidate cannot quietly substitute a different baseline timing or quality record.
+
+
+## Completed evidence and quality misses
+
+[The immutable corpus](../benchmarks/results/weighted-full-deck-flop-cfrplus-v1/index.json)
+contains 18 timed policies, two separate traced allocation policies and two
+physical-world records: 23 files and 2,793,089 stored bytes. All 20 policies pass
+independent physical/numeric-action/own-hand-response replay on 5,940 worlds and
+16,912 information rows, with every scalar replay gap zero. Repeated policy hashes
+are exact within each backend. Maximum cross-backend conditional-policy and
+scalar gaps are 6.924e-12 and 1.248e-13 respectively.
+
+| Sweeps | Recursive NashConv | Public NashConv | Recursive median seconds | Public median seconds |
+| --- | ---: | ---: | ---: | ---: |
+| 10 | 0.2704368826157162 | 0.2704368826157242 | 17.994625 | 7.609677 |
+| 50 | 0.0400945403817885 | 0.04009454038191329 | 81.279338 | 30.836078 |
+| 140 | 0.012537880082120978 | 0.012537880082179598 | 224.811227 | 85.565438 |
+
+Both final observations fail the unchanged 0.005-chip gate. The original process
+exits 1 with `quality-miss`, no validation errors, and successful saved replay.
+The final CFR+ residual is below baseline DCFR400 (0.03680413245381331), but
+charged work differs (29,937,600 versus 28,512,000 units). This establishes no
+unrestricted NLHE result or equal-work comparison.
+
+Times are untraced complete calls including setup, training, exact diagnostics
+and canonical serialization/hash, with three alternating pairs on the recorded
+Windows/Python host. They support no controlled baseline/cross-host speed claim;
+the baseline interruption outlier remains preserved. Separate 10-sweep traced
+peaks are 36,311,606 recursive and 36,311,603 public bytes. These are Python
+allocations, not RSS or high-iteration bounds, and are excluded from timed medians.
+The temporary Windows system-required execution state is restored on exit.
+
+Measured source `06616039f4fea3904614132f31c91c406ca90c1a` has identical clean
+before/after snapshots of 593 source files. All 593 LF hashes match actual Git
+blobs; CRLF normalization applies only to this Git/LF comparison. The
+[source attestation](../benchmarks/results/weighted-full-deck-flop-cfrplus-v1-git-source.json)
+records the first-party audit. Complete captured-manifest SHA256 is
+`411777c7df5f78623ce760e14d384c9e5f451e5527205662ea0be3ee666a64b7`;
+Git/LF-only manifest SHA256 is
+`d381299a8ca71c4e5917f440a156b5fb7edf891d8ef7514a987a36f1121b45dd`.
+
+Raw index SHA256 is
+`6308cf6c9f5636123014355a328279fbc037c5ab0366ba3378909d52086ddaef`;
+canonical unsigned artifact SHA256 is
+`c62308b10f095eb356449d35a10ffffb7cedefe2511e5118862f68d01720500d`.
+[The strict publication verifier](../scripts/verify_flop_cfrplus_publication.py)
+pins the immutable raw index and source identity, reconstructs all 20 candidate
+policies and reauthenticates/replays all 38 baseline policies. Re-signed metadata
+cannot replace this observation; `--require-quality` correctly refuses it.
+[Publication tests](../tests/test_flop_cfrplus_publication.py) disable production
+training/ranking/value/response helpers during full reconstruction, preserve
+quality misses and reject re-signed source/gate/status/baseline, physical-sign
+and numeric-action corruption.

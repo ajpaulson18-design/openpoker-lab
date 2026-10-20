@@ -1479,3 +1479,10 @@ trainers under the unchanged full-request three-pass bound. Independent
 full-deck and raised conditioned validation plus legacy payload comparisons
 are required; convergence evidence remains separate from the adapter change.
 See [scope and validation plan](flop-cfrplus.md).
+
+
+The full-future flop CFR+ experiment is complete: all 20 candidate policies and
+38 baseline policies reconstruct independently; both CFR+140 final NashConv
+observations (~0.012538) still miss the original 0.005-chip gate. Raw repeats,
+separate allocation calls and exact source identities remain immutable. See
+[completed evidence](flop-cfrplus.md#completed-evidence-and-quality-misses).
