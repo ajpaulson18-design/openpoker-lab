@@ -266,3 +266,8 @@ requests up to 100,000 with a distinct result version above 10,000. Existing
 v1 payloads and the turn ceiling remain unchanged; the weighted 100k fixture
 still rejects under the original dense-work cap. This API extension supplies
 no actual 100k direct-tail quality result.
+
+The [fixed longer river experiment](../direct-river-long-tail-experiment.md)
+defines one polarized T=100000,D=3000 call, exact old/new response-gain
+comparison and immutable raw output. Its full-budget result awaits the
+reviewed source freeze and actual call.

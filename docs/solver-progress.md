@@ -1406,3 +1406,8 @@ match the frozen pre-change API byte-for-byte on the same interpreter, a genuine
 response replay, and the real weighted 100k request rejects before training.
 The turn API retains its 10,000 ceiling. A 100k direct-tail quality experiment
 remains separate and has not run in this source slice.
+
+The [fixed longer river experiment](direct-river-long-tail-experiment.md) defines
+one actual T=100000,D=3000 call with no cleanup, unchanged exact 0.001 target,
+strict generic/16x4 exact agreement and reconstruction of the preceding 10k
+policy. The committed source freeze and actual full-budget result are pending.
