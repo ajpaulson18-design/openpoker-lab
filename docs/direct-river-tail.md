@@ -30,7 +30,7 @@ result = solve_river_tail(
 ```
 
 The board must contain exactly five unique cards. `iterations` must be an exact
-integer from 10 through 10,000 and `discard` an exact integer in
+integer from 10 through 100,000 and `discard` an exact integer in
 `[0, iterations)`. Only materialized public-vector CFR+ is supported. A complete
 board has no future-card/runout configuration.
 
@@ -105,3 +105,8 @@ independent audit, complete-call observations and every target outcome.
 
 The subsequent [fixed river experiment](direct-river-tail-experiment.md) defines
 that separate evidence bundle for the two historical configured river games.
+
+The [river-only longer-budget extension](direct-river-long-tail.md) preserves
+the v1 payload through 10,000 iterations and uses a distinct long-request
+version above that threshold. All original work limits remain in force; the
+longer admission does not guarantee an accuracy target.

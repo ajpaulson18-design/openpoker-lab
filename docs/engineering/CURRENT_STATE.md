@@ -260,3 +260,9 @@ calls are saved: polarized NashConv 0.0068727141 misses 0.001; weighted raised
 NashConv 0.0002232345 meets it. Both are positive exact gaps and reproduce prior
 tail flows within 1e-11. This is correctness evidence, with no general quality
 or speed improvement claim.
+
+The [longer direct river budget](../direct-river-long-tail.md) admits explicit
+requests up to 100,000 with a distinct result version above 10,000. Existing
+v1 payloads and the turn ceiling remain unchanged; the weighted 100k fixture
+still rejects under the original dense-work cap. This API extension supplies
+no actual 100k direct-tail quality result.
