@@ -1592,3 +1592,13 @@ The complete compact policies, physical digests, source identity and initial
 interruption receipt remain saved. Card-specific or near-normalized policies
 reject; this adds no training, convergence result or general abstraction.
 The three original alternating-study target misses remain preserved.
+
+
+## Explicit fixed-game compact TURN tail adapter
+
+A separate research entry point trains the proved three-hand turn game on seven
+exact river classes, then lifts every physical row for fresh full-deck diagnostics.
+Its explicit resource model reserves full requested training, fixed preparation,
+logical storage and output costs before dispatch; ordinary APIs and caps remain
+unchanged. Exact first-sweep controls and bounded physical/class replay are
+separate from any longer-budget quality claim. See [API, proof and admission](turn-class-tail.md).

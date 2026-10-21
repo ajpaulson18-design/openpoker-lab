@@ -338,3 +338,12 @@ probabilities, physical policy digests, six source files and the separate first
 execution interruption. This adds a mathematical foundation; the completed
 alternating-study quality misses remain unchanged, and no compact trainer or
 solver/API/default/resource-cap change is included.
+
+
+### Fixed-game turn class-tail research API
+
+The explicit fixed three-hand turn class-tail adapter restores all physical
+policy identities before diagnostics and retains separate full-request/logical
+storage admission. Ordinary solver defaults and earlier streets are unchanged.
+See [scope, controls and model](../turn-class-tail.md); a longer-budget quality
+experiment remains separate.

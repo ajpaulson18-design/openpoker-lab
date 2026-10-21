@@ -355,3 +355,13 @@ initial interruption receipt. Candidate-only input has no physical provenance.
 No compact trainer, widened cap or new convergence claim follows automatically;
 all three alternating-study target misses remain unchanged. See
 [fixed-game proof and limits](docs/flop-public-classes.md).
+
+
+The explicit fixed three-hand turn class-tail adapter supports only the proved
+seven-class full-deck game. Preserve original rational pair/class masses, full-T
+preparation and separate vector admission, independently fixed logical storage
+ceilings, preallocation tree counters and all physical policy rows before fresh
+diagnostics. Ordinary physical admission remains literal; the old proxy is an
+informational comparison in the new model. Exact class/physical response checks
+and first-sweep own-reach scaling precede longer-run claims; retain every saved
+quality miss. See [scope and resource model](docs/turn-class-tail.md).
