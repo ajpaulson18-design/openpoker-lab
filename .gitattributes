@@ -76,3 +76,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/weighted-full-deck-flop-alternating-v1/*.json.gz binary
 /benchmarks/results/weighted-full-deck-flop-alternating-v1-git-source.json -text
 /benchmarks/results/weighted-full-deck-flop-alternating-v1-scratch-incident.json -text whitespace=cr-at-eol
+
+# Immutable no-training fixed-flop equivalence proof and initial interruption.
+/benchmarks/results/flop-public-classes-v1.json -text
+/benchmarks/results/flop-public-classes-initial-interruption-v1.json -text
