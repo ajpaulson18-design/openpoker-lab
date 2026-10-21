@@ -1516,3 +1516,9 @@ hidden opponent hands before each visible-information response. Closed-form
 check/call anchors and a single-card deviation provide independent controls.
 The old physical proof and generic exact limits remain unchanged; this slice
 adds validation coverage without a trained-policy or equilibrium-quality claim.
+
+The [three-hand direct-tail experiment](turn-three-hand-direct-tail-experiment.md)
+predeclares one T=750, discard=250 call, original averaging weight 250250,
+unchanged exact 0.001-chip target and separate valid-miss acceptance. Its
+source-frozen runner independently reconstructs the complete raw-policy report
+and preserves any rejected return; actual results follow the recorded call.

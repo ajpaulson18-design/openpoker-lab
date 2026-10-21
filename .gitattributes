@@ -59,3 +59,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the first delayed-study startup failure and independent physical record.
 /benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1/index.json -text
 /benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-initial-v1/*.json.gz binary
+
+# Preserve the raw three-hand TURN experiment and exact-audit report bytes.
+/benchmarks/results/turn-three-hand-direct-tail-v1.json -text
+/benchmarks/results/turn-three-hand-direct-tail-v1-policy.json -text
