@@ -308,3 +308,12 @@ unchanged. Reserve the existing prefix/private-pair cap before training without
 claiming this precedes initial ranking, and require independent physical/action/
 own-hand replay plus two-reveal pure-response controls. See
 [scope](docs/flop-public-diagnostics.md).
+
+
+The corrected delayed-flop study is a completed six-gate `quality-miss`:
+all 20 candidate policies and both pinned baselines reconstruct independently,
+but delays 70/100 have higher NashConv than the zero-delay CFR+140 control.
+Authenticate `scripts.verify_flop_delayed_publication` before reusing results;
+preserve all 23 files, 602-file measured source identity, exact zero controls,
+all-action realization comparisons and the separate initial startup failure.
+A validated adapter or faster observed call does not turn this miss into success.

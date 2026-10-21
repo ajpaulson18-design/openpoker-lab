@@ -298,3 +298,14 @@ both unrestricted physical best responses, comparing all eight exact metrics
 under the existing generic and physical audit limits. This adds a no-training
 mathematical foundation; the accepted T750 policy's positive target miss remains
 unchanged. A compact trainer and its full resource admission are separate work.
+
+
+## Full-future flop delayed-averaging evidence
+
+The [corrected delayed-averaging study](../flop-delayed-study.md#completed-corrected-study)
+finished all 20 candidate policies with independent replay and exact repeat
+controls. All six final 0.005-chip decisions miss; delays 70 and 100 yield larger
+NashConv than delay zero on this fixed weighted 5,940-world game. The complete
+raw corpus, two earlier baseline receipts and source identities are preserved.
+This is measured finite-game evidence, with no new convergence or general speed
+claim. Flop APIs, resource caps and coaching defaults are unchanged.
