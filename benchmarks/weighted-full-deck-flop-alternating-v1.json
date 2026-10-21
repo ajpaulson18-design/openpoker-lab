@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "weighted-full-deck-flop-alternating-v1",
+  "draft_status": "preregistered-protocol",
+  "baseline": {
+    "publication_index_sha256": "6308cf6c9f5636123014355a328279fbc037c5ab0366ba3378909d52086ddaef",
+    "publication_spec_sha256": "035b8c8732741311a7166163516cd710c4471c1fe4776c67b0c00441db618461",
+    "measured_source_revision": "06616039f4fea3904614132f31c91c406ca90c1a",
+    "measured_source_manifest_sha256": "411777c7df5f78623ce760e14d384c9e5f451e5527205662ea0be3ee666a64b7",
+    "measured_source_files": 593,
+    "policies_replayed": 20,
+    "original_baseline_policies_replayed": 38,
+    "quality_gate_met": false,
+    "zero_cfrplus_140_public_batched_payload_sha256": "db80b4bd394d935ac3fd6b7fea9fd7ca4530fb3766102433ae7e5fef9908c41b"
+  },
+  "board": "2c3d4h",
+  "oop_range": "AsAd:1,QsQd:0.5",
+  "ip_range": "AsKh:0.25,KsKd:1",
+  "literal_oop_hands": [["AdAs", "1"], ["QdQs", "1/2"]],
+  "literal_ip_hands": [["AsKh", "1/4"], ["KdKs", "1"]],
+  "config": {
+    "pot": 10.0,
+    "effective_stack": 5.0,
+    "bet_sizes": [0.5],
+    "raise_sizes": [],
+    "max_raises": 0,
+    "include_all_in": false
+  },
+  "algorithms": [
+    {
+      "id": "cfrplus-control",
+      "solver_algorithm": "cfrplus",
+      "averaging_delay": 0,
+      "training_kernel": "public-batched-cfrplus-python",
+      "average_schedule": "linear-post-sweep-own-reach",
+      "regret_schedule": "cfrplus-positive-regret-floor",
+      "regret_floor": true
+    },
+    {
+      "id": "lcfr",
+      "solver_algorithm": "lcfr",
+      "averaging_delay": 0,
+      "training_kernel": "lcfr-public-batched-python",
+      "average_schedule": "linear-pre-sweep-own-reach",
+      "regret_schedule": "linear-weighted-unfloored",
+      "regret_floor": false
+    },
+    {
+      "id": "alternating-dcfr-3/2-0-2",
+      "solver_algorithm": "dcfr-alternating",
+      "averaging_delay": 0,
+      "training_kernel": "dcfr-alternating-public-batched-python",
+      "average_schedule": "quadratic-pre-sweep-own-reach",
+      "regret_schedule": "discounted-3/2-0-2-unfloored",
+      "regret_floor": false
+    }
+  ],
+  "traversal": "public-batched",
+  "diagnostics": "recursive",
+  "iterations": 140,
+  "training_passes_per_iteration": 3,
+  "timed_repeats": 3,
+  "method_orders": [
+    ["cfrplus-control", "lcfr", "alternating-dcfr-3/2-0-2"],
+    ["alternating-dcfr-3/2-0-2", "cfrplus-control", "lcfr"],
+    ["lcfr", "alternating-dcfr-3/2-0-2", "cfrplus-control"]
+  ],
+  "separate_allocation_calls": {
+    "iterations": 10,
+    "methods": ["cfrplus-control", "lcfr", "alternating-dcfr-3/2-0-2"],
+    "tracing": "Python tracemalloc complete solve call; not RSS; independent replay outside tracing"
+  },
+  "expected": {
+    "candidate_pairs": 4,
+    "compatible_pairs": 3,
+    "worlds": 5940,
+    "public_nodes": 9512,
+    "public_states": 30812,
+    "chance_nodes": 248,
+    "terminal_nodes": 21052,
+    "world_traversal_nodes": 12,
+    "plan_operations": 148500,
+    "max_world_iterations": 831600,
+    "max_world_node_iterations": 29937600,
+    "public_prefix_hand_edges": 6078,
+    "pair_priors": [["AdAs", "KdKs", "8/13"], ["QdQs", "AsKh", "1/13"], ["QdQs", "KdKs", "4/13"]],
+    "raw_joint_weight_normalizer": "13/8"
+  },
+  "acceptance": {
+    "independent_metric_absolute_tolerance": 1e-10,
+    "final_nash_conv_chip_limit": 0.005,
+    "exact_repeat_payloads_per_method": true,
+    "cfrplus_control_payload_exact": true,
+    "cross_method_policy_probability_equality_required": false,
+    "cross_method_action_realization_comparison": "diagnostic-only; compare every aligned row/action, do not drop zero-reach rows",
+    "cross_method_scalar_comparison": "diagnostic-only",
+    "candidate_method_quality_gate_independent": true
+  },
+  "evidence_files": {
+    "timed_policy_payloads": 9,
+    "allocation_policy_payloads": 3,
+    "physical_world_records": 2,
+    "index_files": 1,
+    "total_files": 15
+  },
+  "scope": "One weighted 5,940-world full-future fixed-flop heads-up game with configured flop, turn, and river betting; three algorithms are separately assessed against the same independent legal-game oracle. No unrestricted NLHE, multiway, universal algorithm benefit, equal-work convergence claim, or RSS claim.",
+  "method": "Authenticate the original completed CFR+ publication and its 38-policy source baseline. Complete every rank-free 140-sweep and 10-sweep request admission at three training passes before oracle enumeration. Preserve the full delayed-CFR+ study and its six quality misses. Each method receives three rotating-order complete calls; each has its own unchanged 0.005-chip quality decision. Independently reconstruct physical worlds and legal actions and replay every candidate policy. Cross-method raw conditional probabilities, own-reach action realizations, and scalar metrics are diagnostics only because methods intentionally use different regret and averaging schedules."
+}

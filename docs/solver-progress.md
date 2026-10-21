@@ -1555,3 +1555,12 @@ delay 100 about 0.026546 in both trainers. Positive delays do not improve this
 fixed game. Exact repeats, complete-call observations, all raw probabilities,
 source identity and the initial startup failure remain preserved. See
 [completed evidence and reconstruction](flop-delayed-study.md#completed-corrected-study).
+
+## Frozen comparison for alternating flop trainers
+
+The next quality study fixes CFR+, LCFR and alternating DCFR to the same
+weighted 5,940-world game, 140 sweeps and full three-pass admission. It retains
+nine rotating complete calls, three separate allocation traces and independent
+physical/legal replay. Each method keeps its own original 0.005-chip gate;
+no result or improvement is claimed before the run. See the
+[preregistered protocol](flop-alternating-study.md).

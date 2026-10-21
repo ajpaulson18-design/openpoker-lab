@@ -325,3 +325,10 @@ Authenticate `scripts.verify_flop_delayed_publication` before reusing results;
 preserve all 23 files, 602-file measured source identity, exact zero controls,
 all-action realization comparisons and the separate initial startup failure.
 A validated adapter or faster observed call does not turn this miss into success.
+
+The frozen alternating-flop comparison uses the original weighted 5,940-world
+fixture, 140 sweeps, all three passes and unchanged 0.005-chip per-method gates.
+Keep the exact CFR+ control, nine rotating complete calls, three separate traces
+and all 15 files. Cross-method policy/scalar differences are diagnostic; preserve
+all misses and authenticate the completed source/index before publication. See
+[the preregistered protocol](docs/flop-alternating-study.md).
