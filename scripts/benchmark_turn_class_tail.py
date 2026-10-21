@@ -174,7 +174,7 @@ def _committed(root, head, pins):
 
 def _freeze(root):
     ignored = subprocess.run(
-        ["git", "check-ignore", "--quiet", ATTEMPT_ROOT],
+        ["git", "check-ignore", "--quiet", ATTEMPT_ROOT + "/"],
         cwd=root, check=False)
     need(ignored.returncode == 0,
          "Attempt directory must be Git-ignored before the sole API call")
@@ -684,7 +684,7 @@ def main(argv=None):
     group.add_argument("--verify", action="store_true")
     args = parser.parse_args(argv)
     report = generate() if args.generate else verify()
-    print(json.dumps(report, indent=2, sort_keys=True))
+    sys.stdout.write(canonical(report).decode("utf-8"))
 
 
 if __name__ == "__main__":

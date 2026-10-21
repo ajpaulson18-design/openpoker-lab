@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import subprocess
 import shutil
+import io
+import json
 import unittest
 import uuid
 from contextlib import contextmanager
@@ -45,6 +47,15 @@ class CanonicalAndAdmissionTests(unittest.TestCase):
     def test_nonfinite_json_value_is_rejected(self):
         with self.assertRaises(ValueError):
             experiment.canonical({"bad": float("nan")})
+
+    def test_cli_preserves_numeric_oracle_tuple_keys_after_generation(self):
+        result = {"numeric": {("AsAh", "AcAd"): Fraction(8, 81)}}
+        output = io.StringIO()
+        with patch.object(experiment, "generate", return_value=result) as generate, \
+             patch.object(experiment.sys, "stdout", output):
+            experiment.main(["--generate"])
+        self.assertEqual(json.loads(output.getvalue()), experiment.jsonable(result))
+        generate.assert_called_once_with()
 
     def test_schedule_and_resource_model_are_fixed_before_audit(self):
         payload = {
