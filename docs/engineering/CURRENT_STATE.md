@@ -316,6 +316,11 @@ The opt-in public-batched flop algorithms `lcfr` and `dcfr-alternating` add
 unfloored alternating updates with pre-sweep own-reach averaging. The shared
 legacy algorithms and defaults remain covered by exact archived-adapter controls.
 All requested sweeps reserve three passes under the existing resource caps.
-Mathematical controls and independent physical/legal-response replay pass; a
-frozen convergence comparison is still required before quality or speed claims.
-See [equations, scope and validation](../flop-alternating-cfr.md).
+Mathematical controls and independent physical/legal-response replay pass.
+The [completed frozen comparison](../flop-alternating-study.md#completed-frozen-measurement)
+retains all three original 0.005-chip misses: CFR+ about 0.012538 NashConv, LCFR
+0.090593 and alternating DCFR 0.011509. All 12 policies and both historical
+baselines reconstruct; the 15-file corpus, 626-file source identity and transient
+non-input scratch incident are authenticated. This is finite-game evidence,
+with no successful convergence or controlled speed claim. See
+[equations, scope and validation](../flop-alternating-cfr.md).
