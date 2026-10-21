@@ -1,6 +1,6 @@
 # Preregistered flop algorithm comparison
 
-This is a preregistered, not-yet-run comparison of CFR+, LCFR, and alternating DCFR on one bounded heads-up flop game. The protocol is fixed in [`weighted-full-deck-flop-alternating-v1.json`](../benchmarks/weighted-full-deck-flop-alternating-v1.json). No convergence or performance result is available yet. Do not tune iterations, schedules, gates, or the fixture after observing results.
+This preregistered comparison is complete: CFR+, LCFR and alternating DCFR all miss the original 0.005-chip target on this bounded heads-up flop game. The protocol is fixed in [`weighted-full-deck-flop-alternating-v1.json`](../benchmarks/weighted-full-deck-flop-alternating-v1.json). The original protocol and all three misses are retained below. Do not tune iterations, schedules, gates or the fixture within this recorded study.
 
 ## Fixed game
 
@@ -61,3 +61,88 @@ records. A complete temporary 15-file save/verify rehearsal uses archived policy
 data and stubbed training/oracle preparation; it verifies from a newer stable
 checkout without retraining and rejects a rechecksummed boolean counter.
 That rehearsal is bookkeeping validation, not a new solver measurement.
+
+## Completed frozen measurement
+
+The single recorded run finished on October 21, 2026 at 18:31:25 UTC with
+`status="quality-miss"` and no validation errors. Every method has three exact
+140-sweep payload repeats. All three original per-method 0.005-chip gates miss:
+
+| Method | Independent NashConv, chips | Original target | Result | Median observed complete-call seconds |
+| --- | ---: | ---: | --- | ---: |
+| cfrplus-control | 0.012537880082180 | 0.005 | Miss | 68.974115 |
+| lcfr | 0.090593278528127 | 0.005 | Miss | 58.180124 |
+| alternating-dcfr-3/2-0-2 | 0.011508822247107 | 0.005 | Miss | 59.044988 |
+
+Alternating DCFR has a smaller saved gap than the CFR+ control on this fixture;
+LCFR has a larger gap. Neither new method meets the target. These are finite-game
+profile observations, not an unrestricted equilibrium or general algorithm ranking.
+Defaults, caps, schedules and the fixed fixture are unchanged.
+
+The corpus retains all nine timed policies, all three separate allocation
+policies, both physical-world records and the index: **15 files, 1,931,087 bytes**.
+Each saved policy is independently reconstructed against the 5,940 ordered
+physical worlds, legal numeric actions and own-hand best responses. The pinned
+20-policy CFR+ and original 38-policy baselines remain part of reconstruction.
+The maximum recorded gap across all eight scalar checks and 12 candidate files is `0.0`.
+
+All three CFR+ control hashes exactly equal the original public-batched
+CFR+140 payload `db80b4bd394d935ac3fd6b7fea9fd7ca4530fb3766102433ae7e5fef9908c41b`.
+The LCFR repeat hash is
+`ed45dc39a604cb725300c6b204062eabe0476f3e95bb9b044916035db85f6505`;
+alternating DCFR is
+`86d548a207f2cbc1f47bf2cac87fd416bb3a37565f66f425d02e3778e1947c1e`.
+
+Cross-method comparisons scan every one of the 16,912 aligned information sets
+and 33,824 action rows. Their raw conditional-probability nonzero counts are
+26,092 (CFR+/LCFR), 31,376 (CFR+/alternating DCFR) and 31,336
+(LCFR/alternating DCFR). The index keeps all scalar/own-reach realization maxima
+and ten largest raw examples per pair; raw policy files keep every probability,
+including zero-reach rows. These differences remain diagnostics, not equality gates.
+
+Separate 10-sweep Python allocation peaks are 36,311,603 bytes for CFR+,
+36,322,743 for LCFR and 36,322,735 for alternating DCFR. They do not describe
+140-sweep allocation, native memory or RSS.
+
+### Source identity and timing qualification
+
+The measured revision is
+`481e7ec508724be5012a895f6e53b5b3d375034a`. The captured 626-file source map
+has SHA-256 `0d77d79d310231833ff25414205df12c845de1261b7c583c9c7f801e67920b81`;
+its Git-LF map is
+`dc48bb7a6c7335549788988b82169adfcc40e7a1da8a699610415fc1b98cc866`.
+Every normalized captured source file was matched to its committed Git blob.
+The recorded source revision, input hashes and clean Git status are identical
+before and after the measurement.
+
+During the run, an untracked non-input Markdown planning draft was accidentally
+created under the checkout's `work/` directory, then moved outside it. Git status
+was briefly dirty. It was outside the executable/configuration/documentation
+input paths, and all 626 captured input hashes remained identical to prelaunch.
+The [immutable incident receipt](../benchmarks/results/weighted-full-deck-flop-alternating-v1-scratch-incident.json)
+preserves the event and correction; this is not a claim of clean status throughout.
+The observed call times may include incidental draft I/O and correction checks.
+They are retained without a controlled timing or general speed claim. No call
+was restarted, dropped or rewritten.
+
+### Immutable saved-file reconstruction
+
+The [15-file index](../benchmarks/results/weighted-full-deck-flop-alternating-v1/index.json),
+[Git source attestation](../benchmarks/results/weighted-full-deck-flop-alternating-v1-git-source.json)
+and incident receipt have external raw-byte pins in the
+[publication verifier](../scripts/verify_flop_alternating_publication.py).
+The raw index SHA-256 is
+`32b549df30ce3ac13a12b1fdd32c2cefda795feb7ed0364f6eb1960bfd5c1088`;
+the canonical unsigned artifact is
+`aee1a69f9e88fe2b35a3bb7ea85df045958fc315087daef4df0e14b21d7c5e90`.
+Reconstruction re-enumerates physical worlds and replays the candidate and
+historical policies without training:
+
+```powershell
+python -B -m scripts.verify_flop_alternating_publication
+```
+
+`--require-quality` rejects the retained target misses. Published evidence does
+not establish a successful convergence result for either new trainer. A future
+exact public-chance quotient requires a separate no-training full-tree and
+physical-response equivalence audit before any compact training is considered.

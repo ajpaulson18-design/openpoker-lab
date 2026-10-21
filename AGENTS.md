@@ -332,3 +332,14 @@ Keep the exact CFR+ control, nine rotating complete calls, three separate traces
 and all 15 files. Cross-method policy/scalar differences are diagnostic; preserve
 all misses and authenticate the completed source/index before publication. See
 [the preregistered protocol](docs/flop-alternating-study.md).
+
+The alternating-flop study is a completed three-gate `quality-miss`. Preserve
+all 15 corpus files, exact CFR+ control, all 12 candidate policies and historical
+baseline replay. Authenticate `scripts.verify_flop_alternating_publication`,
+including its 626-file measured Git source attestation and immutable non-input
+scratch-incident receipt. Before/after source and clean status match; Git status
+was briefly dirty during the run. Timings carry an incidental-I/O qualification,
+not a controlled speed claim. Do not turn any smaller saved gap into a passed
+target or general convergence result. Exact public-chance compression requires
+no-training joint-mass, full-tree and unrestricted physical-response equivalence
+before any compact trainer is admitted.

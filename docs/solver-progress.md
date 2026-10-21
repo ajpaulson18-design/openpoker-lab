@@ -1542,8 +1542,8 @@ without changing existing simultaneous DCFR or CFR+ kernels. Both retain unfloor
 regrets and pre-sweep own-reach averages, with full three-pass request admission.
 All 47 focused compatibility tests pass, including abstract mathematical controls,
 independent 5,940-world/weighted raised-game replay and exact archived-adapter
-legacy payload parity. A frozen convergence experiment is still required before
-quality or speed improvement claims. See
+legacy payload parity. The frozen convergence experiment is now complete with
+all three original target misses preserved, as recorded below. See
 [algorithm equations, scope and validation](flop-alternating-cfr.md).
 ## Delayed flop averaging completes with six retained target misses
 
@@ -1558,9 +1558,24 @@ source identity and the initial startup failure remain preserved. See
 
 ## Frozen comparison for alternating flop trainers
 
-The next quality study fixes CFR+, LCFR and alternating DCFR to the same
-weighted 5,940-world game, 140 sweeps and full three-pass admission. It retains
+The preregistered study fixed CFR+, LCFR and alternating DCFR to the same
+weighted 5,940-world game, 140 sweeps and full three-pass admission. It retained
 nine rotating complete calls, three separate allocation traces and independent
-physical/legal replay. Each method keeps its own original 0.005-chip gate;
-no result or improvement is claimed before the run. See the
-[preregistered protocol](flop-alternating-study.md).
+physical/legal replay. Each method kept its own original 0.005-chip gate. See the
+[protocol and completed evidence](flop-alternating-study.md).
+
+## Alternating flop study completes with three retained target misses
+
+All three original gates miss: independent NashConv is 0.012537880082180 for
+CFR+, 0.090593278528127 for LCFR and 0.011508822247107 for alternating DCFR.
+Within-method repeats are exact, and CFR+ matches its original 140-sweep payload.
+All 12 candidate policies and both pinned historical baselines reconstruct
+without training. The 15-file corpus preserves every row, action and positive
+gap, with external raw-byte pins for the index, 626-file Git source attestation
+and separate transient non-input scratch-incident receipt. Observed timings
+retain the documented incidental-I/O qualification; they support no controlled
+or general speed claim. The strict publication suite passed all five tests in
+320.956 seconds, including full saved replay and tamper rejection. See
+[results, source identity and reconstruction](flop-alternating-study.md#completed-frozen-measurement).
+A no-training exact public-chance equivalence audit is the next bounded step;
+compact training requires a separate full-tree and physical-response proof.

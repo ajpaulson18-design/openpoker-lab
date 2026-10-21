@@ -1,0 +1,25 @@
+{
+  "action": "Move accidentally misplaced untracked non-input Markdown draft outside frozen checkout; preserve measurement and disclose timing observation incident.",
+  "corrected_at_utc": "2026-10-21T14:28:13.020138-04:00",
+  "destination_directory": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\flop-public-classes-staging-20261021",
+  "detected_at_utc": "2026-10-21T18:27:17.4430149Z",
+  "draft_sha256": "d4d3f447ec55bc9dd2d715d7f051fdd7fac74075812b139fa10c0f6516eac45b",
+  "last_observed_active_request_before_correction": {
+    "completed_samples": 7,
+    "method": "alternating-dcfr-3/2-0-2",
+    "repeat": 3
+  },
+  "scope": "Only an untracked Markdown draft under work/ was misplaced; it is outside every captured executable/configuration/documentation input path and was not imported/read by the solver.",
+  "source_files": 626,
+  "source_git_status": [
+    "?? work/flop-public-classes-staging-20261021/flop-public-classes.md.in"
+  ],
+  "source_git_status_after": [],
+  "source_hashes_sha256": "0d77d79d310231833ff25414205df12c845de1261b7c583c9c7f801e67920b81",
+  "source_map_identical_to_prelaunch": true,
+  "source_path": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-cfrplus\\work\\flop-public-classes-staging-20261021\\flop-public-classes.md.in",
+  "source_revision": "481e7ec508724be5012a895f6e53b5b3d375034a",
+  "timing_limit": "Observed complete-call times may include incidental draft I/O and the verification/correction. Preserve all timings without a controlled or general speed claim; do not restart or remove calls.",
+  "draft_creation_time_utc": "2026-10-21T18:26:03.2149912Z",
+  "draft_last_write_time_utc": "2026-10-21T18:26:03.2149912Z"
+}

@@ -97,7 +97,11 @@ historical-source checks, turn/river quality, CFR+, delays and public diagnostic
 python -B -m unittest tests.test_alternating_public_cfr tests.test_flop_alternating tests.test_flop_multistreet_validation tests.test_historical_turn_sources tests.test_turn_river_quality tests.test_flop_cfrplus tests.test_flop_delayed_cfrplus tests.test_flop_public_diagnostics -v
 ```
 
-A frozen quality experiment remains separate from those passed controls. Until
-it is complete, neither new option establishes better equilibrium accuracy,
-runtime or memory use. The prior CFR+ and delayed-averaging quality misses remain
-the authoritative observations for those methods.
+The [completed frozen experiment](flop-alternating-study.md#completed-frozen-measurement)
+retains all 15 files and all three original 0.005-chip target misses. Independent
+NashConv is about 0.012538 for CFR+, 0.090593 for LCFR and 0.011509 for alternating
+DCFR on this fixed weighted game. All 12 candidate policies and both historical
+baselines reconstruct independently. The mathematical controls establish the
+implemented recurrences; they do not establish a successful convergence result.
+Observed timings retain the documented incidental-I/O qualification and support
+no controlled or general speed claim.
