@@ -1533,3 +1533,15 @@ boundaries and compare all eight compact and full-physical exact metrics.
 Class-specific probabilities remain allowed; card-specific differences within
 a class reject projection. No training or earlier-street/production change is
 included, and the saved T750 miss is preserved.
+
+
+## Delayed flop averaging completes with six retained target misses
+
+The fixed 140-sweep study now retains all 18 timed and two separate allocation
+policies. Independent physical/numeric-action/own-hand response replay passes
+for every candidate and both pinned baselines. All six final 0.005-chip gates
+miss: delay zero reaches about 0.012538 NashConv, delay 70 about 0.015052, and
+delay 100 about 0.026546 in both trainers. Positive delays do not improve this
+fixed game. Exact repeats, complete-call observations, all raw probabilities,
+source identity and the initial startup failure remain preserved. See
+[completed evidence and reconstruction](flop-delayed-study.md#completed-corrected-study).

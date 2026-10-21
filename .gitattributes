@@ -63,3 +63,8 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the raw three-hand TURN experiment and exact-audit report bytes.
 /benchmarks/results/turn-three-hand-direct-tail-v1.json -text
 /benchmarks/results/turn-three-hand-direct-tail-v1-policy.json -text
+
+# Preserve the completed delayed-averaging study, including every quality miss.
+/benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-v1/index.json -text
+/benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-v1/*.json.gz binary
+/benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-v1-git-source.json -text
