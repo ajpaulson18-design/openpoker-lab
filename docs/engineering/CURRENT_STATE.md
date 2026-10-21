@@ -290,3 +290,11 @@ The source-frozen protocol records quality separately from replay validity.
 The actual raw policy passes independent replay but misses the unchanged
 0.001-chip target at exact NashConv about 0.01069549. Its positive gap and both
 response gains remain saved without cleanup or a general convergence claim.
+
+The [exact seven-class river audit](../turn-three-hand-classes.md) checks an
+equivalent 45-world representation for class-constant policies in this same
+fixed game. It preserves original joint masses, every physical policy row and
+both unrestricted physical best responses, comparing all eight exact metrics
+under the existing generic and physical audit limits. This adds a no-training
+mathematical foundation; the accepted T750 policy's positive target miss remains
+unchanged. A compact trainer and its full resource admission are separate work.

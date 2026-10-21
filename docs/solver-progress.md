@@ -1525,3 +1525,11 @@ and preserves any rejected return; actual results follow the recorded call.
 The sole actual call is now saved: exact NashConv about 0.01069549 misses
 0.001, with OOP/IP gains about 0.01057780/0.00011769. Independent numeric and
 exact physical replay pass; the raw positive-gap policy and miss are immutable.
+
+The [seven-class equivalence audit](turn-three-hand-classes.md) retains all
+396 physical worlds through exact aggregation into 45 private-pair/class
+worlds. Complete subtree and policy-lift checks preserve hidden-information
+boundaries and compare all eight compact and full-physical exact metrics.
+Class-specific probabilities remain allowed; card-specific differences within
+a class reject projection. No training or earlier-street/production change is
+included, and the saved T750 miss is preserved.
