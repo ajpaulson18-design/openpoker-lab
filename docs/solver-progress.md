@@ -1506,3 +1506,13 @@ two-reveal pure-response oracle checks legal information and zero-marginal rows.
 All 22 focused compatibility tests pass, including exact diagnostic-only policy
 parity, prefix-cap boundaries and historical defaults. Flop target stopping
 remains unsupported. See [validation and limits](flop-public-diagnostics.md).
+
+## Independent three-hand TURN audit preparation
+
+The [fixed three-hand physical audit](turn-three-hand-physical-audit.md) rebuilds
+the weighted 3-by-3 game over 396 original physical worlds and all 48 river
+cards. Its separate exact engine checks complete legal policies and aggregates
+hidden opponent hands before each visible-information response. Closed-form
+check/call anchors and a single-card deviation provide independent controls.
+The old physical proof and generic exact limits remain unchanged; this slice
+adds validation coverage without a trained-policy or equilibrium-quality claim.
