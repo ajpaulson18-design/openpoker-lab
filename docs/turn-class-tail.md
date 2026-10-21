@@ -140,6 +140,8 @@ independent physical plus both exact class traversal modes. Run:
     python -m scripts.validate_docs
 
 Longer training and its convergence result remain a separate deliverable.
+The [fixed T6000/D2000 protocol](turn-class-tail-T6000-experiment-spec.md)
+defines the next single-call experiment and independent saved acceptance.
 
 Executed local checks passed:30 focused tests in47.797 seconds (normal) and
 37.497 seconds (optimized), plus27 existing tail/three-hand regressions in
