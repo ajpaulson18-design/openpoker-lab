@@ -576,7 +576,28 @@ def _canonical_hand_label(value):
 def _validate_policy(result, oracle, tolerance):
     if type(result) is not dict or type(result.get("strategy")) is not list:
         raise ValueError("Result must contain a serialized strategy list.")
-    if result.get("solver_version") != "configured-postflop-v1":
+    version = result.get("solver_version")
+    variant = result.get("algorithm")
+    if version == "configured-postflop-alternating-v1":
+        if variant not in ("lcfr", "dcfr-alternating"):
+            raise ValueError("Unknown alternating flop algorithm metadata.")
+        expected_average = ("linear-pre-sweep-own-reach" if variant == "lcfr" else
+                            "quadratic-pre-sweep-own-reach")
+        expected_regret = ("linear-weighted-unfloored" if variant == "lcfr" else
+                           "discounted-3/2-0-2-unfloored")
+        if (len(oracle["board"]) != 3
+                or result.get("execution_backend") != "public-batched-python"
+                or result.get("update_schedule") != "alternating-oop-then-ip"
+                or result.get("average_schedule") != expected_average
+                or result.get("regret_schedule") != expected_regret
+                or result.get("regret_floor") is not False
+                or type(result.get("training_passes_per_iteration")) is not int
+                or result["training_passes_per_iteration"] != 3
+                or result.get("training_kernel") != variant + "-public-batched-python"
+                or "averaging_delay" in result or "convergence" in result):
+            raise ValueError("Alternating flop schedule/admission metadata changed.")
+    elif (version != "configured-postflop-v1"
+          or variant in ("lcfr", "dcfr-alternating")):
         raise ValueError("Expected the configured flop-start solver contract.")
     if result.get("strategy_schema") != "postflop-strategy-v1":
         raise ValueError("Expected postflop-strategy-v1 policy rows.")

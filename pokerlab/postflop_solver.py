@@ -383,6 +383,10 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     start, ``turn_config`` and ``river_config`` may change street sizing. For a
     turn start, only ``river_config`` may override sizing. All configs preserve
     the starting pot and total stack caps. This excludes preflop and multiway.
+    Flop public-batched training may explicitly select LCFR or alternating
+    DCFR(3/2,0,2). Both use pre-sweep own-reach averages, retain unfloored
+    regrets, and reserve three complete passes per requested iteration.
+    Existing vanilla/DCFR/CFR+ schedules and defaults remain unchanged.
     Flop diagnostics may opt into the exact public-batched evaluator; it uses
     the same bounded prefix/private-pair edge cap as public-batched training.
     Optional ``target_exploitability`` is an absolute chip-denominated target
@@ -398,8 +402,11 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     board = cards(board)
     if len(board) not in (3, 4, 5):
         raise ValueError("Postflop board must contain exactly three, four, or five cards.")
-    if algorithm not in ("vanilla", "dcfr", "cfrplus"):
-        raise ValueError("Solver algorithm must be vanilla, dcfr, or cfrplus.")
+    if algorithm not in ("vanilla", "dcfr", "cfrplus", "lcfr", "dcfr-alternating"):
+        raise ValueError("Solver algorithm must be vanilla, dcfr, cfrplus, lcfr, or dcfr-alternating.")
+    alternating_variant = algorithm in ("lcfr", "dcfr-alternating")
+    if alternating_variant and (len(board) != 3 or traversal != "public-batched"):
+        raise ValueError("LCFR and alternating DCFR require a flop start and public-batched traversal.")
     if type(averaging_delay) is not int:
         raise ValueError("CFR+ averaging delay must be an integer in [0, iterations).")
     if averaging_delay < 0:
@@ -474,7 +481,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
     hands, worlds, selected, pair_count = _enumerate_worlds(
         board, oop_range, ip_range, runouts, iterations)
     diagnostic_prefix_edges = None
-    if diagnostics == "public-batched" and len(board) == 3:
+    if (diagnostics == "public-batched" and len(board) == 3) or alternating_variant:
         diagnostic_prefix_edges = _reserve_flop_diagnostic_prefix_edges(worlds)
     terminal_kernel = None
     if terminal_backend == "ranked":
@@ -495,7 +502,7 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         _build_postflop_tree(board, config, turn_config=turn_config,
                              river_config=river_config, worlds=worlds,
                              allocation_counts=public_counts)
-    passes = 3 if algorithm == "cfrplus" else 1
+    passes = 3 if algorithm == "cfrplus" or alternating_variant else 1
     if len(worlds) * visited_nodes * iterations * passes > _MAX_WORLD_NODE_WORK:
         raise ValueError("Postflop solver exceeds 30 million world-node iterations.")
     if traversal == "planned" and len(worlds) * plan_ops_per_world > MAX_PLAN_OPS:
@@ -556,7 +563,11 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
         target_reached = exploitability <= target_exploitability
         return target_reached
 
-    if traversal == "public-batched" and algorithm == "cfrplus" and averaging_delay > 0:
+    if alternating_variant:
+        from .alternating_public_cfr import train_public_lcfr, train_public_alternating_dcfr
+        trainer = train_public_lcfr if algorithm == "lcfr" else train_public_alternating_dcfr
+        averages = trainer(root, worlds, infos, iterations, pot=config.pot, chance_type=_Chance)
+    elif traversal == "public-batched" and algorithm == "cfrplus" and averaging_delay > 0:
         from .preflop_delayed_cfrplus import train_delayed_public_cfrplus
         averages = train_delayed_public_cfrplus(
             root, worlds, infos, iterations, averaging_delay=averaging_delay,
@@ -668,6 +679,18 @@ def solve_postflop(board, oop_range, ip_range, config=None, *, turn_config=None,
             "delayed-linear-post-sweep-own-reach" if averaging_delay > 0 else
             "linear-post-sweep-own-reach")
         result["training_passes_per_iteration"] = passes
+    if alternating_variant:
+        result["solver_version"] = "configured-postflop-alternating-v1"
+        result["update_schedule"] = "alternating-oop-then-ip"
+        result["average_schedule"] = (
+            "linear-pre-sweep-own-reach" if algorithm == "lcfr" else
+            "quadratic-pre-sweep-own-reach")
+        result["regret_schedule"] = (
+            "linear-weighted-unfloored" if algorithm == "lcfr" else
+            "discounted-3/2-0-2-unfloored")
+        result["regret_floor"] = False
+        result["training_passes_per_iteration"] = passes
+        result["training_kernel"] = algorithm + "-public-batched-python"
     if averaging_delay > 0:
         result["averaging_delay"] = averaging_delay
         result["averaging_positive_sweeps"] = iterations - averaging_delay

@@ -63,3 +63,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the raw three-hand TURN experiment and exact-audit report bytes.
 /benchmarks/results/turn-three-hand-direct-tail-v1.json -text
 /benchmarks/results/turn-three-hand-direct-tail-v1-policy.json -text
+
+# Actual merged pre-alternating adapter used for exact legacy payload controls.
+/benchmarks/sources/postflop-before-alternating-flop-v1.py.gz binary

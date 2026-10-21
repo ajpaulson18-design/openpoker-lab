@@ -308,3 +308,13 @@ unchanged. Reserve the existing prefix/private-pair cap before training without
 claiming this precedes initial ranking, and require independent physical/action/
 own-hand replay plus two-reveal pure-response controls. See
 [scope](docs/flop-public-diagnostics.md).
+
+
+Flop `lcfr` and `dcfr-alternating` are separate opt-in public trainers. Preserve
+pre-sweep own-reach averaging, ordinary regret matching without a floor, and
+OOP-update/rematch before IP-update. LCFR weights deltas/averages by t; alternating
+DCFR adds unweighted deltas then applies (3/2,0,2) discounts and averages with t^2.
+Keep existing simultaneous DCFR, CFR+, defaults and all full three-pass/candidate/
+world/tree/prefix guards. Require exact archived-adapter compatibility and
+independent physical/legal-response replay plus a frozen experiment before
+accuracy or speed claims. See [scope](docs/flop-alternating-cfr.md).
