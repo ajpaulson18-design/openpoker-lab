@@ -318,3 +318,10 @@ Keep existing simultaneous DCFR, CFR+, defaults and all full three-pass/candidat
 world/tree/prefix guards. Require exact archived-adapter compatibility and
 independent physical/legal-response replay plus a frozen experiment before
 accuracy or speed claims. See [scope](docs/flop-alternating-cfr.md).
+The corrected delayed-flop study is a completed six-gate `quality-miss`:
+all 20 candidate policies and both pinned baselines reconstruct independently,
+but delays 70/100 have higher NashConv than the zero-delay CFR+140 control.
+Authenticate `scripts.verify_flop_delayed_publication` before reusing results;
+preserve all 23 files, 602-file measured source identity, exact zero controls,
+all-action realization comparisons and the separate initial startup failure.
+A validated adapter or faster observed call does not turn this miss into success.
