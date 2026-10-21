@@ -324,3 +324,17 @@ baselines reconstruct; the 15-file corpus, 626-file source identity and transien
 non-input scratch incident are authenticated. This is finite-game evidence,
 with no successful convergence or controlled speed claim. See
 [equations, scope and validation](../flop-alternating-cfr.md).
+
+## Fixed flop chance equivalence foundation
+
+The [no-training fixed-game audit](../flop-public-classes.md) checks an exact
+126-world representation of the weighted 5,940-world flop fixture: 11 turn
+classes and 19 global river signatures. It checks every original mass and
+private-hand boundary, all 30,812 public nodes and 11,787 chance-branch subtrees,
+then lifts 466 class rows to all 16,912 physical rows. Four synthetic controls
+match all eight exact metrics under unrestricted physical responses; independent
+numeric replay agrees within 8.89e-16. The saved proof authenticates all compact
+probabilities, physical policy digests, six source files and the separate first
+execution interruption. This adds a mathematical foundation; the completed
+alternating-study quality misses remain unchanged, and no compact trainer or
+solver/API/default/resource-cap change is included.

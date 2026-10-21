@@ -1579,3 +1579,16 @@ or general speed claim. The strict publication suite passed all five tests in
 [results, source identity and reconstruction](flop-alternating-study.md#completed-frozen-measurement).
 A no-training exact public-chance equivalence audit is the next bounded step;
 compact training requires a separate full-tree and physical-response proof.
+
+## Full-future flop public-chance equivalence checked without training
+
+A [fixed-game audit](flop-public-classes.md) preserves the full weighted joint
+physical law while grouping 5,940 worlds into 126 class worlds. Both reveal
+layers retain posterior/signature multiplicities and every numeric betting
+subtree. Four class-constant synthetic policies lift without probability
+changes to every physical row; all eight exact metrics equal unrestricted
+physical responses, and the separate numeric oracle agrees within 8.89e-16.
+The complete compact policies, physical digests, source identity and initial
+interruption receipt remain saved. Card-specific or near-normalized policies
+reject; this adds no training, convergence result or general abstraction.
+The three original alternating-study target misses remain preserved.

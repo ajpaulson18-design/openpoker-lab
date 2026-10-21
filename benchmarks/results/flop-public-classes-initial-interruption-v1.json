@@ -1,0 +1,12 @@
+{
+  "next": "Rerun same unchanged sources with persistent external log; no training or timed solver benchmark is restarted.",
+  "observations": [
+    "Tool runtime refreshed; write_stdin reported Unknown process id 78873.",
+    "Expected output JSON did not exist; Get-CimInstance returned no python.exe process.",
+    "Exit status and intermediate stdout are unavailable. No successful audit is claimed from this attempt."
+  ],
+  "observed_at_utc": "2026-10-21T19:45:47.917531+00:00",
+  "old_session_id": 78873,
+  "status": "execution-interrupted-no-final-output",
+  "task": "no-training fixed flop class equivalence audit"
+}

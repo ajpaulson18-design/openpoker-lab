@@ -343,3 +343,15 @@ not a controlled speed claim. Do not turn any smaller saved gap into a passed
 target or general convergence result. Exact public-chance compression requires
 no-training joint-mass, full-tree and unrestricted physical-response equivalence
 before any compact trainer is admitted.
+
+The fixed flop public-chance quotient is a no-training audit only: 11 turn
+classes, 19 river signatures, 126 class worlds and 466 class policy rows.
+Require full original joint-mass/support/sign vectors, per-pair turn marginals,
+river-signature multiplicities, complete two-layer betting-subtree equivalence,
+bit-exact class-constant projection/lift and unrestricted physical own-hand
+responses. Authenticate `scripts.verify_flop_public_classes_publication` before
+reusing its four controls, all compact probabilities, six-source identity or
+initial interruption receipt. Candidate-only input has no physical provenance.
+No compact trainer, widened cap or new convergence claim follows automatically;
+all three alternating-study target misses remain unchanged. See
+[fixed-game proof and limits](docs/flop-public-classes.md).
