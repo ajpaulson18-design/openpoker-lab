@@ -310,6 +310,14 @@ own-hand replay plus two-reveal pure-response controls. See
 [scope](docs/flop-public-diagnostics.md).
 
 
+Flop `lcfr` and `dcfr-alternating` are separate opt-in public trainers. Preserve
+pre-sweep own-reach averaging, ordinary regret matching without a floor, and
+OOP-update/rematch before IP-update. LCFR weights deltas/averages by t; alternating
+DCFR adds unweighted deltas then applies (3/2,0,2) discounts and averages with t^2.
+Keep existing simultaneous DCFR, CFR+, defaults and all full three-pass/candidate/
+world/tree/prefix guards. Require exact archived-adapter compatibility and
+independent physical/legal-response replay plus a frozen experiment before
+accuracy or speed claims. See [scope](docs/flop-alternating-cfr.md).
 The corrected delayed-flop study is a completed six-gate `quality-miss`:
 all 20 candidate policies and both pinned baselines reconstruct independently,
 but delays 70/100 have higher NashConv than the zero-delay CFR+140 control.

@@ -309,3 +309,13 @@ NashConv than delay zero on this fixed weighted 5,940-world game. The complete
 raw corpus, two earlier baseline receipts and source identities are preserved.
 This is measured finite-game evidence, with no new convergence or general speed
 claim. Flop APIs, resource caps and coaching defaults are unchanged.
+
+## Optional alternating flop trainers
+
+The opt-in public-batched flop algorithms `lcfr` and `dcfr-alternating` add
+unfloored alternating updates with pre-sweep own-reach averaging. The shared
+legacy algorithms and defaults remain covered by exact archived-adapter controls.
+All requested sweeps reserve three passes under the existing resource caps.
+Mathematical controls and independent physical/legal-response replay pass; a
+frozen convergence comparison is still required before quality or speed claims.
+See [equations, scope and validation](../flop-alternating-cfr.md).

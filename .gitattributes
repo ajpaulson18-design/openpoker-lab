@@ -64,6 +64,8 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/turn-three-hand-direct-tail-v1.json -text
 /benchmarks/results/turn-three-hand-direct-tail-v1-policy.json -text
 
+# Actual merged pre-alternating adapter used for exact legacy payload controls.
+/benchmarks/sources/postflop-before-alternating-flop-v1.py.gz binary
 # Preserve the completed delayed-averaging study, including every quality miss.
 /benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-v1/index.json -text
 /benchmarks/results/weighted-full-deck-flop-delayed-cfrplus-v1/*.json.gz binary
