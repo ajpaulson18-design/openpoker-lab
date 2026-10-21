@@ -287,3 +287,6 @@ The [three-hand direct-tail experiment](../turn-three-hand-direct-tail-experimen
 defines one T=750, discard=250 call with unchanged full-request admission,
 independent numeric/exact replay, complete source guards and immutable raw output.
 The source-frozen protocol records quality separately from replay validity.
+The actual raw policy passes independent replay but misses the unchanged
+0.001-chip target at exact NashConv about 0.01069549. Its positive gap and both
+response gains remain saved without cleanup or a general convergence claim.

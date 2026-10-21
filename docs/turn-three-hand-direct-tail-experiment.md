@@ -95,8 +95,8 @@ It is rejected evidence, not an accepted benchmark. Never silently rerun it.
 
 Run `python -m scripts.benchmark_turn_three_hand_tail --verify` to replay saved
 files. Generation uses `--generate` only after the reviewed source freeze.
-Executed source identities, tests, raw hashes and quality results are recorded
-after the corresponding work finishes; this protocol alone reports no run.
+The source freeze was committed as
+`03d54fefaad2aa6247f9d627e112e40688c0ead1` before the sole actual call.
 
 Before source freeze, all 21 integrated runner tests passed in normal Python
 (56.412 seconds) and optimized Python (57.708 seconds). The mathematical
@@ -106,3 +106,56 @@ issues. The earlier 2,449-second synthetic-suite timing outlier did not recur
 in a bounded lifecycle profile (40.944 seconds); that profile exposed a test
 cleanup error, fixed before these integrated passing runs. No performance
 claim follows from those test timings.
+
+## Actual raw-policy result
+
+The single T=750, discard=250 call finished and the staged/published evidence
+passed complete reconstruction. Its exact normalized-policy NashConv is about
+**0.010695489887132394 chips**, a **miss** of the unchanged 0.001-chip target.
+The gap is positive. No cleanup or second training call was performed.
+
+| Exact normalized-policy metric | Decimal projection |
+| --- | ---: |
+| OOP profile value | -23.61572343173977 |
+| OOP best-response value | -23.605145634213606 |
+| IP best-response value | 23.61584112410074 |
+| OOP response gain | 0.010577797526164986 |
+| IP response gain | 0.00011769236096740824 |
+| NashConv | 0.010695489887132394 |
+| Half-gap exploitability | 0.005347744943566197 |
+
+The exact report retains every full rational value. The legal response interval
+projects to `[-23.61584112410074, -23.605145634213606]` and contains the profile
+value. It supplies bounds on the finite game's value; there is no separate
+known-value anchor for this game. OOP accounts for most of the observed gap.
+
+The recorded complete-call interval was 106.86118480000005 seconds, including
+the lazy import, immediate frozen-source guard and API call. This is one
+uncontrolled observation, with no comparative performance conclusion.
+
+Independent numeric rules and the fixed physical exact engine agree on all
+eight metrics within the unchanged 1e-9 gate. The exact audit uses 122,345
+checked Fraction results, at most 2,046 bits, 27,351 structural visits,
+13,226 weighted rows, 276 independent seven-card keys, 5,796 best-five calls
+and 396 independently checked signs. Exact normalization adjusts 1,117 rows.
+All declared limits remain unchanged.
+
+| Saved file | Bytes | SHA-256 |
+| --- | ---: | --- |
+| [Report](../benchmarks/results/turn-three-hand-direct-tail-v1.json) | 33,671 | `1827e2163b897c5a1c5274e4a300ee365d8234fdf38235647772d63300953a7a` |
+| [Untouched raw policy](../benchmarks/results/turn-three-hand-direct-tail-v1-policy.json) | 2,541,067 | `c02e37dedf886f586e8b0ce9a98e86d079a32322d6e2ba4eb5beaab127dd6789` |
+
+Lead verification independently matched all 72 distinct source fingerprints
+against working bytes and committed source-freeze bytes, including all ten
+verification paths. A fresh CLI read-only replay completed successfully before
+HEAD advanced. The hash-pinned saved-file regression passed normal Python
+(25.962 seconds) and optimized Python (23.571 seconds), with production
+producer, trainer, evaluation, response and tree entry points disabled during
+complete saved verification. A separately written per-world terminal sum uses
+literal private-pair masses and pocket-pair river signs, original binary64 row
+normalization and the independent numeric public tree; its exact profile value
+equals the report. That profile sum supplies no independent response certificate;
+the fixed physical exact auditor supplies the legal-response evidence.
+
+The saved regression is outside the frozen source sets, avoiding a circular
+artifact hash. Finite validity and the quality miss remain separate.

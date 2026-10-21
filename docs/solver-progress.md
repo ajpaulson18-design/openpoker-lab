@@ -1522,3 +1522,6 @@ predeclares one T=750, discard=250 call, original averaging weight 250250,
 unchanged exact 0.001-chip target and separate valid-miss acceptance. Its
 source-frozen runner independently reconstructs the complete raw-policy report
 and preserves any rejected return; actual results follow the recorded call.
+The sole actual call is now saved: exact NashConv about 0.01069549 misses
+0.001, with OOP/IP gains about 0.01057780/0.00011769. Independent numeric and
+exact physical replay pass; the raw positive-gap policy and miss are immutable.
