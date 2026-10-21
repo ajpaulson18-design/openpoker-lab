@@ -347,3 +347,8 @@ policy identities before diagnostics and retains separate full-request/logical
 storage admission. Ordinary solver defaults and earlier streets are unchanged.
 See [scope, controls and model](../turn-class-tail.md); a longer-budget quality
 experiment remains separate.
+
+The opt-in [fixed-game flop class CFR+ research adapter](../flop-class-cfrplus.md)
+uses the proved quotient with its own retained physical request caps, raw output
+normalization record and exact physical response audit. Production defaults and
+the historical no-training proof remain unchanged; see that page for pilot status.

@@ -139,3 +139,11 @@ Record ID, date, authority, source, rationale, considered alternatives where kno
 status, affected interfaces and superseded IDs. A new ADR is useful for a major
 tradeoff; minor entries belong here. Never invent rationale to fill a template.
 Materially conflicting owner intent stays open in [knowledge gaps](../context/KNOWLEDGE_GAPS.md).
+
+D023 (2026-10-21): under the owner's autonomous flop/preflop detour, add an
+isolated fixed-game class CFR+ research adapter after the full no-training proof.
+Retain the 140-sweep physical reference envelope, unchanged shared recurrence,
+raw average rows, explicit exact-grid output normalization and unrestricted
+physical own-hand responses. Require a frozen first pilot and separate evidence
+for any later budget or performance claim. No prior decision is superseded. See
+[scope and admission](../flop-class-cfrplus.md).

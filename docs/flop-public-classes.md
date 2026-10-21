@@ -158,3 +158,7 @@ bounds, mutated masses/signs/transports/subtrees/metadata and publication pins.
 The first test selection assumed later decisions after a flop all-in; it was
 corrected to a class-duplicated turn/river facing-bet row, without changing the
 audit implementation or saved proof.
+
+A separate [fixed-game CFR+ research adapter](flop-class-cfrplus.md) adds its own
+admission, raw-policy retention and physical replay. The proof above remains
+a no-training record and makes no claim about convergence or performance.
