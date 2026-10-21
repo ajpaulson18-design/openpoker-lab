@@ -282,3 +282,11 @@ independent exact visible-information responses. Its own fixed work envelope
 and control-policy anchors extend validation breadth while preserving the old
 176-world proof and generic exact limits. This validation slice records no
 trained policy or equilibrium-quality result for the larger game.
+
+The [three-hand direct-tail experiment](../turn-three-hand-direct-tail-experiment.md)
+defines one T=750, discard=250 call with unchanged full-request admission,
+independent numeric/exact replay, complete source guards and immutable raw output.
+The source-frozen protocol records quality separately from replay validity.
+The actual raw policy passes independent replay but misses the unchanged
+0.001-chip target at exact NashConv about 0.01069549. Its positive gap and both
+response gains remain saved without cleanup or a general convergence claim.
