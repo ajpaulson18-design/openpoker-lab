@@ -1,0 +1,24 @@
+{
+  "protocol_id": "fixed-flop-class-phase-profile-v1",
+  "request": {
+    "method": "class-560",
+    "entry": "scripts.flop_class_compact_cfrplus.solve_fixed_compact",
+    "iterations": 560,
+    "calls": 1
+  },
+  "preflight": "Call the compact full-request admission for exactly 560 sweeps before authenticating pilots or invoking proof, model preparation, or training.",
+  "instrumented_boundaries": [
+    "compact.publication.verify",
+    "proof.build_model",
+    "base._training_inputs",
+    "cfr_plus.train",
+    "policy.canonicalize_binary_rows",
+    "proof.lift_policy",
+    "proof.audit_policy"
+  ],
+  "measurement": "One complete library call plus canonical JSON serialization and SHA-256 through the existing measurement helper. Phase wrappers use perf_counter and process_time and add instrumentation overhead.",
+  "instrumentation_overhead": "Reversible Python wrappers add dispatch and event-recording overhead; these phase timings are diagnostic only.",
+  "interpretation": "Inclusive nested phase durations are not disjoint and must not be summed. This is a single instrumented profile, not a primary median, same-work comparison, speed claim, or RSS measurement.",
+  "acceptance": "Require a clean committed source snapshot before the call and the identical snapshot after it. Require the complete report to match the independently replayed compact pilot semantic digest. Preserve a failed call and traceback; never retry.",
+  "event_limit": 1000
+}

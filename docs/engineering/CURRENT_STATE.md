@@ -368,3 +368,16 @@ peaks 96,955,723 / 96,959,799 bytes and preserved miss/pass outcomes. Both
 entries use the same representation; these are different work/quality budgets,
 not a same-work speedup or RSS measurement. See the retained
 [Windows validation qualification](../flop-class-windows-validation.md).
+
+## Fixed-flop phase profiling
+
+The opt-in [phase-profile harness](../flop-class-phase-profile.md) is a separate
+diagnostic entry for one fully admitted 560-sweep compact solve. It wraps only
+existing module boundaries, records nested inclusive wall/CPU intervals, and
+retains the full raw report. Synthetic validation is distinct from execution;
+the single profile completed with 21 events, stable source and a byte-identical
+passing policy. Its 172.881961 s whole call includes 89.552585 s publication
+verification, 46.553740 s training and 20.418856 s policy auditing as root
+intervals. This diagnostic does not change the solver,
+proof, recurrence, defaults, Coach, or turn/river paths, and its overlapping phase
+times are not primary timing evidence.

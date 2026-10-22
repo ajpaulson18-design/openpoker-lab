@@ -388,3 +388,9 @@ timing, separate allocation calls and lossless payload retention. Preserve all
 errors and samples; no retries or outlier deletion. Both entries already use
 the same class representation; the 140/560 budgets do not support a same-work
 speedup or RSS claim. See [cost protocol](docs/flop-class-call-cost.md).
+
+The separate opt-in [fixed-flop phase profiler](docs/flop-class-phase-profile.md)
+uses reversible wrappers around existing module boundaries for one 560-sweep
+diagnostic call. Keep its inclusive nested phase durations separate from primary
+medians; do not infer a bottleneck until the retained profile is reviewed. It
+preserves solver, proof, recurrence, Coach, and street-kernel sources and defaults.

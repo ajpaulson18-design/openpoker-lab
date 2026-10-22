@@ -96,3 +96,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Complete immutable fixed-flop call-cost evidence.
 /benchmarks/results/flop-class-call-cost-v1/index.json -text
 /benchmarks/results/flop-class-call-cost-v1/*.json.gz binary
+
+# Immutable separate fixed-flop phase-profile evidence.
+/benchmarks/results/flop-class-phase-profile-v1/index.json -text
+/benchmarks/results/flop-class-phase-profile-v1/*.json.gz binary
