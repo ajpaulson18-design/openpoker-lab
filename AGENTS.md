@@ -373,3 +373,11 @@ explicit exact-grid output normalization and independent physical own-hand
 responses. Reconstruct all four published controls before training. Keep the
 frozen pilot and all misses; no larger budget, raw-policy parity, convergence
 or performance claim follows. See [scope](docs/flop-class-cfrplus.md).
+
+The separate explicit compact-work flop CFR+ entry retains the proved fixed
+game and unchanged legacy 140-sweep adapter sources. Admit the full requested ceiling
+with the versioned named-loop/setup/output cap before preparation, authenticate
+both shared kernel LF pins, and validate the fixed dimensions and 232/234 row
+split before training. Preserve all older misses and raw policies. Storage
+slots are partial bookkeeping, not memory/RSS bounds. See
+[compact-work scope](docs/flop-class-compact-cfrplus.md).

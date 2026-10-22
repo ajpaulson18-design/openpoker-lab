@@ -1,0 +1,37 @@
+{
+  "executable_and_protocol_lf_hashes_unchanged": true,
+  "limits": "One fixed weighted full-deck flop game and normalized output policy. Passing the one frozen finite-game gate is not general convergence, raw-policy equivalence, unrestricted NLHE, runtime or memory evidence.",
+  "measurement_scope": {
+    "allocation_trace": false,
+    "rss": false,
+    "timing_comparison": false
+  },
+  "old_140_sweep_quality_target_met": false,
+  "protocol": "benchmarks/flop-class-compact-cfrplus-pilot-v1.json",
+  "protocol_lf_sha256": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+  "quality_target_met": true,
+  "replay_command": "python -B -m scripts.verify_flop_class_compact_cfrplus <saved-pilot-json>",
+  "restarted_training_calls": 0,
+  "result_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+  "result_raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+  "runtime": {
+    "implementation": "CPython",
+    "python": "3.12.14"
+  },
+  "saved_replay": {
+    "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+    "class_rows": 466,
+    "iterations": 560,
+    "nash_conv": 0.0028924005277596834,
+    "physical_rows": 16912,
+    "quality_target_met": true,
+    "status": "saved-compact-policy-physically-verified",
+    "training_calls": 0
+  },
+  "schema_version": "fixed-flop-class-compact-cfrplus-pilot-execution-v1",
+  "source_checkpoint": "365b0136ea9a571e4303bdac156ba002d027cc0c",
+  "total_admitted_logical_work": 75107830,
+  "training_calls_completed": 1,
+  "training_command": "python -B -m scripts.flop_class_compact_cfrplus --iterations 560 --output <new-pilot-json>",
+  "worktree_clean_at_training_start": true
+}

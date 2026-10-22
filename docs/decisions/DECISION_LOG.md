@@ -147,3 +147,13 @@ raw average rows, explicit exact-grid output normalization and unrestricted
 physical own-hand responses. Require a frozen first pilot and separate evidence
 for any later budget or performance claim. No prior decision is superseded. See
 [scope and admission](../flop-class-cfrplus.md).
+
+D024 (2026-10-21): under the ongoing autonomous flop/preflop detour, add a
+separate opt-in compact-work fixed-flop research entry after the 140-sweep
+physically verified quality miss. Charge named compact recurrence/setup/output
+loops under pinned shared sources and a separately versioned 76-million cap,
+with at most 560 requested sweeps and unchanged fixed physical preparation/BR
+checks. Preserve the legacy adapter and its source-pinned result literally.
+This is a new explicit resource policy, not a silent relaxation of defaults or
+a convergence/performance claim. See [scope](../flop-class-compact-cfrplus.md).
+No prior decision is superseded.

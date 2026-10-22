@@ -113,5 +113,13 @@ python -B -m scripts.verify_flop_class_cfrplus_publication
 ```
 
 The focused adapter/publication checks passed all 39 tests. Documentation links
-and all eight frontend contracts passed. The complete unit suite and GitHub
-Python matrix remain pending at this evidence checkpoint.
+and all eight frontend contracts passed. The complete GitHub Python 3.11, 3.12 and 3.13 suites passed for
+[merged PR #201](https://github.com/ajpaulson18-design/openpoker-lab/pull/201).
+A duplicate local suite retained an error during source changes; its isolated
+frozen-source historical replay passed. That local run remains separately
+reported rather than relabeled as a full pass.
+
+A separate [explicit compact-work research entry](flop-class-compact-cfrplus.md)
+adds its own admission rather than changing this adapter or its source pins.
+Its protocol and validation status are recorded separately; this pilot remains
+a 140-sweep target miss.
