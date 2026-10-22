@@ -381,3 +381,15 @@ verification, 46.553740 s training and 20.418856 s policy auditing as root
 intervals. This diagnostic does not change the solver,
 proof, recurrence, defaults, Coach, or turn/river paths, and its overlapping phase
 times are not primary timing evidence.
+
+
+The cost and phase evidence are published in merged
+[PR #204](https://github.com/ajpaulson18-design/openpoker-lab/pull/204) and
+[PR #205](https://github.com/ajpaulson18-design/openpoker-lab/pull/205), with both
+full Python matrices passing and GitHub-main ancestry/tree checks completed.
+The [fixed-support range-prior proof](../flop-class-reweight.md) completed
+baseline, uniform and skewed positive-weight games with all twelve no-training
+controls passing exact unrestricted physical response checks. Its 15 immutable
+artifacts preserve full policies, priors, source identities and numeric gaps.
+The saved verifier authenticates those bytes and receipts without fresh replay.
+New-prior CFR+ training and convergence remain a later milestone.

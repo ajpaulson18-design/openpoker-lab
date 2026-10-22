@@ -394,3 +394,13 @@ uses reversible wrappers around existing module boundaries for one 560-sweep
 diagnostic call. Keep its inclusive nested phase durations separate from primary
 medians; do not infer a bottleneck until the retained profile is reviewed. It
 preserves solver, proof, recurrence, Coach, and street-kernel sources and defaults.
+
+
+Positive fixed-support [flop prior reweighting](docs/flop-class-reweight.md)
+is a distinct no-training model. Validate exact positive rational weights and
+the derived 384-bit joint-mass envelope before any oracle. Keep global blocker
+conditioning, a genuine old baseline, fresh weighted physical worlds and their
+own hashes, complete reveal/tree checks and exact own-hand responses. Preserve
+all published sources; never pass new priors through the old fixed-weight
+anchor or present control-policy equivalence as convergence. Admit all three
+protocol cases first and retain partial errors and full policies without retry.

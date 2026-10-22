@@ -1,0 +1,123 @@
+{
+  "protocol_id": "fixed-flop-class-reweight-proof-v1",
+  "scope": {
+    "board": [
+      "2c",
+      "3d",
+      "4h"
+    ],
+    "oop_hands": [
+      "AsAd",
+      "QsQd"
+    ],
+    "ip_hands": [
+      "AsKh",
+      "KsKd"
+    ],
+    "positive_exact_weights_only": true,
+    "training_calls": 0
+  },
+  "cases": [
+    {
+      "case_id": "baseline",
+      "oop_weights": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "ip_weights": [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "case_id": "uniform",
+      "oop_weights": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "ip_weights": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "case_id": "skew",
+      "oop_weights": [
+        [
+          4,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "ip_weights": [
+        [
+          4,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "controls": [
+    "check-call",
+    "bet-fold",
+    "class-varying",
+    "zero-reach"
+  ],
+  "preflight": {
+    "oracle_builds": 4,
+    "enumerated_physical_world_rows": 23760,
+    "maximum_live_physical_oracles": 2,
+    "physical_worlds_per_oracle": 5940,
+    "physical_public_states_per_oracle": 30812,
+    "compact_worlds_per_case": 126,
+    "compact_public_states_per_case": 1001,
+    "compact_policy_rows_per_case": 466,
+    "control_audits": 12,
+    "scope_note": "Census and capacity counts, not complete CPU, arithmetic, time, byte, or RSS bounds. Existing oracle caps remain in force."
+  },
+  "acceptance": {
+    "old_proof": "Authenticate the immutable six-source no-training publication cheaply; do not run heavy saved replay.",
+    "baseline": "Compare all four new baseline controls to authenticated old exact metrics, row counts, full class policy, and physical strategy hash.",
+    "source": "Require clean committed source snapshots before and after every case and an identical snapshot throughout.",
+    "failure": "Retain partial files and tracebacks, stop on first error or source drift, mark remaining cases not-run, and never retry.",
+    "interpretation": "No training, runtime or speed claim. Wall and process times are incidental receipts only."
+  },
+  "limits": {
+    "index_bytes": 2097152,
+    "raw_file_bytes": 25165824,
+    "gzip_file_bytes": 8388608,
+    "weight_component_bits": 128,
+    "joint_world_mass_bits": 384
+  }
+}
