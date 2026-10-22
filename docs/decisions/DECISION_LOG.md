@@ -242,3 +242,12 @@ comparative or general performance claim follows. Investigate call-owned model
 integrity before considering validation reuse; a mutable flag/cache alone is
 insufficient. The existing checks remain required. See the completed evidence
 and its qualifications in the linked diagnostic document.
+
+D030 (2026-10-22): before a validation-reuse performance experiment, test complete
+call-owned model integrity coverage separately, retaining unchanged independent
+validation before and after six bounded graph fingerprints. Require exact stable
+and restored digests/censuses, action and rooted-index alias mutation detection,
+39 clean source hashes, zero guarded authorities and first-error retention.
+A digest is not model validity, immutability or permission to bypass validators.
+No real fit, performance or memory claim exists yet. See
+[the no-training investigation](../flop-owned-fingerprint.md).
