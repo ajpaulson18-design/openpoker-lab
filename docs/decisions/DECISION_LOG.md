@@ -203,3 +203,13 @@ positive-prior cases, twelve exact-response controls, fifteen retained artifacts
 zero errors/training and stable committed sources. Saved authentication is
 separate from fresh physical replay. New-prior training remains the next bounded
 milestone; these controls make no convergence claim.
+
+
+D028 (2026-10-22): after the completed D027 no-training proof, implement a
+separate three-prior CFR+ research adapter with the unchanged shared recurrence,
+positive joint masses, its own explicit setup charge and fresh unrestricted
+physical responses. Freeze one 560-sweep call per prior; require exact historical
+baseline calibration and retain every quality miss/failure without tuning or
+retry. Actual training waits for the proof merge and clean reviewed source.
+See [scope and pending evidence](../flop-class-reweight-cfrplus.md). No prior
+decision is superseded.
