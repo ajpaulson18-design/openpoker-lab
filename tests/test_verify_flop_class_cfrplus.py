@@ -177,7 +177,6 @@ class VerifyFlopClassCFRPlusTests(unittest.TestCase):
     def test_noncanonical_raw_hand_rejects_before_publication_or_tree(self):
         rows = _raw_rows()
         rows[0][1] = "1xAs"
-        report = _valid_request_report.__wrapped__(rows) if hasattr(_valid_request_report, "__wrapped__") else None
         # Raw hand validation is part of the early canonicalization pass.
         report = {
             "schema_version": "fixed-flop-class-cfrplus-v1",
@@ -191,6 +190,32 @@ class VerifyFlopClassCFRPlusTests(unittest.TestCase):
         report["artifact_sha256"] = proof._digest(report)
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "bad-hand.json"
+            _save_report(path, report)
+            with patch.object(verifier.trainer, "_source_hashes", return_value={"pinned": "hash"}), \
+                 patch.object(verifier.publication, "verify",
+                              side_effect=AssertionError("publication")) as publication, \
+                 patch.object(verifier.proof, "build_model",
+                              side_effect=AssertionError("tree")) as build:
+                with self.assertRaises(ValueError):
+                    verifier.verify_saved(path)
+            publication.assert_not_called()
+            build.assert_not_called()
+
+    def test_malformed_probability_rejects_before_publication_or_tree(self):
+        rows = _raw_rows()
+        rows[0][3] = ["0.5", 0.5]
+        report = {
+            "schema_version": "fixed-flop-class-cfrplus-v1",
+            "status": "trained-policy-physically-verified",
+            "source_lf_sha256": {"pinned": "hash"},
+            "admission": trainer.admit_request(1),
+            "physical_policy": {"iterations": 1, "algorithm": "cfrplus", "averaging_delay": 0,
+                                "research_adapter": "fixed-flop-public-classes-cfrplus-v1"},
+            "raw_class_policy": rows,
+        }
+        report["artifact_sha256"] = proof._digest(report)
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "bad-probability.json"
             _save_report(path, report)
             with patch.object(verifier.trainer, "_source_hashes", return_value={"pinned": "hash"}), \
                  patch.object(verifier.publication, "verify",
@@ -256,6 +281,23 @@ class VerifyFlopClassCFRPlusTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "compact model"):
                     verifier.verify_saved(path)
             project.assert_not_called()
+
+    def test_size_cap_rejects_before_reading_report_bytes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "large.json"
+            path.write_text("{}", encoding="utf-8")
+            stat = SimpleNamespace(st_size=verifier.MAX_REPORT_BYTES + 1)
+            with patch.object(Path, "stat", return_value=stat), \
+                 patch.object(Path, "read_bytes", side_effect=AssertionError("read")) as read, \
+                 patch.object(verifier.publication, "verify",
+                              side_effect=AssertionError("publication")) as publication, \
+                 patch.object(verifier.proof, "build_model",
+                              side_effect=AssertionError("tree")) as build:
+                with self.assertRaisesRegex(ValueError, "size bound"):
+                    verifier.verify_saved(path)
+            read.assert_not_called()
+            publication.assert_not_called()
+            build.assert_not_called()
 
 
 if __name__ == "__main__":
