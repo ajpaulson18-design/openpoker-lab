@@ -440,5 +440,9 @@ commit as ancestors; all three evidence blobs match local Git hashes/sizes.
 The next [owned-model integrity experiment](../flop-owned-fingerprint.md) is a
 separate no-training precursor to considering validation reuse. It retains
 full independent model validation and uses six bounded graph fingerprints and
-two restored mutations. Only synthetic helper tests have run; no actual full
-model fit, solver shortcut, cache or comparative performance result exists yet.
+two restored mutations. The single actual model census now passed: six fingerprints, two full
+validations, 41 zero authority counters and stable clean 39-source identities.
+Stable/repeated/restored graphs have 318,280 tracked objects and 1,608,777 edges;
+both value and rooted-index alias mutations change the digest and restore exactly.
+The saved report is tracked in PR #211. It implements no solver shortcut/cache
+and establishes no comparative performance or memory result.
