@@ -424,3 +424,10 @@ byte parity. Reuse immutable measurement/instrumentation helpers; restore every
 wrapper on all exits, release first-call payloads before tracing, retain partial
 failures and never retry in place. Keep inclusive nested phases and Python traced
 allocations separate from medians, speed, RSS and general bottleneck claims.
+
+The separate [owned-model fingerprint investigation](docs/flop-owned-fingerprint.md)
+checks bounded integrity coverage only. Keep unchanged full model validation
+before/after the probes, reject unadmitted graph data before encoding/allocation,
+retain first errors and source identities, and restore mutations on every exit.
+Fingerprints do not establish poker validity or authorize validator bypass/cache
+reuse; no performance inference follows without a separate controlled experiment.

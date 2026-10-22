@@ -1,0 +1,59 @@
+{
+  "acceptance": {
+    "authority": "Complete existing 41-production-authority guard inventory remains zero, including shared training.",
+    "failure": "Retain the first original error and completed/partial census, stop later work and do not retry or discard a run.",
+    "source": "Clean identical committed HEAD/status/39 LF hashes before and after the single batch.",
+    "stable": "Initial repeat and both restored graph digests and censuses exactly match.",
+    "tamper": "Root action-value and rooted node-index alias mutations change the fingerprint, and originals always restore in finally.",
+    "validity": "Unchanged full independent model validation before and after all probes; fingerprints alone never establish validity or authorize reuse."
+  },
+  "limits": {
+    "depth": 256,
+    "edges": 6000000,
+    "integer_bits": 4096,
+    "objects": 2000000,
+    "output_bytes": 268435456,
+    "set_bytes": 65536,
+    "stack": 1024,
+    "string_chars": 16384
+  },
+  "preflight": {
+    "batch_named_cap": 50000000,
+    "interpretation": "Named traversal reservations plus separate physical/source census bounds only; not all arithmetic, elapsed time, allocation, bytes or RSS.",
+    "maximum_live_physical_oracles_reference": 2,
+    "named_objects_and_edges_per_fingerprint": 8000000,
+    "physical_oracle_builds_reference": 2,
+    "physical_world_rows_reference": 11880,
+    "report_bytes": 2097152,
+    "source_file_bytes": 2097152,
+    "source_files": 39,
+    "total_named_objects_and_edges": 48000000
+  },
+  "prerequisite": {
+    "diagnostic_index_raw_sha256": "aa18563a9f01c30faa52d8f2c72188892f3a838a9d25cb6c3bb663a28fda74d8",
+    "diagnostic_index_sha256": "919a16138442300a6125159fdc7a72767903896570c556396a0b8984a7a16a07",
+    "publication_pr": 209
+  },
+  "protocol_id": "fixed-flop-owned-fingerprint-v1",
+  "request": {
+    "case_id": "baseline",
+    "fingerprint_calls": 6,
+    "full_validations": 2,
+    "physical_model_builds": 1,
+    "training_calls": 0
+  },
+  "samples": [
+    "stable",
+    "stable-repeat",
+    "root-action-amount",
+    "root-action-restored",
+    "node-index-alias",
+    "node-index-restored"
+  ],
+  "scope": {
+    "evidence": "One fresh baseline fixed-support model and six fingerprints are census/integrity evidence only. No policy, quality, speed, RSS, memory advantage or broader card/action support claim.",
+    "limits": "Fingerprints detect changes between traversals; they do not prevent concurrent mutation, mutation-and-restoration, or prove poker semantics. No cache or validator bypass.",
+    "method": "Type-preserving streaming graph digest with traversal-local reference ordinals and bounded atomic set ordering.",
+    "provenance": "Project-owned standard-library implementation only; no third-party source or dependencies, shared kernels, defaults or Coach changes."
+  }
+}

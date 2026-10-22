@@ -431,3 +431,18 @@ tracked in [PR #209](https://github.com/ajpaulson18-design/openpoker-lab/pull/20
 PR #207 merged as `08e3a339eadfcff706fa75f0851e8f9978361ce2` after both final
 Python 3.11/3.12/3.13 matrices passed. Fetched main matched the reviewed tree
 and retained the original advance-solver commit before this diagnostic.
+
+PR #209 merged as `2b0867acf65ff3eaeff8e52bac1b2f2acf9b896c` after both final
+Python 3.11/3.12/3.13 matrices and all other checks passed. Fetched main had the
+exact reviewed tree and both the diagnostic head and original advance-solver
+commit as ancestors; all three evidence blobs match local Git hashes/sizes.
+
+The next [owned-model integrity experiment](../flop-owned-fingerprint.md) is a
+separate no-training precursor to considering validation reuse. It retains
+full independent model validation and uses six bounded graph fingerprints and
+two restored mutations. The single actual model census now passed: six fingerprints, two full
+validations, 41 zero authority counters and stable clean 39-source identities.
+Stable/repeated/restored graphs have 318,280 tracked objects and 1,608,777 edges;
+both value and rooted-index alias mutations change the digest and restore exactly.
+The saved report is tracked in PR #211. It implements no solver shortcut/cache
+and establishes no comparative performance or memory result.

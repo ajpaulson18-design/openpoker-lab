@@ -115,3 +115,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable separate positive-prior baseline diagnostic evidence.
 /benchmarks/results/flop-class-reweight-baseline-diagnostic-v1/index.json -text
 /benchmarks/results/flop-class-reweight-baseline-diagnostic-v1/*.json.gz binary
+
+# Immutable no-training owned-model fingerprint experiment receipt.
+/benchmarks/results/flop-class-owned-fingerprint-v1.json -text
