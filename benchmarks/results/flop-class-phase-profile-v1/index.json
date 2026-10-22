@@ -1,0 +1,417 @@
+{
+  "admission": {
+    "cap": {
+      "maximum_iterations": 560,
+      "maximum_total_admitted_logical_work": 76000000
+    },
+    "dimensions": {
+      "chance_nodes": 58,
+      "compact_information_rows": 466,
+      "compact_worlds": 126,
+      "max_world_visits": 33,
+      "private_information_action_slots": 932,
+      "public_action_edges": 632,
+      "public_decisions": 316,
+      "terminals": 627,
+      "tree_edges_including_chance": 1000
+    },
+    "fixed_output_and_diagnostics": {
+      "average_action_slots_divided_or_fallback_written": 932,
+      "average_action_slots_summed": 932,
+      "average_rows_finalized": 466,
+      "compact_output_action_slots": 932,
+      "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+      "physical_policy_rows_lifted_and_diagnosed": 16912
+    },
+    "fixed_physical_preparation_reference": {
+      "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+      "physical_public_states": 30812,
+      "physical_worlds": 5940
+    },
+    "fixed_setup": {
+      "information_rows_validated": 466,
+      "pretraining_compact_nodes_visited_upper_bound": 4158,
+      "proof_world_rows_pretraining": 126,
+      "regret_and_average_action_slots_initialized": 1864,
+      "regret_and_average_rows_initialized": 932,
+      "world_rows_converted_and_mass_checked": 126
+    },
+    "fixed_setup_and_output_work": 61670,
+    "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+    "kernel_lf_sha256": {
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+    },
+    "legacy_physical_proxy_reference": {
+      "old_caps_enforced_by_this_mode": false,
+      "physical_decision_world_iterations_informational_only": 119750400,
+      "physical_world_iterations_informational_only": 9979200
+    },
+    "logical_work_per_sweep": 134011,
+    "per_sweep": {
+      "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+      "average_profile_action_slots": 8316,
+      "chance_child_callback_calls": 12474,
+      "delta_dictionary_action_slots_zeroed": 932,
+      "delta_dictionary_information_key_scans": 932,
+      "information_key_lookups_upper_bound": 12474,
+      "node_kind_dispatches": 12474,
+      "outer_world_loop_entries": 378,
+      "owner_regret_update_action_slots": 8316,
+      "profile_dictionary_update_calls": 3,
+      "profile_information_rows": 1398,
+      "regret_clipping_action_slots": 932,
+      "regret_clipping_information_rows": 466,
+      "strategy_action_slot_touches": 8388,
+      "terminal_contribution_reads": 16632,
+      "terminal_value_callback_calls": 8316,
+      "update_expected_value_action_terms": 16632
+    },
+    "requested_iterations": 560,
+    "storage_bookkeeping": {
+      "current_profile_action_slots_per_profile": 932,
+      "final_average_action_slots_while_regrets_and_sums_exist": 932,
+      "largest_single_player_delta_action_slots": 468,
+      "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+      "persistent_average_action_slots": 932,
+      "persistent_regret_action_slots": 932,
+      "recursion_stack_node_bound_per_world": 33
+    },
+    "total_admitted_work": 75107830,
+    "total_training_work": 75046160,
+    "version": "fixed-flop-class-cfrplus-logical-work-v1"
+  },
+  "created_at_utc": "2026-10-22T04:49:52.149869+00:00",
+  "errors": [],
+  "events": [
+    {
+      "event_id": 1,
+      "finished_at_utc": "2026-10-22T04:51:23.823055+00:00",
+      "parent_event_id": null,
+      "phase": "compact.publication.verify",
+      "process_seconds": 87.984375,
+      "started_at_utc": "2026-10-22T04:49:54.261321+00:00",
+      "status": "complete",
+      "wall_seconds": 89.5525850999984
+    },
+    {
+      "event_id": 2,
+      "finished_at_utc": "2026-10-22T04:49:59.143964+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.build_model",
+      "process_seconds": 4.765625,
+      "started_at_utc": "2026-10-22T04:49:54.346858+00:00",
+      "status": "complete",
+      "wall_seconds": 4.792300000000978
+    },
+    {
+      "event_id": 3,
+      "finished_at_utc": "2026-10-22T04:50:03.058972+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.625,
+      "started_at_utc": "2026-10-22T04:49:59.385904+00:00",
+      "status": "complete",
+      "wall_seconds": 3.6621632000023965
+    },
+    {
+      "event_id": 4,
+      "finished_at_utc": "2026-10-22T04:50:19.134622+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.audit_policy",
+      "process_seconds": 15.890625,
+      "started_at_utc": "2026-10-22T04:50:03.058972+00:00",
+      "status": "complete",
+      "wall_seconds": 16.07517419999931
+    },
+    {
+      "event_id": 5,
+      "finished_at_utc": "2026-10-22T04:50:18.236724+00:00",
+      "parent_event_id": 4,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.671875,
+      "started_at_utc": "2026-10-22T04:50:14.539102+00:00",
+      "status": "complete",
+      "wall_seconds": 3.6955442000034964
+    },
+    {
+      "event_id": 6,
+      "finished_at_utc": "2026-10-22T04:50:23.117736+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.75,
+      "started_at_utc": "2026-10-22T04:50:19.336298+00:00",
+      "status": "complete",
+      "wall_seconds": 3.7858345999993617
+    },
+    {
+      "event_id": 7,
+      "finished_at_utc": "2026-10-22T04:50:39.604324+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.audit_policy",
+      "process_seconds": 16.34375,
+      "started_at_utc": "2026-10-22T04:50:23.117736+00:00",
+      "status": "complete",
+      "wall_seconds": 16.495499099997687
+    },
+    {
+      "event_id": 8,
+      "finished_at_utc": "2026-10-22T04:50:38.655712+00:00",
+      "parent_event_id": 7,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.828125,
+      "started_at_utc": "2026-10-22T04:50:34.801588+00:00",
+      "status": "complete",
+      "wall_seconds": 3.853065000002971
+    },
+    {
+      "event_id": 9,
+      "finished_at_utc": "2026-10-22T04:50:43.662138+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.78125,
+      "started_at_utc": "2026-10-22T04:50:39.807400+00:00",
+      "status": "complete",
+      "wall_seconds": 3.865843400002632
+    },
+    {
+      "event_id": 10,
+      "finished_at_utc": "2026-10-22T04:51:00.412108+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.audit_policy",
+      "process_seconds": 16.578125,
+      "started_at_utc": "2026-10-22T04:50:43.662138+00:00",
+      "status": "complete",
+      "wall_seconds": 16.737082999999984
+    },
+    {
+      "event_id": 11,
+      "finished_at_utc": "2026-10-22T04:50:59.397748+00:00",
+      "parent_event_id": 10,
+      "phase": "proof.lift_policy",
+      "process_seconds": 3.890625,
+      "started_at_utc": "2026-10-22T04:50:55.502822+00:00",
+      "status": "complete",
+      "wall_seconds": 3.892603499996767
+    },
+    {
+      "event_id": 12,
+      "finished_at_utc": "2026-10-22T04:51:05.047674+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.lift_policy",
+      "process_seconds": 4.0,
+      "started_at_utc": "2026-10-22T04:51:00.919397+00:00",
+      "status": "complete",
+      "wall_seconds": 4.1369627000021865
+    },
+    {
+      "event_id": 13,
+      "finished_at_utc": "2026-10-22T04:51:23.776172+00:00",
+      "parent_event_id": 1,
+      "phase": "proof.audit_policy",
+      "process_seconds": 18.140625,
+      "started_at_utc": "2026-10-22T04:51:05.063296+00:00",
+      "status": "complete",
+      "wall_seconds": 18.72318549999909
+    },
+    {
+      "event_id": 14,
+      "finished_at_utc": "2026-10-22T04:51:22.682775+00:00",
+      "parent_event_id": 13,
+      "phase": "proof.lift_policy",
+      "process_seconds": 4.9375,
+      "started_at_utc": "2026-10-22T04:51:17.350524+00:00",
+      "status": "complete",
+      "wall_seconds": 5.32426950000081
+    },
+    {
+      "event_id": 15,
+      "finished_at_utc": "2026-10-22T04:51:30.759009+00:00",
+      "parent_event_id": null,
+      "phase": "proof.build_model",
+      "process_seconds": 6.171875,
+      "started_at_utc": "2026-10-22T04:51:23.823055+00:00",
+      "status": "complete",
+      "wall_seconds": 6.945471300001373
+    },
+    {
+      "event_id": 16,
+      "finished_at_utc": "2026-10-22T04:51:34.902464+00:00",
+      "parent_event_id": null,
+      "phase": "base._training_inputs",
+      "process_seconds": 3.921875,
+      "started_at_utc": "2026-10-22T04:51:30.759009+00:00",
+      "status": "complete",
+      "wall_seconds": 4.135290199999872
+    },
+    {
+      "event_id": 17,
+      "finished_at_utc": "2026-10-22T04:52:21.460502+00:00",
+      "parent_event_id": null,
+      "phase": "cfr_plus.train",
+      "process_seconds": 43.109375,
+      "started_at_utc": "2026-10-22T04:51:34.902464+00:00",
+      "status": "complete",
+      "wall_seconds": 46.55374020000454
+    },
+    {
+      "event_id": 18,
+      "finished_at_utc": "2026-10-22T04:52:21.476124+00:00",
+      "parent_event_id": null,
+      "phase": "policy.canonicalize_binary_rows",
+      "process_seconds": 0.015625,
+      "started_at_utc": "2026-10-22T04:52:21.460502+00:00",
+      "status": "complete",
+      "wall_seconds": 0.023548099998151883
+    },
+    {
+      "event_id": 19,
+      "finished_at_utc": "2026-10-22T04:52:25.828298+00:00",
+      "parent_event_id": null,
+      "phase": "proof.lift_policy",
+      "process_seconds": 4.28125,
+      "started_at_utc": "2026-10-22T04:52:21.476124+00:00",
+      "status": "complete",
+      "wall_seconds": 4.344284699996933
+    },
+    {
+      "event_id": 20,
+      "finished_at_utc": "2026-10-22T04:52:46.248583+00:00",
+      "parent_event_id": null,
+      "phase": "proof.audit_policy",
+      "process_seconds": 19.484375,
+      "started_at_utc": "2026-10-22T04:52:25.828298+00:00",
+      "status": "complete",
+      "wall_seconds": 20.418855700001586
+    },
+    {
+      "event_id": 21,
+      "finished_at_utc": "2026-10-22T04:52:45.182904+00:00",
+      "parent_event_id": 20,
+      "phase": "proof.lift_policy",
+      "process_seconds": 4.53125,
+      "started_at_utc": "2026-10-22T04:52:40.552864+00:00",
+      "status": "complete",
+      "wall_seconds": 4.634208199997374
+    }
+  ],
+  "execution_state": {
+    "mode": "windows-benchmark-thread",
+    "previous_flags": 2147483648,
+    "requested_flags": 2147483649,
+    "system_required": true
+  },
+  "finished_at_utc": "2026-10-22T04:52:48.013846+00:00",
+  "gzip_sha256": "986f3e040b63587f07c23bd15c387e544b6e7bc9f9b3e65faf241e255a1b8444",
+  "index_sha256": "58a39f78e9f8f3e18ae91d9e5538369bd259ea962a742c860623b174641e8f8f",
+  "instrumentation_overhead": "Reversible Python wrappers add dispatch and event-recording overhead; these phase timings are diagnostic only.",
+  "measurement": {
+    "allocation_trace": false,
+    "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+    "finished_at_utc": "2026-10-22T04:52:46.706941+00:00",
+    "process_seconds": 165.875,
+    "python_traced_peak_bytes": null,
+    "quality_target_met": true,
+    "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+    "runtime": {
+      "implementation": "CPython",
+      "platform": "Windows-10-10.0.19045-SP0",
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+    },
+    "started_at_utc": "2026-10-22T04:49:53.823922+00:00",
+    "wall_seconds": 172.8819610000064
+  },
+  "protocol": {
+    "acceptance": "Require a clean committed source snapshot before the call and the identical snapshot after it. Require the complete report to match the independently replayed compact pilot semantic digest. Preserve a failed call and traceback; never retry.",
+    "event_limit": 1000,
+    "instrumentation_overhead": "Reversible Python wrappers add dispatch and event-recording overhead; these phase timings are diagnostic only.",
+    "instrumented_boundaries": [
+      "compact.publication.verify",
+      "proof.build_model",
+      "base._training_inputs",
+      "cfr_plus.train",
+      "policy.canonicalize_binary_rows",
+      "proof.lift_policy",
+      "proof.audit_policy"
+    ],
+    "interpretation": "Inclusive nested phase durations are not disjoint and must not be summed. This is a single instrumented profile, not a primary median, same-work comparison, speed claim, or RSS measurement.",
+    "measurement": "One complete library call plus canonical JSON serialization and SHA-256 through the existing measurement helper. Phase wrappers use perf_counter and process_time and add instrumentation overhead.",
+    "preflight": "Call the compact full-request admission for exactly 560 sweeps before authenticating pilots or invoking proof, model preparation, or training.",
+    "protocol_id": "fixed-flop-class-phase-profile-v1",
+    "request": {
+      "calls": 1,
+      "entry": "scripts.flop_class_compact_cfrplus.solve_fixed_compact",
+      "iterations": 560,
+      "method": "class-560"
+    }
+  },
+  "protocol_id": "fixed-flop-class-phase-profile-v1",
+  "raw_file": "class-560-profiled.json.gz",
+  "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+  "request": {
+    "iterations": 560,
+    "method": "class-560"
+  },
+  "schema_version": 1,
+  "source_after": {
+    "revision": "369436002791813e3983104f63e8131b5d3aa0e1",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-phase-profile-v1.json": "3d7209efb1c3cd0c8e0efd70695a2b692ed45eb4c949296e21ee27d6476db0e1",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "369436002791813e3983104f63e8131b5d3aa0e1",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-phase-profile-v1.json": "3d7209efb1c3cd0c8e0efd70695a2b692ed45eb4c949296e21ee27d6476db0e1",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "status": "complete"
+}

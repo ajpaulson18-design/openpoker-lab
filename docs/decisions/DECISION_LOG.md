@@ -180,3 +180,8 @@ reversible nested wrappers around existing boundaries. Inclusive phase times
 overlap and include instrumentation overhead; they do not replace primary
 medians or establish a speed, memory, or bottleneck claim. No solver/proof/
 recurrence source or default changes are selected. See [profile scope and status](../flop-class-phase-profile.md). No earlier decision is superseded.
+
+The D026 single-call profile completed on 2026-10-22 with 21 retained events
+and the unchanged passing pilot policy. The observed largest root interval is
+publication verification; no prepared-reuse or production architecture has
+been implemented by this measurement.
