@@ -223,3 +223,13 @@ exact response metrics are retained, with no lost positive probabilities, errors
 or retries. Training count was three; subsequent physical replay count was three
 with zero training. These finite-game results do not select a performance or
 broader-card-support claim.
+
+
+D029 (2026-10-22): after the three-prior quality pilot and independent physical
+replays, locate baseline call time and Python allocation scope before choosing
+another efficiency architecture. Freeze one phase call and one separate traced
+call at 560 sweeps, requiring full published report byte equality, complete
+admission, reversible instrumentation and no retries. Inclusive events and one
+Python peak are diagnostics, not comparative speed/RSS or general bottleneck
+claims. See [scope and pending status](../flop-class-reweight-baseline-diagnostic.md).
+No earlier decision is superseded.

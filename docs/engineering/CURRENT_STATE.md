@@ -413,3 +413,15 @@ plus 29 prior-proof regressions) before freezing e1. The actual pilot and three
 fresh saved-policy replays completed with stable sources and no errors; full
 artifacts, receipt authentication and final publication are tracked in
 [PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).
+
+
+The reviewed [baseline call diagnostic](../flop-class-reweight-baseline-diagnostic.md)
+separates one instrumented 560-sweep call from one Python allocation call, with
+full published policy/report equality and its own aggregate admission. No actual
+diagnostic or new runtime/memory result exists at this checkpoint.
+
+PR #207 merged as `08e3a339eadfcff706fa75f0851e8f9978361ce2` after both final
+Python 3.11/3.12/3.13 matrices passed. The fetched main tree matches the final
+reviewed head and retains the original advance-solver commit. The next diagnostic
+source checkpoint passed 22 focused harness/measurement/instrumentation tests
+and the documentation checker before its actual two-call execution.
