@@ -203,3 +203,23 @@ positive-prior cases, twelve exact-response controls, fifteen retained artifacts
 zero errors/training and stable committed sources. Saved authentication is
 separate from fresh physical replay. New-prior training remains the next bounded
 milestone; these controls make no convergence claim.
+
+
+D028 (2026-10-22): after the completed D027 no-training proof, implement a
+separate three-prior CFR+ research adapter with the unchanged shared recurrence,
+positive joint masses, its own explicit setup charge and fresh unrestricted
+physical responses. Freeze one 560-sweep call per prior; require exact historical
+baseline calibration and retain every quality miss/failure without tuning or
+retry. Actual training waits for the proof merge and clean reviewed source.
+See [scope and pending evidence](../flop-class-reweight-cfrplus.md). No prior
+decision is superseded.
+
+
+The D028 single pilot and all three fresh saved-policy replays completed on
+2026-10-22 at frozen e1. Baseline calibration passed; normalized-policy exact
+NashConv was 0.002892400528, 0.000012958529 and 0.000993121225 for baseline,
+uniform and skew, each below 0.005. All raw policies, normalization records and
+exact response metrics are retained, with no lost positive probabilities, errors
+or retries. Training count was three; subsequent physical replay count was three
+with zero training. These finite-game results do not select a performance or
+broader-card-support claim.

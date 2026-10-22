@@ -1,0 +1,73 @@
+{
+  "acceptance": {
+    "correctness": "Fresh weighted model, exact compact/unrestricted physical responses, independent numeric gap at most 1e-10, positive mass support and unchanged own-hand information.",
+    "failure": "Preserve partial report files, original traceback and source snapshots; stop on first execution/correctness/source error, mark later calls not-run.",
+    "interpretation": "Finite fixed-support games only; no unrestricted NLHE, rate, runtime speedup, RSS or cross-prior equilibrium claim.",
+    "iterations": "Exactly one 560-sweep call per case; no adaptive tuning, retries or discarded samples.",
+    "quality": "Retain exact NashConv and target outcome for every case, including misses. A target miss does not stop later cases.",
+    "sources": "Clean committed source, exact stable revision/status/LF identities before/after every call and overall."
+  },
+  "averaging_delay": 0,
+  "baseline_acceptance": {
+    "audit_fields": [
+      "exact_metrics",
+      "exact_metric_count",
+      "physical_rows_lifted",
+      "class_rows",
+      "physical_strategy_sha256",
+      "class_policy"
+    ],
+    "fields": [
+      "raw_class_policy",
+      "normalization",
+      "census",
+      "maximum_world_path_states"
+    ],
+    "meaning": "Exact old-baseline semantic calibration; do not compare adapter/provenance tags or report bytes.",
+    "pilot_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+    "pilot_raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e"
+  },
+  "cases": [
+    {
+      "case_id": "baseline",
+      "iterations": 560
+    },
+    {
+      "case_id": "uniform",
+      "iterations": 560
+    },
+    {
+      "case_id": "skew",
+      "iterations": 560
+    }
+  ],
+  "limits": {
+    "gzip_file_bytes": 8388608,
+    "index_bytes": 2097152,
+    "raw_file_bytes": 25165824
+  },
+  "preflight": {
+    "batch_logical_cap": 230000000,
+    "compact_policy_rows_per_call": 466,
+    "compact_worlds_per_call": 126,
+    "enumerated_physical_world_rows": 35640,
+    "logical_work_per_call": 75107956,
+    "maximum_live_physical_oracles": 2,
+    "physical_oracle_builds": 6,
+    "physical_policy_rows_per_call": 16912,
+    "scope_note": "Named training/setup/output loops including 126 additional binary64 mass-sum entries per call, plus separate physical census only. Not total arithmetic, allocated memory, wall time, CPU or RSS bounds.",
+    "total_logical_work": 225323868,
+    "training_calls": 3
+  },
+  "protocol_id": "fixed-flop-prior-cfrplus-pilot-v1",
+  "quality_target_fraction": [
+    1,
+    200
+  ],
+  "source_proof": {
+    "index_raw_sha256": "4fe70ce71d09b5c41816917e2297ab8027e0f2b5c3e536ff6b473c3e695136f6",
+    "index_sha256": "166e877f68cc8ab7cf027ce6e80e18eb4ec952b5918aa26c85e4076bf6185dcb",
+    "source_revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13"
+  },
+  "training_call_counter": "Reversible wrapper counts invocations before delegating unchanged shared cfr_plus.train; restored on every exit. Incidental times include instrumentation and are not performance evidence."
+}

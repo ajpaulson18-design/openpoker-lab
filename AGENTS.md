@@ -404,3 +404,14 @@ own hashes, complete reveal/tree checks and exact own-hand responses. Preserve
 all published sources; never pass new priors through the old fixed-weight
 anchor or present control-policy equivalence as convergence. Admit all three
 protocol cases first and retain partial errors and full policies without retry.
+
+
+The separate [positive-prior flop CFR+ adapter](docs/flop-class-reweight-cfrplus.md)
+trains only baseline/uniform/skew literal supports with strict T<=560 admission.
+Keep its extra 126-entry mass-sum charge separate from the unchanged compact
+forecast and preserve the combined cap. Authenticate saved proof before fresh
+weighted preparation; use the weighted validator, positive joint mass conversion,
+all row/path guards, one unchanged zero-delay trainer call and exact unrestricted
+physical output responses. Preserve raw policies, normalization, misses/errors,
+historical baseline calibration, per-prior world identities and clean source
+snapshots. Do not alter published executables, production defaults or Coach.

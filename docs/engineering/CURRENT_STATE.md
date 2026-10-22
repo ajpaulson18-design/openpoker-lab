@@ -393,3 +393,23 @@ controls passing exact unrestricted physical response checks. Its 15 immutable
 artifacts preserve full policies, priors, source identities and numeric gaps.
 The saved verifier authenticates those bytes and receipts without fresh replay.
 New-prior CFR+ training and convergence remain a later milestone.
+
+
+The separate [positive-prior CFR+ adapter](../flop-class-reweight-cfrplus.md)
+is implemented with synthetic admission/lifecycle tests, an explicit weighted
+setup charge, fresh weighted model checks and a three-case pilot protocol.
+Its completed three-case 560-sweep pilot passed the 0.005 exact NashConv gate
+for baseline, uniform and skew, and all three retained policies passed fresh
+no-training physical replay. These are finite fixed-support results.
+
+
+The no-training range-prior evidence is published in merged
+[PR #206](https://github.com/ajpaulson18-design/openpoker-lab/pull/206), merge
+`53bb4a1266e2450dc8a0b7e0c20a82b2728b5c63`. Both complete Python matrices
+passed its final head; GitHub-main ancestry and exact merged-tree equality were
+verified, including the original solver handoff commit. The new training entry
+has 49 passing combined focused regressions (20 new adapter/harness/replay tests
+plus 29 prior-proof regressions) before freezing e1. The actual pilot and three
+fresh saved-policy replays completed with stable sources and no errors; full
+artifacts, receipt authentication and final publication are tracked in
+[PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).
