@@ -76,4 +76,42 @@ python -B -m scripts.verify_flop_class_cfrplus <new-report.json>
 python -B -m unittest tests.test_flop_class_policy tests.test_flop_class_cfrplus -v
 ```
 
-Pilot execution and publication are pending at the initial source checkpoint.
+## Completed pilot
+
+The [complete pilot policy](../benchmarks/results/flop-class-cfrplus-pilot-v1.json)
+retains all 466 raw compact averages and 16,912 physical rows. All eight exact
+class and unrestricted physical response metrics agree. The maximum independent
+numeric gap is `9.575673587391975e-16`. NashConv is `0.012537880082162792`, so
+this new pilot **misses** the preregistered `0.005` target. The older three misses
+remain unchanged; this is a correctness milestone, not a new convergence result.
+
+At 140 sweeps, the actual maximum path has 33 states, below the reserved 64.
+Output normalization changes 260 rows by binary64 bits, rounds no positive
+probability to zero, and has maximum exact-normalized distance `2^-53` and
+maximum raw-input distance `2^-52`. Exact physical diagnostics describe this
+normalized output policy.
+
+The source checkpoint is `c9ce2aa5e92086bc0b86b2e2e31387cb6dc73f19`;
+executable and protocol LF hashes stayed unchanged throughout. A verifier-test
+file was modified during the call; it was outside the recorded executable
+source set and subsequently passed focused checks. No timing or allocation
+measurement was taken, and no restart was used to select a different result.
+The artifact has 6,157,376 bytes, raw SHA-256
+`1992b8041a17478f3708e8fa6ac38aa5c9ddb7217cba1611c24008b4910d77cc` and
+unsigned canonical report SHA-256
+`36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209`.
+
+Independent saved-policy replay completed with zero training calls, reconstructing
+the four controls and checking all eight exact metrics again. The
+[execution receipt](../benchmarks/results/flop-class-cfrplus-pilot-v1-execution.json)
+records the source checkpoint, test-only qualification, command and saved replay.
+The [immutable publication verifier](../scripts/verify_flop_class_cfrplus_publication.py)
+also pins the complete raw artifact and retained miss before generic replay:
+
+```powershell
+python -B -m scripts.verify_flop_class_cfrplus_publication
+```
+
+The focused adapter/publication checks passed all 39 tests. Documentation links
+and all eight frontend contracts passed. The complete unit suite and GitHub
+Python matrix remain pending at this evidence checkpoint.
