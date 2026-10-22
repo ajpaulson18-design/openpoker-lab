@@ -171,3 +171,12 @@ The D025 eight-call study completed on 2026-10-22 with all policies and source
 identities retained, zero recorded errors and saved verification passing. Its
 [observations](../flop-class-call-cost.md) qualify runtime variation and Python
 allocation scope; phase profiling is the next diagnostic, not a speed claim.
+
+D026 (2026-10-22): after the completed fixed-flop eight-call study, add one
+separate instrumented 560-sweep compact call to locate time allocation before
+selecting another performance architecture. Require full-request admission,
+clean source snapshots, pilot-semantic equality, lossless report retention, and
+reversible nested wrappers around existing boundaries. Inclusive phase times
+overlap and include instrumentation overhead; they do not replace primary
+medians or establish a speed, memory, or bottleneck claim. No solver/proof/
+recurrence source or default changes are selected. See [profile scope and status](../flop-class-phase-profile.md). No earlier decision is superseded.
