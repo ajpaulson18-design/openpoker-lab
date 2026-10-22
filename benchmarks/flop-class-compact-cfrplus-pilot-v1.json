@@ -1,0 +1,33 @@
+{
+  "algorithm": "cfrplus",
+  "allocation_trace": false,
+  "averaging_delay": 0,
+  "baseline_pilot_artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+  "baseline_target_met": false,
+  "call_count": 1,
+  "expected_total_admitted_work": 75107830,
+  "expected_training_work": 75046160,
+  "iterations": 560,
+  "limits": "The explicit compact mode has its own versioned named-loop admission. The legacy adapter and original 140 request caps are unchanged. Fixed proof/preparation/physical replay remain separately bounded. Logical counts are not time, byte or RSS bounds. A single result does not prove general convergence, speed or unrestricted NLHE.",
+  "logical_work_cap": 76000000,
+  "protocol_id": "fixed-flop-class-compact-cfrplus-pilot-v1",
+  "purpose": "First higher-sweep physically verified policy under an explicit compact logical-work forecast.",
+  "quality_policy": "Retain this one fixed call and every miss; no post-hoc retuning or discarded unsuccessful output.",
+  "quality_target_nash_conv": "1/200",
+  "required_validation": [
+    "authenticate pinned shared recurrence and strategy source before model allocation",
+    "authenticate the preserved 140-sweep pilot miss",
+    "fresh four-control proof reconstruction before training",
+    "validate fixed dimensions, row split and maximum 33 visited states before training",
+    "retain all 466 raw average rows and 16912 physical policy rows",
+    "explicit exact-grid output normalization",
+    "eight exact compact/unrestricted physical response metrics equal",
+    "independent numeric physical replay gap at most 1e-10",
+    "independent saved-policy replay without retraining",
+    "unchanged source LF hashes during each complete call"
+  ],
+  "resource_model": "fixed-flop-class-cfrplus-logical-work-v1",
+  "rss": false,
+  "timing_comparison": false,
+  "training_kernel": "pokerlab.cfr_plus.train"
+}

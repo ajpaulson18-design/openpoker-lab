@@ -115,3 +115,8 @@ python -B -m scripts.verify_flop_class_cfrplus_publication
 The focused adapter/publication checks passed all 39 tests. Documentation links
 and all eight frontend contracts passed. The complete unit suite and GitHub
 Python matrix remain pending at this evidence checkpoint.
+
+A separate [explicit compact-work research entry](flop-class-compact-cfrplus.md)
+adds its own admission rather than changing this adapter or its source pins.
+Its protocol and validation status are recorded separately; this pilot remains
+a 140-sweep target miss.
