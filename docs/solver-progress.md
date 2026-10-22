@@ -1616,3 +1616,14 @@ This preserves fixed card/action support, existing shared sources and production
 defaults. It establishes no general convergence rate, speed, memory or
 unrestricted NLHE claim. Publication status is tracked in
 [PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).
+
+## Positive-prior baseline call observation (2026-10-22)
+
+The [separate frozen diagnostic](flop-class-reweight-baseline-diagnostic.md)
+completed one phase call and one allocation call, both reproducing the complete
+previously replayed baseline bytes. It retains 13 completed nested events,
+exactly two training invocations, clean 35-source identities and a Python traced
+peak of 401,901,644 bytes. The allocation call's large wall/CPU separation remains
+recorded. This single warm-process observation establishes no runtime comparison,
+RSS or stable memory advantage. Repeated full validation motivates a scoped
+integrity investigation; no solver, proof, production or Coach default changed.

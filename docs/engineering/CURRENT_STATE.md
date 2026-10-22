@@ -413,3 +413,21 @@ plus 29 prior-proof regressions) before freezing e1. The actual pilot and three
 fresh saved-policy replays completed with stable sources and no errors; full
 artifacts, receipt authentication and final publication are tracked in
 [PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).
+
+
+The [baseline call diagnostic](../flop-class-reweight-baseline-diagnostic.md)
+completed its single frozen two-call batch at source
+`602a37eac96dfd146069e361f2501efff15b3576`. Both reports match the independently
+replayed pilot byte for byte; trainer count is exactly one per sample/two total,
+all 35 sources remained clean/stable, and no error or retry occurred. The phase
+sample has 13 complete events (242.0216675 wall / 191.09375 CPU seconds); four
+nested model validations total 79.6207668 wall seconds, included within their
+parents. The separate allocation sample peaks at 401,901,644 new Python traced
+bytes and retains a large wall/CPU gap (9873.9262813 / 711.265625 seconds).
+These single observations imply no speed, RSS, stable memory or general
+bottleneck claim. Full policies, index and no-solve saved-evidence verifier are
+tracked in [PR #209](https://github.com/ajpaulson18-design/openpoker-lab/pull/209).
+
+PR #207 merged as `08e3a339eadfcff706fa75f0851e8f9978361ce2` after both final
+Python 3.11/3.12/3.13 matrices passed. Fetched main matched the reviewed tree
+and retained the original advance-solver commit before this diagnostic.

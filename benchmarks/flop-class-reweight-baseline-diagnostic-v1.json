@@ -1,0 +1,73 @@
+{
+  "acceptance": {
+    "count": "Exactly two shared trainer invocations; one per requested sample.",
+    "failure": "Retain partial policies, phase events, original traceback and source snapshots; stop later samples on first error, no retry or discarded run.",
+    "interpretation": "Single-call phase/allocation observations only, not throughput, medians, speedup, RSS, stable memory advantage, convergence rate or general bottleneck claims.",
+    "policy": "Both complete raw reports must match the authenticated baseline pilot bytes and artifact checksum exactly.",
+    "sources": "Clean committed identical revision/status/LF identities before/after every call and overall."
+  },
+  "event_limit": 1000,
+  "instrumented_boundaries": [
+    "weighted.publication.verify",
+    "weighted.compact_publication._read",
+    "weighted.build_model",
+    "weighted._training_inputs",
+    "cfr_plus.train",
+    "policy.canonicalize_binary_rows",
+    "weighted.lift_policy",
+    "weighted.audit_policy",
+    "weighted.validate_model"
+  ],
+  "limits": {
+    "gzip_file_bytes": 8388608,
+    "index_bytes": 2097152,
+    "raw_file_bytes": 25165824,
+    "source_bytes": 2097152
+  },
+  "measurement_scope": {
+    "allocation": "Separate call without phase wrappers; tracemalloc peak includes new Python allocations in library call/serialization/hash, excludes RSS/native/preexisting allocations and is not a total memory bound.",
+    "counter": "A reversible shared-trainer wrapper counts invocations and delegates unchanged recurrence. Counter overhead is included in both calls.",
+    "excluded": "Prerequisite baseline-byte authentication, outer source snapshots, gzip compression/file I/O and subsequent saved replay.",
+    "included": "One complete baseline library call plus canonical JSON serialization and SHA256. Internal proof authentication, physical preparation, training, normalization, lift and audit are included.",
+    "phase": "Inclusive nested wall/CPU times overlap, include reversible instrumentation and must not be summed across ancestors/descendants.",
+    "process": "Two sequential calls in one persistent process; GC before each, imports/preflight already warm. No fresh-process or cold-start claim."
+  },
+  "pilot": {
+    "baseline_artifact_sha256": "a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d",
+    "baseline_raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9",
+    "index_raw_sha256": "8ee047f7b7da7f25787abf4f8a8d2f6dcfcb490e543a0b43b11e10a526c93789",
+    "index_sha256": "88805b420346575c2991210bd7fc20c4f562962245347d6c128b4071604678e6"
+  },
+  "preflight": {
+    "batch_logical_cap": 153000000,
+    "enumerated_physical_world_rows_reference": 23760,
+    "logical_work_per_call": 75107956,
+    "maximum_live_physical_oracles_reference": 2,
+    "physical_oracle_builds_reference": 4,
+    "scope_note": "Named loop charges and separate physical census references; not all arithmetic, elapsed time, CPU, allocated bytes or RSS.",
+    "total_logical_work": 150215912
+  },
+  "protocol_id": "fixed-flop-prior-baseline-diagnostic-v1",
+  "request": {
+    "calls": 2,
+    "case_id": "baseline",
+    "iterations": 560
+  },
+  "runtime_admission": {
+    "implementation": "CPython",
+    "meaning": "Reject a different runtime before any measured solver call because full raw pilot bytes include this runtime identity.",
+    "python_version": "3.12.14"
+  },
+  "samples": [
+    {
+      "allocation_trace": false,
+      "phase_instrumentation": true,
+      "sample_id": "phase-profile"
+    },
+    {
+      "allocation_trace": true,
+      "phase_instrumentation": false,
+      "sample_id": "python-allocation"
+    }
+  ]
+}

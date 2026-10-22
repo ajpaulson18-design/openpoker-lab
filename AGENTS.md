@@ -415,3 +415,12 @@ all row/path guards, one unchanged zero-delay trainer call and exact unrestricte
 physical output responses. Preserve raw policies, normalization, misses/errors,
 historical baseline calibration, per-prior world identities and clean source
 snapshots. Do not alter published executables, production defaults or Coach.
+
+
+The separate [positive-prior baseline diagnostic](docs/flop-class-reweight-baseline-diagnostic.md)
+uses exactly one instrumented and one allocation call, full-request admission,
+clean source snapshots, actual trainer-count receipts and exact published report
+byte parity. Reuse immutable measurement/instrumentation helpers; restore every
+wrapper on all exits, release first-call payloads before tracing, retain partial
+failures and never retry in place. Keep inclusive nested phases and Python traced
+allocations separate from medians, speed, RSS and general bottleneck claims.
