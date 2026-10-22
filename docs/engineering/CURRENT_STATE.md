@@ -357,4 +357,14 @@ A separate explicit [compact-work fixed-flop entry](../flop-class-compact-cfrplu
 uses versioned named-loop admission and passed the preregistered 560-sweep
 finite-game quality gate with exact physical responses. It preserves all
 published lower-budget executable sources and old defaults; see the linked
-page for evidence and pending publication status.
+page for evidence and publication status.
+
+The fixed-game class quality pass is published in
+[merged PR #202](https://github.com/ajpaulson18-design/openpoker-lab/pull/202),
+with both full Python matrices passing. The completed eight-call
+[call-cost experiment](../flop-class-call-cost.md) records whole-call median
+148.360679 s / 175.079169 s at 140 / 560 sweeps, with separate Python traced
+peaks 96,955,723 / 96,959,799 bytes and preserved miss/pass outcomes. Both
+entries use the same representation; these are different work/quality budgets,
+not a same-work speedup or RSS measurement. See the retained
+[Windows validation qualification](../flop-class-windows-validation.md).

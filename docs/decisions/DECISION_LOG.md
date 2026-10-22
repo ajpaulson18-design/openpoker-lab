@@ -157,3 +157,17 @@ checks. Preserve the legacy adapter and its source-pinned result literally.
 This is a new explicit resource policy, not a silent relaxation of defaults or
 a convergence/performance claim. See [scope](../flop-class-compact-cfrplus.md).
 No prior decision is superseded.
+
+D025 (2026-10-21): after the independently replayed fixed-flop 560-sweep
+quality pass, prioritize complete-call runtime and allocation evidence before
+choosing another performance architecture. Freeze three paired timed rounds
+and one separate allocation call per entry, retaining every payload, miss,
+failure and source identity. Both entries already use the same representation;
+comparison across 140/560 sweeps describes different quality/work budgets, not
+a same-work speedup. See [measurement scope](../flop-class-call-cost.md).
+No prior decision is superseded.
+
+The D025 eight-call study completed on 2026-10-22 with all policies and source
+identities retained, zero recorded errors and saved verification passing. Its
+[observations](../flop-class-call-cost.md) qualify runtime variation and Python
+allocation scope; phase profiling is the next diagnostic, not a speed claim.

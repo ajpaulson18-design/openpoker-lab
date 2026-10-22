@@ -381,3 +381,10 @@ both shared kernel LF pins, and validate the fixed dimensions and 232/234 row
 split before training. Preserve all older misses and raw policies. Storage
 slots are partial bookkeeping, not memory/RSS bounds. See
 [compact-work scope](docs/flop-class-compact-cfrplus.md).
+
+Fixed-flop call-cost evidence uses the preregistered eight-call order, clean
+source snapshots before/after every call, complete solve plus serialization/hash
+timing, separate allocation calls and lossless payload retention. Preserve all
+errors and samples; no retries or outlier deletion. Both entries already use
+the same class representation; the 140/560 budgets do not support a same-work
+speedup or RSS claim. See [cost protocol](docs/flop-class-call-cost.md).

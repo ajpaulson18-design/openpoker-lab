@@ -1,0 +1,49 @@
+{
+  "allocation_boundary": "Separate calls with the same solve/serialization/hash boundary; gc before tracing; Python tracemalloc peak only, not RSS.",
+  "allocation_calls": 2,
+  "allocation_order": [
+    "class-140",
+    "class-560"
+  ],
+  "expected_experiment_named_work": 375724160,
+  "gc_before_every_call": true,
+  "interpretation": "Both entries use the same 126-world representation, recurrence and output normalization. Iterations differ 140 vs 560 and admission/baseline-authentication bookkeeping differs. Compare observed complete-call costs under different quality/work budgets; no same-work speedup, general speed, convergence or RSS claim.",
+  "maximum_experiment_named_work": 400000000,
+  "methods": [
+    {
+      "entry": "scripts.flop_class_cfrplus.solve_fixed",
+      "expected_quality_target_met": false,
+      "id": "class-140",
+      "iterations": 140
+    },
+    {
+      "entry": "scripts.flop_class_compact_cfrplus.solve_fixed_compact",
+      "expected_quality_target_met": true,
+      "id": "class-560",
+      "iterations": 560
+    }
+  ],
+  "payload_consistency": "All reports must match their independently replayed pinned pilot after removing only runtime and artifact checksum fields; all four reports per method must match one another exactly within this runtime.",
+  "protocol_id": "fixed-flop-class-call-cost-v1",
+  "quality_target_nash_conv": "1/200",
+  "retention": "Persist active request before each call and index after each result/error. Save all eight complete raw reports losslessly when produced, including misses. Never discard outliers, retry a timed sample or relabel failures.",
+  "runtime_qualification": "Record UTC, monotonic wall and process CPU time per call plus Python/platform and Windows execution-state request. Preserve unexplained elapsed gaps and contention as qualifications; execution-state request is not proof of exclusive CPU or absence of suspend.",
+  "source_policy": "Committed clean source before calls, exact source revision/status/LF hashes before and after every call, no source changes during the experiment.",
+  "timed_calls": 6,
+  "timed_orders": [
+    [
+      "class-140",
+      "class-560"
+    ],
+    [
+      "class-560",
+      "class-140"
+    ],
+    [
+      "class-140",
+      "class-560"
+    ]
+  ],
+  "timing_boundary": "One complete library solve, including internal proof reconstruction, training, normalization, lift and physical diagnostics, followed by canonical JSON serialization and SHA256. Excludes gzip/file I/O, external source snapshots and additional saved replay.",
+  "total_calls": 8
+}
