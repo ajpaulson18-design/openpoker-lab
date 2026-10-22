@@ -108,3 +108,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Complete positive-prior fixed-flop training pilot evidence.
 /benchmarks/results/flop-class-reweight-cfrplus-pilot-v1/index.json -text
 /benchmarks/results/flop-class-reweight-cfrplus-pilot-v1/*.json.gz binary
+
+# Immutable record of three fresh no-training physical policy replays.
+/benchmarks/results/flop-class-reweight-cfrplus-saved-replay-v1.json -text

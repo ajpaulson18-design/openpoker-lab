@@ -213,3 +213,13 @@ baseline calibration and retain every quality miss/failure without tuning or
 retry. Actual training waits for the proof merge and clean reviewed source.
 See [scope and pending evidence](../flop-class-reweight-cfrplus.md). No prior
 decision is superseded.
+
+
+The D028 single pilot and all three fresh saved-policy replays completed on
+2026-10-22 at frozen e1. Baseline calibration passed; normalized-policy exact
+NashConv was 0.002892400528, 0.000012958529 and 0.000993121225 for baseline,
+uniform and skew, each below 0.005. All raw policies, normalization records and
+exact response metrics are retained, with no lost positive probabilities, errors
+or retries. Training count was three; subsequent physical replay count was three
+with zero training. These finite-game results do not select a performance or
+broader-card-support claim.

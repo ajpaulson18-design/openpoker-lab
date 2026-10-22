@@ -1602,3 +1602,17 @@ Its explicit resource model reserves full requested training, fixed preparation,
 logical storage and output costs before dispatch; ordinary APIs and caps remain
 unchanged. Exact first-sweep controls and bounded physical/class replay are
 separate from any longer-budget quality claim. See [API, proof and admission](turn-class-tail.md).
+
+
+## Three positive-prior fixed-flop research games (2026-10-22)
+
+The [separate range-prior adapter](flop-class-reweight-cfrplus.md) trained the
+proved baseline/uniform/skew distributions at 560 zero-delay CFR+ sweeps. All
+three normalized policies passed exact unrestricted physical response checks
+and the 0.005 NashConv gate (0.0028924 / 0.00001296 / 0.0009931), followed by
+three independent saved-policy replays without training. Raw policies, exact
+metrics, source manifests and full immutable reports/replay receipts are retained.
+This preserves fixed card/action support, existing shared sources and production
+defaults. It establishes no general convergence rate, speed, memory or
+unrestricted NLHE claim. Publication status is tracked in
+[PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).

@@ -398,7 +398,9 @@ New-prior CFR+ training and convergence remain a later milestone.
 The separate [positive-prior CFR+ adapter](../flop-class-reweight-cfrplus.md)
 is implemented with synthetic admission/lifecycle tests, an explicit weighted
 setup charge, fresh weighted model checks and a three-case pilot protocol.
-No new-prior training result or convergence claim exists at this checkpoint.
+Its completed three-case 560-sweep pilot passed the 0.005 exact NashConv gate
+for baseline, uniform and skew, and all three retained policies passed fresh
+no-training physical replay. These are finite fixed-support results.
 
 
 The no-training range-prior evidence is published in merged
@@ -407,4 +409,7 @@ The no-training range-prior evidence is published in merged
 passed its final head; GitHub-main ancestry and exact merged-tree equality were
 verified, including the original solver handoff commit. The new training entry
 has 49 passing combined focused regressions (20 new adapter/harness/replay tests
-plus 29 prior-proof regressions); its actual pilot remains unexecuted here.
+plus 29 prior-proof regressions) before freezing e1. The actual pilot and three
+fresh saved-policy replays completed with stable sources and no errors; full
+artifacts, receipt authentication and final publication are tracked in
+[PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207).
