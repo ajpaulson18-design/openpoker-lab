@@ -80,7 +80,58 @@ best responses remain necessary before any new-board class training.
 
 ## Execution status
 
-Planner, reference checks and the batch harness currently pass synthetic
-admission and failure-path tests. No real second-board physical preparation,
-ranking, partition measurement or equivalence experiment has run yet. Freeze
-and review the clean committed source before executing the one admitted batch.
+The single admitted batch completed at source
+`a373c6e874b962ebf3d673ee4a95d8f301ae7ca5`, from
+2026-10-22 22:31:57.030310 to 22:32:09.796121 UTC, on CPython 3.12.14 / Windows.
+One physical build and one candidate partition completed, with 4,134 actual
+rank calls in preparation and another 4,134 in the same-ranker fresh-cache
+recheck. All 5,940 signs were compared. All 41 authority counters remained zero,
+44 named sources/clean HEAD/status matched before and after, and no errors,
+retries or training occurred. The UTC interval is an execution receipt,
+not a controlled runtime comparison.
+
+| Fresh observation | Measured value |
+| --- | ---: |
+| Physical ordered worlds | 5,940 |
+| Public states / tree edges | 30,812 / 30,811 |
+| Decisions / chances / terminals | 9,512 / 248 / 21,052 |
+| Maximum depth / traversal stack | 10 / 111 |
+| Candidate turn classes / river signatures | 13 / 17 |
+| Candidate aggregate class worlds | 170 |
+
+| Canonical pair | OOP wins | Ties | OOP losses | Exact pair prior |
+| --- | ---: | ---: | ---: | --- |
+| `AdAs` / `KdKs` | 1,718 | 96 | 166 | `8/13` |
+| `QdQs` / `AsKh` | 1,442 | 64 | 474 | `1/13` |
+| `QdQs` / `KdKs` | 198 | 64 | 1,718 | `4/13` |
+
+Fresh world SHA256 is
+`4ea9c186e4ba524da66b3363ad2a0d8a6851081ca41275a92d2c576a038879ab`;
+fresh typed numeric tree SHA256 is
+`1b327471df5591e48d50a1db305e0ea32ad3b45c2ff0354df2ddbe4025684173`.
+These new anchors describe this board only. Matching any old tree counts
+does not substitute for fresh hashes or full equivalence proof.
+
+The complete [index](../benchmarks/results/flop-second-board-reference-v1/index.json)
+and [lossless reference corpus](../benchmarks/results/flop-second-board-reference-v1/reference.json.gz)
+retain every world, numeric node/action/child view and candidate record.
+The index is 19,914 bytes, raw SHA256
+`46236f56d92c0b546c52b00339f84d202b51b5913031c0fdafedb4b43eb3d01c`,
+with self-digest
+`17be8d509916853b7e24ec2cf73f86567b5b8029083432fd04a2bed0e096d583`.
+The 373,923-byte gzip expands to 7,978,451 raw bytes (SHA256
+`4435d50308efbbe21203f166e6c4f2ccc185bae9dc54578eef56169b0e18b3fe`).
+
+`python -m scripts.verify_flop_second_board_reference_publication` authenticates
+both bounded files, protocol, clean current source inventory and recorded
+receipts. It reconstructs the typed tree structure from all saved JSON node
+views to check the tree hash, without creating numeric game nodes, ranking,
+training or best responses. Its observed build/rank counters are labelled
+`recorded_*`; current work counters remain zero. The 40 focused tests include
+admission/failure paths, explicit flop-root validation, complete authority
+receipts, saved-source/progress tampering and zero-work authentication.
+
+No full class/tree, policy or physical best-response equivalence has been
+performed on this board. The 13/17/170 candidate dimensions do not authorize
+new-board training. Publication is tracked in
+[PR #212](https://github.com/ajpaulson18-design/openpoker-lab/pull/212).

@@ -1627,3 +1627,15 @@ peak of 401,901,644 bytes. The allocation call's large wall/CPU separation remai
 recorded. This single warm-process observation establishes no runtime comparison,
 RSS or stable memory advantage. Repeated full validation motivates a scoped
 integrity investigation; no solver, proof, production or Coach default changed.
+
+## Fresh second-board flop reference (2026-10-22)
+
+The [separate no-training reference](flop-second-board-reference.md) independently
+prepared the fixed `7c8d9h` finite game, retaining all 5,940 weighted worlds and
+30,812 numeric public states with fresh hashes. Its explicit-board candidate
+partition measured 13 turn classes, 17 river signatures and 170 aggregate worlds.
+The same-ranker fresh-cache sign check is consistency evidence, not a second
+independent ranking method. Clean source and actual call/error receipts plus
+the complete lossless corpus are saved. Full class/tree and unrestricted
+own-hand response equivalence remain required before training on this board;
+this adds no strategy, convergence or performance result.

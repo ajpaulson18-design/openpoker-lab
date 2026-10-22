@@ -2,9 +2,11 @@
 
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
-have synthetic coverage; no real second-board worlds or partition dimensions
-have yet been generated. Original fixed-board evidence remains specific to
-`2c3d4h`, and fresh full equivalence is required before new-board training.
+completed one frozen physical batch: 5,940 worlds, 30,812 public states and
+13/17/170 candidate turn/river/world dimensions. Full saved views and fresh
+hashes are retained; no new-board equivalence or training is claimed. Original
+fixed-board evidence remains specific to `2c3d4h`, and fresh full equivalence
+is required before new-board training.
 
 Current source snapshot: merged main [`46e142be8e9585005e5de70bb32bf4a76f731a1c`](https://github.com/ajpaulson18-design/openpoker-lab/commit/46e142be8e9585005e5de70bb32bf4a76f731a1c) (Oct. 13, 2026). This is a source/documentation update only; it does not report a test run performed for this snapshot. The original Oct. 8–9 knowledge audit at `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce` is retained as historical evidence in [the transfer validation record](KNOWLEDGE_TRANSFER_VALIDATION.md).
 
