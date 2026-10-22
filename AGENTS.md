@@ -365,3 +365,11 @@ diagnostics. Ordinary physical admission remains literal; the old proxy is an
 informational comparison in the new model. Exact class/physical response checks
 and first-sweep own-reach scaling precede longer-run claims; retain every saved
 quality miss. See [scope and resource model](docs/turn-class-tail.md).
+
+The fixed-game flop class CFR+ research adapter is explicit and separate from
+the no-training proof and production APIs. Preserve its full-request 140-sweep
+physical reference caps, unchanged shared recurrence, all raw compact averages,
+explicit exact-grid output normalization and independent physical own-hand
+responses. Reconstruct all four published controls before training. Keep the
+frozen pilot and all misses; no larger budget, raw-policy parity, convergence
+or performance claim follows. See [scope](docs/flop-class-cfrplus.md).

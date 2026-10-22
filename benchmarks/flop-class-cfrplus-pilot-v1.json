@@ -1,0 +1,42 @@
+{
+  "algorithm": "cfrplus",
+  "averaging_delay": 0,
+  "fixed_game_proof_artifact_sha256": "996cd561cac42c63df41052df7e32168cfe5b1bb194c08bcc5b427c1fec6792d",
+  "iterations": 140,
+  "measurements": {
+    "allocation_trace": false,
+    "rss": false,
+    "timing": false
+  },
+  "misses_to_preserve": [
+    "historical CFR+ 140-sweep target miss",
+    "historical LCFR 140-sweep target miss",
+    "historical alternating DCFR 140-sweep target miss"
+  ],
+  "output_normalization": {
+    "grid_bits": 52,
+    "max_distance_from_exact_normalized_raw": "1/9007199254740992",
+    "mode": "nearest ties to even, exact complement"
+  },
+  "protocol_id": "fixed-flop-class-cfrplus-pilot-v1",
+  "purpose": "First trained-policy physical correctness pilot; no runtime or memory comparison.",
+  "quality_policy": "Retain the measured result and all raw rows whether the target passes or misses. Do not retune or infer convergence from a smaller gap.",
+  "quality_target_nash_conv": "1/200",
+  "required_validation": [
+    "fresh four-control proof reconstruction before training",
+    "all 466 raw compact average rows retained",
+    "all 16912 physical policy rows retained",
+    "eight exact compact and unrestricted physical own-hand response metrics equal",
+    "independent numeric physical replay gap at most 1e-10",
+    "saved-policy replay without retraining",
+    "source LF hashes unchanged during each call"
+  ],
+  "retained_limits": {
+    "max_iterations": 140,
+    "physical_decision_world_iterations": 30000000,
+    "physical_world_iterations": 3000000
+  },
+  "scope": "Only the independently proved weighted 2c3d4h flop game with later street betting. No wider ranges, games, API integration, general speedup or unrestricted NLHE claim.",
+  "training_kernel": "pokerlab.cfr_plus.train",
+  "training_passes_per_sweep": 3
+}
