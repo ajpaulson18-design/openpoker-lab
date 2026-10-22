@@ -79,5 +79,40 @@ python -B -m scripts.flop_class_compact_cfrplus --iterations 560 --output <new-r
 python -B -m scripts.verify_flop_class_compact_cfrplus <new-report.json>
 ```
 
-The implementation and pilot are pending validation/publication at this source
-checkpoint. No trained 560-sweep result is claimed.
+## Completed finite-game quality pilot
+
+The [complete policy](../benchmarks/results/flop-class-compact-cfrplus-pilot-v1.json)
+retains all 466 raw compact averages and 16,912 physical policy rows. At 560
+sweeps, exact NashConv is `0.0028924005277596834`, passing the preregistered
+`0.005` gate. All eight class/unrestricted physical response metrics agree
+exactly, and the maximum independent numeric gap is `1.1687699419393738e-15`.
+Independent saved-policy replay completed with zero training calls, rebuilding
+the four proof controls and checking the physical policy again.
+
+Output normalization changes 256 rows by binary64 bits, with no positive
+probability rounded to zero. Maximum exact-normalized distance is `2^-53`;
+maximum raw-input distance is `2^-52`. The quality and exact response claims
+apply to that normalized output. All old target misses, including the
+140-sweep compact pilot, remain preserved. This one finite-game pass is not
+a general convergence or unrestricted NLHE result.
+
+The [execution receipt](../benchmarks/results/flop-class-compact-cfrplus-pilot-v1-execution.json)
+records the clean source checkpoint `365b0136ea9a571e4303bdac156ba002d027cc0c`,
+one completed training call, no restarted training, unchanged executable/protocol
+hashes, the 75,107,830 admitted logical units and the zero-training saved replay.
+No timing, allocation or RSS comparison was taken.
+
+The raw artifact has 6,160,106 bytes and SHA-256
+`44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e`;
+its unsigned canonical report SHA-256 is
+`982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334`.
+Publication and the full GitHub Python matrix are pending at this checkpoint.
+
+The [immutable publication verifier](../scripts/verify_flop_class_compact_cfrplus_publication.py)
+pins both raw and canonical report hashes, the passing result and older miss
+before generic replay, then authenticates raw bytes again afterward. Its mocked
+replay control and all compact-mode focused checks passed: 20 tests.
+
+```powershell
+python -B -m scripts.verify_flop_class_compact_cfrplus_publication
+```

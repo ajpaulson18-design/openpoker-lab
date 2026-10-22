@@ -354,6 +354,7 @@ normalization record and exact physical response audit. Production defaults and
 the historical no-training proof remain unchanged; see that page for pilot status.
 
 A separate explicit [compact-work fixed-flop entry](../flop-class-compact-cfrplus.md)
-uses versioned named-loop admission for a preregistered 560-sweep research pilot.
-It preserves all published lower-budget executable sources and old defaults;
-see the linked page for pending validation and publication status.
+uses versioned named-loop admission and passed the preregistered 560-sweep
+finite-game quality gate with exact physical responses. It preserves all
+published lower-budget executable sources and old defaults; see the linked
+page for evidence and pending publication status.

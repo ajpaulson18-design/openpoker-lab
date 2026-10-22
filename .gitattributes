@@ -84,3 +84,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable complete fixed-flop class training pilot and execution receipt.
 /benchmarks/results/flop-class-cfrplus-pilot-v1.json -text
 /benchmarks/results/flop-class-cfrplus-pilot-v1-execution.json -text
+
+# Immutable complete explicit compact-work flop pilot and execution receipt.
+/benchmarks/results/flop-class-compact-cfrplus-pilot-v1.json -text
+/benchmarks/results/flop-class-compact-cfrplus-pilot-v1-execution.json -text
