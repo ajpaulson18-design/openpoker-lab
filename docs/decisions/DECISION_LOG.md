@@ -166,3 +166,8 @@ failure and source identity. Both entries already use the same representation;
 comparison across 140/560 sweeps describes different quality/work budgets, not
 a same-work speedup. See [measurement scope](../flop-class-call-cost.md).
 No prior decision is superseded.
+
+The D025 eight-call study completed on 2026-10-22 with all policies and source
+identities retained, zero recorded errors and saved verification passing. Its
+[observations](../flop-class-call-cost.md) qualify runtime variation and Python
+allocation scope; phase profiling is the next diagnostic, not a speed claim.

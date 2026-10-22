@@ -60,8 +60,62 @@ recurrence, oracle or Coach implementation. No third-party source/dependency
 is incorporated. See the [quality milestone](flop-class-compact-cfrplus.md) and
 [licensing boundary](research/LICENSING.md).
 
-No cost experiment has run at this source checkpoint. Implementation and its
-frozen source revision must be validated before execution.
+## Published observations
+
+The single preregistered eight-call run completed on 2026-10-22, from clean
+source `20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4`, with no retries, discarded
+samples, source drift or recorded errors. CPython 3.12.14 on Windows 10 ran
+all calls in one process. Imports/startup are outside the library-call boundary;
+allocation calls follow the six timing calls and GC, so prior retained objects
+and caches may be outside the trace. These are not fresh-process measurements.
+
+| Entry | Three untraced wall samples (s) | Median (s) | Python traced peak (bytes) | NashConv (decimal display) / 0.005 gate |
+| --- | --- | --- | --- | --- |
+| 140 sweeps | 133.061762, 150.169832, 148.360679 | 148.360679 | 96,955,723 | 0.012537880082162792 / miss |
+| 560 sweeps | 179.545349, 168.325548, 175.079169 | 175.079169 | 96,959,799 | 0.0028924005277596834 / pass |
+
+Both Python traced peaks are about 92.5 MiB. Each is one separate trace, not
+RSS or evidence of a stable memory difference. The traced calls took
+702.737329 s (140) and 554.453560 s (560), with CPU times 694.546875 s and
+542.656250 s. Their reversed timing order is retained and excluded from the
+primary medians. Timed-call CPU seconds are 132.593750, 177.625000,
+166.875000, 148.859375, 147.203125 and 174.734375 in protocol order. All
+elapsed variation remains evidence; CPU/wall agreement and the temporary
+Windows request do not establish exclusive CPU access or a universal cost.
+
+Every one of the four complete raw policies per method is byte-for-byte equal
+to its published pilot. All eight internal physical-response audits therefore
+retain their published exact class/physical agreement, including the miss.
+The study changes neither policy, quality target, solver nor admission.
+
+## Evidence and verification
+
+The [complete saved index](../benchmarks/results/flop-class-call-cost-v1/index.json)
+records all eight payload paths, raw/gzip hashes, UTC/wall/CPU observations,
+source fingerprints and runtime/request metadata. The eight lossless gzip
+reports total 1,091,724 bytes. Index identities are:
+
+- Raw SHA-256: `15fa0dd9c90ecacee4337dca2649cdf771f0f46569bf24d1a2d6056e10ef3a7f`.
+- Canonical index SHA-256: `80c95f4ec6f2af7d8797a7eb6de335c625332a75d0cc77e6993feac1c615bc49`.
+
+The immutable publication verifier pins both identities and the frozen source
+revision before checking all saved payloads, then authenticates the index again:
+
+```sh
+python -B -m scripts.verify_flop_class_cost_publication
+```
+
+The generic saved verifier was actually run on the complete external bundle
+and passed all eight calls without training, proof reconstruction or physical
+replay. Its payload check authenticates every report against the separately
+replayed published pilots; it is not another independent replay of poker rules.
+The publication wrapper has separate synthetic tamper and reauthentication tests.
+All three retained Windows validation logs were also checked against the
+compressed/uncompressed hashes and sizes in their qualification receipt.
+
+Next, use a separate instrumented phase profile to locate time allocation before
+choosing another performance architecture. Keep its instrumentation conditions
+separate from these primary samples.
 
 The [Windows validation qualification](flop-class-windows-validation.md)
 preserves the preceding failed duplicate local run and unchanged-code reruns.

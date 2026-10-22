@@ -1,0 +1,1264 @@
+{
+  "created_at_utc": "2026-10-22T04:04:09.931657+00:00",
+  "execution_state": {
+    "mode": "windows-benchmark-thread",
+    "previous_flags": 2147483648,
+    "requested_flags": 2147483649,
+    "system_required": true
+  },
+  "finished_at_utc": "2026-10-22T04:41:13.274951+00:00",
+  "index_sha256": "80c95f4ec6f2af7d8797a7eb6de335c625332a75d0cc77e6993feac1c615bc49",
+  "method_comparison_limit": "Both entries use the same 126-world representation, recurrence and output normalization. Iterations differ 140 vs 560 and admission/baseline-authentication bookkeeping differs. Compare observed complete-call costs under different quality/work budgets; no same-work speedup, general speed, convergence or RSS claim.",
+  "phase": "after-call",
+  "pilot_semantic_sha256": {
+    "class-140": "0f99df823b1d4ff70ec6db1d0ad406e43f5fa781af2069cc33947eee81cd0026",
+    "class-560": "7faf411ab40aff4cf81a81b44c4c1abc4f36f41b4c03ef8f8d076f48c62f4ddc"
+  },
+  "preflight": {
+    "maximum_named_work": 400000000,
+    "per_request": {
+      "allocation:separate:class-140": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 29937600,
+          "physical_world_iterations_informational_only": 2494800
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 140,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 18823210,
+        "total_training_work": 18761540,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "allocation:separate:class-560": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 119750400,
+          "physical_world_iterations_informational_only": 9979200
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 560,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 75107830,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:1:class-140": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 29937600,
+          "physical_world_iterations_informational_only": 2494800
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 140,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 18823210,
+        "total_training_work": 18761540,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:1:class-560": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 119750400,
+          "physical_world_iterations_informational_only": 9979200
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 560,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 75107830,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:2:class-140": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 29937600,
+          "physical_world_iterations_informational_only": 2494800
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 140,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 18823210,
+        "total_training_work": 18761540,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:2:class-560": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 119750400,
+          "physical_world_iterations_informational_only": 9979200
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 560,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 75107830,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:3:class-140": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 29937600,
+          "physical_world_iterations_informational_only": 2494800
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 140,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 18823210,
+        "total_training_work": 18761540,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      },
+      "timed:3:class-560": {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 76000000
+        },
+        "dimensions": {
+          "chance_nodes": 58,
+          "compact_information_rows": 466,
+          "compact_worlds": 126,
+          "max_world_visits": 33,
+          "private_information_action_slots": 932,
+          "public_action_edges": 632,
+          "public_decisions": 316,
+          "terminals": 627,
+          "tree_edges_including_chance": 1000
+        },
+        "fixed_output_and_diagnostics": {
+          "average_action_slots_divided_or_fallback_written": 932,
+          "average_action_slots_summed": 932,
+          "average_rows_finalized": 466,
+          "compact_output_action_slots": 932,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_reference": {
+          "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+          "physical_public_states": 30812,
+          "physical_worlds": 5940
+        },
+        "fixed_setup": {
+          "information_rows_validated": 466,
+          "pretraining_compact_nodes_visited_upper_bound": 4158,
+          "proof_world_rows_pretraining": 126,
+          "regret_and_average_action_slots_initialized": 1864,
+          "regret_and_average_rows_initialized": 932,
+          "world_rows_converted_and_mass_checked": 126
+        },
+        "fixed_setup_and_output_work": 61670,
+        "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "legacy_physical_proxy_reference": {
+          "old_caps_enforced_by_this_mode": false,
+          "physical_decision_world_iterations_informational_only": 119750400,
+          "physical_world_iterations_informational_only": 9979200
+        },
+        "logical_work_per_sweep": 134011,
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+          "average_profile_action_slots": 8316,
+          "chance_child_callback_calls": 12474,
+          "delta_dictionary_action_slots_zeroed": 932,
+          "delta_dictionary_information_key_scans": 932,
+          "information_key_lookups_upper_bound": 12474,
+          "node_kind_dispatches": 12474,
+          "outer_world_loop_entries": 378,
+          "owner_regret_update_action_slots": 8316,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1398,
+          "regret_clipping_action_slots": 932,
+          "regret_clipping_information_rows": 466,
+          "strategy_action_slot_touches": 8388,
+          "terminal_contribution_reads": 16632,
+          "terminal_value_callback_calls": 8316,
+          "update_expected_value_action_terms": 16632
+        },
+        "requested_iterations": 560,
+        "storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 932,
+          "final_average_action_slots_while_regrets_and_sums_exist": 932,
+          "largest_single_player_delta_action_slots": 468,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 932,
+          "persistent_regret_action_slots": 932,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "total_admitted_work": 75107830,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-cfrplus-logical-work-v1"
+      }
+    },
+    "total_named_work": 375724160
+  },
+  "protocol_id": "fixed-flop-class-call-cost-v1",
+  "runtime": {
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "runtime_qualification": "Record UTC, monotonic wall and process CPU time per call plus Python/platform and Windows execution-state request. Preserve unexplained elapsed gaps and contention as qualifications; execution-state request is not proof of exclusive CPU or absence of suspend.",
+  "samples": [
+    {
+      "file": "class-140-timed-1.json.gz",
+      "gzip_bytes": 135786,
+      "gzip_sha256": "736aa27132768eb2f7d5a7eb85d021c634de6440ae2371b187f672b96695cdf5",
+      "iterations": 140,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+        "finished_at_utc": "2026-10-22T04:06:24.486463+00:00",
+        "process_seconds": 132.59375,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": false,
+        "raw_sha256": "1992b8041a17478f3708e8fa6ac38aa5c9ddb7217cba1611c24008b4910d77cc",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:04:11.426220+00:00",
+        "wall_seconds": 133.0617624000006
+      },
+      "method": "class-140",
+      "quality_target_met": false,
+      "raw_bytes": 6157376,
+      "report_artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+      "round": 1,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-560-timed-1.json.gz",
+      "gzip_bytes": 137145,
+      "gzip_sha256": "986f3e040b63587f07c23bd15c387e544b6e7bc9f9b3e65faf241e255a1b8444",
+      "iterations": 560,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+        "finished_at_utc": "2026-10-22T04:09:25.216649+00:00",
+        "process_seconds": 177.625,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": true,
+        "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:06:25.674011+00:00",
+        "wall_seconds": 179.54534910000075
+      },
+      "method": "class-560",
+      "quality_target_met": true,
+      "raw_bytes": 6160106,
+      "report_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+      "round": 1,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-560-timed-2.json.gz",
+      "gzip_bytes": 137145,
+      "gzip_sha256": "986f3e040b63587f07c23bd15c387e544b6e7bc9f9b3e65faf241e255a1b8444",
+      "iterations": 560,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+        "finished_at_utc": "2026-10-22T04:12:14.789708+00:00",
+        "process_seconds": 166.875,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": true,
+        "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:09:26.470133+00:00",
+        "wall_seconds": 168.32554829999935
+      },
+      "method": "class-560",
+      "quality_target_met": true,
+      "raw_bytes": 6160106,
+      "report_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+      "round": 2,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-140-timed-2.json.gz",
+      "gzip_bytes": 135786,
+      "gzip_sha256": "736aa27132768eb2f7d5a7eb85d021c634de6440ae2371b187f672b96695cdf5",
+      "iterations": 140,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+        "finished_at_utc": "2026-10-22T04:14:46.215824+00:00",
+        "process_seconds": 148.859375,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": false,
+        "raw_sha256": "1992b8041a17478f3708e8fa6ac38aa5c9ddb7217cba1611c24008b4910d77cc",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:12:16.042430+00:00",
+        "wall_seconds": 150.16983219999747
+      },
+      "method": "class-140",
+      "quality_target_met": false,
+      "raw_bytes": 6157376,
+      "report_artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+      "round": 2,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-140-timed-3.json.gz",
+      "gzip_bytes": 135786,
+      "gzip_sha256": "736aa27132768eb2f7d5a7eb85d021c634de6440ae2371b187f672b96695cdf5",
+      "iterations": 140,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+        "finished_at_utc": "2026-10-22T04:17:16.364788+00:00",
+        "process_seconds": 147.203125,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": false,
+        "raw_sha256": "1992b8041a17478f3708e8fa6ac38aa5c9ddb7217cba1611c24008b4910d77cc",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:14:48.005383+00:00",
+        "wall_seconds": 148.36067910000202
+      },
+      "method": "class-140",
+      "quality_target_met": false,
+      "raw_bytes": 6157376,
+      "report_artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+      "round": 3,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-560-timed-3.json.gz",
+      "gzip_bytes": 137145,
+      "gzip_sha256": "986f3e040b63587f07c23bd15c387e544b6e7bc9f9b3e65faf241e255a1b8444",
+      "iterations": 560,
+      "kind": "timed",
+      "metadata": {
+        "allocation_trace": false,
+        "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+        "finished_at_utc": "2026-10-22T04:20:12.754586+00:00",
+        "process_seconds": 174.734375,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": true,
+        "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:17:17.677709+00:00",
+        "wall_seconds": 175.0791694000036
+      },
+      "method": "class-560",
+      "quality_target_met": true,
+      "raw_bytes": 6160106,
+      "report_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+      "round": 3,
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-140-allocation-1.json.gz",
+      "gzip_bytes": 135786,
+      "gzip_sha256": "736aa27132768eb2f7d5a7eb85d021c634de6440ae2371b187f672b96695cdf5",
+      "iterations": 140,
+      "kind": "allocation",
+      "metadata": {
+        "allocation_trace": true,
+        "artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+        "finished_at_utc": "2026-10-22T04:31:56.777551+00:00",
+        "process_seconds": 694.546875,
+        "python_traced_peak_bytes": 96955723,
+        "quality_target_met": false,
+        "raw_sha256": "1992b8041a17478f3708e8fa6ac38aa5c9ddb7217cba1611c24008b4910d77cc",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:20:14.035833+00:00",
+        "wall_seconds": 702.737328700001
+      },
+      "method": "class-140",
+      "quality_target_met": false,
+      "raw_bytes": 6157376,
+      "report_artifact_sha256": "36ddb38bcd9cadd9892fe99d0ba40ab2b1b0d6ae4d31e66f3fc5ec2b08c51209",
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    },
+    {
+      "file": "class-560-allocation-1.json.gz",
+      "gzip_bytes": 137145,
+      "gzip_sha256": "986f3e040b63587f07c23bd15c387e544b6e7bc9f9b3e65faf241e255a1b8444",
+      "iterations": 560,
+      "kind": "allocation",
+      "metadata": {
+        "allocation_trace": true,
+        "artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+        "finished_at_utc": "2026-10-22T04:41:12.240817+00:00",
+        "process_seconds": 542.65625,
+        "python_traced_peak_bytes": 96959799,
+        "quality_target_met": true,
+        "raw_sha256": "44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T04:31:57.778439+00:00",
+        "wall_seconds": 554.4535600000017
+      },
+      "method": "class-560",
+      "quality_target_met": true,
+      "raw_bytes": 6160106,
+      "report_artifact_sha256": "982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334",
+      "source_after_call": {
+        "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete"
+    }
+  ],
+  "schema_version": 1,
+  "source_after": {
+    "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "20a1f1dcf518895dd54ed5a9eb7ddc52fe1d89d4",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "specification": {
+    "allocation_boundary": "Separate calls with the same solve/serialization/hash boundary; gc before tracing; Python tracemalloc peak only, not RSS.",
+    "allocation_calls": 2,
+    "allocation_order": [
+      "class-140",
+      "class-560"
+    ],
+    "expected_experiment_named_work": 375724160,
+    "gc_before_every_call": true,
+    "interpretation": "Both entries use the same 126-world representation, recurrence and output normalization. Iterations differ 140 vs 560 and admission/baseline-authentication bookkeeping differs. Compare observed complete-call costs under different quality/work budgets; no same-work speedup, general speed, convergence or RSS claim.",
+    "maximum_experiment_named_work": 400000000,
+    "methods": [
+      {
+        "entry": "scripts.flop_class_cfrplus.solve_fixed",
+        "expected_quality_target_met": false,
+        "id": "class-140",
+        "iterations": 140
+      },
+      {
+        "entry": "scripts.flop_class_compact_cfrplus.solve_fixed_compact",
+        "expected_quality_target_met": true,
+        "id": "class-560",
+        "iterations": 560
+      }
+    ],
+    "payload_consistency": "All reports must match their independently replayed pinned pilot after removing only runtime and artifact checksum fields; all four reports per method must match one another exactly within this runtime.",
+    "protocol_id": "fixed-flop-class-call-cost-v1",
+    "quality_target_nash_conv": "1/200",
+    "retention": "Persist active request before each call and index after each result/error. Save all eight complete raw reports losslessly when produced, including misses. Never discard outliers, retry a timed sample or relabel failures.",
+    "runtime_qualification": "Record UTC, monotonic wall and process CPU time per call plus Python/platform and Windows execution-state request. Preserve unexplained elapsed gaps and contention as qualifications; execution-state request is not proof of exclusive CPU or absence of suspend.",
+    "source_policy": "Committed clean source before calls, exact source revision/status/LF hashes before and after every call, no source changes during the experiment.",
+    "timed_calls": 6,
+    "timed_orders": [
+      [
+        "class-140",
+        "class-560"
+      ],
+      [
+        "class-560",
+        "class-140"
+      ],
+      [
+        "class-140",
+        "class-560"
+      ]
+    ],
+    "timing_boundary": "One complete library solve, including internal proof reconstruction, training, normalization, lift and physical diagnostics, followed by canonical JSON serialization and SHA256. Excludes gzip/file I/O, external source snapshots and additional saved replay.",
+    "total_calls": 8
+  },
+  "status": "complete",
+  "summary": {
+    "class-140": {
+      "allocation_traced_peak_bytes": 96955723,
+      "median_wall_seconds": 148.36067910000202,
+      "quality_target_met": false,
+      "timed_rows": 3
+    },
+    "class-560": {
+      "allocation_traced_peak_bytes": 96959799,
+      "median_wall_seconds": 175.0791694000036,
+      "quality_target_met": true,
+      "timed_rows": 3
+    }
+  },
+  "validation_errors": []
+}
