@@ -1,0 +1,62 @@
+{
+  "complete_ci": {
+    "merge_commit": "0d641a8c1051ec97326d40a8a62010aca4518de8",
+    "pull_request": 201,
+    "python_versions": [
+      "3.11",
+      "3.12",
+      "3.13"
+    ],
+    "result": "passed"
+  },
+  "files": {
+    "flop-class-windows-frozen-replay-v1.log.gz": {
+      "gzip_bytes": 174,
+      "gzip_sha256": "6494f7d47c91bee51de2bfdd8f6eecaf94c144cb597ed3ebef53621702aaa48c",
+      "raw_bytes": 340,
+      "raw_sha256": "e410d6edf7377e4deff1b9e64ebefcf26139ce38e19a00e88ed57b65eedbd2d6"
+    },
+    "flop-class-windows-full-suite-initial-v1.log.gz": {
+      "gzip_bytes": 50190,
+      "gzip_sha256": "cf92b635f89299a782ff5353676f80a7c645abfc55e6e3aed5875f0d74ef8268",
+      "raw_bytes": 358269,
+      "raw_sha256": "c6091d10614ad1ca4985da4725fe8301c0fc7449898025d77e282a8b89c66742"
+    },
+    "flop-class-windows-short-path-rerun-v1.log.gz": {
+      "gzip_bytes": 443,
+      "gzip_sha256": "5cdde0229beef0fee9a9c780c774308b96768b192c6e8e569c49de5197efeee3",
+      "raw_bytes": 1939,
+      "raw_sha256": "ffa03b077f9f5c84c803b4ae9ca660c8779eb357d159e3bd4a796e7027ab5681"
+    }
+  },
+  "initial_full_suite": {
+    "errors": 8,
+    "failures": 3,
+    "skipped": 14,
+    "status": "failed-retained",
+    "tests": 1631
+  },
+  "schema_version": "fixed-flop-windows-validation-qualification-v1",
+  "scope": "Retain failed local run and targeted unchanged-code reruns. Do not relabel the initial Windows suite as passed, or change turn/river code based on path failures.",
+  "source_drift": {
+    "cause": "Lead committed source during the initial local suite.",
+    "confirmed_message": "Source changed during benchmark or saved verification",
+    "frozen_isolated_result": "passed",
+    "frozen_isolated_test_count": 1
+  },
+  "source_revision": "f5918ff1968d328b868d7794065c0bcb7b4cc835",
+  "staging_paths": {
+    "affected_test_methods": 9,
+    "code_changed_for_rerun": false,
+    "long_checkout": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-preflop",
+    "observed_lengths": [
+      262,
+      264,
+      266,
+      268
+    ],
+    "rerun_result": "passed",
+    "rerun_test_methods": 9,
+    "short_checkout": "C:\\Users\\pauls\\Documents\\Codex\\ot"
+  }
+}

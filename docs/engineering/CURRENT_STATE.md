@@ -358,3 +358,11 @@ uses versioned named-loop admission and passed the preregistered 560-sweep
 finite-game quality gate with exact physical responses. It preserves all
 published lower-budget executable sources and old defaults; see the linked
 page for evidence and pending publication status.
+
+The fixed-game class quality pass is published in
+[merged PR #202](https://github.com/ajpaulson18-design/openpoker-lab/pull/202),
+with both full Python matrices passing. The next
+[call-cost experiment](../flop-class-call-cost.md) measures runtime and separate
+Python traced allocations under the two quality/work budgets; no measurements
+are claimed until its frozen run completes. See the retained
+[Windows validation qualification](../flop-class-windows-validation.md).

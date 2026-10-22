@@ -88,3 +88,11 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable complete explicit compact-work flop pilot and execution receipt.
 /benchmarks/results/flop-class-compact-cfrplus-pilot-v1.json -text
 /benchmarks/results/flop-class-compact-cfrplus-pilot-v1-execution.json -text
+
+# Retained Windows validation logs and explicit qualification.
+/benchmarks/results/flop-class-windows-*.log.gz binary
+/benchmarks/results/flop-class-windows-validation-v1.json -text
+
+# Complete immutable fixed-flop call-cost evidence.
+/benchmarks/results/flop-class-call-cost-v1/index.json -text
+/benchmarks/results/flop-class-call-cost-v1/*.json.gz binary

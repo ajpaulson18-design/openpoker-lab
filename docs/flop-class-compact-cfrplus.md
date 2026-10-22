@@ -106,7 +106,10 @@ The raw artifact has 6,160,106 bytes and SHA-256
 `44e4e3a70713d0b7c69e8a20845c66478febe60db8dad854a43c8ecc302e3b4e`;
 its unsigned canonical report SHA-256 is
 `982e90ea073b1dfefa65662945c9b8178683bc4079ca5a9ae0af3a0d5f9c4334`.
-Publication and the full GitHub Python matrix are pending at this checkpoint.
+Publication completed in [merged PR #202](https://github.com/ajpaulson18-design/openpoker-lab/pull/202).
+Both push and pull-request full suites passed on Python 3.11, 3.12 and 3.13.
+See the [next call-cost protocol](flop-class-call-cost.md) for planned runtime
+and allocation evidence.
 
 The [immutable publication verifier](../scripts/verify_flop_class_compact_cfrplus_publication.py)
 pins both raw and canonical report hashes, the passing result and older miss
