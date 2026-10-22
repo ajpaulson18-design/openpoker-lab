@@ -381,3 +381,12 @@ verification, 46.553740 s training and 20.418856 s policy auditing as root
 intervals. This diagnostic does not change the solver,
 proof, recurrence, defaults, Coach, or turn/river paths, and its overlapping phase
 times are not primary timing evidence.
+
+
+The cost and phase evidence are published in merged
+[PR #204](https://github.com/ajpaulson18-design/openpoker-lab/pull/204) and
+[PR #205](https://github.com/ajpaulson18-design/openpoker-lab/pull/205), with both
+full Python matrices passing and GitHub-main ancestry/tree checks completed.
+The next [fixed-support range-prior proof](../flop-class-reweight.md) adds
+rank-free exact admission and a separate weighted model. Only synthetic tests
+have run so far; no real new-prior audit, training or convergence is claimed.

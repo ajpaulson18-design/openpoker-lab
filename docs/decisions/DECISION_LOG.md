@@ -185,3 +185,14 @@ The D026 single-call profile completed on 2026-10-22 with 21 retained events
 and the unchanged passing pilot policy. The observed largest root interval is
 publication verification; no prepared-reuse or production architecture has
 been implemented by this measurement.
+
+
+D027 (2026-10-22): after the merged runtime/phase studies, prioritize a new
+family of fixed-support range-prior games rather than optimizing certification
+cost alone. First require a separate no-training proof for baseline, uniform
+and skewed positive rational weights, including global blocker conditioning,
+fresh weighted physical reconstruction and exact legal response equivalence.
+Keep old-prior anchors/sources unchanged, all request/resource guards explicit,
+and all failed/partial work retained. Training under new priors remains a later
+milestone. See [scope and evidence](../flop-class-reweight.md). No previous
+decision is superseded.

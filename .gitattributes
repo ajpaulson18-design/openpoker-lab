@@ -100,3 +100,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable separate fixed-flop phase-profile evidence.
 /benchmarks/results/flop-class-phase-profile-v1/index.json -text
 /benchmarks/results/flop-class-phase-profile-v1/*.json.gz binary
+
+# Complete fixed-support reweight no-training proof evidence.
+/benchmarks/results/flop-class-reweight-proof-v1/index.json -text
+/benchmarks/results/flop-class-reweight-proof-v1/*.json.gz binary
