@@ -233,3 +233,12 @@ admission, reversible instrumentation and no retries. Inclusive events and one
 Python peak are diagnostics, not comparative speed/RSS or general bottleneck
 claims. See [scope and pending status](../flop-class-reweight-baseline-diagnostic.md).
 No earlier decision is superseded.
+
+D029 observation: the one admitted batch completed without errors/retries and
+both full reports match the previously replayed baseline exactly. Thirteen phase
+events include four repeated full model validations. The separate trace records
+401,901,644 new Python allocation bytes and a large retained wall/CPU gap; no
+comparative or general performance claim follows. Investigate call-owned model
+integrity before considering validation reuse; a mutable flag/cache alone is
+insufficient. The existing checks remain required. See the completed evidence
+and its qualifications in the linked diagnostic document.

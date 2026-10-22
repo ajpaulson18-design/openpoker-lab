@@ -1,0 +1,924 @@
+{
+  "baseline": {
+    "artifact_sha256": "a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d",
+    "quality_target_met": true,
+    "raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9"
+  },
+  "created_at_utc": "2026-10-22T16:17:17.739607+00:00",
+  "errors": [],
+  "execution_state": {
+    "mode": "windows-benchmark-thread",
+    "previous_flags": 2147483648,
+    "requested_flags": 2147483649,
+    "system_required": true
+  },
+  "finished_at_utc": "2026-10-22T19:05:58.427508+00:00",
+  "index_sha256": "919a16138442300a6125159fdc7a72767903896570c556396a0b8984a7a16a07",
+  "preflight": {
+    "batch_logical_cap": 153000000,
+    "enumerated_physical_world_rows_reference": 23760,
+    "logical_work_per_call": 75107956,
+    "maximum_live_physical_oracles_reference": 2,
+    "physical_oracle_builds_reference": 4,
+    "requests": [
+      {
+        "averaging_delay": 0,
+        "case_id": "baseline",
+        "combined_logical_work_cap": 76000000,
+        "compact_fixed_setup_and_output_work": 61670,
+        "compact_logical_admission": {
+          "cap": {
+            "maximum_iterations": 560,
+            "maximum_total_admitted_logical_work": 76000000
+          },
+          "dimensions": {
+            "chance_nodes": 58,
+            "compact_information_rows": 466,
+            "compact_worlds": 126,
+            "max_world_visits": 33,
+            "private_information_action_slots": 932,
+            "public_action_edges": 632,
+            "public_decisions": 316,
+            "terminals": 627,
+            "tree_edges_including_chance": 1000
+          },
+          "fixed_output_and_diagnostics": {
+            "average_action_slots_divided_or_fallback_written": 932,
+            "average_action_slots_summed": 932,
+            "average_rows_finalized": 466,
+            "compact_output_action_slots": 932,
+            "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+            "physical_policy_rows_lifted_and_diagnosed": 16912
+          },
+          "fixed_physical_preparation_reference": {
+            "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+            "physical_public_states": 30812,
+            "physical_worlds": 5940
+          },
+          "fixed_setup": {
+            "information_rows_validated": 466,
+            "pretraining_compact_nodes_visited_upper_bound": 4158,
+            "proof_world_rows_pretraining": 126,
+            "regret_and_average_action_slots_initialized": 1864,
+            "regret_and_average_rows_initialized": 932,
+            "world_rows_converted_and_mass_checked": 126
+          },
+          "fixed_setup_and_output_work": 61670,
+          "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+          "kernel_lf_sha256": {
+            "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+            "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+          },
+          "legacy_physical_proxy_reference": {
+            "old_caps_enforced_by_this_mode": false,
+            "physical_decision_world_iterations_informational_only": 119750400,
+            "physical_world_iterations_informational_only": 9979200
+          },
+          "logical_work_per_sweep": 134011,
+          "per_sweep": {
+            "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+            "average_profile_action_slots": 8316,
+            "chance_child_callback_calls": 12474,
+            "delta_dictionary_action_slots_zeroed": 932,
+            "delta_dictionary_information_key_scans": 932,
+            "information_key_lookups_upper_bound": 12474,
+            "node_kind_dispatches": 12474,
+            "outer_world_loop_entries": 378,
+            "owner_regret_update_action_slots": 8316,
+            "profile_dictionary_update_calls": 3,
+            "profile_information_rows": 1398,
+            "regret_clipping_action_slots": 932,
+            "regret_clipping_information_rows": 466,
+            "strategy_action_slot_touches": 8388,
+            "terminal_contribution_reads": 16632,
+            "terminal_value_callback_calls": 8316,
+            "update_expected_value_action_terms": 16632
+          },
+          "requested_iterations": 560,
+          "storage_bookkeeping": {
+            "current_profile_action_slots_per_profile": 932,
+            "final_average_action_slots_while_regrets_and_sums_exist": 932,
+            "largest_single_player_delta_action_slots": 468,
+            "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+            "persistent_average_action_slots": 932,
+            "persistent_regret_action_slots": 932,
+            "recursion_stack_node_bound_per_world": 33
+          },
+          "total_admitted_work": 75107830,
+          "total_training_work": 75046160,
+          "version": "fixed-flop-class-cfrplus-logical-work-v1"
+        },
+        "fixed_setup_and_output_work": 61796,
+        "plan": {
+          "board": [
+            "2c",
+            "3d",
+            "4h"
+          ],
+          "compatible_pair_raw_products": [
+            [
+              "AsAd",
+              "KsKd",
+              1,
+              1
+            ],
+            [
+              "QsQd",
+              "AsKh",
+              1,
+              8
+            ],
+            [
+              "QsQd",
+              "KsKd",
+              1,
+              2
+            ]
+          ],
+          "exact_pair_priors": [
+            [
+              "AsAd",
+              "KsKd",
+              8,
+              13
+            ],
+            [
+              "QsQd",
+              "AsKh",
+              1,
+              13
+            ],
+            [
+              "QsQd",
+              "KsKd",
+              4,
+              13
+            ]
+          ],
+          "global_blocker_normalizer": [
+            13,
+            8
+          ],
+          "ip_weights": [
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "oop_weights": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "ordered_runouts_per_pair": 1980,
+          "physical_world_forecast": 5940,
+          "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+        },
+        "requested_iterations": 560,
+        "total_admitted_work": 75107956,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-reweight-cfrplus-v1:admission-v1",
+        "weighted_proof_preparation_census": {
+          "compact_policy_rows": 466,
+          "compact_public_states": 1001,
+          "compact_worlds": 126,
+          "interpretation": "Census/capacity counts only. The compact logical-work forecast does not model all proof arithmetic, elapsed time, allocated bytes, or RSS.",
+          "maximum_live_physical_oracles": 2,
+          "physical_oracle_builds": 2,
+          "physical_policy_rows": 16912,
+          "physical_public_states_per_oracle": 30812,
+          "physical_world_rows_enumerated_total": 11880,
+          "physical_worlds_per_oracle": 5940
+        },
+        "weighted_setup_work": {
+          "binary64_mass_sum_world_entries": 126
+        },
+        "weighted_setup_work_interpretation": "Named 126-entry binary64 mass-sum input count only; not a complete arithmetic, CPU-time, allocated-byte, or RSS bound.",
+        "weighted_setup_work_total": 126
+      },
+      {
+        "averaging_delay": 0,
+        "case_id": "baseline",
+        "combined_logical_work_cap": 76000000,
+        "compact_fixed_setup_and_output_work": 61670,
+        "compact_logical_admission": {
+          "cap": {
+            "maximum_iterations": 560,
+            "maximum_total_admitted_logical_work": 76000000
+          },
+          "dimensions": {
+            "chance_nodes": 58,
+            "compact_information_rows": 466,
+            "compact_worlds": 126,
+            "max_world_visits": 33,
+            "private_information_action_slots": 932,
+            "public_action_edges": 632,
+            "public_decisions": 316,
+            "terminals": 627,
+            "tree_edges_including_chance": 1000
+          },
+          "fixed_output_and_diagnostics": {
+            "average_action_slots_divided_or_fallback_written": 932,
+            "average_action_slots_summed": 932,
+            "average_rows_finalized": 466,
+            "compact_output_action_slots": 932,
+            "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+            "physical_policy_rows_lifted_and_diagnosed": 16912
+          },
+          "fixed_physical_preparation_reference": {
+            "meaning": "Fixed proof/preparation census reference; detailed proof arithmetic is not modeled by these named counters.",
+            "physical_public_states": 30812,
+            "physical_worlds": 5940
+          },
+          "fixed_setup": {
+            "information_rows_validated": 466,
+            "pretraining_compact_nodes_visited_upper_bound": 4158,
+            "proof_world_rows_pretraining": 126,
+            "regret_and_average_action_slots_initialized": 1864,
+            "regret_and_average_rows_initialized": 932,
+            "world_rows_converted_and_mass_checked": 126
+          },
+          "fixed_setup_and_output_work": 61670,
+          "interpretation": "Named logical loop and callback counts only. Fixed setup and output counters are included in total_admitted_work; physical preparation/replay arithmetic is represented only by a separate census reference. Storage entries are partial bookkeeping, not a total memory, CPU-time, RSS, convergence, or speed bound. Legacy physical caps are not enforced here.",
+          "kernel_lf_sha256": {
+            "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+            "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+          },
+          "legacy_physical_proxy_reference": {
+            "old_caps_enforced_by_this_mode": false,
+            "physical_decision_world_iterations_informational_only": 119750400,
+            "physical_world_iterations_informational_only": 9979200
+          },
+          "logical_work_per_sweep": 134011,
+          "per_sweep": {
+            "action_and_deterministic_chance_child_recursions_upper_bound": 24948,
+            "average_profile_action_slots": 8316,
+            "chance_child_callback_calls": 12474,
+            "delta_dictionary_action_slots_zeroed": 932,
+            "delta_dictionary_information_key_scans": 932,
+            "information_key_lookups_upper_bound": 12474,
+            "node_kind_dispatches": 12474,
+            "outer_world_loop_entries": 378,
+            "owner_regret_update_action_slots": 8316,
+            "profile_dictionary_update_calls": 3,
+            "profile_information_rows": 1398,
+            "regret_clipping_action_slots": 932,
+            "regret_clipping_information_rows": 466,
+            "strategy_action_slot_touches": 8388,
+            "terminal_contribution_reads": 16632,
+            "terminal_value_callback_calls": 8316,
+            "update_expected_value_action_terms": 16632
+          },
+          "requested_iterations": 560,
+          "storage_bookkeeping": {
+            "current_profile_action_slots_per_profile": 932,
+            "final_average_action_slots_while_regrets_and_sums_exist": 932,
+            "largest_single_player_delta_action_slots": 468,
+            "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+            "persistent_average_action_slots": 932,
+            "persistent_regret_action_slots": 932,
+            "recursion_stack_node_bound_per_world": 33
+          },
+          "total_admitted_work": 75107830,
+          "total_training_work": 75046160,
+          "version": "fixed-flop-class-cfrplus-logical-work-v1"
+        },
+        "fixed_setup_and_output_work": 61796,
+        "plan": {
+          "board": [
+            "2c",
+            "3d",
+            "4h"
+          ],
+          "compatible_pair_raw_products": [
+            [
+              "AsAd",
+              "KsKd",
+              1,
+              1
+            ],
+            [
+              "QsQd",
+              "AsKh",
+              1,
+              8
+            ],
+            [
+              "QsQd",
+              "KsKd",
+              1,
+              2
+            ]
+          ],
+          "exact_pair_priors": [
+            [
+              "AsAd",
+              "KsKd",
+              8,
+              13
+            ],
+            [
+              "QsQd",
+              "AsKh",
+              1,
+              13
+            ],
+            [
+              "QsQd",
+              "KsKd",
+              4,
+              13
+            ]
+          ],
+          "global_blocker_normalizer": [
+            13,
+            8
+          ],
+          "ip_weights": [
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "oop_weights": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "ordered_runouts_per_pair": 1980,
+          "physical_world_forecast": 5940,
+          "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+        },
+        "requested_iterations": 560,
+        "total_admitted_work": 75107956,
+        "total_training_work": 75046160,
+        "version": "fixed-flop-class-reweight-cfrplus-v1:admission-v1",
+        "weighted_proof_preparation_census": {
+          "compact_policy_rows": 466,
+          "compact_public_states": 1001,
+          "compact_worlds": 126,
+          "interpretation": "Census/capacity counts only. The compact logical-work forecast does not model all proof arithmetic, elapsed time, allocated bytes, or RSS.",
+          "maximum_live_physical_oracles": 2,
+          "physical_oracle_builds": 2,
+          "physical_policy_rows": 16912,
+          "physical_public_states_per_oracle": 30812,
+          "physical_world_rows_enumerated_total": 11880,
+          "physical_worlds_per_oracle": 5940
+        },
+        "weighted_setup_work": {
+          "binary64_mass_sum_world_entries": 126
+        },
+        "weighted_setup_work_interpretation": "Named 126-entry binary64 mass-sum input count only; not a complete arithmetic, CPU-time, allocated-byte, or RSS bound.",
+        "weighted_setup_work_total": 126
+      }
+    ],
+    "scope_note": "Named loop charges and separate physical census references; not all arithmetic, elapsed time, CPU, allocated bytes or RSS.",
+    "total_logical_work": 150215912
+  },
+  "protocol": {
+    "acceptance": {
+      "count": "Exactly two shared trainer invocations; one per requested sample.",
+      "failure": "Retain partial policies, phase events, original traceback and source snapshots; stop later samples on first error, no retry or discarded run.",
+      "interpretation": "Single-call phase/allocation observations only, not throughput, medians, speedup, RSS, stable memory advantage, convergence rate or general bottleneck claims.",
+      "policy": "Both complete raw reports must match the authenticated baseline pilot bytes and artifact checksum exactly.",
+      "sources": "Clean committed identical revision/status/LF identities before/after every call and overall."
+    },
+    "event_limit": 1000,
+    "instrumented_boundaries": [
+      "weighted.publication.verify",
+      "weighted.compact_publication._read",
+      "weighted.build_model",
+      "weighted._training_inputs",
+      "cfr_plus.train",
+      "policy.canonicalize_binary_rows",
+      "weighted.lift_policy",
+      "weighted.audit_policy",
+      "weighted.validate_model"
+    ],
+    "limits": {
+      "gzip_file_bytes": 8388608,
+      "index_bytes": 2097152,
+      "raw_file_bytes": 25165824,
+      "source_bytes": 2097152
+    },
+    "measurement_scope": {
+      "allocation": "Separate call without phase wrappers; tracemalloc peak includes new Python allocations in library call/serialization/hash, excludes RSS/native/preexisting allocations and is not a total memory bound.",
+      "counter": "A reversible shared-trainer wrapper counts invocations and delegates unchanged recurrence. Counter overhead is included in both calls.",
+      "excluded": "Prerequisite baseline-byte authentication, outer source snapshots, gzip compression/file I/O and subsequent saved replay.",
+      "included": "One complete baseline library call plus canonical JSON serialization and SHA256. Internal proof authentication, physical preparation, training, normalization, lift and audit are included.",
+      "phase": "Inclusive nested wall/CPU times overlap, include reversible instrumentation and must not be summed across ancestors/descendants.",
+      "process": "Two sequential calls in one persistent process; GC before each, imports/preflight already warm. No fresh-process or cold-start claim."
+    },
+    "pilot": {
+      "baseline_artifact_sha256": "a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d",
+      "baseline_raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9",
+      "index_raw_sha256": "8ee047f7b7da7f25787abf4f8a8d2f6dcfcb490e543a0b43b11e10a526c93789",
+      "index_sha256": "88805b420346575c2991210bd7fc20c4f562962245347d6c128b4071604678e6"
+    },
+    "preflight": {
+      "batch_logical_cap": 153000000,
+      "enumerated_physical_world_rows_reference": 23760,
+      "logical_work_per_call": 75107956,
+      "maximum_live_physical_oracles_reference": 2,
+      "physical_oracle_builds_reference": 4,
+      "scope_note": "Named loop charges and separate physical census references; not all arithmetic, elapsed time, CPU, allocated bytes or RSS.",
+      "total_logical_work": 150215912
+    },
+    "protocol_id": "fixed-flop-prior-baseline-diagnostic-v1",
+    "request": {
+      "calls": 2,
+      "case_id": "baseline",
+      "iterations": 560
+    },
+    "runtime_admission": {
+      "implementation": "CPython",
+      "meaning": "Reject a different runtime before any measured solver call because full raw pilot bytes include this runtime identity.",
+      "python_version": "3.12.14"
+    },
+    "samples": [
+      {
+        "allocation_trace": false,
+        "phase_instrumentation": true,
+        "sample_id": "phase-profile"
+      },
+      {
+        "allocation_trace": true,
+        "phase_instrumentation": false,
+        "sample_id": "python-allocation"
+      }
+    ]
+  },
+  "protocol_id": "fixed-flop-prior-baseline-diagnostic-v1",
+  "protocol_sha256": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+  "runtime": {
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "samples": [
+    {
+      "allocation_trace": false,
+      "error": null,
+      "events": [
+        {
+          "event_id": 1,
+          "finished_at_utc": "2026-10-22T16:17:51.165844+00:00",
+          "parent_event_id": null,
+          "phase": "weighted.publication.verify",
+          "process_seconds": 21.46875,
+          "started_at_utc": "2026-10-22T16:17:20.635466+00:00",
+          "status": "complete",
+          "wall_seconds": 30.53078749999986
+        },
+        {
+          "event_id": 2,
+          "finished_at_utc": "2026-10-22T16:17:51.975941+00:00",
+          "parent_event_id": null,
+          "phase": "weighted.compact_publication._read",
+          "process_seconds": 0.671875,
+          "started_at_utc": "2026-10-22T16:17:51.165844+00:00",
+          "status": "complete",
+          "wall_seconds": 0.8112848000018857
+        },
+        {
+          "event_id": 3,
+          "finished_at_utc": "2026-10-22T16:18:19.399665+00:00",
+          "parent_event_id": null,
+          "phase": "weighted.build_model",
+          "process_seconds": 22.796875,
+          "started_at_utc": "2026-10-22T16:17:52.132700+00:00",
+          "status": "complete",
+          "wall_seconds": 27.2673735999997
+        },
+        {
+          "event_id": 4,
+          "finished_at_utc": "2026-10-22T16:18:42.270946+00:00",
+          "parent_event_id": null,
+          "phase": "weighted._training_inputs",
+          "process_seconds": 17.921875,
+          "started_at_utc": "2026-10-22T16:18:19.399665+00:00",
+          "status": "complete",
+          "wall_seconds": 22.871652100002393
+        },
+        {
+          "event_id": 5,
+          "finished_at_utc": "2026-10-22T16:18:41.861343+00:00",
+          "parent_event_id": 4,
+          "phase": "weighted.validate_model",
+          "process_seconds": 17.59375,
+          "started_at_utc": "2026-10-22T16:18:19.399665+00:00",
+          "status": "complete",
+          "wall_seconds": 22.465210000009392
+        },
+        {
+          "event_id": 6,
+          "finished_at_utc": "2026-10-22T16:20:03.221927+00:00",
+          "parent_event_id": null,
+          "phase": "cfr_plus.train",
+          "process_seconds": 63.8125,
+          "started_at_utc": "2026-10-22T16:18:42.276023+00:00",
+          "status": "complete",
+          "wall_seconds": 80.94692120001127
+        },
+        {
+          "event_id": 7,
+          "finished_at_utc": "2026-10-22T16:20:03.354192+00:00",
+          "parent_event_id": null,
+          "phase": "policy.canonicalize_binary_rows",
+          "process_seconds": 0.078125,
+          "started_at_utc": "2026-10-22T16:20:03.221927+00:00",
+          "status": "complete",
+          "wall_seconds": 0.1316145000018878
+        },
+        {
+          "event_id": 8,
+          "finished_at_utc": "2026-10-22T16:20:25.923064+00:00",
+          "parent_event_id": null,
+          "phase": "weighted.lift_policy",
+          "process_seconds": 17.5,
+          "started_at_utc": "2026-10-22T16:20:03.355191+00:00",
+          "status": "complete",
+          "wall_seconds": 22.57402610000281
+        },
+        {
+          "event_id": 9,
+          "finished_at_utc": "2026-10-22T16:20:24.445923+00:00",
+          "parent_event_id": 8,
+          "phase": "weighted.validate_model",
+          "process_seconds": 16.28125,
+          "started_at_utc": "2026-10-22T16:20:03.359293+00:00",
+          "status": "complete",
+          "wall_seconds": 21.088372700003674
+        },
+        {
+          "event_id": 10,
+          "finished_at_utc": "2026-10-22T16:21:21.798621+00:00",
+          "parent_event_id": null,
+          "phase": "weighted.audit_policy",
+          "process_seconds": 46.046875,
+          "started_at_utc": "2026-10-22T16:20:25.923064+00:00",
+          "status": "complete",
+          "wall_seconds": 55.86654270000872
+        },
+        {
+          "event_id": 11,
+          "finished_at_utc": "2026-10-22T16:20:44.787042+00:00",
+          "parent_event_id": 10,
+          "phase": "weighted.validate_model",
+          "process_seconds": 15.3125,
+          "started_at_utc": "2026-10-22T16:20:25.923064+00:00",
+          "status": "complete",
+          "wall_seconds": 18.853710200011847
+        },
+        {
+          "event_id": 12,
+          "finished_at_utc": "2026-10-22T16:21:20.588149+00:00",
+          "parent_event_id": 10,
+          "phase": "weighted.lift_policy",
+          "process_seconds": 15.4375,
+          "started_at_utc": "2026-10-22T16:21:02.289879+00:00",
+          "status": "complete",
+          "wall_seconds": 18.30356169999868
+        },
+        {
+          "event_id": 13,
+          "finished_at_utc": "2026-10-22T16:21:19.506007+00:00",
+          "parent_event_id": 12,
+          "phase": "weighted.validate_model",
+          "process_seconds": 14.53125,
+          "started_at_utc": "2026-10-22T16:21:02.289879+00:00",
+          "status": "complete",
+          "wall_seconds": 17.213473899988458
+        }
+      ],
+      "evidence_file": {
+        "gzip_bytes": 138363,
+        "gzip_sha256": "9c3a3029c1a17d25ac2a99acab837d7e9bb7d1278e137f91fe8896e15b7fdaa6",
+        "path": "phase-profile.json.gz",
+        "raw_bytes": 6163274,
+        "raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9"
+      },
+      "measurement": {
+        "allocation_trace": false,
+        "artifact_sha256": "a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d",
+        "finished_at_utc": "2026-10-22T16:21:22.602889+00:00",
+        "process_seconds": 191.09375,
+        "python_traced_peak_bytes": null,
+        "quality_target_met": true,
+        "raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T16:17:20.584649+00:00",
+        "wall_seconds": 242.02166749999742
+      },
+      "phase_instrumentation": true,
+      "report_matches_pilot": true,
+      "sample_id": "phase-profile",
+      "source_after": {
+        "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+          "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+          "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+          "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "source_before": {
+        "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+          "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+          "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+          "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete",
+      "training_calls": 1
+    },
+    {
+      "allocation_trace": true,
+      "error": null,
+      "events": [],
+      "evidence_file": {
+        "gzip_bytes": 138363,
+        "gzip_sha256": "9c3a3029c1a17d25ac2a99acab837d7e9bb7d1278e137f91fe8896e15b7fdaa6",
+        "path": "python-allocation.json.gz",
+        "raw_bytes": 6163274,
+        "raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9"
+      },
+      "measurement": {
+        "allocation_trace": true,
+        "artifact_sha256": "a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d",
+        "finished_at_utc": "2026-10-22T19:05:57.449846+00:00",
+        "process_seconds": 711.265625,
+        "python_traced_peak_bytes": 401901644,
+        "quality_target_met": true,
+        "raw_sha256": "902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9",
+        "runtime": {
+          "implementation": "CPython",
+          "platform": "Windows-10-10.0.19045-SP0",
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+        },
+        "started_at_utc": "2026-10-22T16:21:23.599553+00:00",
+        "wall_seconds": 9873.926281299995
+      },
+      "phase_instrumentation": false,
+      "report_matches_pilot": true,
+      "sample_id": "python-allocation",
+      "source_after": {
+        "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+          "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+          "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+          "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "source_before": {
+        "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+          "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+          "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+          "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "status": "complete",
+      "training_calls": 1
+    }
+  ],
+  "schema_version": 1,
+  "source_after": {
+    "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "602a37eac96dfd146069e361f2501efff15b3576",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "status": "complete",
+  "training_calls": 2
+}

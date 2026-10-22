@@ -52,18 +52,96 @@ trace. It retains original failures/partial events and stops later samples on th
 first error without retry or discarded runs. Single-call observations establish
 no medians, throughput, speedup, RSS, general bottleneck or convergence-rate claim.
 
-## Status and provenance
+## Completed frozen observation
 
-No actual diagnostic call has run at this source checkpoint. The preceding
-training and three fresh saved replays are published in merged
+The single admitted batch ran on source
+`602a37eac96dfd146069e361f2501efff15b3576`, from
+2026-10-22 16:17:17.739607 to 19:05:58.427508 UTC. Both samples completed,
+with exactly one shared trainer invocation each and two total, no errors or
+retries, and identical clean HEAD/status/35-source maps before and after every
+sample and overall. Every returned byte equals the previously independently
+replayed baseline pilot: raw SHA256
+`902420ca04f52e1b64fda5127adc074357e41151e07565488d3d859399147cf9`, artifact
+`a3f94b109cff3ce8e4b487b4a376160f152d4114ec39173a31f8db6e1a51983d`.
+Its exact physical-response NashConv remains `0.0028924005277596834`, passing
+0.005; these diagnostics add no new convergence result.
+
+| Sample | Complete-call wall seconds | Process CPU seconds | Python traced peak bytes |
+| --- | ---: | ---: | ---: |
+| Phase instrumentation | 242.0216675 | 191.093750 | Not traced |
+| Separate allocation trace | 9873.9262813 | 711.265625 | 401,901,644 |
+
+The allocation sample spans a large wall/CPU gap that was observed while the
+same authoritative process remained alive. That gap and tracing overhead are
+retained; no cause is assumed, no run was replaced, and these timings are not
+a controlled runtime comparison. The peak measures new traced Python
+allocations in the stated window, not RSS, all live/native/preexisting memory,
+a stable memory advantage or a byte bound. The two calls share a warm process.
+
+All 13 phase events completed. The eight non-nested root intervals were:
+
+| Root phase | Inclusive wall seconds | Inclusive CPU seconds |
+| --- | ---: | ---: |
+| No-training publication authentication | 30.5307875 | 21.468750 |
+| Old compact-pilot read | 0.8112848 | 0.671875 |
+| Weighted physical model construction | 27.2673736 | 22.796875 |
+| Training input preparation | 22.8716521 | 17.921875 |
+| Shared CFR+ training | 80.9469212 | 63.812500 |
+| Output normalization | 0.1316145 | 0.078125 |
+| Initial physical policy lift | 22.5740261 | 17.500000 |
+| Independent physical audit | 55.8665427 | 46.046875 |
+
+Four nested `weighted.validate_model` intervals total 79.6207668 wall seconds;
+they are included within the relevant root intervals above. Audit also contains
+a nested lift/validation. Do not add these nested measurements to the root
+measurements. The observations motivate investigating privately owned prepared
+state with complete integrity coverage; they establish no speed benefit,
+general bottleneck or permission to skip model/policy/physical-response checks.
+
+## Saved files and authentication
+
+The [index](../benchmarks/results/flop-class-reweight-baseline-diagnostic-v1/index.json)
+preserves every event, measurement, source snapshot and admission receipt.
+The complete returned reports are retained separately for the
+[phase sample](../benchmarks/results/flop-class-reweight-baseline-diagnostic-v1/phase-profile.json.gz)
+and [allocation sample](../benchmarks/results/flop-class-reweight-baseline-diagnostic-v1/python-allocation.json.gz).
+Each gzip has 138,363 bytes (6,163,274 raw bytes); both contain the exact
+baseline report. Index raw SHA256 is
+`aa18563a9f01c30faa52d8f2c72188892f3a838a9d25cb6c3bb663a28fda74d8`,
+and canonical self-digest is
+`919a16138442300a6125159fdc7a72767903896570c556396a0b8984a7a16a07`.
+
+```text
+python -m scripts.verify_flop_class_reweight_baseline_diagnostic_publication
+```
+
+This publication command authenticates bounded index/gzip bytes, the frozen
+protocol, source identities, trainer counts, baseline parity, modes, UTC
+chronology, nested event intervals and Python peak metadata. It rechecks files
+and the current clean source map at the end. It performs no model construction,
+training, ranking or physical replay. A later clean publication HEAD is allowed
+only with the same 35 executable/specification hashes as the measured source.
+No additional physical replay is claimed: byte-identical reports bind these
+observations to the pilot's three fresh saved-policy reconstructions.
+
+## Provenance and limits
+
+The prerequisite pilot and fresh saved replays are published in merged
 [PR #207](https://github.com/ajpaulson18-design/openpoker-lab/pull/207), merge
-`08e3a339eadfcff706fa75f0851e8f9978361ce2`. Both final Python 3.11/3.12/3.13
-matrices passed; the reviewed pilot head and original advance-solver commit are
-ancestors of fetched GitHub main. Actual diagnostic execution requires this
-reviewed clean frozen source/protocol. Twenty-two focused harness, measurement
-and wrapper tests passed on CPython 3.12.14. Synthetic tests do not provide
-runtime or allocation evidence. All existing mathematical and published measurement
-sources remain intact. No third-party source or dependency is incorporated; see
+`08e3a339eadfcff706fa75f0851e8f9978361ce2`. Its reviewed head and the original
+advance-solver commit were verified ancestors of fetched GitHub main before
+this diagnostic. This publication is tracked in
+[PR #209](https://github.com/ajpaulson18-design/openpoker-lab/pull/209).
+
+Luna implemented the bounded diagnostic and saved-evidence verifier; lead
+reviewed admission, per-sample trainer counts, report retention, wrapper
+restoration and timestamp containment, requiring corrections before execution
+or publication. Twenty-two focused harness/measurement/instrumentation tests
+passed before source freeze; ten publication tamper/chronology tests passed
+independently in scratch. All 32 integrated focused tests and the documentation checker passed.
+Final-head CI and publication authentication are recorded in the PR. The actual two-sample batch had no failure/retry. All existing
+mathematical and published measurement sources remain intact. No third-party
+source or dependency is incorporated; see
 [commercial boundary](research/LICENSING.md),
 [prior phase profile](flop-class-phase-profile.md) and
 [primary cost study](flop-class-call-cost.md).
