@@ -387,6 +387,9 @@ The cost and phase evidence are published in merged
 [PR #204](https://github.com/ajpaulson18-design/openpoker-lab/pull/204) and
 [PR #205](https://github.com/ajpaulson18-design/openpoker-lab/pull/205), with both
 full Python matrices passing and GitHub-main ancestry/tree checks completed.
-The next [fixed-support range-prior proof](../flop-class-reweight.md) adds
-rank-free exact admission and a separate weighted model. Only synthetic tests
-have run so far; no real new-prior audit, training or convergence is claimed.
+The [fixed-support range-prior proof](../flop-class-reweight.md) completed
+baseline, uniform and skewed positive-weight games with all twelve no-training
+controls passing exact unrestricted physical response checks. Its 15 immutable
+artifacts preserve full policies, priors, source identities and numeric gaps.
+The saved verifier authenticates those bytes and receipts without fresh replay.
+New-prior CFR+ training and convergence remain a later milestone.

@@ -1,0 +1,205 @@
+{
+  "audit": {
+    "class_rows": 466,
+    "exact_metric_count": 8,
+    "exact_metrics": {
+      "exploitability": "2267/1287",
+      "ip_best_response_gain": "171/286",
+      "ip_best_response_value": "-691/858",
+      "nash_conv": "4534/1287",
+      "oop_best_response_gain": "7529/2574",
+      "oop_best_response_value": "857/198",
+      "value_ip": "-602/429",
+      "value_oop": "602/429"
+    },
+    "independent_numeric_metrics": {
+      "exploitability": 1.7614607614607616,
+      "ip_best_response_gain": 0.5979020979020978,
+      "ip_best_response_value": -0.8053613053613055,
+      "nash_conv": 3.522921522921523,
+      "oop_best_response_gain": 2.9250194250194257,
+      "oop_best_response_value": 4.328282828282829,
+      "value_ip": -1.4032634032634033,
+      "value_oop": 1.4032634032634033
+    },
+    "maximum_numeric_gap": 8.881784197001252e-16,
+    "physical_rows_lifted": 16912,
+    "physical_strategy_sha256": "00e554b84b40ac0e13cf251111822eed51f75d3640ebdccd0460d54f2ebf8ac2"
+  },
+  "audit_keys": [
+    "class_policy",
+    "class_rows",
+    "exact_metric_count",
+    "exact_metrics",
+    "independent_numeric_metrics",
+    "maximum_numeric_gap",
+    "physical_rows_lifted",
+    "physical_strategy_sha256"
+  ],
+  "baseline_tree_sha256": "e83e0793562bd48c7ce0b1073d2ca5af01855c6d073a55925cae74626505036e",
+  "baseline_world_sha256": "c865b4d9a9052b613809389046d44a90d313daeddf0cee371c397a2e020f3568",
+  "case_id": "baseline",
+  "census": {
+    "compact_action_slots": 932,
+    "compact_chance_nodes": 58,
+    "compact_decisions": 316,
+    "compact_policy_rows": 466,
+    "compact_public_states": 1001,
+    "compact_terminals": 627,
+    "compact_tree_sha256": "55d75a6563ffb595c044d92d73c4f452880717a01f394dfd6c176e106b531dec",
+    "compact_worlds": 126,
+    "physical_action_slots": 33824,
+    "physical_branch_subtrees_compared": 11787,
+    "physical_nodes_checked": 30812,
+    "physical_policy_rows": 16912,
+    "river_signatures": 19,
+    "turn_classes": 11
+  },
+  "metric_keys": [
+    "exploitability",
+    "ip_best_response_gain",
+    "ip_best_response_value",
+    "nash_conv",
+    "oop_best_response_gain",
+    "oop_best_response_value",
+    "value_ip",
+    "value_oop"
+  ],
+  "normalizer": [
+    13,
+    8
+  ],
+  "pair_counts": [
+    {
+      "ip_hand": "KdKs",
+      "losses": 150,
+      "oop_hand": "AdAs",
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.6153846153846154,
+      "pair_probability_fraction": "8/13",
+      "ties": 48,
+      "wins": 1782
+    },
+    {
+      "ip_hand": "AsKh",
+      "losses": 710,
+      "oop_hand": "QdQs",
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.07692307692307693,
+      "pair_probability_fraction": "1/13",
+      "ties": 56,
+      "wins": 1214
+    },
+    {
+      "ip_hand": "KdKs",
+      "losses": 1750,
+      "oop_hand": "QdQs",
+      "ordered_outcomes": 1980,
+      "pair_probability": 0.3076923076923077,
+      "pair_probability_fraction": "4/13",
+      "ties": 64,
+      "wins": 166
+    }
+  ],
+  "pair_probabilities": [
+    [
+      "AdAs",
+      "KdKs",
+      0.6153846153846154
+    ],
+    [
+      "QdQs",
+      "AsKh",
+      0.07692307692307693
+    ],
+    [
+      "QdQs",
+      "KdKs",
+      0.3076923076923077
+    ]
+  ],
+  "payload": {
+    "compatible_pairs": 3,
+    "deals": 3,
+    "strategy_schema": "postflop-strategy-v1",
+    "worlds": 5940
+  },
+  "physical_tree_sha256": "e83e0793562bd48c7ce0b1073d2ca5af01855c6d073a55925cae74626505036e",
+  "plan": {
+    "board": [
+      "2c",
+      "3d",
+      "4h"
+    ],
+    "compatible_pair_raw_products": [
+      [
+        "AsAd",
+        "KsKd",
+        1,
+        1
+      ],
+      [
+        "QsQd",
+        "AsKh",
+        1,
+        8
+      ],
+      [
+        "QsQd",
+        "KsKd",
+        1,
+        2
+      ]
+    ],
+    "exact_pair_priors": [
+      [
+        "AsAd",
+        "KsKd",
+        8,
+        13
+      ],
+      [
+        "QsQd",
+        "AsKh",
+        1,
+        13
+      ],
+      [
+        "QsQd",
+        "KsKd",
+        4,
+        13
+      ]
+    ],
+    "global_blocker_normalizer": [
+      13,
+      8
+    ],
+    "ip_weights": [
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "oop_weights": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "ordered_runouts_per_pair": 1980,
+    "physical_world_forecast": 5940,
+    "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+  },
+  "source_revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+  "weighted_worlds_sha256": "c865b4d9a9052b613809389046d44a90d313daeddf0cee371c397a2e020f3568",
+  "worlds": 5940
+}

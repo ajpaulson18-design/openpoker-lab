@@ -1,0 +1,1450 @@
+{
+  "baseline_receipt": {
+    "artifact_sha256": "996cd561cac42c63df41052df7e32168cfe5b1bb194c08bcc5b427c1fec6792d",
+    "forbidden_production_calls": {
+      "RiverConfig.__post_init__": 0,
+      "RiverConfig.from_dict": 0,
+      "pokerlab.alternating_public_cfr._aggregate_prefixes": 0,
+      "pokerlab.alternating_public_cfr._cfrplus_target_deltas": 0,
+      "pokerlab.alternating_public_cfr._train_alternating": 0,
+      "pokerlab.alternating_public_cfr._weighted_average_sweep": 0,
+      "pokerlab.alternating_public_cfr.train_public_alternating_dcfr": 0,
+      "pokerlab.alternating_public_cfr.train_public_lcfr": 0,
+      "pokerlab.cards.cards": 0,
+      "pokerlab.cards.expand_range": 0,
+      "pokerlab.cards.rank_hand": 0,
+      "pokerlab.cfr.best_response": 0,
+      "pokerlab.cfr.evaluate": 0,
+      "pokerlab.cfr.train": 0,
+      "pokerlab.cfr_plus.train": 0,
+      "pokerlab.planned_cfr.train": 0,
+      "pokerlab.postflop_solver._build_postflop_tree": 0,
+      "pokerlab.postflop_solver._build_public_tree": 0,
+      "pokerlab.postflop_solver._build_tree": 0,
+      "pokerlab.postflop_solver._enumerate_worlds": 0,
+      "pokerlab.postflop_solver._terminal_value": 0,
+      "pokerlab.postflop_solver.best_response": 0,
+      "pokerlab.postflop_solver.cards": 0,
+      "pokerlab.postflop_solver.evaluate": 0,
+      "pokerlab.postflop_solver.evaluate_profile": 0,
+      "pokerlab.postflop_solver.expand_range": 0,
+      "pokerlab.postflop_solver.rank_hand": 0,
+      "pokerlab.postflop_solver.solve_postflop": 0,
+      "pokerlab.postflop_solver.train": 0,
+      "pokerlab.postflop_solver.train_planned": 0,
+      "pokerlab.postflop_solver.train_plus": 0,
+      "pokerlab.postflop_solver.train_public_batched": 0,
+      "pokerlab.preflop_delayed_cfrplus.train_delayed_public_cfrplus": 0,
+      "pokerlab.public_cfr._aggregate_prefixes": 0,
+      "pokerlab.public_cfr._cfrplus_target_deltas": 0,
+      "pokerlab.public_cfr.train_public_batched": 0,
+      "pokerlab.public_diagnostics.evaluate_profile": 0,
+      "pokerlab.river_tree._build_tree": 0,
+      "pokerlab.river_tree._terminal_value": 0,
+      "scripts.preflop_validation.cards": 0,
+      "scripts.preflop_validation.expand_range": 0
+    },
+    "interruption_sha256": "53bd788b0eb7ea1fa0f0fb40aecffd76f6bf5238c9d6bb58a2d87b371c4df55a",
+    "physical_tree_sha256": "e83e0793562bd48c7ce0b1073d2ca5af01855c6d073a55925cae74626505036e",
+    "physical_worlds_sha256": "c865b4d9a9052b613809389046d44a90d313daeddf0cee371c397a2e020f3568",
+    "raw_sha256": "c661a01a579b59053e93f7200d68dcda595df858dc5592cf9921e8f7a692e66a",
+    "source_lf_sha256": {
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8"
+    },
+    "training_calls": 0
+  },
+  "cases": [
+    {
+      "case_id": "baseline",
+      "census": {
+        "compact_action_slots": 932,
+        "compact_chance_nodes": 58,
+        "compact_decisions": 316,
+        "compact_policy_rows": 466,
+        "compact_public_states": 1001,
+        "compact_terminals": 627,
+        "compact_tree_sha256": "55d75a6563ffb595c044d92d73c4f452880717a01f394dfd6c176e106b531dec",
+        "compact_worlds": 126,
+        "physical_action_slots": 33824,
+        "physical_branch_subtrees_compared": 11787,
+        "physical_nodes_checked": 30812,
+        "physical_policy_rows": 16912,
+        "river_signatures": 19,
+        "turn_classes": 11
+      },
+      "controls": [
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "2267/1287",
+              "ip_best_response_gain": "171/286",
+              "ip_best_response_value": "-691/858",
+              "nash_conv": "4534/1287",
+              "oop_best_response_gain": "7529/2574",
+              "oop_best_response_value": "857/198",
+              "value_ip": "-602/429",
+              "value_oop": "602/429"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.7614607614607616,
+              "ip_best_response_gain": 0.5979020979020978,
+              "ip_best_response_value": -0.8053613053613055,
+              "nash_conv": 3.522921522921523,
+              "oop_best_response_gain": 2.9250194250194257,
+              "oop_best_response_value": 4.328282828282829,
+              "value_ip": -1.4032634032634033,
+              "value_oop": 1.4032634032634033
+            },
+            "maximum_numeric_gap": 8.881784197001252e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "00e554b84b40ac0e13cf251111822eed51f75d3640ebdccd0460d54f2ebf8ac2"
+          },
+          "control": "check-call",
+          "evidence_file": {
+            "gzip_bytes": 96789,
+            "gzip_sha256": "d068e4ef920086f5c01e5a898faa6e795988628cccd4c6d7a686c1c0e72b5d31",
+            "path": "baseline-check-call.json.gz",
+            "raw_bytes": 5817116,
+            "raw_sha256": "fe610b4a96ebeb80a2379d2dac3ae1f763eab2d70eb596c67525ee22d19688d3"
+          },
+          "finished_at_utc": "2026-10-22T12:43:38.660210+00:00",
+          "process_seconds": 76.953125,
+          "started_at_utc": "2026-10-22T12:42:02.616859+00:00",
+          "status": "complete",
+          "wall_seconds": 96.03319129999727
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "599/286",
+              "ip_best_response_gain": "941/429",
+              "ip_best_response_value": "-1204/429",
+              "nash_conv": "599/143",
+              "oop_best_response_gain": "856/429",
+              "oop_best_response_value": "3001/429",
+              "value_ip": "-5",
+              "value_oop": "5"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 2.094405594405594,
+              "ip_best_response_gain": 2.1934731934731935,
+              "ip_best_response_value": -2.8065268065268065,
+              "nash_conv": 4.188811188811188,
+              "oop_best_response_gain": 1.9953379953379953,
+              "oop_best_response_value": 6.995337995337995,
+              "value_ip": -5.0,
+              "value_oop": 5.0
+            },
+            "maximum_numeric_gap": 8.881784197001252e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "614661f9ef78daf9637a3d81f8b0443136c51b0c1a0b60af2bff51866cdfb4bf"
+          },
+          "control": "bet-fold",
+          "evidence_file": {
+            "gzip_bytes": 96726,
+            "gzip_sha256": "82c9afea7ea245a6dd88e8018e9bf429eb4fd1dc8427bf7a1e20c44cff22ba62",
+            "path": "baseline-bet-fold.json.gz",
+            "raw_bytes": 5817037,
+            "raw_sha256": "63e8e60d08adbaed9b3e4bed494d7492a7c80701e2460226d409ecfe815398a1"
+          },
+          "finished_at_utc": "2026-10-22T12:45:04.561511+00:00",
+          "process_seconds": 63.0,
+          "started_at_utc": "2026-10-22T12:43:39.080411+00:00",
+          "status": "complete",
+          "wall_seconds": 85.48230070000136
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "268531/239616",
+              "ip_best_response_gain": "9533509/10543104",
+              "ip_best_response_value": "-2832911/1317888",
+              "nash_conv": "268531/119808",
+              "oop_best_response_gain": "4699073/3514368",
+              "oop_best_response_value": "45209/10296",
+              "value_ip": "-32196797/10543104",
+              "value_oop": "32196797/10543104"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.1206722422542732,
+              "ip_best_response_gain": 0.9042411987968628,
+              "ip_best_response_value": -2.1495840314199692,
+              "nash_conv": 2.2413444845085464,
+              "oop_best_response_gain": 1.3371032857116836,
+              "oop_best_response_value": 4.390928515928516,
+              "value_ip": -3.053825230216832,
+              "value_oop": 3.053825230216832
+            },
+            "maximum_numeric_gap": 6.661338147750939e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "57f29d598af1c5966ff52ad8a47ccf7162e60fed8db0252931efc43c75857025"
+          },
+          "control": "class-varying",
+          "evidence_file": {
+            "gzip_bytes": 102888,
+            "gzip_sha256": "891e83d4ddbb5802a4effc80fb43a568ff58533f873b95b745a4b56d2e07a350",
+            "path": "baseline-class-varying.json.gz",
+            "raw_bytes": 5836726,
+            "raw_sha256": "04cb4f4a4abc83ed0c210caf8c654ab6806533f636c68434ae0a01bde1367598"
+          },
+          "finished_at_utc": "2026-10-22T12:46:43.790682+00:00",
+          "process_seconds": 71.265625,
+          "started_at_utc": "2026-10-22T12:45:04.811880+00:00",
+          "status": "complete",
+          "wall_seconds": 98.97377409999899
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "5",
+              "ip_best_response_gain": "2747/429",
+              "ip_best_response_value": "5",
+              "nash_conv": "10",
+              "oop_best_response_gain": "1543/429",
+              "oop_best_response_value": "5",
+              "value_ip": "-602/429",
+              "value_oop": "602/429"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 5.0,
+              "ip_best_response_gain": 6.403263403263403,
+              "ip_best_response_value": 5.0,
+              "nash_conv": 10.0,
+              "oop_best_response_gain": 3.596736596736597,
+              "oop_best_response_value": 5.0,
+              "value_ip": -1.4032634032634033,
+              "value_oop": 1.4032634032634033
+            },
+            "maximum_numeric_gap": 0.0,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "e3e78b46e92d18dd74d5d6df39104cc59ac62e0be9f308074104babee829ea58"
+          },
+          "control": "zero-reach",
+          "evidence_file": {
+            "gzip_bytes": 96636,
+            "gzip_sha256": "b80d12c244bb4405e0a8be92db34188d6042e3d31eecbf977cd1cffbf7cdf226",
+            "path": "baseline-zero-reach.json.gz",
+            "raw_bytes": 5816950,
+            "raw_sha256": "3e34933c493c126d90a8752d91108c092e30002ec5e1b91a723d17b6634e89a8"
+          },
+          "finished_at_utc": "2026-10-22T12:48:30.192344+00:00",
+          "process_seconds": 79.71875,
+          "started_at_utc": "2026-10-22T12:46:44.028745+00:00",
+          "status": "complete",
+          "wall_seconds": 106.15357240000594
+        }
+      ],
+      "finished_at_utc": "2026-10-22T12:48:30.419108+00:00",
+      "plan": {
+        "board": [
+          "2c",
+          "3d",
+          "4h"
+        ],
+        "compatible_pair_raw_products": [
+          [
+            "AsAd",
+            "KsKd",
+            1,
+            1
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            1,
+            8
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            1,
+            2
+          ]
+        ],
+        "exact_pair_priors": [
+          [
+            "AsAd",
+            "KsKd",
+            8,
+            13
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            1,
+            13
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            4,
+            13
+          ]
+        ],
+        "global_blocker_normalizer": [
+          13,
+          8
+        ],
+        "ip_weights": [
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "ordered_runouts_per_pair": 1980,
+        "physical_world_forecast": 5940,
+        "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+      },
+      "preparation_file": {
+        "gzip_bytes": 19898,
+        "gzip_sha256": "a16a227537249d296ff8c1447e6411c9d55929574b13dffc208eed2f1d4e3329",
+        "path": "baseline-preparation.json.gz",
+        "raw_bytes": 324641,
+        "raw_sha256": "44139636fd94070e4a665777fa0d1b096954d3e3bd6d79d62eb3f9f457e3319d"
+      },
+      "process_seconds": 315.421875,
+      "source_after": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "source_before": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "started_at_utc": "2026-10-22T12:41:33.782487+00:00",
+      "status": "complete",
+      "wall_seconds": 416.456031099995
+    },
+    {
+      "case_id": "uniform",
+      "census": {
+        "compact_action_slots": 932,
+        "compact_chance_nodes": 58,
+        "compact_decisions": 316,
+        "compact_policy_rows": 466,
+        "compact_public_states": 1001,
+        "compact_terminals": 627,
+        "compact_tree_sha256": "55d75a6563ffb595c044d92d73c4f452880717a01f394dfd6c176e106b531dec",
+        "compact_worlds": 126,
+        "physical_action_slots": 33824,
+        "physical_branch_subtrees_compared": 11787,
+        "physical_nodes_checked": 30812,
+        "physical_policy_rows": 16912,
+        "river_signatures": 19,
+        "turn_classes": 11
+      },
+      "controls": [
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "1619/1188",
+              "ip_best_response_gain": "32/33",
+              "ip_best_response_value": "50/99",
+              "nash_conv": "1619/594",
+              "oop_best_response_gain": "1043/594",
+              "oop_best_response_value": "1319/594",
+              "value_ip": "-46/99",
+              "value_oop": "46/99"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.3627946127946131,
+              "ip_best_response_gain": 0.9696969696969697,
+              "ip_best_response_value": 0.5050505050505051,
+              "nash_conv": 2.7255892255892262,
+              "oop_best_response_gain": 1.7558922558922563,
+              "oop_best_response_value": 2.220538720538721,
+              "value_ip": -0.4646464646464647,
+              "value_oop": 0.4646464646464647
+            },
+            "maximum_numeric_gap": 4.440892098500626e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "00e554b84b40ac0e13cf251111822eed51f75d3640ebdccd0460d54f2ebf8ac2"
+          },
+          "control": "check-call",
+          "evidence_file": {
+            "gzip_bytes": 96756,
+            "gzip_sha256": "204c1527aa117f146e5f415619f07ccd4876f0b5390a64f4176a317b32dbcdfe",
+            "path": "uniform-check-call.json.gz",
+            "raw_bytes": 5817106,
+            "raw_sha256": "d427268078f4fccd8415e003f00dda30221facf4499e4500f9671f0e87c6901c"
+          },
+          "finished_at_utc": "2026-10-22T12:50:36.380645+00:00",
+          "process_seconds": 70.96875,
+          "started_at_utc": "2026-10-22T12:49:00.525634+00:00",
+          "status": "complete",
+          "wall_seconds": 95.84750440000062
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "85/33",
+              "ip_best_response_gain": "403/99",
+              "ip_best_response_value": "-92/99",
+              "nash_conv": "170/33",
+              "oop_best_response_gain": "107/99",
+              "oop_best_response_value": "602/99",
+              "value_ip": "-5",
+              "value_oop": "5"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 2.575757575757576,
+              "ip_best_response_gain": 4.070707070707071,
+              "ip_best_response_value": -0.9292929292929294,
+              "nash_conv": 5.151515151515152,
+              "oop_best_response_gain": 1.0808080808080813,
+              "oop_best_response_value": 6.080808080808081,
+              "value_ip": -5.0,
+              "value_oop": 5.0
+            },
+            "maximum_numeric_gap": 8.881784197001252e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "614661f9ef78daf9637a3d81f8b0443136c51b0c1a0b60af2bff51866cdfb4bf"
+          },
+          "control": "bet-fold",
+          "evidence_file": {
+            "gzip_bytes": 96720,
+            "gzip_sha256": "928c7c99a4cc79b7858f665ddde8c228e1eaff51f6f9e8e32e879d3f432bd2a0",
+            "path": "uniform-bet-fold.json.gz",
+            "raw_bytes": 5817023,
+            "raw_sha256": "786019546050755310b1c96ab69bb27f8512fdad833a350755bba748fa6ba111"
+          },
+          "finished_at_utc": "2026-10-22T12:52:04.715896+00:00",
+          "process_seconds": 60.671875,
+          "started_at_utc": "2026-10-22T12:50:36.565937+00:00",
+          "status": "complete",
+          "wall_seconds": 88.1475219999993
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "100459/67584",
+              "ip_best_response_gain": "867137/608256",
+              "ip_best_response_value": "-8309/33792",
+              "nash_conv": "100459/33792",
+              "oop_best_response_gain": "941125/608256",
+              "oop_best_response_value": "103/32",
+              "value_ip": "-1016699/608256",
+              "value_oop": "1016699/608256"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.486431699810606,
+              "ip_best_response_gain": 1.4256119134048824,
+              "ip_best_response_value": -0.24588660037878787,
+              "nash_conv": 2.972863399621212,
+              "oop_best_response_gain": 1.5472514862163298,
+              "oop_best_response_value": 3.21875,
+              "value_ip": -1.6714985137836702,
+              "value_oop": 1.6714985137836702
+            },
+            "maximum_numeric_gap": 2.220446049250313e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "57f29d598af1c5966ff52ad8a47ccf7162e60fed8db0252931efc43c75857025"
+          },
+          "control": "class-varying",
+          "evidence_file": {
+            "gzip_bytes": 102856,
+            "gzip_sha256": "5cada3726639eb2276feaf3ab5d0346ab5dd6e5fb23dfb2426f5fd0fb60848fa",
+            "path": "uniform-class-varying.json.gz",
+            "raw_bytes": 5836678,
+            "raw_sha256": "ea58a82aa8830890cfb8c63037b88bb2ca646bf596aa32e649392a9ff8bfffa4"
+          },
+          "finished_at_utc": "2026-10-22T12:53:38.918846+00:00",
+          "process_seconds": 69.109375,
+          "started_at_utc": "2026-10-22T12:52:04.998107+00:00",
+          "status": "complete",
+          "wall_seconds": 93.90413329999865
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "5",
+              "ip_best_response_gain": "541/99",
+              "ip_best_response_value": "5",
+              "nash_conv": "10",
+              "oop_best_response_gain": "449/99",
+              "oop_best_response_value": "5",
+              "value_ip": "-46/99",
+              "value_oop": "46/99"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 5.000000000000001,
+              "ip_best_response_gain": 5.464646464646465,
+              "ip_best_response_value": 5.000000000000001,
+              "nash_conv": 10.000000000000002,
+              "oop_best_response_gain": 4.535353535353536,
+              "oop_best_response_value": 5.000000000000001,
+              "value_ip": -0.4646464646464647,
+              "value_oop": 0.4646464646464647
+            },
+            "maximum_numeric_gap": 1.7763568394002505e-15,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "e3e78b46e92d18dd74d5d6df39104cc59ac62e0be9f308074104babee829ea58"
+          },
+          "control": "zero-reach",
+          "evidence_file": {
+            "gzip_bytes": 96666,
+            "gzip_sha256": "0f50fcdb39c25f1e87e9106c5c9fdcea897704bb446087a1e8e43df5e8a151c8",
+            "path": "uniform-zero-reach.json.gz",
+            "raw_bytes": 5817020,
+            "raw_sha256": "5bfa2d4e75aec1d376d8145d8ca6b512e6ba47ebe560e0cd8244150c2324b4e2"
+          },
+          "finished_at_utc": "2026-10-22T12:55:19.920184+00:00",
+          "process_seconds": 79.25,
+          "started_at_utc": "2026-10-22T12:53:39.155761+00:00",
+          "status": "complete",
+          "wall_seconds": 100.74873099999968
+        }
+      ],
+      "finished_at_utc": "2026-10-22T12:55:20.164993+00:00",
+      "plan": {
+        "board": [
+          "2c",
+          "3d",
+          "4h"
+        ],
+        "compatible_pair_raw_products": [
+          [
+            "AsAd",
+            "KsKd",
+            1,
+            1
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            1,
+            1
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            1,
+            1
+          ]
+        ],
+        "exact_pair_priors": [
+          [
+            "AsAd",
+            "KsKd",
+            1,
+            3
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            1,
+            3
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            1,
+            3
+          ]
+        ],
+        "global_blocker_normalizer": [
+          3,
+          1
+        ],
+        "ip_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "ordered_runouts_per_pair": 1980,
+        "physical_world_forecast": 5940,
+        "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+      },
+      "preparation_file": {
+        "gzip_bytes": 19766,
+        "gzip_sha256": "c544ee7fe7830671c84d911a4f82604fb9af6e72969b5fea1a7909c255f7c0cb",
+        "path": "uniform-preparation.json.gz",
+        "raw_bytes": 324564,
+        "raw_sha256": "00e69d481d11647fbc52df85c7b005c3a05add9dbaecc851efaf596d3cbac20d"
+      },
+      "process_seconds": 300.390625,
+      "source_after": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "source_before": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "started_at_utc": "2026-10-22T12:48:30.997114+00:00",
+      "status": "complete",
+      "wall_seconds": 408.88447549999546
+    },
+    {
+      "case_id": "skew",
+      "census": {
+        "compact_action_slots": 932,
+        "compact_chance_nodes": 58,
+        "compact_decisions": 316,
+        "compact_policy_rows": 466,
+        "compact_public_states": 1001,
+        "compact_terminals": 627,
+        "compact_tree_sha256": "55d75a6563ffb595c044d92d73c4f452880717a01f394dfd6c176e106b531dec",
+        "compact_worlds": 126,
+        "physical_action_slots": 33824,
+        "physical_branch_subtrees_compared": 11787,
+        "physical_nodes_checked": 30812,
+        "physical_policy_rows": 16912,
+        "river_signatures": 19,
+        "turn_classes": 11
+      },
+      "controls": [
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "673/324",
+              "ip_best_response_gain": "311/297",
+              "ip_best_response_value": "-269/297",
+              "nash_conv": "673/162",
+              "oop_best_response_gain": "5537/1782",
+              "oop_best_response_value": "9017/1782",
+              "value_ip": "-580/297",
+              "value_oop": "580/297"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 2.077160493827161,
+              "ip_best_response_gain": 1.0471380471380474,
+              "ip_best_response_value": -0.9057239057239057,
+              "nash_conv": 4.154320987654322,
+              "oop_best_response_gain": 3.1071829405162745,
+              "oop_best_response_value": 5.060044893378228,
+              "value_ip": -1.952861952861953,
+              "value_oop": 1.952861952861953
+            },
+            "maximum_numeric_gap": 8.881784197001252e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "00e554b84b40ac0e13cf251111822eed51f75d3640ebdccd0460d54f2ebf8ac2"
+          },
+          "control": "check-call",
+          "evidence_file": {
+            "gzip_bytes": 96791,
+            "gzip_sha256": "250201048c4f11cac280a512df9373e3d671e1676d3827307bee682a3f820f81",
+            "path": "skew-check-call.json.gz",
+            "raw_bytes": 5817107,
+            "raw_sha256": "42532fc9fb5941de071262185a05cd8cc5d398eca0c7b01cf291d6d984b60552"
+          },
+          "finished_at_utc": "2026-10-22T12:57:18.281594+00:00",
+          "process_seconds": 68.703125,
+          "started_at_utc": "2026-10-22T12:55:46.462578+00:00",
+          "status": "complete",
+          "wall_seconds": 91.81370250000327
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "251/198",
+              "ip_best_response_gain": "325/297",
+              "ip_best_response_value": "-1160/297",
+              "nash_conv": "251/99",
+              "oop_best_response_gain": "428/297",
+              "oop_best_response_value": "1913/297",
+              "value_ip": "-5",
+              "value_oop": "5"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.2676767676767677,
+              "ip_best_response_gain": 1.0942760942760943,
+              "ip_best_response_value": -3.9057239057239057,
+              "nash_conv": 2.5353535353535355,
+              "oop_best_response_gain": 1.4410774410774412,
+              "oop_best_response_value": 6.441077441077441,
+              "value_ip": -5.0,
+              "value_oop": 5.0
+            },
+            "maximum_numeric_gap": 0.0,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "614661f9ef78daf9637a3d81f8b0443136c51b0c1a0b60af2bff51866cdfb4bf"
+          },
+          "control": "bet-fold",
+          "evidence_file": {
+            "gzip_bytes": 96695,
+            "gzip_sha256": "d7e4eff24c4765d723ff8531299ed618e1137f421e9cdad3b0a8337eed3335c0",
+            "path": "skew-bet-fold.json.gz",
+            "raw_bytes": 5817017,
+            "raw_sha256": "773aea32c2ca5bc18673fed3e4b3df78ad5273682103f0ddabf69fbd888b736f"
+          },
+          "finished_at_utc": "2026-10-22T12:58:58.102021+00:00",
+          "process_seconds": 70.171875,
+          "started_at_utc": "2026-10-22T12:57:18.476287+00:00",
+          "status": "complete",
+          "wall_seconds": 99.6146432999958
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "2177405/1824768",
+              "ip_best_response_gain": "67381/67584",
+              "ip_best_response_value": "-2514115/912384",
+              "nash_conv": "2177405/912384",
+              "oop_best_response_gain": "2535523/1824768",
+              "oop_best_response_value": "905/176",
+              "value_ip": "-6847517/1824768",
+              "value_oop": "6847517/1824768"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 1.1932503200406848,
+              "ip_best_response_gain": 0.9969963304924243,
+              "ip_best_response_value": -2.7555448144640855,
+              "nash_conv": 2.3865006400813695,
+              "oop_best_response_gain": 1.3895043095889452,
+              "oop_best_response_value": 5.142045454545455,
+              "value_ip": -3.75254114495651,
+              "value_oop": 3.75254114495651
+            },
+            "maximum_numeric_gap": 8.881784197001252e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "57f29d598af1c5966ff52ad8a47ccf7162e60fed8db0252931efc43c75857025"
+          },
+          "control": "class-varying",
+          "evidence_file": {
+            "gzip_bytes": 102863,
+            "gzip_sha256": "71916a2dca76a4efe4118d9d79d9f271b5e6f9996bca27e8bbd54264264fc947",
+            "path": "skew-class-varying.json.gz",
+            "raw_bytes": 5836709,
+            "raw_sha256": "856c23cb326f8054a25a67c46eef433b1057c708c861c06956a4aa8f31eee7fd"
+          },
+          "finished_at_utc": "2026-10-22T13:00:30.447443+00:00",
+          "process_seconds": 75.703125,
+          "started_at_utc": "2026-10-22T12:58:58.333392+00:00",
+          "status": "complete",
+          "wall_seconds": 92.12013389999629
+        },
+        {
+          "audit_summary": {
+            "class_rows": 466,
+            "exact_metric_count": 8,
+            "exact_metrics": {
+              "exploitability": "5",
+              "ip_best_response_gain": "2065/297",
+              "ip_best_response_value": "5",
+              "nash_conv": "10",
+              "oop_best_response_gain": "905/297",
+              "oop_best_response_value": "5",
+              "value_ip": "-580/297",
+              "value_oop": "580/297"
+            },
+            "independent_numeric_metrics": {
+              "exploitability": 5.0,
+              "ip_best_response_gain": 6.952861952861953,
+              "ip_best_response_value": 5.0,
+              "nash_conv": 10.0,
+              "oop_best_response_gain": 3.0471380471380467,
+              "oop_best_response_value": 5.0,
+              "value_ip": -1.952861952861953,
+              "value_oop": 1.952861952861953
+            },
+            "maximum_numeric_gap": 4.440892098500626e-16,
+            "physical_rows_lifted": 16912,
+            "physical_strategy_sha256": "e3e78b46e92d18dd74d5d6df39104cc59ac62e0be9f308074104babee829ea58"
+          },
+          "control": "zero-reach",
+          "evidence_file": {
+            "gzip_bytes": 96657,
+            "gzip_sha256": "0a0b60e26f303174ff19c92462608a69265bfab33cbf8dd84abb9b8127c37255",
+            "path": "skew-zero-reach.json.gz",
+            "raw_bytes": 5816962,
+            "raw_sha256": "b6669efb53babaae01969c3d3d165da1c1cbd75fd405cee12924ce53e1b93837"
+          },
+          "finished_at_utc": "2026-10-22T13:02:03.614488+00:00",
+          "process_seconds": 81.625,
+          "started_at_utc": "2026-10-22T13:00:30.764953+00:00",
+          "status": "complete",
+          "wall_seconds": 92.8536013999983
+        }
+      ],
+      "finished_at_utc": "2026-10-22T13:02:03.842066+00:00",
+      "plan": {
+        "board": [
+          "2c",
+          "3d",
+          "4h"
+        ],
+        "compatible_pair_raw_products": [
+          [
+            "AsAd",
+            "KsKd",
+            4,
+            1
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            4,
+            1
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            1,
+            1
+          ]
+        ],
+        "exact_pair_priors": [
+          [
+            "AsAd",
+            "KsKd",
+            4,
+            9
+          ],
+          [
+            "QsQd",
+            "AsKh",
+            4,
+            9
+          ],
+          [
+            "QsQd",
+            "KsKd",
+            1,
+            9
+          ]
+        ],
+        "global_blocker_normalizer": [
+          9,
+          1
+        ],
+        "ip_weights": [
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "ordered_runouts_per_pair": 1980,
+        "physical_world_forecast": 5940,
+        "scope": "Planning only: no quotient, ranking, tree, policy, or solver certification."
+      },
+      "preparation_file": {
+        "gzip_bytes": 19860,
+        "gzip_sha256": "e803dd1532d512c2079336431a703f5777a744ec0fcac670e892879860fb3290",
+        "path": "skew-preparation.json.gz",
+        "raw_bytes": 324608,
+        "raw_sha256": "923339854a3099a9935fc760ade1c49b5139ddbcb968aa3223d12ecf8b70e66a"
+      },
+      "process_seconds": 316.703125,
+      "source_after": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "source_before": {
+        "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+        "source_lf_sha256": {
+          "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+          "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+          "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+          "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+          "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+          "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+          "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+          "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+          "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+          "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+          "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+          "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+          "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+          "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+          "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+          "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+          "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+          "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+          "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+          "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+          "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+          "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+          "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+          "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+        },
+        "status": ""
+      },
+      "started_at_utc": "2026-10-22T12:55:20.647924+00:00",
+      "status": "complete",
+      "wall_seconds": 402.99133350000193
+    }
+  ],
+  "created_at_utc": "2026-10-22T12:41:28.985926+00:00",
+  "errors": [],
+  "execution_state": {
+    "mode": "windows-benchmark-thread",
+    "previous_flags": 2147483648,
+    "requested_flags": 2147483649,
+    "system_required": true
+  },
+  "files": [
+    {
+      "gzip_bytes": 19898,
+      "gzip_sha256": "a16a227537249d296ff8c1447e6411c9d55929574b13dffc208eed2f1d4e3329",
+      "path": "baseline-preparation.json.gz",
+      "raw_bytes": 324641,
+      "raw_sha256": "44139636fd94070e4a665777fa0d1b096954d3e3bd6d79d62eb3f9f457e3319d"
+    },
+    {
+      "gzip_bytes": 96789,
+      "gzip_sha256": "d068e4ef920086f5c01e5a898faa6e795988628cccd4c6d7a686c1c0e72b5d31",
+      "path": "baseline-check-call.json.gz",
+      "raw_bytes": 5817116,
+      "raw_sha256": "fe610b4a96ebeb80a2379d2dac3ae1f763eab2d70eb596c67525ee22d19688d3"
+    },
+    {
+      "gzip_bytes": 96726,
+      "gzip_sha256": "82c9afea7ea245a6dd88e8018e9bf429eb4fd1dc8427bf7a1e20c44cff22ba62",
+      "path": "baseline-bet-fold.json.gz",
+      "raw_bytes": 5817037,
+      "raw_sha256": "63e8e60d08adbaed9b3e4bed494d7492a7c80701e2460226d409ecfe815398a1"
+    },
+    {
+      "gzip_bytes": 102888,
+      "gzip_sha256": "891e83d4ddbb5802a4effc80fb43a568ff58533f873b95b745a4b56d2e07a350",
+      "path": "baseline-class-varying.json.gz",
+      "raw_bytes": 5836726,
+      "raw_sha256": "04cb4f4a4abc83ed0c210caf8c654ab6806533f636c68434ae0a01bde1367598"
+    },
+    {
+      "gzip_bytes": 96636,
+      "gzip_sha256": "b80d12c244bb4405e0a8be92db34188d6042e3d31eecbf977cd1cffbf7cdf226",
+      "path": "baseline-zero-reach.json.gz",
+      "raw_bytes": 5816950,
+      "raw_sha256": "3e34933c493c126d90a8752d91108c092e30002ec5e1b91a723d17b6634e89a8"
+    },
+    {
+      "gzip_bytes": 19766,
+      "gzip_sha256": "c544ee7fe7830671c84d911a4f82604fb9af6e72969b5fea1a7909c255f7c0cb",
+      "path": "uniform-preparation.json.gz",
+      "raw_bytes": 324564,
+      "raw_sha256": "00e69d481d11647fbc52df85c7b005c3a05add9dbaecc851efaf596d3cbac20d"
+    },
+    {
+      "gzip_bytes": 96756,
+      "gzip_sha256": "204c1527aa117f146e5f415619f07ccd4876f0b5390a64f4176a317b32dbcdfe",
+      "path": "uniform-check-call.json.gz",
+      "raw_bytes": 5817106,
+      "raw_sha256": "d427268078f4fccd8415e003f00dda30221facf4499e4500f9671f0e87c6901c"
+    },
+    {
+      "gzip_bytes": 96720,
+      "gzip_sha256": "928c7c99a4cc79b7858f665ddde8c228e1eaff51f6f9e8e32e879d3f432bd2a0",
+      "path": "uniform-bet-fold.json.gz",
+      "raw_bytes": 5817023,
+      "raw_sha256": "786019546050755310b1c96ab69bb27f8512fdad833a350755bba748fa6ba111"
+    },
+    {
+      "gzip_bytes": 102856,
+      "gzip_sha256": "5cada3726639eb2276feaf3ab5d0346ab5dd6e5fb23dfb2426f5fd0fb60848fa",
+      "path": "uniform-class-varying.json.gz",
+      "raw_bytes": 5836678,
+      "raw_sha256": "ea58a82aa8830890cfb8c63037b88bb2ca646bf596aa32e649392a9ff8bfffa4"
+    },
+    {
+      "gzip_bytes": 96666,
+      "gzip_sha256": "0f50fcdb39c25f1e87e9106c5c9fdcea897704bb446087a1e8e43df5e8a151c8",
+      "path": "uniform-zero-reach.json.gz",
+      "raw_bytes": 5817020,
+      "raw_sha256": "5bfa2d4e75aec1d376d8145d8ca6b512e6ba47ebe560e0cd8244150c2324b4e2"
+    },
+    {
+      "gzip_bytes": 19860,
+      "gzip_sha256": "e803dd1532d512c2079336431a703f5777a744ec0fcac670e892879860fb3290",
+      "path": "skew-preparation.json.gz",
+      "raw_bytes": 324608,
+      "raw_sha256": "923339854a3099a9935fc760ade1c49b5139ddbcb968aa3223d12ecf8b70e66a"
+    },
+    {
+      "gzip_bytes": 96791,
+      "gzip_sha256": "250201048c4f11cac280a512df9373e3d671e1676d3827307bee682a3f820f81",
+      "path": "skew-check-call.json.gz",
+      "raw_bytes": 5817107,
+      "raw_sha256": "42532fc9fb5941de071262185a05cd8cc5d398eca0c7b01cf291d6d984b60552"
+    },
+    {
+      "gzip_bytes": 96695,
+      "gzip_sha256": "d7e4eff24c4765d723ff8531299ed618e1137f421e9cdad3b0a8337eed3335c0",
+      "path": "skew-bet-fold.json.gz",
+      "raw_bytes": 5817017,
+      "raw_sha256": "773aea32c2ca5bc18673fed3e4b3df78ad5273682103f0ddabf69fbd888b736f"
+    },
+    {
+      "gzip_bytes": 102863,
+      "gzip_sha256": "71916a2dca76a4efe4118d9d79d9f271b5e6f9996bca27e8bbd54264264fc947",
+      "path": "skew-class-varying.json.gz",
+      "raw_bytes": 5836709,
+      "raw_sha256": "856c23cb326f8054a25a67c46eef433b1057c708c861c06956a4aa8f31eee7fd"
+    },
+    {
+      "gzip_bytes": 96657,
+      "gzip_sha256": "0a0b60e26f303174ff19c92462608a69265bfab33cbf8dd84abb9b8127c37255",
+      "path": "skew-zero-reach.json.gz",
+      "raw_bytes": 5816962,
+      "raw_sha256": "b6669efb53babaae01969c3d3d165da1c1cbd75fd405cee12924ce53e1b93837"
+    }
+  ],
+  "finished_at_utc": "2026-10-22T13:02:04.497087+00:00",
+  "forbidden_production_calls": {
+    "RiverConfig.__post_init__": 0,
+    "RiverConfig.from_dict": 0,
+    "pokerlab.alternating_public_cfr._aggregate_prefixes": 0,
+    "pokerlab.alternating_public_cfr._cfrplus_target_deltas": 0,
+    "pokerlab.alternating_public_cfr._train_alternating": 0,
+    "pokerlab.alternating_public_cfr._weighted_average_sweep": 0,
+    "pokerlab.alternating_public_cfr.train_public_alternating_dcfr": 0,
+    "pokerlab.alternating_public_cfr.train_public_lcfr": 0,
+    "pokerlab.cards.cards": 0,
+    "pokerlab.cards.expand_range": 0,
+    "pokerlab.cards.rank_hand": 0,
+    "pokerlab.cfr.best_response": 0,
+    "pokerlab.cfr.evaluate": 0,
+    "pokerlab.cfr.train": 0,
+    "pokerlab.cfr_plus.train": 0,
+    "pokerlab.planned_cfr.train": 0,
+    "pokerlab.postflop_solver._build_postflop_tree": 0,
+    "pokerlab.postflop_solver._build_public_tree": 0,
+    "pokerlab.postflop_solver._build_tree": 0,
+    "pokerlab.postflop_solver._enumerate_worlds": 0,
+    "pokerlab.postflop_solver._terminal_value": 0,
+    "pokerlab.postflop_solver.best_response": 0,
+    "pokerlab.postflop_solver.cards": 0,
+    "pokerlab.postflop_solver.evaluate": 0,
+    "pokerlab.postflop_solver.evaluate_profile": 0,
+    "pokerlab.postflop_solver.expand_range": 0,
+    "pokerlab.postflop_solver.rank_hand": 0,
+    "pokerlab.postflop_solver.solve_postflop": 0,
+    "pokerlab.postflop_solver.train": 0,
+    "pokerlab.postflop_solver.train_planned": 0,
+    "pokerlab.postflop_solver.train_plus": 0,
+    "pokerlab.postflop_solver.train_public_batched": 0,
+    "pokerlab.preflop_delayed_cfrplus.train_delayed_public_cfrplus": 0,
+    "pokerlab.public_cfr._aggregate_prefixes": 0,
+    "pokerlab.public_cfr._cfrplus_target_deltas": 0,
+    "pokerlab.public_cfr.train_public_batched": 0,
+    "pokerlab.public_diagnostics.evaluate_profile": 0,
+    "pokerlab.river_tree._build_tree": 0,
+    "pokerlab.river_tree._terminal_value": 0,
+    "scripts.preflop_validation.cards": 0,
+    "scripts.preflop_validation.expand_range": 0
+  },
+  "index_sha256": "166e877f68cc8ab7cf027ce6e80e18eb4ec952b5918aa26c85e4076bf6185dcb",
+  "preflight": {
+    "compact_policy_rows_per_case": 466,
+    "compact_public_states_per_case": 1001,
+    "compact_worlds_per_case": 126,
+    "control_audits": 12,
+    "enumerated_physical_world_rows": 23760,
+    "maximum_live_physical_oracles": 2,
+    "oracle_builds": 4,
+    "physical_public_states_per_oracle": 30812,
+    "physical_worlds_per_oracle": 5940,
+    "scope_note": "Census/capacity counts only; not complete CPU, arithmetic, time, byte, or RSS bounds."
+  },
+  "process_seconds": 936.5625,
+  "protocol": {
+    "acceptance": {
+      "baseline": "Compare all four new baseline controls to authenticated old exact metrics, row counts, full class policy, and physical strategy hash.",
+      "failure": "Retain partial files and tracebacks, stop on first error or source drift, mark remaining cases not-run, and never retry.",
+      "interpretation": "No training, runtime or speed claim. Wall and process times are incidental receipts only.",
+      "old_proof": "Authenticate the immutable six-source no-training publication cheaply; do not run heavy saved replay.",
+      "source": "Require clean committed source snapshots before and after every case and an identical snapshot throughout."
+    },
+    "cases": [
+      {
+        "case_id": "baseline",
+        "ip_weights": [
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "case_id": "uniform",
+        "ip_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      {
+        "case_id": "skew",
+        "ip_weights": [
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "oop_weights": [
+          [
+            4,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      }
+    ],
+    "controls": [
+      "check-call",
+      "bet-fold",
+      "class-varying",
+      "zero-reach"
+    ],
+    "limits": {
+      "gzip_file_bytes": 8388608,
+      "index_bytes": 2097152,
+      "joint_world_mass_bits": 384,
+      "raw_file_bytes": 25165824,
+      "weight_component_bits": 128
+    },
+    "preflight": {
+      "compact_policy_rows_per_case": 466,
+      "compact_public_states_per_case": 1001,
+      "compact_worlds_per_case": 126,
+      "control_audits": 12,
+      "enumerated_physical_world_rows": 23760,
+      "maximum_live_physical_oracles": 2,
+      "oracle_builds": 4,
+      "physical_public_states_per_oracle": 30812,
+      "physical_worlds_per_oracle": 5940,
+      "scope_note": "Census and capacity counts, not complete CPU, arithmetic, time, byte, or RSS bounds. Existing oracle caps remain in force."
+    },
+    "protocol_id": "fixed-flop-class-reweight-proof-v1",
+    "scope": {
+      "board": [
+        "2c",
+        "3d",
+        "4h"
+      ],
+      "ip_hands": [
+        "AsKh",
+        "KsKd"
+      ],
+      "oop_hands": [
+        "AsAd",
+        "QsQd"
+      ],
+      "positive_exact_weights_only": true,
+      "training_calls": 0
+    }
+  },
+  "protocol_id": "fixed-flop-class-reweight-proof-v1",
+  "runtime": {
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "schema_version": 1,
+  "source_after": {
+    "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "b43bacbf2bd19b37ac6c7b0f8d4d5b115f9d2e13",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "status": "complete",
+  "training_calls": 0,
+  "wall_seconds": 1235.511555099998
+}

@@ -196,3 +196,10 @@ Keep old-prior anchors/sources unchanged, all request/resource guards explicit,
 and all failed/partial work retained. Training under new priors remains a later
 milestone. See [scope and evidence](../flop-class-reweight.md). No previous
 decision is superseded.
+
+
+The D027 single frozen proof batch completed on 2026-10-22 with all three
+positive-prior cases, twelve exact-response controls, fifteen retained artifacts,
+zero errors/training and stable committed sources. Saved authentication is
+separate from fresh physical replay. New-prior training remains the next bounded
+milestone; these controls make no convergence claim.
