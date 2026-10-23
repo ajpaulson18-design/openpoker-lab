@@ -347,3 +347,15 @@ policy identities before diagnostics and retains separate full-request/logical
 storage admission. Ordinary solver defaults and earlier streets are unchanged.
 See [scope, controls and model](../turn-class-tail.md); a longer-budget quality
 experiment remains separate.
+
+## Fixed three-hand TURN accuracy result
+
+The [T6000/D2000 experiment](../turn-class-tail-T6000-experiment.md) met its
+unchanged exact normalized-policy NashConv target of 0.001 chip at approximately
+0.00003025771156. One fixed 396-world game was trained through seven proved
+river classes, then lifted to all 3,606 physical policy rows and 8,046 actions.
+Independent full-physical and both class exact audits agree on all eight metrics;
+the previous T750 miss remains immutable. The complete policy, source identities
+and numeric/exact checks are retained. This is fixed-game accuracy evidence;
+the broader range of supported games and the separately exact game value remain
+unfinished work.
