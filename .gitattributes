@@ -126,3 +126,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable second-board equivalence receipts and complete policy controls.
 /benchmarks/results/flop-second-board-equivalence-v1/index.json -text
 /benchmarks/results/flop-second-board-equivalence-v1/*/reference.json.gz binary
+
+# Immutable second-board training pilot receipts and complete adapter reports.
+/benchmarks/results/flop-second-board-cfrplus-pilot-v1/index.json -text
+/benchmarks/results/flop-second-board-cfrplus-pilot-v1/*/reference.json.gz binary

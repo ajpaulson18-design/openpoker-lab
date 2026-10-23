@@ -1,0 +1,613 @@
+{
+  "admission": {
+    "aggregate_logical_work": 126289636,
+    "aggregate_logical_work_cap": 140000000,
+    "cases": [
+      {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 110000000
+        },
+        "census_and_scope": {
+          "compact_action_slots": 1216,
+          "compact_chance_nodes": 68,
+          "compact_decisions": 400,
+          "compact_policy_rows": 608,
+          "compact_public_states": 1270,
+          "compact_terminals": 802,
+          "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+          "compact_worlds": 170,
+          "meaning": "Named logical loop and bookkeeping counts only. All three passes and zero averaging delay are charged. Setup includes the explicit 170-entry binary64 mass sum. These counts do not model all arithmetic, runtime, allocation, or RSS and make no speed or strategy-quality claim.",
+          "physical_action_slots": 33824,
+          "physical_policy_rows": 16912,
+          "public_action_edges": 800,
+          "tree_edges_including_chance": 1269
+        },
+        "cfrplus_recurrence": {
+          "average_profile_passes_per_sweep": 1,
+          "averaging_delay": 0,
+          "named_passes_per_sweep": 3,
+          "regret_passes_per_sweep": 2
+        },
+        "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+        "dimensions": {
+          "chance_nodes": 68,
+          "compact_information_rows": 608,
+          "compact_worlds": 170,
+          "max_world_path_states": 33,
+          "max_world_visits": 33,
+          "own_hand_rows_per_player": {
+            "player_0": 304,
+            "player_1": 304
+          },
+          "physical_policy_action_slots": 33824,
+          "physical_policy_rows": 16912,
+          "private_information_action_slots": 1216,
+          "public_decisions": 400,
+          "terminals": 802
+        },
+        "fixed_output": {
+          "average_action_slots_divided_or_fallback_written": 1216,
+          "average_action_slots_summed": 1216,
+          "average_rows_finalized": 608,
+          "compact_output_action_slots": 1216,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_census": {
+          "meaning": "Separate fixed physical preparation census. These counts are not proof-work units, training-work units, or allocation/RSS bounds.",
+          "oracle_worlds": 5940,
+          "physical_public_states": 30812
+        },
+        "fixed_setup": {
+          "information_rows_validated": 608,
+          "pretraining_compact_nodes_visited_upper_bound": 5610,
+          "proof_world_rows_pretraining": 170,
+          "regret_and_average_action_slots_initialized": 2432,
+          "regret_and_average_rows_initialized": 1216,
+          "world_mass_sum_terms": 170,
+          "world_rows_converted_and_mass_checked": 170
+        },
+        "fixed_setup_and_output_work": 65368,
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "logical_work_per_sweep": 180227,
+        "partial_storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 1216,
+          "final_average_action_slots_while_regrets_and_sums_exist": 1216,
+          "largest_single_player_delta_action_slots": 608,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 1216,
+          "persistent_regret_action_slots": 1216,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 33660,
+          "average_profile_action_slots": 11220,
+          "chance_child_callback_calls": 16830,
+          "delta_dictionary_action_slots_zeroed": 1216,
+          "delta_dictionary_information_key_scans": 1216,
+          "information_key_lookups_upper_bound": 16830,
+          "node_kind_dispatches": 16830,
+          "outer_world_loop_entries": 510,
+          "owner_regret_update_action_slots": 11220,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1824,
+          "regret_clipping_action_slots": 1216,
+          "regret_clipping_information_rows": 608,
+          "strategy_action_slot_touches": 10944,
+          "terminal_contribution_reads": 22440,
+          "terminal_value_callback_calls": 11220,
+          "update_expected_value_action_terms": 22440
+        },
+        "requested_iterations": 140,
+        "total_admitted_work": 25297148,
+        "total_training_work": 25231780,
+        "version": "fixed-flop-second-board-cfrplus-logical-work-v1"
+      },
+      {
+        "cap": {
+          "maximum_iterations": 560,
+          "maximum_total_admitted_logical_work": 110000000
+        },
+        "census_and_scope": {
+          "compact_action_slots": 1216,
+          "compact_chance_nodes": 68,
+          "compact_decisions": 400,
+          "compact_policy_rows": 608,
+          "compact_public_states": 1270,
+          "compact_terminals": 802,
+          "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+          "compact_worlds": 170,
+          "meaning": "Named logical loop and bookkeeping counts only. All three passes and zero averaging delay are charged. Setup includes the explicit 170-entry binary64 mass sum. These counts do not model all arithmetic, runtime, allocation, or RSS and make no speed or strategy-quality claim.",
+          "physical_action_slots": 33824,
+          "physical_policy_rows": 16912,
+          "public_action_edges": 800,
+          "tree_edges_including_chance": 1269
+        },
+        "cfrplus_recurrence": {
+          "average_profile_passes_per_sweep": 1,
+          "averaging_delay": 0,
+          "named_passes_per_sweep": 3,
+          "regret_passes_per_sweep": 2
+        },
+        "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+        "dimensions": {
+          "chance_nodes": 68,
+          "compact_information_rows": 608,
+          "compact_worlds": 170,
+          "max_world_path_states": 33,
+          "max_world_visits": 33,
+          "own_hand_rows_per_player": {
+            "player_0": 304,
+            "player_1": 304
+          },
+          "physical_policy_action_slots": 33824,
+          "physical_policy_rows": 16912,
+          "private_information_action_slots": 1216,
+          "public_decisions": 400,
+          "terminals": 802
+        },
+        "fixed_output": {
+          "average_action_slots_divided_or_fallback_written": 1216,
+          "average_action_slots_summed": 1216,
+          "average_rows_finalized": 608,
+          "compact_output_action_slots": 1216,
+          "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+          "physical_policy_rows_lifted_and_diagnosed": 16912
+        },
+        "fixed_physical_preparation_census": {
+          "meaning": "Separate fixed physical preparation census. These counts are not proof-work units, training-work units, or allocation/RSS bounds.",
+          "oracle_worlds": 5940,
+          "physical_public_states": 30812
+        },
+        "fixed_setup": {
+          "information_rows_validated": 608,
+          "pretraining_compact_nodes_visited_upper_bound": 5610,
+          "proof_world_rows_pretraining": 170,
+          "regret_and_average_action_slots_initialized": 2432,
+          "regret_and_average_rows_initialized": 1216,
+          "world_mass_sum_terms": 170,
+          "world_rows_converted_and_mass_checked": 170
+        },
+        "fixed_setup_and_output_work": 65368,
+        "kernel_lf_sha256": {
+          "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+          "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+        },
+        "logical_work_per_sweep": 180227,
+        "partial_storage_bookkeeping": {
+          "current_profile_action_slots_per_profile": 1216,
+          "final_average_action_slots_while_regrets_and_sums_exist": 1216,
+          "largest_single_player_delta_action_slots": 608,
+          "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+          "persistent_average_action_slots": 1216,
+          "persistent_regret_action_slots": 1216,
+          "recursion_stack_node_bound_per_world": 33
+        },
+        "per_sweep": {
+          "action_and_deterministic_chance_child_recursions_upper_bound": 33660,
+          "average_profile_action_slots": 11220,
+          "chance_child_callback_calls": 16830,
+          "delta_dictionary_action_slots_zeroed": 1216,
+          "delta_dictionary_information_key_scans": 1216,
+          "information_key_lookups_upper_bound": 16830,
+          "node_kind_dispatches": 16830,
+          "outer_world_loop_entries": 510,
+          "owner_regret_update_action_slots": 11220,
+          "profile_dictionary_update_calls": 3,
+          "profile_information_rows": 1824,
+          "regret_clipping_action_slots": 1216,
+          "regret_clipping_information_rows": 608,
+          "strategy_action_slot_touches": 10944,
+          "terminal_contribution_reads": 22440,
+          "terminal_value_callback_calls": 11220,
+          "update_expected_value_action_terms": 22440
+        },
+        "requested_iterations": 560,
+        "total_admitted_work": 100992488,
+        "total_training_work": 100927120,
+        "version": "fixed-flop-second-board-cfrplus-logical-work-v1"
+      }
+    ]
+  },
+  "boundaries": {
+    "exact_metric_calls": 2,
+    "exact_world_node_terms": 604890,
+    "model_build_attempts": 1,
+    "model_proof_calls": 3,
+    "numeric_replay_calls": 1,
+    "numeric_world_node_terms": 588060,
+    "preparation_rank_calls": 4134,
+    "preparation_ranker_attempts": 4134,
+    "projection_calls": 1,
+    "row_action_slots": 240416,
+    "row_tables": 10,
+    "training_calls": 1
+  },
+  "case_admissions": [
+    {
+      "cap": {
+        "maximum_iterations": 560,
+        "maximum_total_admitted_logical_work": 110000000
+      },
+      "census_and_scope": {
+        "compact_action_slots": 1216,
+        "compact_chance_nodes": 68,
+        "compact_decisions": 400,
+        "compact_policy_rows": 608,
+        "compact_public_states": 1270,
+        "compact_terminals": 802,
+        "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+        "compact_worlds": 170,
+        "meaning": "Named logical loop and bookkeeping counts only. All three passes and zero averaging delay are charged. Setup includes the explicit 170-entry binary64 mass sum. These counts do not model all arithmetic, runtime, allocation, or RSS and make no speed or strategy-quality claim.",
+        "physical_action_slots": 33824,
+        "physical_policy_rows": 16912,
+        "public_action_edges": 800,
+        "tree_edges_including_chance": 1269
+      },
+      "cfrplus_recurrence": {
+        "average_profile_passes_per_sweep": 1,
+        "averaging_delay": 0,
+        "named_passes_per_sweep": 3,
+        "regret_passes_per_sweep": 2
+      },
+      "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+      "dimensions": {
+        "chance_nodes": 68,
+        "compact_information_rows": 608,
+        "compact_worlds": 170,
+        "max_world_path_states": 33,
+        "max_world_visits": 33,
+        "own_hand_rows_per_player": {
+          "player_0": 304,
+          "player_1": 304
+        },
+        "physical_policy_action_slots": 33824,
+        "physical_policy_rows": 16912,
+        "private_information_action_slots": 1216,
+        "public_decisions": 400,
+        "terminals": 802
+      },
+      "fixed_output": {
+        "average_action_slots_divided_or_fallback_written": 1216,
+        "average_action_slots_summed": 1216,
+        "average_rows_finalized": 608,
+        "compact_output_action_slots": 1216,
+        "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+        "physical_policy_rows_lifted_and_diagnosed": 16912
+      },
+      "fixed_physical_preparation_census": {
+        "meaning": "Separate fixed physical preparation census. These counts are not proof-work units, training-work units, or allocation/RSS bounds.",
+        "oracle_worlds": 5940,
+        "physical_public_states": 30812
+      },
+      "fixed_setup": {
+        "information_rows_validated": 608,
+        "pretraining_compact_nodes_visited_upper_bound": 5610,
+        "proof_world_rows_pretraining": 170,
+        "regret_and_average_action_slots_initialized": 2432,
+        "regret_and_average_rows_initialized": 1216,
+        "world_mass_sum_terms": 170,
+        "world_rows_converted_and_mass_checked": 170
+      },
+      "fixed_setup_and_output_work": 65368,
+      "kernel_lf_sha256": {
+        "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+        "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+      },
+      "logical_work_per_sweep": 180227,
+      "partial_storage_bookkeeping": {
+        "current_profile_action_slots_per_profile": 1216,
+        "final_average_action_slots_while_regrets_and_sums_exist": 1216,
+        "largest_single_player_delta_action_slots": 608,
+        "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+        "persistent_average_action_slots": 1216,
+        "persistent_regret_action_slots": 1216,
+        "recursion_stack_node_bound_per_world": 33
+      },
+      "per_sweep": {
+        "action_and_deterministic_chance_child_recursions_upper_bound": 33660,
+        "average_profile_action_slots": 11220,
+        "chance_child_callback_calls": 16830,
+        "delta_dictionary_action_slots_zeroed": 1216,
+        "delta_dictionary_information_key_scans": 1216,
+        "information_key_lookups_upper_bound": 16830,
+        "node_kind_dispatches": 16830,
+        "outer_world_loop_entries": 510,
+        "owner_regret_update_action_slots": 11220,
+        "profile_dictionary_update_calls": 3,
+        "profile_information_rows": 1824,
+        "regret_clipping_action_slots": 1216,
+        "regret_clipping_information_rows": 608,
+        "strategy_action_slot_touches": 10944,
+        "terminal_contribution_reads": 22440,
+        "terminal_value_callback_calls": 11220,
+        "update_expected_value_action_terms": 22440
+      },
+      "requested_iterations": 140,
+      "total_admitted_work": 25297148,
+      "total_training_work": 25231780,
+      "version": "fixed-flop-second-board-cfrplus-logical-work-v1"
+    },
+    {
+      "cap": {
+        "maximum_iterations": 560,
+        "maximum_total_admitted_logical_work": 110000000
+      },
+      "census_and_scope": {
+        "compact_action_slots": 1216,
+        "compact_chance_nodes": 68,
+        "compact_decisions": 400,
+        "compact_policy_rows": 608,
+        "compact_public_states": 1270,
+        "compact_terminals": 802,
+        "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+        "compact_worlds": 170,
+        "meaning": "Named logical loop and bookkeeping counts only. All three passes and zero averaging delay are charged. Setup includes the explicit 170-entry binary64 mass sum. These counts do not model all arithmetic, runtime, allocation, or RSS and make no speed or strategy-quality claim.",
+        "physical_action_slots": 33824,
+        "physical_policy_rows": 16912,
+        "public_action_edges": 800,
+        "tree_edges_including_chance": 1269
+      },
+      "cfrplus_recurrence": {
+        "average_profile_passes_per_sweep": 1,
+        "averaging_delay": 0,
+        "named_passes_per_sweep": 3,
+        "regret_passes_per_sweep": 2
+      },
+      "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+      "dimensions": {
+        "chance_nodes": 68,
+        "compact_information_rows": 608,
+        "compact_worlds": 170,
+        "max_world_path_states": 33,
+        "max_world_visits": 33,
+        "own_hand_rows_per_player": {
+          "player_0": 304,
+          "player_1": 304
+        },
+        "physical_policy_action_slots": 33824,
+        "physical_policy_rows": 16912,
+        "private_information_action_slots": 1216,
+        "public_decisions": 400,
+        "terminals": 802
+      },
+      "fixed_output": {
+        "average_action_slots_divided_or_fallback_written": 1216,
+        "average_action_slots_summed": 1216,
+        "average_rows_finalized": 608,
+        "compact_output_action_slots": 1216,
+        "physical_policy_action_slots_lifted_and_diagnosed": 33824,
+        "physical_policy_rows_lifted_and_diagnosed": 16912
+      },
+      "fixed_physical_preparation_census": {
+        "meaning": "Separate fixed physical preparation census. These counts are not proof-work units, training-work units, or allocation/RSS bounds.",
+        "oracle_worlds": 5940,
+        "physical_public_states": 30812
+      },
+      "fixed_setup": {
+        "information_rows_validated": 608,
+        "pretraining_compact_nodes_visited_upper_bound": 5610,
+        "proof_world_rows_pretraining": 170,
+        "regret_and_average_action_slots_initialized": 2432,
+        "regret_and_average_rows_initialized": 1216,
+        "world_mass_sum_terms": 170,
+        "world_rows_converted_and_mass_checked": 170
+      },
+      "fixed_setup_and_output_work": 65368,
+      "kernel_lf_sha256": {
+        "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+        "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6"
+      },
+      "logical_work_per_sweep": 180227,
+      "partial_storage_bookkeeping": {
+        "current_profile_action_slots_per_profile": 1216,
+        "final_average_action_slots_while_regrets_and_sums_exist": 1216,
+        "largest_single_player_delta_action_slots": 608,
+        "one_updated_regret_row_old_and_new_temporary_action_slots": 4,
+        "persistent_average_action_slots": 1216,
+        "persistent_regret_action_slots": 1216,
+        "recursion_stack_node_bound_per_world": 33
+      },
+      "per_sweep": {
+        "action_and_deterministic_chance_child_recursions_upper_bound": 33660,
+        "average_profile_action_slots": 11220,
+        "chance_child_callback_calls": 16830,
+        "delta_dictionary_action_slots_zeroed": 1216,
+        "delta_dictionary_information_key_scans": 1216,
+        "information_key_lookups_upper_bound": 16830,
+        "node_kind_dispatches": 16830,
+        "outer_world_loop_entries": 510,
+        "owner_regret_update_action_slots": 11220,
+        "profile_dictionary_update_calls": 3,
+        "profile_information_rows": 1824,
+        "regret_clipping_action_slots": 1216,
+        "regret_clipping_information_rows": 608,
+        "strategy_action_slot_touches": 10944,
+        "terminal_contribution_reads": 22440,
+        "terminal_value_callback_calls": 11220,
+        "update_expected_value_action_terms": 22440
+      },
+      "requested_iterations": 560,
+      "total_admitted_work": 100992488,
+      "total_training_work": 100927120,
+      "version": "fixed-flop-second-board-cfrplus-logical-work-v1"
+    }
+  ],
+  "cases": [
+    {
+      "adapter_observation_phase": "final-model-validation",
+      "adapter_progress": null,
+      "diagnostic_forbidden_calls": null,
+      "elapsed": {
+        "process_cpu_seconds": 35.375,
+        "wall_seconds": 37.496939399978146
+      },
+      "error": "ValueError: Numeric replay metric inventory differs",
+      "iterations": 140,
+      "payload": {
+        "gzip_bytes": 152863,
+        "gzip_sha256": "16c12e67e622c90ad5e0461c1bf370fe2ea265e7f053221666f8499fbf74e2cd",
+        "path": "case-140/reference.json.gz",
+        "raw_bytes": 6319719,
+        "raw_sha256": "7f43e60f86bd67cdd47efc80a12b8a17771f5864360afcefaef232d08ca04831"
+      },
+      "phase": "serialized",
+      "preparation_forbidden_calls": null,
+      "preparation_rank_calls": 4134,
+      "preparation_ranker_attempts": 4134,
+      "quality_target_met": null,
+      "serialization_error": null,
+      "status": "error",
+      "training_calls_after": 1,
+      "training_calls_before": 0
+    }
+  ],
+  "created_at_utc": "2026-10-23T14:05:03.037479+00:00",
+  "errors": [
+    {
+      "message": "ValueError: Numeric replay metric inventory differs",
+      "phase": "case-execution",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\benchmark_flop_second_board_cfrplus.py\", line 528, in run\n    case = _run_case(adapter_module, iterations, directory, report)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\benchmark_flop_second_board_cfrplus.py\", line 430, in _run_case\n    raise error_object\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\benchmark_flop_second_board_cfrplus.py\", line 363, in _run_case\n    adapter_report = adapter_module.solve_second_board(iterations, observation=observation)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\flop_second_board_cfrplus.py\", line 398, in solve_second_board\n    raise diag_error\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\flop_second_board_cfrplus.py\", line 344, in solve_second_board\n    _need(type(numeric) is dict and set(numeric) == set(proof.METRICS),\n  File \"C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\openpoker-flop-prior-diagnostic\\scripts\\flop_second_board_cfrplus.py\", line 35, in _need\n    raise ValueError(message)\nValueError: Numeric replay metric inventory differs\n"
+    }
+  ],
+  "execution_receipts": {
+    "interpretation": "Execution timing receipt only; no performance claim.",
+    "process_cpu_seconds": 38.015625,
+    "wall_seconds": 40.27913249999983
+  },
+  "finished_at_utc": "2026-10-23T14:05:43.562875+00:00",
+  "index_sha256": "237d9f30d80b13d9e89fee71121ca750438dcd8e34c330a0276dfdbd4b2a5fba",
+  "protocol_id": "fixed-flop-second-board-cfrplus-pilot-v1",
+  "protocol_sha256": "75c0e30819a0632594b93bc29994ef764559eac33245b44d321dcef6eb261f87",
+  "runtime": {
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "schema_version": 1,
+  "source_after": {
+    "revision": "0106c521fffffdb407f193b4295da6ff2e35759d",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-owned-fingerprint-v1.json": "dc3f92ddfe0ed1c4f1e9006683d1b1b2ae9726ab425776b3bc36b1f7ab94ef56",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "benchmarks/flop-second-board-cfrplus-pilot-v1.json": "75c0e30819a0632594b93bc29994ef764559eac33245b44d321dcef6eb261f87",
+      "benchmarks/flop-second-board-equivalence-v1.json": "f27d10e7f23968d5d8a6826e098b7fa5cbb643b2263f9b73077c98e4878e2198",
+      "benchmarks/flop-second-board-reference-v1.json": "92bf84ed5d438b75accbfa2f40e541a2efb916dd0ee0708169024a8d7f7b9ed2",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_owned_fingerprint.py": "7811d633f4e66ca8c14fae433db15c3e5b95ceaa620f8a1042c7cdafc0f43100",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_flop_second_board_cfrplus.py": "60567257adacbc03c274c7666c6bae957f66d3d4d839f0249c9865e01cbde01a",
+      "scripts/benchmark_flop_second_board_equivalence.py": "5dc62b2c0b344e1143d07b87e0ff11af7753eaee331e1001df98d828f08209d1",
+      "scripts/benchmark_flop_second_board_reference.py": "33d70f9bede3e4eb5d8f5b0dfe785887eb09688219fa3c1047aadb6c2927e598",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_owned_fingerprint.py": "bd3d1b1fbc741fdfeeb5cdc8e3c6a716da2513a7e5bc6f01f46317a0da3a7aa7",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/flop_second_board_cfrplus.py": "c71921146da71cc643ed3759502336cac19c09b83b5f6362763375de06b48b15",
+      "scripts/flop_second_board_cfrplus_budget.py": "3e5bfdb46c8882321bea953f8b423f3f50fe40d97889b21c6989c73d3ffb63d5",
+      "scripts/flop_second_board_equivalence.py": "07b63967910920b5a78e4a373015d4a176864a34fd5160f44aad589b994db2d6",
+      "scripts/flop_second_board_partition_proof.py": "1f563a38dcb2ee7fc21ab96639fe6ca94ecfda7d4f56381c369e66cd8b37d8c4",
+      "scripts/flop_second_board_plan.py": "90012f78d8b5936fd5706cb4d4f307873c9957a1c45c97869576e5dd75cf5a34",
+      "scripts/flop_second_board_reference.py": "94b247d227b3d2d40ba2aa963b7ce812ded881538a13b0f387f3ea71d9034581",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_owned_fingerprint_publication.py": "01277b57f286e5eab53a2be3c0996ff8a0c3a58982be806a57535c227edea4eb",
+      "scripts/verify_flop_class_reweight_baseline_diagnostic_publication.py": "99300c02a8c48981fb8feefb6cf47b0ad870025af796c23bc0a987c29465ce54",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a",
+      "scripts/verify_flop_second_board_equivalence_publication.py": "ea7fdc67b07830299625522f6779ab8f3cf89cc8e3a6a3d784502e17ee30ca2b",
+      "scripts/verify_flop_second_board_reference_publication.py": "6a983e0877dafd2eae265131467659c4c7ddc496441b0420cd84f01ce422cf85"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "0106c521fffffdb407f193b4295da6ff2e35759d",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-owned-fingerprint-v1.json": "dc3f92ddfe0ed1c4f1e9006683d1b1b2ae9726ab425776b3bc36b1f7ab94ef56",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "benchmarks/flop-second-board-cfrplus-pilot-v1.json": "75c0e30819a0632594b93bc29994ef764559eac33245b44d321dcef6eb261f87",
+      "benchmarks/flop-second-board-equivalence-v1.json": "f27d10e7f23968d5d8a6826e098b7fa5cbb643b2263f9b73077c98e4878e2198",
+      "benchmarks/flop-second-board-reference-v1.json": "92bf84ed5d438b75accbfa2f40e541a2efb916dd0ee0708169024a8d7f7b9ed2",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_owned_fingerprint.py": "7811d633f4e66ca8c14fae433db15c3e5b95ceaa620f8a1042c7cdafc0f43100",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_flop_second_board_cfrplus.py": "60567257adacbc03c274c7666c6bae957f66d3d4d839f0249c9865e01cbde01a",
+      "scripts/benchmark_flop_second_board_equivalence.py": "5dc62b2c0b344e1143d07b87e0ff11af7753eaee331e1001df98d828f08209d1",
+      "scripts/benchmark_flop_second_board_reference.py": "33d70f9bede3e4eb5d8f5b0dfe785887eb09688219fa3c1047aadb6c2927e598",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_owned_fingerprint.py": "bd3d1b1fbc741fdfeeb5cdc8e3c6a716da2513a7e5bc6f01f46317a0da3a7aa7",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/flop_second_board_cfrplus.py": "c71921146da71cc643ed3759502336cac19c09b83b5f6362763375de06b48b15",
+      "scripts/flop_second_board_cfrplus_budget.py": "3e5bfdb46c8882321bea953f8b423f3f50fe40d97889b21c6989c73d3ffb63d5",
+      "scripts/flop_second_board_equivalence.py": "07b63967910920b5a78e4a373015d4a176864a34fd5160f44aad589b994db2d6",
+      "scripts/flop_second_board_partition_proof.py": "1f563a38dcb2ee7fc21ab96639fe6ca94ecfda7d4f56381c369e66cd8b37d8c4",
+      "scripts/flop_second_board_plan.py": "90012f78d8b5936fd5706cb4d4f307873c9957a1c45c97869576e5dd75cf5a34",
+      "scripts/flop_second_board_reference.py": "94b247d227b3d2d40ba2aa963b7ce812ded881538a13b0f387f3ea71d9034581",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_owned_fingerprint_publication.py": "01277b57f286e5eab53a2be3c0996ff8a0c3a58982be806a57535c227edea4eb",
+      "scripts/verify_flop_class_reweight_baseline_diagnostic_publication.py": "99300c02a8c48981fb8feefb6cf47b0ad870025af796c23bc0a987c29465ce54",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a",
+      "scripts/verify_flop_second_board_equivalence_publication.py": "ea7fdc67b07830299625522f6779ab8f3cf89cc8e3a6a3d784502e17ee30ca2b",
+      "scripts/verify_flop_second_board_reference_publication.py": "6a983e0877dafd2eae265131467659c4c7ddc496441b0420cd84f01ce422cf85"
+    },
+    "status": ""
+  },
+  "status": "error"
+}

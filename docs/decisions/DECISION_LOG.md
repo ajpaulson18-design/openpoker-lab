@@ -303,3 +303,24 @@ Clean 49-source identities and all 41 zero authority counters are preserved.
 The controls are not trained strategies and establish no quality target,
 convergence, speed, memory or unrestricted NLHE result. Publication authentication
 and CI must finish before a separate new-board trainer is admitted.
+
+D033 (2026-10-23 UTC): stage a separate fixed second-board CFR+ pilot after
+D032 publication validation. Keep a distinct versioned 110M named logical-work
+envelope and the unchanged shared recurrence; the old 76M cap is preserved.
+Freeze fresh T140/T560 calls and exact physical NashConv<=0.005 checks, retaining
+all target misses. Validate the complete model before/after, all positive joint
+masses, own-hand information rows, both response domains and separate numeric
+replay. Keep raw averages, normalized full policies, errors and source identities.
+No training or quality result is claimed by this staging decision. See
+[the pilot and its limits](../flop-second-board-cfrplus.md). No earlier decision
+is superseded.
+
+D033 observation: the one frozen v1 batch stopped after T140 on an adapter
+schema check that wrongly excluded replay audit metadata. T560 never ran;
+the original quality gate is null. Retain the complete failed report, raw and
+normalized policies, identical compact/physical exact metrics, original error,
+all zero guard counters and clean source identities. Final model validation
+passed, but the numeric replay return was not saved and the case is not a
+completed verified policy. Preserve frozen v1 sources and require a distinct
+reviewed correction/protocol before further measurement. See the
+[retained failure](../flop-second-board-cfrplus.md).

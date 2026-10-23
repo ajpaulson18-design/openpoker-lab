@@ -1,5 +1,23 @@
 # Solver progress record
 
+## Second-board flop proof published; failed training pilot retained
+
+The complete no-training `7c8d9h` quotient proof is merged in
+[PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213).
+Its four control policies have identical exact compact/unrestricted physical
+responses, and both invalid projection controls reject. All seven saved files
+authenticate without live poker computation; 49 focused tests and both final
+Python CI matrices passed. This establishes correctness for the stated finite
+game, not trained quality or general convergence.
+
+A distinct [second-board CFR+ pilot](flop-second-board-cfrplus.md) stopped
+after T140 on an adapter check that wrongly excluded numeric replay audit
+metadata. Its full raw/normalized policies and identical compact/physical exact
+metrics are retained with the original error and clean source/guard receipts.
+T560 never ran, and the original quality gate remains null. This failed attempt
+is preserved with its frozen source; a separate correction must be reviewed
+before another version is measured. No completed verified policy is claimed.
+
 ## Independent physical source rows for mixed-range work
 
 The project-owned best-five reference now supports strictly bounded one-to-four
