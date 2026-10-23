@@ -281,3 +281,25 @@ physical world/tree views and hashes are retained. These measured dimensions
 establish a new reference; they do not prove public-chance equivalence or
 authorize training. Across-class variation is a valid future control; physical
 card-specific variation within a class must reject projection.
+
+D032 (2026-10-23 UTC): independently prove the fixed second-board quotient
+before training. Freeze one complete no-training batch with fresh physical
+anchors, full joint support/masses/signs and both numeric reveal subtrees.
+Require exact compact/unrestricted own-hand responses and separate numeric
+replay for four positive class-constant controls, preserving all rows/actions.
+Across-class variation is valid; within-class card variation and near-normalized
+floats must reject. Admit every proof/response/output family before any ranking,
+retain source/error/policy receipts and change no shared or published source.
+See [the full protocol and pending execution status](../flop-second-board-equivalence.md).
+No earlier decision is superseded.
+
+D032 observation: the one frozen batch passed all joint-mass and complete
+two-reveal numeric subtree checks, all four positive exact/numeric response
+controls and both intended projection rejections. It derives 170 compact worlds,
+1,270 numeric states and 608 own-hand rows, retaining all six complete policies.
+Ten model proofs, eight exact metric calls, four numeric replays, six projections,
+one fresh physical build and 4,134 rank calls completed without errors/retries.
+Clean 49-source identities and all 41 zero authority counters are preserved.
+The controls are not trained strategies and establish no quality target,
+convergence, speed, memory or unrestricted NLHE result. Publication authentication
+and CI must finish before a separate new-board trainer is admitted.

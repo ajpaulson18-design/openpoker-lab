@@ -1639,3 +1639,16 @@ independent ranking method. Clean source and actual call/error receipts plus
 the complete lossless corpus are saved. Full class/tree and unrestricted
 own-hand response equivalence remain required before training on this board;
 this adds no strategy, convergence or performance result.
+
+## Second-board exact quotient and response proof (2026-10-23 UTC)
+
+The [separate frozen no-training audit](flop-second-board-equivalence.md)
+completed full joint-mass/transport and both reveal-layer numeric subtree checks
+for `7c8d9h`. It derives 170 compact worlds, 1,270 states and 608 own-hand policy
+rows from the 5,940-world physical game. Four class-constant controls have exact
+compact/unrestricted own-hand response equality and separate numeric gaps below
+`9e-16` chips; within-class card variation and near-normalization reject.
+All six complete policies and source/call/error receipts are retained. These
+controls are not trained strategies; new-board convergence and any performance
+comparison remain separate milestones. Publication status is in
+[PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213).
