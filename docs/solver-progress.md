@@ -1701,3 +1701,8 @@ are linked from the experiment record.
 ## Configurable matrix-free turn tail (2026-10-23)
 
 The opt-in [generic direct-tail API](matrix-free-turn-tail.md) removes joint-world materialization for configurable original-weight turn tail solves, using the existing private-hand vectors and exact public river tree. It keeps original caps, all physical information rows and fresh legal response metrics. Bounded T10 controls cover exact zero-discard policy parity, positive-discard materialized agreement, blockers, selected/full-deck rivers, short all-ins/refunds and independent physical response replay. The fixed T6000 result and earlier misses remain immutable. Accuracy on held-out river games and then broader turn games is the next priority; no measured runtime/RSS gain follows from this representation.
+
+
+## Held-out river accuracy protocol (2026-10-23)
+
+A separate [fixed four-profile protocol](river-heldout-quality-protocol.md) broadens correctness and accuracy checks to two weighted 4x4 complete-board games with blocker collisions, ties, short stacks, raises/all-ins and rank extremes. Fresh full-tree/action/refund preflight, committed-source guards, exact-once batch claims and independent numeric/exact saved-policy replay precede any reported outcome. Both existing backends use predeclared CFR+10000 and exact normalized-policy NashConv<=0.001; no trained result is claimed by staging the runner.
