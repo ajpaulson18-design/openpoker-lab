@@ -523,3 +523,8 @@ six/24/six relative-suit censuses pass. One candidate and both independent
 memory/saved checks agree, all eleven forbidden-calculation counters are zero,
 and the clean measured source snapshot is stable. This establishes prepared
 count provenance, with no strategy, later-street betting or equilibrium claim.
+
+
+## Held-out RIVER accuracy evidence
+
+The separate [four-profile river corpus](../river-heldout-quality-results.md) adds two weighted 4x4 games with blocker/tie and short-stack/rank-extreme coverage. All CFR+10000 profiles pass independent physical and exact normalized-policy replay, but all four miss the fixed 0.001-chip NashConv target (about 0.00174251 and 0.00232499). Complete policies, source/claim receipts and unchanged misses are retained. This is an observed accuracy limitation, not commercial solver parity.

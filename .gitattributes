@@ -149,3 +149,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /docs/turn-class-tail-T6000-experiment-spec.md text eol=lf
 /benchmarks/results/turn-class-tail-T6000-v1.json -text
 /benchmarks/results/turn-class-tail-T6000-v1-policy.json -text
+
+# Preserve every completed held-out river policy, miss and replay receipt byte for byte.
+/benchmarks/results/river-heldout-quality-v1/** -text
+/benchmarks/results/river-heldout-quality-v1/independent-saved-replay.json -text whitespace=cr-at-eol
