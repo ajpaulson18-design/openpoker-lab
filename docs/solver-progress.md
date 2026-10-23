@@ -18,6 +18,12 @@ T560 never ran, and the original quality gate remains null. This failed attempt
 is preserved with its frozen source; a separate correction must be reviewed
 before another version is measured. No completed verified policy is claimed.
 
+The [separate replay boundary v2](flop-second-board-cfrplus-replay-v2.md)
+preserves the v1 failure and validates/retains the complete replay metadata
+before passing eight metrics to the unchanged adapter. Fourteen focused
+synthetic tests pass; no v2 game preparation, training or quality outcome is
+claimed before prerequisite publication and its own clean source freeze.
+
 ## Independent physical source rows for mixed-range work
 
 The project-owned best-five reference now supports strictly bounded one-to-four

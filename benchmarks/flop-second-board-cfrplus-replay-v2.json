@@ -1,0 +1,224 @@
+{
+  "acceptance": {
+    "admission": "Pre-admit both complete iteration requests and validate the new output location before source authentication or either solve.",
+    "artifacts": "Preserve each complete adapter report, raw rows, normalized policy and any partial observation in a lossless bounded case/reference.json.gz artifact; retain one bounded raw fallback if gzip output fails.",
+    "failure": "Keep first error, then record source/index/cleanup errors as secondary; preserve available reports in the returned API with an explicit not-durable marker when both artifact paths fail.",
+    "models_and_training": "Exactly one fresh model and at most one shared CFR+ training call per case; two cases total. No retries; stop after the first execution error.",
+    "normalization": "Record the explicit per-player 304-row normalization batches and their bounded row-family counts.",
+    "quality": "Retain exact NashConv and an explicit <=1/200 target result for each completed case; a miss is recorded without rerunning.",
+    "runtime": "Record CPython/OS metadata and wall/CPU elapsed receipts; elapsed values are not performance claims.",
+    "source": "Clean identical committed HEAD/status and 58 named LF hashes before/after; preserve the original failed v1 source and evidence."
+  },
+  "case_admission": [
+    {
+      "fixed_setup_and_output_work": 65368,
+      "iterations": 140,
+      "logical_work_per_sweep": 180227,
+      "total_admitted_work": 25297148,
+      "total_training_work": 25231780
+    },
+    {
+      "fixed_setup_and_output_work": 65368,
+      "iterations": 560,
+      "logical_work_per_sweep": 180227,
+      "total_admitted_work": 100992488,
+      "total_training_work": 100927120
+    }
+  ],
+  "failed_v1_prerequisite": {
+    "index_sha256": "237d9f30d80b13d9e89fee71121ca750438dcd8e34c330a0276dfdbd4b2a5fba",
+    "qualification": "One stopped T140 attempt; no T560, completed numeric verification or quality-gate result. Never relabel or retry the frozen v1 batch.",
+    "raw_index_sha256": "6923789f8847b79326c37906875ae3f658d15762e52c8d6fb37ae89f46ba9afd",
+    "source_revision": "0106c521fffffdb407f193b4295da6ff2e35759d",
+    "status": "error"
+  },
+  "limits": {
+    "aggregate_gzip_bytes": 33554432,
+    "aggregate_logical_work_cap": 140000000,
+    "aggregate_logical_work_reservation": 126289636,
+    "aggregate_preparation_rank_calls": 23760,
+    "aggregate_proof_pass_reservation": 8077400,
+    "aggregate_raw_payload_bytes": 134217728,
+    "case_payload_files": 2,
+    "exact_world_node_term_reservation": 1209780,
+    "failure_fallback_raw_bytes": 67108864,
+    "failure_fallback_raw_files": 1,
+    "gzip_bytes_each": 16777216,
+    "index_bytes": 2097152,
+    "maximum_exact_metric_calls": 4,
+    "maximum_model_builds": 2,
+    "maximum_model_proofs": 10,
+    "maximum_numeric_replays": 2,
+    "maximum_projection_calls": 2,
+    "maximum_row_action_slots": 4000000,
+    "maximum_row_tables": 100,
+    "numeric_world_node_term_reservation": 1176120,
+    "preparation_rank_calls_per_model": 11880,
+    "proof_pass_reservation_each": 807740,
+    "raw_payload_bytes_each": 67108864,
+    "source_file_bytes": 2097152,
+    "source_files": 58
+  },
+  "model_admission": {
+    "fixture": {
+      "board": [
+        "7c",
+        "8d",
+        "9h"
+      ],
+      "canonical_pair_identities": [
+        [
+          "AdAs",
+          "KdKs",
+          "AsAd",
+          "KsKd"
+        ],
+        [
+          "QdQs",
+          "AsKh",
+          "QsQd",
+          "AsKh"
+        ],
+        [
+          "QdQs",
+          "KdKs",
+          "QsQd",
+          "KsKd"
+        ]
+      ],
+      "class_tree_equivalence_claim": false,
+      "compatible_pair_count": 3,
+      "compatible_pair_raw_products": [
+        [
+          "AsAd",
+          "KsKd",
+          "1/1"
+        ],
+        [
+          "QsQd",
+          "AsKh",
+          "1/8"
+        ],
+        [
+          "QsQd",
+          "KsKd",
+          "1/2"
+        ]
+      ],
+      "distinct_turn_card_forecast": 49,
+      "exact_pair_priors": [
+        [
+          "AsAd",
+          "KsKd",
+          "8/13"
+        ],
+        [
+          "QsQd",
+          "AsKh",
+          "1/13"
+        ],
+        [
+          "QsQd",
+          "KsKd",
+          "4/13"
+        ]
+      ],
+      "existing_limits_reference_only": {
+        "candidate_partition": {
+          "max_pairs": 3,
+          "max_turns": 49,
+          "max_worlds": 5940
+        },
+        "physical_oracle": {
+          "max_decisions": 10000,
+          "max_pairs": 4,
+          "max_public_states": 250000,
+          "max_worlds": 7920
+        }
+      },
+      "global_blocker_normalizer": "13/8",
+      "literal_ranges": {
+        "ip": [
+          [
+            "AsKh",
+            "1/4"
+          ],
+          [
+            "KsKd",
+            "1/1"
+          ]
+        ],
+        "oop": [
+          [
+            "AsAd",
+            "1/1"
+          ],
+          [
+            "QsQd",
+            "1/2"
+          ]
+        ]
+      },
+      "ordered_runouts_per_pair": 1980,
+      "physical_world_forecast": 5940,
+      "scope": "fixed-board-range-plan-only"
+    },
+    "interpretation": "Named model/world/policy/path bounds only, not full-call work, memory or RSS.",
+    "maximum_compact_worlds": 170,
+    "maximum_policy_rows": 20000,
+    "maximum_world_path_states": 33,
+    "physical_builds": 1,
+    "physical_worlds": 5940,
+    "preparation_rank_call_limit": 11880,
+    "training_calls": 0
+  },
+  "prerequisite": {
+    "compact_tree_sha256": "5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152",
+    "index_sha256": "29ff51b127a393d484262d788835324ac76c44fd0f2c5b2ee76e7ee375bd8691",
+    "raw_index_sha256": "06b60eada9aa6465e63138525060b0891f3d66d00e2364dd42e047e2b060880a",
+    "source_revision": "8c093c9af650e53ddf1a98457d0cad69382eb5d1"
+  },
+  "protocol_id": "fixed-flop-second-board-cfrplus-replay-v2",
+  "replay_boundary": {
+    "checked_counts": {
+      "checked_information_sets": 16912,
+      "checked_physical_worlds": 5940,
+      "checked_public_nodes": 9512,
+      "checked_public_states": 30812
+    },
+    "finite_metric_fields": 8,
+    "finite_scalar_gap_fields": 8,
+    "maximum_calls_per_case": 1,
+    "maximum_scalar_gap": 1e-10,
+    "meaning": "Bounded result-schema checks, separate from the unchanged named logical training forecast; not all arithmetic or a performance/memory bound.",
+    "raw_result_keys": 13,
+    "retention": "Retain the full raw replay result before validation; expose only its eight metrics to the preserved v1 adapter and restore the wrapper on every exit."
+  },
+  "request": {
+    "algorithm": "cfrplus",
+    "averaging_delay": 0,
+    "board": [
+      "7c",
+      "8d",
+      "9h"
+    ],
+    "independent_fresh_model_per_case": true,
+    "iterations": [
+      140,
+      560
+    ],
+    "normalization_batch_rows_by_player": {
+      "player_0": 304,
+      "player_1": 304
+    },
+    "retain_quality_misses": true,
+    "retry_count": 0,
+    "stop_after_first_error": true,
+    "target_nash_conv": "1/200"
+  },
+  "scope": {
+    "bounds": "Named logical work, proof/diagnostic families, preparation ranks, source and output bytes only; not all arithmetic, allocation, wall time or RSS.",
+    "claims": "One finite fixed-board, fixed-stack, fixed-action-size game. No unrestricted Hold'em, convergence, speed, or memory claim follows.",
+    "provenance": "Project-owned implementation and standard library; shared CFR+ recurrence remains authenticated by the separate versioned budget."
+  }
+}

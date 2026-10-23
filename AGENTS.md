@@ -466,3 +466,11 @@ inventory mismatch. Preserve its original failed receipt, policies and source;
 T560 did not run and the quality-gate field remains null. Do not silently repair
 or rerun that frozen batch. A correction needs a separate version/protocol and
 must retain the full replay metadata along with all eight numeric metrics.
+
+The [separate replay boundary v2](docs/flop-second-board-cfrplus-replay-v2.md)
+authenticates the stopped-v1 evidence before wrapping the preserved adapter.
+Validate and retain the full thirteen-field replay receipt, strict checked
+counts and finite scalar gaps, and expose only eight metrics to v1. Restore
+the callable on every exit and preserve exact-once outer instrumentation.
+Keep the new 58-source map and old 54-source subset, and never rewrite the
+original failed attempt as a successful measurement or silently rerun it.

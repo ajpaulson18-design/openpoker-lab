@@ -324,3 +324,14 @@ passed, but the numeric replay return was not saved and the case is not a
 completed verified policy. Preserve frozen v1 sources and require a distinct
 reviewed correction/protocol before further measurement. See the
 [retained failure](../flop-second-board-cfrplus.md).
+
+D034 (2026-10-23 UTC): stage a distinct
+[replay-boundary v2](../flop-second-board-cfrplus-replay-v2.md) rather than alter
+the frozen D033 failure. Authenticate the stopped-v1 saved evidence, wrap one
+unchanged independent replay call, retain/validate its full thirteen-field
+return, and expose the eight numeric metrics to the preserved adapter. Require
+restoration on every exit, exact-once counting, stable 58/54 source identities
+and the unchanged exact/numeric/model guards. Keep the same fresh T140/T560
+quality protocol and separate named resource envelopes; no v2 actual training
+or quality result is claimed by this staging decision. No earlier decision is
+superseded.

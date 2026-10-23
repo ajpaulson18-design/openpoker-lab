@@ -130,3 +130,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Immutable second-board training pilot receipts and complete adapter reports.
 /benchmarks/results/flop-second-board-cfrplus-pilot-v1/index.json -text
 /benchmarks/results/flop-second-board-cfrplus-pilot-v1/*/reference.json.gz binary
+
+# Separate replay-contract v2 pilot evidence; preserve stopped v1 unchanged.
+/benchmarks/results/flop-second-board-cfrplus-replay-v2/index.json -text
+/benchmarks/results/flop-second-board-cfrplus-replay-v2/*/reference.json.gz binary
