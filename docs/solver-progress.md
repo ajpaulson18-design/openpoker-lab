@@ -1739,3 +1739,11 @@ A separate [fixed four-profile protocol](river-heldout-quality-protocol.md) broa
 
 
 The [completed held-out river v1 batch](river-heldout-quality-results.md) retains four verified CFR+10000 policies and four misses against the exact 0.001-chip NashConv gate. The unpaired game has gaps about 0.00174251 and the paired game about 0.00232499 for both existing backends. All physical numeric/exact replays, source guards and saved reloads passed. These new cases expose a finite-budget accuracy limit; higher precision remains the next bounded task, with v1 unchanged.
+
+
+## Fixed river tail follow-up protocol (2026-10-23)
+
+The [separate original-weight tail study](river-heldout-tail-protocol.md) preregisters four calls through the existing materialized research adapter: both unchanged v1 games at T10000/D5000 and T50000/D25000. Fresh full-request admission uses the original limits; baseline hashes, all four historical misses and original mathematical sources remain fixed. The wrapper saves complete raw policies before independent numeric/exact replay and retains failures without retry. Its 11 synthetic and no-training harness tests pass alongside 12 saved-baseline tests in normal and optimized Python. No new trained result is claimed by this source freeze; the later outcomes require a separate evidence record.
+
+
+The [completed fixed river-tail study](river-heldout-tail-results.md) retained two shorter-tail misses and two exact target passes: the unpaired and paired T50000/D25000 gaps are about 0.000447256 and 0.000656760 chip. All four complete policies, original v1 misses, source guards, full-request admissions and independent numeric/exact saved replays are retained. The unpaired T10000/D5000 tail was worse than its baseline. Higher-budget target attainment covers these finite games; it does not establish equal-cost method gains, broader convergence or commercial parity.
