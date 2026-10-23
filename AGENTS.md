@@ -474,3 +474,13 @@ counts and finite scalar gaps, and expose only eight metrics to v1. Restore
 the callable on every exit and preserve exact-once outer instrumentation.
 Keep the new 58-source map and old 54-source subset, and never rewrite the
 original failed attempt as a successful measurement or silently rerun it.
+
+
+The separate [configurable matrix-free turn tail](docs/matrix-free-turn-tail.md)
+retains the existing matrix-free defaults/shared kernels and all literal guards.
+Average completed sweeps t>discard with original t, own sequence reach and global
+private-hand/public-prefix marginals; keep future rivers hidden at turn rows.
+Admit the full 3*T+3 envelope regardless of discard and disclose executed pass
+counts separately. Require D=0 literal policy parity, positive-tail materialized
+controls and independent physical/action/visible-response replay; bounded
+correctness does not establish convergence, performance or commercial parity.

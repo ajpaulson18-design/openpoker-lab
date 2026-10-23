@@ -484,3 +484,31 @@ Stable/repeated/restored graphs have 318,280 tracked objects and 1,608,777 edges
 both value and rooted-index alias mutations change the digest and restore exactly.
 The saved report is tracked in PR #211. It implements no solver shortcut/cache
 and establishes no comparative performance or memory result.
+
+## Fixed three-hand TURN accuracy result
+
+The [T6000/D2000 experiment](../turn-class-tail-T6000-experiment.md) met its
+unchanged exact normalized-policy NashConv target of 0.001 chip at approximately
+0.00003025771156. One fixed 396-world game was trained through seven proved
+river classes, then lifted to all 3,606 physical policy rows and 8,046 actions.
+Independent full-physical and both class exact audits agree on all eight metrics;
+the previous T750 miss remains immutable. The complete policy, source identities
+and numeric/exact checks are retained. This is fixed-game accuracy evidence;
+the broader range of supported games and the separately exact game value remain
+unfinished work.
+
+## Three-class JJ/KK physical source counts
+
+The separate [JJ/KK observation](../preflop-jj-kk-basis-results.md) completed
+one full-board source-count batch. The independent best-five reference and
+native seven-card counter agree exactly on all three relative-suit classes,
+after exhaustive five-card conformance and the published AA calibration.
+Complete raw JSON/text receipts and strict saved-data authentication are
+retained. This adds no strategy or equilibrium certificate; the future
+108-pair AA/QQ/JJ-versus-KK pool remains a separate transport milestone.
+Publication checks and merge status are tracked in
+[PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
+
+## Configurable matrix-free TURN tail
+
+The separate [original-weight tail API](../matrix-free-turn-tail.md) adds configurable four-card boards, weighted ranges, physical selected/full-deck rivers and compatible street sizing to matrix-free CFR+. It averages completed sweeps t>discard with original weight t and preserves full-request admission. D=0 matches the existing matrix-free policy exactly in the control; positive tails match materialized training and independent physical rules at the declared tolerances. This is new research API coverage, with bounded correctness controls; broader convergence and commercial solver parity remain unproved.

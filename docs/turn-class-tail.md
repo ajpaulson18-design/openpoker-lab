@@ -139,7 +139,13 @@ independent physical plus both exact class traversal modes. Run:
     python -B -O -m unittest discover -s tests -p "test_turn_class*.py" -v
     python -m scripts.validate_docs
 
-Longer training and its convergence result remain a separate deliverable.
+The [fixed T6000/D2000 experiment](turn-class-tail-T6000-experiment.md)
+completed its [preregistered protocol](turn-class-tail-T6000-experiment-spec.md).
+Its untouched lifted policy met the unchanged 1/1000-chip exact NashConv target
+at approximately 0.00003025771156. All eight full-physical exact metrics agree
+with both class traversal modes and numeric replay. The saved T750 miss remains
+unchanged. This result applies to the fixed three-hand game and saved policy;
+it does not establish a separately known exact game value or broader convergence.
 
 Executed local checks passed:30 focused tests in47.797 seconds (normal) and
 37.497 seconds (optimized), plus27 existing tail/three-hand regressions in
