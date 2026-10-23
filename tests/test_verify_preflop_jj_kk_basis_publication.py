@@ -4,6 +4,7 @@ import json
 from copy import deepcopy
 from pathlib import Path
 import shutil
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -165,6 +166,30 @@ class SavedJJKKBasisPublicationTests(unittest.TestCase):
         for altered, message in cases:
             with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
                 publication._validate_linkages(altered, aa)
+
+    def test_benchmark_test_restores_process_wide_subprocess_delegate(self):
+        from tests.test_preflop_jj_kk_basis_benchmark import JJKKBasisHarnessTests
+        original = subprocess.run
+        result = unittest.TestResult()
+        JJKKBasisHarnessTests("test_write_only_file_and_pipe_streams_are_preserved").run(result)
+        self.assertTrue(result.wasSuccessful(), result.errors + result.failures)
+        self.assertIs(subprocess.run, original)
+
+    def test_exact_historical_test_transition_requires_original_archive(self):
+        historical = {publication.TEST_PATH: {"raw_sha256": publication.FROZEN_TEST_LF_SHA256,
+                                               "lf_sha256": publication.FROZEN_TEST_LF_SHA256}}
+        state = {"status": [], "source_hashes": {}}
+        with patch.object(publication.five, "snapshot", return_value=state):
+            publication._current_source_check(historical)
+        original_read = publication._read
+        def bad_archive(path, limit):
+            if Path(path).name == Path(publication.FROZEN_TEST_ARCHIVE).name:
+                return b"changed historical test\n"
+            return original_read(path, limit)
+        with (patch.object(publication.five, "snapshot", return_value=state),
+              patch.object(publication, "_read", side_effect=bad_archive)):
+            with self.assertRaisesRegex(ValueError, "Historical test archive"):
+                publication._current_source_check(historical)
 
 
 if __name__ == "__main__":

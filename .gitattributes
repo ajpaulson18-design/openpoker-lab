@@ -137,3 +137,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Byte-exact source-count JSON/text receipts; binary dumps stay outside Git.
 /benchmarks/results/preflop-jj-kk-basis-v1/** -text
+/benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py -text
