@@ -492,3 +492,15 @@ reporting gate before training. Authenticate clean committed source and all
 four original admissions first. Preserve exclusive batch claims, raw policies
 before replay, partial errors and every target miss. Keep numeric target flags
 separate from exact normalized-binary64 gates and retain unchanged audit caps.
+
+
+The [fixed river original-weight tail follow-up](docs/river-heldout-tail-protocol.md)
+keeps the four v1 accuracy misses immutable and admits exactly the two original
+games at T10000/D5000 and T50000/D25000 through the existing river-tail adapter.
+Authenticate all baseline artifacts and unchanged mathematical sources, freeze
+the complete runner/protocol, and preflight every full requested budget before
+an exclusive new claim. Save each complete return before replay; retain first
+errors and every exact target miss, with unknown gates on exact capacity misses.
+Saved replay uses independent physical numeric/exact rules and admitted count
+receipts without production builders. Higher T and altered averaging windows
+provide no equal-cost comparison or general convergence guarantee.
