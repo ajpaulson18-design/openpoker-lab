@@ -1,0 +1,51 @@
+{
+  "schema": "river-heldout-tail-evidence-index-v1",
+  "source_head": "74b8fa8adb13838401b06d203d597476eada4274",
+  "claim_id": "99a99ba342ee3935b0879a7d471a5b6a",
+  "files": {
+    "report.json": {
+      "bytes": 905511,
+      "sha256": "d19caa11eeb013f25287406af10888015d544cc534e70ff03c08d16a09e86acf"
+    },
+    "run-claim.json": {
+      "bytes": 1193,
+      "sha256": "0756292ab435d463bff02d88aa3fa0074ee6c32a5050332d7540babda55da3f9"
+    },
+    "run-status.json": {
+      "bytes": 414,
+      "sha256": "41ee6302bced18023b4b7730fecedee67f33f5efe229aa2326ecf62812b6ae56"
+    },
+    "independent-saved-replay.json": {
+      "bytes": 35087,
+      "sha256": "e5b4214c21371d013bcb96bcb0b44d421ceda53237f2cc94f7c2200f39efd312"
+    },
+    "replay-verifier.py": {
+      "bytes": 19178,
+      "sha256": "9f9ee39259507477550cfa15b2a8a7f4671f31bae6dbc1238279d8d6e671026c"
+    },
+    "verification-history/first-verifier.py": {
+      "bytes": 19138,
+      "sha256": "0a590e71634421b0aa188b0ad38d234bd11f42a66a31d58eca5bf885d8ad74a9"
+    },
+    "verification-history/first-verifier-failure.log": {
+      "bytes": 901,
+      "sha256": "46d283a2f903bd01c10620c46aadc933d9937e9d18fd852ca8e88949fee8fdc8"
+    },
+    "policies/river-unpaired-blocker-tie-raise-T10000-D5000.json": {
+      "bytes": 31462,
+      "sha256": "f1a14a174b1e64558b60d413ff77e51e3ddd70889f3d704f2d570de4fd3b96fb"
+    },
+    "policies/river-unpaired-blocker-tie-raise-T50000-D25000.json": {
+      "bytes": 31474,
+      "sha256": "e4bc1aaa94f39e27d1e9121c8633c131c97f337787f98e8e5ec7695f7155cd86"
+    },
+    "policies/river-paired-short-spr-rank-extremes-T10000-D5000.json": {
+      "bytes": 31619,
+      "sha256": "c21b3be7a378746784a904bdc156250db3c0e529f4119c458011e79f5c9d4d32"
+    },
+    "policies/river-paired-short-spr-rank-extremes-T50000-D25000.json": {
+      "bytes": 31643,
+      "sha256": "189ffcb9ca10dcd9de38501c14f19e76d44846fae73786bd8aff64eafe039a4c"
+    }
+  }
+}

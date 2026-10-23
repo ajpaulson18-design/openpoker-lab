@@ -1,0 +1,11 @@
+{
+  "claim_id": "99a99ba342ee3935b0879a7d471a5b6a",
+  "completed_profiles": [
+    "policies/river-unpaired-blocker-tie-raise-T10000-D5000.json",
+    "policies/river-unpaired-blocker-tie-raise-T50000-D25000.json",
+    "policies/river-paired-short-spr-rank-extremes-T10000-D5000.json",
+    "policies/river-paired-short-spr-rank-extremes-T50000-D25000.json"
+  ],
+  "retry_permitted": false,
+  "status": "completed"
+}

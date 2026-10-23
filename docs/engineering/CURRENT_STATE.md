@@ -528,3 +528,8 @@ count provenance, with no strategy, later-street betting or equilibrium claim.
 ## Held-out RIVER accuracy evidence
 
 The separate [four-profile river corpus](../river-heldout-quality-results.md) adds two weighted 4x4 games with blocker/tie and short-stack/rank-extreme coverage. All CFR+10000 profiles pass independent physical and exact normalized-policy replay, but all four miss the fixed 0.001-chip NashConv target (about 0.00174251 and 0.00232499). Complete policies, source/claim receipts and unchanged misses are retained. This is an observed accuracy limitation, not commercial solver parity.
+
+
+## Fixed river original-weight tail accuracy
+
+The separate [four-profile follow-up](../river-heldout-tail-results.md) reaches exact normalized-policy NashConv<=0.001 chip for both original weighted 4x4 river games at T50000/D25000. Both T10000/D5000 tails remain misses; the unpaired one worsens at equal T. Complete policies, immutable baseline misses, all source/admission receipts and independent physical numeric/exact saved replays are retained. This finite-game milestone does not establish wider game accuracy, equal-cost benefits, performance or GTO Wizard quality.
