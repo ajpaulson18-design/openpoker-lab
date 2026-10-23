@@ -8,3 +8,4 @@ data/
 *.sqlite3*
 coverage.xml
 .coverage
+/work/turn_class_tail_T6000_attempts/

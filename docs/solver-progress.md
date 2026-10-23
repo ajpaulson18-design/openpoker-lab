@@ -1680,3 +1680,19 @@ All six complete policies and source/call/error receipts are retained. These
 controls are not trained strategies; new-board convergence and any performance
 comparison remain separate milestones. Publication status is in
 [PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213).
+
+## Fixed T6000 three-hand TURN result
+
+The single [preregistered class-tail experiment](turn-class-tail-T6000-experiment.md)
+completed on frozen source `2aa02c4f2db75beb7bc8a229e3c36073a56c5118`.
+Its exact normalized-policy NashConv projects to 0.00003025771155975608 chip,
+below the unchanged 0.001 target. OOP/IP response gains project to
+0.00002863425666932674 and 0.000001623454890429346. All eight full-physical
+exact metrics equal both generic class audits; maximum exact/numeric difference
+was 1.2343551101222112e-14. All 3,606 physical rows and 8,046 actions are saved.
+
+The old T750 gap of 0.010695489887132394 remains an unchanged miss. The result
+establishes the target for this finite configured game and policy. A separately
+known exact equilibrium value, broader convergence and unrestricted Hold'em
+coverage remain unproven. The frozen protocol, raw files and source identities
+are linked from the experiment record.
