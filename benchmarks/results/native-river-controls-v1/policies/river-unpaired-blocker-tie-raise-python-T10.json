@@ -1,0 +1,1556 @@
+{
+  "algorithm": "cfrplus",
+  "average_schedule": "direct-original-linear-sweep-weight-own-reach-tail",
+  "average_weight_sum": 55,
+  "averaged_sweeps": 10,
+  "backend": "exact-public-chance-tree",
+  "board": [
+    "Ah",
+    "Kd",
+    "Qc",
+    "Js",
+    "2d"
+  ],
+  "chance_nodes": 0,
+  "chance_note": "Compatible private-pair range products normalized once; board is complete.",
+  "compatible_pairs": 14,
+  "config": {
+    "bet_sizes": [
+      0.33
+    ],
+    "effective_stack": [
+      120.0,
+      80.0
+    ],
+    "include_all_in": true,
+    "max_raises": 1,
+    "pot": 100.0,
+    "raise_sizes": [
+      0.25
+    ]
+  },
+  "deals": 14,
+  "diagnostic_provenance": "Metrics recomputed from this direct original-weight river-tail policy using public-batched diagnostics; numeric convergence diagnostics are not an exact equilibrium certificate.",
+  "diagnostics_backend": "public-batched-python",
+  "discard": 0,
+  "effective_stack": [
+    120.0,
+    80.0
+  ],
+  "execution_backend": "direct-original-weight-river-tail-python",
+  "exploitability": 3.1734542979449647,
+  "info_sets": 40,
+  "ip_best_response_gain": 1.15005045027557,
+  "ip_best_response_value": 6.130972656500713,
+  "iterations": 10,
+  "method": "Direct original-weight CFR+ river tail averaging",
+  "nash_conv": 6.346908595889929,
+  "oop_best_response_gain": 5.196858145614359,
+  "oop_best_response_value": 0.21593593938921618,
+  "pot": 100.0,
+  "public_batch_edge_limit": 250000,
+  "public_node_limit": 10000,
+  "public_nodes": 10,
+  "public_state_limit": 250000,
+  "public_states": 27,
+  "reachable_runouts": [],
+  "requested_average_passes": 10,
+  "requested_iterations": 10,
+  "requested_regret_passes": 20,
+  "requested_total_traversal_passes": 30,
+  "resource_usage": {
+    "full_requested_dense_hand_state_pass_work": 3564,
+    "full_requested_dense_hand_state_pass_work_limit": 30000000,
+    "full_requested_world_node_work": 4200,
+    "full_requested_world_node_work_limit": 30000000,
+    "info_action_slots": 104,
+    "info_action_slots_limit": 1000000,
+    "prefix_hand_edge_limit": 250000,
+    "prefix_hand_edges": 14
+  },
+  "river_config": {
+    "bet_sizes": [
+      0.33
+    ],
+    "effective_stack": [
+      120.0,
+      80.0
+    ],
+    "include_all_in": true,
+    "max_raises": 1,
+    "pot": 100.0,
+    "raise_sizes": [
+      0.25
+    ]
+  },
+  "runout_mode": "none",
+  "runouts": [],
+  "scope": "Research profile for a configured heads-up river game; no preflop, multiway play, rake, or general exact-equilibrium claim.",
+  "solver_version": "research-river-tail-adapter-v1",
+  "source_iteration_window": [
+    1,
+    10
+  ],
+  "strategy": [
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.3343622591067113,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.5253189206978617,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.14031882019542702,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsTc",
+      "history": [],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsTc",
+      "history": [
+        "bet@33",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsTc",
+      "history": [
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsTc",
+      "history": [
+        "check",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.49629829754858357,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.5037017024514164,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsTc",
+      "history": [
+        "check",
+        "bet@33"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.016530851560830947,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.7756959007671017,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.2077732476720673,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "3c4c",
+      "history": [],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "bet@33",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "check",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.5622107518659243,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.4377892481340757,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "3c4c",
+      "history": [
+        "check",
+        "bet@33"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.5464650804281042,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.3983913835512111,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.05514353602068475,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "9c9d",
+      "history": [],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.5701424192877157,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.42985758071228425,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "9c9d",
+      "history": [
+        "bet@33",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.5143886601590989,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.4856113398409011,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "9c9d",
+      "history": [
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.7583921832788751,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.24160781672112477,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "9c9d",
+      "history": [
+        "check",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.38418495946704656,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.5333161361992134,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.04198543388602922,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.040513470447710836,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "9c9d",
+      "history": [
+        "check",
+        "bet@33"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.8620132113338403,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.11566338443360648,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.022323404232553214,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "5c6c",
+      "history": [],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "bet@33",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 1.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "check",
+        "all_in@80"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.8982825606051676,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.032410363901631906,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.039916672311787846,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 120.0,
+          "history_key": "all_in@120",
+          "name": "all_in",
+          "probability": 0.029390403181412585,
+          "raise_to": 120.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "5c6c",
+      "history": [
+        "check",
+        "bet@33"
+      ],
+      "player": "oop",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.004545454545454545,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.014925436366273179,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.4680681604878733,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.5124609486003989,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "bet@33"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.006060606060606061,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.7604078392210865,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.23353155471830744,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.003985102301689946,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9960148976983101,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "check",
+        "bet@33",
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.003985102301689946,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9960148976983101,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "AsKh",
+      "history": [
+        "check",
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.0,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 1.0,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "QhTh",
+      "history": [
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.004545454545454546,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.022857516552221773,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.46823052974390733,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.5043664991584164,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "QhTh",
+      "history": [
+        "bet@33"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.008087144423183175,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.7034308914382705,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.28848196413854627,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "QhTh",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.004307890181091021,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9956921098189089,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "QhTh",
+      "history": [
+        "check",
+        "bet@33",
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.004307890181091021,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.9956921098189089,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "QhTh",
+      "history": [
+        "check",
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.8795751943176856,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.12042480568231433,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "8c8d",
+      "history": [
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.025205526432171842,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.5232725686418941,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.22500047883863702,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.22652142608729706,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "8c8d",
+      "history": [
+        "bet@33"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.6987396428278533,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.16684850619468333,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.1344118509774634,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "8c8d",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.9804170874300132,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.019582912569986788,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "8c8d",
+      "history": [
+        "check",
+        "bet@33",
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.8322412612903196,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.1677587387096805,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "8c8d",
+      "history": [
+        "check",
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.9397014503287977,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.060298549671202316,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "6c7d",
+      "history": [
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.7947686879171888,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.07977101435619725,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 74.5,
+          "history_key": "raise@74.5",
+          "name": "raise",
+          "probability": 0.054301810580262413,
+          "raise_to": 74.5
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.07115848714635158,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "6c7d",
+      "history": [
+        "bet@33"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "check",
+          "name": "check",
+          "probability": 0.5901800228338152,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 33.0,
+          "history_key": "bet@33",
+          "name": "bet",
+          "probability": 0.27170477053245157,
+          "raise_to": 33.0
+        },
+        {
+          "amount": 80.0,
+          "history_key": "all_in@80",
+          "name": "all_in",
+          "probability": 0.1381152066337331,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "6c7d",
+      "history": [
+        "check"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.9888470746230748,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 47.0,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.011152925376925246,
+          "raise_to": 80.0
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "6c7d",
+      "history": [
+        "check",
+        "bet@33",
+        "all_in@120"
+      ],
+      "player": "ip",
+      "street": "river"
+    },
+    {
+      "actions": [
+        {
+          "amount": 0.0,
+          "history_key": "fold",
+          "name": "fold",
+          "probability": 0.9888470746230748,
+          "raise_to": 0.0
+        },
+        {
+          "amount": 41.5,
+          "history_key": "call",
+          "name": "call",
+          "probability": 0.011152925376925246,
+          "raise_to": 74.5
+        }
+      ],
+      "board": [
+        "Ah",
+        "Kd",
+        "Qc",
+        "Js",
+        "2d"
+      ],
+      "hand": "6c7d",
+      "history": [
+        "check",
+        "bet@33",
+        "raise@74.5"
+      ],
+      "player": "ip",
+      "street": "river"
+    }
+  ],
+  "strategy_schema": "postflop-strategy-v1",
+  "street_configs": {
+    "river": {
+      "bet_sizes": [
+        0.33
+      ],
+      "effective_stack": [
+        120.0,
+        80.0
+      ],
+      "include_all_in": true,
+      "max_raises": 1,
+      "pot": 100.0,
+      "raise_sizes": [
+        0.25
+      ]
+    }
+  },
+  "terminal_nodes": 17,
+  "training_calls": 1,
+  "tree_actions": 26,
+  "turn_config": null,
+  "update_schedule": "alternating-oop-then-ip",
+  "value_ip": 4.980922206225143,
+  "value_oop": -4.980922206225143,
+  "world_traversal_nodes": 10,
+  "worlds": 14,
+  "worlds_materialized": 14
+}

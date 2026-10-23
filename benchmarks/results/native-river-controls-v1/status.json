@@ -1,0 +1,39 @@
+{
+  "claim_id": "29f643a2201dd16cf93a6fbba487a362",
+  "completed_profiles": [
+    {
+      "iterations": 10,
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "iterations": 100,
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "iterations": 10,
+      "scenario": "river-paired-short-spr-rank-extremes"
+    },
+    {
+      "iterations": 100,
+      "scenario": "river-paired-short-spr-rank-extremes"
+    },
+    {
+      "iterations": 10,
+      "scenario": "river-weighted-8x8-blocker-tie-short-refund"
+    },
+    {
+      "iterations": 100,
+      "scenario": "river-weighted-8x8-blocker-tie-short-refund"
+    },
+    {
+      "iterations": 10,
+      "scenario": "river-royal-flush-tie-anchor"
+    },
+    {
+      "iterations": 100,
+      "scenario": "river-royal-flush-tie-anchor"
+    }
+  ],
+  "retry_permitted": false,
+  "status": "completed"
+}

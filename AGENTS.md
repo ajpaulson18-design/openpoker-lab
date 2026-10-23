@@ -504,3 +504,14 @@ errors and every exact target miss, with unknown gates on exact capacity misses.
 Saved replay uses independent physical numeric/exact rules and admitted count
 receipts without production builders. Higher T and altered averaging windows
 provide no equal-cost comparison or general convergence guarantee.
+
+
+The separate [native fixed-board river API](docs/native-river-solver.md) requires
+an explicit source-built executable and keeps every historical river guard plus
+the native shape/work envelope. Preserve actor/own-hand/public-history keys,
+physical range-product normalization, mass-times-sign transport, all action
+metadata and Python diagnostics. D=0 averages rematched completed CFR+ sweeps
+with original t and own reach; no native tail or longer iteration mode is implied.
+Require compiled full-policy controls and independent physical numeric/exact
+replay, including known-value bounds. Native identities and logical budgets
+establish no performance or broader convergence claim.
