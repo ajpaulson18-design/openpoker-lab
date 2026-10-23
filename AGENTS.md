@@ -449,3 +449,14 @@ preserve complete own-hand policies, zero-reach rows and bitwise constancy.
 Across-class variation is a valid control, within-class physical-card variation
 must reject, and near-normalized floats must fail exact normalization. Retain
 first errors, cleanup failures and available raw policies/metrics without retry.
+
+The separate [second-board flop CFR+ pilot](docs/flop-second-board-cfrplus.md)
+admits the full T<=560 request and the distinct 110M named logical-work envelope
+before proof authentication or ranking. Preserve the original adapter caps and
+all published proof/kernel sources. Use a fresh validated second-board model,
+positive joint masses, all own-hand rows and path guards, one zero-delay shared
+trainer call and exact unrestricted physical output responses. Retain raw rows,
+normalization, every target miss, partial observations and first/cleanup errors.
+No real pilot precedes its clean executable/protocol freeze and prerequisite
+publication checks. Two budget observations do not establish general convergence,
+controlled runtime gains, allocation/RSS bounds or unrestricted NLHE quality.
