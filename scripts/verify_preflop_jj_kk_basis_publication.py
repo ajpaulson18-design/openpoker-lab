@@ -25,6 +25,10 @@ PAIR_ROWS = (("JdJs", "KdKs"), ("JdJs", "KcKd"), ("JdJs", "KcKh"))
 AA_PAIR_ROWS = (("AdAs", "KdKs"), ("AdAs", "KcKd"), ("AdAs", "KcKh"))
 STAGES = ("reference-all-five", "reference-aa-calibration", "native-aa-calibration",
           "reference-jj", "native-jj")
+TEST_PATH = "tests/test_preflop_jj_kk_basis_benchmark.py"
+FROZEN_TEST_LF_SHA256 = "b19712a80f2ff89070db5027b9f5339d57b6d21e3abaa159b21239a49b61cad2"
+ISOLATED_TEST_LF_SHA256 = "8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd"
+FROZEN_TEST_ARCHIVE = "benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py"
 
 
 def _need(condition, message):
@@ -372,8 +376,14 @@ def _current_source_check(historical):
         raw = _read(path, 32 * 1024 * 1024)
         value = {"raw_sha256": hashlib.sha256(raw).hexdigest(),
                  "lf_sha256": hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()}
-        _need(value["lf_sha256"] == expected["lf_sha256"],
-              f"Frozen measured source LF bytes changed: {relative}")
+        if value["lf_sha256"] != expected["lf_sha256"]:
+            _need(relative == TEST_PATH and expected["lf_sha256"] == FROZEN_TEST_LF_SHA256 and
+                  value["lf_sha256"] == ISOLATED_TEST_LF_SHA256,
+                  f"Frozen measured source LF bytes changed: {relative}")
+            archived = _read(evidence.ROOT / FROZEN_TEST_ARCHIVE, MAX_REPORT_BYTES)
+            _need(hashlib.sha256(archived).hexdigest() == FROZEN_TEST_LF_SHA256 and
+                  hashlib.sha256(archived.replace(b"\r\n", b"\n")).hexdigest() == expected["lf_sha256"],
+                  "Historical test archive does not authenticate the exact source transition")
         if relative in state["source_hashes"]:
             _need(state["source_hashes"][relative].get("lf_sha256") == value["lf_sha256"],
                   f"Current identity snapshot differs: {relative}")

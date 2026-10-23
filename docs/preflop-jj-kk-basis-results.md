@@ -62,14 +62,35 @@ pins the index and every raw file before parsing, freshly authenticates the
 published AA/QQ and current-build conformance receipts, links the raw outputs
 to all physical rows and build identities, and checks all 746 measured source
 LF hashes. New publication files are allowed; a change to a measured file must
-reject. The current version requires that measured source subset to remain
-available unchanged; it does not attest arbitrary later source revisions.
-Its [14 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
+reject except for the exact archived test-isolation transition below. The current
+version does not attest arbitrary later source revisions.
+Its [16 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
 include actual and copied-corpus authentication with live computation forbidden,
 byte/source/build/count tampering, metadata linkage and strict scalar types.
-Together with the 23 frozen admission/orchestration checks, all 37 focused tests
+Together with the 23 admission/orchestration checks, all 39 focused tests
 passed on bundled CPython 3.12.14 before publication. Documentation validation
-passed for 172 Markdown files and 937 local links.
+passed for 172 Markdown files and 938 local links.
+
+## CI test isolation correction
+
+The first publication-head CI failed ten later saved-evidence tests because a
+benchmark test left its fake `subprocess.run` installed globally. The standalone
+benchmark module passed all 16 tests while leaking that callable; the combined
+suite exposed it. Test teardown now restores the process-wide delegate even
+when a test deliberately replaces the capture instance's internal delegate.
+A regression executes that test and asserts exact callable restoration.
+
+The original measured test is retained
+[byte-for-byte](../benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py),
+with raw/LF SHA256
+`b19712a80f2ff89070db5027b9f5339d57b6d21e3abaa159b21239a49b61cad2`.
+The corrected test's LF SHA256 is
+`8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd`.
+Saved authentication admits only this exact historical-to-current pair and
+requires the original archive; every other source change still rejects. The
+measured batch, executable, protocol, count rows, source snapshots, corpus
+digests and original failure observation remain untouched. No physical study
+was repeated. The separate failing CI log is retained outside Git.
 
 ## Scope and next evidence
 

@@ -42,6 +42,9 @@ class FakeCapture:
 class JJKKBasisHarnessTests(unittest.TestCase):
     def setUp(self):
         FakeCapture.instances.clear()
+        # Tests deliberately replace a capture instance's delegate. Restore the
+        # process-wide subprocess module even if that fake is published on exit.
+        self.addCleanup(setattr, benchmark.native.subprocess, "run", benchmark.native.subprocess.run)
 
     def test_invalid_complete_request_rejects_before_protocol_reports_output_or_build_lookup(self):
         bad = planner.expected_request()
