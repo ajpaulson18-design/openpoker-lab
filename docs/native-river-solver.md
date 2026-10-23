@@ -77,3 +77,34 @@ These bounded controls establish integration correctness for the tested games;
 they establish no accuracy target for new ranges, general convergence, controlled
 speed or memory gain, TURN support or GTO Wizard quality. Wider range coverage
 and a source-derived scaling model remain separate work.
+
+
+## Retained paired compiled controls
+
+A separate fixed control batch completed once from clean published source
+`e537ec82b756b3e69d87a3b4f574d7eda8becc4f` under claim
+`29f643a2201dd16cf93a6fbba487a362`. Its
+[complete report](../benchmarks/results/native-river-controls-v1/report.json),
+[exclusive claim](../benchmarks/results/native-river-controls-v1/claim.json),
+[terminal status](../benchmarks/results/native-river-controls-v1/status.json),
+[byte index](../benchmarks/results/native-river-controls-v1/index.json) and
+[runner](../benchmarks/results/native-river-controls-v1/validate_compiled_river.py)
+retain all 16 complete Python/native policy returns. All 77 committed
+Python/C/helper identities, the external runner bytes, compiler/build manifest
+and executable hashes stayed stable. No compiled binary is distributed.
+
+The eight paired profiles cover both original 4x4 games, a separate weighted
+8x8 game on `AhKdQcJs2d` with pot 17.3, stacks 29.1/11.2 and 0.33 bet/raise
+fractions, and a royal-flush tied-board anchor, each at T10 and T100. On this
+recorded MSVC build, every native/Python policy probability and all eight
+independent numeric metric deltas are exactly zero in the serialized binary64
+values. This observation does not promise bitwise agreement on other compilers
+or at larger budgets; the declared 1e-9 policy and 1e-8 metric tolerances remain.
+
+All 16 saved policies pass independent physical numeric and exact scan/partition
+audits. Fatal production solve/tree/training/evaluation/rank tripwires observed
+zero calls during each independent replay. Both trained tied-board profiles
+retain exact response intervals containing the separately known game value zero.
+The complete raw rows and audit fractions, including every finite-budget gap,
+are preserved. This is correctness evidence; no target attainment, runtime ratio
+or memory claim is inferred from these short controls.

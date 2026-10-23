@@ -1752,3 +1752,6 @@ The [completed fixed river-tail study](river-heldout-tail-results.md) retained t
 ## Separate native fixed-board river integration (2026-10-23)
 
 The opt-in [native river research API](native-river-solver.md) reuses the existing compiled public-batched CFR+ trainer with explicit source/build provenance while retaining all old river and native caps. T10/T100 full-policy controls pass for two weighted 4x4 games, a weighted 8x8 game and a known-zero royal-flush game. Independent physical numeric/exact saved replays agree with the returned policies; known value zero lies in the exact response intervals. This establishes bounded integration correctness, with no wider admission, longer native tail, speed or general accuracy claim.
+
+
+The [retained compiled river control corpus](native-river-solver.md#retained-paired-compiled-controls) now preserves eight paired T10/T100 profiles and all 16 Python/native policies. Source/build/runner identities remain fixed; on the recorded MSVC build, full policy and independently replayed numeric differences are zero. All 16 exact scan/partition audits pass with production helpers disabled, including fractional short-stack 8x8 and known-zero tied-board controls. These correctness results add no convergence or performance claim.
