@@ -1,0 +1,4105 @@
+{
+  "artifact_sha256": "18933598b5410e926440773351cf53d9c1990835b68fa8c2129f7c82e99cb6c4",
+  "candidate_details": {
+    "authority_scope": "candidate reduced LP and physical policy lift only; independent exact physical pure-response verification is required",
+    "candidate_lp_shapes": {
+      "ip": [
+        39,
+        110,
+        4440
+      ],
+      "oop": [
+        24,
+        79,
+        2000
+      ]
+    },
+    "candidate_primal_dual_observations": [
+      {
+        "dual": [
+          "1464215/2330174",
+          "0",
+          "0",
+          "0",
+          "876434/1165087"
+        ],
+        "lp": {
+          "constraint_labels": [
+            {
+              "id": "0:empty",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('AA', ()))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('AA', ('call', 'raise@2')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('AA', ('call', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('AA', ('raise@2', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('QQ', ()))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('QQ', ('call', 'raise@2')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('QQ', ('call', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('QQ', ('raise@2', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('JJ', ()))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('JJ', ('call', 'raise@2')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('JJ', ('call', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(0, ('JJ', ('raise@2', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "cover:('empty',)",
+              "sense": ">=",
+              "slack_variable": "surplus:('empty',)"
+            },
+            {
+              "id": "cover:('KK', ('call',), 'check')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('call',), 'check')"
+            },
+            {
+              "id": "cover:('KK', ('call',), 'raise@2')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('call',), 'raise@2')"
+            },
+            {
+              "id": "cover:('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('call', 'raise@2', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('call', 'raise@2', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('KK', ('call',), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('call',), 'all_in@3')"
+            },
+            {
+              "id": "cover:('KK', ('raise@2',), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('raise@2',), 'fold')"
+            },
+            {
+              "id": "cover:('KK', ('raise@2',), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('raise@2',), 'call')"
+            },
+            {
+              "id": "cover:('KK', ('raise@2',), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('raise@2',), 'all_in@3')"
+            },
+            {
+              "id": "cover:('KK', ('all_in@3',), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('all_in@3',), 'fold')"
+            },
+            {
+              "id": "cover:('KK', ('all_in@3',), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('KK', ('all_in@3',), 'call')"
+            }
+          ],
+          "dual_flow_values": {
+            "flow_labels": [
+              "1:empty",
+              "(1, ('KK', ('call',)))",
+              "(1, ('KK', ('call', 'raise@2', 'all_in@3')))",
+              "(1, ('KK', ('raise@2',)))",
+              "(1, ('KK', ('all_in@3',)))"
+            ],
+            "fractions": [
+              "1464215/2330174",
+              "0",
+              "0",
+              "0",
+              "876434/1165087"
+            ]
+          },
+          "inequality_slacks": {
+            "fractions": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            "sequence_labels": [
+              "('empty',)",
+              "('KK', ('call',), 'check')",
+              "('KK', ('call',), 'raise@2')",
+              "('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+              "('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+              "('KK', ('call',), 'all_in@3')",
+              "('KK', ('raise@2',), 'fold')",
+              "('KK', ('raise@2',), 'call')",
+              "('KK', ('raise@2',), 'all_in@3')",
+              "('KK', ('all_in@3',), 'fold')",
+              "('KK', ('all_in@3',), 'call')"
+            ]
+          },
+          "logical_cell_updates": 109354,
+          "lp": "oop_guarantee",
+          "maximum_fraction_bits": 70,
+          "objective": "1464215/2330174",
+          "objective_bound_fraction": "1464215/2330174",
+          "own_realization": {
+            "fractions": [
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1",
+              "288653/332882",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "44229/332882",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "sequence_labels": [
+              "('empty',)",
+              "('AA', (), 'fold')",
+              "('AA', (), 'call')",
+              "('AA', ('call', 'raise@2'), 'fold')",
+              "('AA', ('call', 'raise@2'), 'call')",
+              "('AA', ('call', 'raise@2'), 'all_in@3')",
+              "('AA', ('call', 'all_in@3'), 'fold')",
+              "('AA', ('call', 'all_in@3'), 'call')",
+              "('AA', (), 'raise@2')",
+              "('AA', ('raise@2', 'all_in@3'), 'fold')",
+              "('AA', ('raise@2', 'all_in@3'), 'call')",
+              "('AA', (), 'all_in@3')",
+              "('QQ', (), 'fold')",
+              "('QQ', (), 'call')",
+              "('QQ', ('call', 'raise@2'), 'fold')",
+              "('QQ', ('call', 'raise@2'), 'call')",
+              "('QQ', ('call', 'raise@2'), 'all_in@3')",
+              "('QQ', ('call', 'all_in@3'), 'fold')",
+              "('QQ', ('call', 'all_in@3'), 'call')",
+              "('QQ', (), 'raise@2')",
+              "('QQ', ('raise@2', 'all_in@3'), 'fold')",
+              "('QQ', ('raise@2', 'all_in@3'), 'call')",
+              "('QQ', (), 'all_in@3')",
+              "('JJ', (), 'fold')",
+              "('JJ', (), 'call')",
+              "('JJ', ('call', 'raise@2'), 'fold')",
+              "('JJ', ('call', 'raise@2'), 'call')",
+              "('JJ', ('call', 'raise@2'), 'all_in@3')",
+              "('JJ', ('call', 'all_in@3'), 'fold')",
+              "('JJ', ('call', 'all_in@3'), 'call')",
+              "('JJ', (), 'raise@2')",
+              "('JJ', ('raise@2', 'all_in@3'), 'fold')",
+              "('JJ', ('raise@2', 'all_in@3'), 'call')",
+              "('JJ', (), 'all_in@3')"
+            ]
+          },
+          "phase_one_objective": "0",
+          "pivots": 50,
+          "tableau_cells_including_rhs_and_objective": 2000,
+          "tableau_columns": 79,
+          "tableau_rows": 24,
+          "variable_labels": [
+            "x:('empty',)",
+            "x:('AA', (), 'fold')",
+            "x:('AA', (), 'call')",
+            "x:('AA', ('call', 'raise@2'), 'fold')",
+            "x:('AA', ('call', 'raise@2'), 'call')",
+            "x:('AA', ('call', 'raise@2'), 'all_in@3')",
+            "x:('AA', ('call', 'all_in@3'), 'fold')",
+            "x:('AA', ('call', 'all_in@3'), 'call')",
+            "x:('AA', (), 'raise@2')",
+            "x:('AA', ('raise@2', 'all_in@3'), 'fold')",
+            "x:('AA', ('raise@2', 'all_in@3'), 'call')",
+            "x:('AA', (), 'all_in@3')",
+            "x:('QQ', (), 'fold')",
+            "x:('QQ', (), 'call')",
+            "x:('QQ', ('call', 'raise@2'), 'fold')",
+            "x:('QQ', ('call', 'raise@2'), 'call')",
+            "x:('QQ', ('call', 'raise@2'), 'all_in@3')",
+            "x:('QQ', ('call', 'all_in@3'), 'fold')",
+            "x:('QQ', ('call', 'all_in@3'), 'call')",
+            "x:('QQ', (), 'raise@2')",
+            "x:('QQ', ('raise@2', 'all_in@3'), 'fold')",
+            "x:('QQ', ('raise@2', 'all_in@3'), 'call')",
+            "x:('QQ', (), 'all_in@3')",
+            "x:('JJ', (), 'fold')",
+            "x:('JJ', (), 'call')",
+            "x:('JJ', ('call', 'raise@2'), 'fold')",
+            "x:('JJ', ('call', 'raise@2'), 'call')",
+            "x:('JJ', ('call', 'raise@2'), 'all_in@3')",
+            "x:('JJ', ('call', 'all_in@3'), 'fold')",
+            "x:('JJ', ('call', 'all_in@3'), 'call')",
+            "x:('JJ', (), 'raise@2')",
+            "x:('JJ', ('raise@2', 'all_in@3'), 'fold')",
+            "x:('JJ', ('raise@2', 'all_in@3'), 'call')",
+            "x:('JJ', (), 'all_in@3')",
+            "q+:1:empty",
+            "q+:(1, ('KK', ('call',)))",
+            "q+:(1, ('KK', ('call', 'raise@2', 'all_in@3')))",
+            "q+:(1, ('KK', ('raise@2',)))",
+            "q+:(1, ('KK', ('all_in@3',)))",
+            "q-:1:empty",
+            "q-:(1, ('KK', ('call',)))",
+            "q-:(1, ('KK', ('call', 'raise@2', 'all_in@3')))",
+            "q-:(1, ('KK', ('raise@2',)))",
+            "q-:(1, ('KK', ('all_in@3',)))",
+            "surplus:('empty',)",
+            "surplus:('KK', ('call',), 'check')",
+            "surplus:('KK', ('call',), 'raise@2')",
+            "surplus:('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+            "surplus:('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+            "surplus:('KK', ('call',), 'all_in@3')",
+            "surplus:('KK', ('raise@2',), 'fold')",
+            "surplus:('KK', ('raise@2',), 'call')",
+            "surplus:('KK', ('raise@2',), 'all_in@3')",
+            "surplus:('KK', ('all_in@3',), 'fold')",
+            "surplus:('KK', ('all_in@3',), 'call')",
+            "artificial:0:empty",
+            "artificial:(0, ('AA', ()))",
+            "artificial:(0, ('AA', ('call', 'raise@2')))",
+            "artificial:(0, ('AA', ('call', 'all_in@3')))",
+            "artificial:(0, ('AA', ('raise@2', 'all_in@3')))",
+            "artificial:(0, ('QQ', ()))",
+            "artificial:(0, ('QQ', ('call', 'raise@2')))",
+            "artificial:(0, ('QQ', ('call', 'all_in@3')))",
+            "artificial:(0, ('QQ', ('raise@2', 'all_in@3')))",
+            "artificial:(0, ('JJ', ()))",
+            "artificial:(0, ('JJ', ('call', 'raise@2')))",
+            "artificial:(0, ('JJ', ('call', 'all_in@3')))",
+            "artificial:(0, ('JJ', ('raise@2', 'all_in@3')))",
+            "artificial:cover:('empty',)",
+            "artificial:cover:('KK', ('call',), 'check')",
+            "artificial:cover:('KK', ('call',), 'raise@2')",
+            "artificial:cover:('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+            "artificial:cover:('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+            "artificial:cover:('KK', ('call',), 'all_in@3')",
+            "artificial:cover:('KK', ('raise@2',), 'fold')",
+            "artificial:cover:('KK', ('raise@2',), 'call')",
+            "artificial:cover:('KK', ('raise@2',), 'all_in@3')",
+            "artificial:cover:('KK', ('all_in@3',), 'fold')",
+            "artificial:cover:('KK', ('all_in@3',), 'call')"
+          ]
+        },
+        "realization": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "288653/332882",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "44229/332882",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1"
+        ],
+        "slacks": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "dual": [
+          "1464215/2330174",
+          "445327/529585",
+          "0",
+          "0",
+          "298371/529585",
+          "-1/7",
+          "0",
+          "0",
+          "-149133/529585",
+          "-811709/11650870",
+          "0",
+          "0",
+          "-1619967/11650870"
+        ],
+        "lp": {
+          "constraint_labels": [
+            {
+              "id": "1:empty",
+              "sense": "="
+            },
+            {
+              "id": "(1, ('KK', ('call',)))",
+              "sense": "="
+            },
+            {
+              "id": "(1, ('KK', ('call', 'raise@2', 'all_in@3')))",
+              "sense": "="
+            },
+            {
+              "id": "(1, ('KK', ('raise@2',)))",
+              "sense": "="
+            },
+            {
+              "id": "(1, ('KK', ('all_in@3',)))",
+              "sense": "="
+            },
+            {
+              "id": "cover:('empty',)",
+              "sense": ">=",
+              "slack_variable": "surplus:('empty',)"
+            },
+            {
+              "id": "cover:('AA', (), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', (), 'fold')"
+            },
+            {
+              "id": "cover:('AA', (), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', (), 'call')"
+            },
+            {
+              "id": "cover:('AA', ('call', 'raise@2'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('call', 'raise@2'), 'fold')"
+            },
+            {
+              "id": "cover:('AA', ('call', 'raise@2'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('call', 'raise@2'), 'call')"
+            },
+            {
+              "id": "cover:('AA', ('call', 'raise@2'), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('call', 'raise@2'), 'all_in@3')"
+            },
+            {
+              "id": "cover:('AA', ('call', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('call', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('AA', ('call', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('call', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('AA', (), 'raise@2')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', (), 'raise@2')"
+            },
+            {
+              "id": "cover:('AA', ('raise@2', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('raise@2', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('AA', ('raise@2', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', ('raise@2', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('AA', (), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('AA', (), 'all_in@3')"
+            },
+            {
+              "id": "cover:('QQ', (), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', (), 'fold')"
+            },
+            {
+              "id": "cover:('QQ', (), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', (), 'call')"
+            },
+            {
+              "id": "cover:('QQ', ('call', 'raise@2'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('call', 'raise@2'), 'fold')"
+            },
+            {
+              "id": "cover:('QQ', ('call', 'raise@2'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('call', 'raise@2'), 'call')"
+            },
+            {
+              "id": "cover:('QQ', ('call', 'raise@2'), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('call', 'raise@2'), 'all_in@3')"
+            },
+            {
+              "id": "cover:('QQ', ('call', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('call', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('QQ', ('call', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('call', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('QQ', (), 'raise@2')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', (), 'raise@2')"
+            },
+            {
+              "id": "cover:('QQ', ('raise@2', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('raise@2', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('QQ', ('raise@2', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', ('raise@2', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('QQ', (), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('QQ', (), 'all_in@3')"
+            },
+            {
+              "id": "cover:('JJ', (), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', (), 'fold')"
+            },
+            {
+              "id": "cover:('JJ', (), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', (), 'call')"
+            },
+            {
+              "id": "cover:('JJ', ('call', 'raise@2'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('call', 'raise@2'), 'fold')"
+            },
+            {
+              "id": "cover:('JJ', ('call', 'raise@2'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('call', 'raise@2'), 'call')"
+            },
+            {
+              "id": "cover:('JJ', ('call', 'raise@2'), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('call', 'raise@2'), 'all_in@3')"
+            },
+            {
+              "id": "cover:('JJ', ('call', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('call', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('JJ', ('call', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('call', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('JJ', (), 'raise@2')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', (), 'raise@2')"
+            },
+            {
+              "id": "cover:('JJ', ('raise@2', 'all_in@3'), 'fold')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('raise@2', 'all_in@3'), 'fold')"
+            },
+            {
+              "id": "cover:('JJ', ('raise@2', 'all_in@3'), 'call')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', ('raise@2', 'all_in@3'), 'call')"
+            },
+            {
+              "id": "cover:('JJ', (), 'all_in@3')",
+              "sense": ">=",
+              "slack_variable": "surplus:('JJ', (), 'all_in@3')"
+            }
+          ],
+          "dual_flow_values": {
+            "flow_labels": [
+              "0:empty",
+              "(0, ('AA', ()))",
+              "(0, ('AA', ('call', 'raise@2')))",
+              "(0, ('AA', ('call', 'all_in@3')))",
+              "(0, ('AA', ('raise@2', 'all_in@3')))",
+              "(0, ('QQ', ()))",
+              "(0, ('QQ', ('call', 'raise@2')))",
+              "(0, ('QQ', ('call', 'all_in@3')))",
+              "(0, ('QQ', ('raise@2', 'all_in@3')))",
+              "(0, ('JJ', ()))",
+              "(0, ('JJ', ('call', 'raise@2')))",
+              "(0, ('JJ', ('call', 'all_in@3')))",
+              "(0, ('JJ', ('raise@2', 'all_in@3')))"
+            ],
+            "fractions": [
+              "1464215/2330174",
+              "445327/529585",
+              "0",
+              "0",
+              "298371/529585",
+              "-1/7",
+              "0",
+              "0",
+              "-149133/529585",
+              "-811709/11650870",
+              "0",
+              "0",
+              "-1619967/11650870"
+            ]
+          },
+          "inequality_slacks": {
+            "fractions": [
+              "0",
+              "596637/529585",
+              "9805926197/20609329860",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "609699/529585",
+              "0",
+              "0",
+              "0",
+              "10795/272412",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "933/75655",
+              "0",
+              "0",
+              "1464/832205",
+              "9264400351/453405256920",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "13191/1664410",
+              "0",
+              "0"
+            ],
+            "sequence_labels": [
+              "('empty',)",
+              "('AA', (), 'fold')",
+              "('AA', (), 'call')",
+              "('AA', ('call', 'raise@2'), 'fold')",
+              "('AA', ('call', 'raise@2'), 'call')",
+              "('AA', ('call', 'raise@2'), 'all_in@3')",
+              "('AA', ('call', 'all_in@3'), 'fold')",
+              "('AA', ('call', 'all_in@3'), 'call')",
+              "('AA', (), 'raise@2')",
+              "('AA', ('raise@2', 'all_in@3'), 'fold')",
+              "('AA', ('raise@2', 'all_in@3'), 'call')",
+              "('AA', (), 'all_in@3')",
+              "('QQ', (), 'fold')",
+              "('QQ', (), 'call')",
+              "('QQ', ('call', 'raise@2'), 'fold')",
+              "('QQ', ('call', 'raise@2'), 'call')",
+              "('QQ', ('call', 'raise@2'), 'all_in@3')",
+              "('QQ', ('call', 'all_in@3'), 'fold')",
+              "('QQ', ('call', 'all_in@3'), 'call')",
+              "('QQ', (), 'raise@2')",
+              "('QQ', ('raise@2', 'all_in@3'), 'fold')",
+              "('QQ', ('raise@2', 'all_in@3'), 'call')",
+              "('QQ', (), 'all_in@3')",
+              "('JJ', (), 'fold')",
+              "('JJ', (), 'call')",
+              "('JJ', ('call', 'raise@2'), 'fold')",
+              "('JJ', ('call', 'raise@2'), 'call')",
+              "('JJ', ('call', 'raise@2'), 'all_in@3')",
+              "('JJ', ('call', 'all_in@3'), 'fold')",
+              "('JJ', ('call', 'all_in@3'), 'call')",
+              "('JJ', (), 'raise@2')",
+              "('JJ', ('raise@2', 'all_in@3'), 'fold')",
+              "('JJ', ('raise@2', 'all_in@3'), 'call')",
+              "('JJ', (), 'all_in@3')"
+            ]
+          },
+          "logical_cell_updates": 481843,
+          "lp": "ip_ceiling",
+          "maximum_fraction_bits": 67,
+          "objective": "-1464215/2330174",
+          "objective_bound_fraction": "1464215/2330174",
+          "own_realization": {
+            "fractions": [
+              "1",
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "36739/75655",
+              "0",
+              "38916/75655",
+              "36739/75655",
+              "38916/75655"
+            ],
+            "sequence_labels": [
+              "('empty',)",
+              "('KK', ('call',), 'check')",
+              "('KK', ('call',), 'raise@2')",
+              "('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+              "('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+              "('KK', ('call',), 'all_in@3')",
+              "('KK', ('raise@2',), 'fold')",
+              "('KK', ('raise@2',), 'call')",
+              "('KK', ('raise@2',), 'all_in@3')",
+              "('KK', ('all_in@3',), 'fold')",
+              "('KK', ('all_in@3',), 'call')"
+            ]
+          },
+          "phase_one_objective": "0",
+          "pivots": 103,
+          "tableau_cells_including_rhs_and_objective": 4440,
+          "tableau_columns": 110,
+          "tableau_rows": 39,
+          "variable_labels": [
+            "y:('empty',)",
+            "y:('KK', ('call',), 'check')",
+            "y:('KK', ('call',), 'raise@2')",
+            "y:('KK', ('call', 'raise@2', 'all_in@3'), 'fold')",
+            "y:('KK', ('call', 'raise@2', 'all_in@3'), 'call')",
+            "y:('KK', ('call',), 'all_in@3')",
+            "y:('KK', ('raise@2',), 'fold')",
+            "y:('KK', ('raise@2',), 'call')",
+            "y:('KK', ('raise@2',), 'all_in@3')",
+            "y:('KK', ('all_in@3',), 'fold')",
+            "y:('KK', ('all_in@3',), 'call')",
+            "p+:0:empty",
+            "p+:(0, ('AA', ()))",
+            "p+:(0, ('AA', ('call', 'raise@2')))",
+            "p+:(0, ('AA', ('call', 'all_in@3')))",
+            "p+:(0, ('AA', ('raise@2', 'all_in@3')))",
+            "p+:(0, ('QQ', ()))",
+            "p+:(0, ('QQ', ('call', 'raise@2')))",
+            "p+:(0, ('QQ', ('call', 'all_in@3')))",
+            "p+:(0, ('QQ', ('raise@2', 'all_in@3')))",
+            "p+:(0, ('JJ', ()))",
+            "p+:(0, ('JJ', ('call', 'raise@2')))",
+            "p+:(0, ('JJ', ('call', 'all_in@3')))",
+            "p+:(0, ('JJ', ('raise@2', 'all_in@3')))",
+            "p-:0:empty",
+            "p-:(0, ('AA', ()))",
+            "p-:(0, ('AA', ('call', 'raise@2')))",
+            "p-:(0, ('AA', ('call', 'all_in@3')))",
+            "p-:(0, ('AA', ('raise@2', 'all_in@3')))",
+            "p-:(0, ('QQ', ()))",
+            "p-:(0, ('QQ', ('call', 'raise@2')))",
+            "p-:(0, ('QQ', ('call', 'all_in@3')))",
+            "p-:(0, ('QQ', ('raise@2', 'all_in@3')))",
+            "p-:(0, ('JJ', ()))",
+            "p-:(0, ('JJ', ('call', 'raise@2')))",
+            "p-:(0, ('JJ', ('call', 'all_in@3')))",
+            "p-:(0, ('JJ', ('raise@2', 'all_in@3')))",
+            "surplus:('empty',)",
+            "surplus:('AA', (), 'fold')",
+            "surplus:('AA', (), 'call')",
+            "surplus:('AA', ('call', 'raise@2'), 'fold')",
+            "surplus:('AA', ('call', 'raise@2'), 'call')",
+            "surplus:('AA', ('call', 'raise@2'), 'all_in@3')",
+            "surplus:('AA', ('call', 'all_in@3'), 'fold')",
+            "surplus:('AA', ('call', 'all_in@3'), 'call')",
+            "surplus:('AA', (), 'raise@2')",
+            "surplus:('AA', ('raise@2', 'all_in@3'), 'fold')",
+            "surplus:('AA', ('raise@2', 'all_in@3'), 'call')",
+            "surplus:('AA', (), 'all_in@3')",
+            "surplus:('QQ', (), 'fold')",
+            "surplus:('QQ', (), 'call')",
+            "surplus:('QQ', ('call', 'raise@2'), 'fold')",
+            "surplus:('QQ', ('call', 'raise@2'), 'call')",
+            "surplus:('QQ', ('call', 'raise@2'), 'all_in@3')",
+            "surplus:('QQ', ('call', 'all_in@3'), 'fold')",
+            "surplus:('QQ', ('call', 'all_in@3'), 'call')",
+            "surplus:('QQ', (), 'raise@2')",
+            "surplus:('QQ', ('raise@2', 'all_in@3'), 'fold')",
+            "surplus:('QQ', ('raise@2', 'all_in@3'), 'call')",
+            "surplus:('QQ', (), 'all_in@3')",
+            "surplus:('JJ', (), 'fold')",
+            "surplus:('JJ', (), 'call')",
+            "surplus:('JJ', ('call', 'raise@2'), 'fold')",
+            "surplus:('JJ', ('call', 'raise@2'), 'call')",
+            "surplus:('JJ', ('call', 'raise@2'), 'all_in@3')",
+            "surplus:('JJ', ('call', 'all_in@3'), 'fold')",
+            "surplus:('JJ', ('call', 'all_in@3'), 'call')",
+            "surplus:('JJ', (), 'raise@2')",
+            "surplus:('JJ', ('raise@2', 'all_in@3'), 'fold')",
+            "surplus:('JJ', ('raise@2', 'all_in@3'), 'call')",
+            "surplus:('JJ', (), 'all_in@3')",
+            "artificial:1:empty",
+            "artificial:(1, ('KK', ('call',)))",
+            "artificial:(1, ('KK', ('call', 'raise@2', 'all_in@3')))",
+            "artificial:(1, ('KK', ('raise@2',)))",
+            "artificial:(1, ('KK', ('all_in@3',)))",
+            "artificial:cover:('empty',)",
+            "artificial:cover:('AA', (), 'fold')",
+            "artificial:cover:('AA', (), 'call')",
+            "artificial:cover:('AA', ('call', 'raise@2'), 'fold')",
+            "artificial:cover:('AA', ('call', 'raise@2'), 'call')",
+            "artificial:cover:('AA', ('call', 'raise@2'), 'all_in@3')",
+            "artificial:cover:('AA', ('call', 'all_in@3'), 'fold')",
+            "artificial:cover:('AA', ('call', 'all_in@3'), 'call')",
+            "artificial:cover:('AA', (), 'raise@2')",
+            "artificial:cover:('AA', ('raise@2', 'all_in@3'), 'fold')",
+            "artificial:cover:('AA', ('raise@2', 'all_in@3'), 'call')",
+            "artificial:cover:('AA', (), 'all_in@3')",
+            "artificial:cover:('QQ', (), 'fold')",
+            "artificial:cover:('QQ', (), 'call')",
+            "artificial:cover:('QQ', ('call', 'raise@2'), 'fold')",
+            "artificial:cover:('QQ', ('call', 'raise@2'), 'call')",
+            "artificial:cover:('QQ', ('call', 'raise@2'), 'all_in@3')",
+            "artificial:cover:('QQ', ('call', 'all_in@3'), 'fold')",
+            "artificial:cover:('QQ', ('call', 'all_in@3'), 'call')",
+            "artificial:cover:('QQ', (), 'raise@2')",
+            "artificial:cover:('QQ', ('raise@2', 'all_in@3'), 'fold')",
+            "artificial:cover:('QQ', ('raise@2', 'all_in@3'), 'call')",
+            "artificial:cover:('QQ', (), 'all_in@3')",
+            "artificial:cover:('JJ', (), 'fold')",
+            "artificial:cover:('JJ', (), 'call')",
+            "artificial:cover:('JJ', ('call', 'raise@2'), 'fold')",
+            "artificial:cover:('JJ', ('call', 'raise@2'), 'call')",
+            "artificial:cover:('JJ', ('call', 'raise@2'), 'all_in@3')",
+            "artificial:cover:('JJ', ('call', 'all_in@3'), 'fold')",
+            "artificial:cover:('JJ', ('call', 'all_in@3'), 'call')",
+            "artificial:cover:('JJ', (), 'raise@2')",
+            "artificial:cover:('JJ', ('raise@2', 'all_in@3'), 'fold')",
+            "artificial:cover:('JJ', ('raise@2', 'all_in@3'), 'call')",
+            "artificial:cover:('JJ', (), 'all_in@3')"
+          ]
+        },
+        "realization": [
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "36739/75655",
+          "0",
+          "38916/75655",
+          "36739/75655",
+          "38916/75655"
+        ],
+        "slacks": [
+          "0",
+          "596637/529585",
+          "9805926197/20609329860",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "609699/529585",
+          "0",
+          "0",
+          "0",
+          "10795/272412",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "933/75655",
+          "0",
+          "0",
+          "1464/832205",
+          "9264400351/453405256920",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "13191/1664410",
+          "0",
+          "0"
+        ]
+      }
+    ],
+    "candidate_reduced_model": {
+      "flow_labels": [
+        {
+          "id": "0:empty"
+        },
+        {
+          "id": "(0, ('AA', ()))"
+        },
+        {
+          "id": "(0, ('AA', ('call', 'raise@2')))"
+        },
+        {
+          "id": "(0, ('AA', ('call', 'all_in@3')))"
+        },
+        {
+          "id": "(0, ('AA', ('raise@2', 'all_in@3')))"
+        },
+        {
+          "id": "(0, ('QQ', ()))"
+        },
+        {
+          "id": "(0, ('QQ', ('call', 'raise@2')))"
+        },
+        {
+          "id": "(0, ('QQ', ('call', 'all_in@3')))"
+        },
+        {
+          "id": "(0, ('QQ', ('raise@2', 'all_in@3')))"
+        },
+        {
+          "id": "(0, ('JJ', ()))"
+        },
+        {
+          "id": "(0, ('JJ', ('call', 'raise@2')))"
+        },
+        {
+          "id": "(0, ('JJ', ('call', 'all_in@3')))"
+        },
+        {
+          "id": "(0, ('JJ', ('raise@2', 'all_in@3')))"
+        },
+        {
+          "id": "1:empty"
+        },
+        {
+          "id": "(1, ('KK', ('call',)))"
+        },
+        {
+          "id": "(1, ('KK', ('call', 'raise@2', 'all_in@3')))"
+        },
+        {
+          "id": "(1, ('KK', ('raise@2',)))"
+        },
+        {
+          "id": "(1, ('KK', ('all_in@3',)))"
+        }
+      ],
+      "flows": [
+        [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-1",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "1"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "-1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "1"
+        ]
+      ],
+      "payoff_matrix": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "-2/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "99457/272412",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-4/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "99457/136206",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "8/7",
+          "99457/90804",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-4/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "99457/90804",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "4/7",
+          "99457/136206",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-8/7",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "99457/90804",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "4/7",
+          "99457/90804"
+        ],
+        [
+          "-1/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "-49711/272412",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-2/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-49711/136206",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "4/7",
+          "-49711/90804",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-2/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-49711/90804",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "2/7",
+          "-49711/136206",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-4/7",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-49711/90804",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "2/7",
+          "-49711/90804"
+        ],
+        [
+          "-1/14",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "-539989/5993064",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-1/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "-539989/2996532",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "2/7",
+          "-539989/1997688",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-1/7",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-539989/1997688",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/7",
+          "-539989/2996532",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-2/7",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "-539989/1997688",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1/7",
+          "-539989/1997688"
+        ]
+      ],
+      "sequences": [
+        [
+          {
+            "id": "('empty',)"
+          },
+          {
+            "id": "('AA', (), 'fold')"
+          },
+          {
+            "id": "('AA', (), 'call')"
+          },
+          {
+            "id": "('AA', ('call', 'raise@2'), 'fold')"
+          },
+          {
+            "id": "('AA', ('call', 'raise@2'), 'call')"
+          },
+          {
+            "id": "('AA', ('call', 'raise@2'), 'all_in@3')"
+          },
+          {
+            "id": "('AA', ('call', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('AA', ('call', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('AA', (), 'raise@2')"
+          },
+          {
+            "id": "('AA', ('raise@2', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('AA', ('raise@2', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('AA', (), 'all_in@3')"
+          },
+          {
+            "id": "('QQ', (), 'fold')"
+          },
+          {
+            "id": "('QQ', (), 'call')"
+          },
+          {
+            "id": "('QQ', ('call', 'raise@2'), 'fold')"
+          },
+          {
+            "id": "('QQ', ('call', 'raise@2'), 'call')"
+          },
+          {
+            "id": "('QQ', ('call', 'raise@2'), 'all_in@3')"
+          },
+          {
+            "id": "('QQ', ('call', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('QQ', ('call', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('QQ', (), 'raise@2')"
+          },
+          {
+            "id": "('QQ', ('raise@2', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('QQ', ('raise@2', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('QQ', (), 'all_in@3')"
+          },
+          {
+            "id": "('JJ', (), 'fold')"
+          },
+          {
+            "id": "('JJ', (), 'call')"
+          },
+          {
+            "id": "('JJ', ('call', 'raise@2'), 'fold')"
+          },
+          {
+            "id": "('JJ', ('call', 'raise@2'), 'call')"
+          },
+          {
+            "id": "('JJ', ('call', 'raise@2'), 'all_in@3')"
+          },
+          {
+            "id": "('JJ', ('call', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('JJ', ('call', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('JJ', (), 'raise@2')"
+          },
+          {
+            "id": "('JJ', ('raise@2', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('JJ', ('raise@2', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('JJ', (), 'all_in@3')"
+          }
+        ],
+        [
+          {
+            "id": "('empty',)"
+          },
+          {
+            "id": "('KK', ('call',), 'check')"
+          },
+          {
+            "id": "('KK', ('call',), 'raise@2')"
+          },
+          {
+            "id": "('KK', ('call', 'raise@2', 'all_in@3'), 'fold')"
+          },
+          {
+            "id": "('KK', ('call', 'raise@2', 'all_in@3'), 'call')"
+          },
+          {
+            "id": "('KK', ('call',), 'all_in@3')"
+          },
+          {
+            "id": "('KK', ('raise@2',), 'fold')"
+          },
+          {
+            "id": "('KK', ('raise@2',), 'call')"
+          },
+          {
+            "id": "('KK', ('raise@2',), 'all_in@3')"
+          },
+          {
+            "id": "('KK', ('all_in@3',), 'fold')"
+          },
+          {
+            "id": "('KK', ('all_in@3',), 'call')"
+          }
+        ]
+      ]
+    },
+    "flow_counts": {
+      "bb": 5,
+      "sb": 13
+    },
+    "matrix_value_fraction": "1464215/2330174",
+    "public_tree": {
+      "continuations": 7,
+      "decision_nodes": 8,
+      "fold_terminals": 7,
+      "public_states": 22
+    },
+    "rank_mean_fractions": {
+      "A": "99457/155664",
+      "J": "-539989/856152",
+      "Q": "-49711/77832"
+    },
+    "rank_type_policies": [
+      {
+        "actions": [
+          "fold",
+          "call",
+          "raise@2",
+          "all_in@3"
+        ],
+        "history": [],
+        "player": 0,
+        "probabilities": [
+          "0",
+          "0",
+          "0",
+          "1"
+        ],
+        "type": "AA"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "all_in@3"
+        ],
+        "history": [
+          "call",
+          "raise@2"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/3",
+          "1/3",
+          "1/3"
+        ],
+        "type": "AA"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "call",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "AA"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "raise@2",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "AA"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "raise@2",
+          "all_in@3"
+        ],
+        "history": [],
+        "player": 0,
+        "probabilities": [
+          "288653/332882",
+          "0",
+          "0",
+          "44229/332882"
+        ],
+        "type": "QQ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "all_in@3"
+        ],
+        "history": [
+          "call",
+          "raise@2"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/3",
+          "1/3",
+          "1/3"
+        ],
+        "type": "QQ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "call",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "QQ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "raise@2",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "QQ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "raise@2",
+          "all_in@3"
+        ],
+        "history": [],
+        "player": 0,
+        "probabilities": [
+          "0",
+          "0",
+          "0",
+          "1"
+        ],
+        "type": "JJ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "all_in@3"
+        ],
+        "history": [
+          "call",
+          "raise@2"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/3",
+          "1/3",
+          "1/3"
+        ],
+        "type": "JJ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "call",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "JJ"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "raise@2",
+          "all_in@3"
+        ],
+        "player": 0,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "JJ"
+      },
+      {
+        "actions": [
+          "check",
+          "raise@2",
+          "all_in@3"
+        ],
+        "history": [
+          "call"
+        ],
+        "player": 1,
+        "probabilities": [
+          "1",
+          "0",
+          "0"
+        ],
+        "type": "KK"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "call",
+          "raise@2",
+          "all_in@3"
+        ],
+        "player": 1,
+        "probabilities": [
+          "1/2",
+          "1/2"
+        ],
+        "type": "KK"
+      },
+      {
+        "actions": [
+          "fold",
+          "call",
+          "all_in@3"
+        ],
+        "history": [
+          "raise@2"
+        ],
+        "player": 1,
+        "probabilities": [
+          "36739/75655",
+          "0",
+          "38916/75655"
+        ],
+        "type": "KK"
+      },
+      {
+        "actions": [
+          "fold",
+          "call"
+        ],
+        "history": [
+          "all_in@3"
+        ],
+        "player": 1,
+        "probabilities": [
+          "36739/75655",
+          "38916/75655"
+        ],
+        "type": "KK"
+      }
+    ],
+    "sequence_counts": {
+      "bb": 11,
+      "sb": 34
+    },
+    "transport_receipt": {
+      "benchmark_id": "preflop-three-rank-transport-v1",
+      "board_enumerations": 0,
+      "board_outcomes_per_pair": 1712304,
+      "candidate_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+      "equilibrium_or_policy_claim": false,
+      "exact_global_prior_mass": "1",
+      "overlap_census_by_rank": {
+        "A": {
+          "0": 6,
+          "1": 24,
+          "2": 6
+        },
+        "J": {
+          "0": 6,
+          "1": 24,
+          "2": 6
+        },
+        "Q": {
+          "0": 6,
+          "1": 24,
+          "2": 6
+        }
+      },
+      "physical_pair_rows_authenticated": 108,
+      "rank_calls": 0,
+      "represented_board_count_informational_only": 184928832,
+      "scope": "authenticated source-orbit count transport only; no board enumeration or solver claim",
+      "source_basis_pins": {
+        "aa": {
+          "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+          "path": "benchmarks/results/preflop-five-basis-v1.json"
+        },
+        "jj": {
+          "publication_index_sha256": "9022673f0801fa1481af146f66392b2c7ea4d88c8576946735ecb5ced34bf5e1",
+          "report_artifact_sha256": "1f80d95da14890be036c72772f6a88228beff936d05355875384dcc34d6d5156"
+        },
+        "qq": {
+          "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8",
+          "path": "benchmarks/results/preflop-qq-kk-basis-v1.json"
+        }
+      },
+      "status": "transport-authenticated-candidate-only",
+      "training_calls": 0
+    }
+  },
+  "certificate_id": "preflop-three-rank-physical-exact-v1",
+  "policies": [
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AcAd",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AcAd",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAd",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAd",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AcAh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AcAh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AcAs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AcAs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AcAs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AdAh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AdAh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AdAs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AdAs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AdAs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "AhAs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "AhAs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AhAs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "AhAs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QcQd",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QcQd",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQd",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQd",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QcQh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QcQh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QcQs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QcQs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QcQs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QdQh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QdQh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QdQs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QdQs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QdQs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "QhQs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "288653/332882",
+        "0",
+        "0",
+        "44229/332882"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "QhQs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JcJd",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JcJd",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJd",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJd",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JcJh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JcJh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JcJs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JcJs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JcJs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JdJh",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JdJh",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JdJh",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JdJh",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JdJs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JdJs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JdJs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JdJs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "JhJs",
+      "history": [],
+      "player": 0,
+      "probabilities": [
+        "0",
+        "0",
+        "0",
+        "1"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "JhJs",
+      "history": [
+        "call",
+        "raise@2"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/3",
+        "1/3",
+        "1/3"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JhJs",
+      "history": [
+        "call",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "JhJs",
+      "history": [
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 0,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKd",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KcKh",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKh",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KcKh",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKh",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KcKs",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKs",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KcKs",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KcKs",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KdKh",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKh",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KdKh",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKh",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KdKs",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "check",
+        "raise@2",
+        "all_in@3"
+      ],
+      "hand": "KhKs",
+      "history": [
+        "call"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KhKs",
+      "history": [
+        "call",
+        "raise@2",
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "1/2",
+        "1/2"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call",
+        "all_in@3"
+      ],
+      "hand": "KhKs",
+      "history": [
+        "raise@2"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "0",
+        "38916/75655"
+      ]
+    },
+    {
+      "actions": [
+        "fold",
+        "call"
+      ],
+      "hand": "KhKs",
+      "history": [
+        "all_in@3"
+      ],
+      "player": 1,
+      "probabilities": [
+        "36739/75655",
+        "38916/75655"
+      ]
+    }
+  ],
+  "request": {
+    "bb_range": "KK",
+    "big_blind": "1",
+    "candidate_lp_shapes": {
+      "ip": [
+        39,
+        110,
+        4440
+      ],
+      "oop": [
+        24,
+        79,
+        2000
+      ]
+    },
+    "certificate_id": "preflop-three-rank-physical-exact-v1",
+    "flow_counts": {
+      "bb": 5,
+      "sb": 13
+    },
+    "include_all_in": true,
+    "lp_caps": {
+      "bits": 4096,
+      "cells": 25000,
+      "columns": 256,
+      "exact_bits": 65536,
+      "exact_depth": 64,
+      "exact_work": 100000,
+      "pivots": 512,
+      "rows": 96,
+      "updates": 10000000
+    },
+    "max_raises": 2,
+    "own_hand_counts": {
+      "bb": 6,
+      "sb": 18
+    },
+    "physical_pair_count": 108,
+    "public_tree": {
+      "continuations": 7,
+      "decision_nodes": 8,
+      "fold_terminals": 7,
+      "public_states": 22
+    },
+    "raise_sizes": [
+      "1/2",
+      "1"
+    ],
+    "rank_masses": {
+      "AA": "4/7",
+      "JJ": "1/7",
+      "QQ": "2/7"
+    },
+    "sb_range_weights": {
+      "AA": "1",
+      "JJ": "1/4",
+      "QQ": "1/2"
+    },
+    "schema_version": 1,
+    "sequence_counts": {
+      "bb": 11,
+      "sb": 34
+    },
+    "small_blind": "1/2",
+    "starting_stack": [
+      "3",
+      "3"
+    ],
+    "transport_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9"
+  },
+  "schema_version": 1,
+  "status": "candidate-only",
+  "transport_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+  "value_candidate_fraction": "1464215/2330174"
+}

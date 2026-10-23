@@ -524,6 +524,15 @@ memory/saved checks agree, all eleven forbidden-calculation counters are zero,
 and the clean measured source snapshot is stable. This establishes prepared
 count provenance, with no strategy, later-street betting or equilibrium claim.
 
+The subsequent [exact physical witness](../preflop-three-rank-exact-witness-results.md)
+certifies one mutual-response profile for the 108-pair finite three-chip
+preflop/checkdown game. Exact SB value is 1464215/2330174 chips; both unilateral
+gains and NashConv are zero. Independent replay checks all 96 own-hand rows,
+258 probabilities and 1,080 complete legal responses, preserving hidden
+opponents and permitting suit-dependent deviations. This supplies a fixed-game
+accuracy anchor; unrestricted ranges, later-street betting and production
+trainer convergence remain separate work.
+
 
 ## Held-out RIVER accuracy evidence
 
