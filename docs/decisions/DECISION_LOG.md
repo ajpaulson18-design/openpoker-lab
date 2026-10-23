@@ -335,3 +335,13 @@ and the unchanged exact/numeric/model guards. Keep the same fresh T140/T560
 quality protocol and separate named resource envelopes; no v2 actual training
 or quality result is claimed by this staging decision. No earlier decision is
 superseded.
+
+D034 observation: the single frozen replay-v2 batch completed T140/T560
+without execution errors, retries or fallbacks. Exact compact and unrestricted
+physical metric maps agree, numeric gaps remain below 7e-16, both full replay
+receipts are retained and source/model/authority checks passed. Keep T140's
+0.014166984012911272 NashConv miss and T560's 0.0016464625267553663 pass as
+separate finite-game observations. Two models/training calls, six proof passes,
+four exact calls, two replays/projections and 8,268 ranks are recorded. The v1
+failure stays unchanged; saved-data authentication/CI still gate publication.
+See [the complete outcomes and limits](../flop-second-board-cfrplus-replay-v2.md).

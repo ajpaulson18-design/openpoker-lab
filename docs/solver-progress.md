@@ -20,9 +20,13 @@ before another version is measured. No completed verified policy is claimed.
 
 The [separate replay boundary v2](flop-second-board-cfrplus-replay-v2.md)
 preserves the v1 failure and validates/retains the complete replay metadata
-before passing eight metrics to the unchanged adapter. Fourteen focused
-synthetic tests pass; no v2 game preparation, training or quality outcome is
-claimed before prerequisite publication and its own clean source freeze.
+before passing eight metrics to the unchanged adapter. Fourteen focused tests
+passed before measurement. Its single frozen batch completed both fresh calls:
+T140 missed 0.005 with exact physical NashConv about 0.014166984012911272; T560
+passed with about 0.0016464625267553663. All eight exact compact/physical metrics
+agree, both full numeric receipts pass, and all source/guard/model checks held.
+The miss and original failed v1 attempt remain retained. Saved-data authentication
+and final-head CI are publication gates; these are finite-game observations.
 
 ## Independent physical source rows for mixed-range work
 

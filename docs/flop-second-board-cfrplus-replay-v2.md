@@ -57,7 +57,7 @@ retained. Each completed output uses its own exact physical NashConv target
 `1/200` chip. Two iteration budgets are observations, not a convergence theorem
 or a controlled performance comparison.
 
-## Execution status
+## Completed frozen execution
 
 Fourteen focused tests pass on bundled CPython 3.12, including real protocol
 loading/admission with poker work forbidden, nested-wrapper exact-once behavior,
@@ -65,11 +65,54 @@ loading/admission with poker work forbidden, nested-wrapper exact-once behavior,
 and first-error/source-drift retention. Lead and bounded GPT-6 Luna reviews found
 no remaining blocker after those independent batch checks were added.
 
-Only synthetic validation has run for this version. No v2 model preparation,
-ranking, numeric replay or training experiment is claimed yet. Finish review,
-prerequisite merge validation and a clean executable/protocol freeze before
-running `python -m scripts.benchmark_flop_second_board_cfrplus_replay_v2
---output-dir PATH` with a new output directory outside the repository.
+The single batch at `7eed198bc6eb47a7a15b8fb8a84e0061f583ca48` ran from
+2026-10-23 15:26:27.320330 to 15:28:38.561171 UTC on CPython 3.12.14 / Windows,
+after the original failed attempt merged in PR #214. Both fresh calls completed
+all exact/numeric/model checks without execution errors, retries or fallbacks.
+The batch status is `verified-quality-miss`, preserving the T140 miss.
+
+| Sweeps | Exact physical NashConv, decimal display | Target 0.005 | Maximum numeric gap |
+| --- | ---: | --- | ---: |
+| 140 | 0.014166984012911272 | Miss | 5.35162192338845e-16 |
+| 560 | 0.0016464625267553663 | Pass | 6.557254739192331e-16 |
+
+The lossless reports retain the full rational metric strings; decimals here are
+display approximations. All eight compact/unrestricted physical metrics agree
+exactly for each normalized output. Both independent replay returns retain all
+thirteen fields and the exact expected checked counts. Each case used one replay
+attempt/call; both preparation and diagnostic guards have all 41 zero counters.
+Every final model check passed and clean 58-source snapshots matched before/after.
+
+Actual batch counters are two fresh models, two shared training calls, six full
+model proofs, four exact metric calls, two numeric replays, two projections,
+20 expected row tables, 480,832 row/action slots and 8,268 attempted/actual ranks.
+Each output retains 608 raw average rows, 608 normalized rows and all 16,912
+physical rows/33,824 probabilities. Normalization changed 361/358 rows for
+T140/T560 respectively, using two 304-row batches and zeroing no positive mass.
+The earlier failed v1 attempt and its null gate remain separate and unchanged.
+
+Total execution receipts are 131.02294160000747 wall seconds and 125.03125 process
+CPU seconds, including proof/authentication, two calls, diagnostics and output.
+These are one execution's receipts, not controlled timing, throughput, allocation
+or RSS measurements. The two budgets establish two quality observations in this
+finite game; they do not prove monotonic or general convergence.
+
+The [complete index](../benchmarks/results/flop-second-board-cfrplus-replay-v2/index.json)
+and both lossless reports are copied byte-for-byte from the original output.
+The 46,200-byte index has raw SHA256
+`f039c2667ac06db1b987643e4bfe17321a4b086e233b681da4041850c68039a5`
+and self-digest
+`d4ce99cbd3411f95664e828092c5634500d806c4db64ba78339b288d20315021`.
+Both reports retain 51,125,237 raw bytes in 1,274,940 gzip bytes. Saved-data
+authentication is available from a clean checkout with
+`python -m scripts.verify_flop_second_board_cfrplus_replay_v2_publication`.
+It validates raw file pins, both source maps, complete policies/normalization,
+saved public-label transport, exact target outcomes and all replay receipts,
+with zero live game builds, ranking, model projection, exact responses, numeric
+replays or training. Eight focused publication tests cover the actual corpus,
+source drift, file/schema tampering and bounded rational arithmetic.
+Final-head CI and publication review are tracked in
+[PR #215](https://github.com/ajpaulson18-design/openpoker-lab/pull/215).
 
 The protocol LF SHA256 is
 `efe8af15bec9fc9d45f2344c0583d7a3a538ba4f2ba9f05289798ed998e787be`.
