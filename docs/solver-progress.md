@@ -1706,3 +1706,6 @@ The opt-in [generic direct-tail API](matrix-free-turn-tail.md) removes joint-wor
 ## Held-out river accuracy protocol (2026-10-23)
 
 A separate [fixed four-profile protocol](river-heldout-quality-protocol.md) broadens correctness and accuracy checks to two weighted 4x4 complete-board games with blocker collisions, ties, short stacks, raises/all-ins and rank extremes. Fresh full-tree/action/refund preflight, committed-source guards, exact-once batch claims and independent numeric/exact saved-policy replay precede any reported outcome. Both existing backends use predeclared CFR+10000 and exact normalized-policy NashConv<=0.001; no trained result is claimed by staging the runner.
+
+
+The [completed held-out river v1 batch](river-heldout-quality-results.md) retains four verified CFR+10000 policies and four misses against the exact 0.001-chip NashConv gate. The unpaired game has gaps about 0.00174251 and the paired game about 0.00232499 for both existing backends. All physical numeric/exact replays, source guards and saved reloads passed. These new cases expose a finite-budget accuracy limit; higher precision remains the next bounded task, with v1 unchanged.
