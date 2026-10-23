@@ -1,0 +1,98 @@
+{
+  "artifact_sha256": "9bda60a970d566b0f48640ae67c44accfa37f04d584fe179f649edd145957d22",
+  "benchmark_id": "preflop-jj-kk-basis-publication-v1",
+  "execution": {
+    "exit_code": 0,
+    "finished_at_utc": "2026-10-23T16:21:00.5303658Z",
+    "log": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\preflop-jj-kk-basis-v1-execution.log",
+    "output": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-08\\make-this-the-new-goal-continuously\\work\\preflop-jj-kk-basis-v1-observation",
+    "source_commit": "cfe53c8e9a96993f32740dea1bf3f03405f3701b",
+    "started_at_utc": "2026-10-23T16:19:33.5724545Z"
+  },
+  "external_binary_dump": {
+    "bytes": 15593760,
+    "captured_copy": "captured-native-streams/reference-all-five-stdout.bin",
+    "original_path": "aa-conformance/all-five.bin",
+    "published": false,
+    "reason": "Repository instruction keeps binary dumps/builds outside Git; no encoded substitute distributed",
+    "sha256": "7dfd1ff4ed2761fef77db70b170fdae750cf7c162932087e30163037e4e78e52"
+  },
+  "files": [
+    {
+      "bytes": 753320,
+      "original_path": "report.json",
+      "path": "report.json",
+      "sha256": "f276da203ce73de024b1e2ae79558e78c8fe589cf82f2032f3aae4910cacadc5"
+    },
+    {
+      "bytes": 360118,
+      "original_path": "aa-conformance/report.json",
+      "path": "aa-conformance-report.json",
+      "sha256": "7e9ecab5b9a567f555d85f6c9cb542a1028ce3969b66f11b6862ffcbf2c25db7"
+    },
+    {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-all-five-stderr.bin",
+      "path": "streams/reference-all-five.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 449,
+      "original_path": "captured-native-streams/reference-aa-calibration-stdout.bin",
+      "path": "streams/reference-aa-calibration.stdout.json",
+      "sha256": "dabdcb58a556d7fee431218801d7abd3682cd2dde821f0cd3088464f81fd5abf"
+    },
+    {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-aa-calibration-stderr.bin",
+      "path": "streams/reference-aa-calibration.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 161,
+      "original_path": "captured-native-streams/native-aa-calibration-stdout.bin",
+      "path": "streams/native-aa-calibration.stdout.json",
+      "sha256": "a36a43c2c2be6cc4ae7adb56a93b0122dbd246b034294dc682f21c94592c4dea"
+    },
+    {
+      "bytes": 0,
+      "original_path": "captured-native-streams/native-aa-calibration-stderr.bin",
+      "path": "streams/native-aa-calibration.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 449,
+      "original_path": "captured-native-streams/reference-jj-stdout.bin",
+      "path": "streams/reference-jj.stdout.json",
+      "sha256": "d605c7f2321f6b45399fc42d64b3601ac94f74542429c491483d2e567cfbe6bc"
+    },
+    {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-jj-stderr.bin",
+      "path": "streams/reference-jj.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 161,
+      "original_path": "captured-native-streams/native-jj-stdout.bin",
+      "path": "streams/native-jj.stdout.json",
+      "sha256": "1f287a74fa621ee13bd78564dee2812ffd3853f0d31a9e0b462ea24b9df2aa19"
+    },
+    {
+      "bytes": 0,
+      "original_path": "captured-native-streams/native-jj-stderr.bin",
+      "path": "streams/native-jj.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "frozen_source_commit": "cfe53c8e9a96993f32740dea1bf3f03405f3701b",
+  "limits": {
+    "binary_dump_or_executable_distributed": false,
+    "runtime_or_memory_claim": false,
+    "scope": "Saved raw JSON and receipt authentication does not repeat exhaustive five-card tuple comparison or physical enumeration; external binary remains retained locally",
+    "strategy_or_equilibrium_claim": false
+  },
+  "protocol_canonical_sha256": "303594b6782b111c2c132a61c42bfda551379cb5400f3b2ec34f239ff71ee4e3",
+  "report_artifact_sha256": "1f80d95da14890be036c72772f6a88228beff936d05355875384dcc34d6d5156",
+  "schema_version": 1
+}
