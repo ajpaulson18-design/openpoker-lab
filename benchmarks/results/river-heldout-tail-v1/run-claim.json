@@ -1,0 +1,40 @@
+{
+  "baseline_report_sha256": "5b26d6e9275b4962df4c67be1822594caa3d46291d196f863fe3b65f4353b578",
+  "benchmark_id": "river-heldout-tail-v1",
+  "claim_id": "99a99ba342ee3935b0879a7d471a5b6a",
+  "created_at_utc": "2026-10-23T19:27:09.790726+00:00",
+  "expected_source_commit": "74b8fa8adb13838401b06d203d597476eada4274",
+  "fixed_grid": [
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized-tail",
+      "discard": 5000,
+      "iterations": 10000,
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized-tail",
+      "discard": 25000,
+      "iterations": 50000,
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized-tail",
+      "discard": 5000,
+      "iterations": 10000,
+      "scenario": "river-paired-short-spr-rank-extremes"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized-tail",
+      "discard": 25000,
+      "iterations": 50000,
+      "scenario": "river-paired-short-spr-rank-extremes"
+    }
+  ],
+  "retry_permitted": false,
+  "target_is_reporting_only": true,
+  "target_nash_conv_fraction": "1/1000"
+}
