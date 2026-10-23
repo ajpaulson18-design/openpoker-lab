@@ -29,18 +29,18 @@ TEST_PATH = "tests/test_preflop_jj_kk_basis_benchmark.py"
 FROZEN_TEST_LF_SHA256 = "b19712a80f2ff89070db5027b9f5339d57b6d21e3abaa159b21239a49b61cad2"
 ISOLATED_TEST_LF_SHA256 = "8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd"
 FROZEN_TEST_ARCHIVE = "benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py"
-DOCUMENT_SOURCE_TRANSITIONS = {
+HISTORICAL_CONTEXT_SOURCES = {
+    "AGENTS.md": (
+        "0d5a2cf56d2a8e9b1bde79e34bb1e162915aa71443e71a14a2b6af7c6af047f0",
+        "benchmarks/sources/preflop-jj-kk-context-freeze-v1/AGENTS.md.txt"),
     "docs/engineering/CURRENT_STATE.md": (
         "daa3507e51b21ad944e67655b1c6703f2e9da0d086ee8e02b5772aa4e6b2ea4e",
-        "306d9b2e5268105a226627205182154be0dfdca1aaf94fa572c627653706c96d",
         "benchmarks/sources/preflop-jj-kk-context-freeze-v1/CURRENT_STATE.md.txt"),
     "docs/solver-progress.md": (
         "e6c2ae028b7adf81513d0f004ec3c819ac4fcf598a2c1ca2e8d748d58c2bbf68",
-        "8e01ea95093069f7f9b5bbd5b0559094822f91016a9b002af47d63f1371c55ad",
         "benchmarks/sources/preflop-jj-kk-context-freeze-v1/solver-progress.md.txt"),
     "docs/turn-class-tail.md": (
         "c542181a45d2fade0bdcf142f7b456cd40b17913935b70b3d63a23fbe70e9aed",
-        "15d7b146d082df2727783c429eeb37980988db0639bb4630847755650d574b6b",
         "benchmarks/sources/preflop-jj-kk-context-freeze-v1/turn-class-tail.md.txt"),
 }
 
@@ -384,27 +384,35 @@ def _current_source_check(historical):
     state = five.snapshot()
     _need(type(state) is dict and state.get("status") == [] and
           type(state.get("source_hashes")) is dict, "Current checkout must be committed and clean")
+    current_hashes, context_hashes = {}, {}
     for relative, expected in historical.items():
         path = evidence.ROOT / relative
         _need(not path.is_symlink(), f"Historical source became symlinked: {relative}")
         raw = _read(path, 32 * 1024 * 1024)
         value = {"raw_sha256": hashlib.sha256(raw).hexdigest(),
                  "lf_sha256": hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()}
-        if value["lf_sha256"] != expected["lf_sha256"]:
-            if relative == TEST_PATH:
-                endpoints = (FROZEN_TEST_LF_SHA256, ISOLATED_TEST_LF_SHA256, FROZEN_TEST_ARCHIVE)
-            else:
-                endpoints = DOCUMENT_SOURCE_TRANSITIONS.get(relative)
-            _need(endpoints is not None and expected["lf_sha256"] == endpoints[0] and
-                  value["lf_sha256"] == endpoints[1],
+        context = HISTORICAL_CONTEXT_SOURCES.get(relative)
+        if context is not None:
+            _need(expected["lf_sha256"] == context[0], "Historical context generation hash differs")
+            archived = _read(evidence.ROOT / context[1], MAX_REPORT_BYTES)
+            _need(hashlib.sha256(archived).hexdigest() == context[0] and
+                  hashlib.sha256(archived.replace(b"\r\n", b"\n")).hexdigest() == context[0],
+                  "Historical context archive does not authenticate the generation source")
+            context_hashes[relative] = value["lf_sha256"]
+        elif value["lf_sha256"] != expected["lf_sha256"]:
+            _need(relative == TEST_PATH and expected["lf_sha256"] == FROZEN_TEST_LF_SHA256 and
+                  value["lf_sha256"] == ISOLATED_TEST_LF_SHA256,
                   f"Frozen measured source LF bytes changed: {relative}")
-            archived = _read(evidence.ROOT / endpoints[2], MAX_REPORT_BYTES)
-            _need(hashlib.sha256(archived).hexdigest() == endpoints[0] and
+            archived = _read(evidence.ROOT / FROZEN_TEST_ARCHIVE, MAX_REPORT_BYTES)
+            _need(hashlib.sha256(archived).hexdigest() == FROZEN_TEST_LF_SHA256 and
                   hashlib.sha256(archived.replace(b"\r\n", b"\n")).hexdigest() == expected["lf_sha256"],
                   "Historical source archive does not authenticate the exact source transition")
         if relative in state["source_hashes"]:
             _need(state["source_hashes"][relative].get("lf_sha256") == value["lf_sha256"],
                   f"Current identity snapshot differs: {relative}")
+        current_hashes[relative] = value["lf_sha256"]
+    return {"revision": state.get("revision"), "current_source_subset_lf_sha256": _digest(current_hashes),
+            "current_context_lf_sha256": context_hashes}
 
 
 def verify(directory=PUBLICATION):
@@ -419,6 +427,7 @@ def verify(directory=PUBLICATION):
     _need(hashlib.sha256(report_raw).hexdigest() == REPORT_SHA256,
           "Pinned report bytes differ")
     report = _json(report_raw)
+    current_before = _current_source_check(report["source_before"]["source_hashes"])
     _validate_report(report, index, files, root)
     aa_path = evidence.ROOT / "benchmarks/results/preflop-five-basis-v1.json"
     qq_path = evidence.ROOT / "benchmarks/results/preflop-qq-kk-basis-v1.json"
@@ -444,14 +453,16 @@ def verify(directory=PUBLICATION):
     _need(hashlib.sha256(_read(root / "index.json", MAX_INDEX_BYTES)).hexdigest() ==
           hashlib.sha256(raw_index).hexdigest(), "Index changed during saved verification")
     _inventory(root, index)
-    _current_source_check(report["source_before"]["source_hashes"])
+    current_after = _current_source_check(report["source_before"]["source_hashes"])
+    _need(current_before == current_after, "Current source or context changed during saved verification")
     return {"status": "authenticated-saved-counts-only", "benchmark_id": index["benchmark_id"],
             "report_artifact_sha256": REPORT_ARTIFACT_SHA256,
             "source_revision": FROZEN_REVISION, "source_file_count": 746,
             "numerical_subprocess_calls_recorded": 5,
             "physical_pair_censuses_recorded": 4,
             "current_build_all_five_replay_performed": False,
-            "physical_counts_recomputed": False, "training_calls": 0}
+            "physical_counts_recomputed": False, "training_calls": 0,
+            "current_source_attestation": current_after}
 
 
 def _validate_linkages(report, aa_data):

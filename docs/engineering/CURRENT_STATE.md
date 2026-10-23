@@ -508,3 +508,7 @@ retained. This adds no strategy or equilibrium certificate; the future
 108-pair AA/QQ/JJ-versus-KK pool remains a separate transport milestone.
 Publication checks and merge status are tracked in
 [PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
+
+## Configurable matrix-free TURN tail
+
+The separate [original-weight tail API](../matrix-free-turn-tail.md) adds configurable four-card boards, weighted ranges, physical selected/full-deck rivers and compatible street sizing to matrix-free CFR+. It averages completed sweeps t>discard with original weight t and preserves full-request admission. D=0 matches the existing matrix-free policy exactly in the control; positive tails match materialized training and independent physical rules at the declared tolerances. This is new research API coverage, with bounded correctness controls; broader convergence and commercial solver parity remain unproved.

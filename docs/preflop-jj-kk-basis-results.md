@@ -60,18 +60,19 @@ python -m scripts.verify_preflop_jj_kk_basis_publication
 The [saved-data verifier](../scripts/verify_preflop_jj_kk_basis_publication.py)
 pins the index and every raw file before parsing, freshly authenticates the
 published AA/QQ and current-build conformance receipts, links the raw outputs
-to all physical rows and build identities, and checks all 746 measured source
-LF hashes. New publication files are allowed; a change to a measured file must
-reject except for the exact archived test/document transitions below. The current
-version does not attest arbitrary later source revisions.
-Its [18 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
+to all physical rows and build identities, and authenticates the generation-time
+746-file source map. Four explicit non-computational context files use their
+pinned original archives; their current LF hashes are recorded separately.
+The other sources retain strict LF checks, with the one exact archived test
+cleanup transition below. This does not attest arbitrary later calculation code.
+Its [20 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
 include actual and copied-corpus authentication with live computation forbidden,
 byte/source/build/count tampering, metadata linkage and strict scalar types.
-Together with the 23 admission/orchestration checks, the publication has 41
-focused checks. Earlier 39-check validation preceded the parallel-main merge;
-the two added checks cover exact documentation transitions and archive rejection.
-All 41 passed on bundled CPython 3.12.14 after integration. Documentation
-validation passed for 174 Markdown files and 950 local links.
+Together with the 23 admission/orchestration checks, all 43 focused checks
+passed on bundled CPython 3.12.14. Earlier 39-check and 41-check validations
+preceded the two parallel-main integrations; added checks cover historical
+archives, separate current context, mathematical-source rejection and
+source/context changes during verification.
 
 ## CI test isolation correction
 
@@ -94,25 +95,33 @@ measured batch, executable, protocol, count rows, source snapshots, corpus
 digests and original failure observation remain untouched. No physical study
 was repeated. The separate failing CI log is retained outside Git.
 
-## Parallel-main documentation integration
+## Parallel-main context integration
 
 The later main revision
 [`de569fe`](https://github.com/ajpaulson18-design/openpoker-lab/commit/de569fe)
-published the separate turn workstream. This branch preserves its complete
+published the separate turn workstream, followed by
+[`745b72e`](https://github.com/ajpaulson18-design/openpoker-lab/commit/745b72e).
+This branch preserves their complete
 implementation and evidence, and resolves the attribute/progress conflicts by
 retaining both sets of rules and sections. No turn executable or policy was
 changed. Current capability/progress summaries also link this completed JJ
 observation separately from the original frozen planning record.
 
-Three generation-time documents are retained as exact source text:
+Four generation-time context documents are retained as exact source text:
+[agent instructions](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/AGENTS.md.txt),
 [current state](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/CURRENT_STATE.md.txt),
 [solver progress](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/solver-progress.md.txt)
 and [turn context](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/turn-class-tail.md.txt).
-The verifier pins each old/current LF pair and requires its original archive.
-These are three explicit documentation transitions, alongside the one test
-cleanup transition. The other 742 measured files remain unchanged. Unlisted
-paths, different revisions and altered archives reject; this does not approve
-arbitrary future source drift or repeat the physical study.
+The verifier authenticates each original archive against its immutable
+generation LF hash on every check. It separately records current context hashes
+and the current subset digest, requiring source/context stability across the
+entire saved verification. Current narrative updates are not claims that run-time
+context matched later documentation. The four paths are explicit; none is read
+as mathematical input by the counter or proof. The original run's source maps
+remain byte-for-byte unchanged. The other 741 sources remain strictly pinned,
+alongside the one exact benchmark-test cleanup transition. Unlisted paths,
+calculation-source changes and altered archives reject. No physical study was
+repeated, and no protocol, cap or mathematical-source allowance is introduced.
 
 ## Scope and next evidence
 

@@ -110,7 +110,7 @@ class SavedJJKKBasisPublicationTests(unittest.TestCase):
     def test_measured_source_allows_line_endings_but_rejects_lf_drift(self):
         raw = b"project-owned source\r\n"
         lf = raw.replace(b"\r\n", b"\n")
-        historical = {"AGENTS.md": {"raw_sha256": hashlib.sha256(raw).hexdigest(),
+        historical = {"pokerlab/cards.py": {"raw_sha256": hashlib.sha256(raw).hexdigest(),
                                      "lf_sha256": hashlib.sha256(lf).hexdigest()}}
         state = {"status": [], "source_hashes": {}}
         with (patch.object(publication.five, "snapshot", return_value=state),
@@ -191,11 +191,12 @@ class SavedJJKKBasisPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Historical source archive"):
                 publication._current_source_check(historical)
 
-    def test_exact_parallel_document_transitions_require_archived_generation_sources(self):
+    def test_historical_context_requires_all_pinned_generation_archives(self):
         historical = {path: {"raw_sha256": old, "lf_sha256": old}
-                      for path, (old, _new, _archive) in publication.DOCUMENT_SOURCE_TRANSITIONS.items()}
+                      for path, (old, _archive) in publication.HISTORICAL_CONTEXT_SOURCES.items()}
         with patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}):
-            publication._current_source_check(historical)
+            result = publication._current_source_check(historical)
+        self.assertEqual(set(result["current_context_lf_sha256"]), set(historical))
         original = publication._read
         def wrong_archive(path, limit):
             if Path(path).name == "CURRENT_STATE.md.txt":
@@ -203,16 +204,38 @@ class SavedJJKKBasisPublicationTests(unittest.TestCase):
             return original(path, limit)
         with (patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}),
               patch.object(publication, "_read", side_effect=wrong_archive)):
-            with self.assertRaisesRegex(ValueError, "Historical source archive"):
+            with self.assertRaisesRegex(ValueError, "Historical context archive"):
                 publication._current_source_check(historical)
 
-    def test_unlisted_or_different_document_transition_rejects(self):
+    def test_current_context_is_recorded_separately_from_immutable_generation_context(self):
         path = "docs/engineering/CURRENT_STATE.md"
-        old, _new, _archive = publication.DOCUMENT_SOURCE_TRANSITIONS[path]
+        old, _archive = publication.HISTORICAL_CONTEXT_SOURCES[path]
+        original = publication._read
+        current = b"later published context\n"
+        def newer_context(name, limit):
+            if Path(name) == publication.evidence.ROOT / path:
+                return current
+            return original(name, limit)
         with (patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}),
-              patch.object(publication, "_read", return_value=b"other document revision\n")):
+              patch.object(publication, "_read", side_effect=newer_context)):
+            result = publication._current_source_check({path: {"raw_sha256": old, "lf_sha256": old}})
+        self.assertEqual(result["current_context_lf_sha256"][path], hashlib.sha256(current).hexdigest())
+        self.assertEqual(publication.HISTORICAL_CONTEXT_SOURCES[path][0], old)
+
+    def test_mathematical_source_drift_is_never_a_context_allowance(self):
+        _, report, _ = self._saved()
+        path = "native/preflop_five_card_reference.c"
+        with (patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}),
+              patch.object(publication, "_read", return_value=b"changed counter\n")):
             with self.assertRaisesRegex(ValueError, "LF bytes changed"):
-                publication._current_source_check({path: {"raw_sha256": old, "lf_sha256": old}})
+                publication._current_source_check({path: report["source_before"]["source_hashes"][path]})
+
+    def test_current_context_or_source_changes_during_verification_reject(self):
+        with patch.object(publication, "_current_source_check", side_effect=[
+                {"revision": "same", "context": "before"},
+                {"revision": "same", "context": "changed"}]):
+            with self.assertRaisesRegex(ValueError, "context changed during"):
+                publication.verify()
 
 
 if __name__ == "__main__":
