@@ -8,6 +8,10 @@ hashes are retained; no new-board equivalence or training is claimed. Original
 fixed-board evidence remains specific to `2c3d4h`, and fresh full equivalence
 is required before new-board training.
 
+The [separate second-board equivalence implementation](../flop-second-board-equivalence.md)
+is under synthetic validation. Its full no-training physical/control batch has
+not run; the new reference dimensions alone do not admit a trainer.
+
 Current source snapshot: merged main [`46e142be8e9585005e5de70bb32bf4a76f731a1c`](https://github.com/ajpaulson18-design/openpoker-lab/commit/46e142be8e9585005e5de70bb32bf4a76f731a1c) (Oct. 13, 2026). This is a source/documentation update only; it does not report a test run performed for this snapshot. The original Oct. 8–9 knowledge audit at `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce` is retained as historical evidence in [the transfer validation record](KNOWLEDGE_TRANSFER_VALIDATION.md).
 
 OpenPoker Lab is a standard-library Python 3.11+ research app with a plain JavaScript client. Its implemented surface includes weighted Hold'em range parsing and hand evaluation, sampled multiway equity and exact heads-up river equity, one-decision EV estimates, a locally persisted opponent tendency model, finite heads-up river/postflop solvers, bounded heads-up preflop models, a separate fixed-flop checkdown game, hand practice, deterministic explanations, optional coaching and a loopback HTTP server. README.md, AGENTS.md and the detailed solver references define the limits: no unrestricted no-limit equilibrium, no multiway equilibrium, and no full-deck preflop solution with later-street betting.

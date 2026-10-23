@@ -440,3 +440,12 @@ numeric tree views, exact blocker-conditioned priors, partial rank/build counter
 clean source and original errors. Same-ranker rechecking is consistency evidence,
 not an independent second ranking algorithm. Candidate provenance flags remain
 unchanged; no training before separate full-tree/mass/physical-response proof.
+
+The [second-board equivalence audit](docs/flop-second-board-equivalence.md)
+is a distinct no-training proof with fresh physical reference anchors. Admit
+all model-proof, exact-response, numeric replay, row and output families before
+authentication or ranking. Check every joint mass and both full reveal subtrees;
+preserve complete own-hand policies, zero-reach rows and bitwise constancy.
+Across-class variation is a valid control, within-class physical-card variation
+must reject, and near-normalized floats must fail exact normalization. Retain
+first errors, cleanup failures and available raw policies/metrics without retry.
