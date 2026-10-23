@@ -1734,3 +1734,8 @@ The [separate original-weight tail study](river-heldout-tail-protocol.md) prereg
 
 
 The [completed fixed river-tail study](river-heldout-tail-results.md) retained two shorter-tail misses and two exact target passes: the unpaired and paired T50000/D25000 gaps are about 0.000447256 and 0.000656760 chip. All four complete policies, original v1 misses, source guards, full-request admissions and independent numeric/exact saved replays are retained. The unpaired T10000/D5000 tail was worse than its baseline. Higher-budget target attainment covers these finite games; it does not establish equal-cost method gains, broader convergence or commercial parity.
+
+
+## Separate native fixed-board river integration (2026-10-23)
+
+The opt-in [native river research API](native-river-solver.md) reuses the existing compiled public-batched CFR+ trainer with explicit source/build provenance while retaining all old river and native caps. T10/T100 full-policy controls pass for two weighted 4x4 games, a weighted 8x8 game and a known-zero royal-flush game. Independent physical numeric/exact saved replays agree with the returned policies; known value zero lies in the exact response intervals. This establishes bounded integration correctness, with no wider admission, longer native tail, speed or general accuracy claim.
