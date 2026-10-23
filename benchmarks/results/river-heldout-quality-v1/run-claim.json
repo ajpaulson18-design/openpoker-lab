@@ -1,0 +1,369 @@
+{
+  "algorithm": "cfrplus",
+  "benchmark_id": "river-heldout-quality-v1",
+  "claim_id": "7f22bb1a83484302bfc7a39258e4f798",
+  "claimed_at_utc": "2026-10-23T18:51:30.082691+00:00",
+  "expected_source_commit": "df02381625ce72d7922461b97d7c7d238258523e",
+  "iterations": 10000,
+  "profile_plan": [
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "iterations": 10000,
+      "preflight": {
+        "fixed_budget": {
+          "configured_solver_target": null,
+          "iterations": 10000,
+          "materialized_admitted": true,
+          "materialized_limit": 30000000,
+          "materialized_world_node_work": 4200000,
+          "matrix_free_admitted": true,
+          "matrix_free_hand_state_pass_work": 3240324,
+          "matrix_free_limit": 30000000,
+          "other_caps": {
+            "exact_depth_limit": 64,
+            "exact_fraction_bit_limit": 65536,
+            "exact_fraction_bits": 56,
+            "exact_modes": {
+              "partition": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "27431/504",
+                "tree_depth": 5,
+                "work": 5024
+              },
+              "scan": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "27431/504",
+                "tree_depth": 5,
+                "work": 5024
+              }
+            },
+            "exact_tree_depth": 5,
+            "exact_work": 5024,
+            "exact_work_by_kind": {
+              "best_response_node_group_visits": 216,
+              "fraction_operations": 2515,
+              "opponent_action_group_slots": 104,
+              "opponent_group_entries_copied": 364,
+              "opponent_group_entries_scanned": 364,
+              "own_action_slots": 104,
+              "own_hand_group_entries_copied": 112,
+              "own_hand_group_entries_scanned": 112,
+              "own_hand_setup": 28,
+              "policy_sort_entries": 40,
+              "profile_node_world_visits": 378,
+              "row_normalization_entries": 104,
+              "serialized_strategy_row_index_entries": 40,
+              "terminal_group_entries_scanned": 476,
+              "tree_preflight_edges": 26,
+              "tree_preflight_nodes": 27,
+              "world_setup_entries": 14
+            },
+            "exact_work_limit": 100000,
+            "max_fallback_pair_checks": 30000000,
+            "max_info_action_slots": 1000000,
+            "max_oracle_modeled_world_node_work": 8000000,
+            "max_public_decisions": 10000,
+            "max_public_states": 250000,
+            "max_world_count": 200000
+          },
+          "passes_per_iteration": 3,
+          "threshold_nash_conv": 0.001
+        },
+        "tree": {
+          "action_name_counts": {
+            "all_in": 4,
+            "bet": 2,
+            "call": 8,
+            "check": 2,
+            "fold": 8,
+            "raise": 2
+          },
+          "action_slots_per_public_node_sum": 26,
+          "decision_nodes": 10,
+          "info_sets_for_uniform_supported_rows": 40,
+          "max_depth_nodes": 5,
+          "public_states": 27,
+          "supported_hands_by_player": [
+            4,
+            4
+          ],
+          "supported_information_action_slots": 104,
+          "terminal_nodes": 17
+        },
+        "worlds": 14
+      },
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "iterations": 10000,
+      "preflight": {
+        "fixed_budget": {
+          "configured_solver_target": null,
+          "iterations": 10000,
+          "materialized_admitted": true,
+          "materialized_limit": 30000000,
+          "materialized_world_node_work": 4200000,
+          "matrix_free_admitted": true,
+          "matrix_free_hand_state_pass_work": 3240324,
+          "matrix_free_limit": 30000000,
+          "other_caps": {
+            "exact_depth_limit": 64,
+            "exact_fraction_bit_limit": 65536,
+            "exact_fraction_bits": 56,
+            "exact_modes": {
+              "partition": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "27431/504",
+                "tree_depth": 5,
+                "work": 5024
+              },
+              "scan": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "27431/504",
+                "tree_depth": 5,
+                "work": 5024
+              }
+            },
+            "exact_tree_depth": 5,
+            "exact_work": 5024,
+            "exact_work_by_kind": {
+              "best_response_node_group_visits": 216,
+              "fraction_operations": 2515,
+              "opponent_action_group_slots": 104,
+              "opponent_group_entries_copied": 364,
+              "opponent_group_entries_scanned": 364,
+              "own_action_slots": 104,
+              "own_hand_group_entries_copied": 112,
+              "own_hand_group_entries_scanned": 112,
+              "own_hand_setup": 28,
+              "policy_sort_entries": 40,
+              "profile_node_world_visits": 378,
+              "row_normalization_entries": 104,
+              "serialized_strategy_row_index_entries": 40,
+              "terminal_group_entries_scanned": 476,
+              "tree_preflight_edges": 26,
+              "tree_preflight_nodes": 27,
+              "world_setup_entries": 14
+            },
+            "exact_work_limit": 100000,
+            "max_fallback_pair_checks": 30000000,
+            "max_info_action_slots": 1000000,
+            "max_oracle_modeled_world_node_work": 8000000,
+            "max_public_decisions": 10000,
+            "max_public_states": 250000,
+            "max_world_count": 200000
+          },
+          "passes_per_iteration": 3,
+          "threshold_nash_conv": 0.001
+        },
+        "tree": {
+          "action_name_counts": {
+            "all_in": 4,
+            "bet": 2,
+            "call": 8,
+            "check": 2,
+            "fold": 8,
+            "raise": 2
+          },
+          "action_slots_per_public_node_sum": 26,
+          "decision_nodes": 10,
+          "info_sets_for_uniform_supported_rows": 40,
+          "max_depth_nodes": 5,
+          "public_states": 27,
+          "supported_hands_by_player": [
+            4,
+            4
+          ],
+          "supported_information_action_slots": 104,
+          "terminal_nodes": 17
+        },
+        "worlds": 14
+      },
+      "scenario": "river-unpaired-blocker-tie-raise"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "materialized",
+      "iterations": 10000,
+      "preflight": {
+        "fixed_budget": {
+          "configured_solver_target": null,
+          "iterations": 10000,
+          "materialized_admitted": true,
+          "materialized_limit": 30000000,
+          "materialized_world_node_work": 4500000,
+          "matrix_free_admitted": true,
+          "matrix_free_hand_state_pass_work": 3240324,
+          "matrix_free_limit": 30000000,
+          "other_caps": {
+            "exact_depth_limit": 64,
+            "exact_fraction_bit_limit": 65536,
+            "exact_fraction_bits": 56,
+            "exact_modes": {
+              "partition": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "10015/192",
+                "tree_depth": 5,
+                "work": 5305
+              },
+              "scan": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "10015/192",
+                "tree_depth": 5,
+                "work": 5305
+              }
+            },
+            "exact_tree_depth": 5,
+            "exact_work": 5305,
+            "exact_work_by_kind": {
+              "best_response_node_group_visits": 216,
+              "fraction_operations": 2664,
+              "opponent_action_group_slots": 104,
+              "opponent_group_entries_copied": 390,
+              "opponent_group_entries_scanned": 390,
+              "own_action_slots": 104,
+              "own_hand_group_entries_copied": 120,
+              "own_hand_group_entries_scanned": 120,
+              "own_hand_setup": 30,
+              "policy_sort_entries": 40,
+              "profile_node_world_visits": 405,
+              "row_normalization_entries": 104,
+              "serialized_strategy_row_index_entries": 40,
+              "terminal_group_entries_scanned": 510,
+              "tree_preflight_edges": 26,
+              "tree_preflight_nodes": 27,
+              "world_setup_entries": 15
+            },
+            "exact_work_limit": 100000,
+            "max_fallback_pair_checks": 30000000,
+            "max_info_action_slots": 1000000,
+            "max_oracle_modeled_world_node_work": 8000000,
+            "max_public_decisions": 10000,
+            "max_public_states": 250000,
+            "max_world_count": 200000
+          },
+          "passes_per_iteration": 3,
+          "threshold_nash_conv": 0.001
+        },
+        "tree": {
+          "action_name_counts": {
+            "all_in": 4,
+            "bet": 2,
+            "call": 8,
+            "check": 2,
+            "fold": 8,
+            "raise": 2
+          },
+          "action_slots_per_public_node_sum": 26,
+          "decision_nodes": 10,
+          "info_sets_for_uniform_supported_rows": 40,
+          "max_depth_nodes": 5,
+          "public_states": 27,
+          "supported_hands_by_player": [
+            4,
+            4
+          ],
+          "supported_information_action_slots": 104,
+          "terminal_nodes": 17
+        },
+        "worlds": 15
+      },
+      "scenario": "river-paired-short-spr-rank-extremes"
+    },
+    {
+      "algorithm": "cfrplus",
+      "backend": "matrix-free",
+      "iterations": 10000,
+      "preflight": {
+        "fixed_budget": {
+          "configured_solver_target": null,
+          "iterations": 10000,
+          "materialized_admitted": true,
+          "materialized_limit": 30000000,
+          "materialized_world_node_work": 4500000,
+          "matrix_free_admitted": true,
+          "matrix_free_hand_state_pass_work": 3240324,
+          "matrix_free_limit": 30000000,
+          "other_caps": {
+            "exact_depth_limit": 64,
+            "exact_fraction_bit_limit": 65536,
+            "exact_fraction_bits": 56,
+            "exact_modes": {
+              "partition": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "10015/192",
+                "tree_depth": 5,
+                "work": 5305
+              },
+              "scan": {
+                "maximum_fraction_bits": 56,
+                "nash_conv": "10015/192",
+                "tree_depth": 5,
+                "work": 5305
+              }
+            },
+            "exact_tree_depth": 5,
+            "exact_work": 5305,
+            "exact_work_by_kind": {
+              "best_response_node_group_visits": 216,
+              "fraction_operations": 2664,
+              "opponent_action_group_slots": 104,
+              "opponent_group_entries_copied": 390,
+              "opponent_group_entries_scanned": 390,
+              "own_action_slots": 104,
+              "own_hand_group_entries_copied": 120,
+              "own_hand_group_entries_scanned": 120,
+              "own_hand_setup": 30,
+              "policy_sort_entries": 40,
+              "profile_node_world_visits": 405,
+              "row_normalization_entries": 104,
+              "serialized_strategy_row_index_entries": 40,
+              "terminal_group_entries_scanned": 510,
+              "tree_preflight_edges": 26,
+              "tree_preflight_nodes": 27,
+              "world_setup_entries": 15
+            },
+            "exact_work_limit": 100000,
+            "max_fallback_pair_checks": 30000000,
+            "max_info_action_slots": 1000000,
+            "max_oracle_modeled_world_node_work": 8000000,
+            "max_public_decisions": 10000,
+            "max_public_states": 250000,
+            "max_world_count": 200000
+          },
+          "passes_per_iteration": 3,
+          "threshold_nash_conv": 0.001
+        },
+        "tree": {
+          "action_name_counts": {
+            "all_in": 4,
+            "bet": 2,
+            "call": 8,
+            "check": 2,
+            "fold": 8,
+            "raise": 2
+          },
+          "action_slots_per_public_node_sum": 26,
+          "decision_nodes": 10,
+          "info_sets_for_uniform_supported_rows": 40,
+          "max_depth_nodes": 5,
+          "public_states": 27,
+          "supported_hands_by_player": [
+            4,
+            4
+          ],
+          "supported_information_action_slots": 104,
+          "terminal_nodes": 17
+        },
+        "worlds": 15
+      },
+      "scenario": "river-paired-short-spr-rank-extremes"
+    }
+  ],
+  "retry_permitted": false,
+  "schema": "river-heldout-quality-run-claim-v1",
+  "target_is_reporting_only": true
+}

@@ -484,3 +484,11 @@ Admit the full 3*T+3 envelope regardless of discard and disclose executed pass
 counts separately. Require D=0 literal policy parity, positive-tail materialized
 controls and independent physical/action/visible-response replay; bounded
 correctness does not establish convergence, performance or commercial parity.
+
+
+The [held-out river quality protocol](docs/river-heldout-quality-protocol.md)
+fixes both literal games, four CFR+10000 calls and the exact 1/1000 NashConv
+reporting gate before training. Authenticate clean committed source and all
+four original admissions first. Preserve exclusive batch claims, raw policies
+before replay, partial errors and every target miss. Keep numeric target flags
+separate from exact normalized-binary64 gates and retain unchanged audit caps.

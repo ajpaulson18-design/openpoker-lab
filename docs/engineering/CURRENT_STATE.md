@@ -512,3 +512,8 @@ Publication checks and merge status are tracked in
 ## Configurable matrix-free TURN tail
 
 The separate [original-weight tail API](../matrix-free-turn-tail.md) adds configurable four-card boards, weighted ranges, physical selected/full-deck rivers and compatible street sizing to matrix-free CFR+. It averages completed sweeps t>discard with original weight t and preserves full-request admission. D=0 matches the existing matrix-free policy exactly in the control; positive tails match materialized training and independent physical rules at the declared tolerances. This is new research API coverage, with bounded correctness controls; broader convergence and commercial solver parity remain unproved.
+
+
+## Held-out RIVER accuracy evidence
+
+The separate [four-profile river corpus](../river-heldout-quality-results.md) adds two weighted 4x4 games with blocker/tie and short-stack/rank-extreme coverage. All CFR+10000 profiles pass independent physical and exact normalized-policy replay, but all four miss the fixed 0.001-chip NashConv target (about 0.00174251 and 0.00232499). Complete policies, source/claim receipts and unchanged misses are retained. This is an observed accuracy limitation, not commercial solver parity.
