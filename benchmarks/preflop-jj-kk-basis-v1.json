@@ -1,0 +1,152 @@
+{
+  "acceptance": {
+    "aa_calibration_matches_published_basis": true,
+    "all_three_jj_kk_censuses_agree": true,
+    "complete_raw_stream_receipts": true,
+    "current_build_exhaustive_five_card_conformance": true,
+    "no_retry_or_fallback": true,
+    "unchanged_clean_source_and_both_builds": true
+  },
+  "admission": {
+    "aggregate_admission": {
+      "budget_version": "preflop-jj-kk-basis-admission-v1",
+      "cap_native_board_evaluations": 10273824,
+      "cap_native_seven_card_rank_calls": 20547648,
+      "cap_reference_board_evaluations": 10273824,
+      "cap_reference_count_requests": 2,
+      "cap_reference_five_card_subset_calls": 431500608,
+      "cap_reference_seven_card_rank_calls": 20547648,
+      "five_card_conformance_tuples": 2598960,
+      "native_board_evaluations": 10273824,
+      "native_seven_card_rank_calls": 20547648,
+      "reference_board_evaluations": 10273824,
+      "reference_count_requests": 2,
+      "reference_five_card_subset_calls": 431500608,
+      "reference_seven_card_rank_calls": 20547648,
+      "scope": "named count stages only; excludes CPU, memory and runtime"
+    },
+    "benchmark_id": "preflop-jj-kk-basis-plan-v1",
+    "best_five_reference": {
+      "boards": 5136912,
+      "five_card_subset_calls": 215750304,
+      "pairs": 3,
+      "per_pair_board_cap": 1712304,
+      "request_board_cap": 6849216,
+      "request_five_card_subset_cap": 287667072,
+      "request_pair_cap": 4,
+      "request_seven_card_rank_cap": 13698432,
+      "seven_card_rank_calls": 10273824
+    },
+    "five_card_conformance": {
+      "dump_bytes": 15593760,
+      "rank_tuples": 2598960,
+      "required_mismatches": 0,
+      "tuple_width_bytes": 6
+    },
+    "future_mixed_pool": {
+      "bb_hands": 6,
+      "compatible_pairs": 108,
+      "covered_pair_cap": 128,
+      "maximum_positive_sign_rows": 324,
+      "sb_hands": 18,
+      "status": "forecast-only; no pair counts/equities or game certificate"
+    },
+    "native_seven_card_recount": {
+      "board_evaluation_cap": 6849216,
+      "board_evaluations": 5136912,
+      "compatible_pair_cap": 4,
+      "pairs": 3,
+      "rank_call_cap": 13698432,
+      "rank_calls": 10273824
+    },
+    "ordered_pairs": [
+      [
+        "JdJs",
+        "KdKs"
+      ],
+      [
+        "JdJs",
+        "KcKd"
+      ],
+      [
+        "JdJs",
+        "KcKh"
+      ]
+    ],
+    "provenance": {
+      "candidate_only": true,
+      "counts_generated": false,
+      "equities_claimed": false,
+      "independently_authenticated": false,
+      "solver_or_training_claimed": false,
+      "work_scope": "named reference/conformance/native count units only; not CPU, memory or runtime"
+    },
+    "reference_protocol": "PREFLOP_FIVE_REFERENCE_V2",
+    "shared_suits_by_pair": [
+      2,
+      1,
+      0
+    ],
+    "source_basis_prerequisite": [
+      "authenticate existing AA/KK and QQ/KK published count bases separately before counting",
+      "current-build exhaustive conformance includes its AA/KK three-pair calibration query",
+      "that AA/KK stage is calibration, not a new AA/KK source-count claim",
+      "no extra AA/KK query beyond conformance is included"
+    ],
+    "status": "admitted-plan-only"
+  },
+  "basis_reports": [
+    {
+      "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "path": "benchmarks/results/preflop-five-basis-v1.json"
+    },
+    {
+      "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8",
+      "path": "benchmarks/results/preflop-qq-kk-basis-v1.json"
+    }
+  ],
+  "bb_range": "KdKs,KcKd,KcKh",
+  "benchmark_id": "preflop-jj-kk-basis-v1",
+  "limits": {
+    "basis_report_bytes": 1000000,
+    "numerical_subprocess_calls": 5,
+    "protocol_bytes": 32768,
+    "raw_stderr_bytes": 65536,
+    "raw_stdout_bytes": 16777216,
+    "report_bytes": 4194304
+  },
+  "provenance": {
+    "implementation": "project-owned existing best-five and independent seven-card counters; new orchestration only",
+    "scope": "three fixed JJ/KK relative-suit source rows; future 108-pair pool remains a forecast until separately authenticated",
+    "third_party_source_or_dependencies_added": false,
+    "training_or_equilibrium_claim": false
+  },
+  "request": {
+    "benchmark_id": "preflop-jj-kk-basis-plan-v1",
+    "pairs": [
+      {
+        "bb_hand": "KdKs",
+        "sb_hand": "JdJs"
+      },
+      {
+        "bb_hand": "KcKd",
+        "sb_hand": "JdJs"
+      },
+      {
+        "bb_hand": "KcKh",
+        "sb_hand": "JdJs"
+      }
+    ],
+    "reference_protocol": "PREFLOP_FIVE_REFERENCE_V2",
+    "schema_version": 1
+  },
+  "required_stage_order": [
+    "reference-all-five",
+    "reference-aa-calibration",
+    "native-aa-calibration",
+    "reference-jj",
+    "native-jj"
+  ],
+  "sb_range": "JdJs",
+  "schema_version": 1
+}

@@ -497,6 +497,17 @@ and numeric/exact checks are retained. This is fixed-game accuracy evidence;
 the broader range of supported games and the separately exact game value remain
 unfinished work.
 
+## Three-class JJ/KK physical source counts
+
+The separate [JJ/KK observation](../preflop-jj-kk-basis-results.md) completed
+one full-board source-count batch. The independent best-five reference and
+native seven-card counter agree exactly on all three relative-suit classes,
+after exhaustive five-card conformance and the published AA calibration.
+Complete raw JSON/text receipts and strict saved-data authentication are
+retained. This adds no strategy or equilibrium certificate; the future
+108-pair AA/QQ/JJ-versus-KK pool remains a separate transport milestone.
+Publication checks and merge status are tracked in
+[PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
 
 ## Configurable matrix-free TURN tail
 

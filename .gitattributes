@@ -135,6 +135,11 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/flop-second-board-cfrplus-replay-v2/index.json -text
 /benchmarks/results/flop-second-board-cfrplus-replay-v2/*/reference.json.gz binary
 
+# Byte-exact source-count JSON/text receipts; binary dumps stay outside Git.
+/benchmarks/results/preflop-jj-kk-basis-v1/** -text
+/benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py -text
+/benchmarks/sources/preflop-jj-kk-context-freeze-v1/** -text
+
 # Preserve the preregistered compact-turn protocol and raw experiment bundle.
 /.gitattributes text eol=lf
 /.gitignore text eol=lf

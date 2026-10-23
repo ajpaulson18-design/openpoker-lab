@@ -1681,6 +1681,23 @@ controls are not trained strategies; new-board convergence and any performance
 comparison remain separate milestones. Publication status is in
 [PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213).
 
+## Proposed JJ/KK full-board source basis (2026-10-23 UTC)
+
+The separate [JJ/KK plan](preflop-jj-kk-basis.md) fixes three relative-suit
+queries and admits the complete existing all-five/AA calibration plus new JJ
+reference/native count schedule before any executable lookup. Its rank-free
+108-pair AA/QQ/JJ-versus-KK forecast remains within the existing prepared-pool
+cap. No new physical JJ counts, larger-game certificate or strategy result is
+claimed at this planning stage; source-count agreement and independent saved
+evidence are required before reuse.
+
+The subsequent [completed source-count observation](preflop-jj-kk-basis-results.md)
+retains exact three-class JJ/KK agreement between the independent best-five
+and native counters, full raw receipts and the saved authenticator. It
+supersedes the planning-only count status above; the larger-game and strategy
+claims remain pending. Publication is tracked in
+[PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
+
 ## Fixed T6000 three-hand TURN result
 
 The single [preregistered class-tail experiment](turn-class-tail-T6000-experiment.md)
