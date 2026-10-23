@@ -292,3 +292,14 @@ floats must reject. Admit every proof/response/output family before any ranking,
 retain source/error/policy receipts and change no shared or published source.
 See [the full protocol and pending execution status](../flop-second-board-equivalence.md).
 No earlier decision is superseded.
+
+D032 observation: the one frozen batch passed all joint-mass and complete
+two-reveal numeric subtree checks, all four positive exact/numeric response
+controls and both intended projection rejections. It derives 170 compact worlds,
+1,270 numeric states and 608 own-hand rows, retaining all six complete policies.
+Ten model proofs, eight exact metric calls, four numeric replays, six projections,
+one fresh physical build and 4,134 rank calls completed without errors/retries.
+Clean 49-source identities and all 41 zero authority counters are preserved.
+The controls are not trained strategies and establish no quality target,
+convergence, speed, memory or unrestricted NLHE result. Publication authentication
+and CI must finish before a separate new-board trainer is admitted.

@@ -9,8 +9,12 @@ fixed-board evidence remains specific to `2c3d4h`, and fresh full equivalence
 is required before new-board training.
 
 The [separate second-board equivalence implementation](../flop-second-board-equivalence.md)
-is under synthetic validation. Its full no-training physical/control batch has
-not run; the new reference dimensions alone do not admit a trainer.
+completed its frozen no-training physical/control batch: full joint-mass and
+numeric subtree checks, all four exact compact/unrestricted response controls
+and both intended projection rejections passed. Derived compact dimensions are
+170 worlds, 1,270 states and 608 own-hand rows; all raw policies/receipts are
+retained. Publication authentication/CI remains separate. No new-board strategy
+has been trained or convergence target measured.
 
 Current source snapshot: merged main [`46e142be8e9585005e5de70bb32bf4a76f731a1c`](https://github.com/ajpaulson18-design/openpoker-lab/commit/46e142be8e9585005e5de70bb32bf4a76f731a1c) (Oct. 13, 2026). This is a source/documentation update only; it does not report a test run performed for this snapshot. The original Oct. 8–9 knowledge audit at `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce` is retained as historical evidence in [the transfer validation record](KNOWLEDGE_TRANSFER_VALIDATION.md).
 

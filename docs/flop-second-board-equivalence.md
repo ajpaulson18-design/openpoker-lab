@@ -98,8 +98,71 @@ before and after. All additions are project-owned standard-library research
 code. No published executable, shared turn/river kernel, production/default,
 Coach workstream or third-party source/dependency is changed.
 
-The current implementation has synthetic tests for mass/transport tampering,
-both reveal layers, public/private information, exact response ordering,
-bitwise policy constancy and error restoration. No real second-board
-equivalence batch has run yet. No new-board class policy has been trained.
-The final source and complete protocol must be reviewed and frozen first.
+## Completed frozen proof
+
+The single admitted batch completed at source
+`8c093c9af650e53ddf1a98457d0cad69382eb5d1`, from
+2026-10-23 04:03:14.635371 to 04:05:39.064146 UTC, on CPython 3.12.14 / Windows.
+It completed one fresh physical build, 4,134 attempted/actual rank calls,
+all ten model-proof passes, eight exact metric calls, four numeric replays,
+six projection attempts and 26 expected-row tables (879,424 row/action slots).
+All 41 authority counters stayed zero, clean HEAD/status and 49 LF sources
+matched before/after, and no errors, retries, output fallbacks or training
+occurred. The UTC interval is an execution receipt, not a controlled timing
+comparison.
+
+The full exact audit covers 5,940 physical worlds, 2,328 supported ordered
+public runouts/transports, all 30,812 physical numeric states and 11,787
+physical branch subtrees. It retains the exact global/pair masses and both
+reveal layers. Fresh derived compact dimensions are:
+
+| Representation | Physical | Proved compact |
+| --- | ---: | ---: |
+| Worlds | 5,940 | 170 |
+| Public states | 30,812 | 1,270 |
+| Decisions | 9,512 | 400 |
+| Chance nodes | 248 | 68 |
+| Terminals | 21,052 | 802 |
+| Own-hand policy rows | 16,912 | 608 |
+| Action slots | 33,824 | 1,216 |
+| Maximum all-action world path | 33 | 33 |
+
+Compact numeric tree SHA256 is
+`5b8b6d504a35e0023c9150476ba9bb91d10615eae9ec6bb0305071745ab98152`.
+These logical dimensions do not measure Python allocation, RSS or a runtime
+advantage.
+
+Every positive control projects/lifts exactly, retains all rows/actions and
+has identical compact and unrestricted physical rational metrics. The separate
+numeric replay gaps are at most `8.881784197001252e-16` chips. Both intentionally
+invalid policies reject for their exact expected reason; their full policies
+and recorded changes remain saved.
+
+| Control | Exact OOP value | Exact NashConv |
+| --- | --- | --- |
+| Check-call | `166/117` | `343/99` |
+| Bet-fold | `5` | `43/11` |
+| Across-class-varying | `1995215/658944` | `118439/54912` |
+| Zero-reach | `166/117` | `10` |
+
+These are deliberately chosen controls, not trained strategies. Their response
+gaps are not convergence targets or claims of good play. No new-board class
+policy has been trained.
+
+The complete [index](../benchmarks/results/flop-second-board-equivalence-v1/index.json)
+and its six linked lossless files retain all positive/negative physical policies,
+compact policies, exact/numeric metrics, partition, compact worlds and receipts.
+The 1,423,452-byte index has raw SHA256
+`06b60eada9aa6465e63138525060b0891f3d66d00e2364dd42e047e2b060880a`
+and self-digest
+`29ff51b127a393d484262d788835324ac76c44fd0f2c5b2ee76e7ee375bd8691`.
+The 39 pre-freeze synthetic tests covered mass/transport tampering, both reveal
+layers, public/private information, exact response ordering, bitwise policy
+constancy, source/authority guards and output/error restoration. Publication
+authentication has ten additional focused tamper tests. Run
+`python -m scripts.verify_flop_second_board_equivalence_publication` from a clean
+checkout to authenticate all seven saved files, source identities, complete
+policies and recorded outcomes. This saved-data check performs zero physical
+builds, ranking, model projections, exact responses, numeric replays or training;
+it does not repeat the experiment or establish convergence. Final CI is tracked in
+[PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213).
