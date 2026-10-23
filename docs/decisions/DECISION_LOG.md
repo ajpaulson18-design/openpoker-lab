@@ -314,3 +314,13 @@ replay. Keep raw averages, normalized full policies, errors and source identitie
 No training or quality result is claimed by this staging decision. See
 [the pilot and its limits](../flop-second-board-cfrplus.md). No earlier decision
 is superseded.
+
+D033 observation: the one frozen v1 batch stopped after T140 on an adapter
+schema check that wrongly excluded replay audit metadata. T560 never ran;
+the original quality gate is null. Retain the complete failed report, raw and
+normalized policies, identical compact/physical exact metrics, original error,
+all zero guard counters and clean source identities. Final model validation
+passed, but the numeric replay return was not saved and the case is not a
+completed verified policy. Preserve frozen v1 sources and require a distinct
+reviewed correction/protocol before further measurement. See the
+[retained failure](../flop-second-board-cfrplus.md).

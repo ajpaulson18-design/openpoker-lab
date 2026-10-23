@@ -460,3 +460,9 @@ normalization, every target miss, partial observations and first/cleanup errors.
 No real pilot precedes its clean executable/protocol freeze and prerequisite
 publication checks. Two budget observations do not establish general convergence,
 controlled runtime gains, allocation/RSS bounds or unrestricted NLHE quality.
+
+The frozen second-board v1 pilot stopped after T140 on a replay metadata
+inventory mismatch. Preserve its original failed receipt, policies and source;
+T560 did not run and the quality-gate field remains null. Do not silently repair
+or rerun that frozen batch. A correction needs a separate version/protocol and
+must retain the full replay metadata along with all eight numeric metrics.

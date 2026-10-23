@@ -103,8 +103,54 @@ Run `python -m scripts.benchmark_flop_second_board_cfrplus --output-dir PATH`
 only from a clean frozen checkout, with a new output directory outside the
 repository. Complete reports are retained independently of quality-gate misses.
 
-At this implementation stage no second-board training has run and no quality
-result is claimed. The actual frozen batch must precede any reported result.
+## Retained failed v1 execution
+
+The single frozen batch at `0106c521fffffdb407f193b4295da6ff2e35759d`
+ran from 2026-10-23 14:05:03.037479 to 14:05:43.562875 UTC on CPython 3.12.14 /
+Windows. It stopped after the first T140 case with
+`ValueError: Numeric replay metric inventory differs`. T560 never ran and the
+original quality-gate field remains null. No retry or correction was made to
+the frozen executable or protocol.
+
+This is an adapter integration failure: the unchanged independent replay returns
+the eight metrics plus `scalar_absolute_gaps` and four checked-count fields.
+The v1 adapter incorrectly requires the result to contain exactly eight keys.
+The replay completed before this check, but its raw return was not retained;
+there is no completed numeric-gap or successful-policy verification receipt.
+The v1 entry point remains preserved to reproduce the failure and is not a
+validated training interface. Any correction requires a separate version and
+new protocol; it must preserve this failed attempt.
+
+The batch records one actual shared training call, one fresh physical build,
+4,134 ranking attempts/calls, three complete model proofs, two exact metric calls,
+one numeric replay and one projection. Full raw averages (608 rows), normalized
+compact rows (608), all physical rows (16,912), both exact metric maps and the
+original exception remain saved. The maps agree exactly; their retained rational
+NashConv is approximately `0.014166984012911272` chips. That saved value exceeds
+`0.005` on post-execution inspection, but the original run never reached its
+quality-gate assignment and is not reclassified as a completed pilot.
+
+Both preparation/diagnostic guards contain all 41 zero counters, final model
+validation passed and identical clean 54-source snapshots bracket the run.
+Normalization used two 304-row batches, changed 361 rows, zeroed no positive
+probabilities and retained exact maximum distance receipts. Timings remain
+execution receipts, with no controlled performance or memory conclusion.
+
+The complete [failure index](../benchmarks/results/flop-second-board-cfrplus-pilot-v1/index.json)
+and its linked lossless report are copied byte-for-byte from the original output.
+The saved-data authenticator
+`python -m scripts.verify_flop_second_board_cfrplus_failure_publication`
+checks both files and all 54 source identities from a clean checkout, with zero
+live builds, ranks, training, responses or replays. Its eight focused tamper tests
+pass on bundled CPython 3.12. This authenticates a failed attempt, without turning
+its missing numeric result or null quality gate into a success.
+The index is 36,372 bytes, raw SHA256
+`6923789f8847b79326c37906875ae3f658d15762e52c8d6fb37ae89f46ba9afd`,
+self-digest `237d9f30d80b13d9e89fee71121ca750438dcd8e34c330a0276dfdbd4b2a5fba`.
+The 152,863-byte gzip retains 6,319,719 raw JSON bytes. Saved-data authentication
+and final publication checks are tracked in
+[PR #214](https://github.com/ajpaulson18-design/openpoker-lab/pull/214).
+
 This independently written adapter
 uses project-owned components and the Python standard library; no third-party
 source or dependency is incorporated. Method provenance remains the existing

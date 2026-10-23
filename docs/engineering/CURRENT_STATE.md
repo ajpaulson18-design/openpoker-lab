@@ -19,11 +19,13 @@ target outcome.
 The equivalence publication is now merged through
 [PR #213](https://github.com/ajpaulson18-design/openpoker-lab/pull/213): all 49
 focused tests, clean saved-data authentication and all six Python CI jobs passed.
-The separate [second-board CFR+ pilot](../flop-second-board-cfrplus.md) is being
-staged on that merged baseline with a distinct bounded resource envelope,
-fresh T140/T560 calls and independent exact physical output responses. Its
-implementation/protocol review must finish before measurement; no new-board
-training or quality result is claimed at this stage.
+The separate [second-board CFR+ pilot](../flop-second-board-cfrplus.md) stopped
+after T140 because its result-schema check incorrectly excluded numeric replay
+audit metadata. The failed attempt retains raw/normalized/full policies,
+identical compact/physical exact metrics, zero authority counters and clean
+sources. T560 never ran; the quality-gate field stays null. This is not a
+validated training interface or completed verified policy. The frozen v1 source
+and failure remain preserved for a separate reviewed correction.
 
 Current source snapshot: merged main [`46e142be8e9585005e5de70bb32bf4a76f731a1c`](https://github.com/ajpaulson18-design/openpoker-lab/commit/46e142be8e9585005e5de70bb32bf4a76f731a1c) (Oct. 13, 2026). This is a source/documentation update only; it does not report a test run performed for this snapshot. The original Oct. 8–9 knowledge audit at `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce` is retained as historical evidence in [the transfer validation record](KNOWLEDGE_TRANSFER_VALIDATION.md).
 
