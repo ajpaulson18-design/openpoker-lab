@@ -496,3 +496,8 @@ the previous T750 miss remains immutable. The complete policy, source identities
 and numeric/exact checks are retained. This is fixed-game accuracy evidence;
 the broader range of supported games and the separately exact game value remain
 unfinished work.
+
+
+## Configurable matrix-free TURN tail
+
+The separate [original-weight tail API](../matrix-free-turn-tail.md) adds configurable four-card boards, weighted ranges, physical selected/full-deck rivers and compatible street sizing to matrix-free CFR+. It averages completed sweeps t>discard with original weight t and preserves full-request admission. D=0 matches the existing matrix-free policy exactly in the control; positive tails match materialized training and independent physical rules at the declared tolerances. This is new research API coverage, with bounded correctness controls; broader convergence and commercial solver parity remain unproved.
