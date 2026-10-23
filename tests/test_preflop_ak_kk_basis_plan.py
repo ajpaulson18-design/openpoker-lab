@@ -13,6 +13,10 @@ class AKKKBasisPlanTests(unittest.TestCase):
             result = planner.admit_plan()
         self.assertEqual(result["status"], "admitted-plan-only")
         self.assertEqual([len(row["ordered_pairs"]) for row in result["count_requests"]], [3, 1, 2])
+        self.assertEqual([row["sb_range"] for row in result["count_requests"]],
+                         ["AdAs", "AcKc", "AdKc"])
+        self.assertTrue(all(pair[0] == row["sb_range"]
+                            for row in result["count_requests"] for pair in row["ordered_pairs"]))
         self.assertEqual(result["aggregate"]["numerical_subprocesses"], 7)
         self.assertEqual(result["aggregate"]["reference_boards"], 10_273_824)
         self.assertEqual(result["aggregate"]["reference_seven_calls"], 20_547_648)

@@ -15,8 +15,8 @@ SUITS = "cdhs"
 DECK = tuple(rank + suit for rank in "23456789TJQKA" for suit in SUITS)
 QUERIES = (
     ("aa-calibration", "AdAs", "KdKs,KcKd,KcKh", 3),
-    ("ak-suited", "KcAc", "KdKh", 1),
-    ("ak-offsuit", "KcAd", "KdKh,KhKs", 2),
+    ("ak-suited", "AcKc", "KdKh", 1),
+    ("ak-offsuit", "AdKc", "KdKh,KhKs", 2),
 )
 
 
@@ -62,7 +62,8 @@ def _caps():
 
 
 def _hand(cards):
-    return tuple(sorted(cards, key=DECK.index))
+    # Match the project's established lexical private-hand serialization.
+    return tuple(sorted(cards))
 
 
 def _orbit(sb, bb):
@@ -113,6 +114,8 @@ def admit_plan(request=None):
         pairs, admission = reference.pair_admission(sb, bb)
         if len(pairs) != expected_count or admission["compatible_pairs"] != expected_count:
             raise ValueError("Ordinary count request changed its physical pair census")
+        if any("".join(a) != sb for a, _ in pairs):
+            raise ValueError("Count source hand is not in canonical serialized order")
         requests.append({"id": name, "sb_range": sb, "bb_range": bb,
                          "ordered_pairs": [["".join(a), "".join(b)] for a, b in pairs],
                          "admission": admission})
