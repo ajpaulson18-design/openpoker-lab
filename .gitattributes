@@ -118,3 +118,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Immutable no-training owned-model fingerprint experiment receipt.
 /benchmarks/results/flop-class-owned-fingerprint-v1.json -text
+
+# Complete immutable second-board physical reference and candidate corpus.
+/benchmarks/results/flop-second-board-reference-v1/index.json -text
+/benchmarks/results/flop-second-board-reference-v1/*.json.gz binary

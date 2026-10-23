@@ -1,0 +1,154 @@
+{
+  "acceptance": {
+    "authority": "All 41 existing guarded production authorities stay zero; one admitted physical build and candidate partition, no training or best response.",
+    "candidate": "Explicit-board candidate output retains candidate_only=true and physical_provenance=false; measured class dimensions are not assumed.",
+    "failure": "Retain first error, progress counters and partial output; stop without retry, replacement or discarded observations.",
+    "ranker": "Fresh-cache recheck uses the same established independent reference ranker; this is consistency, not a second independent ranking algorithm.",
+    "source": "Identical clean committed HEAD/status and all 44 named dependency LF hashes before/after the single batch.",
+    "tree": "Cycle-free rooted tree, decision-index aliases, public histories, explicit node/depth/stack limits and fresh views/hashes pass.",
+    "worlds": "All 5940 ordered worlds, three exact pair priors, full support, blockers, masses, sign metadata and source counters pass fresh checks."
+  },
+  "fixture": {
+    "board": [
+      "7c",
+      "8d",
+      "9h"
+    ],
+    "canonical_pair_identities": [
+      [
+        "AdAs",
+        "KdKs",
+        "AsAd",
+        "KsKd"
+      ],
+      [
+        "QdQs",
+        "AsKh",
+        "QsQd",
+        "AsKh"
+      ],
+      [
+        "QdQs",
+        "KdKs",
+        "QsQd",
+        "KsKd"
+      ]
+    ],
+    "class_tree_equivalence_claim": false,
+    "compatible_pair_count": 3,
+    "compatible_pair_raw_products": [
+      [
+        "AsAd",
+        "KsKd",
+        "1/1"
+      ],
+      [
+        "QsQd",
+        "AsKh",
+        "1/8"
+      ],
+      [
+        "QsQd",
+        "KsKd",
+        "1/2"
+      ]
+    ],
+    "distinct_turn_card_forecast": 49,
+    "exact_pair_priors": [
+      [
+        "AsAd",
+        "KsKd",
+        "8/13"
+      ],
+      [
+        "QsQd",
+        "AsKh",
+        "1/13"
+      ],
+      [
+        "QsQd",
+        "KsKd",
+        "4/13"
+      ]
+    ],
+    "existing_limits_reference_only": {
+      "candidate_partition": {
+        "max_pairs": 3,
+        "max_turns": 49,
+        "max_worlds": 5940
+      },
+      "physical_oracle": {
+        "max_decisions": 10000,
+        "max_pairs": 4,
+        "max_public_states": 250000,
+        "max_worlds": 7920
+      }
+    },
+    "global_blocker_normalizer": "13/8",
+    "literal_ranges": {
+      "ip": [
+        [
+          "AsKh",
+          "1/4"
+        ],
+        [
+          "KsKd",
+          "1/1"
+        ]
+      ],
+      "oop": [
+        [
+          "AsAd",
+          "1/1"
+        ],
+        [
+          "QsQd",
+          "1/2"
+        ]
+      ]
+    },
+    "ordered_runouts_per_pair": 1980,
+    "physical_world_forecast": 5940,
+    "scope": "fixed-board-range-plan-only"
+  },
+  "limits": {
+    "actions_per_node": 64,
+    "best_five_combinations_per_rank": 21,
+    "gzip_bytes": 16777216,
+    "index_bytes": 2097152,
+    "payload_bytes": 67108864,
+    "physical_decisions": 10000,
+    "physical_public_states": 250000,
+    "physical_worlds": 5940,
+    "preparation_rank_calls": 11880,
+    "recheck_rank_calls": 11880,
+    "source_file_bytes": 2097152,
+    "source_files": 44,
+    "total_best_five_combinations": 498960,
+    "total_rank_calls": 23760,
+    "tree_depth": 128,
+    "tree_stack": 8192
+  },
+  "prerequisite": {
+    "publication_pr": 211,
+    "raw_report_sha256": "8ac7091a289a5e131348bd86fed58e769d1e1413b797a408435b1b8c2a4d56a5",
+    "report_sha256": "48cb08101cd1d9a1c9141572609e89cf2518a06afb7fb96b1bf0591467b76afb"
+  },
+  "protocol_id": "fixed-flop-second-board-reference-v1",
+  "request": {
+    "best_response_calls": 0,
+    "board": [
+      "7c",
+      "8d",
+      "9h"
+    ],
+    "candidate_partitions": 1,
+    "physical_oracle_builds": 1,
+    "training_calls": 0
+  },
+  "scope": {
+    "bounds": "Named rank, world, tree, source and output bounds only; not all arithmetic, allocation, elapsed time or RSS.",
+    "claims": "Reference preparation and candidate partition only. No class/tree equivalence, policy projection/lift, best-response equality, convergence, speed or unrestricted NLHE claim.",
+    "provenance": "Project-owned standard-library additions; unchanged existing independent physical oracle/ranker/candidate. No third-party source/dependency, shared street kernel, default or Coach change."
+  }
+}

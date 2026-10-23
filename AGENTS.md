@@ -431,3 +431,12 @@ before/after the probes, reject unadmitted graph data before encoding/allocation
 retain first errors and source identities, and restore mutations on every exit.
 Fingerprints do not establish poker validity or authorize validator bypass/cache
 reuse; no performance inference follows without a separate controlled experiment.
+
+The separate [second-board flop reference](docs/flop-second-board-reference.md)
+prepares only the fixed 7c8d9h literal-support game after full request admission.
+Use fresh world/tree hashes and measured candidate dimensions; original 2c3d4h
+class/tree anchors are not authorities for another board. Retain all worlds and
+numeric tree views, exact blocker-conditioned priors, partial rank/build counters,
+clean source and original errors. Same-ranker rechecking is consistency evidence,
+not an independent second ranking algorithm. Candidate provenance flags remain
+unchanged; no training before separate full-tree/mass/physical-response proof.

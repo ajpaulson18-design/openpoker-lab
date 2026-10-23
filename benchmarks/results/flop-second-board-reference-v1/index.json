@@ -1,0 +1,411 @@
+{
+  "admission": {
+    "fixture": {
+      "board": [
+        "7c",
+        "8d",
+        "9h"
+      ],
+      "canonical_pair_identities": [
+        [
+          "AdAs",
+          "KdKs",
+          "AsAd",
+          "KsKd"
+        ],
+        [
+          "QdQs",
+          "AsKh",
+          "QsQd",
+          "AsKh"
+        ],
+        [
+          "QdQs",
+          "KdKs",
+          "QsQd",
+          "KsKd"
+        ]
+      ],
+      "class_tree_equivalence_claim": false,
+      "compatible_pair_count": 3,
+      "compatible_pair_raw_products": [
+        [
+          "AsAd",
+          "KsKd",
+          "1/1"
+        ],
+        [
+          "QsQd",
+          "AsKh",
+          "1/8"
+        ],
+        [
+          "QsQd",
+          "KsKd",
+          "1/2"
+        ]
+      ],
+      "distinct_turn_card_forecast": 49,
+      "exact_pair_priors": [
+        [
+          "AsAd",
+          "KsKd",
+          "8/13"
+        ],
+        [
+          "QsQd",
+          "AsKh",
+          "1/13"
+        ],
+        [
+          "QsQd",
+          "KsKd",
+          "4/13"
+        ]
+      ],
+      "existing_limits_reference_only": {
+        "candidate_partition": {
+          "max_pairs": 3,
+          "max_turns": 49,
+          "max_worlds": 5940
+        },
+        "physical_oracle": {
+          "max_decisions": 10000,
+          "max_pairs": 4,
+          "max_public_states": 250000,
+          "max_worlds": 7920
+        }
+      },
+      "global_blocker_normalizer": "13/8",
+      "literal_ranges": {
+        "ip": [
+          [
+            "AsKh",
+            "1/4"
+          ],
+          [
+            "KsKd",
+            "1/1"
+          ]
+        ],
+        "oop": [
+          [
+            "AsAd",
+            "1/1"
+          ],
+          [
+            "QsQd",
+            "1/2"
+          ]
+        ]
+      },
+      "ordered_runouts_per_pair": 1980,
+      "physical_world_forecast": 5940,
+      "scope": "fixed-board-range-plan-only"
+    },
+    "interpretation": "Named rank, world, tree, source and output bounds only; not all arithmetic, allocation, elapsed time or RSS.",
+    "limits": {
+      "actions_per_node": 64,
+      "best_five_combinations_per_rank": 21,
+      "gzip_bytes": 16777216,
+      "index_bytes": 2097152,
+      "payload_bytes": 67108864,
+      "physical_decisions": 10000,
+      "physical_public_states": 250000,
+      "physical_worlds": 5940,
+      "preparation_rank_calls": 11880,
+      "recheck_rank_calls": 11880,
+      "source_file_bytes": 2097152,
+      "source_files": 44,
+      "total_best_five_combinations": 498960,
+      "total_rank_calls": 23760,
+      "tree_depth": 128,
+      "tree_stack": 8192
+    },
+    "request": {
+      "best_response_calls": 0,
+      "board": [
+        "7c",
+        "8d",
+        "9h"
+      ],
+      "candidate_partitions": 1,
+      "physical_oracle_builds": 1,
+      "training_calls": 0
+    }
+  },
+  "authority_calls": {
+    "RiverConfig.__post_init__": 0,
+    "RiverConfig.from_dict": 0,
+    "pokerlab.alternating_public_cfr._aggregate_prefixes": 0,
+    "pokerlab.alternating_public_cfr._cfrplus_target_deltas": 0,
+    "pokerlab.alternating_public_cfr._train_alternating": 0,
+    "pokerlab.alternating_public_cfr._weighted_average_sweep": 0,
+    "pokerlab.alternating_public_cfr.train_public_alternating_dcfr": 0,
+    "pokerlab.alternating_public_cfr.train_public_lcfr": 0,
+    "pokerlab.cards.cards": 0,
+    "pokerlab.cards.expand_range": 0,
+    "pokerlab.cards.rank_hand": 0,
+    "pokerlab.cfr.best_response": 0,
+    "pokerlab.cfr.evaluate": 0,
+    "pokerlab.cfr.train": 0,
+    "pokerlab.cfr_plus.train": 0,
+    "pokerlab.planned_cfr.train": 0,
+    "pokerlab.postflop_solver._build_postflop_tree": 0,
+    "pokerlab.postflop_solver._build_public_tree": 0,
+    "pokerlab.postflop_solver._build_tree": 0,
+    "pokerlab.postflop_solver._enumerate_worlds": 0,
+    "pokerlab.postflop_solver._terminal_value": 0,
+    "pokerlab.postflop_solver.best_response": 0,
+    "pokerlab.postflop_solver.cards": 0,
+    "pokerlab.postflop_solver.evaluate": 0,
+    "pokerlab.postflop_solver.evaluate_profile": 0,
+    "pokerlab.postflop_solver.expand_range": 0,
+    "pokerlab.postflop_solver.rank_hand": 0,
+    "pokerlab.postflop_solver.solve_postflop": 0,
+    "pokerlab.postflop_solver.train": 0,
+    "pokerlab.postflop_solver.train_planned": 0,
+    "pokerlab.postflop_solver.train_plus": 0,
+    "pokerlab.postflop_solver.train_public_batched": 0,
+    "pokerlab.preflop_delayed_cfrplus.train_delayed_public_cfrplus": 0,
+    "pokerlab.public_cfr._aggregate_prefixes": 0,
+    "pokerlab.public_cfr._cfrplus_target_deltas": 0,
+    "pokerlab.public_cfr.train_public_batched": 0,
+    "pokerlab.public_diagnostics.evaluate_profile": 0,
+    "pokerlab.river_tree._build_tree": 0,
+    "pokerlab.river_tree._terminal_value": 0,
+    "scripts.preflop_validation.cards": 0,
+    "scripts.preflop_validation.expand_range": 0
+  },
+  "created_at_utc": "2026-10-22T22:31:57.030310+00:00",
+  "errors": [],
+  "execution_state": {
+    "mode": "ordinary-process",
+    "system_required": false
+  },
+  "finished_at_utc": "2026-10-22T22:32:09.796121+00:00",
+  "index_sha256": "17be8d509916853b7e24ec2cf73f86567b5b8029083432fd04a2bed0e096d583",
+  "payload": {
+    "gzip_bytes": 373923,
+    "gzip_sha256": "6e9690e649815aa315ef1fff6e8cf1aca3ccc40a54e178a8fbf7a9acea874e9f",
+    "path": "reference.json.gz",
+    "raw_bytes": 7978451,
+    "raw_sha256": "4435d50308efbbe21203f166e6c4f2ccc185bae9dc54578eef56169b0e18b3fe"
+  },
+  "prerequisite": {
+    "fingerprint_calls": 0,
+    "full_validations": 0,
+    "raw_sha256": "8ac7091a289a5e131348bd86fed58e769d1e1413b797a408435b1b8c2a4d56a5",
+    "recorded_fingerprint_calls": 6,
+    "recorded_full_validations": 2,
+    "report_sha256": "48cb08101cd1d9a1c9141572609e89cf2518a06afb7fb96b1bf0591467b76afb",
+    "source_revision": "1b61d75f89c8960bf6aeca464611f899a2cbc841",
+    "status": "saved-owned-fingerprint-census-authenticated",
+    "training_calls": 0
+  },
+  "progress": {
+    "candidate_builds_attempted": 1,
+    "candidate_builds_completed": 1,
+    "candidate_world_rows": 5940,
+    "phase": "complete",
+    "physical_builds_attempted": 1,
+    "physical_builds_completed": 1,
+    "physical_world_rows": 5940,
+    "preparation_rank_calls": 4134,
+    "preparation_ranker_attempts": 4134,
+    "recheck_rank_calls": 4134,
+    "recheck_ranker_attempts": 4134,
+    "tree_nodes_validated": 30812,
+    "world_rows_validated": 5940
+  },
+  "protocol_id": "fixed-flop-second-board-reference-v1",
+  "protocol_sha256": "92bf84ed5d438b75accbfa2f40e541a2efb916dd0ee0708169024a8d7f7b9ed2",
+  "runtime": {
+    "implementation": "CPython",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "schema_version": 1,
+  "source_after": {
+    "revision": "a373c6e874b962ebf3d673ee4a95d8f301ae7ca5",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-owned-fingerprint-v1.json": "dc3f92ddfe0ed1c4f1e9006683d1b1b2ae9726ab425776b3bc36b1f7ab94ef56",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "benchmarks/flop-second-board-reference-v1.json": "92bf84ed5d438b75accbfa2f40e541a2efb916dd0ee0708169024a8d7f7b9ed2",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_owned_fingerprint.py": "7811d633f4e66ca8c14fae433db15c3e5b95ceaa620f8a1042c7cdafc0f43100",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_flop_second_board_reference.py": "33d70f9bede3e4eb5d8f5b0dfe785887eb09688219fa3c1047aadb6c2927e598",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_owned_fingerprint.py": "bd3d1b1fbc741fdfeeb5cdc8e3c6a716da2513a7e5bc6f01f46317a0da3a7aa7",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/flop_second_board_plan.py": "90012f78d8b5936fd5706cb4d4f307873c9957a1c45c97869576e5dd75cf5a34",
+      "scripts/flop_second_board_reference.py": "94b247d227b3d2d40ba2aa963b7ce812ded881538a13b0f387f3ea71d9034581",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_owned_fingerprint_publication.py": "01277b57f286e5eab53a2be3c0996ff8a0c3a58982be806a57535c227edea4eb",
+      "scripts/verify_flop_class_reweight_baseline_diagnostic_publication.py": "99300c02a8c48981fb8feefb6cf47b0ad870025af796c23bc0a987c29465ce54",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "source_before": {
+    "revision": "a373c6e874b962ebf3d673ee4a95d8f301ae7ca5",
+    "source_lf_sha256": {
+      "benchmarks/flop-class-call-cost-v1.json": "06c652d2e593be70ec0956bacfb323ee76f24d79b22b5f7b7a61487968bf120e",
+      "benchmarks/flop-class-cfrplus-pilot-v1.json": "54281996535296f29606a9e6a395dc4c21f7e8ff1283b8e91d1c8d3c94abf3b6",
+      "benchmarks/flop-class-compact-cfrplus-pilot-v1.json": "b921cb5278707ee87c3dcda157fc549a0f3d1347167503870e674442cc1b7365",
+      "benchmarks/flop-class-owned-fingerprint-v1.json": "dc3f92ddfe0ed1c4f1e9006683d1b1b2ae9726ab425776b3bc36b1f7ab94ef56",
+      "benchmarks/flop-class-reweight-baseline-diagnostic-v1.json": "54d2773c8046923727985c4714a766ceca3b28d61739c743bdff1a9e6b2cbbe7",
+      "benchmarks/flop-class-reweight-cfrplus-pilot-v1.json": "747457bc4557be273368a9c24c3af7e418f9c9fde782837bc8595a0de4e3822d",
+      "benchmarks/flop-class-reweight-proof-v1.json": "24b5f0cb29775f6b6615a03c27fb063b7fd885126d4e6808a69bcfa0fbc2fc97",
+      "benchmarks/flop-second-board-reference-v1.json": "92bf84ed5d438b75accbfa2f40e541a2efb916dd0ee0708169024a8d7f7b9ed2",
+      "pokerlab/cfr.py": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+      "pokerlab/cfr_plus.py": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+      "scripts/benchmark_flop_alternating.py": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+      "scripts/benchmark_flop_class_cost.py": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+      "scripts/benchmark_flop_class_owned_fingerprint.py": "7811d633f4e66ca8c14fae433db15c3e5b95ceaa620f8a1042c7cdafc0f43100",
+      "scripts/benchmark_flop_class_reweight.py": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+      "scripts/benchmark_flop_second_board_reference.py": "33d70f9bede3e4eb5d8f5b0dfe785887eb09688219fa3c1047aadb6c2927e598",
+      "scripts/benchmark_weighted_full_deck_flop.py": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+      "scripts/diagnose_flop_class_reweight_baseline.py": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+      "scripts/flop_class_call_measurement.py": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+      "scripts/flop_class_cfrplus.py": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+      "scripts/flop_class_compact_budget.py": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+      "scripts/flop_class_compact_cfrplus.py": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+      "scripts/flop_class_owned_fingerprint.py": "bd3d1b1fbc741fdfeeb5cdc8e3c6a716da2513a7e5bc6f01f46317a0da3a7aa7",
+      "scripts/flop_class_policy.py": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+      "scripts/flop_class_reweight_cfrplus.py": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+      "scripts/flop_class_reweight_plan.py": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+      "scripts/flop_class_reweight_proof.py": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+      "scripts/flop_multistreet_validation.py": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+      "scripts/flop_public_classes.py": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+      "scripts/flop_public_classes_candidate.py": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+      "scripts/flop_second_board_plan.py": "90012f78d8b5936fd5706cb4d4f307873c9957a1c45c97869576e5dd75cf5a34",
+      "scripts/flop_second_board_reference.py": "94b247d227b3d2d40ba2aa963b7ce812ded881538a13b0f387f3ea71d9034581",
+      "scripts/preflop_validation.py": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+      "scripts/profile_flop_class_phases.py": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+      "scripts/verify_flop_class_cfrplus.py": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+      "scripts/verify_flop_class_cfrplus_publication.py": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+      "scripts/verify_flop_class_compact_cfrplus.py": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+      "scripts/verify_flop_class_owned_fingerprint_publication.py": "01277b57f286e5eab53a2be3c0996ff8a0c3a58982be806a57535c227edea4eb",
+      "scripts/verify_flop_class_reweight_baseline_diagnostic_publication.py": "99300c02a8c48981fb8feefb6cf47b0ad870025af796c23bc0a987c29465ce54",
+      "scripts/verify_flop_class_reweight_cfrplus.py": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+      "scripts/verify_flop_class_reweight_publication.py": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+      "scripts/verify_flop_public_classes_publication.py": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a"
+    },
+    "status": ""
+  },
+  "status": "complete",
+  "summary": {
+    "candidate": {
+      "candidate_only": true,
+      "compatible_pair_count": 3,
+      "input_completeness": "unverified-caller-supplied-records",
+      "physical_provenance": false,
+      "physical_world_count": 5940,
+      "river_class_count": 17,
+      "turn_card_count": 49,
+      "turn_class_count": 13
+    },
+    "claims": {
+      "class_or_tree_equivalence_proved": false,
+      "physical_best_response_equality_proved": false,
+      "policy_projection_or_lift_proved": false,
+      "training_performed": false
+    },
+    "physical": {
+      "metadata_counters": {
+        "normalizer": "13/8",
+        "preparation_rank_call_allowance": 11880,
+        "preparation_rank_calls": 4134,
+        "world_count_by_pair": {
+          "AdAs/KdKs": 1980,
+          "QdQs/AsKh": 1980,
+          "QdQs/KdKs": 1980
+        }
+      },
+      "normalizer": "13/8",
+      "same_ranker_recheck": {
+        "allowance": 11880,
+        "interpretation": "same established reference ranker; consistency check only",
+        "unique_rank_calls": 4134,
+        "world_comparisons": 5940
+      },
+      "tree_census": {
+        "chance_nodes": 248,
+        "decision_nodes": 9512,
+        "maximum_depth": 10,
+        "maximum_stack": 111,
+        "public_states": 30812,
+        "stack_cap": 8192,
+        "terminal_nodes": 21052,
+        "tree_edges": 30811
+      },
+      "tree_sha256": "1b327471df5591e48d50a1db305e0ea32ad3b45c2ff0354df2ddbe4025684173",
+      "world_summary": {
+        "joint_mass": "1/1",
+        "outcomes_per_pair": 1980,
+        "pair_count": 3,
+        "pair_sign_counts": [
+          {
+            "ip_hand": "KdKs",
+            "losses": 166,
+            "oop_hand": "AdAs",
+            "ordered_outcomes": 1980,
+            "ties": 96,
+            "wins": 1718
+          },
+          {
+            "ip_hand": "AsKh",
+            "losses": 474,
+            "oop_hand": "QdQs",
+            "ordered_outcomes": 1980,
+            "ties": 64,
+            "wins": 1442
+          },
+          {
+            "ip_hand": "KdKs",
+            "losses": 1718,
+            "oop_hand": "QdQs",
+            "ordered_outcomes": 1980,
+            "ties": 64,
+            "wins": 198
+          }
+        ],
+        "world_count": 5940
+      },
+      "worlds_sha256": "4ea9c186e4ba524da66b3363ad2a0d8a6851081ca41275a92d2c576a038879ab"
+    }
+  }
+}

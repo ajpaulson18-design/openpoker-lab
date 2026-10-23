@@ -260,3 +260,24 @@ tracked objects/edges are 318,280/1,608,777; 39 sources are clean/stable and all
 training/errors/retries. This does not authorize reuse or select a performance
 architecture. Broader flop-board support remains a separate independently proved
 slice with freshly measured partitions and tree dimensions.
+
+D031 (2026-10-22): broaden flop correctness evidence to the fixed `7c8d9h`
+board before choosing a validation-reuse performance architecture. First freeze
+one admitted no-training physical-reference build and candidate partition, with
+fresh complete world/tree views and hashes. Keep exact global blocker priors,
+bounded and counted reference ranking, full source/error receipts and unchanged
+candidate-only flags. New class dimensions are measured, not inherited from
+`2c3d4h`. This preparation does not establish full class/tree or best-response
+equivalence; that separate proof must precede training. See
+[the reference protocol and pending status](../flop-second-board-reference.md).
+No earlier decision is superseded.
+
+D031 observation: the one frozen reference batch completed without errors or
+retries, with one physical build/candidate partition, 4,134 preparation and
+4,134 same-ranker recheck calls, all 5,940 world signs compared, clean stable
+44-source identities and all 41 guarded authorities at zero. Fresh candidates
+have 13 turn classes, 17 river signatures and 170 class worlds. Complete
+physical world/tree views and hashes are retained. These measured dimensions
+establish a new reference; they do not prove public-chance equivalence or
+authorize training. Across-class variation is a valid future control; physical
+card-specific variation within a class must reject projection.
