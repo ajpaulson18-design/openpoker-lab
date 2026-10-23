@@ -12,6 +12,7 @@ import itertools
 import json
 import math
 from pathlib import Path
+import re
 
 from scripts import benchmark_preflop_qq_kk_basis as qq
 from scripts import validate_preflop_five_reference as five
@@ -102,6 +103,8 @@ def _bounded_file(path, limit):
 def _fraction(value, *, positive=False):
     _need(type(value) is str and 0 < len(value) <= MAX_FRACTION_CHARS,
           "Fraction must be a bounded canonical string")
+    _need(re.fullmatch(r"-?(?:0|[1-9][0-9]*)(?:/[1-9][0-9]*)?", value) is not None,
+          "Fraction must use a plain integer or rational token")
     try:
         result = Fraction(value)
     except (ValueError, ZeroDivisionError, OverflowError) as exc:
