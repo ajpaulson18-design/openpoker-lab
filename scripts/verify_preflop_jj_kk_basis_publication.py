@@ -29,6 +29,20 @@ TEST_PATH = "tests/test_preflop_jj_kk_basis_benchmark.py"
 FROZEN_TEST_LF_SHA256 = "b19712a80f2ff89070db5027b9f5339d57b6d21e3abaa159b21239a49b61cad2"
 ISOLATED_TEST_LF_SHA256 = "8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd"
 FROZEN_TEST_ARCHIVE = "benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py"
+DOCUMENT_SOURCE_TRANSITIONS = {
+    "docs/engineering/CURRENT_STATE.md": (
+        "daa3507e51b21ad944e67655b1c6703f2e9da0d086ee8e02b5772aa4e6b2ea4e",
+        "306d9b2e5268105a226627205182154be0dfdca1aaf94fa572c627653706c96d",
+        "benchmarks/sources/preflop-jj-kk-context-freeze-v1/CURRENT_STATE.md.txt"),
+    "docs/solver-progress.md": (
+        "e6c2ae028b7adf81513d0f004ec3c819ac4fcf598a2c1ca2e8d748d58c2bbf68",
+        "8e01ea95093069f7f9b5bbd5b0559094822f91016a9b002af47d63f1371c55ad",
+        "benchmarks/sources/preflop-jj-kk-context-freeze-v1/solver-progress.md.txt"),
+    "docs/turn-class-tail.md": (
+        "c542181a45d2fade0bdcf142f7b456cd40b17913935b70b3d63a23fbe70e9aed",
+        "15d7b146d082df2727783c429eeb37980988db0639bb4630847755650d574b6b",
+        "benchmarks/sources/preflop-jj-kk-context-freeze-v1/turn-class-tail.md.txt"),
+}
 
 
 def _need(condition, message):
@@ -377,13 +391,17 @@ def _current_source_check(historical):
         value = {"raw_sha256": hashlib.sha256(raw).hexdigest(),
                  "lf_sha256": hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()}
         if value["lf_sha256"] != expected["lf_sha256"]:
-            _need(relative == TEST_PATH and expected["lf_sha256"] == FROZEN_TEST_LF_SHA256 and
-                  value["lf_sha256"] == ISOLATED_TEST_LF_SHA256,
+            if relative == TEST_PATH:
+                endpoints = (FROZEN_TEST_LF_SHA256, ISOLATED_TEST_LF_SHA256, FROZEN_TEST_ARCHIVE)
+            else:
+                endpoints = DOCUMENT_SOURCE_TRANSITIONS.get(relative)
+            _need(endpoints is not None and expected["lf_sha256"] == endpoints[0] and
+                  value["lf_sha256"] == endpoints[1],
                   f"Frozen measured source LF bytes changed: {relative}")
-            archived = _read(evidence.ROOT / FROZEN_TEST_ARCHIVE, MAX_REPORT_BYTES)
-            _need(hashlib.sha256(archived).hexdigest() == FROZEN_TEST_LF_SHA256 and
+            archived = _read(evidence.ROOT / endpoints[2], MAX_REPORT_BYTES)
+            _need(hashlib.sha256(archived).hexdigest() == endpoints[0] and
                   hashlib.sha256(archived.replace(b"\r\n", b"\n")).hexdigest() == expected["lf_sha256"],
-                  "Historical test archive does not authenticate the exact source transition")
+                  "Historical source archive does not authenticate the exact source transition")
         if relative in state["source_hashes"]:
             _need(state["source_hashes"][relative].get("lf_sha256") == value["lf_sha256"],
                   f"Current identity snapshot differs: {relative}")

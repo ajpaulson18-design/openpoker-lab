@@ -188,8 +188,31 @@ class SavedJJKKBasisPublicationTests(unittest.TestCase):
             return original_read(path, limit)
         with (patch.object(publication.five, "snapshot", return_value=state),
               patch.object(publication, "_read", side_effect=bad_archive)):
-            with self.assertRaisesRegex(ValueError, "Historical test archive"):
+            with self.assertRaisesRegex(ValueError, "Historical source archive"):
                 publication._current_source_check(historical)
+
+    def test_exact_parallel_document_transitions_require_archived_generation_sources(self):
+        historical = {path: {"raw_sha256": old, "lf_sha256": old}
+                      for path, (old, _new, _archive) in publication.DOCUMENT_SOURCE_TRANSITIONS.items()}
+        with patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}):
+            publication._current_source_check(historical)
+        original = publication._read
+        def wrong_archive(path, limit):
+            if Path(path).name == "CURRENT_STATE.md.txt":
+                return b"changed original documentation\n"
+            return original(path, limit)
+        with (patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}),
+              patch.object(publication, "_read", side_effect=wrong_archive)):
+            with self.assertRaisesRegex(ValueError, "Historical source archive"):
+                publication._current_source_check(historical)
+
+    def test_unlisted_or_different_document_transition_rejects(self):
+        path = "docs/engineering/CURRENT_STATE.md"
+        old, _new, _archive = publication.DOCUMENT_SOURCE_TRANSITIONS[path]
+        with (patch.object(publication.five, "snapshot", return_value={"status": [], "source_hashes": {}}),
+              patch.object(publication, "_read", return_value=b"other document revision\n")):
+            with self.assertRaisesRegex(ValueError, "LF bytes changed"):
+                publication._current_source_check({path: {"raw_sha256": old, "lf_sha256": old}})
 
 
 if __name__ == "__main__":

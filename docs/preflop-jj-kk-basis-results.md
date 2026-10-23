@@ -62,14 +62,16 @@ pins the index and every raw file before parsing, freshly authenticates the
 published AA/QQ and current-build conformance receipts, links the raw outputs
 to all physical rows and build identities, and checks all 746 measured source
 LF hashes. New publication files are allowed; a change to a measured file must
-reject except for the exact archived test-isolation transition below. The current
+reject except for the exact archived test/document transitions below. The current
 version does not attest arbitrary later source revisions.
-Its [16 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
+Its [18 publication tests](../tests/test_verify_preflop_jj_kk_basis_publication.py)
 include actual and copied-corpus authentication with live computation forbidden,
 byte/source/build/count tampering, metadata linkage and strict scalar types.
-Together with the 23 admission/orchestration checks, all 39 focused tests
-passed on bundled CPython 3.12.14 before publication. Documentation validation
-passed for 172 Markdown files and 938 local links.
+Together with the 23 admission/orchestration checks, the publication has 41
+focused checks. Earlier 39-check validation preceded the parallel-main merge;
+the two added checks cover exact documentation transitions and archive rejection.
+All 41 passed on bundled CPython 3.12.14 after integration. Documentation
+validation passed for 174 Markdown files and 950 local links.
 
 ## CI test isolation correction
 
@@ -87,10 +89,30 @@ with raw/LF SHA256
 The corrected test's LF SHA256 is
 `8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd`.
 Saved authentication admits only this exact historical-to-current pair and
-requires the original archive; every other source change still rejects. The
+requires the original archive. The
 measured batch, executable, protocol, count rows, source snapshots, corpus
 digests and original failure observation remain untouched. No physical study
 was repeated. The separate failing CI log is retained outside Git.
+
+## Parallel-main documentation integration
+
+The later main revision
+[`de569fe`](https://github.com/ajpaulson18-design/openpoker-lab/commit/de569fe)
+published the separate turn workstream. This branch preserves its complete
+implementation and evidence, and resolves the attribute/progress conflicts by
+retaining both sets of rules and sections. No turn executable or policy was
+changed. Current capability/progress summaries also link this completed JJ
+observation separately from the original frozen planning record.
+
+Three generation-time documents are retained as exact source text:
+[current state](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/CURRENT_STATE.md.txt),
+[solver progress](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/solver-progress.md.txt)
+and [turn context](../benchmarks/sources/preflop-jj-kk-context-freeze-v1/turn-class-tail.md.txt).
+The verifier pins each old/current LF pair and requires its original archive.
+These are three explicit documentation transitions, alongside the one test
+cleanup transition. The other 742 measured files remain unchanged. Unlisted
+paths, different revisions and altered archives reject; this does not approve
+arbitrary future source drift or repeat the physical study.
 
 ## Scope and next evidence
 

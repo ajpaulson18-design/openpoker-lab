@@ -1690,3 +1690,26 @@ reference/native count schedule before any executable lookup. Its rank-free
 cap. No new physical JJ counts, larger-game certificate or strategy result is
 claimed at this planning stage; source-count agreement and independent saved
 evidence are required before reuse.
+
+The subsequent [completed source-count observation](preflop-jj-kk-basis-results.md)
+retains exact three-class JJ/KK agreement between the independent best-five
+and native counters, full raw receipts and the saved authenticator. It
+supersedes the planning-only count status above; the larger-game and strategy
+claims remain pending. Publication is tracked in
+[PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
+
+## Fixed T6000 three-hand TURN result
+
+The single [preregistered class-tail experiment](turn-class-tail-T6000-experiment.md)
+completed on frozen source `2aa02c4f2db75beb7bc8a229e3c36073a56c5118`.
+Its exact normalized-policy NashConv projects to 0.00003025771155975608 chip,
+below the unchanged 0.001 target. OOP/IP response gains project to
+0.00002863425666932674 and 0.000001623454890429346. All eight full-physical
+exact metrics equal both generic class audits; maximum exact/numeric difference
+was 1.2343551101222112e-14. All 3,606 physical rows and 8,046 actions are saved.
+
+The old T750 gap of 0.010695489887132394 remains an unchanged miss. The result
+establishes the target for this finite configured game and policy. A separately
+known exact equilibrium value, broader convergence and unrestricted Hold'em
+coverage remain unproven. The frozen protocol, raw files and source identities
+are linked from the experiment record.
