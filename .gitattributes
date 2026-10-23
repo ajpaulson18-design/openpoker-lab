@@ -140,6 +140,9 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py -text
 /benchmarks/sources/preflop-jj-kk-context-freeze-v1/** -text
 
+# Original no-enumeration three-rank transport observation, byte-exact.
+/benchmarks/results/preflop-three-rank-transport-v1/** -text
+
 # Preserve the preregistered compact-turn protocol and raw experiment bundle.
 /.gitattributes text eol=lf
 /.gitignore text eol=lf
