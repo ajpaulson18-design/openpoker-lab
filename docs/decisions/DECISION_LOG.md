@@ -324,3 +324,24 @@ passed, but the numeric replay return was not saved and the case is not a
 completed verified policy. Preserve frozen v1 sources and require a distinct
 reviewed correction/protocol before further measurement. See the
 [retained failure](../flop-second-board-cfrplus.md).
+
+D034 (2026-10-23 UTC): stage a distinct
+[replay-boundary v2](../flop-second-board-cfrplus-replay-v2.md) rather than alter
+the frozen D033 failure. Authenticate the stopped-v1 saved evidence, wrap one
+unchanged independent replay call, retain/validate its full thirteen-field
+return, and expose the eight numeric metrics to the preserved adapter. Require
+restoration on every exit, exact-once counting, stable 58/54 source identities
+and the unchanged exact/numeric/model guards. Keep the same fresh T140/T560
+quality protocol and separate named resource envelopes; no v2 actual training
+or quality result is claimed by this staging decision. No earlier decision is
+superseded.
+
+D034 observation: the single frozen replay-v2 batch completed T140/T560
+without execution errors, retries or fallbacks. Exact compact and unrestricted
+physical metric maps agree, numeric gaps remain below 7e-16, both full replay
+receipts are retained and source/model/authority checks passed. Keep T140's
+0.014166984012911272 NashConv miss and T560's 0.0016464625267553663 pass as
+separate finite-game observations. Two models/training calls, six proof passes,
+four exact calls, two replays/projections and 8,268 ranks are recorded. The v1
+failure stays unchanged; saved-data authentication/CI still gate publication.
+See [the complete outcomes and limits](../flop-second-board-cfrplus-replay-v2.md).

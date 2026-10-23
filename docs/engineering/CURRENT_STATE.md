@@ -27,6 +27,17 @@ sources. T560 never ran; the quality-gate field stays null. This is not a
 validated training interface or completed verified policy. The frozen v1 source
 and failure remain preserved for a separate reviewed correction.
 
+The [replay boundary v2](../flop-second-board-cfrplus-replay-v2.md) stages that
+correction as separate files/protocol. It validates and retains all thirteen
+replay fields before exposing the eight metrics expected by v1, restoring the
+callable and preserving exact-once instrumentation on every exit. Its one frozen
+batch completed both exact/numeric/model audits without errors: T140 retained
+NashConv 0.014166984012911272 (miss), and T560 reached 0.0016464625267553663
+(pass against 0.005). Full policies, all replay metadata, source/guard receipts
+and the earlier failure are retained. Saved-data publication authentication and
+final-head CI remain separate; no unrestricted NLHE or general convergence claim
+follows from these two finite-game observations.
+
 Current source snapshot: merged main [`46e142be8e9585005e5de70bb32bf4a76f731a1c`](https://github.com/ajpaulson18-design/openpoker-lab/commit/46e142be8e9585005e5de70bb32bf4a76f731a1c) (Oct. 13, 2026). This is a source/documentation update only; it does not report a test run performed for this snapshot. The original Oct. 8–9 knowledge audit at `65c9ba7a9ddba67f2bababe51e4d6c5eed8696ce` is retained as historical evidence in [the transfer validation record](KNOWLEDGE_TRANSFER_VALIDATION.md).
 
 OpenPoker Lab is a standard-library Python 3.11+ research app with a plain JavaScript client. Its implemented surface includes weighted Hold'em range parsing and hand evaluation, sampled multiway equity and exact heads-up river equity, one-decision EV estimates, a locally persisted opponent tendency model, finite heads-up river/postflop solvers, bounded heads-up preflop models, a separate fixed-flop checkdown game, hand practice, deterministic explanations, optional coaching and a loopback HTTP server. README.md, AGENTS.md and the detailed solver references define the limits: no unrestricted no-limit equilibrium, no multiway equilibrium, and no full-deck preflop solution with later-street betting.
