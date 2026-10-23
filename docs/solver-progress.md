@@ -1696,3 +1696,8 @@ establishes the target for this finite configured game and policy. A separately
 known exact equilibrium value, broader convergence and unrestricted Hold'em
 coverage remain unproven. The frozen protocol, raw files and source identities
 are linked from the experiment record.
+
+
+## Configurable matrix-free turn tail (2026-10-23)
+
+The opt-in [generic direct-tail API](matrix-free-turn-tail.md) removes joint-world materialization for configurable original-weight turn tail solves, using the existing private-hand vectors and exact public river tree. It keeps original caps, all physical information rows and fresh legal response metrics. Bounded T10 controls cover exact zero-discard policy parity, positive-discard materialized agreement, blockers, selected/full-deck rivers, short all-ins/refunds and independent physical response replay. The fixed T6000 result and earlier misses remain immutable. Accuracy on held-out river games and then broader turn games is the next priority; no measured runtime/RSS gain follows from this representation.
