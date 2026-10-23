@@ -140,6 +140,9 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py -text
 /benchmarks/sources/preflop-jj-kk-context-freeze-v1/** -text
 
+# Original no-enumeration three-rank transport observation, byte-exact.
+/benchmarks/results/preflop-three-rank-transport-v1/** -text
+
 # Preserve the preregistered compact-turn protocol and raw experiment bundle.
 /.gitattributes text eol=lf
 /.gitignore text eol=lf
@@ -150,3 +153,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve every completed held-out river policy, miss and replay receipt byte for byte.
 /benchmarks/results/river-heldout-quality-v1/** -text
 /benchmarks/results/river-heldout-quality-v1/independent-saved-replay.json -text whitespace=cr-at-eol
+
+# Preserve the complete original-weight river tail study and independent replay.
+/benchmarks/results/river-heldout-tail-v1/** -text
+/benchmarks/results/river-heldout-tail-v1/verification-history/** whitespace=cr-at-eol

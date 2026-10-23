@@ -1719,6 +1719,19 @@ are linked from the experiment record.
 
 The opt-in [generic direct-tail API](matrix-free-turn-tail.md) removes joint-world materialization for configurable original-weight turn tail solves, using the existing private-hand vectors and exact public river tree. It keeps original caps, all physical information rows and fresh legal response metrics. Bounded T10 controls cover exact zero-discard policy parity, positive-discard materialized agreement, blockers, selected/full-deck rivers, short all-ins/refunds and independent physical response replay. The fixed T6000 result and earlier misses remain immutable. Accuracy on held-out river games and then broader turn games is the next priority; no measured runtime/RSS gain follows from this representation.
 
+## Three-rank preflop transport observation (2026-10-23 UTC)
+
+The separate [108-pair source transport](preflop-three-rank-transport-results.md)
+passed one clean frozen observation after JJ publication #216 merged.
+Authenticated AA/QQ/JJ-versus-KK counts transfer through one joint suit
+bijection per physical pair. Exact per-pair priors are 1/63, 1/126 and 1/252,
+with total mass one. All 108 maps, nine source classes and three six/24/six
+overlap censuses pass both independent memory and fresh saved-file replay.
+All eleven forbidden-calculation counters are zero; there is no new board
+enumeration or training. The original two-file corpus and eight stable measured
+source identities are retained. A finite-game physical own-hand mutual-response
+witness and any solver convergence result remain separate milestones.
+
 
 ## Held-out river accuracy protocol (2026-10-23)
 
@@ -1726,3 +1739,11 @@ A separate [fixed four-profile protocol](river-heldout-quality-protocol.md) broa
 
 
 The [completed held-out river v1 batch](river-heldout-quality-results.md) retains four verified CFR+10000 policies and four misses against the exact 0.001-chip NashConv gate. The unpaired game has gaps about 0.00174251 and the paired game about 0.00232499 for both existing backends. All physical numeric/exact replays, source guards and saved reloads passed. These new cases expose a finite-budget accuracy limit; higher precision remains the next bounded task, with v1 unchanged.
+
+
+## Fixed river tail follow-up protocol (2026-10-23)
+
+The [separate original-weight tail study](river-heldout-tail-protocol.md) preregisters four calls through the existing materialized research adapter: both unchanged v1 games at T10000/D5000 and T50000/D25000. Fresh full-request admission uses the original limits; baseline hashes, all four historical misses and original mathematical sources remain fixed. The wrapper saves complete raw policies before independent numeric/exact replay and retains failures without retry. Its 11 synthetic and no-training harness tests pass alongside 12 saved-baseline tests in normal and optimized Python. No new trained result is claimed by this source freeze; the later outcomes require a separate evidence record.
+
+
+The [completed fixed river-tail study](river-heldout-tail-results.md) retained two shorter-tail misses and two exact target passes: the unpaired and paired T50000/D25000 gaps are about 0.000447256 and 0.000656760 chip. All four complete policies, original v1 misses, source guards, full-request admissions and independent numeric/exact saved replays are retained. The unpaired T10000/D5000 tail was worse than its baseline. Higher-budget target attainment covers these finite games; it does not establish equal-cost method gains, broader convergence or commercial parity.
