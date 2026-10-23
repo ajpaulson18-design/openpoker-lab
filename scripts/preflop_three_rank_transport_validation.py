@@ -293,9 +293,12 @@ def verify_candidate_report(report_or_path):
     with duplicate-key and nonfinite-number rejection. Fixed request/admission
     fields are rejected before any saved source is read.
     """
+    saved_path = None
+    saved_raw = None
     if isinstance(report_or_path, (str, Path)):
-        raw = _bounded_file(report_or_path, MAX_REPORT_BYTES)
-        report = _load_json(raw)
+        saved_path = Path(report_or_path)
+        saved_raw = _bounded_file(saved_path, MAX_REPORT_BYTES)
+        report = _load_json(saved_raw)
     else:
         report = report_or_path
     _validate_envelope(report)
@@ -348,7 +351,7 @@ def verify_candidate_report(report_or_path):
           "Literal joint-suit overlap census differs")
     _need(total_prior == 1 and _fraction(report["total_prior"]) == 1,
           "Candidate global exact prior does not normalize")
-    return {
+    result = {
         "status": "transport-authenticated-candidate-only",
         "benchmark_id": "preflop-three-rank-transport-v1",
         "candidate_artifact_sha256": report["artifact_sha256"],
@@ -365,6 +368,12 @@ def verify_candidate_report(report_or_path):
         "equilibrium_or_policy_claim": False,
         "scope": "authenticated source-orbit count transport only; no board enumeration or solver claim",
     }
+    if saved_path is not None:
+        final_raw = _bounded_file(saved_path, MAX_REPORT_BYTES)
+        _need(final_raw == saved_raw and
+              hashlib.sha256(final_raw).digest() == hashlib.sha256(saved_raw).digest(),
+              "Saved candidate file changed during verification")
+    return result
 
 
 if __name__ == "__main__":

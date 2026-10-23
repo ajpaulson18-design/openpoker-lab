@@ -177,6 +177,23 @@ class ThreeRankTransportValidationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "fixed request/admission"):
                 validator.verify_candidate_report(path)
 
+    def test_saved_candidate_changed_during_source_authentication_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "candidate.json"
+            raw = json.dumps(self.report, sort_keys=True, separators=(",", ":")).encode()
+            path.write_bytes(raw)
+            original_source_check = validator._source_rows
+
+            def authenticate_then_mutate():
+                with patch.object(validator.jj, "_current_source_check", return_value=None):
+                    result = original_source_check()
+                path.write_bytes(raw + b" ")
+                return result
+
+            with patch.object(validator, "_source_rows", side_effect=authenticate_then_mutate):
+                with self.assertRaisesRegex(ValueError, "file changed during verification"):
+                    validator.verify_candidate_report(path)
+
     def test_duplicate_json_keys_and_exponent_overflow_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "candidate.json"

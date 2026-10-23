@@ -63,6 +63,8 @@ a clean committed source snapshot and a fresh external output directory. It
 calls the candidate once, retains its entire serialized report, runs the
 [independent checker](../scripts/preflop_three_rank_transport_validation.py)
 in memory and freshly from that saved file, and requires identical results.
+The saved-file verifier re-reads the candidate after authentication and rejects
+any byte change during the check.
 Reversible guards forbid ranking, native/reference counting, building and
 training throughout; the independent phase additionally disables the candidate
 and production pool. Saved-source authentication retains its existing rank-free
