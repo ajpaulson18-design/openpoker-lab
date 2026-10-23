@@ -1,0 +1,192 @@
+{
+  "artifact_sha256": "9d73cbc63bda40a4e51afda03d89af79258a350df4ab42960dbe5e1f7a0f16f9",
+  "benchmark_id": "preflop-three-rank-transport-audit-v1",
+  "candidate_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+  "candidate_attempts": 1,
+  "created_at_utc": "2026-10-23T19:18:34.362825+00:00",
+  "errors": [],
+  "forbidden_calculation_calls": {
+    "pokerlab.cfr.train": 0,
+    "pokerlab.cfr_plus.train": 0,
+    "pokerlab.native_preflop_equity.prepare_native_preflop_equities": 0,
+    "pokerlab.preflop_covered_equity._ranges": 0,
+    "pokerlab.preflop_covered_equity.pool_preflop_equities_by_suit": 0,
+    "pokerlab.preflop_full_board_equity.rank_hand": 0,
+    "scripts.build_native_preflop.build": 0,
+    "scripts.build_preflop_five_reference.build": 0,
+    "scripts.preflop_five_count_reference.reference_preflop_counts": 0,
+    "scripts.preflop_three_rank_transport.build_candidate": 0,
+    "scripts.validate_preflop_five_reference.validate_five_dump": 0
+  },
+  "fresh_saved_file_verification": {
+    "benchmark_id": "preflop-three-rank-transport-v1",
+    "board_enumerations": 0,
+    "board_outcomes_per_pair": 1712304,
+    "candidate_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+    "equilibrium_or_policy_claim": false,
+    "exact_global_prior_mass": "1",
+    "overlap_census_by_rank": {
+      "A": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      },
+      "J": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      },
+      "Q": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      }
+    },
+    "physical_pair_rows_authenticated": 108,
+    "rank_calls": 0,
+    "represented_board_count_informational_only": 184928832,
+    "scope": "authenticated source-orbit count transport only; no board enumeration or solver claim",
+    "source_basis_pins": {
+      "aa": {
+        "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+        "path": "benchmarks/results/preflop-five-basis-v1.json"
+      },
+      "jj": {
+        "publication_index_sha256": "9022673f0801fa1481af146f66392b2c7ea4d88c8576946735ecb5ced34bf5e1",
+        "report_artifact_sha256": "1f80d95da14890be036c72772f6a88228beff936d05355875384dcc34d6d5156"
+      },
+      "qq": {
+        "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8",
+        "path": "benchmarks/results/preflop-qq-kk-basis-v1.json"
+      }
+    },
+    "status": "transport-authenticated-candidate-only",
+    "training_calls": 0
+  },
+  "independent_attempts": 2,
+  "independent_memory_verification": {
+    "benchmark_id": "preflop-three-rank-transport-v1",
+    "board_enumerations": 0,
+    "board_outcomes_per_pair": 1712304,
+    "candidate_artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+    "equilibrium_or_policy_claim": false,
+    "exact_global_prior_mass": "1",
+    "overlap_census_by_rank": {
+      "A": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      },
+      "J": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      },
+      "Q": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      }
+    },
+    "physical_pair_rows_authenticated": 108,
+    "rank_calls": 0,
+    "represented_board_count_informational_only": 184928832,
+    "scope": "authenticated source-orbit count transport only; no board enumeration or solver claim",
+    "source_basis_pins": {
+      "aa": {
+        "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+        "path": "benchmarks/results/preflop-five-basis-v1.json"
+      },
+      "jj": {
+        "publication_index_sha256": "9022673f0801fa1481af146f66392b2c7ea4d88c8576946735ecb5ced34bf5e1",
+        "report_artifact_sha256": "1f80d95da14890be036c72772f6a88228beff936d05355875384dcc34d6d5156"
+      },
+      "qq": {
+        "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8",
+        "path": "benchmarks/results/preflop-qq-kk-basis-v1.json"
+      }
+    },
+    "status": "transport-authenticated-candidate-only",
+    "training_calls": 0
+  },
+  "schema_version": 1,
+  "scope": "108 physical pair counts and exact priors; no strategy, equilibrium, runtime or memory claim",
+  "source_after": {
+    "revision": "2198f1f23ddb9d1d24c08ec4182afeedb60c28b5",
+    "source_hashes": {
+      "docs/preflop-three-rank-transport.md": {
+        "lf_sha256": "8d7a1afd8262cea9d9127888b410d860408729990ade6dedbd367baa60127260",
+        "raw_sha256": "8d7a1afd8262cea9d9127888b410d860408729990ade6dedbd367baa60127260"
+      },
+      "scripts/certify_preflop_three_rank_transport.py": {
+        "lf_sha256": "079a44cb66c5c2324d25abec046226632507b3026e10446e2ef4391c0e716b74",
+        "raw_sha256": "079a44cb66c5c2324d25abec046226632507b3026e10446e2ef4391c0e716b74"
+      },
+      "scripts/preflop_three_rank_transport.py": {
+        "lf_sha256": "147974b4d15e4b6a73239f5220fb8108df0b5df2a5f4f1c463cce848848b5537",
+        "raw_sha256": "147974b4d15e4b6a73239f5220fb8108df0b5df2a5f4f1c463cce848848b5537"
+      },
+      "scripts/preflop_three_rank_transport_validation.py": {
+        "lf_sha256": "8b26ee6becd3f221581012952822a1b06b2c8cc609d1be82f590ced19bad0e23",
+        "raw_sha256": "8b26ee6becd3f221581012952822a1b06b2c8cc609d1be82f590ced19bad0e23"
+      },
+      "scripts/verify_preflop_jj_kk_basis_publication.py": {
+        "lf_sha256": "56dd358774d3e49fdf5c54213dd706cc9b7135abbdec12f8181b18ffade0215f",
+        "raw_sha256": "c2d618b28a48a767083f075fa27d97cb476f175cd61a2846b7a434171457a774"
+      },
+      "tests/test_certify_preflop_three_rank_transport.py": {
+        "lf_sha256": "e0009ffe0cf200a1733c01dbd9e041d1d10493139214c7aedd79db5e2772ba0f",
+        "raw_sha256": "e0009ffe0cf200a1733c01dbd9e041d1d10493139214c7aedd79db5e2772ba0f"
+      },
+      "tests/test_preflop_three_rank_transport.py": {
+        "lf_sha256": "311cb38acf487b47b5cadb0a84db04258507f0c0393d84d4ea59e47e555a0146",
+        "raw_sha256": "311cb38acf487b47b5cadb0a84db04258507f0c0393d84d4ea59e47e555a0146"
+      },
+      "tests/test_preflop_three_rank_transport_validation.py": {
+        "lf_sha256": "eee25dd2d8aa3fd88102f7c4b9b533bd0f0c37aef4565d4aba0b6456a31a760d",
+        "raw_sha256": "eee25dd2d8aa3fd88102f7c4b9b533bd0f0c37aef4565d4aba0b6456a31a760d"
+      }
+    },
+    "status": []
+  },
+  "source_before": {
+    "revision": "2198f1f23ddb9d1d24c08ec4182afeedb60c28b5",
+    "source_hashes": {
+      "docs/preflop-three-rank-transport.md": {
+        "lf_sha256": "8d7a1afd8262cea9d9127888b410d860408729990ade6dedbd367baa60127260",
+        "raw_sha256": "8d7a1afd8262cea9d9127888b410d860408729990ade6dedbd367baa60127260"
+      },
+      "scripts/certify_preflop_three_rank_transport.py": {
+        "lf_sha256": "079a44cb66c5c2324d25abec046226632507b3026e10446e2ef4391c0e716b74",
+        "raw_sha256": "079a44cb66c5c2324d25abec046226632507b3026e10446e2ef4391c0e716b74"
+      },
+      "scripts/preflop_three_rank_transport.py": {
+        "lf_sha256": "147974b4d15e4b6a73239f5220fb8108df0b5df2a5f4f1c463cce848848b5537",
+        "raw_sha256": "147974b4d15e4b6a73239f5220fb8108df0b5df2a5f4f1c463cce848848b5537"
+      },
+      "scripts/preflop_three_rank_transport_validation.py": {
+        "lf_sha256": "8b26ee6becd3f221581012952822a1b06b2c8cc609d1be82f590ced19bad0e23",
+        "raw_sha256": "8b26ee6becd3f221581012952822a1b06b2c8cc609d1be82f590ced19bad0e23"
+      },
+      "scripts/verify_preflop_jj_kk_basis_publication.py": {
+        "lf_sha256": "56dd358774d3e49fdf5c54213dd706cc9b7135abbdec12f8181b18ffade0215f",
+        "raw_sha256": "c2d618b28a48a767083f075fa27d97cb476f175cd61a2846b7a434171457a774"
+      },
+      "tests/test_certify_preflop_three_rank_transport.py": {
+        "lf_sha256": "e0009ffe0cf200a1733c01dbd9e041d1d10493139214c7aedd79db5e2772ba0f",
+        "raw_sha256": "e0009ffe0cf200a1733c01dbd9e041d1d10493139214c7aedd79db5e2772ba0f"
+      },
+      "tests/test_preflop_three_rank_transport.py": {
+        "lf_sha256": "311cb38acf487b47b5cadb0a84db04258507f0c0393d84d4ea59e47e555a0146",
+        "raw_sha256": "311cb38acf487b47b5cadb0a84db04258507f0c0393d84d4ea59e47e555a0146"
+      },
+      "tests/test_preflop_three_rank_transport_validation.py": {
+        "lf_sha256": "eee25dd2d8aa3fd88102f7c4b9b533bd0f0c37aef4565d4aba0b6456a31a760d",
+        "raw_sha256": "eee25dd2d8aa3fd88102f7c4b9b533bd0f0c37aef4565d4aba0b6456a31a760d"
+      }
+    },
+    "status": []
+  },
+  "source_unchanged": true,
+  "status": "transport-verified"
+}
