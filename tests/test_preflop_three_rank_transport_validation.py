@@ -48,6 +48,12 @@ def _make_candidate():
 
 
 class ThreeRankTransportValidationTests(unittest.TestCase):
+    def test_fraction_exponent_is_rejected_before_exact_arithmetic(self):
+        with patch.object(validator, "Fraction", side_effect=AssertionError("fraction parse")):
+            for token in ("1e1000000000", "1E-1000000000", "+1", "0.5"):
+                with self.subTest(token=token), self.assertRaisesRegex(ValueError, "plain integer"):
+                    validator._fraction(token)
+
     def setUp(self):
         with patch.object(validator.jj, "_current_source_check", return_value=None):
             self.report = _make_candidate()

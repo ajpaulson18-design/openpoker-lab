@@ -1,0 +1,1871 @@
+{
+  "admission": {
+    "bb_range": "KK",
+    "sb_range_weights": {
+      "AA": "1",
+      "JJ": "1/4",
+      "QQ": "1/2"
+    },
+    "source_pair_count": 9,
+    "target_pair_count": 108,
+    "total_weight": "63"
+  },
+  "artifact_sha256": "fc98072bef74e1570a13db5c876d36226bcec1b3a2f7959c361872feb3abdbb9",
+  "benchmark_id": "preflop-three-rank-transport-v1",
+  "row_count": 108,
+  "rows": [
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "d",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "h",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "d",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "h",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/63",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQd",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "d",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "h",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QcQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "d",
+        "c"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "h",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QdQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1387864,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 6584,
+      "wins": 317856
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1398993,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 7960,
+      "wins": 305351
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1410122,
+      "prior_fraction": "1/126",
+      "sb_hand": "QhQs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "QdQs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 9336,
+      "wins": 292846
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJd",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "d",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "h",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JcJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "d",
+        "c"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJh",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "h",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JdJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1381416,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KcKh",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 6102,
+      "wins": 324786
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1392403,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KcKd",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 7476,
+      "wins": 312425
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1403390,
+      "prior_fraction": "1/252",
+      "sb_hand": "JhJs",
+      "source_bb_hand": "KdKs",
+      "source_sb_hand": "JdJs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 8850,
+      "wins": 300064
+    }
+  ],
+  "schema_version": 1,
+  "source_basis": {
+    "aa": {
+      "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "path": "benchmarks/results/preflop-five-basis-v1.json"
+    },
+    "jj": {
+      "publication_index_sha256": "9022673f0801fa1481af146f66392b2c7ea4d88c8576946735ecb5ced34bf5e1",
+      "report_artifact_sha256": "1f80d95da14890be036c72772f6a88228beff936d05355875384dcc34d6d5156"
+    },
+    "qq": {
+      "artifact_sha256": "d47fcbdca9cb84275adb8902636d8331bca8b6089e1d62e83cc2160ff09503b8",
+      "path": "benchmarks/results/preflop-qq-kk-basis-v1.json"
+    }
+  },
+  "status": "candidate-only",
+  "total_prior": "1"
+}

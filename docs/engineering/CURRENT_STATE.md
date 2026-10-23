@@ -504,11 +504,22 @@ one full-board source-count batch. The independent best-five reference and
 native seven-card counter agree exactly on all three relative-suit classes,
 after exhaustive five-card conformance and the published AA calibration.
 Complete raw JSON/text receipts and strict saved-data authentication are
-retained. This adds no strategy or equilibrium certificate; the future
-108-pair AA/QQ/JJ-versus-KK pool remains a separate transport milestone.
+retained. This adds no strategy or equilibrium certificate; the subsequent
+[108-pair transport observation](../preflop-three-rank-transport-results.md)
+separately verifies every physical joint-suit map and exact global prior.
 Publication checks and merge status are tracked in
 [PR #216](https://github.com/ajpaulson18-design/openpoker-lab/pull/216).
 
 ## Configurable matrix-free TURN tail
 
 The separate [original-weight tail API](../matrix-free-turn-tail.md) adds configurable four-card boards, weighted ranges, physical selected/full-deck rivers and compatible street sizing to matrix-free CFR+. It averages completed sweeps t>discard with original weight t and preserves full-request admission. D=0 matches the existing matrix-free policy exactly in the control; positive tails match materialized training and independent physical rules at the declared tolerances. This is new research API coverage, with bounded correctness controls; broader convergence and commercial solver parity remain unproved.
+
+## Three-rank preflop count transport
+
+One frozen [no-enumeration transport observation](../preflop-three-rank-transport-results.md)
+passed for SB AA:1, QQ:0.5, JJ:0.25 versus BB KK. All 108 physical pair rows
+authenticate from nine saved source classes; exact priors sum to one and all
+six/24/six relative-suit censuses pass. One candidate and both independent
+memory/saved checks agree, all eleven forbidden-calculation counters are zero,
+and the clean measured source snapshot is stable. This establishes prepared
+count provenance, with no strategy, later-street betting or equilibrium claim.

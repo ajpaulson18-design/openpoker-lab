@@ -1718,3 +1718,16 @@ are linked from the experiment record.
 ## Configurable matrix-free turn tail (2026-10-23)
 
 The opt-in [generic direct-tail API](matrix-free-turn-tail.md) removes joint-world materialization for configurable original-weight turn tail solves, using the existing private-hand vectors and exact public river tree. It keeps original caps, all physical information rows and fresh legal response metrics. Bounded T10 controls cover exact zero-discard policy parity, positive-discard materialized agreement, blockers, selected/full-deck rivers, short all-ins/refunds and independent physical response replay. The fixed T6000 result and earlier misses remain immutable. Accuracy on held-out river games and then broader turn games is the next priority; no measured runtime/RSS gain follows from this representation.
+
+## Three-rank preflop transport observation (2026-10-23 UTC)
+
+The separate [108-pair source transport](preflop-three-rank-transport-results.md)
+passed one clean frozen observation after JJ publication #216 merged.
+Authenticated AA/QQ/JJ-versus-KK counts transfer through one joint suit
+bijection per physical pair. Exact per-pair priors are 1/63, 1/126 and 1/252,
+with total mass one. All 108 maps, nine source classes and three six/24/six
+overlap censuses pass both independent memory and fresh saved-file replay.
+All eleven forbidden-calculation counters are zero; there is no new board
+enumeration or training. The original two-file corpus and eight stable measured
+source identities are retained. A finite-game physical own-hand mutual-response
+witness and any solver convergence result remain separate milestones.
