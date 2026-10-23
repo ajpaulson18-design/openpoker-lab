@@ -27,6 +27,29 @@ def synthetic_rows():
 
 
 class ThreeRankSequenceCandidateTests(unittest.TestCase):
+    def test_reduced_payoff_matches_literal_terminal_transfers(self):
+        # This is a synthetic structural control, not a physical count or LP.
+        from scripts.preflop_mixed_pure_response import TERMINALS
+        config = {"small_blind": .5, "big_blind": 1, "starting_stack": [3, 3],
+                  "raise_sizes": [.5, 1], "max_raises": 2, "include_all_in": True}
+        root, _ = candidate.rules._build(candidate.rules._config(config))
+        means = {"A": Fraction(1, 3), "Q": Fraction(-1, 4), "J": Fraction(-2, 5)}
+        pairs, sequences, parents, menus, children, _ = candidate._tree_model(root, means)
+        _, _, indexes = candidate._make_flows(sequences, parents, children)
+        actual = candidate._payoff(root, pairs, indexes, sequences)
+        expected = [[Fraction(0)] * 11 for _ in range(34)]
+        for rank, mass in (("A", Fraction(4, 7)), ("Q", Fraction(2, 7)),
+                           ("J", Fraction(1, 7))):
+            for path, constant, multiplier in TERMINALS:
+                last = [("empty",), ("empty",)]
+                for position, action in enumerate(path):
+                    player = position % 2
+                    hand = rank * 2 if player == 0 else "KK"
+                    last[player] = (hand, path[:position], action)
+                expected[indexes[0][last[0]]][indexes[1][last[1]]] += (
+                    mass * (constant + multiplier * means[rank]))
+        self.assertEqual(actual, expected)
+
     def test_modified_whole_request_rejects_before_source_tree_or_lp_access(self):
         bad = deepcopy(candidate.expected_request())
         bad["own_hand_counts"]["sb"] = True
