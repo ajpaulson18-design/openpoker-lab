@@ -515,3 +515,12 @@ with original t and own reach; no native tail or longer iteration mode is implie
 Require compiled full-policy controls and independent physical numeric/exact
 replay, including known-value bounds. Native identities and logical budgets
 establish no performance or broader convergence claim.
+
+
+The separate [matrix-free river tail API](docs/matrix-free-river-tail.md)
+averages completed CFR+ sweeps t>D with original weight t, globally conditioned
+own-hand marginals and own sequence reach. Preserve literal D=0 policy parity,
+private actor/hand/history rows, unchanged ranked cancellation fallback and
+full requested 3T+3 vector admission independent of D. Existing defaults and
+saved corpora stay fixed; small physical/exact controls imply no speed or
+general accuracy benefit.
