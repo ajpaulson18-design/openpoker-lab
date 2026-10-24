@@ -7,6 +7,7 @@ import re
 from scripts import certify_preflop_three_rank_sequence as formal
 from scripts import preflop_three_rank_pure_response as independent
 from scripts import verify_preflop_three_rank_transport_publication as transport
+from scripts import preflop_publication_source_history as history
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLICATION = ROOT / "benchmarks/results/preflop-three-rank-exact-witness-v1"
@@ -81,10 +82,15 @@ def _current_source(source):
     _need(type(current["status"]) is list and current["status"] == [],
           "Current witness publication checkout must be clean")
     _need(set(current["source_hashes"]) == set(SOURCES), "Current witness source inventory differs")
+    transitions = {}
     for name in SOURCES:
-        _need(current["source_hashes"][name]["lf_sha256"] == source["source_hashes"][name]["lf_sha256"],
-              "Current witness LF source differs: " + name)
-    return current
+        old = source["source_hashes"][name]["lf_sha256"]
+        new = current["source_hashes"][name]["lf_sha256"]
+        if new != old:
+            transition = history.authenticate_transition(name, old, new)
+            _need(transition is not None, "Current witness LF source differs: " + name)
+            transitions[name] = transition
+    return {**current, "publication_source_transitions": transitions}
 
 
 def _quality(receipt):

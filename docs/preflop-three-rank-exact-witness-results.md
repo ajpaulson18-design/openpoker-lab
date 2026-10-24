@@ -63,8 +63,11 @@ The [saved-publication authenticator](../scripts/verify_preflop_three_rank_seque
 checks raw pins before parsing, original call/source/guard receipts and candidate
 links, then freshly repeats the exact physical response proof with candidate,
 tree, LP, pool, rank and trainer entry points disabled. A later current clean
-HEAD is attested separately and must retain all fifteen measured LF source
-identities. Neither original report is rewritten to describe publication edits.
+HEAD is attested separately and retains the measured calculation LF identities.
+The sole changed helper in that fifteen-file map has an explicit archived
+[publication-only transition](preflop-publication-source-history.md); every
+other measured file remains exact. Neither original report is rewritten to
+describe publication edits.
 
 The batch ran once on CPython 3.12.14 / Windows from
 2026-10-23T19:57:33.259407Z to 19:58:47.934226Z. The external process receipt
