@@ -1,0 +1,713 @@
+"""Exact normalized-policy value and legal-response certificate for U3's model.
+
+Each public call builds and validates a fresh bounded physical model. This
+module never trains, calls production payoff/response code, or retains a graph.
+"""
+from fractions import Fraction
+import hashlib
+import json
+from math import isfinite
+
+from scripts import four_street_validation as numeric
+from scripts import turn_rational_certificate as rational
+
+
+MAX_EXACT_WORK = 100_000
+MAX_CENSUS_WORK = 8_000_000
+MAX_FRACTION_BITS = 65_536
+MAX_EXACT_DEPTH = 32
+MAX_SERIALIZED_JSON_NODES = 100_000
+THRESHOLD = Fraction(1, 1000)
+SOURCE_IDENTITY = "four-street-independent-exact-v1"
+
+
+def _need(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def _safe_json_value(value, depth=0, budget=None):
+    """Accept only inert JSON-compatible built-ins; do not invoke user hooks."""
+    if budget is None:
+        budget = [0]
+    budget[0] += 1
+    if budget[0] > MAX_SERIALIZED_JSON_NODES:
+        raise ValueError("serialized policy exceeds the bounded JSON node count")
+    if depth > 40:
+        raise ValueError("serialized policy exceeds the bounded JSON depth")
+    if value is None or type(value) in (str, int, bool):
+        if type(value) is str and len(value) > numeric.MAX_RANGE_EXPRESSION_LENGTH:
+            raise ValueError("serialized policy string exceeds the bounded length")
+        return
+    if type(value) is float:
+        if not isfinite(value):
+            raise ValueError("serialized policy contains a nonfinite number")
+        return
+    if type(value) in (list, tuple):
+        for item in value:
+            _safe_json_value(item, depth + 1, budget)
+        return
+    if type(value) is dict:
+        for key, item in value.items():
+            if type(key) is not str:
+                raise ValueError("serialized policy object keys must be strings")
+            if len(key) > numeric.MAX_RANGE_EXPRESSION_LENGTH:
+                raise ValueError("serialized policy key exceeds the bounded length")
+            _safe_json_value(item, depth + 1, budget)
+        return
+    raise ValueError("serialized policy must contain only JSON-compatible built-ins")
+
+
+def _snapshot_case(case):
+    if type(case) is not dict:
+        raise ValueError("case must be a plain bounded dictionary")
+
+    def clone(value, depth=0):
+        if depth > 8:
+            raise ValueError("case exceeds bounded configuration depth")
+        if value is None or type(value) in (str, int, float, bool, Fraction):
+            return value
+        if type(value) in (list, tuple):
+            if len(value) > 128:
+                raise ValueError("case sequence exceeds bounded input size")
+            return tuple(clone(item, depth + 1) for item in value) if type(value) is tuple else [
+                clone(item, depth + 1) for item in value]
+        if type(value) is dict:
+            if len(value) > 32 or any(type(key) is not str for key in value):
+                raise ValueError("case mapping exceeds bounded plain-string fields")
+            return {key: clone(item, depth + 1) for key, item in value.items()}
+        raise ValueError("case must contain only bounded scalar/list/tuple/dict values")
+
+    return clone(case)
+
+
+def _canonical_hash(value):
+    def safe(item):
+        if isinstance(item, Fraction):
+            return {"$fraction": str(item)}
+        if type(item) is dict:
+            return {key: safe(child) for key, child in item.items()}
+        if type(item) in (list, tuple):
+            return [safe(child) for child in item]
+        return item
+
+    raw = json.dumps(safe(value), sort_keys=True, separators=(",", ":"),
+                     ensure_ascii=True, allow_nan=False).encode("ascii")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _children(node):
+    if isinstance(node, numeric._Decision):
+        return node.children
+    if isinstance(node, numeric.Reveal):
+        return tuple(node.branches.values())
+    if isinstance(node, numeric._Terminal):
+        return ()
+    raise ValueError("numeric graph contains an unknown node")
+
+
+def _validate_graph(model, budget=None):
+    """Check the complete owned graph and its exact physical reveal partition."""
+    if not isinstance(model, numeric.NumericModel):
+        raise ValueError("a fresh independent numeric model is required")
+    worlds = model.worlds
+    _need(type(worlds) is tuple and 0 < len(worlds) <= numeric.MAX_WORLDS,
+          "numeric graph has invalid bounded physical worlds")
+    total_mass = Fraction(0)
+    for world in worlds:
+        _need(type(world) is dict and set(world) == {"hands", "board", "weight", "sign"},
+              "numeric world has an invalid shape")
+        _need(type(world["hands"]) is tuple and len(world["hands"]) == 2 and
+              all(type(hand) is tuple and len(hand) == 2 and
+                  all(type(card) is str for card in hand) for hand in world["hands"]),
+              "numeric world has invalid global SB/BB hands")
+        _need(type(world["board"]) is tuple and len(world["board"]) == 5 and
+              len(set(world["board"])) == 5 and all(type(card) is str for card in world["board"]),
+              "numeric world has invalid ordered board")
+        _need(type(world["weight"]) is Fraction and world["weight"] > 0,
+              "numeric world mass must be a positive exact fraction")
+        _need(type(world["sign"]) is int and world["sign"] in (-1, 0, 1),
+              "numeric world showdown sign must be -1, zero or one")
+        if budget is not None:
+            total_mass = budget.add(total_mass,
+                                    budget.fraction(world["weight"], "physical world mass"),
+                                    "physical world normalizer")
+        else:
+            total_mass += world["weight"]
+    _need(total_mass == 1, "numeric physical world masses must sum exactly to one")
+
+    active = set()
+    visited = set()
+    nodes = []
+    decisions = []
+    expected_infos = {}
+
+    def visit(node, subset, depth, public_history):
+        if budget is not None:
+            budget.charge("tree_preflight_nodes")
+        _need(depth <= MAX_EXACT_DEPTH, "exact certificate exceeds depth 32")
+        identity = id(node)
+        _need(identity not in active, "numeric graph contains a cycle")
+        _need(identity not in visited, "numeric graph aliases a mutable node")
+        active.add(identity)
+        visited.add(identity)
+        nodes.append(node)
+        _need(len(nodes) <= numeric.MAX_STATES,
+              "numeric graph exceeds its admitted state bound")
+        if isinstance(node, numeric._Decision):
+            _need(type(node.player) is int and node.player in (0, 1),
+                  "numeric decision actor must be global SB or BB")
+            _need(type(node.history) is tuple and node.history == public_history,
+                  "numeric decision has a mismatched public history")
+            _need(type(node.board) is tuple and len(node.board) in (0, 3, 4, 5),
+                  "numeric decision has an invalid visible board")
+            _need(all(world["board"][:len(node.board)] == node.board for world in subset),
+                  "numeric decision includes a hidden or mismatched board")
+            _need(type(node.actions) is tuple and type(node.children) is tuple and
+                  len(node.actions) > 0 and len(node.actions) == len(node.children),
+                  "numeric action/child vectors are omitted or misaligned")
+            decisions.append(node)
+            for world in subset:
+                hand = "".join(world["hands"][node.player])
+                key = (node.player, hand, node.history)
+                previous = expected_infos.get(key)
+                _need(previous is None or previous is node,
+                      "numeric graph aliases incompatible information decisions")
+                expected_infos[key] = node
+            if budget is not None:
+                budget.charge("tree_preflight_edges", len(node.children))
+            for action, child in zip(node.actions, node.children):
+                visit(child, subset, depth + 1,
+                      public_history + (action.token,))
+        elif isinstance(node, numeric.Reveal):
+            _need(type(node.history) is tuple and node.history == public_history,
+                  "numeric reveal has a mismatched public history")
+            _need(type(node.board_length) is int and node.board_length in (3, 4, 5),
+                  "numeric reveal board length is invalid")
+            _need(type(node.branches) is dict and node.branches,
+                  "numeric reveal has no public branches in its exact partition")
+            expected_prefixes = {world["board"][:node.board_length] for world in subset}
+            _need(set(node.branches) == expected_prefixes,
+                  "numeric reveal branches do not partition the complete visible prefix")
+            if budget is not None:
+                budget.charge("tree_preflight_edges", len(node.branches))
+            for prefix, child in node.branches.items():
+                _need(type(prefix) is tuple and len(prefix) == node.board_length,
+                      "numeric reveal key is not a complete visible prefix")
+                child_worlds = tuple(world for world in subset
+                                     if world["board"][:node.board_length] == prefix)
+                _need(child_worlds, "numeric reveal contains an unreachable branch")
+                child_node = child
+                if isinstance(child_node, (numeric._Decision, numeric.Reveal)):
+                    visible = child_node.board if isinstance(child_node, numeric._Decision) else None
+                    if visible is not None:
+                        _need(visible == prefix, "numeric reveal child board differs from its branch")
+                if node.board_length == 3:
+                    reveal_token = "flop@" + "".join(prefix)
+                elif node.board_length == 4:
+                    reveal_token = "turn@" + prefix[-1]
+                else:
+                    reveal_token = "river@" + prefix[-1]
+                visit(child, child_worlds, depth + 1,
+                      public_history + (reveal_token,))
+        elif isinstance(node, numeric._Terminal):
+            _need(node.kind in ("fold", "showdown"), "numeric terminal kind is invalid")
+            _need(type(node.contributions) is tuple and len(node.contributions) == 2 and
+                  all(type(value) in (int, float) and isfinite(float(value)) and value >= 0
+                      for value in node.contributions),
+                  "numeric terminal contributions are invalid")
+            if node.kind == "fold":
+                _need(type(node.winner) is int and node.winner in (0, 1),
+                      "numeric fold terminal has an invalid global winner")
+            else:
+                _need(node.winner is None, "showdown terminal cannot declare a winner")
+        else:
+            raise ValueError("numeric graph contains an unknown node")
+        active.remove(identity)
+
+    visit(model.root, worlds, 1, ())
+    _need(len(decisions) == len(model.decisions) and
+          all(left is right for left, right in zip(decisions, model.decisions)),
+          "numeric decision index differs from the independently traversed graph")
+    _need(set(expected_infos) == set(model.expected_infos) and all(
+        expected_infos[key] is model.expected_infos[key] for key in expected_infos),
+        "numeric information rows do not exactly cover visible own-hand decisions")
+    if budget is not None and len(nodes) > 1:
+        # Every tree edge was reserved at its parent; this bound is checked
+        # independently from the U3 graph construction receipt.
+        recorded_edges = getattr(budget, "counters", getattr(budget, "counts", {}))
+        _need(recorded_edges.get("tree_preflight_edges", 0) == len(nodes) - 1,
+              "numeric graph is not a rooted tree")
+    return tuple(nodes), tuple(decisions), expected_infos
+
+
+def _model_identity(model):
+    graph_rows = []
+    nodes, decisions, _ = _validate_graph(model)
+    for node in nodes:
+        if isinstance(node, numeric._Decision):
+            graph_rows.append({"type": "decision", "player": node.player,
+                               "history": list(node.history), "board": list(node.board),
+                               "actions": [{"name": action.name,
+                                            "amount": action.amount,
+                                            "raise_to": action.raise_to,
+                                            "history_key": action.token}
+                                           for action in node.actions]})
+        elif isinstance(node, numeric.Reveal):
+            graph_rows.append({"type": "reveal", "history": list(node.history),
+                               "board_length": node.board_length,
+                               "branches": [list(prefix) for prefix in node.branches]})
+        else:
+            graph_rows.append({"type": "terminal", "kind": node.kind,
+                               "contributions": list(node.contributions),
+                               "winner": node.winner})
+    support = [{"hands": [list(hand) for hand in world["hands"]],
+                "board": list(world["board"]), "weight": str(world["weight"]),
+                "sign": world["sign"]} for world in model.worlds]
+    return _canonical_hash({"case": model.case, "support": support,
+                            "graph": graph_rows, "rows": len(model.expected_infos)})
+
+
+class _Counter:
+    def __init__(self, limit=MAX_CENSUS_WORK):
+        self.limit = limit
+        self.work = 0
+        self.counts = {}
+
+    def charge(self, kind, amount=1):
+        if type(amount) is not int or amount < 0:
+            raise ValueError("certificate work reservation must be a nonnegative integer")
+        if self.work + amount > self.limit:
+            raise ValueError(
+                f"Exact structural census exceeds its {self.limit}-work limit "
+                f"at {self.work}+{amount}; partial counters={self.counts!r}")
+        self.work += amount
+        self.counts[kind] = self.counts.get(kind, 0) + amount
+
+    def fraction(self, value, label):
+        if not isinstance(value, Fraction):
+            raise TypeError(f"{label} must be an exact Fraction")
+        if max(abs(value.numerator).bit_length(), value.denominator.bit_length(), 1) > MAX_FRACTION_BITS:
+            raise ValueError("physical mass exceeds the 65536-bit fraction limit")
+        return value
+
+    def add(self, left, right, label):
+        self.charge("fraction_operations")
+        return self.fraction(left + right, label)
+
+
+class _ObservedBudget(rational._Budget):
+    """Keep the source helper's fixed caps while retaining first-failure work."""
+
+    def _with_receipt(self, operation, value, label=None):
+        try:
+            return operation(value) if label is None else operation(value, label)
+        except (ValueError, TypeError, ZeroDivisionError) as exc:
+            raise ValueError(
+                f"{exc}; partial exact counters work={self.work} "
+                f"width={self.max_observed_bits} by_kind={self.counters!r}") from exc
+
+    def charge(self, kind, amount=1):
+        return self._with_receipt(lambda value: super(_ObservedBudget, self).charge(kind, value),
+                                  amount)
+
+    def fraction(self, value, label):
+        return self._with_receipt(lambda item, name: super(_ObservedBudget, self).fraction(item, name),
+                                  value, label)
+
+
+def _profile_structure(root, worlds, counter):
+    def visit(node, world, depth):
+        counter.charge("profile_node_world_visits")
+        _need(depth <= MAX_EXACT_DEPTH, "profile forecast exceeds depth 32")
+        if isinstance(node, numeric._Terminal):
+            counter.charge("profile_terminal_conversions")
+            return
+        if isinstance(node, numeric.Reveal):
+            counter.charge("profile_reveal_lookups")
+            child = node.branches[world["board"][:node.board_length]]
+            visit(child, world, depth + 1)
+            return
+        counter.charge("profile_action_edges", len(node.children))
+        for child in node.children:
+            counter.charge("profile_fraction_operations", 2)
+            visit(child, world, depth + 1)
+
+    for world in worlds:
+        counter.charge("profile_world_weight_operations", 2)
+        visit(root, world, 1)
+
+
+def _br_structure(root, worlds, player, counter):
+    counter.charge("br_own_hand_setup", len(worlds))
+    hands = sorted({world["hands"][player] for world in worlds})
+
+    def visit(node, own_hand, group, depth):
+        counter.charge("br_node_group_visits")
+        _need(depth <= MAX_EXACT_DEPTH, "best-response forecast exceeds depth 32")
+        if not group:
+            return
+        if isinstance(node, numeric._Terminal):
+            counter.charge("br_terminal_group_scans", len(group))
+            counter.charge("br_terminal_conversions", len(group))
+            counter.charge("br_terminal_fraction_operations", 2 * len(group))
+            return
+        if isinstance(node, numeric.Reveal):
+            branch_count = len(node.branches)
+            counter.charge("br_reveal_branch_slots", 2 * branch_count)
+            counter.charge("br_reveal_group_scans", len(group))
+            counter.charge("br_reveal_bucket_references", len(group))
+            buckets = {prefix: [] for prefix in node.branches}
+            for world_id in group:
+                world = worlds[world_id]
+                buckets[world["board"][:node.board_length]].append(world_id)
+            for prefix, child in node.branches.items():
+                visit(child, own_hand, tuple(buckets[prefix]), depth + 1)
+            counter.charge("br_reveal_branch_sum_operations", branch_count)
+            return
+        if node.player == player:
+            counter.charge("br_own_action_slots", len(node.children))
+            for child in node.children:
+                visit(child, own_hand, group, depth + 1)
+            counter.charge("br_own_action_selection_operations", max(0, len(node.children) - 1))
+            return
+        action_count = len(node.children)
+        counter.charge("br_opponent_action_group_slots", action_count)
+        counter.charge("br_opponent_group_scans", len(group) * action_count)
+        counter.charge("br_opponent_group_copies", len(group) * action_count)
+        counter.charge("br_opponent_reach_multiplications", len(group) * action_count)
+        for child in node.children:
+            # Forecast every policy action as positive, independent of a saved
+            # payload's zero probabilities.
+            visit(child, own_hand, group, depth + 1)
+        counter.charge("br_opponent_action_sum_operations", action_count)
+
+    for own_hand in hands:
+        counter.charge("br_own_hand_group_scans", len(worlds))
+        group = tuple(index for index, world in enumerate(worlds)
+                      if world["hands"][player] == own_hand)
+        counter.charge("br_own_hand_group_copies", len(group))
+        visit(root, own_hand, group, 1)
+        counter.charge("br_own_hand_response_sums")
+
+
+def _forecast_model(model):
+    counter = _Counter()
+    nodes, decisions, infos = _validate_graph(model, counter)
+    worlds = model.worlds
+    counter.charge("physical_world_setup_entries", len(worlds))
+    counter.charge("physical_mass_normalization_operations", 2 * len(worlds))
+    counter.charge("policy_row_index_entries", len(infos))
+    counter.charge("policy_row_sort_entries", len(infos))
+    action_slots = sum(len(node.actions) for node in infos.values())
+    counter.charge("policy_action_conversion_entries", action_slots)
+    counter.charge("policy_fraction_operation_slots", 4 * action_slots + len(infos))
+    counter.charge("normalization_ledger_row_slots", len(infos))
+    counter.charge("normalization_ledger_action_slots", action_slots)
+    counter.charge("normalized_output_row_slots", len(infos))
+    counter.charge("normalized_output_action_slots", action_slots)
+    counter.charge("policy_hash_row_action_slots", len(infos) + action_slots)
+    _profile_structure(model.root, worlds, counter)
+    _br_structure(model.root, worlds, 0, counter)
+    _br_structure(model.root, worlds, 1, counter)
+    counter.charge("final_metric_fraction_operations", 12)
+    counter.charge("certificate_output_entries", 24 + len(infos) + action_slots)
+    return {"work": counter.work, "work_limit": MAX_EXACT_WORK,
+            "admitted": counter.work <= MAX_EXACT_WORK,
+            "excess_work": max(0, counter.work - MAX_EXACT_WORK),
+            "work_by_kind": dict(sorted(counter.counts.items())),
+            "tree_nodes": len(nodes), "tree_decisions": len(decisions),
+            "tree_depth": model.counts["depth"], "worlds": len(worlds),
+            "information_rows": len(infos), "action_slots": action_slots,
+            "maximum_depth": MAX_EXACT_DEPTH,
+            "maximum_fraction_bits": MAX_FRACTION_BITS}
+
+
+def forecast_exact(case):
+    """Admit the full shape/support without consulting trained probabilities."""
+    safe_case = _snapshot_case(case)
+    model = numeric.build_model(safe_case)
+    forecast = _forecast_model(model)
+    forecast.update({"source_identity": SOURCE_IDENTITY,
+                     "model_sha256": _model_identity(model),
+                     "input_case_canonical_sha256": _canonical_hash(model.case),
+                     "preparation_receipts": {
+                         "independent_model_build": {
+                             "worlds": len(model.worlds),
+                             "public_states": model.counts["public_states"],
+                             "decisions": model.counts["decisions"],
+                             "information_rows": model.counts["infos"]},
+                         "model_identity_hash": {
+                             "tree_nodes": forecast["tree_nodes"],
+                             "information_rows": forecast["information_rows"],
+                             "action_slots": forecast["action_slots"],
+                             "worlds": forecast["worlds"]}}})
+    return forecast
+
+
+def _normalise_policy(model, payload, checked, budget):
+    rows = payload["strategy"]
+    budget.charge("serialized_row_index_entries", len(rows))
+    source_rows = {}
+    for row in rows:
+        key = numeric._row_key(row)
+        source_rows[key] = row
+    keys = sorted(checked)
+    budget.charge("policy_sort_entries", len(keys))
+    action_slot_count = sum(len(node.actions) for node in model.expected_infos.values())
+    budget.charge("normalization_ledger_row_slots", len(keys))
+    budget.charge("normalization_ledger_action_slots", action_slot_count)
+    normalized = {}
+    ledger = []
+    normalized_rows = []
+    max_adjustment = Fraction(0)
+    for key in keys:
+        row = source_rows[key]
+        raw_values = checked[key]
+        budget.charge("row_normalization_action_entries", len(raw_values))
+        raw = tuple(rational._input_fraction(value, budget, "serialized probability")
+                    for value in raw_values)
+        total = Fraction(0)
+        for value in raw:
+            total = budget.add(total, value, "serialized row probability sum")
+        if total <= 0:
+            raise ValueError("serialized policy row has zero probability mass")
+        probabilities = tuple(budget.divide(value, total, "normalized row probability")
+                              for value in raw)
+        normalized[key] = probabilities
+        action_entries = []
+        normalized_actions = []
+        for index, (before, after, action) in enumerate(zip(raw, probabilities, row["actions"])):
+            adjustment = budget.add(after, -before, "policy normalization adjustment")
+            max_adjustment = max(max_adjustment, abs(adjustment))
+            action_entries.append({"index": index, "name": action["name"],
+                                   "history_key": action["history_key"],
+                                   "raw_binary64_fraction": str(before),
+                                   "normalized_fraction": str(after),
+                                   "adjustment_fraction": str(adjustment),
+                                   "adjustment_float": float(adjustment)})
+            normalized_actions.append({"name": action["name"],
+                                       "amount": action["amount"],
+                                       "raise_to": action["raise_to"],
+                                       "history_key": action["history_key"],
+                                       "probability_fraction": str(after)})
+        ledger.append({"player": row["player"], "hand": row["hand"],
+                      "revealed_board": row["revealed_board"],
+                      "history": row["history"],
+                      "raw_row_sum_fraction": str(total), "actions": action_entries})
+        normalized_rows.append({"player": row["player"], "hand": row["hand"],
+                                "street": row["street"],
+                                "revealed_board": row["revealed_board"],
+                                "history": row["history"], "actions": normalized_actions})
+    _need(set(normalized) == set(model.expected_infos),
+          "normalized policy rows do not cover the complete independent model")
+    return normalized, ledger, normalized_rows, max_adjustment
+
+
+def _terminal_value(node, world, budget):
+    matched = min(node.contributions)
+    sign = node.winner if node.kind == "fold" else world["sign"]
+    if node.kind == "fold":
+        sign = 1 if node.winner == 0 else -1
+    payoff = float(sign) * float(matched)
+    if not isfinite(payoff):
+        raise ValueError("exact terminal payoff is nonfinite")
+    budget.charge("terminal_binary64_conversion")
+    return rational._input_fraction(payoff, budget, "binary64 terminal payoff")
+
+
+def _profile_value(model, policies, budget):
+    def visit(node, world, depth):
+        budget.charge("profile_node_world_visits")
+        if depth > MAX_EXACT_DEPTH:
+            raise ValueError("profile traversal exceeds depth 32")
+        if isinstance(node, numeric._Terminal):
+            return _terminal_value(node, world, budget)
+        if isinstance(node, numeric.Reveal):
+            budget.charge("profile_reveal_lookups")
+            return visit(node.branches[world["board"][:node.board_length]], world, depth + 1)
+        key = (node.player, "".join(world["hands"][node.player]), node.history)
+        row = policies[key]
+        total = Fraction(0)
+        for probability, child in zip(row, node.children):
+            total = budget.add(total, budget.multiply(
+                probability, visit(child, world, depth + 1), "profile action value"),
+                "profile action sum")
+        return total
+
+    value = Fraction(0)
+    for world in model.worlds:
+        contribution = budget.multiply(world["weight"], visit(model.root, world, 1),
+                                       "physical world profile contribution")
+        value = budget.add(value, contribution, "profile value sum")
+    return value
+
+
+def _best_response(model, policies, player, budget):
+    worlds = model.worlds
+    budget.charge("br_own_hand_setup", len(worlds))
+    own_hands = sorted({world["hands"][player] for world in worlds})
+
+    def visit(node, own_hand, group, depth):
+        budget.charge("br_node_group_visits")
+        if depth > MAX_EXACT_DEPTH:
+            raise ValueError("best-response traversal exceeds depth 32")
+        if not group:
+            return Fraction(0)
+        if isinstance(node, numeric._Terminal):
+            budget.charge("br_terminal_group_scans", len(group))
+            total = Fraction(0)
+            for world, mass in group:
+                total = budget.add(total, budget.multiply(
+                    mass, _terminal_value(node, world, budget), "BR terminal contribution"),
+                    "BR terminal group sum")
+            return total
+        if isinstance(node, numeric.Reveal):
+            budget.charge("br_reveal_branch_slots", 2 * len(node.branches))
+            budget.charge("br_reveal_group_scans", len(group))
+            budget.charge("br_reveal_bucket_references", len(group))
+            buckets = {prefix: [] for prefix in node.branches}
+            for entry in group:
+                buckets[entry[0]["board"][:node.board_length]].append(entry)
+            total = Fraction(0)
+            for prefix, child in node.branches.items():
+                branch = visit(child, own_hand, tuple(buckets[prefix]), depth + 1)
+                total = budget.add(total, branch, "BR reveal branch sum")
+            return total
+        if node.player == player:
+            budget.charge("br_own_action_slots", len(node.children))
+            values = [visit(child, own_hand, group, depth + 1)
+                      for child in node.children]
+            if player == 0:
+                return max(values)
+            return min(values)
+        action_count = len(node.children)
+        budget.charge("br_opponent_action_group_slots", action_count)
+        budget.charge("br_opponent_group_scans", len(group) * action_count)
+        budget.charge("br_opponent_group_copies", len(group) * action_count)
+        action_groups = [[] for _ in node.children]
+        for world, mass in group:
+            key = (node.player, "".join(world["hands"][node.player]), node.history)
+            row = policies[key]
+            for index, probability in enumerate(row):
+                if probability:
+                    budget.charge("br_opponent_reach_multiplications")
+                    action_groups[index].append((
+                        world, budget.multiply(mass, probability, "opponent policy reach")))
+        total = Fraction(0)
+        for child, action_group in zip(node.children, action_groups):
+            if action_group:
+                total = budget.add(total, visit(child, own_hand, tuple(action_group), depth + 1),
+                                   "BR opponent action sum")
+        return total
+
+    response = Fraction(0)
+    for own_hand in own_hands:
+        budget.charge("br_own_hand_group_scans", len(worlds))
+        group = tuple((world, world["weight"]) for world in worlds
+                      if world["hands"][player] == own_hand)
+        budget.charge("br_own_hand_group_copies", len(group))
+        response = budget.add(response, visit(model.root, own_hand, group, 1),
+                              "BR own-hand response sum")
+    return response if player == 0 else response
+
+
+def evaluate_exact(case, payload):
+    """Return exact profile EV, legal grouped BR bounds and normalization proof."""
+    safe_case = _snapshot_case(case)
+    if type(payload) is not dict:
+        raise ValueError("payload must be a plain serialized mapping")
+    if len(payload) > 128 or type(payload.get("strategy")) is not list or \
+            len(payload["strategy"]) > numeric.MAX_ROWS:
+        raise ValueError("payload exceeds bounded four-street result shape")
+    json_nodes = [0]
+    _safe_json_value(payload, budget=json_nodes)
+    model = numeric.build_model(safe_case)
+    forecast = _forecast_model(model)
+    if not forecast["admitted"]:
+        raise ValueError(
+            f"exact certificate forecast exceeds its hard work limit: "
+            f"forecast={forecast['work']} limit={MAX_EXACT_WORK} "
+            f"counters={forecast['work_by_kind']!r}")
+    budget = _ObservedBudget(MAX_EXACT_WORK, MAX_EXACT_DEPTH, MAX_FRACTION_BITS)
+    _validate_graph(model, budget)
+    policies_float = numeric.validate_policy(model, payload)
+    normalized, ledger, normalized_rows, max_adjustment = _normalise_policy(
+        model, payload, policies_float, budget)
+    value = _profile_value(model, normalized, budget)
+    br_sb = _best_response(model, normalized, 0, budget)
+    min_sb = _best_response(model, normalized, 1, budget)
+    br_bb = -min_sb
+    lower = -br_bb
+    upper = br_sb
+    if not lower <= value <= upper:
+        raise ValueError("exact legal-response interval does not contain policy value")
+    gain_sb = budget.add(upper, -value, "SB unilateral response gain")
+    gain_bb = budget.add(value, -lower, "BB unilateral response gain")
+    if gain_sb < 0 or gain_bb < 0:
+        raise ValueError("exact unilateral response gain is negative")
+    nash_conv = budget.add(upper, -lower, "exact NashConv")
+    exploitability = budget.divide(nash_conv, Fraction(2), "exact exploitability")
+    metrics = {"value_sb": value, "value_bb": -value,
+               "sb_best_response_value": br_sb, "bb_best_response_value": br_bb,
+               "sb_best_response_gain": gain_sb, "bb_best_response_gain": gain_bb,
+               "nash_conv": nash_conv, "exploitability": exploitability,
+               "lower_value_bound": lower, "upper_value_bound": upper}
+    for name, result in metrics.items():
+        budget.fraction(result, name)
+
+    budget.charge("policy_hash_row_action_slots", len(normalized_rows) +
+                  sum(len(row["actions"]) for row in normalized_rows))
+    normalized_policy_hash = _canonical_hash(normalized_rows)
+    input_policy_hash = _canonical_hash(payload)
+    float_replay = numeric.replay_policy(payload, safe_case)
+    float_comparison = {}
+    for key in ("value_sb", "value_bb", "sb_best_response_value",
+                "bb_best_response_value", "nash_conv"):
+        exact_float = float(metrics[key])
+        observed = float_replay[key]
+        difference = abs(exact_float - float(observed))
+        if difference > 1e-9:
+            raise ValueError(f"exact and independent floating replay disagree for {key}")
+        float_comparison[key] = {"exact_float": exact_float, "independent_float": observed,
+                                 "absolute_difference": difference}
+    budget.charge("exact_metric_output_entries", len(metrics))
+    budget.charge("normalized_output_row_slots", len(normalized_rows))
+    budget.charge("normalized_output_action_slots",
+                  sum(len(row["actions"]) for row in normalized_rows))
+    budget.charge("certificate_output_entries", 24 + len(normalized_rows) +
+                  sum(len(row["actions"]) for row in normalized_rows))
+    actual_work = budget.work
+    if actual_work > forecast["work"]:
+        raise ValueError("actual exact work exceeded the shape-only forecast")
+    return {"schema_version": 1, "source_identity": SOURCE_IDENTITY,
+            "model_sha256": _model_identity(model),
+            "input_case_canonical_sha256": _canonical_hash(model.case),
+            "input_policy_canonical_sha256": input_policy_hash,
+            "normalized_policy_sha256": normalized_policy_hash,
+            "metrics": {key: str(result) for key, result in metrics.items()},
+            "threshold": str(THRESHOLD),
+            "threshold_met": nash_conv <= THRESHOLD,
+            "normalization_ledger": ledger,
+            "normalized_policy_rows": normalized_rows,
+            "maximum_row_adjustment": str(max_adjustment),
+            "floating_replay": float_replay,
+            "floating_comparison": float_comparison,
+            "preparation_receipts": {
+                "input_policy_canonical_hash_json_nodes": json_nodes[0],
+                "model_identity_hash": {
+                    "tree_nodes": forecast["tree_nodes"],
+                    "information_rows": forecast["information_rows"],
+                    "action_slots": forecast["action_slots"],
+                    "worlds": forecast["worlds"]},
+                "independent_numeric_replay": {
+                    "worlds": model.counts["worlds"],
+                    "public_states": model.counts["public_states"],
+                    "information_rows": model.counts["infos"]}},
+            "forecast": forecast,
+            "actual_work": actual_work,
+            "actual_work_by_kind": dict(sorted(budget.counters.items())),
+            "maximum_fraction_bits": budget.max_observed_bits,
+            "fraction_bit_limit": MAX_FRACTION_BITS,
+            "work_limit": MAX_EXACT_WORK,
+            "depth_limit": MAX_EXACT_DEPTH}

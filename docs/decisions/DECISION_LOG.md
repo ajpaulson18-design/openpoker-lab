@@ -406,3 +406,16 @@ T10 development policy passes all 1,200 row checks with maximum scalar replay ga
 Proceed to a fresh call-owned rational evaluator with full named-work forecast,
 100,000 work/65,536 Fraction-bit caps and grouped legal own-hand best responses;
 then review its controls before freezing the one-call accuracy experiment.
+
+D039 (2026-10-24): the first exact evaluator's full structural forecast rejects
+the unchanged 22-world fixture at 118,261 modeled work against the 100,000 cap.
+Preserve this development source/census and its unknown whole-fixture quality;
+eight small/control tests passing does not satisfy U4 or authorize training.
+Sol approves a distinct evaluator v2 correction that computes the current-profile
+value inside the SB grouped legal-response traversal, sharing weighted terminal
+sums while retaining all legal SB actions. Opponent reach alone weights groups;
+SB policy mixtures supply SB reach exactly once. Keep separate BB response,
+complete normalization/output ledgers and existing caps/fixture/threshold. Add
+common named actual/forecast events and per-family dominance checks, preserving
+the v1 capacity miss. Require fresh census and exact mixed/zero/tiny-probability,
+hidden-future and literal coupling controls before the frozen runner is eligible.

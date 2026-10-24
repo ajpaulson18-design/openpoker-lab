@@ -41,6 +41,12 @@ the largest production-versus-independent scalar gap was
 `2.498001805406602e-16`. This control is not the frozen accuracy run. The exact
 generic rational evaluator and its known zero/nonzero-gap controls remain U4.
 
+The first U4 development census rejected the unchanged fixture: 118,261 modeled
+work exceeds the fixed 100,000 cap. No literal exact policy evaluation or quality
+training followed. D039 requires a separately reviewed fused profile/SB-response
+traversal, complete familywise accounting and fresh exact controls. Small-game
+control success cannot replace the named fixture's pending certificate.
+
 Required pre-training controls include the 22-world exact prior, cumulative
 matched ledger `1 -> 2 -> 4 -> 8`, all check/call profile, a single legal river
 policy change with a nonzero upstream-value difference, a sure-winner exact-zero
