@@ -1732,6 +1732,18 @@ enumeration or training. The original two-file corpus and eight stable measured
 source identities are retained. A finite-game physical own-hand mutual-response
 witness and any solver convergence result remain separate milestones.
 
+The subsequent [physical exact-witness observation](preflop-three-rank-exact-witness-results.md)
+completed once from clean source 58ccc8d886a22428efe26c8ba9447a596659db29.
+Both independent memory and actual saved-file checks certify exact value
+1464215/2330174 chips and NashConv zero for the fixed three-chip game.
+The proof retains 108 physical pairs, 96 own-hand/history policy rows, 258
+probabilities and 1,080 complete legal responses. It uses literal terminal
+transfers and authenticated counts while disabling candidate/tree/LP authority.
+Original outputs and fifteen unchanged measured source identities are retained.
+The old 72-pair witness and every historical quality miss remain unchanged.
+This supersedes only the pending-witness status above, with trained convergence
+and broader poker coverage still unproved.
+
 
 ## Held-out river accuracy protocol (2026-10-23)
 

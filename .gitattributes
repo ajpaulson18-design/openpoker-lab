@@ -143,6 +143,9 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Original no-enumeration three-rank transport observation, byte-exact.
 /benchmarks/results/preflop-three-rank-transport-v1/** -text
 
+# Original three-rank physical mutual-response witness and complete candidate.
+/benchmarks/results/preflop-three-rank-exact-witness-v1/** -text
+
 # Preserve the preregistered compact-turn protocol and raw experiment bundle.
 /.gitattributes text eol=lf
 /.gitignore text eol=lf
@@ -163,3 +166,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Preserve fixed native river quality evidence byte-for-byte.
 /benchmarks/results/native-river-range-quality-v1/** -text
+
+# Original LF source bytes for sealed historical publication compatibility.
+/benchmarks/sources/preflop-publication-context-v1/** -text

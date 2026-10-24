@@ -11,6 +11,7 @@ import re
 
 from scripts import certify_preflop_three_rank_transport as audit
 from scripts import preflop_three_rank_transport_validation as independent
+from scripts import preflop_publication_source_history as history
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLICATION = ROOT / "benchmarks/results/preflop-three-rank-transport-v1"
@@ -132,12 +133,19 @@ def _current_source_attestation(expected):
     hashes = snap.get("source_hashes")
     _need(type(hashes) is dict and set(hashes) == set(SOURCE_PATHS),
           "Current eight-file source inventory differs")
+    transitions = {}
     for relative in SOURCE_PATHS:
         row = hashes[relative]
-        _need(type(row) is dict and set(row) == {"raw_sha256", "lf_sha256"}
-              and row.get("lf_sha256") == expected["source_hashes"][relative]["lf_sha256"],
-              f"Current LF source differs from frozen transport source: {relative}")
-    return {"revision": snap["revision"], "status": snap["status"], "source_hashes": hashes}
+        _need(type(row) is dict and set(row) == {"raw_sha256", "lf_sha256"},
+              f"Current source digest schema differs: {relative}")
+        old = expected["source_hashes"][relative]["lf_sha256"]
+        if row.get("lf_sha256") != old:
+            transition = history.authenticate_transition(relative, old, row.get("lf_sha256"))
+            _need(transition is not None,
+                  f"Current LF source differs from frozen transport source: {relative}")
+            transitions[relative] = transition
+    return {"revision": snap["revision"], "status": snap["status"], "source_hashes": hashes,
+            "publication_source_transitions": transitions}
 
 
 def _validate_receipt(receipt):
