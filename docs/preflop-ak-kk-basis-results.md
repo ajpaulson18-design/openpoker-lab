@@ -72,9 +72,27 @@ must match the report, while current context is separately recorded. All other
 calculation sources remain strict. Any later publication-only source transition
 must have explicit original/current pins and original archived bytes.
 
-Saved authentication, focused tests, current clean source verification and CI
-publication status are recorded separately when completed. The observation's
-original metadata and failure semantics are preserved.
+The [saved-publication verifier](../scripts/verify_preflop_ak_kk_basis_publication.py)
+checks raw index and all mapped files before parsing them, authenticates the
+original complete protocol, published AA prerequisite and separately saved
+current-build conformance report, and links every seven-stage receipt to the
+captured streams, source/build identities and exact typed count rows. It
+attests a clean current checkout before and after all validation. Historical
+source changes are limited to the four archived context files and the three
+exact [publication-only transitions](preflop-publication-source-history.md);
+new current-main/publication files are separately recorded as unmeasured.
+
+The combined planner, runner, saved-publication, source-history, transport and
+exact-witness suite passed 52 tests under bundled CPython 3.12.14. The fourteen
+AK publication tests include actual saved corpus authentication with numerical
+entry points forbidden, altered raw files, malformed metadata, conformance
+failure and source drift. Actual clean CLI authentication and final-head CI are
+verified separately before merge. The original observation's metadata and
+failure semantics are preserved.
+
+```text
+python -B -m scripts.verify_preflop_ak_kk_basis_publication
+```
 
 ## Next bounded use and model limits
 
