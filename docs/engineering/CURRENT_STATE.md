@@ -550,3 +550,8 @@ The [fixed two-game 8x8 protocol](../native-river-range-quality-protocol.md) exp
 
 
 The [completed 8x8 accuracy record](../native-river-range-quality-results.md) preserves four fixed-budget policies with exact NashConv below 0.001 chip and zero observed native/Python policy differences on the recorded build. All independent physical/exact checks passed; original 4x4 misses remain unchanged and broader game accuracy remains unproven.
+
+
+## Next fixed matrix-free river accuracy study
+
+The [16x16 protocol](../matrix-free-river-range-quality-protocol.md) stages fresh physical preflight, source/baseline authentication and a fixed four-call experiment. No trained result follows from the no-training harness or uniform exact controls.

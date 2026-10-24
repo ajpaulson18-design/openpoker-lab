@@ -1767,3 +1767,8 @@ The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters
 
 
 The [completed paired native 8x8 study](native-river-range-quality-results.md) retains four CFR+10000/D0 policies, all meeting exact normalized-policy NashConv<=0.001 chip. The unpaired and paired gaps are about 0.0000366524 and 0.00000923825 chip; on the recorded MSVC build both policy and independent metric parity differences are zero. Complete source/build/control pins, physical numeric/exact replays and all historical misses remain visible. These two finite games establish no full-range, performance or commercial quality claim.
+
+
+## Matrix-free 16x16 river study protocol
+
+The [fixed four-call study](matrix-free-river-range-quality-protocol.md) expands validation to two new weighted 16x16 games at existing CFR+10000/D0 and original-weight tail T20000/D10000. Uniform physical/exact capacity controls and synthetic lifecycle tests precede any trained call. Original materialized/native cap rejections remain explicit; this source freeze establishes no trained accuracy or comparative performance outcome.

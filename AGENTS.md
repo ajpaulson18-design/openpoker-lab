@@ -531,3 +531,10 @@ committed-source/build identities, and fresh full-request admissions before
 claim creation. Preserve every raw serialized return before metadata/audits,
 independent physical numeric/exact replay, explicit unknown gates on rejected
 audits, all misses and separate parity results. No retry or speed claim.
+
+
+The [fixed matrix-free 16x16 river study](docs/matrix-free-river-range-quality-protocol.md)
+requires published source/protocol/manifest, actual committed-byte authentication,
+full requested 3T+3 admission and all retained baseline policies before its
+exclusive four-call claim. Save all raw returns before audits. Preserve misses,
+unknown exact capacity gates and separate descriptive budget/schedule differences.
