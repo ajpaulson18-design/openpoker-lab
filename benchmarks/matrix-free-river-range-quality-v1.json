@@ -1,0 +1,95 @@
+{
+  "algorithm": "cfrplus",
+  "calls": [
+    {
+      "backend": "matrix-free-D0",
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "discard": 0,
+      "iterations": 10000
+    },
+    {
+      "backend": "matrix-free-tail",
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "discard": 10000,
+      "iterations": 20000
+    },
+    {
+      "backend": "matrix-free-D0",
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "discard": 0,
+      "iterations": 10000
+    },
+    {
+      "backend": "matrix-free-tail",
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "discard": 10000,
+      "iterations": 20000
+    }
+  ],
+  "cases": [
+    {
+      "board": "AcKdQc9h2c",
+      "config": {
+        "bet_sizes": [
+          0.25
+        ],
+        "effective_stack": [
+          28.1,
+          35.6
+        ],
+        "include_all_in": true,
+        "max_raises": 1,
+        "pot": 43.7,
+        "raise_sizes": [
+          0.25
+        ]
+      },
+      "id": "river-unpaired-club-16x16-fractional-short-refund",
+      "ip": "AsAd:0.5,KhKs:0.75,QdQh:0.25,JhTs:1,KcJc:0.35,8c6c:0.65,9c2d:0.8,2h2s:0.45,JdTd:0.6,3c4c:0.4,AhJh:0.9,Kh8d:0.3,7h7s:0.55,5cTc:0.2,6h7d:0.7,8h9d:0.1",
+      "oop": "AsKh:1,AdAh:0.25,KcKs:0.75,QhQs:0.5,JcTc:0.4,8c7c:0.2,JdTh:0.6,9c9d:0.3,2d2h:0.45,6c5c:0.55,JhTd:0.65,3d4d:0.35,Jc8d:0.8,Tc7d:0.7,8h8s:0.9,5h6d:0.1"
+    },
+    {
+      "board": "Th8h8d4h3s",
+      "config": {
+        "bet_sizes": [
+          0.25
+        ],
+        "effective_stack": [
+          41.7,
+          62.1
+        ],
+        "include_all_in": true,
+        "max_raises": 1,
+        "pot": 75.5,
+        "raise_sizes": [
+          0.25
+        ]
+      },
+      "id": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "ip": "AhQh:0.5,KhJh:0.75,8cTc:0.25,8s4c:1,4d4s:0.35,3d3h:0.65,9h6h:0.8,AsKs:0.45,AdAc:0.6,KcKd:0.4,TdTs:0.9,7s7h:0.3,2s2h:0.55,QcJc:0.2,6d5c:0.7,9dJd:0.1",
+      "oop": "AhKh:1,QhJh:0.25,8c8s:0.75,TcTd:0.5,4c4d:0.4,3c3d:0.2,9h7h:0.6,AsAd:0.3,KsKd:0.45,Ts9s:0.55,7c7d:0.65,2c2d:0.35,AcQc:0.8,6c5d:0.7,9cJd:0.9,QdJs:0.1"
+    }
+  ],
+  "comparison": "tail-minus-D0 descriptive differences only; schedules and budgets differ",
+  "exact_limits": {
+    "depth": 64,
+    "fraction_bits": 65536,
+    "work": 100000
+  },
+  "independent_numeric_limits": {
+    "MAX_ORACLE_WORK": 8000000,
+    "MAX_WORLD_COUNT": 200000
+  },
+  "matrix_free_limits": {
+    "fallback_pair_checks": 30000000,
+    "hand_state_pass_work": 30000000,
+    "info_action_slots": 1000000,
+    "iterations": 100000,
+    "public_states": 250000
+  },
+  "numeric_tolerance": 1e-09,
+  "retry_permitted": false,
+  "schema": "matrix-free-river-range-quality-manifest-v1",
+  "target_is_reporting_only": true,
+  "target_nash_conv": "1/1000"
+}
