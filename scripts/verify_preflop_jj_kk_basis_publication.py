@@ -30,6 +30,9 @@ FROZEN_TEST_LF_SHA256 = "b19712a80f2ff89070db5027b9f5339d57b6d21e3abaa159b21239a
 ISOLATED_TEST_LF_SHA256 = "8348222151a715eedb834f2fef5c6344311a742465c7ad573276b02173173abd"
 FROZEN_TEST_ARCHIVE = "benchmarks/sources/preflop-jj-kk-basis-benchmark-test-frozen-v1.py"
 HISTORICAL_CONTEXT_SOURCES = {
+    ".github/workflows/native-fixed-street.yml": (
+        "f707f54e8f0644bdddf12cf1de00826ef4bcf505dc11919749ae83c838dc6d66",
+        "benchmarks/sources/preflop-publication-context-v1/native-fixed-street.yml.txt"),
     "AGENTS.md": (
         "0d5a2cf56d2a8e9b1bde79e34bb1e162915aa71443e71a14a2b6af7c6af047f0",
         "benchmarks/sources/preflop-jj-kk-context-freeze-v1/AGENTS.md.txt"),
@@ -384,7 +387,7 @@ def _current_source_check(historical):
     state = five.snapshot()
     _need(type(state) is dict and state.get("status") == [] and
           type(state.get("source_hashes")) is dict, "Current checkout must be committed and clean")
-    current_hashes, context_hashes = {}, {}
+    current_hashes, context_hashes, transitions = {}, {}, {}
     for relative, expected in historical.items():
         path = evidence.ROOT / relative
         _need(not path.is_symlink(), f"Historical source became symlinked: {relative}")
@@ -398,6 +401,13 @@ def _current_source_check(historical):
             _need(hashlib.sha256(archived).hexdigest() == context[0] and
                   hashlib.sha256(archived.replace(b"\r\n", b"\n")).hexdigest() == context[0],
                   "Historical context archive does not authenticate the generation source")
+            if relative == ".github/workflows/native-fixed-street.yml":
+                _need(value["lf_sha256"] in (context[0],
+                      "da2f20cda4e62d8edc70f9f81983c83e904ca14971ceced08e895fad5a1ee039"),
+                      "Unrecognized historical CI workflow source transition")
+                transitions[relative] = {"historical_lf_sha256": context[0],
+                                         "current_lf_sha256": value["lf_sha256"],
+                                         "archive": context[1]}
             context_hashes[relative] = value["lf_sha256"]
         elif value["lf_sha256"] != expected["lf_sha256"]:
             _need(relative == TEST_PATH and expected["lf_sha256"] == FROZEN_TEST_LF_SHA256 and
@@ -412,7 +422,7 @@ def _current_source_check(historical):
                   f"Current identity snapshot differs: {relative}")
         current_hashes[relative] = value["lf_sha256"]
     return {"revision": state.get("revision"), "current_source_subset_lf_sha256": _digest(current_hashes),
-            "current_context_lf_sha256": context_hashes}
+            "current_context_lf_sha256": context_hashes, "publication_source_transitions": transitions}
 
 
 def verify(directory=PUBLICATION):

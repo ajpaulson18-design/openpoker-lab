@@ -1,0 +1,160 @@
+{
+  "artifact_sha256": "2424f97058a3be821e5e53a9aaaabcf6e832fc1fee23af5e4c97173bac043ea0",
+  "benchmark_id": "preflop-ak-kk-basis-v1",
+  "conformance_artifact_sha256": "3f490292c996068004f5918da4afa2bd7d7b1dd8f0dc1fdc1ef612e486185e8a",
+  "excluded_all_five_stdout": {
+    "bytes_observed_at_most_limit_plus_one": 15593760,
+    "bytes_retained": 15593760,
+    "capture_source": "file-backed-stream",
+    "over_bound": false,
+    "path": "captured-native-streams/reference-all-five-stdout.bin",
+    "sha256": "7dfd1ff4ed2761fef77db70b170fdae750cf7c162932087e30163037e4e78e52"
+  },
+  "files": {
+    "aa-conformance-report.json": {
+      "bytes": 379343,
+      "original_path": "aa-conformance/report.json",
+      "sha256": "4287737d17713847ee9d58b3dbeb83c1da40adaf06456859d04e3b88c7e9497c"
+    },
+    "report.json": {
+      "bytes": 807681,
+      "original_path": "report.json",
+      "sha256": "89f2720092e659ccd982665cf4fdaa1d33448e30bb25a9321f9111410942e7a7"
+    },
+    "streams/native-aa-calibration.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/native-aa-calibration-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/native-aa-calibration.stdout.json": {
+      "bytes": 161,
+      "original_path": "captured-native-streams/native-aa-calibration-stdout.bin",
+      "sha256": "a36a43c2c2be6cc4ae7adb56a93b0122dbd246b034294dc682f21c94592c4dea"
+    },
+    "streams/native-ak-offsuit.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/native-ak-offsuit-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/native-ak-offsuit.stdout.json": {
+      "bytes": 140,
+      "original_path": "captured-native-streams/native-ak-offsuit-stdout.bin",
+      "sha256": "7bcf60bfae9f3ea9357a2daf7c5615d6548d74f1b85a48dd94aecf91b20c0b3f"
+    },
+    "streams/native-ak-suited.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/native-ak-suited-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/native-ak-suited.stdout.json": {
+      "bytes": 117,
+      "original_path": "captured-native-streams/native-ak-suited-stdout.bin",
+      "sha256": "7a75e38410c6667610dc3121279376d589e43fd5055b466f624f861d0b985300"
+    },
+    "streams/reference-aa-calibration.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-aa-calibration-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/reference-aa-calibration.stdout.json": {
+      "bytes": 449,
+      "original_path": "captured-native-streams/reference-aa-calibration-stdout.bin",
+      "sha256": "dabdcb58a556d7fee431218801d7abd3682cd2dde821f0cd3088464f81fd5abf"
+    },
+    "streams/reference-ak-offsuit.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-ak-offsuit-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/reference-ak-offsuit.stdout.json": {
+      "bytes": 354,
+      "original_path": "captured-native-streams/reference-ak-offsuit-stdout.bin",
+      "sha256": "3df0df932cc1974ee54a848fb88db90d9470f5c8987f393e1c3ac222f2864ada"
+    },
+    "streams/reference-ak-suited.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-ak-suited-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "streams/reference-ak-suited.stdout.json": {
+      "bytes": 256,
+      "original_path": "captured-native-streams/reference-ak-suited-stdout.bin",
+      "sha256": "1f01137f3f8946d0aa2cc56c2353b1b5f6995eb0955ee5b8830a60e28987a2a2"
+    },
+    "streams/reference-all-five.stderr.txt": {
+      "bytes": 0,
+      "original_path": "captured-native-streams/reference-all-five-stderr.bin",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "report_artifact_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+  "schema_version": 1,
+  "source_revision": "4aac2c22fa7066fa2d0a896cbd8b0c77800ccd1b",
+  "streams": [
+    {
+      "label": "stderr",
+      "saved_path": "streams/reference-all-five.stderr.txt",
+      "stage": "reference-all-five"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/reference-aa-calibration.stdout.json",
+      "stage": "reference-aa-calibration"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/reference-aa-calibration.stderr.txt",
+      "stage": "reference-aa-calibration"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/native-aa-calibration.stdout.json",
+      "stage": "native-aa-calibration"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/native-aa-calibration.stderr.txt",
+      "stage": "native-aa-calibration"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/reference-ak-suited.stdout.json",
+      "stage": "reference-ak-suited"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/reference-ak-suited.stderr.txt",
+      "stage": "reference-ak-suited"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/native-ak-suited.stdout.json",
+      "stage": "native-ak-suited"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/native-ak-suited.stderr.txt",
+      "stage": "native-ak-suited"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/reference-ak-offsuit.stdout.json",
+      "stage": "reference-ak-offsuit"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/reference-ak-offsuit.stderr.txt",
+      "stage": "reference-ak-offsuit"
+    },
+    {
+      "label": "stdout",
+      "saved_path": "streams/native-ak-offsuit.stdout.json",
+      "stage": "native-ak-offsuit"
+    },
+    {
+      "label": "stderr",
+      "saved_path": "streams/native-ak-offsuit.stderr.txt",
+      "stage": "native-ak-offsuit"
+    }
+  ]
+}
