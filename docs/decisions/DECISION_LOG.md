@@ -365,3 +365,16 @@ The owner has approved the priority and workflow, **not yet the proposed technic
 architecture or implementation launch**. This instruction takes precedence over
 earlier isolated-street development priorities while retaining their mathematical
 constraints and immutable evidence.
+
+D036 (2026-10-24): **confirmed subsequent owner instruction in the same chat**:
+the owner revoked the pause for their review, requested continuous work as an
+active goal, and delegated review responsibility to the agent until instructed
+otherwise. This supersedes D035's owner-review/implementation-launch gate and
+the initial audit's waiting status. The integration objective, Sol architectural
+lead, Luna bounded implementation/tests, Terra difficult implementation/debugging,
+independent mathematical validation and preservation of existing evidence remain.
+The agent performs architecture/implementation reviews, advances scoped milestones,
+resolves ordinary defects, and publishes completed changes through GitHub without
+waiting for the owner. A failed quality gate remains a miss; a capacity rejection
+remains unknown. These are inputs to autonomous review and a separately justified
+next step, not reasons to silently change the old experiment or stop for approval.

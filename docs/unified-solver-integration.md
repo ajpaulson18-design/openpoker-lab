@@ -1,5 +1,13 @@
 # Unified OpenPoker Lab solver: architecture review
 
+**Current authority update (D036, October 24, 2026):** the owner revoked the pause
+for their review, delegated architectural and implementation acceptance to the
+agent, and requested continuous goal-driven integration work until instructed
+otherwise. The audit below preserves the initial review snapshot. Its references
+to waiting for owner approval are superseded by [D036](decisions/DECISION_LOG.md).
+Architecture, independent validation and implementation reviews remain mandatory
+and are performed autonomously by the Sol-led team.
+
 October 24, 2026. **Status: audit complete; architecture and implementation tasks
 proposed for owner review. Implementation has not launched.**
 

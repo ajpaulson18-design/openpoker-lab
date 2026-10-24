@@ -538,7 +538,10 @@ Independent preflop/flop and turn/river development is temporarily paused for
 integration. Prioritize one coherent four-street solver and the
 [architecture review](docs/unified-solver-integration.md). Sol leads architecture;
 Luna implements bounded tasks/tests, escalating difficult implementation/debugging
-to Terra and architectural decisions to Sol. The audit and proposed task list are
-for owner review: do not launch major refactors before that review. Preserve all
+to Terra and architectural decisions to Sol. The owner subsequently delegated
+review and acceptance to the agent and requested continuous goal-driven work
+until instructed otherwise (D036). Perform architectural and implementation
+reviews autonomously; do not wait for owner review to begin approved milestones.
+Preserve all
 existing benchmark evidence and misses; do not start unrelated features or isolated
 benchmark optimization unless integration requires it.

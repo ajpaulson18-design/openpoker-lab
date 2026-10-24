@@ -86,5 +86,7 @@ not add later-street decisions or change the selected-outcome preflop API.
 
 The owner has temporarily paused independent street development to prioritize a
 coherent four-street solver. Read the [pinned audit, architecture and task plan](unified-solver-integration.md)
-and [D035](decisions/DECISION_LOG.md) before solver work. The proposed design awaits
-review; its publication is not implementation or architecture approval.
+and [D035/D036](decisions/DECISION_LOG.md) before solver work. D036 delegates
+architectural and implementation acceptance to the agent and requests continuous
+goal-driven work until instructed otherwise. Agent review remains required;
+owner approval is not a milestone gate. Publication alone is not validation.
