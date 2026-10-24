@@ -515,3 +515,11 @@ with original t and own reach; no native tail or longer iteration mode is implie
 Require compiled full-policy controls and independent physical numeric/exact
 replay, including known-value bounds. Native identities and logical budgets
 establish no performance or broader convergence claim.
+
+
+The [native river 8x8 quality protocol](docs/native-river-range-quality-protocol.md)
+fixes exactly four T10000/D0 calls and requires authenticated retained controls,
+committed-source/build identities, and fresh full-request admissions before
+claim creation. Preserve every raw serialized return before metadata/audits,
+independent physical numeric/exact replay, explicit unknown gates on rejected
+audits, all misses and separate parity results. No retry or speed claim.

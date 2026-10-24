@@ -1,0 +1,86 @@
+{
+  "schema": "native-river-range-quality-v1",
+  "iterations": 10000,
+  "algorithm": "cfrplus",
+  "discard": 0,
+  "target_nash_conv": "1/1000",
+  "policy_probability_tolerance": 1e-9,
+  "metric_tolerance": 1e-8,
+  "exact_limits": {
+    "work": 100000,
+    "depth": 64,
+    "fraction_bits": 65536
+  },
+  "cases": [
+    {
+      "id": "river-weighted-8x8-blocker-tie-short-refund",
+      "board": "AhKdQcJs2d",
+      "oop": "AsTc:1,3c4c:0.25,9c9d:0.75,5c6c:0.5,JcTh:0.4,2c3d:0.2,7h8h:0.6,KsQh:0.3",
+      "ip": "AsKh:0.5,QhTh:0.75,8c8d:0.25,6c7d:1,3h4h:0.35,5h6h:0.65,9h9s:0.8,KcKs:0.45",
+      "config": {
+        "pot": 17.3,
+        "effective_stack": [
+          29.1,
+          11.2
+        ],
+        "bet_sizes": [
+          0.33
+        ],
+        "raise_sizes": [
+          0.33
+        ],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "provenance": "validate_compiled_river.py FRESH_CASE; reused control, previously compiled T=10/100, not newly held out"
+    },
+    {
+      "id": "river-paired-8x8-short-refund-zero-tie",
+      "board": "9h8h7h2c2d",
+      "oop": "6h5h:0.75,AhKh:0.25,9c9d:1,2h2s:0.5,AcAd:0.6,KsKd:0.4,QcJc:0.3,3c4d:0.2",
+      "ip": "JhTh:0.5,QhKh:1,8c8d:0.75,7c7d:0.25,Ac9s:0.75,AsAh:0.5,QcQd:0.7,3s4s:0.3",
+      "config": {
+        "pot": 100.0,
+        "effective_stack": [
+          70.0,
+          80.0
+        ],
+        "bet_sizes": [
+          0.25
+        ],
+        "raise_sizes": [
+          0.25
+        ],
+        "max_raises": 1,
+        "include_all_in": true
+      },
+      "provenance": "new frozen paired-board physical complement"
+    }
+  ],
+  "calls": [
+    {
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "backend": "python-materialized-D0"
+    },
+    {
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "backend": "native"
+    },
+    {
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "backend": "python-materialized-D0"
+    },
+    {
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "backend": "native"
+    }
+  ],
+  "policy_serialization": "canonical UTF-8 JSON with sorted keys, compact separators, LF terminator",
+  "independent_numeric_limits": {
+    "MAX_WORLD_COUNT": 200000,
+    "MAX_ORACLE_WORK": 8000000,
+    "exact_work": 100000,
+    "exact_depth": 64,
+    "exact_fraction_bits": 65536
+  }
+}
