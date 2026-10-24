@@ -1769,6 +1769,10 @@ The opt-in [native river research API](native-river-solver.md) reuses the existi
 The [retained compiled river control corpus](native-river-solver.md#retained-paired-compiled-controls) now preserves eight paired T10/T100 profiles and all 16 Python/native policies. Source/build/runner identities remain fixed; on the recorded MSVC build, full policy and independently replayed numeric differences are zero. All 16 exact scan/partition audits pass with production helpers disabled, including fractional short-stack 8x8 and known-zero tied-board controls. These correctness results add no convergence or performance claim.
 
 
+## Matrix-free original-weight river tails (2026-10-23)
+
+The separate [river tail API](matrix-free-river-tail.md) combines the existing ranked hand vectors with completed-sweep original-weight CFR+ tail averages. Bounded controls establish literal D=0 serialized-policy/metric parity, positive-tail agreement with the materialized adapter and independent physical numeric/exact replay. It retains the full 3T+3 requested vector charge, original action/state/fallback caps and zero joint-world materialization. No larger-budget accuracy or performance outcome is claimed by this integration.
+
 ## Native river broader-range quality protocol (2026-10-23)
 
 The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters Python materialized and native CFR+10000/D0 calls on two weighted river games. Independent no-training preflight checks physical pairs, ranks, ties, trees, refunds and all original admission limits. Complete returned policies precede independent numeric/exact audits; invalid results, capacity misses and parity failures remain explicit. Staging this protocol makes no new trained accuracy or performance claim.
