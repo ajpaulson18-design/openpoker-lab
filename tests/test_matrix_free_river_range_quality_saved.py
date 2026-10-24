@@ -18,6 +18,10 @@ EXPECTED_HASHES={
     "policies/river-paired-heart-16x16-rank-extremes-short-refund-matrix-free-D0-T10000-D0.json": "1318525d959cb24a48c830e62559efa1c666a40939900895be9ae829eedbc715",
     "policies/river-paired-heart-16x16-rank-extremes-short-refund-matrix-free-tail-T20000-D10000.json": "861238338321c14231076440f96dfc8fe54741d381aa84cd0c601932b7e9524a"
 }
+SUPPLEMENT_HASHES={
+    "supplemental-ranked-verifier.py": "b09034deb8885199f149f89bcda68c561aa760e05f6eea7506e6248f5fbe5b84",
+    "supplemental-ranked-equivalence.json": "c6e26bc57da5646dd111eacaa59a0b182c77fa56d7bb0a33618f83aad7feada1"
+}
 class SavedMatrixFreeRangeQualityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -88,6 +92,30 @@ class SavedMatrixFreeRangeQualityTests(unittest.TestCase):
                     g=exact["chance_groupings"][mode]
                     self.assertEqual(g["metrics_fraction"],exact["metrics_fraction"])
                     self.assertLessEqual(g["work"],100000);self.assertLessEqual(g["tree_depth"],64);self.assertLessEqual(g["maximum_fraction_bits"],65536)
+
+    def test_supplemental_ranked_receipt_keeps_original_auditor_separate(self):
+        supplement=json.loads((ARTIFACT/"supplemental-ranked-equivalence.json").read_text(encoding="utf-8"))
+        for name,expected_digest in SUPPLEMENT_HASHES.items():
+            self.assertEqual(hashlib.sha256((ARTIFACT/name).read_bytes()).hexdigest(),expected_digest)
+        index=json.loads((ARTIFACT/"index.json").read_text(encoding="utf-8"))
+        for entry in index["files"]:
+            path=(ARTIFACT/entry["file"]).resolve()
+            self.assertTrue(path.is_relative_to(ARTIFACT.resolve()))
+            raw=path.read_bytes()
+            self.assertEqual(len(raw),entry["bytes"])
+            self.assertEqual(hashlib.sha256(raw).hexdigest(),entry["sha256"])
+        self.assertEqual(supplement["status"],"verified")
+        self.assertEqual(supplement["source_head"],"949060275f00bbd2f174a05a6de247ece1852e73")
+        self.assertEqual(supplement["original_study_claim"],CLAIM)
+        self.assertEqual(supplement["training_calls"],0)
+        self.assertEqual(supplement["blocked_production_calls"],[])
+        self.assertEqual(len(supplement["profiles"]),4)
+        for actual,expected in zip(supplement["profiles"],self.report["profiles"]):
+            self.assertEqual(actual["policy_sha256"],expected["sha256"])
+            self.assertIs(actual["all_eight_metrics_exactly_match_scan_and_partition"],True)
+            self.assertIs(actual["all_normalization_rows_and_ledgers_match"],True)
+            self.assertEqual(actual["worlds_materialized"],0)
+            self.assertLessEqual(actual["work"],100000)
 
     def test_differences_are_descriptive_and_recomputed_independently(self):
         comparisons=[]

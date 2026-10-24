@@ -85,6 +85,17 @@ mathematical sources, every physical/exact saved replay and both descriptive
 comparisons. The separate experimental ranked certificate is not substituted
 for this study's preregistered physical auditor.
 
+A subsequent [supplemental saved-only check](../benchmarks/results/matrix-free-river-range-quality-v1/supplemental-ranked-verifier.py)
+with its [receipt](../benchmarks/results/matrix-free-river-range-quality-v1/supplemental-ranked-equivalence.json)
+also compares the separate ranked certificate at source
+`949060275f00bbd2f174a05a6de247ece1852e73` against all four physical certificates.
+Every Fraction metric, normalized row and normalization ledger agrees exactly.
+The distinct ranked work model uses 27,669, 25,354, 23,181 and 22,025 units;
+these are different work units from physical scanning, with no runtime comparison.
+Production helpers remain disabled, training calls are zero and original study
+policies, source, audits and outcomes are unchanged. This extra equivalence check
+is separate from the study's preregistered accuracy gate.
+
 ## Scope and remaining quality work
 
 The original [4x4 misses](river-heldout-quality-results.md) and

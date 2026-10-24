@@ -57,6 +57,16 @@
       "file": "independent-saved-replay.json",
       "bytes": 40227,
       "sha256": "de2fc8f6632bef28abf7303c038faa70a11605d1df36fd05b2665542e48dd232"
+    },
+    {
+      "file": "supplemental-ranked-verifier.py",
+      "bytes": 4142,
+      "sha256": "b09034deb8885199f149f89bcda68c561aa760e05f6eea7506e6248f5fbe5b84"
+    },
+    {
+      "file": "supplemental-ranked-equivalence.json",
+      "bytes": 34209,
+      "sha256": "c6e26bc57da5646dd111eacaa59a0b182c77fa56d7bb0a33618f83aad7feada1"
     }
   ]
 }
