@@ -1732,6 +1732,18 @@ enumeration or training. The original two-file corpus and eight stable measured
 source identities are retained. A finite-game physical own-hand mutual-response
 witness and any solver convergence result remain separate milestones.
 
+The subsequent [physical exact-witness observation](preflop-three-rank-exact-witness-results.md)
+completed once from clean source 58ccc8d886a22428efe26c8ba9447a596659db29.
+Both independent memory and actual saved-file checks certify exact value
+1464215/2330174 chips and NashConv zero for the fixed three-chip game.
+The proof retains 108 physical pairs, 96 own-hand/history policy rows, 258
+probabilities and 1,080 complete legal responses. It uses literal terminal
+transfers and authenticated counts while disabling candidate/tree/LP authority.
+Original outputs and fifteen unchanged measured source identities are retained.
+The old 72-pair witness and every historical quality miss remain unchanged.
+This supersedes only the pending-witness status above, with trained convergence
+and broader poker coverage still unproved.
+
 
 ## Held-out river accuracy protocol (2026-10-23)
 
@@ -1747,6 +1759,14 @@ The [separate original-weight tail study](river-heldout-tail-protocol.md) prereg
 
 
 The [completed fixed river-tail study](river-heldout-tail-results.md) retained two shorter-tail misses and two exact target passes: the unpaired and paired T50000/D25000 gaps are about 0.000447256 and 0.000656760 chip. All four complete policies, original v1 misses, source guards, full-request admissions and independent numeric/exact saved replays are retained. The unpaired T10000/D5000 tail was worse than its baseline. Higher-budget target attainment covers these finite games; it does not establish equal-cost method gains, broader convergence or commercial parity.
+
+
+## Separate native fixed-board river integration (2026-10-23)
+
+The opt-in [native river research API](native-river-solver.md) reuses the existing compiled public-batched CFR+ trainer with explicit source/build provenance while retaining all old river and native caps. T10/T100 full-policy controls pass for two weighted 4x4 games, a weighted 8x8 game and a known-zero royal-flush game. Independent physical numeric/exact saved replays agree with the returned policies; known value zero lies in the exact response intervals. This establishes bounded integration correctness, with no wider admission, longer native tail, speed or general accuracy claim.
+
+
+The [retained compiled river control corpus](native-river-solver.md#retained-paired-compiled-controls) now preserves eight paired T10/T100 profiles and all 16 Python/native policies. Source/build/runner identities remain fixed; on the recorded MSVC build, full policy and independently replayed numeric differences are zero. All 16 exact scan/partition audits pass with production helpers disabled, including fractional short-stack 8x8 and known-zero tied-board controls. These correctness results add no convergence or performance claim.
 
 ## Blocker-sensitive preflop source basis (2026-10-23 UTC)
 

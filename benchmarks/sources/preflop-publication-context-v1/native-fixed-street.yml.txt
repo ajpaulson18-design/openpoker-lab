@@ -1,0 +1,39 @@
+name: Native fixed-street training conformance
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  train:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      OPENPOKER_NATIVE_TRAIN_BUILD_DIR: ../native-train-ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build with installed C compiler
+        if: runner.os != 'Windows'
+        run: python -m scripts.build_native_train --output-dir "$OPENPOKER_NATIVE_TRAIN_BUILD_DIR"
+      - name: Build with installed MSVC
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $vswherePath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstall = & $vswherePath -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vsInstall) { throw 'Installed MSVC toolchain unavailable' }
+          $nativeDevCmd = Join-Path $vsInstall 'Common7\Tools\VsDevCmd.bat'
+          $nativeEnvironment = & cmd.exe /d /c "call `"$nativeDevCmd`" -arch=x64 -host_arch=x64 >nul && set"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($environmentLine in $nativeEnvironment) {
+            if ($environmentLine -match '^([^=]+)=(.*)$') {
+              [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
+            }
+          }
+          python -m scripts.build_native_train --output-dir "$env:OPENPOKER_NATIVE_TRAIN_BUILD_DIR"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Independent policies, diagnostics and protocol conformance
+        run: python -m unittest tests.test_native_fixed_street_protocol tests.test_native_fixed_street tests.test_native_cfrplus_rematch tests.test_preflop_covered_equity tests.test_preflop_aa_kk_reference tests.test_preflop_mixed_range_reference -v
