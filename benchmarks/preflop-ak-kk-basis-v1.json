@@ -1,0 +1,320 @@
+{
+  "acceptance": {
+    "all_three_ak_censuses_agree": true,
+    "complete_raw_stream_receipts": true,
+    "current_build_all_five_and_aa_calibration": true,
+    "no_retry_or_fallback": true,
+    "published_aa_counts_match": true,
+    "unchanged_clean_source_and_both_builds": true
+  },
+  "admission": {
+    "aggregate": {
+      "five_card_conformance_tuples": 2598960,
+      "five_card_dump_bytes": 15593760,
+      "native_boards": 10273824,
+      "native_requests": 3,
+      "native_seven_calls": 20547648,
+      "numerical_subprocesses": 7,
+      "reference_boards": 10273824,
+      "reference_five_calls": 431500608,
+      "reference_requests": 3,
+      "reference_seven_calls": 20547648,
+      "version": "preflop-ak-kk-complete-count-work-v1"
+    },
+    "count_requests": [
+      {
+        "admission": {
+          "boards": 5136912,
+          "compatible_pairs": 3,
+          "five_card_rank_calls": 215750304,
+          "limits": {
+            "boards": 6849216,
+            "five_card_rank_calls": 287667072,
+            "pairs": 4,
+            "seven_card_rank_calls": 13698432
+          },
+          "ordinary_preparation": {
+            "board_evaluations_upper_bound": 5136912,
+            "boards_per_pair": 1712304,
+            "candidate_pairs": 3,
+            "categorical_rows_upper_bound": 12,
+            "compatible_pairs": 3,
+            "limits": {
+              "board_evaluations": 6849216,
+              "candidate_pairs": 4096,
+              "categorical_rows": 12,
+              "compatible_pairs": 4,
+              "rank_calls": 13698432
+            },
+            "physical_worlds_upper_bound": 5136912,
+            "rank_calls_upper_bound": 10273824,
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "seven_card_rank_calls": 10273824
+        },
+        "bb_range": "KdKs,KcKd,KcKh",
+        "id": "aa-calibration",
+        "ordered_pairs": [
+          [
+            "AdAs",
+            "KcKd"
+          ],
+          [
+            "AdAs",
+            "KcKh"
+          ],
+          [
+            "AdAs",
+            "KdKs"
+          ]
+        ],
+        "sb_range": "AdAs"
+      },
+      {
+        "admission": {
+          "boards": 1712304,
+          "compatible_pairs": 1,
+          "five_card_rank_calls": 71916768,
+          "limits": {
+            "boards": 6849216,
+            "five_card_rank_calls": 287667072,
+            "pairs": 4,
+            "seven_card_rank_calls": 13698432
+          },
+          "ordinary_preparation": {
+            "board_evaluations_upper_bound": 1712304,
+            "boards_per_pair": 1712304,
+            "candidate_pairs": 1,
+            "categorical_rows_upper_bound": 12,
+            "compatible_pairs": 1,
+            "limits": {
+              "board_evaluations": 6849216,
+              "candidate_pairs": 4096,
+              "categorical_rows": 12,
+              "compatible_pairs": 4,
+              "rank_calls": 13698432
+            },
+            "physical_worlds_upper_bound": 1712304,
+            "rank_calls_upper_bound": 3424608,
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "seven_card_rank_calls": 3424608
+        },
+        "bb_range": "KdKh",
+        "id": "ak-suited",
+        "ordered_pairs": [
+          [
+            "AcKc",
+            "KdKh"
+          ]
+        ],
+        "sb_range": "AcKc"
+      },
+      {
+        "admission": {
+          "boards": 3424608,
+          "compatible_pairs": 2,
+          "five_card_rank_calls": 143833536,
+          "limits": {
+            "boards": 6849216,
+            "five_card_rank_calls": 287667072,
+            "pairs": 4,
+            "seven_card_rank_calls": 13698432
+          },
+          "ordinary_preparation": {
+            "board_evaluations_upper_bound": 3424608,
+            "boards_per_pair": 1712304,
+            "candidate_pairs": 2,
+            "categorical_rows_upper_bound": 12,
+            "compatible_pairs": 2,
+            "limits": {
+              "board_evaluations": 6849216,
+              "candidate_pairs": 4096,
+              "categorical_rows": 12,
+              "compatible_pairs": 4,
+              "rank_calls": 13698432
+            },
+            "physical_worlds_upper_bound": 3424608,
+            "rank_calls_upper_bound": 6849216,
+            "scope": "Exact unordered five-card boards per compatible private pair; logical counts, not time or memory guarantees."
+          },
+          "seven_card_rank_calls": 6849216
+        },
+        "bb_range": "KdKh,KhKs",
+        "id": "ak-offsuit",
+        "ordered_pairs": [
+          [
+            "AdKc",
+            "KdKh"
+          ],
+          [
+            "AdKc",
+            "KhKs"
+          ]
+        ],
+        "sb_range": "AdKc"
+      }
+    ],
+    "counts_generated": false,
+    "equities_claimed": false,
+    "existing_caps": {
+      "boards_per_pair": 1712304,
+      "covered_candidates": 4096,
+      "covered_hands": 128,
+      "covered_pairs": 128,
+      "covered_sources": 32,
+      "five_bytes": 15593760,
+      "five_tuples": 2598960,
+      "ordinary_boards": 6849216,
+      "ordinary_pairs": 4,
+      "ordinary_ranks": 13698432,
+      "reference_boards": 6849216,
+      "reference_five": 287667072,
+      "reference_pairs": 4,
+      "reference_seven": 13698432
+    },
+    "future_pool_forecast": {
+      "all_aa_qq_jj_plus_ak_pairs": 156,
+      "all_four_group_support_exceeds_existing_pair_cap": true,
+      "bb_hands": 6,
+      "blocked_candidates": 48,
+      "compatible_pairs": 84,
+      "exact_prior_per_pair": "1/84",
+      "raw_candidates": 132,
+      "sb_hands": 22,
+      "source_suit_orbits": [
+        {
+          "bb_hand": "KcKd",
+          "physical_members": 6,
+          "sb_hand": "AcAd",
+          "type": "AA"
+        },
+        {
+          "bb_hand": "KcKh",
+          "physical_members": 24,
+          "sb_hand": "AcAd",
+          "type": "AA"
+        },
+        {
+          "bb_hand": "KhKs",
+          "physical_members": 6,
+          "sb_hand": "AcAd",
+          "type": "AA"
+        },
+        {
+          "bb_hand": "KcKh",
+          "physical_members": 24,
+          "sb_hand": "AcKd",
+          "type": "AKo"
+        },
+        {
+          "bb_hand": "KhKs",
+          "physical_members": 12,
+          "sb_hand": "AcKd",
+          "type": "AKo"
+        },
+        {
+          "bb_hand": "KdKh",
+          "physical_members": 12,
+          "sb_hand": "AcKc",
+          "type": "AKs"
+        }
+      ],
+      "type_pair_counts": {
+        "AA": 36,
+        "AKo": 36,
+        "AKs": 12
+      },
+      "type_prior_masses": {
+        "AA": "3/7",
+        "AKo": "3/7",
+        "AKs": "1/7"
+      }
+    },
+    "prerequisites": [
+      "authenticate published AA/KK basis before counting",
+      "build unchanged project-owned counters in fresh external directories",
+      "complete current-build all-five and AA calibration before AK queries",
+      "retain all seven raw outputs/errors and source/build identities",
+      "independently authenticate counts before any transport or strategy use"
+    ],
+    "request": {
+      "benchmark_id": "preflop-ak-kk-basis-plan-v1",
+      "count_requests": [
+        {
+          "bb_range": "KdKs,KcKd,KcKh",
+          "compatible_pairs": 3,
+          "id": "aa-calibration",
+          "sb_range": "AdAs"
+        },
+        {
+          "bb_range": "KdKh",
+          "compatible_pairs": 1,
+          "id": "ak-suited",
+          "sb_range": "AcKc"
+        },
+        {
+          "bb_range": "KdKh,KhKs",
+          "compatible_pairs": 2,
+          "id": "ak-offsuit",
+          "sb_range": "AdKc"
+        }
+      ],
+      "reference_protocol": "PREFLOP_FIVE_REFERENCE_V2",
+      "schema_version": 1
+    },
+    "scope": "Named work and private-card census only; no physical counts, CPU, runtime or RSS guarantee",
+    "solver_or_training_claimed": false,
+    "status": "admitted-plan-only"
+  },
+  "basis_report": {
+    "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+    "path": "benchmarks/results/preflop-five-basis-v1.json"
+  },
+  "benchmark_id": "preflop-ak-kk-basis-v1",
+  "limits": {
+    "basis_bytes": 1000000,
+    "numerical_subprocess_calls": 7,
+    "protocol_bytes": 65536,
+    "raw_stderr_bytes": 65536,
+    "raw_stdout_bytes": 16777216,
+    "report_bytes": 4194304
+  },
+  "request": {
+    "benchmark_id": "preflop-ak-kk-basis-plan-v1",
+    "count_requests": [
+      {
+        "bb_range": "KdKs,KcKd,KcKh",
+        "compatible_pairs": 3,
+        "id": "aa-calibration",
+        "sb_range": "AdAs"
+      },
+      {
+        "bb_range": "KdKh",
+        "compatible_pairs": 1,
+        "id": "ak-suited",
+        "sb_range": "AcKc"
+      },
+      {
+        "bb_range": "KdKh,KhKs",
+        "compatible_pairs": 2,
+        "id": "ak-offsuit",
+        "sb_range": "AdKc"
+      }
+    ],
+    "reference_protocol": "PREFLOP_FIVE_REFERENCE_V2",
+    "schema_version": 1
+  },
+  "required_stage_order": [
+    "reference-all-five",
+    "reference-aa-calibration",
+    "native-aa-calibration",
+    "reference-ak-suited",
+    "native-ak-suited",
+    "reference-ak-offsuit",
+    "native-ak-offsuit"
+  ],
+  "schema_version": 1,
+  "scope": "Three AK/KK count sources only; no transported equity or strategy claim",
+  "third_party_source_or_dependencies_added": false
+}

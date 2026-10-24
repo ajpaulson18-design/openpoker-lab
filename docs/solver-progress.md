@@ -1732,6 +1732,18 @@ enumeration or training. The original two-file corpus and eight stable measured
 source identities are retained. A finite-game physical own-hand mutual-response
 witness and any solver convergence result remain separate milestones.
 
+The subsequent [physical exact-witness observation](preflop-three-rank-exact-witness-results.md)
+completed once from clean source 58ccc8d886a22428efe26c8ba9447a596659db29.
+Both independent memory and actual saved-file checks certify exact value
+1464215/2330174 chips and NashConv zero for the fixed three-chip game.
+The proof retains 108 physical pairs, 96 own-hand/history policy rows, 258
+probabilities and 1,080 complete legal responses. It uses literal terminal
+transfers and authenticated counts while disabling candidate/tree/LP authority.
+Original outputs and fifteen unchanged measured source identities are retained.
+The old 72-pair witness and every historical quality miss remain unchanged.
+This supersedes only the pending-witness status above, with trained convergence
+and broader poker coverage still unproved.
+
 
 ## Held-out river accuracy protocol (2026-10-23)
 
@@ -1757,6 +1769,10 @@ The opt-in [native river research API](native-river-solver.md) reuses the existi
 The [retained compiled river control corpus](native-river-solver.md#retained-paired-compiled-controls) now preserves eight paired T10/T100 profiles and all 16 Python/native policies. Source/build/runner identities remain fixed; on the recorded MSVC build, full policy and independently replayed numeric differences are zero. All 16 exact scan/partition audits pass with production helpers disabled, including fractional short-stack 8x8 and known-zero tied-board controls. These correctness results add no convergence or performance claim.
 
 
+## Matrix-free original-weight river tails (2026-10-23)
+
+The separate [river tail API](matrix-free-river-tail.md) combines the existing ranked hand vectors with completed-sweep original-weight CFR+ tail averages. Bounded controls establish literal D=0 serialized-policy/metric parity, positive-tail agreement with the materialized adapter and independent physical numeric/exact replay. It retains the full 3T+3 requested vector charge, original action/state/fallback caps and zero joint-world materialization. No larger-budget accuracy or performance outcome is claimed by this integration.
+
 ## Native river broader-range quality protocol (2026-10-23)
 
 The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters Python materialized and native CFR+10000/D0 calls on two weighted river games. Independent no-training preflight checks physical pairs, ranks, ties, trees, refunds and all original admission limits. Complete returned policies precede independent numeric/exact audits; invalid results, capacity misses and parity failures remain explicit. Staging this protocol makes no new trained accuracy or performance claim.
@@ -1768,3 +1784,7 @@ The [completed paired native 8x8 study](native-river-range-quality-results.md) r
 ## Independent ranked river certificate
 
 The [exact rank/card vector audit](independent-ranked-river-certificate.md) preserves the physical oracle and its limits while adding a distinct counted audit path. All16 retained policy metrics and normalization ledgers agree exactly with physical scan/partition results. A 100-hand tied-board uniform control passes the new 100k work envelope, with the old physical capacity rejection retained. Broader non-tied range/tree capacity and solver accuracy remain unproven.
+
+## Blocker-sensitive preflop source basis (2026-10-23 UTC)
+
+The [AK/KK count observation](preflop-ak-kk-basis-results.md) passed once at clean source 4aac2c22fa7066fa2d0a896cbd8b0c77800ccd1b. Both original counters agree over 1,712,304 boards for each of one suited and two distinct offsuit pairs, after exhaustive all-five conformance and AA calibration. All seven return codes are zero, all stderr streams empty, and 783 source identities plus both builds remain stable. The untouched original corpus is published separately from saved authentication and GitHub CI. No physical transport, policy, convergence, runtime/RSS gain or unrestricted solving claim follows. The next bounded step is independent AA/AK-versus-KK joint-suit transport under the unchanged 128-pair cap.

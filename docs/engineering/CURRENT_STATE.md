@@ -524,6 +524,15 @@ memory/saved checks agree, all eleven forbidden-calculation counters are zero,
 and the clean measured source snapshot is stable. This establishes prepared
 count provenance, with no strategy, later-street betting or equilibrium claim.
 
+The subsequent [exact physical witness](../preflop-three-rank-exact-witness-results.md)
+certifies one mutual-response profile for the 108-pair finite three-chip
+preflop/checkdown game. Exact SB value is 1464215/2330174 chips; both unilateral
+gains and NashConv are zero. Independent replay checks all 96 own-hand rows,
+258 probabilities and 1,080 complete legal responses, preserving hidden
+opponents and permitting suit-dependent deviations. This supplies a fixed-game
+accuracy anchor; unrestricted ranges, later-street betting and production
+trainer convergence remain separate work.
+
 
 ## Held-out RIVER accuracy evidence
 
@@ -540,6 +549,10 @@ The separate [four-profile follow-up](../river-heldout-tail-results.md) reaches 
 The separate [compiled river adapter](../native-river-solver.md) supports existing admitted fixed-board games at CFR+10..10000 with explicit local build identity, full historical/native guards and original completed-sweep D=0 averaging. Independent physical numeric/exact controls cover weighted blockers, ties, short refunds, 8x8 supports and a known-zero game. Production defaults, shared native C and earlier-street paths are unchanged; broader accuracy, admission and measured performance remain pending.
 
 
+## Matrix-free river original-weight tail integration
+
+The opt-in [ranked river tail](../matrix-free-river-tail.md) keeps later completed CFR+ sweep averages under unchanged full-request admission and dynamic cancellation fallback limits. Independent bounded controls cover original-policy parity, physical numeric/exact replay, blockers, ties, refunds and dead hands; broader accuracy remains a separate study.
+
 ## Broader native river quality study
 
 The [fixed two-game 8x8 protocol](../native-river-range-quality-protocol.md) expands the paired Python/native accuracy study at T10000/D0. Source/build/control authentication and full physical preflight are required before its exclusive four-call claim. No trained outcome is established by this source freeze.
@@ -551,3 +564,7 @@ The [completed 8x8 accuracy record](../native-river-range-quality-results.md) pr
 ## Independent exact ranked river audit
 
 The [separate ranked certificate](../independent-ranked-river-certificate.md) computes exact profile/own-hand response metrics without materializing joint worlds. Retained bounded policies agree with physical scan/partition certificates; a 100-hand known-zero capacity control does not establish broader game admission or convergence.
+
+## Blocker-sensitive AK/KK source counts
+
+One [complete seven-stage physical observation](../preflop-ak-kk-basis-results.md) passed exact native/best-five agreement for three new AK/KK suit classes after current-build all-five conformance and published AA calibration. The original reports and thirteen small raw streams retain all 783 stable source identities and both build identities. These are source counts only; 84-pair joint-suit transport and strategy accuracy remain separate prerequisites. No shared solver or Coach behavior changes.
