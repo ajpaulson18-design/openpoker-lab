@@ -531,3 +531,11 @@ committed-source/build identities, and fresh full-request admissions before
 claim creation. Preserve every raw serialized return before metadata/audits,
 independent physical numeric/exact replay, explicit unknown gates on rejected
 audits, all misses and separate parity results. No retry or speed claim.
+
+
+The separate [independent ranked river certificate](docs/independent-ranked-river-certificate.md)
+uses independent ranks/numeric rules and exact card inclusion-exclusion with
+visible-own-hand responses. Preserve old physical oracle bytes and caps, exact
+binary64 terminal boundaries, normalization ledgers and local charged caches.
+A distinct vector work model or known-zero support control implies no general
+large-range admission, convergence or commercial quality claim.

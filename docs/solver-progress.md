@@ -1780,6 +1780,11 @@ The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters
 
 The [completed paired native 8x8 study](native-river-range-quality-results.md) retains four CFR+10000/D0 policies, all meeting exact normalized-policy NashConv<=0.001 chip. The unpaired and paired gaps are about 0.0000366524 and 0.00000923825 chip; on the recorded MSVC build both policy and independent metric parity differences are zero. Complete source/build/control pins, physical numeric/exact replays and all historical misses remain visible. These two finite games establish no full-range, performance or commercial quality claim.
 
+
+## Independent ranked river certificate
+
+The [exact rank/card vector audit](independent-ranked-river-certificate.md) preserves the physical oracle and its limits while adding a distinct counted audit path. All16 retained policy metrics and normalization ledgers agree exactly with physical scan/partition results. A 100-hand tied-board uniform control passes the new 100k work envelope, with the old physical capacity rejection retained. Broader non-tied range/tree capacity and solver accuracy remain unproven.
+
 ## Blocker-sensitive preflop source basis (2026-10-23 UTC)
 
 The [AK/KK count observation](preflop-ak-kk-basis-results.md) passed once at clean source 4aac2c22fa7066fa2d0a896cbd8b0c77800ccd1b. Both original counters agree over 1,712,304 boards for each of one suited and two distinct offsuit pairs, after exhaustive all-five conformance and AA calibration. All seven return codes are zero, all stderr streams empty, and 783 source identities plus both builds remain stable. The untouched original corpus is published separately from saved authentication and GitHub CI. No physical transport, policy, convergence, runtime/RSS gain or unrestricted solving claim follows. The next bounded step is independent AA/AK-versus-KK joint-suit transport under the unchanged 128-pair cap.
