@@ -531,3 +531,17 @@ committed-source/build identities, and fresh full-request admissions before
 claim creation. Preserve every raw serialized return before metadata/audits,
 independent physical numeric/exact replay, explicit unknown gates on rejected
 audits, all misses and separate parity results. No retry or speed claim.
+
+## Active solver priority (owner instruction, October 24, 2026)
+
+Independent preflop/flop and turn/river development is temporarily paused for
+integration. Prioritize one coherent four-street solver and the
+[architecture review](docs/unified-solver-integration.md). Sol leads architecture;
+Luna implements bounded tasks/tests, escalating difficult implementation/debugging
+to Terra and architectural decisions to Sol. The owner subsequently delegated
+review and acceptance to the agent and requested continuous goal-driven work
+until instructed otherwise (D036). Perform architectural and implementation
+reviews autonomously; do not wait for owner review to begin approved milestones.
+Preserve all
+existing benchmark evidence and misses; do not start unrelated features or isolated
+benchmark optimization unless integration requires it.

@@ -81,3 +81,12 @@ An additional [prepared preflop betting model](preflop-full-checkdown.md) uses
 the same full-board counts with finite limps, checks, raises and reraises, then
 forces hidden future checkdown. Read its separate scope and evidence; it does
 not add later-street decisions or change the selected-outcome preflop API.
+
+## Active integration review, October 24, 2026
+
+The owner has temporarily paused independent street development to prioritize a
+coherent four-street solver. Read the [pinned audit, architecture and task plan](unified-solver-integration.md)
+and [D035/D036](decisions/DECISION_LOG.md) before solver work. D036 delegates
+architectural and implementation acceptance to the agent and requests continuous
+goal-driven work until instructed otherwise. Agent review remains required;
+owner approval is not a milestone gate. Publication alone is not validation.
