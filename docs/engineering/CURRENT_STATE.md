@@ -547,3 +547,11 @@ The separate [four-profile follow-up](../river-heldout-tail-results.md) reaches 
 ## Explicit native river research API
 
 The separate [compiled river adapter](../native-river-solver.md) supports existing admitted fixed-board games at CFR+10..10000 with explicit local build identity, full historical/native guards and original completed-sweep D=0 averaging. Independent physical numeric/exact controls cover weighted blockers, ties, short refunds, 8x8 supports and a known-zero game. Production defaults, shared native C and earlier-street paths are unchanged; broader accuracy, admission and measured performance remain pending.
+
+
+## Broader native river quality study
+
+The [fixed two-game 8x8 protocol](../native-river-range-quality-protocol.md) expands the paired Python/native accuracy study at T10000/D0. Source/build/control authentication and full physical preflight are required before its exclusive four-call claim. No trained outcome is established by this source freeze.
+
+
+The [completed 8x8 accuracy record](../native-river-range-quality-results.md) preserves four fixed-budget policies with exact NashConv below 0.001 chip and zero observed native/Python policy differences on the recorded build. All independent physical/exact checks passed; original 4x4 misses remain unchanged and broader game accuracy remains unproven.

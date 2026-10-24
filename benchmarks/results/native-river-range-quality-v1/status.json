@@ -1,0 +1,99 @@
+{
+  "active_call": null,
+  "claim_id": "9399dbdbf6de4d7397295c05269140de",
+  "completed_audits": [
+    {
+      "backend": "python-materialized-D0",
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "native",
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "python-materialized-D0",
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "native",
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "replay_status": "valid"
+    }
+  ],
+  "parity": [
+    {
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "max_probability_delta": 0.0,
+      "metric_deltas": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "metric_tolerance": 1e-08,
+      "policy_tolerance": 1e-09,
+      "status": "passed"
+    },
+    {
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "max_probability_delta": 0.0,
+      "metric_deltas": {
+        "exploitability": 0.0,
+        "ip_best_response_gain": 0.0,
+        "ip_best_response_value": 0.0,
+        "nash_conv": 0.0,
+        "oop_best_response_gain": 0.0,
+        "oop_best_response_value": 0.0,
+        "value_ip": 0.0,
+        "value_oop": 0.0
+      },
+      "metric_tolerance": 1e-08,
+      "policy_tolerance": 1e-09,
+      "status": "passed"
+    }
+  ],
+  "phase": "done",
+  "retry_permitted": false,
+  "saved_policies": [
+    {
+      "backend": "python-materialized-D0",
+      "bytes": 30343,
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "file": "policies/river-weighted-8x8-blocker-tie-short-refund-python-materialized-D0-T10000.json",
+      "iterations": 10000,
+      "sha256": "b9dabd5f728de0266d71c43a71acebf4bb7ae79bc18beafca4877c23294aa332"
+    },
+    {
+      "backend": "native",
+      "bytes": 35188,
+      "case": "river-weighted-8x8-blocker-tie-short-refund",
+      "file": "policies/river-weighted-8x8-blocker-tie-short-refund-native-T10000.json",
+      "iterations": 10000,
+      "sha256": "daece189d6c46aae9f4436aa42c2a986ff55ea33e9576b22d5353068326d0d2a"
+    },
+    {
+      "backend": "python-materialized-D0",
+      "bytes": 33268,
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "file": "policies/river-paired-8x8-short-refund-zero-tie-python-materialized-D0-T10000.json",
+      "iterations": 10000,
+      "sha256": "471fa00fcc3fd5de78204e2ab7f98a3d1e8dbff6a8864e76f865c229b78bf61b"
+    },
+    {
+      "backend": "native",
+      "bytes": 38113,
+      "case": "river-paired-8x8-short-refund-zero-tie",
+      "file": "policies/river-paired-8x8-short-refund-zero-tie-native-T10000.json",
+      "iterations": 10000,
+      "sha256": "f45b41ab8cf995b80a66f140945b1c72091a1d331c426a1eb1bb1021776569f0"
+    }
+  ],
+  "status": "completed"
+}

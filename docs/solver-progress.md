@@ -1767,3 +1767,11 @@ The opt-in [native river research API](native-river-solver.md) reuses the existi
 
 
 The [retained compiled river control corpus](native-river-solver.md#retained-paired-compiled-controls) now preserves eight paired T10/T100 profiles and all 16 Python/native policies. Source/build/runner identities remain fixed; on the recorded MSVC build, full policy and independently replayed numeric differences are zero. All 16 exact scan/partition audits pass with production helpers disabled, including fractional short-stack 8x8 and known-zero tied-board controls. These correctness results add no convergence or performance claim.
+
+
+## Native river broader-range quality protocol (2026-10-23)
+
+The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters Python materialized and native CFR+10000/D0 calls on two weighted river games. Independent no-training preflight checks physical pairs, ranks, ties, trees, refunds and all original admission limits. Complete returned policies precede independent numeric/exact audits; invalid results, capacity misses and parity failures remain explicit. Staging this protocol makes no new trained accuracy or performance claim.
+
+
+The [completed paired native 8x8 study](native-river-range-quality-results.md) retains four CFR+10000/D0 policies, all meeting exact normalized-policy NashConv<=0.001 chip. The unpaired and paired gaps are about 0.0000366524 and 0.00000923825 chip; on the recorded MSVC build both policy and independent metric parity differences are zero. Complete source/build/control pins, physical numeric/exact replays and all historical misses remain visible. These two finite games establish no full-range, performance or commercial quality claim.
