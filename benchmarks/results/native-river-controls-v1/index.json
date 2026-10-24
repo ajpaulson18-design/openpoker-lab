@@ -1,0 +1,91 @@
+{
+  "schema": "native-river-controls-evidence-index-v1",
+  "source_head": "e537ec82b756b3e69d87a3b4f574d7eda8becc4f",
+  "claim_id": "29f643a2201dd16cf93a6fbba487a362",
+  "files": {
+    "claim.json": {
+      "bytes": 32095,
+      "sha256": "7661066e157f285d49a52c8a6b25a14b3eed97cc6b313a7a38220c1f91e64172"
+    },
+    "status.json": {
+      "bytes": 882,
+      "sha256": "831599649628f7068489821f041c7f9a6c1c56db14a6a7e4b7d93fe3cf258961"
+    },
+    "report.json": {
+      "bytes": 4139584,
+      "sha256": "a731d45d9356158eb2711ebf734616c05b174abb236c85406f0e65b87b8c6444"
+    },
+    "check-only-control.json": {
+      "bytes": 16491,
+      "sha256": "88070d62b76fc6640852ebba3c9efef220654fac207567d2fa7b8ad1eaef0d73"
+    },
+    "validate_compiled_river.py": {
+      "bytes": 40306,
+      "sha256": "a4155547d39b49c65a7fcb3b22a0ee5ce751de17a6183026ee713f62f88203b6"
+    },
+    "policies/river-paired-short-spr-rank-extremes-native-T10.json": {
+      "bytes": 37971,
+      "sha256": "5360af2802868600067ab311f2dfc986d1e928673a2a1c1fae18a7dc4e5a5ed4"
+    },
+    "policies/river-paired-short-spr-rank-extremes-native-T100.json": {
+      "bytes": 38025,
+      "sha256": "f82328492134bd6e9f8019036c38c1a5a7b54860e359d72a4df2624ba8026310"
+    },
+    "policies/river-paired-short-spr-rank-extremes-python-T10.json": {
+      "bytes": 32165,
+      "sha256": "c68fc5815d31dcb5d52f1d2eedaa20ad79564995acd6f841ddcb126e833339a2"
+    },
+    "policies/river-paired-short-spr-rank-extremes-python-T100.json": {
+      "bytes": 32204,
+      "sha256": "7235d9099609f007753e82c6b6d8563b51318004b6885a869bff46ef929bff56"
+    },
+    "policies/river-royal-flush-tie-anchor-native-T10.json": {
+      "bytes": 23118,
+      "sha256": "e1d5a96d56d173e8b6f7dbc5f562955f1e96a6658cb8586735bfc8c07694f88d"
+    },
+    "policies/river-royal-flush-tie-anchor-native-T100.json": {
+      "bytes": 23153,
+      "sha256": "e466946a20aa944fc5a20b6e08cafb901c7c0b959897c9dcc5a25bc206ab21e1"
+    },
+    "policies/river-royal-flush-tie-anchor-python-T10.json": {
+      "bytes": 17324,
+      "sha256": "1ec0238abaa571d6308388db6d13b3c45a63ee112bb46865a037b2f68244e70d"
+    },
+    "policies/river-royal-flush-tie-anchor-python-T100.json": {
+      "bytes": 17347,
+      "sha256": "a0f99f28583b197a791d2024523bed08a6470c7bd3c9b53530ab4487ead3551b"
+    },
+    "policies/river-unpaired-blocker-tie-raise-native-T10.json": {
+      "bytes": 37844,
+      "sha256": "8a4228ae64ab93d59d80fc46c769d656ebd09dadef476969538890d60a3d3e8e"
+    },
+    "policies/river-unpaired-blocker-tie-raise-native-T100.json": {
+      "bytes": 37950,
+      "sha256": "c5a96292535b6f81f602fa34dc58bdeb25dc257c0f2cf6aaf7d143c863f42b74"
+    },
+    "policies/river-unpaired-blocker-tie-raise-python-T10.json": {
+      "bytes": 32038,
+      "sha256": "e67e6d39e91c3c5e9697a89604232eb5ddd8fa6296f37b89bc06f6727cad8f13"
+    },
+    "policies/river-unpaired-blocker-tie-raise-python-T100.json": {
+      "bytes": 32129,
+      "sha256": "b6df5e6f36a4d6d6505c8a71ec22818a4ee673903aa8bcb15d660e76ca65166b"
+    },
+    "policies/river-weighted-8x8-blocker-tie-short-refund-native-T10.json": {
+      "bytes": 60880,
+      "sha256": "5c160d696f60ef00bbf4727f1b8922d36766aecf69b971213c2f69f7626094be"
+    },
+    "policies/river-weighted-8x8-blocker-tie-short-refund-native-T100.json": {
+      "bytes": 61039,
+      "sha256": "804932c13675fd3fb2febc05c90688e00648b4ce61928832271cf4055c08a3d2"
+    },
+    "policies/river-weighted-8x8-blocker-tie-short-refund-python-T10.json": {
+      "bytes": 55071,
+      "sha256": "f0dc9f91be0b189cb31d1f4309a70bb0581abdb88ad32306a39445b121567291"
+    },
+    "policies/river-weighted-8x8-blocker-tie-short-refund-python-T100.json": {
+      "bytes": 55215,
+      "sha256": "4ef1389b48a279bdea482e57fa6ae5d9a0258d0acf48db48399d4479cf62e100"
+    }
+  }
+}
