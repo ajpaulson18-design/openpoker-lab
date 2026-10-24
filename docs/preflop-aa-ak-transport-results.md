@@ -75,8 +75,12 @@ The observation ran once on CPython 3.12.14 / Windows from
 2026-10-24T01:13:16.640102Z to 01:14:50.200844Z. The external receipt records
 93.5605712 seconds. This is one uncontrolled complete observation, including
 saved prerequisite authentication and both literal transport checks; it supplies
-no runtime or RSS bound. Focused publication tests, actual clean-source saved
-CLI verification and final-head CI are separately recorded before merge.
+no runtime or RSS bound. All 21 core producer/oracle/orchestration controls and
+ten saved-publication controls pass under bundled CPython 3.12.14. The latter
+include actual fresh saved-candidate replay with dirty-status metadata isolated,
+raw-before-parse mutation rejection, boolean aliases, later-HEAD/source drift,
+and successful math followed by source change. Actual clean-source saved CLI
+verification and final-head CI are separately recorded before merge.
 
 ## Next accuracy boundary and provenance
 
