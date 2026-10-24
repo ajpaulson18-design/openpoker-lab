@@ -1,0 +1,1596 @@
+{
+  "admission": {
+    "bb_range": "KK",
+    "benchmark_id": "preflop-aa-ak-transport-v1",
+    "exact_prior": {
+      "per_pair": "1/84",
+      "total": "1",
+      "type_masses": {
+        "AA": "3/7",
+        "AKo": "3/7",
+        "AKs": "1/7"
+      }
+    },
+    "hand_counts": {
+      "AA": 6,
+      "AKo": 12,
+      "AKs": 4,
+      "KK": 6
+    },
+    "sb_range": "AA,AKs,AKo",
+    "schema_version": 1,
+    "suit_class_census": {
+      "AA": {
+        "0": 6,
+        "1": 24,
+        "2": 6
+      },
+      "AKo": {
+        "0": 12,
+        "1": 24
+      },
+      "AKs": {
+        "0": 12
+      }
+    },
+    "target_census": {
+      "bb_hands": 6,
+      "blocked_candidates": 48,
+      "boards_per_pair": 1712304,
+      "compatible_pairs": 84,
+      "pair_cap": 128,
+      "raw_candidates": 132,
+      "sb_hands": 22,
+      "source_classes": 6,
+      "type_pair_counts": {
+        "AA": 36,
+        "AKo": 36,
+        "AKs": 12
+      }
+    },
+    "weights": {
+      "AA": "1",
+      "AKo": "1",
+      "AKs": "1",
+      "KK": "1"
+    }
+  },
+  "artifact_sha256": "7bf39179d001c39d7872b28f1f2584820f344ecd631fa75630cbc99e0ced38c4",
+  "benchmark_id": "preflop-aa-ak-transport-v1",
+  "row_count": 84,
+  "rows": [
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAd",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "d",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "h",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "d",
+        "c"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAh",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "h",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 317694,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKh",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 6538,
+      "wins": 1388072
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 305177,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KcKd",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 7923,
+      "wins": 1399204
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 292660,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhAs",
+      "source_bb_hand": "KdKs",
+      "source_identity_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "source_sb_hand": "AdAs",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 9308,
+      "wins": 1410336
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1121238,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AcKc",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 14122,
+      "wins": 576944
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "c",
+        "s",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKd",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "c",
+        "h",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "c",
+        "s",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKh",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "c",
+        "d",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "c",
+        "h",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AcKs",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "c",
+        "d",
+        "h"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "d",
+        "s",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKc",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "d",
+        "h",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKh",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "d",
+        "c",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "d",
+        "s",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKs",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "d",
+        "c",
+        "h"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AdKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "d",
+        "h",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKc",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "h",
+        "d",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "h",
+        "s",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKd",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "h",
+        "c",
+        "s"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "h",
+        "s",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKs",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "h",
+        "c",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AhKs",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "s",
+        "h",
+        "d",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKh",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKc",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "s",
+        "d",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKc",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "c",
+        "s",
+        "h",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKh",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKd",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "s",
+        "c",
+        "h"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KhKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKd",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "d",
+        "s",
+        "h",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KcKd",
+      "boards": 1712304,
+      "losses": 1191993,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKh",
+      "source_bb_hand": "KhKs",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 13510,
+      "wins": 506801
+    },
+    {
+      "bb_hand": "KcKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "s",
+        "c",
+        "d"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    },
+    {
+      "bb_hand": "KdKs",
+      "boards": 1712304,
+      "losses": 1187967,
+      "prior_fraction": "1/84",
+      "sb_hand": "AsKh",
+      "source_bb_hand": "KdKh",
+      "source_identity_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "source_sb_hand": "AdKc",
+      "suit_permutation": [
+        "h",
+        "s",
+        "d",
+        "c"
+      ],
+      "ties": 15019,
+      "wins": 509318
+    }
+  ],
+  "schema_version": 1,
+  "source_basis": {
+    "aa": {
+      "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+      "path": "benchmarks/results/preflop-five-basis-v1.json",
+      "raw_sha256": "bb906c0dac2deca79753e48548b5c3c1b7b9cedd92ba3574da934154713b5419"
+    },
+    "ak": {
+      "artifact_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+      "path": "benchmarks/results/preflop-ak-kk-basis-v1/report.json",
+      "publication_index_raw_sha256": "fb08e891b9879d1fb17671a6c71c6019cd0bbb1fdc21fc120737773a9c47ffad",
+      "raw_sha256": "89f2720092e659ccd982665cf4fdaa1d33448e30bb25a9321f9111410942e7a7"
+    }
+  },
+  "status": "candidate-only",
+  "total_prior": "1",
+  "type_pair_counts": {
+    "AA": 36,
+    "AKo": 36,
+    "AKs": 12
+  }
+}

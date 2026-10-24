@@ -173,3 +173,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Byte-exact single-observation AK source-count receipts and original context.
 /benchmarks/results/preflop-ak-kk-basis-v1/** -text
 /benchmarks/sources/preflop-ak-kk-context-freeze-v1/** -text
+
+# Byte-exact original blocker-sensitive AA/AK count-transport proof.
+/benchmarks/results/preflop-aa-ak-transport-v1/** -text
