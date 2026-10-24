@@ -13,9 +13,12 @@ The workflow itself is preserved from main; this change does not edit it.
 
 The transport and exact-witness source maps include the JJ authenticator, so
 their saved-publication guards explicitly authenticate that helper's original
-archived LF bytes and require its one exact current LF identity. The current
-transport publication helper has the same sealed treatment for later count
-publication. These exceptions are implemented in the
+archived LF bytes and require its one exact current LF identity. A third sealed
+entry records the transport publication helper's transition for the separately
+measured AK count publication, whose 783-file map includes it. That path is
+absent from the eight-file transport and fifteen-file witness maps; the entry
+provides no additional attestation for either of those two observations.
+These entries are implemented in the
 [source-history helper](../scripts/preflop_publication_source_history.py):
 
 | Source | Original LF SHA-256 | Accepted later LF SHA-256 |
