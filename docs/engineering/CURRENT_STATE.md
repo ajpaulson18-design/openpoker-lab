@@ -571,3 +571,7 @@ The [completed 8x8 accuracy record](../native-river-range-quality-results.md) pr
 ## Blocker-sensitive AK/KK source counts
 
 One [complete seven-stage physical observation](../preflop-ak-kk-basis-results.md) passed exact native/best-five agreement for three new AK/KK suit classes after current-build all-five conformance and published AA calibration. The original reports and thirteen small raw streams retain all 783 stable source identities and both build identities. These are source counts only; 84-pair joint-suit transport and strategy accuracy remain separate prerequisites. No shared solver or Coach behavior changes.
+
+## Physical AA/AK preflop count transport
+
+One [independent blocker-sensitive transport observation](../preflop-aa-ak-transport-results.md) passed for 84 compatible AA/AK-versus-KK pairs after removing 48 physical collisions. Six authenticated source orbits, every integer count/map/source identity and exact global 1/84 prior passed both memory and fresh saved-file verification. All sixteen forbidden-call counters are zero and ten clean source identities are stable. This is count provenance only; real-source policy accuracy and convergence remain separate work.
