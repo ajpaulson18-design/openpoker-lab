@@ -160,3 +160,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Byte-exact paired compiled river correctness corpus.
 /benchmarks/results/native-river-controls-v1/** -text
+
+# Preserve fixed native river quality evidence byte-for-byte.
+/benchmarks/results/native-river-range-quality-v1/** -text

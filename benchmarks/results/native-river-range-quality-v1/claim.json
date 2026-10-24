@@ -1,0 +1,1312 @@
+{
+  "build": {
+    "files": {
+      "fixed_street_train.obj": {
+        "bytes": 50305,
+        "sha256": "de62a70be8917d2b023a255bc6f626a754bdd3705a6ce13215425a15a64e5481"
+      },
+      "native-fixed-street-train.exe": {
+        "bytes": 179712,
+        "sha256": "d8f21a4598c65ef31770ab1ba44439510d122abb5fcc19800ac38bf5ef737bbc"
+      },
+      "native-train-manifest.json": {
+        "bytes": 992,
+        "sha256": "8046b7e7e85a3d2acff3d8e3c33dfd646dff23739d6bd929167994f34e4c8a7d"
+      }
+    },
+    "manifest": {
+      "compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+      "compiler_version": "usage: cl [ option... ] filename... [ /link linkoption... ]\r\nMicrosoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\r\nCopyright (C) Microsoft Corporation.  All rights reserved.",
+      "executable": "native-fixed-street-train.exe",
+      "executable_sha256": "d8f21a4598c65ef31770ab1ba44439510d122abb5fcc19800ac38bf5ef737bbc",
+      "flags": [
+        "/nologo",
+        "/std:c11",
+        "/O2",
+        "/W4",
+        "/WX",
+        "/MT",
+        "/D_CRT_SECURE_NO_WARNINGS",
+        "/fp:strict"
+      ],
+      "platform": "Windows-10-10.0.19045-SP0",
+      "protocol": "OPENPOKER_FIXED_TRAIN_V2",
+      "schema_version": 1,
+      "source_lf_sha256": "5101bee03f7fd9d6d1b7cac8ea825144cd1a2471179de909ab22358264821676",
+      "source_sha256": "2c1c31328b61306c7ae90512f2e4e7e1bdfd00cd23fc5d8dc50fffcba5b09b29",
+      "work_model": "native-fixed-street-work-v2"
+    },
+    "manifest_sha256": "8046b7e7e85a3d2acff3d8e3c33dfd646dff23739d6bd929167994f34e4c8a7d"
+  },
+  "claim_id": "9399dbdbf6de4d7397295c05269140de",
+  "control_authentication": {
+    "claim_id": "29f643a2201dd16cf93a6fbba487a362",
+    "claim_sha256": "7661066e157f285d49a52c8a6b25a14b3eed97cc6b313a7a38220c1f91e64172",
+    "policies": [
+      {
+        "bytes": 32038,
+        "file": "policies/river-unpaired-blocker-tie-raise-python-T10.json",
+        "sha256": "e67e6d39e91c3c5e9697a89604232eb5ddd8fa6296f37b89bc06f6727cad8f13"
+      },
+      {
+        "bytes": 37844,
+        "file": "policies/river-unpaired-blocker-tie-raise-native-T10.json",
+        "sha256": "8a4228ae64ab93d59d80fc46c769d656ebd09dadef476969538890d60a3d3e8e"
+      },
+      {
+        "bytes": 32129,
+        "file": "policies/river-unpaired-blocker-tie-raise-python-T100.json",
+        "sha256": "b6df5e6f36a4d6d6505c8a71ec22818a4ee673903aa8bcb15d660e76ca65166b"
+      },
+      {
+        "bytes": 37950,
+        "file": "policies/river-unpaired-blocker-tie-raise-native-T100.json",
+        "sha256": "c5a96292535b6f81f602fa34dc58bdeb25dc257c0f2cf6aaf7d143c863f42b74"
+      },
+      {
+        "bytes": 32165,
+        "file": "policies/river-paired-short-spr-rank-extremes-python-T10.json",
+        "sha256": "c68fc5815d31dcb5d52f1d2eedaa20ad79564995acd6f841ddcb126e833339a2"
+      },
+      {
+        "bytes": 37971,
+        "file": "policies/river-paired-short-spr-rank-extremes-native-T10.json",
+        "sha256": "5360af2802868600067ab311f2dfc986d1e928673a2a1c1fae18a7dc4e5a5ed4"
+      },
+      {
+        "bytes": 32204,
+        "file": "policies/river-paired-short-spr-rank-extremes-python-T100.json",
+        "sha256": "7235d9099609f007753e82c6b6d8563b51318004b6885a869bff46ef929bff56"
+      },
+      {
+        "bytes": 38025,
+        "file": "policies/river-paired-short-spr-rank-extremes-native-T100.json",
+        "sha256": "f82328492134bd6e9f8019036c38c1a5a7b54860e359d72a4df2624ba8026310"
+      },
+      {
+        "bytes": 55071,
+        "file": "policies/river-weighted-8x8-blocker-tie-short-refund-python-T10.json",
+        "sha256": "f0dc9f91be0b189cb31d1f4309a70bb0581abdb88ad32306a39445b121567291"
+      },
+      {
+        "bytes": 60880,
+        "file": "policies/river-weighted-8x8-blocker-tie-short-refund-native-T10.json",
+        "sha256": "5c160d696f60ef00bbf4727f1b8922d36766aecf69b971213c2f69f7626094be"
+      },
+      {
+        "bytes": 55215,
+        "file": "policies/river-weighted-8x8-blocker-tie-short-refund-python-T100.json",
+        "sha256": "4ef1389b48a279bdea482e57fa6ae5d9a0258d0acf48db48399d4479cf62e100"
+      },
+      {
+        "bytes": 61039,
+        "file": "policies/river-weighted-8x8-blocker-tie-short-refund-native-T100.json",
+        "sha256": "804932c13675fd3fb2febc05c90688e00648b4ce61928832271cf4055c08a3d2"
+      },
+      {
+        "bytes": 17324,
+        "file": "policies/river-royal-flush-tie-anchor-python-T10.json",
+        "sha256": "1ec0238abaa571d6308388db6d13b3c45a63ee112bb46865a037b2f68244e70d"
+      },
+      {
+        "bytes": 23118,
+        "file": "policies/river-royal-flush-tie-anchor-native-T10.json",
+        "sha256": "e1d5a96d56d173e8b6f7dbc5f562955f1e96a6658cb8586735bfc8c07694f88d"
+      },
+      {
+        "bytes": 17347,
+        "file": "policies/river-royal-flush-tie-anchor-python-T100.json",
+        "sha256": "a0f99f28583b197a791d2024523bed08a6470c7bd3c9b53530ab4487ead3551b"
+      },
+      {
+        "bytes": 23153,
+        "file": "policies/river-royal-flush-tie-anchor-native-T100.json",
+        "sha256": "e466946a20aa944fc5a20b6e08cafb901c7c0b959897c9dcc5a25bc206ab21e1"
+      }
+    ],
+    "policy_count": 16,
+    "report_sha256": "a731d45d9356158eb2711ebf734616c05b174abb236c85406f0e65b87b8c6444",
+    "root": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\openpoker-native-river-range-quality\\benchmarks\\results\\native-river-controls-v1",
+    "status": "completed",
+    "status_sha256": "831599649628f7068489821f041c7f9a6c1c56db14a6a7e4b7d93fe3cf258961"
+  },
+  "created_utc": "2026-10-24T00:17:12.830047+00:00",
+  "manifest": {
+    "algorithm": "cfrplus",
+    "calls": [
+      {
+        "backend": "python-materialized-D0",
+        "case": "river-weighted-8x8-blocker-tie-short-refund"
+      },
+      {
+        "backend": "native",
+        "case": "river-weighted-8x8-blocker-tie-short-refund"
+      },
+      {
+        "backend": "python-materialized-D0",
+        "case": "river-paired-8x8-short-refund-zero-tie"
+      },
+      {
+        "backend": "native",
+        "case": "river-paired-8x8-short-refund-zero-tie"
+      }
+    ],
+    "cases": [
+      {
+        "board": "AhKdQcJs2d",
+        "config": {
+          "bet_sizes": [
+            0.33
+          ],
+          "effective_stack": [
+            29.1,
+            11.2
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 17.3,
+          "raise_sizes": [
+            0.33
+          ]
+        },
+        "id": "river-weighted-8x8-blocker-tie-short-refund",
+        "ip": "AsKh:0.5,QhTh:0.75,8c8d:0.25,6c7d:1,3h4h:0.35,5h6h:0.65,9h9s:0.8,KcKs:0.45",
+        "oop": "AsTc:1,3c4c:0.25,9c9d:0.75,5c6c:0.5,JcTh:0.4,2c3d:0.2,7h8h:0.6,KsQh:0.3",
+        "provenance": "validate_compiled_river.py FRESH_CASE; reused control, previously compiled T=10/100, not newly held out"
+      },
+      {
+        "board": "9h8h7h2c2d",
+        "config": {
+          "bet_sizes": [
+            0.25
+          ],
+          "effective_stack": [
+            70.0,
+            80.0
+          ],
+          "include_all_in": true,
+          "max_raises": 1,
+          "pot": 100.0,
+          "raise_sizes": [
+            0.25
+          ]
+        },
+        "id": "river-paired-8x8-short-refund-zero-tie",
+        "ip": "JhTh:0.5,QhKh:1,8c8d:0.75,7c7d:0.25,Ac9s:0.75,AsAh:0.5,QcQd:0.7,3s4s:0.3",
+        "oop": "6h5h:0.75,AhKh:0.25,9c9d:1,2h2s:0.5,AcAd:0.6,KsKd:0.4,QcJc:0.3,3c4d:0.2",
+        "provenance": "new frozen paired-board physical complement"
+      }
+    ],
+    "discard": 0,
+    "exact_limits": {
+      "depth": 64,
+      "fraction_bits": 65536,
+      "work": 100000
+    },
+    "independent_numeric_limits": {
+      "MAX_ORACLE_WORK": 8000000,
+      "MAX_WORLD_COUNT": 200000,
+      "exact_depth": 64,
+      "exact_fraction_bits": 65536,
+      "exact_work": 100000
+    },
+    "iterations": 10000,
+    "metric_tolerance": 1e-08,
+    "policy_probability_tolerance": 1e-09,
+    "policy_serialization": "canonical UTF-8 JSON with sorted keys, compact separators, LF terminator",
+    "schema": "native-river-range-quality-v1",
+    "target_nash_conv": "1/1000"
+  },
+  "output": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\native-river-range-quality-v1-attempt-20261023",
+  "preflight_admissions": [
+    {
+      "adapted_independent_census": {
+        "independent_rank_census": {
+          "categories": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "compatible_exact_rank_tie_worlds": 4,
+          "per_hand_category": [
+            {
+              "2c3d": 1,
+              "3c4c": 0,
+              "5c6c": 0,
+              "7h8h": 0,
+              "9c9d": 1,
+              "AsTc": 4,
+              "JcTh": 4,
+              "KsQh": 2
+            },
+            {
+              "3h4h": 0,
+              "5h6h": 0,
+              "6c7d": 0,
+              "8c8d": 1,
+              "9h9s": 1,
+              "AsKh": 2,
+              "KcKs": 3,
+              "QhTh": 4
+            }
+          ],
+          "tie_pairs": [
+            [
+              "3c4c",
+              "3h4h"
+            ],
+            [
+              "5c6c",
+              "5h6h"
+            ],
+            [
+              "9c9d",
+              "9h9s"
+            ],
+            [
+              "AsTc",
+              "QhTh"
+            ]
+          ]
+        },
+        "independent_tree_action_slots": 23,
+        "independent_tree_decisions": 9,
+        "independent_tree_terminals": 15,
+        "max_depth": 5,
+        "native_postflop_tree_signature_matches": true,
+        "production_physical_world_crosscheck": {
+          "mass_max_abs_difference": 6.938893903907228e-18,
+          "rank_signs": {
+            "loss": 26,
+            "tie": 4,
+            "win": 29
+          },
+          "ties": 4,
+          "world_pairs": 59
+        },
+        "production_tree_signature_matches": true,
+        "uniform_exact_smokes": {
+          "partition": {
+            "depth": 5,
+            "fraction_bits": 168,
+            "nash_conv": "169018989137420303834181159862222259990426642087663/19006828793488392687326169035980704540479396511744",
+            "work": 17637
+          },
+          "scan": {
+            "depth": 5,
+            "fraction_bits": 168,
+            "nash_conv": "169018989137420303834181159862222259990426642087663/19006828793488392687326169035980704540479396511744",
+            "work": 17637
+          }
+        },
+        "uniform_numeric_replay_metrics": {
+          "exploitability": 4.446270100442137,
+          "ip_best_response_gain": 5.469630771017558,
+          "ip_best_response_value": 2.4294888744713568,
+          "nash_conv": 8.892540200884275,
+          "oop_best_response_gain": 3.4229094298667175,
+          "oop_best_response_value": 6.463051326412918,
+          "value_ip": -3.0401418965462006,
+          "value_oop": 3.0401418965462006
+        }
+      },
+      "backend_cell": "python-materialized-D0",
+      "candidate_hand_pair_iterations": 640000,
+      "case_id": "river-weighted-8x8-blocker-tie-short-refund",
+      "chance_nodes": 0,
+      "compatible_pairs": 59,
+      "dense_hand_state_pass_work": 5760576,
+      "independent_max_world_count": 200000,
+      "independent_numeric_modeled_work": 2124,
+      "independent_numeric_modeled_work_limit": 8000000,
+      "independent_world_count": 59,
+      "information_action_slots": 184,
+      "information_sets": 72,
+      "iterations": 10000,
+      "native_active_hand_counts": [
+        8,
+        8
+      ],
+      "native_shape_admission": {
+        "active_hand_counts": [
+          8,
+          8
+        ],
+        "algorithm": "cfrplus",
+        "budget_version": "native-fixed-street-work-v2",
+        "information_action_slots": 184,
+        "native_heap_byte_limit": 67108864,
+        "native_heap_bytes_upper_bound": 8534769,
+        "native_setup_loop_entries_upper_bound": 11376,
+        "passes_per_iteration": 3,
+        "public_states": 24,
+        "python_adapter_loop_entries_upper_bound": 72448,
+        "reduction": "public-batched",
+        "requested_iterations": 10000,
+        "scope": "Full requested native training and Python adapter bookkeeping; the calling solver separately retains its historical admission and exact Python diagnostics. Logical loop/allocation reservations are not runtime, actual allocated Python bytes or process RSS.",
+        "total_loop_entries_upper_bound": 358163824,
+        "total_loop_entry_limit": 500000000,
+        "training_loop_entries_upper_bound": 358080000,
+        "wire_byte_limit": 8388608,
+        "wire_bytes_upper_bound": 7104,
+        "world_rows": 59
+      },
+      "native_tree_max_actions": 4,
+      "native_tree_max_depth": 4,
+      "native_tree_nodes": 24,
+      "prefix_hand_edges": 59,
+      "public_nodes": 9,
+      "public_states": 24,
+      "terminal_nodes": 15,
+      "trainer_or_build_lookup_called": false,
+      "tree_actions": 23,
+      "world_iterations": 590000,
+      "world_node_work": 15930000,
+      "world_traversal_nodes": 9,
+      "worlds": 59
+    },
+    {
+      "adapted_independent_census": {
+        "independent_rank_census": {
+          "categories": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "compatible_exact_rank_tie_worlds": 4,
+          "per_hand_category": [
+            {
+              "2c3d": 1,
+              "3c4c": 0,
+              "5c6c": 0,
+              "7h8h": 0,
+              "9c9d": 1,
+              "AsTc": 4,
+              "JcTh": 4,
+              "KsQh": 2
+            },
+            {
+              "3h4h": 0,
+              "5h6h": 0,
+              "6c7d": 0,
+              "8c8d": 1,
+              "9h9s": 1,
+              "AsKh": 2,
+              "KcKs": 3,
+              "QhTh": 4
+            }
+          ],
+          "tie_pairs": [
+            [
+              "3c4c",
+              "3h4h"
+            ],
+            [
+              "5c6c",
+              "5h6h"
+            ],
+            [
+              "9c9d",
+              "9h9s"
+            ],
+            [
+              "AsTc",
+              "QhTh"
+            ]
+          ]
+        },
+        "independent_tree_action_slots": 23,
+        "independent_tree_decisions": 9,
+        "independent_tree_terminals": 15,
+        "max_depth": 5,
+        "native_postflop_tree_signature_matches": true,
+        "production_physical_world_crosscheck": {
+          "mass_max_abs_difference": 6.938893903907228e-18,
+          "rank_signs": {
+            "loss": 26,
+            "tie": 4,
+            "win": 29
+          },
+          "ties": 4,
+          "world_pairs": 59
+        },
+        "production_tree_signature_matches": true,
+        "uniform_exact_smokes": {
+          "partition": {
+            "depth": 5,
+            "fraction_bits": 168,
+            "nash_conv": "169018989137420303834181159862222259990426642087663/19006828793488392687326169035980704540479396511744",
+            "work": 17637
+          },
+          "scan": {
+            "depth": 5,
+            "fraction_bits": 168,
+            "nash_conv": "169018989137420303834181159862222259990426642087663/19006828793488392687326169035980704540479396511744",
+            "work": 17637
+          }
+        },
+        "uniform_numeric_replay_metrics": {
+          "exploitability": 4.446270100442137,
+          "ip_best_response_gain": 5.469630771017558,
+          "ip_best_response_value": 2.4294888744713568,
+          "nash_conv": 8.892540200884275,
+          "oop_best_response_gain": 3.4229094298667175,
+          "oop_best_response_value": 6.463051326412918,
+          "value_ip": -3.0401418965462006,
+          "value_oop": 3.0401418965462006
+        }
+      },
+      "backend_cell": "native",
+      "candidate_hand_pair_iterations": 640000,
+      "case_id": "river-weighted-8x8-blocker-tie-short-refund",
+      "chance_nodes": 0,
+      "compatible_pairs": 59,
+      "dense_hand_state_pass_work": 5760576,
+      "independent_max_world_count": 200000,
+      "independent_numeric_modeled_work": 2124,
+      "independent_numeric_modeled_work_limit": 8000000,
+      "independent_world_count": 59,
+      "information_action_slots": 184,
+      "information_sets": 72,
+      "iterations": 10000,
+      "native_active_hand_counts": [
+        8,
+        8
+      ],
+      "native_shape_admission": {
+        "active_hand_counts": [
+          8,
+          8
+        ],
+        "algorithm": "cfrplus",
+        "budget_version": "native-fixed-street-work-v2",
+        "information_action_slots": 184,
+        "native_heap_byte_limit": 67108864,
+        "native_heap_bytes_upper_bound": 8534769,
+        "native_setup_loop_entries_upper_bound": 11376,
+        "passes_per_iteration": 3,
+        "public_states": 24,
+        "python_adapter_loop_entries_upper_bound": 72448,
+        "reduction": "public-batched",
+        "requested_iterations": 10000,
+        "scope": "Full requested native training and Python adapter bookkeeping; the calling solver separately retains its historical admission and exact Python diagnostics. Logical loop/allocation reservations are not runtime, actual allocated Python bytes or process RSS.",
+        "total_loop_entries_upper_bound": 358163824,
+        "total_loop_entry_limit": 500000000,
+        "training_loop_entries_upper_bound": 358080000,
+        "wire_byte_limit": 8388608,
+        "wire_bytes_upper_bound": 7104,
+        "world_rows": 59
+      },
+      "native_tree_max_actions": 4,
+      "native_tree_max_depth": 4,
+      "native_tree_nodes": 24,
+      "prefix_hand_edges": 59,
+      "public_nodes": 9,
+      "public_states": 24,
+      "terminal_nodes": 15,
+      "trainer_or_build_lookup_called": false,
+      "tree_actions": 23,
+      "world_iterations": 590000,
+      "world_node_work": 15930000,
+      "world_traversal_nodes": 9,
+      "worlds": 59
+    },
+    {
+      "adapted_independent_census": {
+        "independent_rank_census": {
+          "categories": [
+            1,
+            2,
+            5,
+            6,
+            7,
+            8
+          ],
+          "compatible_exact_rank_tie_worlds": 2,
+          "per_hand_category": [
+            {
+              "2h2s": 7,
+              "3c4d": 1,
+              "5h6h": 8,
+              "9c9d": 6,
+              "AcAd": 2,
+              "AhKh": 5,
+              "JcQc": 1,
+              "KdKs": 2
+            },
+            {
+              "3s4s": 1,
+              "7c7d": 6,
+              "8c8d": 6,
+              "9sAc": 2,
+              "AhAs": 2,
+              "JhTh": 8,
+              "KhQh": 5,
+              "QcQd": 2
+            }
+          ],
+          "tie_pairs": [
+            [
+              "3c4d",
+              "3s4s"
+            ],
+            [
+              "AcAd",
+              "AhAs"
+            ]
+          ]
+        },
+        "independent_tree_action_slots": 26,
+        "independent_tree_decisions": 10,
+        "independent_tree_terminals": 17,
+        "max_depth": 5,
+        "native_postflop_tree_signature_matches": true,
+        "production_physical_world_crosscheck": {
+          "mass_max_abs_difference": 3.469446951953614e-18,
+          "rank_signs": {
+            "loss": 28,
+            "tie": 2,
+            "win": 30
+          },
+          "ties": 2,
+          "world_pairs": 60
+        },
+        "production_tree_signature_matches": true,
+        "uniform_exact_smokes": {
+          "partition": {
+            "depth": 5,
+            "fraction_bits": 122,
+            "nash_conv": "3290242909518779416269208719741419515/69959709797683633042219138298067024",
+            "work": 19942
+          },
+          "scan": {
+            "depth": 5,
+            "fraction_bits": 122,
+            "nash_conv": "3290242909518779416269208719741419515/69959709797683633042219138298067024",
+            "work": 19942
+          }
+        },
+        "uniform_numeric_replay_metrics": {
+          "exploitability": 23.515269853418687,
+          "ip_best_response_gain": 23.82758140829391,
+          "ip_best_response_value": 4.2577001577140745,
+          "nash_conv": 47.030539706837374,
+          "oop_best_response_gain": 23.202958298543464,
+          "oop_best_response_value": 42.7728395491233,
+          "value_ip": -19.569881250579833,
+          "value_oop": 19.569881250579833
+        }
+      },
+      "backend_cell": "python-materialized-D0",
+      "candidate_hand_pair_iterations": 640000,
+      "case_id": "river-paired-8x8-short-refund-zero-tie",
+      "chance_nodes": 0,
+      "compatible_pairs": 60,
+      "dense_hand_state_pass_work": 6480648,
+      "independent_max_world_count": 200000,
+      "independent_numeric_modeled_work": 2400,
+      "independent_numeric_modeled_work_limit": 8000000,
+      "independent_world_count": 60,
+      "information_action_slots": 208,
+      "information_sets": 80,
+      "iterations": 10000,
+      "native_active_hand_counts": [
+        8,
+        8
+      ],
+      "native_shape_admission": {
+        "active_hand_counts": [
+          8,
+          8
+        ],
+        "algorithm": "cfrplus",
+        "budget_version": "native-fixed-street-work-v2",
+        "information_action_slots": 208,
+        "native_heap_byte_limit": 67108864,
+        "native_heap_bytes_upper_bound": 8535991,
+        "native_setup_loop_entries_upper_bound": 12272,
+        "passes_per_iteration": 3,
+        "public_states": 27,
+        "python_adapter_loop_entries_upper_bound": 79616,
+        "reduction": "public-batched",
+        "requested_iterations": 10000,
+        "scope": "Full requested native training and Python adapter bookkeeping; the calling solver separately retains its historical admission and exact Python diagnostics. Logical loop/allocation reservations are not runtime, actual allocated Python bytes or process RSS.",
+        "total_loop_entries_upper_bound": 406411888,
+        "total_loop_entry_limit": 500000000,
+        "training_loop_entries_upper_bound": 406320000,
+        "wire_byte_limit": 8388608,
+        "wire_bytes_upper_bound": 7552,
+        "world_rows": 60
+      },
+      "native_tree_max_actions": 4,
+      "native_tree_max_depth": 4,
+      "native_tree_nodes": 27,
+      "prefix_hand_edges": 60,
+      "public_nodes": 10,
+      "public_states": 27,
+      "terminal_nodes": 17,
+      "trainer_or_build_lookup_called": false,
+      "tree_actions": 26,
+      "world_iterations": 600000,
+      "world_node_work": 18000000,
+      "world_traversal_nodes": 10,
+      "worlds": 60
+    },
+    {
+      "adapted_independent_census": {
+        "independent_rank_census": {
+          "categories": [
+            1,
+            2,
+            5,
+            6,
+            7,
+            8
+          ],
+          "compatible_exact_rank_tie_worlds": 2,
+          "per_hand_category": [
+            {
+              "2h2s": 7,
+              "3c4d": 1,
+              "5h6h": 8,
+              "9c9d": 6,
+              "AcAd": 2,
+              "AhKh": 5,
+              "JcQc": 1,
+              "KdKs": 2
+            },
+            {
+              "3s4s": 1,
+              "7c7d": 6,
+              "8c8d": 6,
+              "9sAc": 2,
+              "AhAs": 2,
+              "JhTh": 8,
+              "KhQh": 5,
+              "QcQd": 2
+            }
+          ],
+          "tie_pairs": [
+            [
+              "3c4d",
+              "3s4s"
+            ],
+            [
+              "AcAd",
+              "AhAs"
+            ]
+          ]
+        },
+        "independent_tree_action_slots": 26,
+        "independent_tree_decisions": 10,
+        "independent_tree_terminals": 17,
+        "max_depth": 5,
+        "native_postflop_tree_signature_matches": true,
+        "production_physical_world_crosscheck": {
+          "mass_max_abs_difference": 3.469446951953614e-18,
+          "rank_signs": {
+            "loss": 28,
+            "tie": 2,
+            "win": 30
+          },
+          "ties": 2,
+          "world_pairs": 60
+        },
+        "production_tree_signature_matches": true,
+        "uniform_exact_smokes": {
+          "partition": {
+            "depth": 5,
+            "fraction_bits": 122,
+            "nash_conv": "3290242909518779416269208719741419515/69959709797683633042219138298067024",
+            "work": 19942
+          },
+          "scan": {
+            "depth": 5,
+            "fraction_bits": 122,
+            "nash_conv": "3290242909518779416269208719741419515/69959709797683633042219138298067024",
+            "work": 19942
+          }
+        },
+        "uniform_numeric_replay_metrics": {
+          "exploitability": 23.515269853418687,
+          "ip_best_response_gain": 23.82758140829391,
+          "ip_best_response_value": 4.2577001577140745,
+          "nash_conv": 47.030539706837374,
+          "oop_best_response_gain": 23.202958298543464,
+          "oop_best_response_value": 42.7728395491233,
+          "value_ip": -19.569881250579833,
+          "value_oop": 19.569881250579833
+        }
+      },
+      "backend_cell": "native",
+      "candidate_hand_pair_iterations": 640000,
+      "case_id": "river-paired-8x8-short-refund-zero-tie",
+      "chance_nodes": 0,
+      "compatible_pairs": 60,
+      "dense_hand_state_pass_work": 6480648,
+      "independent_max_world_count": 200000,
+      "independent_numeric_modeled_work": 2400,
+      "independent_numeric_modeled_work_limit": 8000000,
+      "independent_world_count": 60,
+      "information_action_slots": 208,
+      "information_sets": 80,
+      "iterations": 10000,
+      "native_active_hand_counts": [
+        8,
+        8
+      ],
+      "native_shape_admission": {
+        "active_hand_counts": [
+          8,
+          8
+        ],
+        "algorithm": "cfrplus",
+        "budget_version": "native-fixed-street-work-v2",
+        "information_action_slots": 208,
+        "native_heap_byte_limit": 67108864,
+        "native_heap_bytes_upper_bound": 8535991,
+        "native_setup_loop_entries_upper_bound": 12272,
+        "passes_per_iteration": 3,
+        "public_states": 27,
+        "python_adapter_loop_entries_upper_bound": 79616,
+        "reduction": "public-batched",
+        "requested_iterations": 10000,
+        "scope": "Full requested native training and Python adapter bookkeeping; the calling solver separately retains its historical admission and exact Python diagnostics. Logical loop/allocation reservations are not runtime, actual allocated Python bytes or process RSS.",
+        "total_loop_entries_upper_bound": 406411888,
+        "total_loop_entry_limit": 500000000,
+        "training_loop_entries_upper_bound": 406320000,
+        "wire_byte_limit": 8388608,
+        "wire_bytes_upper_bound": 7552,
+        "world_rows": 60
+      },
+      "native_tree_max_actions": 4,
+      "native_tree_max_depth": 4,
+      "native_tree_nodes": 27,
+      "prefix_hand_edges": 60,
+      "public_nodes": 10,
+      "public_states": 27,
+      "terminal_nodes": 17,
+      "trainer_or_build_lookup_called": false,
+      "tree_actions": 26,
+      "world_iterations": 600000,
+      "world_node_work": 18000000,
+      "world_traversal_nodes": 10,
+      "worlds": 60
+    }
+  ],
+  "retry_permitted": false,
+  "schema": "native-river-range-quality-claim-v1",
+  "source": {
+    "files": {
+      "docs/river-heldout-quality-protocol.md": {
+        "bytes": 9966,
+        "git_blob": "61d9858de0f078760a6bef5e35501cb30d5b01fb",
+        "normalized_lf_sha256": "a57fe9f59ddc73761e406e4cc05b92939d9810717ca10bcbd48b5b2fa30ece9f",
+        "raw_sha256": "caa3211dfb861ee599d4f836ff40208c52ee96aa051b60ea45150e3cb285a702"
+      },
+      "native/fixed_street_train.c": {
+        "bytes": 47426,
+        "git_blob": "68768a3b483aacabe1da236ee84790bac25c5586",
+        "normalized_lf_sha256": "5101bee03f7fd9d6d1b7cac8ea825144cd1a2471179de909ab22358264821676",
+        "raw_sha256": "2c1c31328b61306c7ae90512f2e4e7e1bdfd00cd23fc5d8dc50fffcba5b09b29"
+      },
+      "native/preflop_equity.c": {
+        "bytes": 22832,
+        "git_blob": "1e712e9bdc6747eca178f21f8e1ecdcb6d710f01",
+        "normalized_lf_sha256": "1cdedd6b17ead59a9adca0f5ff38cad119453dcf593b013508031c1c0ae5cccf",
+        "raw_sha256": "248f7b3145425eb1e22f11c14c929ef51648eff01ae7cae26187754ed83afa2f"
+      },
+      "native/preflop_five_card_reference.c": {
+        "bytes": 8226,
+        "git_blob": "1e05877de420330c01440ec0a7aea3c3a927d79d",
+        "normalized_lf_sha256": "68993c237e4092a9ddb8c0e2432a2cac8030486fd2b16904bf519fca024e6288",
+        "raw_sha256": "1abc95e973807fe957e49691598447b28b5894b19cf2405edd1a789742ed6a1c"
+      },
+      "pokerlab/__init__.py": {
+        "bytes": 79,
+        "git_blob": "f40c7195c7a6873baf952d8508ab89d1c05df654",
+        "normalized_lf_sha256": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+        "raw_sha256": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c"
+      },
+      "pokerlab/alternating_public_cfr.py": {
+        "bytes": 7381,
+        "git_blob": "dc9097ff46760babfa6aefecbe59fa8b9f7b657b",
+        "normalized_lf_sha256": "b2dec04f838afaa90ceae6e5ea98b950d9445d54c3f8f639990f0b70cb9a74e5",
+        "raw_sha256": "82665d7e22b5bde67c1662c690fa9deda50bebf14ca11737b7e2ce87ea1a29d3"
+      },
+      "pokerlab/analysis.py": {
+        "bytes": 3257,
+        "git_blob": "203d5acd73656f5509beb3f4f672a34f66b7eb2b",
+        "normalized_lf_sha256": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+        "raw_sha256": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e"
+      },
+      "pokerlab/cards.py": {
+        "bytes": 5216,
+        "git_blob": "44d86c7222042b05c33d9a3a85010a2d74b623fe",
+        "normalized_lf_sha256": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+        "raw_sha256": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074"
+      },
+      "pokerlab/cfr.py": {
+        "bytes": 7123,
+        "git_blob": "7ab4abeee83818105875e75ba6391b405fffa47d",
+        "normalized_lf_sha256": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+        "raw_sha256": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a"
+      },
+      "pokerlab/cfr_plus.py": {
+        "bytes": 8073,
+        "git_blob": "e3d1285779d101ba53d33502026c2e7d67f7feab",
+        "normalized_lf_sha256": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+        "raw_sha256": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89"
+      },
+      "pokerlab/coach_analysis.py": {
+        "bytes": 20515,
+        "git_blob": "78386d4f0057328c9919beeff9c738cae4e4dc34",
+        "normalized_lf_sha256": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+        "raw_sha256": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441"
+      },
+      "pokerlab/coach_conversation.py": {
+        "bytes": 6590,
+        "git_blob": "9f0e28d0464ef053004a360561ff9befe720e2a0",
+        "normalized_lf_sha256": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+        "raw_sha256": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad"
+      },
+      "pokerlab/coach_grounding.py": {
+        "bytes": 45060,
+        "git_blob": "56250ae368229b5bb9cf23f90b28d26b736db029",
+        "normalized_lf_sha256": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+        "raw_sha256": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e"
+      },
+      "pokerlab/coach_provider.py": {
+        "bytes": 9111,
+        "git_blob": "b0c48a86cd6b8d2ab014986f662e8e4bda770e2a",
+        "normalized_lf_sha256": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+        "raw_sha256": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880"
+      },
+      "pokerlab/coach_teaching.py": {
+        "bytes": 16740,
+        "git_blob": "d4c978a59d5654597d3d897e53abe335e1732193",
+        "normalized_lf_sha256": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+        "raw_sha256": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6"
+      },
+      "pokerlab/contracts.py": {
+        "bytes": 48704,
+        "git_blob": "1b3d9d4f5d3210417adc90f80cae3fcb770a2058",
+        "normalized_lf_sha256": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+        "raw_sha256": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247"
+      },
+      "pokerlab/current_study.py": {
+        "bytes": 6222,
+        "git_blob": "f000b790431793c6c8528db07fe2c4cacf068a70",
+        "normalized_lf_sha256": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+        "raw_sha256": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7"
+      },
+      "pokerlab/decision_study.py": {
+        "bytes": 11910,
+        "git_blob": "ee601a9b9aaa127500b6bc46d55ad5838dbfe26a",
+        "normalized_lf_sha256": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+        "raw_sha256": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9"
+      },
+      "pokerlab/equilibrium.py": {
+        "bytes": 4840,
+        "git_blob": "35ae22f8a79597fd9c8d4b0040e7ba3869c74ea5",
+        "normalized_lf_sha256": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+        "raw_sha256": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407"
+      },
+      "pokerlab/equity.py": {
+        "bytes": 2955,
+        "git_blob": "efc9ccddd0eb6d92118ec62e4a7967963b9dd4e5",
+        "normalized_lf_sha256": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+        "raw_sha256": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca"
+      },
+      "pokerlab/explanations.py": {
+        "bytes": 17855,
+        "git_blob": "ed44a6a90ae03cbfc73968ce5fc9c98776017947",
+        "normalized_lf_sha256": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+        "raw_sha256": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d"
+      },
+      "pokerlab/exploit.py": {
+        "bytes": 18222,
+        "git_blob": "2c4660412b6a9d9f222998cdf1e973b2c10227d3",
+        "normalized_lf_sha256": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+        "raw_sha256": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7"
+      },
+      "pokerlab/flop_checkdown_equity.py": {
+        "bytes": 10821,
+        "git_blob": "c451a41e673db3422e171fa379848599e7f8a16c",
+        "normalized_lf_sha256": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+        "raw_sha256": "a4af7122d32e932b57c5cfd76165f0efc4fba2a1040aea4ca8dd39a3e0b550e2"
+      },
+      "pokerlab/flop_checkdown_solver.py": {
+        "bytes": 13056,
+        "git_blob": "f64819cb5ecaef7a9d08df8c13cb2b04e873fefc",
+        "normalized_lf_sha256": "3da41f5119e9317f533a95b168aec5613b4c812a73eda49b2a731c516901578d",
+        "raw_sha256": "7428c6e2f6dbc47c3fb1e6f059364b44fc7ddd4632e908d9805386ec21d47c7d"
+      },
+      "pokerlab/flop_checkdown_worlds.py": {
+        "bytes": 6120,
+        "git_blob": "214b63428964c92a3024e2700797541f4dfb933d",
+        "normalized_lf_sha256": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+        "raw_sha256": "4d9d35941771b7e793457068c12978d8ecc3f9c3772273d7ebb70f0db5d7483d"
+      },
+      "pokerlab/flop_suit_equity.py": {
+        "bytes": 6285,
+        "git_blob": "39cd93d44c8b2f061415edafcc39d5172b2fab17",
+        "normalized_lf_sha256": "7649fc037d7ed530a1b27b9467543a77a91d3fda87a29a6fd4fe42af214c01ec",
+        "raw_sha256": "8df1a91d1353ff6e092e665156fcc32e538b35b0e5e9a842379a188ea043546c"
+      },
+      "pokerlab/game.py": {
+        "bytes": 8421,
+        "git_blob": "79bb874ce5734be03ee84d63ee39437e2e36dc77",
+        "normalized_lf_sha256": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+        "raw_sha256": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6"
+      },
+      "pokerlab/matrix_free_river.py": {
+        "bytes": 11196,
+        "git_blob": "edc056dfca2e59b5674d0cd69c4880d137748db3",
+        "normalized_lf_sha256": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+        "raw_sha256": "931002966a5ba1831c98ec0566aa9975c909ba376fa56bf504d07e533492d879"
+      },
+      "pokerlab/matrix_free_turn.py": {
+        "bytes": 18080,
+        "git_blob": "cbeae99957c9324a370d1b4ac0d899baddda3ad1",
+        "normalized_lf_sha256": "0fd5fa336a7c0ca10a0d12c8a7dbc7be404a86638a93b39497b3f32eb18dc92a",
+        "raw_sha256": "de670ffa20d92ab615d6be6c5cb73ec883431aea6903e3d5007473776726c5ad"
+      },
+      "pokerlab/matrix_free_turn_tail.py": {
+        "bytes": 18711,
+        "git_blob": "a9f075f0eee50096ae516c5c582089a6a4202e3e",
+        "normalized_lf_sha256": "714c5ae094faf29123a9993079781efdcfe915bbd91dcbd02c8365016dafff6c",
+        "raw_sha256": "555b04ba92c10d9ef8ae98f619c74720c08fe41ece56812f582b9759c6476f4c"
+      },
+      "pokerlab/models.py": {
+        "bytes": 30436,
+        "git_blob": "e32ae0be3d0fe75703915e4f007f82276b3037d2",
+        "normalized_lf_sha256": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+        "raw_sha256": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66"
+      },
+      "pokerlab/native_fixed_street.py": {
+        "bytes": 21438,
+        "git_blob": "eae603f6d855c04b9b6d29f08eca7e2ac3d9956e",
+        "normalized_lf_sha256": "d6e58addca737af57e309b003c93cc0de2d1551f05665a4bfd24548b11dd78d5",
+        "raw_sha256": "ab36e2808da1c91369c9825403d751be1de3810adc945edf7934a317c0ac2fbb"
+      },
+      "pokerlab/native_flop_equity.py": {
+        "bytes": 5982,
+        "git_blob": "81a92de702ea6d45be87716d8934c33a461b8c24",
+        "normalized_lf_sha256": "2c5d3fd9341097e8ecfd04f0032343b11f70dbdd74b5dbb10bd1910f7195e8c5",
+        "raw_sha256": "29b43f08cbcd0d420e25fa5e79bb789c27553cdf8517ba0c63477ef9b618541e"
+      },
+      "pokerlab/native_preflop_equity.py": {
+        "bytes": 9649,
+        "git_blob": "d58adaa6e6904da36b6d94075bca4025cdd26cb3",
+        "normalized_lf_sha256": "d36de170d91e918f1e19166d4d9f2239ea418c327303efb20db641cfc1de42bd",
+        "raw_sha256": "10a482fe2019277b894e6380ae235f3cae945af178f471e0493585d9a1d71edb"
+      },
+      "pokerlab/native_river_solver.py": {
+        "bytes": 12468,
+        "git_blob": "131aed29991593d92f29b2c1b698271dbfdc0f7a",
+        "normalized_lf_sha256": "db54f4339319cddf83eb8ccb6c6e98d2fb566d70a72623939504d57e60b22e86",
+        "raw_sha256": "43a0fa853bafe91b627506bf497f092206bbdc63040c336f9731d976617e63cf"
+      },
+      "pokerlab/personalities.py": {
+        "bytes": 6733,
+        "git_blob": "b317dce9514c021cfa1e6fdb5678c35f566f1cff",
+        "normalized_lf_sha256": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+        "raw_sha256": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1"
+      },
+      "pokerlab/planned_cfr.py": {
+        "bytes": 6090,
+        "git_blob": "3bad88880cb306bd6fa10fea65c0a423b04c0d77",
+        "normalized_lf_sha256": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+        "raw_sha256": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7"
+      },
+      "pokerlab/postflop_solver.py": {
+        "bytes": 35836,
+        "git_blob": "11d70ace0ea11a2f35474ff97c2eb5691391a5f3",
+        "normalized_lf_sha256": "85b63897a9a4ae14dfa45053f2c2aa05a83549f6f75ee1dc205e0dba8c367808",
+        "raw_sha256": "b7272e33616ab2d686f93b27c02271bec7f8980842da9dde8bd87d9738f763db"
+      },
+      "pokerlab/practice.py": {
+        "bytes": 14858,
+        "git_blob": "022f67d7593392487bc9a6e1f5ab25e3aab8cbde",
+        "normalized_lf_sha256": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+        "raw_sha256": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd"
+      },
+      "pokerlab/preflop_checkdown_budget.py": {
+        "bytes": 8917,
+        "git_blob": "ba70bc92a6ea9c5743b14d116b94525a0a4a8660",
+        "normalized_lf_sha256": "c2e6bfce1d5d5df6a7531d8a9ba39ad9b921124a3a984a9a6fd43107ee3d243c",
+        "raw_sha256": "ddc0e053438e0be634b72169e2af496057f65964b69dad146e4ea08232adcb59"
+      },
+      "pokerlab/preflop_checkdown_solver.py": {
+        "bytes": 10530,
+        "git_blob": "798e5981bba4188a0289fe3cdf4d3ee6a7ed0d55",
+        "normalized_lf_sha256": "894a2d46423d5dcf1c46e2c1310e621f283bba51958687bfb2256a70c3ecde60",
+        "raw_sha256": "96d506bf21d0e85af775dec3844acebb116842a5e53cc0447d5e617356333104"
+      },
+      "pokerlab/preflop_covered_equity.py": {
+        "bytes": 11457,
+        "git_blob": "2b56d7b142fdf7956d03ff00f8a497bc49682fb2",
+        "normalized_lf_sha256": "927cb84dfa20102e69f65f5d737a2d45ea69c92901c4d5cb91f89691d196b729",
+        "raw_sha256": "cbccc2f9c7c7f680cc6aa3f816ef38c481f65f20600f7bb0d70e3d879f82f667"
+      },
+      "pokerlab/preflop_delayed_cfrplus.py": {
+        "bytes": 6931,
+        "git_blob": "2a7f775e4f65e71eefac9884b71b7ba5713bee56",
+        "normalized_lf_sha256": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+        "raw_sha256": "3dd745f4a548b0f7fd46a6b02f519be1d98f027eaa37499f03cf8de1135a259e"
+      },
+      "pokerlab/preflop_full_board_equity.py": {
+        "bytes": 22308,
+        "git_blob": "9b3b888ad87edeb29ff420cd8e3d89bb5a92d9b8",
+        "normalized_lf_sha256": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+        "raw_sha256": "f678412ae0b02bb87517bfde14081db3598ef5485f0728e899e7abacaad04d9a"
+      },
+      "pokerlab/preflop_future_groups.py": {
+        "bytes": 5944,
+        "git_blob": "e60de8548cfc8683182c2e4f0a842ae7cd605cc2",
+        "normalized_lf_sha256": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+        "raw_sha256": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106"
+      },
+      "pokerlab/preflop_private_indices.py": {
+        "bytes": 8011,
+        "git_blob": "2daab771e8b1818095bb709317a04618d72196e1",
+        "normalized_lf_sha256": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+        "raw_sha256": "6d46e31d58f24a979d3881671b4e898bfa23597b1771c160dbbe43c0a47776c1"
+      },
+      "pokerlab/preflop_push_fold.py": {
+        "bytes": 11871,
+        "git_blob": "ad73c2f7f1928e40bce079ce5f84dc874ce72e3c",
+        "normalized_lf_sha256": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+        "raw_sha256": "6cb341017c364e5af4dc830de1c6031a4e8202580146f36857fb05d975f5ffb4"
+      },
+      "pokerlab/preflop_runout_index.py": {
+        "bytes": 6116,
+        "git_blob": "fc49099fe67c77c6f4486a3dbcb3d6c2ed648a18",
+        "normalized_lf_sha256": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+        "raw_sha256": "4001b76d6f092c3c441795e1a4fa83fd5ef33d2584ab7aa05ab911a12f92806b"
+      },
+      "pokerlab/preflop_sampled_budget.py": {
+        "bytes": 3115,
+        "git_blob": "9cba26e374d0c6c007b5a5e09fb5d27d0e7c1c3d",
+        "normalized_lf_sha256": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+        "raw_sha256": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5"
+      },
+      "pokerlab/preflop_sampled_cfr.py": {
+        "bytes": 13484,
+        "git_blob": "65137d3540b36f4d89f89480fc86f1a5335b31fd",
+        "normalized_lf_sha256": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+        "raw_sha256": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47"
+      },
+      "pokerlab/preflop_sampled_storage.py": {
+        "bytes": 3927,
+        "git_blob": "62847e8d2e58ba78f878b0364a03b42fb442046f",
+        "normalized_lf_sha256": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+        "raw_sha256": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150"
+      },
+      "pokerlab/preflop_solver.py": {
+        "bytes": 61556,
+        "git_blob": "24e13891a15f28ba2fb385e8455e93edd313a1d8",
+        "normalized_lf_sha256": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+        "raw_sha256": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9"
+      },
+      "pokerlab/preflop_suit_equity.py": {
+        "bytes": 5287,
+        "git_blob": "b5ba6c87e8377275331c0720fda9d53ea3b4f8b5",
+        "normalized_lf_sha256": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+        "raw_sha256": "68881b4d927d5ed03e2ecff0da081e8ee0761fb0262fdef22fab6f9ad3be34cc"
+      },
+      "pokerlab/preflop_tree.py": {
+        "bytes": 12941,
+        "git_blob": "ef76802bc2f534b4badd78705d16bb186f479744",
+        "normalized_lf_sha256": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+        "raw_sha256": "7d57148b0eeba05535e0f2e10eadb8c3c43fdaa9a1d5b7e91f372bc38f164e2c"
+      },
+      "pokerlab/preflop_vector_budget.py": {
+        "bytes": 22042,
+        "git_blob": "166729b9aed6a5f89430a2b1b6ab8db32e695115",
+        "normalized_lf_sha256": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+        "raw_sha256": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be"
+      },
+      "pokerlab/public_cfr.py": {
+        "bytes": 29651,
+        "git_blob": "c55549b1e12f3cdea569fc0df796ffcdeacd9739",
+        "normalized_lf_sha256": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+        "raw_sha256": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd"
+      },
+      "pokerlab/public_diagnostics.py": {
+        "bytes": 10948,
+        "git_blob": "a7b3da9778032c6e5c419d77cf479be8bd149ace",
+        "normalized_lf_sha256": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+        "raw_sha256": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0"
+      },
+      "pokerlab/ranked_river.py": {
+        "bytes": 25683,
+        "git_blob": "8966f9558a9afb37c333b68fae13db5c981010d8",
+        "normalized_lf_sha256": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+        "raw_sha256": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f"
+      },
+      "pokerlab/restricted_solver.py": {
+        "bytes": 10045,
+        "git_blob": "ef75f8f31f0bd26bfc2bb764aa73c7d3a9573657",
+        "normalized_lf_sha256": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+        "raw_sha256": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9"
+      },
+      "pokerlab/river_config.py": {
+        "bytes": 3663,
+        "git_blob": "6b85ecf35fd57906d3d3d42940162ecbdc467281",
+        "normalized_lf_sha256": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+        "raw_sha256": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874"
+      },
+      "pokerlab/river_tail_adapter.py": {
+        "bytes": 9799,
+        "git_blob": "edbae3538470067317c2996a92fb21f4c02a7911",
+        "normalized_lf_sha256": "0963a8df65d432415157a164618923bd2fcfede98ef0ed328ea8f1867e384e7d",
+        "raw_sha256": "4f74793d8a0a34c41b8238071f1d9a2dfa93e28037f13aaf76c0b16fd2fe3edf"
+      },
+      "pokerlab/river_tree.py": {
+        "bytes": 8378,
+        "git_blob": "dd7f6c9b7dea8feddc029e2644a6bb924bf009d3",
+        "normalized_lf_sha256": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+        "raw_sha256": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8"
+      },
+      "pokerlab/server.py": {
+        "bytes": 65499,
+        "git_blob": "ce14885739685bb24378f506ddf3b41d19998e40",
+        "normalized_lf_sha256": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+        "raw_sha256": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813"
+      },
+      "pokerlab/situation_teaching.py": {
+        "bytes": 5398,
+        "git_blob": "f457dd652287ae4d25d0729a0854f8ea9fdf6c4a",
+        "normalized_lf_sha256": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+        "raw_sha256": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a"
+      },
+      "pokerlab/solver.py": {
+        "bytes": 16344,
+        "git_blob": "42b823786b4ffd9d0e5b38f1a8f66e4c2f884143",
+        "normalized_lf_sha256": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+        "raw_sha256": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d"
+      },
+      "pokerlab/turn_class_tail_adapter.py": {
+        "bytes": 34540,
+        "git_blob": "8625e49f7028ff75799d5e8e37386005e033fb44",
+        "normalized_lf_sha256": "252b5e91cd2c4f56f3823640f767c7691c17cbb09b37f64dcc9b019cb0d58c9a",
+        "raw_sha256": "9adb349eb4d2e10a18a2b75963304e7af10cc64d8a9950e402110831fcc56c44"
+      },
+      "pokerlab/turn_class_vector_budget.py": {
+        "bytes": 29858,
+        "git_blob": "aae95db7761c9eef6af85d4d4af3b7088664c5d9",
+        "normalized_lf_sha256": "b029504318f27771ca19bfd7076f21c6701d378e0ff6440e300d8c0efb2c7b37",
+        "raw_sha256": "a56feffd4a4ae8958677671cd4510956dd5473371cb9d0acad41a9c6387e1215"
+      },
+      "pokerlab/turn_range_kernel.py": {
+        "bytes": 29522,
+        "git_blob": "9acdc43ba12e33d0fb1a1fd7ad18d13976bc9a4e",
+        "normalized_lf_sha256": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+        "raw_sha256": "b2e61068135111f7949c20b509d6f4520d8d6de25b0b22cbb383485470d1420d"
+      },
+      "pokerlab/turn_solver.py": {
+        "bytes": 2185,
+        "git_blob": "3c5da3a4bc6356a935e854d37724e4e10667ab0c",
+        "normalized_lf_sha256": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+        "raw_sha256": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f"
+      },
+      "pokerlab/turn_tail_adapter.py": {
+        "bytes": 13543,
+        "git_blob": "683830524782b2497661c0c41d5b998a87f16df5",
+        "normalized_lf_sha256": "ecd183dedbaa967d691b8467a176203b9cb827a513425bdf660a4088813193c2",
+        "raw_sha256": "b3d6acd5c8bf5bba1ceb45380e585c2a5ee84e24e48de25a2f87db92184125cf"
+      },
+      "pokerlab/turn_terminal_cache.py": {
+        "bytes": 14970,
+        "git_blob": "b73a3f9aa5451a8160c0a0baebcfbd6553059d7a",
+        "normalized_lf_sha256": "cea7df6db83b65b7b7de403271ff4a55be708d8b983de3aa29d97af16a495092",
+        "raw_sha256": "07502ed93793174c5dd4de00d187adb5496865d53c4154fdab9b679d0575263c"
+      },
+      "scripts/benchmark_river_heldout_quality.py": {
+        "bytes": 40115,
+        "git_blob": "03c79b70f224da0cd40af01bb59dd7f2d15ad710",
+        "normalized_lf_sha256": "1259777db93672f513d5a1f19f245996d692820370560746c4794b1a495a9587",
+        "raw_sha256": "2ba43fceb25b08b48cc3e78f1998b969367eb0508c7632fb686018dc36ead786"
+      },
+      "scripts/build_native_train.py": {
+        "bytes": 4088,
+        "git_blob": "5c9667faa8ac37f2f725f5a1556b068ea822eb1f",
+        "normalized_lf_sha256": "ccd47212fcd1b029d9f7f2023cb0b71a9648f8df8e78d3e6c71bacb9f4f1e019",
+        "raw_sha256": "1101f4db9e1a89b3f8b02da920547374da7bfe60b149e7939ba5618ff4380687"
+      },
+      "scripts/preflop_validation.py": {
+        "bytes": 23835,
+        "git_blob": "a6dd8a2c8b6e8f54f0d42fa5d138426cc94c656d",
+        "normalized_lf_sha256": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+        "raw_sha256": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b"
+      },
+      "scripts/river_heldout_preflight.py": {
+        "bytes": 21465,
+        "git_blob": "6a083601b9d6d04864ed25dd1a5960cf1a35993c",
+        "normalized_lf_sha256": "35216d3ca1ae60bdb8232783ed33917ef2a7bbb42ec8ae637981925328385a74",
+        "raw_sha256": "1e01c1285ee98674e314216d78a0a7deab6391f399e4c4a46db2ba5638228a28"
+      },
+      "scripts/turn_rational_certificate.py": {
+        "bytes": 18816,
+        "git_blob": "cc90fd825fcb42a7e2cfc67152782c4bfb69dac4",
+        "normalized_lf_sha256": "0c94bee344871a47d34a1291f65f85ac3e80a1a9389d7785e4baf6695b3967fb",
+        "raw_sha256": "bc77a0420a3ed22ac30bf901db7d93eb5f8f78161a6c8b0a47ac059691cdbf39"
+      },
+      "scripts/turn_river_validation.py": {
+        "bytes": 33366,
+        "git_blob": "4eb434355f4de775378b293d32860384c3c20ed9",
+        "normalized_lf_sha256": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+        "raw_sha256": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1"
+      }
+    },
+    "head": "7371b450976a8b904afb7c7583070db4d5b84595",
+    "new_source_git_pins": {
+      "benchmarks/native-river-range-quality-v1.json": {
+        "git_blob": "f71237939f519b6b11a57e25788f27b38aff94fe",
+        "normalized_lf_sha256": "49f8b00bd8ef43f8328b4fd4b485a98f9bc7ec991d2a68bfc0adf73d1ac2575f",
+        "raw_sha256": "49f8b00bd8ef43f8328b4fd4b485a98f9bc7ec991d2a68bfc0adf73d1ac2575f"
+      },
+      "docs/native-river-range-quality-protocol.md": {
+        "git_blob": "6362e8a124a2f2698a559c990cf89ba64dcfb495",
+        "normalized_lf_sha256": "ded2c08fc8348ab9dcfeb75ebed04457cca2b8545537a428c58a98e4fd55f7e7",
+        "raw_sha256": "ded2c08fc8348ab9dcfeb75ebed04457cca2b8545537a428c58a98e4fd55f7e7"
+      },
+      "scripts/benchmark_native_river_range_quality.py": {
+        "git_blob": "fc334b31544eac9ddf6bc86ece6e619dad8b36a7",
+        "normalized_lf_sha256": "8b4e3d098a216e31c600b412a5382979b0269b88c909d2f8831c0466269b334e",
+        "raw_sha256": "8b4e3d098a216e31c600b412a5382979b0269b88c909d2f8831c0466269b334e"
+      }
+    },
+    "runner": {
+      "bytes": 40306,
+      "normalized_lf_sha256": "a4155547d39b49c65a7fcb3b22a0ee5ce751de17a6183026ee713f62f88203b6",
+      "path": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\openpoker-native-river-range-quality\\benchmarks\\results\\native-river-controls-v1\\validate_compiled_river.py",
+      "raw_sha256": "a4155547d39b49c65a7fcb3b22a0ee5ce751de17a6183026ee713f62f88203b6"
+    },
+    "status": "clean",
+    "study_source_files": {
+      "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\openpoker-native-river-range-quality\\benchmarks\\native-river-range-quality-v1.json": {
+        "bytes": 2338,
+        "normalized_lf_sha256": "49f8b00bd8ef43f8328b4fd4b485a98f9bc7ec991d2a68bfc0adf73d1ac2575f",
+        "raw_sha256": "49f8b00bd8ef43f8328b4fd4b485a98f9bc7ec991d2a68bfc0adf73d1ac2575f"
+      },
+      "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\openpoker-native-river-range-quality\\docs\\native-river-range-quality-protocol.md": {
+        "bytes": 8308,
+        "normalized_lf_sha256": "ded2c08fc8348ab9dcfeb75ebed04457cca2b8545537a428c58a98e4fd55f7e7",
+        "raw_sha256": "ded2c08fc8348ab9dcfeb75ebed04457cca2b8545537a428c58a98e4fd55f7e7"
+      },
+      "C:\\Users\\pauls\\Documents\\Codex\\2026-10-13\\i-x20\\work\\openpoker-native-river-range-quality\\scripts\\benchmark_native_river_range_quality.py": {
+        "bytes": 45032,
+        "normalized_lf_sha256": "8b4e3d098a216e31c600b412a5382979b0269b88c909d2f8831c0466269b334e",
+        "raw_sha256": "8b4e3d098a216e31c600b412a5382979b0269b88c909d2f8831c0466269b334e"
+      }
+    }
+  },
+  "target_nash_conv": "1/1000"
+}
