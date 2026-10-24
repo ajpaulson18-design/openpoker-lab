@@ -1,0 +1,264 @@
+{
+  "artifact_sha256": "6ddb80afae0aeb0be152c4ba76e18e675ac2199396b1777d044544f4cb27f9e4",
+  "baseline_commit": "ed0deba4a08fe3c9bb25f75eb41e73e2b3b4b251",
+  "benchmark_id": "preflop-aa-ak-transport-audit-v1",
+  "candidate_artifact_sha256": "7bf39179d001c39d7872b28f1f2584820f344ecd631fa75630cbc99e0ced38c4",
+  "candidate_attempts": 1,
+  "created_at_utc": "2026-10-24T01:13:17.543382+00:00",
+  "errors": [],
+  "forbidden_calculation_calls": {
+    "pokerlab.cards.rank_hand": 0,
+    "pokerlab.cfr.train": 0,
+    "pokerlab.cfr_plus.train": 0,
+    "pokerlab.native_preflop_equity.prepare_native_preflop_equities": 0,
+    "pokerlab.preflop_covered_equity._canonical_pair_key": 0,
+    "pokerlab.preflop_covered_equity._mapped_hand": 0,
+    "pokerlab.preflop_covered_equity._permutation_between": 0,
+    "pokerlab.preflop_covered_equity._ranges": 0,
+    "pokerlab.preflop_covered_equity.pool_preflop_equities_by_suit": 0,
+    "pokerlab.preflop_full_board_equity.rank_hand": 0,
+    "scripts.build_native_preflop.build": 0,
+    "scripts.build_preflop_five_reference.build": 0,
+    "scripts.preflop_aa_ak_transport.build_candidate": 0,
+    "scripts.preflop_five_count_reference.reference_preflop_counts": 0,
+    "scripts.river_sequence_form._solve_lp": 0,
+    "scripts.validate_preflop_five_reference.validate_five_dump": 0
+  },
+  "fresh_saved_file_verification": {
+    "benchmark_id": "preflop-aa-ak-transport-v1",
+    "board_enumerations": 0,
+    "board_outcomes_per_pair": 1712304,
+    "candidate_artifact_sha256": "7bf39179d001c39d7872b28f1f2584820f344ecd631fa75630cbc99e0ced38c4",
+    "equilibrium_or_policy_claim": false,
+    "exact_global_prior_mass": "1",
+    "physical_pair_rows_authenticated": 84,
+    "rank_calls": 0,
+    "represented_boards_informational_only": 143833536,
+    "scope": "authenticated blocker-sensitive source count transport only",
+    "source_basis_pins": {
+      "aa": {
+        "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+        "path": "benchmarks/results/preflop-five-basis-v1.json",
+        "raw_sha256": "bb906c0dac2deca79753e48548b5c3c1b7b9cedd92ba3574da934154713b5419"
+      },
+      "ak": {
+        "artifact_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+        "path": "benchmarks/results/preflop-ak-kk-basis-v1/report.json",
+        "publication_index_raw_sha256": "fb08e891b9879d1fb17671a6c71c6019cd0bbb1fdc21fc120737773a9c47ffad",
+        "raw_sha256": "89f2720092e659ccd982665cf4fdaa1d33448e30bb25a9321f9111410942e7a7"
+      }
+    },
+    "source_classes_authenticated": 6,
+    "source_orbit_members": [
+      {
+        "bb_hand": "KdKh",
+        "members": 12,
+        "sb_hand": "AcKc"
+      },
+      {
+        "bb_hand": "KcKd",
+        "members": 24,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KcKh",
+        "members": 6,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKs",
+        "members": 6,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKh",
+        "members": 24,
+        "sb_hand": "AdKc"
+      },
+      {
+        "bb_hand": "KhKs",
+        "members": 12,
+        "sb_hand": "AdKc"
+      }
+    ],
+    "status": "transport-authenticated-candidate-only",
+    "training_calls": 0,
+    "type_pair_counts": {
+      "AA": 36,
+      "AKo": 36,
+      "AKs": 12
+    },
+    "type_prior_masses": {
+      "AA": "3/7",
+      "AKo": "3/7",
+      "AKs": "1/7"
+    }
+  },
+  "independent_attempts": 2,
+  "independent_memory_verification": {
+    "benchmark_id": "preflop-aa-ak-transport-v1",
+    "board_enumerations": 0,
+    "board_outcomes_per_pair": 1712304,
+    "candidate_artifact_sha256": "7bf39179d001c39d7872b28f1f2584820f344ecd631fa75630cbc99e0ced38c4",
+    "equilibrium_or_policy_claim": false,
+    "exact_global_prior_mass": "1",
+    "physical_pair_rows_authenticated": 84,
+    "rank_calls": 0,
+    "represented_boards_informational_only": 143833536,
+    "scope": "authenticated blocker-sensitive source count transport only",
+    "source_basis_pins": {
+      "aa": {
+        "artifact_sha256": "2ae377e0af6d55491c667d574f41482f2ea6911ba8565ade3b9c8406b54010f7",
+        "path": "benchmarks/results/preflop-five-basis-v1.json",
+        "raw_sha256": "bb906c0dac2deca79753e48548b5c3c1b7b9cedd92ba3574da934154713b5419"
+      },
+      "ak": {
+        "artifact_sha256": "4f64aea64d85a77153187dfb0b8c537b173674cc542d38200133c5e01aaed982",
+        "path": "benchmarks/results/preflop-ak-kk-basis-v1/report.json",
+        "publication_index_raw_sha256": "fb08e891b9879d1fb17671a6c71c6019cd0bbb1fdc21fc120737773a9c47ffad",
+        "raw_sha256": "89f2720092e659ccd982665cf4fdaa1d33448e30bb25a9321f9111410942e7a7"
+      }
+    },
+    "source_classes_authenticated": 6,
+    "source_orbit_members": [
+      {
+        "bb_hand": "KdKh",
+        "members": 12,
+        "sb_hand": "AcKc"
+      },
+      {
+        "bb_hand": "KcKd",
+        "members": 24,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KcKh",
+        "members": 6,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKs",
+        "members": 6,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKh",
+        "members": 24,
+        "sb_hand": "AdKc"
+      },
+      {
+        "bb_hand": "KhKs",
+        "members": 12,
+        "sb_hand": "AdKc"
+      }
+    ],
+    "status": "transport-authenticated-candidate-only",
+    "training_calls": 0,
+    "type_pair_counts": {
+      "AA": 36,
+      "AKo": 36,
+      "AKs": 12
+    },
+    "type_prior_masses": {
+      "AA": "3/7",
+      "AKo": "3/7",
+      "AKs": "1/7"
+    }
+  },
+  "schema_version": 1,
+  "scope": "84 physical pair counts and exact priors only; no strategy, convergence, runtime or memory claim",
+  "source_after": {
+    "revision": "573b615aae77c554e58b71f8ff256699f954a66a",
+    "source_hashes": {
+      "docs/preflop-aa-ak-transport.md": {
+        "lf_sha256": "ca4b237bf4462661697e31f79e17073f091b90378044c42bd7f474b1d0560bea",
+        "raw_sha256": "ca4b237bf4462661697e31f79e17073f091b90378044c42bd7f474b1d0560bea"
+      },
+      "scripts/certify_preflop_aa_ak_transport.py": {
+        "lf_sha256": "9fb480cf466b712aba5e4a462e1187e105308799ef239ec09fa818b2b0bc7c12",
+        "raw_sha256": "9fb480cf466b712aba5e4a462e1187e105308799ef239ec09fa818b2b0bc7c12"
+      },
+      "scripts/preflop_aa_ak_transport.py": {
+        "lf_sha256": "7ae42b78e4363d2a7708bdd5f68c1a0488ecc2b0591936d0d2d39e374111d7e4",
+        "raw_sha256": "7ae42b78e4363d2a7708bdd5f68c1a0488ecc2b0591936d0d2d39e374111d7e4"
+      },
+      "scripts/preflop_aa_ak_transport_validation.py": {
+        "lf_sha256": "e9231e4efa9cb42ec5d60da808e6d42505888ce6b6046e2191ce8c01800e6bcc",
+        "raw_sha256": "e9231e4efa9cb42ec5d60da808e6d42505888ce6b6046e2191ce8c01800e6bcc"
+      },
+      "scripts/preflop_publication_source_history.py": {
+        "lf_sha256": "4c2e27b30eebfa7d5ce0e286d484b22a1a811c2e910082093ca6d9ea664b69a1",
+        "raw_sha256": "8ca96a8506b14ae377d81507b500932f32d5e424d10a87fba7b77aef1477e00f"
+      },
+      "scripts/verify_preflop_ak_kk_basis_publication.py": {
+        "lf_sha256": "f683676dfa51a3350e9baaab8f72109f184beff2df570da84972d9f1e00476f2",
+        "raw_sha256": "d24770e2f6a5ffee4fff75a92b0df4b3e32e38888f296b5ae056b600bed6178f"
+      },
+      "tests/test_certify_preflop_aa_ak_transport.py": {
+        "lf_sha256": "73997cd34ae410e3bcfafcd9ef670fd4c6f73a2219d6f370a709b5d6080c44e7",
+        "raw_sha256": "73997cd34ae410e3bcfafcd9ef670fd4c6f73a2219d6f370a709b5d6080c44e7"
+      },
+      "tests/test_preflop_aa_ak_transport.py": {
+        "lf_sha256": "620186899aa671a397b06cded81a92122f79400f62124255b1833504be7b3cc5",
+        "raw_sha256": "620186899aa671a397b06cded81a92122f79400f62124255b1833504be7b3cc5"
+      },
+      "tests/test_preflop_aa_ak_transport_validation.py": {
+        "lf_sha256": "7c1d3f3aad693de17ac89c132c374e02e27d6a2b8731a59a5ecd7fd3f5e1d914",
+        "raw_sha256": "7c1d3f3aad693de17ac89c132c374e02e27d6a2b8731a59a5ecd7fd3f5e1d914"
+      },
+      "tests/test_verify_preflop_ak_kk_basis_publication.py": {
+        "lf_sha256": "3efba242e65ef90014d739a4e44bf7ff472f995554c15f09d81f5658225ebc9b",
+        "raw_sha256": "e48c36f1425746af89b620923cdfa226b0637e2c6e7d1cac9c3e3730cb9b4aa7"
+      }
+    },
+    "status": []
+  },
+  "source_before": {
+    "revision": "573b615aae77c554e58b71f8ff256699f954a66a",
+    "source_hashes": {
+      "docs/preflop-aa-ak-transport.md": {
+        "lf_sha256": "ca4b237bf4462661697e31f79e17073f091b90378044c42bd7f474b1d0560bea",
+        "raw_sha256": "ca4b237bf4462661697e31f79e17073f091b90378044c42bd7f474b1d0560bea"
+      },
+      "scripts/certify_preflop_aa_ak_transport.py": {
+        "lf_sha256": "9fb480cf466b712aba5e4a462e1187e105308799ef239ec09fa818b2b0bc7c12",
+        "raw_sha256": "9fb480cf466b712aba5e4a462e1187e105308799ef239ec09fa818b2b0bc7c12"
+      },
+      "scripts/preflop_aa_ak_transport.py": {
+        "lf_sha256": "7ae42b78e4363d2a7708bdd5f68c1a0488ecc2b0591936d0d2d39e374111d7e4",
+        "raw_sha256": "7ae42b78e4363d2a7708bdd5f68c1a0488ecc2b0591936d0d2d39e374111d7e4"
+      },
+      "scripts/preflop_aa_ak_transport_validation.py": {
+        "lf_sha256": "e9231e4efa9cb42ec5d60da808e6d42505888ce6b6046e2191ce8c01800e6bcc",
+        "raw_sha256": "e9231e4efa9cb42ec5d60da808e6d42505888ce6b6046e2191ce8c01800e6bcc"
+      },
+      "scripts/preflop_publication_source_history.py": {
+        "lf_sha256": "4c2e27b30eebfa7d5ce0e286d484b22a1a811c2e910082093ca6d9ea664b69a1",
+        "raw_sha256": "8ca96a8506b14ae377d81507b500932f32d5e424d10a87fba7b77aef1477e00f"
+      },
+      "scripts/verify_preflop_ak_kk_basis_publication.py": {
+        "lf_sha256": "f683676dfa51a3350e9baaab8f72109f184beff2df570da84972d9f1e00476f2",
+        "raw_sha256": "d24770e2f6a5ffee4fff75a92b0df4b3e32e38888f296b5ae056b600bed6178f"
+      },
+      "tests/test_certify_preflop_aa_ak_transport.py": {
+        "lf_sha256": "73997cd34ae410e3bcfafcd9ef670fd4c6f73a2219d6f370a709b5d6080c44e7",
+        "raw_sha256": "73997cd34ae410e3bcfafcd9ef670fd4c6f73a2219d6f370a709b5d6080c44e7"
+      },
+      "tests/test_preflop_aa_ak_transport.py": {
+        "lf_sha256": "620186899aa671a397b06cded81a92122f79400f62124255b1833504be7b3cc5",
+        "raw_sha256": "620186899aa671a397b06cded81a92122f79400f62124255b1833504be7b3cc5"
+      },
+      "tests/test_preflop_aa_ak_transport_validation.py": {
+        "lf_sha256": "7c1d3f3aad693de17ac89c132c374e02e27d6a2b8731a59a5ecd7fd3f5e1d914",
+        "raw_sha256": "7c1d3f3aad693de17ac89c132c374e02e27d6a2b8731a59a5ecd7fd3f5e1d914"
+      },
+      "tests/test_verify_preflop_ak_kk_basis_publication.py": {
+        "lf_sha256": "3efba242e65ef90014d739a4e44bf7ff472f995554c15f09d81f5658225ebc9b",
+        "raw_sha256": "e48c36f1425746af89b620923cdfa226b0637e2c6e7d1cac9c3e3730cb9b4aa7"
+      }
+    },
+    "status": []
+  },
+  "source_unchanged": true,
+  "status": "transport-verified"
+}
