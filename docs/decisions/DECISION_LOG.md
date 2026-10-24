@@ -345,3 +345,23 @@ separate finite-game observations. Two models/training calls, six proof passes,
 four exact calls, two replays/projections and 8,268 ranks are recorded. The v1
 failure stays unchanged; saved-data authentication/CI still gate publication.
 See [the complete outcomes and limits](../flop-second-board-cfrplus-replay-v2.md).
+
+D035 (2026-10-24): **confirmed owner instruction in the integration chat**:
+temporarily pause independent preflop/flop and turn/river development and make one
+coherent game model spanning all four streets the primary solver objective. Audit
+existing engines/state/ranges/actions/transitions/validation first; maximize reuse
+of verified implementations; preserve accuracy benchmarks; demonstrate a complete
+small four-street game before gradual realistic heads-up NLHE expansion. Connecting
+independent street policies does not establish a complete-game equilibrium. Sol
+leads audit, architecture, milestones and task scoping; Luna handles routine
+implementation/tests, Terra difficult implementation/debugging, and Sol architectural
+decisions. Pause for review before major refactors. Unrelated features and isolated
+benchmark optimization are out of this phase unless necessary for integration.
+
+The [pinned integration audit and proposed design](../unified-solver-integration.md)
+records an existing selected-outcome combined-root four-street path and separates
+that verified implementation from new contracts, evidence gates and future work.
+The owner has approved the priority and workflow, **not yet the proposed technical
+architecture or implementation launch**. This instruction takes precedence over
+earlier isolated-street development priorities while retaining their mathematical
+constraints and immutable evidence.
