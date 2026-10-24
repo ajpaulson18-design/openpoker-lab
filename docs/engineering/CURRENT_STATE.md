@@ -8,6 +8,13 @@ integration priority, not a new full-deck capability or exact quality certificat
 The [integration plan](../unified-solver-integration.md) defines the remaining
 whole-game corpus/certificate and later expansion work.
 
+The [four-street numeric controls](../four-street-integration-protocol.md) now
+independently rebuild the bounded physical game and validate complete serialized
+policies, including zero-reach rows, hidden future cards, cumulative money and
+joint blocker-conditioned reach. The 15 focused tests pass normally and under
+optimized Python; the combined 44-test numeric/interface/legacy suite passes.
+The exact whole-game certificate and frozen quality run remain pending (D038).
+
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
 completed one frozen physical batch: 5,940 worlds, 30,812 public states and
