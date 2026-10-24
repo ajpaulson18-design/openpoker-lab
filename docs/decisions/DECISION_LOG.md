@@ -378,3 +378,16 @@ resolves ordinary defects, and publishes completed changes through GitHub withou
 waiting for the owner. A failed quality gate remains a miss; a capacity rejection
 remains unknown. These are inputs to autonomous review and a separately justified
 next step, not reasons to silently change the old experiment or stop for approval.
+
+D037 (2026-10-24): Sol architectural review under D036 approves the additive
+[four-street request/result boundary](../four-street-solver.md): reuse the current
+all-streets `solve_preflop` engine through one exact delegation, frozen input
+contracts and a complete immutable JSON result snapshot. Keep existing graph,
+numerical, admission, strategy-row and history semantics. Ordinary calls explicitly
+report unknown source revision; authenticated source and exact-normalized quality
+certificates belong to the later frozen integration runner. Exclude advanced
+sampling/grouping/compaction/delay/stopping options from this initial facade.
+Existing analysis/Coach contracts and simulator state remain separate. The lead
+reviewed the implementation and executed the combined 50-test boundary/legacy
+suite; the new contract-only suite also passes with optimized Python. This is an
+interface milestone, not the final whole-game quality gate or full-deck coverage.

@@ -56,6 +56,7 @@ persist a conversation. The request uses the Responses API with structured outpu
 | River solver | Full-traversal CFR over configurable river bet/raise sizes and compatible private hands; mixed strategies; exact best-response gap; confidence-weighted legacy node locks |
 | Turn-to-river solver library | Configured betting on both streets; exact physical river chance, card blockers, full-history policies and exact best-response gaps; Python API |
 | Shared postflop solver library | Flop, turn or river starts; ordered physical turn/river chance; per-street sizing with cumulative commitments; bounded exact best responses |
+| Unified four-street solver library | Immutable request and complete result around one coupled preflop-to-river selected-outcome game; [Python interface](docs/four-street-solver.md) |
 | Explanations | Deterministic short, normal, and beginner explanations of structured strategy results, with evidence and field-level provenance |
 | Hand sandbox | 2–6 named players; live or hidden coaching; reproducible decision history and session review; short all-ins, side pots, and odd-chip settlement |
 | Coach voices | Five offline deterministic presentation styles; every voice preserves the same recommendation, EVs, frequencies, confidence, and analysis ID |

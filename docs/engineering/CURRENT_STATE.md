@@ -1,5 +1,13 @@
 # Current engineering state
 
+The [unified four-street interface](../four-street-solver.md) adds an immutable
+request and complete-result envelope around the existing single-root all-streets
+preflop solver. It preserves its kernels, histories, joint chance law, numerical
+rules and admission. This is the first boundary milestone under D036's autonomous
+integration priority, not a new full-deck capability or exact quality certificate.
+The [integration plan](../unified-solver-integration.md) defines the remaining
+whole-game corpus/certificate and later expansion work.
+
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
 completed one frozen physical batch: 5,940 worlds, 30,812 public states and
