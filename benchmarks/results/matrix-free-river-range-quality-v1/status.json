@@ -1,0 +1,99 @@
+{
+  "active_call": null,
+  "claim_id": "a3738a714e284468b02fcc96daf3e25c",
+  "completed_audits": [
+    {
+      "backend": "matrix-free-D0",
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "matrix-free-tail",
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "matrix-free-D0",
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "replay_status": "valid"
+    },
+    {
+      "backend": "matrix-free-tail",
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "replay_status": "valid"
+    }
+  ],
+  "descriptive_comparisons": [
+    {
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "kind": "descriptive-only-different-schedules-and-budgets",
+      "max_absolute_probability_difference": 0.709396110233826,
+      "tail_minus_D0_numeric_metrics": {
+        "exploitability": -1.0858135734981289e-05,
+        "ip_best_response_gain": -4.0931788820586235e-06,
+        "ip_best_response_value": -1.656613126588269e-05,
+        "nash_conv": -2.1716271469962578e-05,
+        "oop_best_response_gain": -1.7623092587903955e-05,
+        "oop_best_response_value": -5.150140204079889e-06,
+        "value_ip": -1.2472952383824065e-05,
+        "value_oop": 1.2472952383824065e-05
+      }
+    },
+    {
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "kind": "descriptive-only-different-schedules-and-budgets",
+      "max_absolute_probability_difference": 0.5,
+      "tail_minus_D0_numeric_metrics": {
+        "exploitability": -3.641507358853602e-05,
+        "ip_best_response_gain": -4.282230352004035e-05,
+        "ip_best_response_value": -4.2984442037763415e-05,
+        "nash_conv": -7.283014717707204e-05,
+        "oop_best_response_gain": -3.0007843657031685e-05,
+        "oop_best_response_value": -2.984570513930862e-05,
+        "value_ip": -1.6213851772306498e-07,
+        "value_oop": 1.6213851772306498e-07
+      }
+    }
+  ],
+  "phase": "done",
+  "retry_permitted": false,
+  "saved_policies": [
+    {
+      "backend": "matrix-free-D0",
+      "bytes": 64851,
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "discard": 0,
+      "file": "policies/river-unpaired-club-16x16-fractional-short-refund-matrix-free-D0-T10000-D0.json",
+      "iterations": 10000,
+      "sha256": "22be9a53ed250919f5a6e353474504507e433d4109b110aa1b4c6902f3f7942f"
+    },
+    {
+      "backend": "matrix-free-tail",
+      "bytes": 61854,
+      "case": "river-unpaired-club-16x16-fractional-short-refund",
+      "discard": 10000,
+      "file": "policies/river-unpaired-club-16x16-fractional-short-refund-matrix-free-tail-T20000-D10000.json",
+      "iterations": 20000,
+      "sha256": "a417c62b110da8ebe6f315dda76b38f8b8d25b01d9309694476d3347a6320da9"
+    },
+    {
+      "backend": "matrix-free-D0",
+      "bytes": 57456,
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "discard": 0,
+      "file": "policies/river-paired-heart-16x16-rank-extremes-short-refund-matrix-free-D0-T10000-D0.json",
+      "iterations": 10000,
+      "sha256": "1318525d959cb24a48c830e62559efa1c666a40939900895be9ae829eedbc715"
+    },
+    {
+      "backend": "matrix-free-tail",
+      "bytes": 54830,
+      "case": "river-paired-heart-16x16-rank-extremes-short-refund",
+      "discard": 10000,
+      "file": "policies/river-paired-heart-16x16-rank-extremes-short-refund-matrix-free-tail-T20000-D10000.json",
+      "iterations": 20000,
+      "sha256": "861238338321c14231076440f96dfc8fe54741d381aa84cd0c601932b7e9524a"
+    }
+  ],
+  "status": "completed"
+}

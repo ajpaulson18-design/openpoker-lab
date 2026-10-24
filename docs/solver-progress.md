@@ -1772,3 +1772,6 @@ The [completed paired native 8x8 study](native-river-range-quality-results.md) r
 ## Matrix-free 16x16 river study protocol
 
 The [fixed four-call study](matrix-free-river-range-quality-protocol.md) expands validation to two new weighted 16x16 games at existing CFR+10000/D0 and original-weight tail T20000/D10000. Uniform physical/exact capacity controls and synthetic lifecycle tests precede any trained call. Original materialized/native cap rejections remain explicit; this source freeze establishes no trained accuracy or comparative performance outcome.
+
+
+The [completed matrix-free 16x16 study](matrix-free-river-range-quality-results.md) retains four fixed-budget policies with exact normalized-policy NashConv below 0.001 chip. Both D0 T10000 and original-weight T20000/D10000 profiles pass independent physical numeric and exact scan/partition audits; all raw policies, original cap rejections, fallback counts and earlier misses remain visible. Different budgets/schedules support descriptive comparisons only, without a broad accuracy or performance claim.

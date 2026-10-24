@@ -555,3 +555,6 @@ The [completed 8x8 accuracy record](../native-river-range-quality-results.md) pr
 ## Next fixed matrix-free river accuracy study
 
 The [16x16 protocol](../matrix-free-river-range-quality-protocol.md) stages fresh physical preflight, source/baseline authentication and a fixed four-call experiment. No trained result follows from the no-training harness or uniform exact controls.
+
+
+The [completed 16x16 evidence](../matrix-free-river-range-quality-results.md) retains four exact target passes on two fixed weighted river games, with all physical numeric/exact replays admitted under unchanged caps. Original materialized/native rejection receipts and historical target misses remain unchanged.
