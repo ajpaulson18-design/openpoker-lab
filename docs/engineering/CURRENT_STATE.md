@@ -533,3 +533,7 @@ The separate [four-profile river corpus](../river-heldout-quality-results.md) ad
 ## Fixed river original-weight tail accuracy
 
 The separate [four-profile follow-up](../river-heldout-tail-results.md) reaches exact normalized-policy NashConv<=0.001 chip for both original weighted 4x4 river games at T50000/D25000. Both T10000/D5000 tails remain misses; the unpaired one worsens at equal T. Complete policies, immutable baseline misses, all source/admission receipts and independent physical numeric/exact saved replays are retained. This finite-game milestone does not establish wider game accuracy, equal-cost benefits, performance or GTO Wizard quality.
+
+## Blocker-sensitive AK/KK source counts
+
+One [complete seven-stage physical observation](../preflop-ak-kk-basis-results.md) passed exact native/best-five agreement for three new AK/KK suit classes after current-build all-five conformance and published AA calibration. The original reports and thirteen small raw streams retain all 783 stable source identities and both build identities. These are source counts only; 84-pair joint-suit transport and strategy accuracy remain separate prerequisites. No shared solver or Coach behavior changes.

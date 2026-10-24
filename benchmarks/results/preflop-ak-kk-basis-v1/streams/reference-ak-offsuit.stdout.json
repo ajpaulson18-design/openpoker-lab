@@ -1,0 +1,1 @@
+{"schema_version":1,"reference":"preflop-five-card-pairs-v2","pairs":[{"sb_ids":[49,44],"bb_ids":[45,46],"wins":509318,"ties":15019,"losses":1187967,"boards":1712304},{"sb_ids":[49,44],"bb_ids":[46,47],"wins":506801,"ties":13510,"losses":1191993,"boards":1712304}],"boards_total":3424608,"five_card_rank_calls":143833536,"seven_card_rank_calls":6849216}

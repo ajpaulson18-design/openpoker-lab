@@ -1747,3 +1747,7 @@ The [separate original-weight tail study](river-heldout-tail-protocol.md) prereg
 
 
 The [completed fixed river-tail study](river-heldout-tail-results.md) retained two shorter-tail misses and two exact target passes: the unpaired and paired T50000/D25000 gaps are about 0.000447256 and 0.000656760 chip. All four complete policies, original v1 misses, source guards, full-request admissions and independent numeric/exact saved replays are retained. The unpaired T10000/D5000 tail was worse than its baseline. Higher-budget target attainment covers these finite games; it does not establish equal-cost method gains, broader convergence or commercial parity.
+
+## Blocker-sensitive preflop source basis (2026-10-23 UTC)
+
+The [AK/KK count observation](preflop-ak-kk-basis-results.md) passed once at clean source 4aac2c22fa7066fa2d0a896cbd8b0c77800ccd1b. Both original counters agree over 1,712,304 boards for each of one suited and two distinct offsuit pairs, after exhaustive all-five conformance and AA calibration. All seven return codes are zero, all stderr streams empty, and 783 source identities plus both builds remain stable. The untouched original corpus is published separately from saved authentication and GitHub CI. No physical transport, policy, convergence, runtime/RSS gain or unrestricted solving claim follows. The next bounded step is independent AA/AK-versus-KK joint-suit transport under the unchanged 128-pair cap.

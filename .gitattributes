@@ -157,3 +157,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the complete original-weight river tail study and independent replay.
 /benchmarks/results/river-heldout-tail-v1/** -text
 /benchmarks/results/river-heldout-tail-v1/verification-history/** whitespace=cr-at-eol
+
+# Byte-exact single-observation AK source-count receipts and original context.
+/benchmarks/results/preflop-ak-kk-basis-v1/** -text
+/benchmarks/sources/preflop-ak-kk-context-freeze-v1/** -text
