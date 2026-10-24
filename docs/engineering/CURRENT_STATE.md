@@ -546,3 +546,8 @@ The [fixed two-game 8x8 protocol](../native-river-range-quality-protocol.md) exp
 
 
 The [completed 8x8 accuracy record](../native-river-range-quality-results.md) preserves four fixed-budget policies with exact NashConv below 0.001 chip and zero observed native/Python policy differences on the recorded build. All independent physical/exact checks passed; original 4x4 misses remain unchanged and broader game accuracy remains unproven.
+
+
+## Independent exact ranked river audit
+
+The [separate ranked certificate](../independent-ranked-river-certificate.md) computes exact profile/own-hand response metrics without materializing joint worlds. Retained bounded policies agree with physical scan/partition certificates; a 100-hand known-zero capacity control does not establish broader game admission or convergence.

@@ -1763,3 +1763,8 @@ The [fixed 8x8 range study](native-river-range-quality-protocol.md) preregisters
 
 
 The [completed paired native 8x8 study](native-river-range-quality-results.md) retains four CFR+10000/D0 policies, all meeting exact normalized-policy NashConv<=0.001 chip. The unpaired and paired gaps are about 0.0000366524 and 0.00000923825 chip; on the recorded MSVC build both policy and independent metric parity differences are zero. Complete source/build/control pins, physical numeric/exact replays and all historical misses remain visible. These two finite games establish no full-range, performance or commercial quality claim.
+
+
+## Independent ranked river certificate
+
+The [exact rank/card vector audit](independent-ranked-river-certificate.md) preserves the physical oracle and its limits while adding a distinct counted audit path. All16 retained policy metrics and normalization ledgers agree exactly with physical scan/partition results. A 100-hand tied-board uniform control passes the new 100k work envelope, with the old physical capacity rejection retained. Broader non-tied range/tree capacity and solver accuracy remain unproven.
