@@ -406,3 +406,61 @@ T10 development policy passes all 1,200 row checks with maximum scalar replay ga
 Proceed to a fresh call-owned rational evaluator with full named-work forecast,
 100,000 work/65,536 Fraction-bit caps and grouped legal own-hand best responses;
 then review its controls before freezing the one-call accuracy experiment.
+
+D039 (2026-10-24): the first exact evaluator's full structural forecast rejects
+the unchanged 22-world fixture at 118,261 modeled work against the 100,000 cap.
+Preserve this development source/census and its unknown whole-fixture quality;
+eight small/control tests passing does not satisfy U4 or authorize training.
+Sol approves a distinct evaluator v2 correction that computes the current-profile
+value inside the SB grouped legal-response traversal, sharing weighted terminal
+sums while retaining all legal SB actions. Opponent reach alone weights groups;
+SB policy mixtures supply SB reach exactly once. Keep separate BB response,
+complete normalization/output ledgers and existing caps/fixture/threshold. Add
+common named actual/forecast events and per-family dominance checks, preserving
+the v1 capacity miss. Require fresh census and exact mixed/zero/tiny-probability,
+hidden-future and literal coupling controls before the frozen runner is eligible.
+
+D040 (2026-10-25): root review accepts the v2 prescribed-policy controls for
+bounded frozen-runner implementation. Sol's fused profile/response proof and
+storage correction retain the same game/caps; the full forecast is 98,298,
+including two root result slots. All ten exact-control tests pass normally and
+under optimized Python; the combined 54-test suite passes. The literal check/call
+value is 1/34, the prescribed one-row river change yields 5/34, and the same legal
+response bounds remain. Complete normalization ledgers, slow exact profile
+comparison and familywise runtime/forecast checks pass. Case snapshot copying
+now has a 1,024-node bound before expansion. Preserve D039's rejected source and
+census. The runner may be implemented with inert tests; final architectural
+accounting/preparation disclosure, clean source authentication, both official
+admissions and runner/authenticator review must pass before any production
+quality call. No trained-policy quality outcome is claimed by these controls.
+
+D041 (2026-10-25): Sol's final read-only review accepts the U4 fused profile/legal
+response mathematics, hidden-information boundaries, normalization and familywise
+98,298-work envelope, qualified by separate bounded graph-preparation reporting.
+Record conservative world-scan, copied-reference and information-index bounds
+for the forecast's two and evaluation/identity's three owned-graph walks. Keep
+all existing named node/edge/mass charges and hard caps unchanged; neither receipt
+is a Python-operation, byte or RSS guarantee. A narrow guarded text formatter
+uses exact integer Decimal construction separately for Fraction numerator and
+denominator, avoiding Python's lower default string digit limit without Decimal
+division or global-setting changes. Independent large-component round trips
+pass. The combined 57-test suite and thirteen focused optimized tests pass.
+This closes U4's qualified mathematical/control review. The unexecuted production
+quality call remains gated by runner/authenticator validation, clean source
+authentication and both official admission receipts.
+
+D042 (2026-10-25): Sol/root review accepts the single-attempt runner and saved-only
+publication verifier for clean-source freezing. Seventeen lifecycle/integration
+controls pass normally (163.405 seconds) and with optimized Python (193.238 seconds).
+They use the full real source closure and actual no-training preparations, with
+synthetic complete policies; production solve/trainer tripwires remain untouched.
+Fresh independent support, numeric replay and full exact certificates/ledgers
+authenticate retained misses. Altered raw/numeric/source/ledger artifacts reject;
+a partial pre-training claim remains a failure, and a forged exact capacity
+failure rejects when fresh replay succeeds. Numeric exploitability comparison
+derives NashConv/2 from the preserved oracle. The scripts directory remains a
+namespace package. Pin the 16 MiB raw-artifact bound before execution; it is
+separate from all unchanged mathematical and production admission caps. This
+accepts implementation controls, not a frozen production quality result. The
+single T1000 call still requires clean committed source, fresh official admissions
+and publication verification. No additional owner review gate is introduced.

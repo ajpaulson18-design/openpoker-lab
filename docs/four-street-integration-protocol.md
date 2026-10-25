@@ -1,8 +1,8 @@
 # Four-street integration v1: staged acceptance protocol
 
 Status: the [literal fixture](../benchmarks/four-street-integration-v1.json) has
-passed bounded independent numeric controls under D038. The exact certificate
-and frozen quality run remain unexecuted.
+passed bounded independent numeric controls under D038 and exact prescribed-policy
+controls under D040. The frozen production quality run remains unexecuted.
 The Sol-reviewed architecture fixes one coupled game, one complete policy and
 one whole-game legal-response gap. Interface or backend agreement alone cannot
 satisfy this gate.
@@ -39,7 +39,30 @@ The combined numeric/interface/legacy suite passed 44 tests in 14.799 seconds.
 A separate development T10 vanilla recursive result validated all 1,200 rows;
 the largest production-versus-independent scalar gap was
 `2.498001805406602e-16`. This control is not the frozen accuracy run. The exact
-generic rational evaluator and its known zero/nonzero-gap controls remain U4.
+generic rational evaluator and its known zero/nonzero-gap controls were pending
+at that numeric-only milestone.
+
+The [exact evaluator v2](four-street-certificate.md) now passes thirteen focused tests
+normally and under optimized Python. The combined certificate/numeric/interface/
+legacy suite passes 57 tests (23.329 seconds in the lead's latest control run).
+Its all-positive literal forecast is 98,298 under the unchanged 100,000 cap;
+the prescribed check/call policy uses 48,577 named entries. Full normalized rows
+and per-family runtime/forecast dominance are checked. The exact whole-game
+value moves `1/34 -> 5/34` after the one prescribed river-row change, with legal
+response values unchanged. Known zero/nonzero gaps, hidden-future cheating,
+mixed/zero/subnormal probabilities, fractional money and an independent slow
+exact profile replay pass. This accepts control evidence for runner development;
+Sol's final mathematical review accepts this scope with separate bounded
+structural-preparation receipts. The guarded output formatter also retains exact
+large-fraction text without changing global settings. Frozen runner/authenticator
+review, clean source authentication and both admissions still precede the
+production quality call.
+
+The first U4 development census rejected the unchanged fixture: 118,261 modeled
+work exceeds the fixed 100,000 cap. No literal exact policy evaluation or quality
+training followed. D039 requires a separately reviewed fused profile/SB-response
+traversal, complete familywise accounting and fresh exact controls. Small-game
+control success cannot replace the named fixture's pending certificate.
 
 Required pre-training controls include the 22-world exact prior, cumulative
 matched ledger `1 -> 2 -> 4 -> 8`, all check/call profile, a single legal river
@@ -80,6 +103,44 @@ chip here). This is the normalized policy's finite-game certificate, not a forma
 raw-floating-point interval or proof of unrestricted Hold'em equilibrium.
 
 ## Evidence lifecycle
+
+The [single-attempt runner](../scripts/benchmark_four_street_integration.py)
+accepts `--expected-source-commit` and an absolute external
+`--attempt-directory`. Its source closure includes every committed Python file
+under `pokerlab/` and `scripts/`, this protocol, the literal benchmark and the
+reused river protocol. It checks the committed and working inventories, clean
+status and source hashes around both preparations, claim creation, the sole
+solve call and both audits. A fresh directory is exclusive; interrupted attempts
+cannot resume. The original facade serialization is flushed and hashed before
+any policy validation. The facade's inner unrecorded-source fields remain intact;
+the companion claim supplies the actual frozen execution provenance.
+
+The [saved-only verifier](../scripts/verify_four_street_integration_publication.py)
+accepts `--directory` and `--expected-index-sha256`. The external index pin is the
+SHA256 of the original `report.json` bytes. Before importing mathematical code,
+it authenticates that pin, bounded artifact inventory and the frozen Git/current
+LF source closure. It checks the full fixed request, raw bytes, admissions and
+source checks, then recomputes independent physical support, the complete numeric
+receipt and the entire exact certificate, including all off-path rows and the
+normalization ledger. It never calls production preparation, solving or training.
+Raw source size/hash remains a pinned historical receipt; Git blobs independently
+authenticate normalized content and permit a different checkout line ending.
+
+Complete outcomes are `completed-met`, `completed-missed` or
+`completed-unknown`. A saved exact capacity failure must reproduce with the
+authenticated source; replay cannot promote it to a passed gate. General failures
+retain their first error and receipt-backed artifacts, with no quality claim.
+Unreceipted partial bytes remain explicitly unauthenticated observations. Test
+services are marked `injected-test-services`; publication verification requires
+`frozen-production`. Synthetic lifecycle tests do not establish actual training
+or a production quality result.
+
+Artifact I/O limits are fixed before the production attempt: 16 MiB for the raw
+envelope, 32 MiB for each replay/certificate/source/report JSON, 1 MiB for each
+attempt/claim/failure/status JSON, at most 14 files and 256 MiB total. Strict JSON
+also limits nesting to 80 and nodes to 1,000,000. These storage/parser limits do
+not change the independent mathematical shape, 100,000-work, depth-32 or
+65,536-bit limits, or any production admission cap.
 
 Use a fresh external attempt directory and exclusive claim. Admit the complete
 literal request before creating the claim. Retain source/fixture/protocol hashes,

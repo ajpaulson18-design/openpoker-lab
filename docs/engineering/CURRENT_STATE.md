@@ -13,7 +13,22 @@ independently rebuild the bounded physical game and validate complete serialized
 policies, including zero-reach rows, hidden future cards, cumulative money and
 joint blocker-conditioned reach. The 15 focused tests pass normally and under
 optimized Python; the combined 44-test numeric/interface/legacy suite passes.
-The exact whole-game certificate and frozen quality run remain pending (D038).
+The [exact whole-game certificate](../four-street-certificate.md) now passes its
+prescribed-policy controls: thirteen focused tests normal/optimized and 57 combined
+certificate/numeric/interface/legacy tests. Its fused profile/SB-response forecast
+admits the same 22-world fixture under unchanged caps; the first capacity miss
+is preserved. D041 closes the qualified
+U4 mathematical review with separate structural-preparation bounds and guarded
+large-fraction serialization; the original exact-work and bit caps are unchanged.
+
+The single-attempt runner and saved-only publication verifier are implemented
+under [D042](../decisions/DECISION_LOG.md). Seventeen controls pass normally and
+under optimized Python, using a committed full-source fixture, real no-training
+admissions and synthetic complete policies. Fresh independent numeric/exact replay
+retains misses and rejects artifact tampering and false capacity failures. Partial
+claim writes remain preparation failures. This is implementation evidence; clean
+source freezing and the single production quality call remain pending. See the
+[execution and artifact protocol](../four-street-integration-protocol.md).
 
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
