@@ -391,3 +391,18 @@ Existing analysis/Coach contracts and simulator state remain separate. The lead
 reviewed the implementation and executed the combined 50-test boundary/legacy
 suite; the new contract-only suite also passes with optimized Python. This is an
 interface milestone, not the final whole-game quality gate or full-deck coverage.
+
+D038 (2026-10-24): autonomous Sol-led review accepts the bounded independent
+[four-street numeric model and staged corpus](../four-street-integration-protocol.md).
+Reuse old numeric-state/ranking/replay utilities read-only; independently rebuild
+physical support, betting, reveals and complete information rows without production
+tree/rank/payoff/evaluation/BR authorities. Preserve binary64 parenthesization,
+local quantization, fixed preflop ledger origin, refunds and global SB/BB identity.
+Require bounded snapshotted inputs, joint selected-world conditioning and all
+off-path row checks. Fifteen focused tests pass normally and under optimized
+Python; the combined numeric/interface/legacy suite passes 44 tests. A complete
+T10 development policy passes all 1,200 row checks with maximum scalar replay gap
+2.498001805406602e-16. No exact generic certificate or frozen quality run is claimed.
+Proceed to a fresh call-owned rational evaluator with full named-work forecast,
+100,000 work/65,536 Fraction-bit caps and grouped legal own-hand best responses;
+then review its controls before freezing the one-call accuracy experiment.
