@@ -34,6 +34,13 @@ closure (D043). This establishes the named finite conditioned game to its declar
 tolerance. Full-deck and realistic support expansion remain pending. The original
 [execution protocol](../four-street-integration-protocol.md) stays frozen.
 
+The next [seven-outcome expansion preflight](../four-street-expansion-preflight.md)
+is implemented under D044. It appends one hidden river to the same coupled game,
+reuses the existing complete preparations and exact forecast, and contains no
+training path. Its real support test passes with solver/trainer tripwires. The
+official clean-source admission and expanded-game quality remain unestablished;
+all original caps and the successful v1 evidence stay fixed.
+
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
 completed one frozen physical batch: 5,940 worlds, 30,812 public states and

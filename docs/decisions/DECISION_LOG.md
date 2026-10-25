@@ -479,3 +479,14 @@ the frozen protocol/fixture unchanged as historical execution inputs, and preser
 all earlier failures and misses. See the [complete result](../four-street-integration-result.md).
 The next integration expansion may be scoped only with a fresh joint law and
 full requested forecasts under unchanged caps, before any new training.
+
+D044 (2026-10-25): after v1 passed saved-only authentication and its code/evidence
+merged in PRs #237/#240, Sol accepts the next M5 ticket as preflight only. Append
+`5c6d7s8cKc` to the six existing outcomes and change only the case ID; all public
+request fields except runouts remain literal v1. Reuse both preparations and the
+generic complete-game forecast, preserving the full false forecast and support
+comparison before any rejection. One real test verifies 26-world support, four
+analytic pair masses, the added winner reversal and zero solver/trainer access.
+Keep all old sources, corpus bytes, thresholds and caps unchanged. The fresh
+source-frozen receipt is still required; no expanded-game solve is authorized by
+this implementation acceptance. See the [preflight specification](../four-street-expansion-preflight.md).
