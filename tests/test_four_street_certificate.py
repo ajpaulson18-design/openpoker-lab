@@ -2,8 +2,11 @@
 import copy
 import hashlib
 import json
+import sys
 import unittest
+from decimal import Decimal, getcontext, localcontext
 from fractions import Fraction
+from decimal import Decimal
 from unittest.mock import patch
 
 from scripts import four_street_certificate as certificate
@@ -128,6 +131,25 @@ def _assert_family_schedule(testcase, result):
 
 
 class FourStreetCertificateTests(unittest.TestCase):
+    def test_structural_preparation_is_separate_and_bounded_for_each_public_call(self):
+        forecast = certificate.forecast_exact(CASE)
+        model = validation.build_model(CASE)
+        exact = certificate.evaluate_exact(CASE, _payload(model, _check_call))
+        for result, passes in ((forecast, 2), (exact, 3)):
+            receipt = result["preparation_receipts"]["structural_graph_validation"]
+            self.assertEqual(receipt["owned_graph_validation_walks"], passes)
+            self.assertEqual(receipt["per_walk_upper_bounds"], {
+                "world_scan_entries": 124432,
+                "copied_world_references": 31108,
+                "information_key_iterations": 13816,
+                "physical_mass_validation_additions": 22,
+            })
+            self.assertEqual(receipt["total_entries_upper_bound"], 169378 * passes)
+            self.assertLessEqual(receipt["total_entries_upper_bound"], receipt["entry_limit"])
+            self.assertTrue(receipt["admitted"])
+        self.assertEqual(forecast["work"], 98298)
+        self.assertEqual(exact["forecast"]["work"], 98298)
+
     def test_forecast_is_probability_independent_and_retains_full_overcap_receipt(self):
         first = certificate.forecast_exact(CASE)
         second = certificate.forecast_exact(copy.deepcopy(CASE))
@@ -405,6 +427,49 @@ class FourStreetCertificateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "partial exact counters"):
             observed.charge("over")
 
+    def test_fraction_text_formats_full_guard_width_without_global_limit_changes(self):
+        from decimal import Decimal as ExactDecimal
+
+        values = (
+            Fraction(0), Fraction(1), Fraction(-1), Fraction(1, 3), Fraction(-7, 4),
+            Fraction((1 << 65_535) + 1, 1),
+            Fraction(-((1 << 65_535) + 1), 1),
+            Fraction(1, (1 << 65_535) + 1),
+        )
+        digit_limit = sys.get_int_max_str_digits()
+        original_precision = getcontext().prec
+        with localcontext() as context:
+            context.prec = 1
+            self.assertEqual(getcontext().prec, 1)
+            for value in values:
+                rendered = certificate._fraction_text(value)
+                numerator_text, separator, denominator_text = rendered.partition("/")
+                self.assertEqual(ExactDecimal(numerator_text).as_integer_ratio(),
+                                 (value.numerator, 1))
+                self.assertEqual(ExactDecimal(denominator_text if separator else "1").as_integer_ratio(),
+                                 (value.denominator, 1))
+                if max(abs(value.numerator).bit_length(), value.denominator.bit_length()) < 4_000:
+                    self.assertEqual(rendered, str(value))
+                numerator_text, separator, denominator_text = rendered.partition("/")
+                numerator, numerator_denominator = Decimal(numerator_text).as_integer_ratio()
+                self.assertEqual(numerator_denominator, 1)
+                if separator:
+                    denominator, denominator_denominator = Decimal(
+                        denominator_text).as_integer_ratio()
+                    self.assertEqual(denominator_denominator, 1)
+                    self.assertEqual(Fraction(numerator, denominator), value)
+                else:
+                    self.assertEqual((numerator, 1),
+                                     (value.numerator, value.denominator))
+                self.assertEqual(certificate._canonical_hash({"value": value}),
+                                 certificate._canonical_hash({
+                                     "value": {"$fraction": rendered}}))
+            self.assertEqual(getcontext().prec, 1)
+        self.assertEqual(getcontext().prec, original_precision)
+        self.assertEqual(sys.get_int_max_str_digits(), digit_limit)
+        with self.assertRaisesRegex(ValueError, "65536-bit limit"):
+            certificate._fraction_text(Fraction(1, 1 << 65_536))
+
 
 def _walk(root):
     pending = [root]
@@ -420,3 +485,14 @@ def _walk(root):
 
 if __name__ == "__main__":
     unittest.main()
+class TestFractionTextMathematicalIntegrity(unittest.TestCase):
+    def test_large_fraction_text_round_trips_exact_integer_components(self):
+        value = Fraction((1 << 60_000) - 123, (1 << 59_900) + 321)
+        rendered = certificate._fraction_text(value)
+        numerator, denominator = rendered.split("/")
+        self.assertEqual(Decimal(numerator).as_integer_ratio(), (value.numerator, 1))
+        self.assertEqual(Decimal(denominator).as_integer_ratio(), (value.denominator, 1))
+import unittest
+from fractions import Fraction
+from decimal import Decimal
+from scripts import four_street_certificate as certificate

@@ -4,6 +4,7 @@ Each public call builds and validates a fresh bounded physical model. This
 module never trains, calls production payoff/response code, or retains a graph.
 """
 from fractions import Fraction
+from decimal import Decimal, localcontext
 import hashlib
 import json
 from math import isfinite
@@ -60,6 +61,22 @@ def _safe_json_value(value, depth=0, budget=None):
     raise ValueError("serialized policy must contain only JSON-compatible built-ins")
 
 
+def _fraction_text(value):
+    """Format an admitted exact fraction without Python's global int digit cap."""
+    if type(value) is not Fraction:
+        raise TypeError("fraction text requires an exact Fraction")
+    bits = max(abs(value.numerator).bit_length(), value.denominator.bit_length(), 1)
+    if bits > MAX_FRACTION_BITS:
+        raise ValueError("Exact rational certificate exceeds the 65536-bit limit")
+    with localcontext() as context:
+        context.prec = 1
+        numerator = format(Decimal(value.numerator), "f")
+        if value.denominator == 1:
+            return numerator
+        denominator = format(Decimal(value.denominator), "f")
+        return numerator + "/" + denominator
+
+
 def _snapshot_case(case):
     if type(case) is not dict:
         raise ValueError("case must be a plain bounded dictionary")
@@ -109,7 +126,7 @@ def _snapshot_case(case):
 def _canonical_hash(value):
     def safe(item):
         if isinstance(item, Fraction):
-            return {"$fraction": str(item)}
+            return {"$fraction": _fraction_text(item)}
         if type(item) is dict:
             return {key: safe(child) for key, child in item.items()}
         if type(item) in (list, tuple):
@@ -288,7 +305,7 @@ def _model_identity(model):
                                "contributions": list(node.contributions),
                                "winner": node.winner})
     support = [{"hands": [list(hand) for hand in world["hands"]],
-                "board": list(world["board"]), "weight": str(world["weight"]),
+                "board": list(world["board"]), "weight": _fraction_text(world["weight"]),
                 "sign": world["sign"]} for world in model.worlds]
     return _canonical_hash({"case": model.case, "support": support,
                             "graph": graph_rows, "rows": len(model.expected_infos)})
@@ -470,6 +487,39 @@ def _forecast_model(model):
             "maximum_fraction_bits": MAX_FRACTION_BITS}
 
 
+def _structural_preparation_receipt(census, passes):
+    """Bound graph validation/identity preparation separately from exact work."""
+    _need(type(passes) is int and passes in (2, 3),
+          "structural preparation requires two or three owned-graph walks")
+    states = census["tree_nodes"]
+    decisions = census["tree_decisions"]
+    worlds = census["worlds"]
+    per_pass = {
+        "world_scan_entries": 4 * states * worlds,
+        "copied_world_references": states * worlds,
+        "information_key_iterations": decisions * worlds,
+        "physical_mass_validation_additions": worlds,
+    }
+    complete = {name: count * passes for name, count in per_pass.items()}
+    total = sum(complete.values())
+    _need(total <= MAX_CENSUS_WORK,
+          "structural preparation exceeds its 8000000-entry limit")
+    return {
+        "owned_graph_validation_walks": passes,
+        "per_walk_upper_bounds": per_pass,
+        "full_call_upper_bounds": complete,
+        "total_entries_upper_bound": total,
+        "entry_limit": MAX_CENSUS_WORK,
+        "admitted": True,
+        "scope": (
+            "Separately bounded structural scans, reference copies, information indexing "
+            "and identity validation. Existing named exact node/edge and mass charges "
+            "remain unchanged. These conservative envelopes can overlap; they are not "
+            "Python-operation, byte, runtime or RSS totals."
+        ),
+    }
+
+
 def forecast_exact(case):
     """Admit the full shape/support without consulting trained probabilities."""
     safe_case = _snapshot_case(case)
@@ -480,6 +530,7 @@ def forecast_exact(case):
                      "model_sha256": _model_identity(model),
                      "input_case_canonical_sha256": _canonical_hash(model.case),
                      "preparation_receipts": {
+                         "structural_graph_validation": _structural_preparation_receipt(forecast, 2),
                          "independent_model_build": {
                              "worlds": len(model.worlds),
                              "public_states": model.counts["public_states"],
@@ -537,19 +588,19 @@ def _normalise_policy(model, payload, checked, budget):
             max_adjustment = max(max_adjustment, magnitude)
             action_entries.append({"index": index, "name": action["name"],
                                    "history_key": action["history_key"],
-                                   "raw_binary64_fraction": str(before),
-                                   "normalized_fraction": str(after),
-                                   "adjustment_fraction": str(adjustment),
+                                   "raw_binary64_fraction": _fraction_text(before),
+                                   "normalized_fraction": _fraction_text(after),
+                                   "adjustment_fraction": _fraction_text(adjustment),
                                    "adjustment_float": float(adjustment)})
             normalized_actions.append({"name": action["name"],
                                        "amount": action["amount"],
                                        "raise_to": action["raise_to"],
                                        "history_key": action["history_key"],
-                                       "probability_fraction": str(after)})
+                                       "probability_fraction": _fraction_text(after)})
         ledger.append({"player": row["player"], "hand": row["hand"],
                       "revealed_board": row["revealed_board"],
                       "history": row["history"],
-                      "raw_row_sum_fraction": str(total), "actions": action_entries})
+                      "raw_row_sum_fraction": _fraction_text(total), "actions": action_entries})
         normalized_rows.append({"player": row["player"], "hand": row["hand"],
                                 "street": row["street"],
                                 "revealed_board": row["revealed_board"],
@@ -868,16 +919,17 @@ def evaluate_exact(case, payload):
             "input_case_canonical_sha256": _canonical_hash(model.case),
             "input_policy_canonical_sha256": input_policy_hash,
             "normalized_policy_sha256": normalized_policy_hash,
-            "metrics": {key: str(result) for key, result in metrics.items()},
-            "threshold": str(THRESHOLD),
+            "metrics": {key: _fraction_text(result) for key, result in metrics.items()},
+            "threshold": _fraction_text(THRESHOLD),
             "threshold_met": nash_conv <= THRESHOLD,
             "normalization_ledger": ledger,
             "normalized_policy_rows": normalized_rows,
-            "maximum_row_adjustment": str(max_adjustment),
+            "maximum_row_adjustment": _fraction_text(max_adjustment),
             "floating_replay": float_replay,
             "floating_comparison": float_comparison,
             "preparation_receipts": {
                 "input_policy_canonical_hash_json_nodes": json_nodes[0],
+                "structural_graph_validation": _structural_preparation_receipt(forecast, 3),
                 "model_identity_hash": {
                     "tree_nodes": forecast["tree_nodes"],
                     "information_rows": forecast["information_rows"],

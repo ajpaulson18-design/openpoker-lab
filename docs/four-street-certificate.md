@@ -58,6 +58,21 @@ parsing/hashing and floating replay have separate bounded preparation receipts.
 Named work is a model of specified entries and arithmetic, not elapsed time or
 RSS. Unknown trained denominators can still exhaust the Fraction-width guard.
 
+The separate structural receipt bounds each owned-graph walk by `4*S*W` world
+scans, `S*W` copied world references, `D*W` information-key iterations and `W`
+mass-validation additions. Forecast preparation uses two walks; exact evaluation
+and identity preparation use three. The complete call bound stays below the
+separate 8,000,000-entry ceiling. These conservative envelopes can overlap with
+existing named node/edge/mass charges, which remain unchanged; they are not
+unique Python-operation or memory counts.
+
+Guarded Fraction text supports the same 65,536-bit envelope even when Python's
+ordinary integer-to-string conversion has a lower digit limit. Numerators and
+denominators are formatted separately using exact `Decimal(int)` construction
+and fixed notation. There is no Decimal division, policy arithmetic or change
+to global conversion settings. Large positive/negative component round trips
+and small canonical spellings are covered by the controls.
+
 D039 preserves the first evaluator's rejected 118,261-work census. The v2
 algorithm shares profile and SB response arithmetic; it does not raise the cap,
 change the fixture or omit ledger rows. Current exact-control acceptance and the

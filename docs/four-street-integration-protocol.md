@@ -42,9 +42,9 @@ the largest production-versus-independent scalar gap was
 generic rational evaluator and its known zero/nonzero-gap controls were pending
 at that numeric-only milestone.
 
-The [exact evaluator v2](four-street-certificate.md) now passes ten focused tests
+The [exact evaluator v2](four-street-certificate.md) now passes thirteen focused tests
 normally and under optimized Python. The combined certificate/numeric/interface/
-legacy suite passes 54 tests (11.465 seconds in the lead's final control run).
+legacy suite passes 57 tests (23.329 seconds in the lead's latest control run).
 Its all-positive literal forecast is 98,298 under the unchanged 100,000 cap;
 the prescribed check/call policy uses 48,577 named entries. Full normalized rows
 and per-family runtime/forecast dominance are checked. The exact whole-game
@@ -52,7 +52,11 @@ value moves `1/34 -> 5/34` after the one prescribed river-row change, with legal
 response values unchanged. Known zero/nonzero gaps, hidden-future cheating,
 mixed/zero/subnormal probabilities, fractional money and an independent slow
 exact profile replay pass. This accepts control evidence for runner development;
-final source/admission review still precedes the frozen production call.
+Sol's final mathematical review accepts this scope with separate bounded
+structural-preparation receipts. The guarded output formatter also retains exact
+large-fraction text without changing global settings. Frozen runner/authenticator
+review, clean source authentication and both admissions still precede the
+production quality call.
 
 The first U4 development census rejected the unchanged fixture: 118,261 modeled
 work exceeds the fixed 100,000 cap. No literal exact policy evaluation or quality

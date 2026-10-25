@@ -433,3 +433,18 @@ census. The runner may be implemented with inert tests; final architectural
 accounting/preparation disclosure, clean source authentication, both official
 admissions and runner/authenticator review must pass before any production
 quality call. No trained-policy quality outcome is claimed by these controls.
+
+D041 (2026-10-25): Sol's final read-only review accepts the U4 fused profile/legal
+response mathematics, hidden-information boundaries, normalization and familywise
+98,298-work envelope, qualified by separate bounded graph-preparation reporting.
+Record conservative world-scan, copied-reference and information-index bounds
+for the forecast's two and evaluation/identity's three owned-graph walks. Keep
+all existing named node/edge/mass charges and hard caps unchanged; neither receipt
+is a Python-operation, byte or RSS guarantee. A narrow guarded text formatter
+uses exact integer Decimal construction separately for Fraction numerator and
+denominator, avoiding Python's lower default string digit limit without Decimal
+division or global-setting changes. Independent large-component round trips
+pass. The combined 57-test suite and thirteen focused optimized tests pass.
+This closes U4's qualified mathematical/control review. The unexecuted production
+quality call remains gated by runner/authenticator validation, clean source
+authentication and both official admission receipts.
