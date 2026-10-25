@@ -26,9 +26,13 @@ under [D042](../decisions/DECISION_LOG.md). Seventeen controls pass normally and
 under optimized Python, using a committed full-source fixture, real no-training
 admissions and synthetic complete policies. Fresh independent numeric/exact replay
 retains misses and rejects artifact tampering and false capacity failures. Partial
-claim writes remain preparation failures. This is implementation evidence; clean
-source freezing and the single production quality call remain pending. See the
-[execution and artifact protocol](../four-street-integration-protocol.md).
+claim writes remain preparation failures. The [first frozen whole-game run](../four-street-integration-result.md)
+now passes exact normalized NashConv <= 1/1000 BB, with approximate gap
+0.000399738815144135 BB across all 1,200 rows. One production call and a separate
+zero-training saved replay authenticated all original bytes and the 314-file source
+closure (D043). This establishes the named finite conditioned game to its declared
+tolerance. Full-deck and realistic support expansion remain pending. The original
+[execution protocol](../four-street-integration-protocol.md) stays frozen.
 
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness

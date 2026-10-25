@@ -1,0 +1,492 @@
+{
+  "attempt_id": "04f675c5-8222-4a11-9139-5c2dfc1e8bc9",
+  "receipt": {
+    "admitted": true,
+    "attempted_training": false,
+    "caps": {
+      "candidate_pair_iterations": 3000000,
+      "decision_nodes": 10000,
+      "information_set_action_slots": 1000000,
+      "pair_runout_preflight_checks": 30000000,
+      "public_states": 250000,
+      "vector_prefix_edges": 250000,
+      "world_decision_work": 30000000,
+      "world_iterations": 3000000
+    },
+    "counts": {
+      "candidate_private_pairs": 4,
+      "compatible_private_pairs": 4,
+      "decisions": 628,
+      "information_set_action_slots": 2402,
+      "information_sets": 1200,
+      "pair_runout_preflight_checks": 24,
+      "positive_pot_training_anchor": 0.5,
+      "positive_pot_training_view_states": 1462,
+      "public_states": 1462,
+      "temporary_template_peak_decisions": 184,
+      "temporary_template_peak_states": 414,
+      "world_decision_work": 8448000,
+      "worlds": 22
+    },
+    "physical_pair_probabilities": [
+      {
+        "bb_hand": "KdKs",
+        "probability": 0.5294117647058824,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "JdJh",
+        "probability": 0.17647058823529413,
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKs",
+        "probability": 0.22058823529411764,
+        "sb_hand": "QdQs"
+      },
+      {
+        "bb_hand": "JdJh",
+        "probability": 0.07352941176470588,
+        "sb_hand": "QdQs"
+      }
+    ],
+    "request": {
+      "algorithm": "cfrplus",
+      "bb_range": "KsKd:0.75,JhJd:0.25",
+      "diagnostics": "public-batched",
+      "flop_actions": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "iterations": 1000,
+      "preflop_config": {
+        "big_blind": 1.0,
+        "include_all_in": false,
+        "max_raises": 1,
+        "raise_sizes": [
+          0.5
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          8.0,
+          8.0
+        ]
+      },
+      "resource_model": "public-vector",
+      "river_actions": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "runouts": [
+        "2c3c4d7h8h",
+        "2c3c4d7hKc",
+        "2c3c4dKc8h",
+        "2c3c4dQd8h",
+        "5c6d7s8c9h",
+        "5c6d7s8cJc"
+      ],
+      "sb_range": "AsAd:0.5,QsQd:0.25",
+      "schema_version": "four-street-request-v1",
+      "traversal": "public-batched",
+      "turn_actions": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      }
+    },
+    "schema": "four-street-production-admission-v1",
+    "training_request": {
+      "actual_training_passes_observed": null,
+      "algorithm": "cfrplus",
+      "iterations_requested": 1000,
+      "modeled_expected_training_passes": 3000
+    },
+    "vector_budget": {
+      "action_edges": 1257,
+      "aggregation_count": 2,
+      "aggregation_loop_entries_upper_bound": 3048,
+      "algorithm": "cfrplus",
+      "budget_version": "preflop-public-vector-budget-v1",
+      "chance_edges": 204,
+      "chance_nodes": 129,
+      "decision_nodes": 628,
+      "dense_prefix_slot_limit": 2000000,
+      "dense_prefix_slots": 52,
+      "diagnostic_missing_policy_lookups": 224,
+      "diagnostics_dense_fallback_slot_upper_bound": 896,
+      "diagnostics_loop_entries_upper_bound": 164012,
+      "diagnostics_setup_loop_entries_upper_bound": 10054,
+      "diagnostics_uniform_fallback_slot_upper_bound": 448,
+      "hand_counts": [
+        2,
+        2
+      ],
+      "information_set_action_slot_limit": 1000000,
+      "information_set_action_slots": 2402,
+      "information_sets": 1200,
+      "iterations": 1000,
+      "loop_entry_scope": "Conservative modeled vector-backend validation, aggregation, row setup/normalization, training, and diagnostic loop envelope; not bytecode count, runtime, or process RSS. World enumeration and tree construction use separate existing guards.",
+      "prefix_edge_limit": 250000,
+      "prefix_edges": 48,
+      "public_prefixes": 13,
+      "terminal_nodes": 705,
+      "terminal_prefix_edge_visits": 2578,
+      "total_loop_entries_upper_bound": 167280468,
+      "total_loop_entry_limit": 500000000,
+      "training_loop_entries_upper_bound": 167113408,
+      "training_setup_loop_entries_upper_bound": 14408,
+      "training_traversals_per_iteration": 3,
+      "visitor_loop_entries_per_traversal_upper_bound": 50722,
+      "world_count": 22
+    },
+    "world_sign_counts": {
+      "bb_win": 8,
+      "sb_win": 10,
+      "tie": 4
+    },
+    "world_support": [
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Qd",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 0,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": 0.08823529411764706
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Qd",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 0,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": -1,
+        "weight": 0.029411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.04411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.04411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.04411764705882353
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": 0,
+        "weight": 0.04411764705882353
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": 0.04411764705882353
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.014705882352941176
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.014705882352941176
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": 0.014705882352941176
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 0,
+        "weight": 0.014705882352941176
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": -1,
+        "weight": 0.014705882352941176
+      }
+    ]
+  },
+  "schema": "four-street-production-admission-record-v1"
+}

@@ -1,0 +1,1937 @@
+{
+  "attempt_id": "04f675c5-8222-4a11-9139-5c2dfc1e8bc9",
+  "schema": "four-street-source-state-v1",
+  "source_checks": [
+    {
+      "matches_expected": null,
+      "stage": "source-before",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "after-production-admission",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "after-exact-admission",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "before-claim",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "immediately-before-solve",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "source-after-raw",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "after-numeric-replay",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    },
+    {
+      "matches_expected": true,
+      "stage": "source-after-audit",
+      "state_sha256": "acbd1324046406cb8906d814f8b7642521d1c943f11d1db0d5fe7839d059628b"
+    }
+  ],
+  "source_state": {
+    "files": {
+      "benchmarks/four-street-integration-v1.json": {
+        "bytes": 2488,
+        "git_blob": "ef810fc4cc8070eb327933a74e7d9bb44605a1ed",
+        "normalized_lf_sha256": "91e725b4bcdcba7fbe1e62f04d816dc8a99c931db235a853ea73d6ecd0b83350",
+        "raw_sha256": "91e725b4bcdcba7fbe1e62f04d816dc8a99c931db235a853ea73d6ecd0b83350"
+      },
+      "docs/four-street-integration-protocol.md": {
+        "bytes": 10374,
+        "git_blob": "a729bb5574b62429bd73c1d1a6b49c12f314bf3a",
+        "normalized_lf_sha256": "ecf49d5fda007e8eca475e7767ffef75ed777859fe8ff6b66797c4e4100f50e2",
+        "raw_sha256": "ecf49d5fda007e8eca475e7767ffef75ed777859fe8ff6b66797c4e4100f50e2"
+      },
+      "docs/river-heldout-quality-protocol.md": {
+        "bytes": 9966,
+        "git_blob": "61d9858de0f078760a6bef5e35501cb30d5b01fb",
+        "normalized_lf_sha256": "a57fe9f59ddc73761e406e4cc05b92939d9810717ca10bcbd48b5b2fa30ece9f",
+        "raw_sha256": "caa3211dfb861ee599d4f836ff40208c52ee96aa051b60ea45150e3cb285a702"
+      },
+      "pokerlab/__init__.py": {
+        "bytes": 79,
+        "git_blob": "f40c7195c7a6873baf952d8508ab89d1c05df654",
+        "normalized_lf_sha256": "5ad8261f6eaa46ba219735b208202825e81854283230d6ba881b5732cd844796",
+        "raw_sha256": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c"
+      },
+      "pokerlab/alternating_public_cfr.py": {
+        "bytes": 7381,
+        "git_blob": "dc9097ff46760babfa6aefecbe59fa8b9f7b657b",
+        "normalized_lf_sha256": "b2dec04f838afaa90ceae6e5ea98b950d9445d54c3f8f639990f0b70cb9a74e5",
+        "raw_sha256": "82665d7e22b5bde67c1662c690fa9deda50bebf14ca11737b7e2ce87ea1a29d3"
+      },
+      "pokerlab/analysis.py": {
+        "bytes": 3257,
+        "git_blob": "203d5acd73656f5509beb3f4f672a34f66b7eb2b",
+        "normalized_lf_sha256": "f24ae523fffcaf28f7d22e1bf3b2850c59a9e141a049b8261b7390077e056a27",
+        "raw_sha256": "97e5e9e48211978ca5c135b166bb42a56803d614b9ab530d8637f58af3f6620e"
+      },
+      "pokerlab/cards.py": {
+        "bytes": 5216,
+        "git_blob": "44d86c7222042b05c33d9a3a85010a2d74b623fe",
+        "normalized_lf_sha256": "d748bc7960a3159ebe139b265782bcb3d5f065369951770c7928d6b5efeacadf",
+        "raw_sha256": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074"
+      },
+      "pokerlab/cfr.py": {
+        "bytes": 7123,
+        "git_blob": "7ab4abeee83818105875e75ba6391b405fffa47d",
+        "normalized_lf_sha256": "92017d8a3f6086fa5892a2a5ed99bb86f0734c01d03799e40866216b7797b1cb",
+        "raw_sha256": "c10e0342763e9e529ba641f44661df84278f8f65940f6b4b16d98673cc84046a"
+      },
+      "pokerlab/cfr_plus.py": {
+        "bytes": 8073,
+        "git_blob": "e3d1285779d101ba53d33502026c2e7d67f7feab",
+        "normalized_lf_sha256": "93694ac893f314a5264393410d61580d0c74d8d0ca0d65c9ea522d442a12e5f6",
+        "raw_sha256": "edd4b3e0fe689ba7b08ea8191836e153917a8f302e421f71b92df65d53b4bd89"
+      },
+      "pokerlab/coach_analysis.py": {
+        "bytes": 20515,
+        "git_blob": "78386d4f0057328c9919beeff9c738cae4e4dc34",
+        "normalized_lf_sha256": "f9b43d3c810eebb055235e0ec5e352f569cc146476974284b7ab9e775b02adc0",
+        "raw_sha256": "f78ceb4657082d818583d453ba3111058a4c0e8bfe0e4863335ae6a1cd258441"
+      },
+      "pokerlab/coach_conversation.py": {
+        "bytes": 6590,
+        "git_blob": "9f0e28d0464ef053004a360561ff9befe720e2a0",
+        "normalized_lf_sha256": "73c237e6c0bf4b37b95398a59303ee381d76f05e8eeba7434468a329607f88d0",
+        "raw_sha256": "ad38354f64b80162c31f4c96eec9d48952ae169b1c1e6173709dc057c8ed29ad"
+      },
+      "pokerlab/coach_grounding.py": {
+        "bytes": 45060,
+        "git_blob": "56250ae368229b5bb9cf23f90b28d26b736db029",
+        "normalized_lf_sha256": "80411d02edf7aff849a700ce7f25254776d2fb92d81dc2fd3f3be461e7c748de",
+        "raw_sha256": "13a360cf077f5e4757c8209d34803822e179cd5a64e5b9a2194b7117b973658e"
+      },
+      "pokerlab/coach_provider.py": {
+        "bytes": 9111,
+        "git_blob": "b0c48a86cd6b8d2ab014986f662e8e4bda770e2a",
+        "normalized_lf_sha256": "be243cca2b7ffaf827aeeacec999be7d4f9514e2dcbedae1d67fae94d04c509a",
+        "raw_sha256": "d839a7bd6fc2498e7d24ce5a57a1d03ee8a457fd8bf5c82e3231290d3967e880"
+      },
+      "pokerlab/coach_teaching.py": {
+        "bytes": 16740,
+        "git_blob": "d4c978a59d5654597d3d897e53abe335e1732193",
+        "normalized_lf_sha256": "f1fd489e016677b3b2ea37514735fc3f69cef2cd500376208d9930978dfb4597",
+        "raw_sha256": "6528e16dcf92b9749be71a714145e97cd525f2d0a89a1013d829f48d936fb3e6"
+      },
+      "pokerlab/contracts.py": {
+        "bytes": 48704,
+        "git_blob": "1b3d9d4f5d3210417adc90f80cae3fcb770a2058",
+        "normalized_lf_sha256": "78d0df77e33e8e886d4a2c63f3eab373cc2a06a07f625235873aa9ae8970eb92",
+        "raw_sha256": "cb4b1530a63807a4017701d660e74ef38839ccc95491ebab6671e65d4d67b247"
+      },
+      "pokerlab/current_study.py": {
+        "bytes": 6222,
+        "git_blob": "f000b790431793c6c8528db07fe2c4cacf068a70",
+        "normalized_lf_sha256": "734073228a26e1a22f0fc7f4c033365820e5e2a6d1f9f815395b15c40fa37ca1",
+        "raw_sha256": "0f27c9a6cdb10731a7511b085b0a15172cc4555df2eb904d7ef1c55d1ca62df7"
+      },
+      "pokerlab/decision_study.py": {
+        "bytes": 11910,
+        "git_blob": "ee601a9b9aaa127500b6bc46d55ad5838dbfe26a",
+        "normalized_lf_sha256": "62018b285d4b98d290c5caaf8f6888a54839fe15f094887e35f137c91f22d1e7",
+        "raw_sha256": "eb8e38ba822503565e667adeb09d6c2bc4e30dc7dcfc66f8162d90575e1594a9"
+      },
+      "pokerlab/equilibrium.py": {
+        "bytes": 4840,
+        "git_blob": "35ae22f8a79597fd9c8d4b0040e7ba3869c74ea5",
+        "normalized_lf_sha256": "46a73fd8a9c67d620e79c29aa28fa7379cf1904f38aa7e9ef1ddd88d1914ada8",
+        "raw_sha256": "7ab67e85516d3ec78a9849b0edd35db7fe371227ebfaa3a30889a5015cd38407"
+      },
+      "pokerlab/equity.py": {
+        "bytes": 2955,
+        "git_blob": "efc9ccddd0eb6d92118ec62e4a7967963b9dd4e5",
+        "normalized_lf_sha256": "d1c4ae6b104975467f5e9a66c796fc1fb4043ec4602a675c70da43871ff6478e",
+        "raw_sha256": "99068ff8e3c3fb8fbe58cc3068a4efa8e3e2d076079551e88a5304b7a5102bca"
+      },
+      "pokerlab/explanations.py": {
+        "bytes": 17855,
+        "git_blob": "ed44a6a90ae03cbfc73968ce5fc9c98776017947",
+        "normalized_lf_sha256": "0be31deccfcbc654cb1c60f659918effe148d691e9d27f82decd384465265c01",
+        "raw_sha256": "031ac38142470d40255e4ceae083009d8178e25e5eb46e1512095385a505f82d"
+      },
+      "pokerlab/exploit.py": {
+        "bytes": 18222,
+        "git_blob": "2c4660412b6a9d9f222998cdf1e973b2c10227d3",
+        "normalized_lf_sha256": "ef161bff4b1f5a2613a7756c13158c20dedf06bf7d675acb98ca7dcc069ba929",
+        "raw_sha256": "918c9275e1c6c1c891779662e099588395d6ad2e0b9577800083ed9a3ce73cb7"
+      },
+      "pokerlab/flop_checkdown_equity.py": {
+        "bytes": 10821,
+        "git_blob": "c451a41e673db3422e171fa379848599e7f8a16c",
+        "normalized_lf_sha256": "7fcb787681f5b38c03fed6ae659af5a801e2038f25b6a72d76c123a8052c6c1e",
+        "raw_sha256": "a4af7122d32e932b57c5cfd76165f0efc4fba2a1040aea4ca8dd39a3e0b550e2"
+      },
+      "pokerlab/flop_checkdown_solver.py": {
+        "bytes": 13056,
+        "git_blob": "f64819cb5ecaef7a9d08df8c13cb2b04e873fefc",
+        "normalized_lf_sha256": "3da41f5119e9317f533a95b168aec5613b4c812a73eda49b2a731c516901578d",
+        "raw_sha256": "7428c6e2f6dbc47c3fb1e6f059364b44fc7ddd4632e908d9805386ec21d47c7d"
+      },
+      "pokerlab/flop_checkdown_worlds.py": {
+        "bytes": 6120,
+        "git_blob": "214b63428964c92a3024e2700797541f4dfb933d",
+        "normalized_lf_sha256": "d0cf5ff73f0d8e888584af1e564452c06f4bcb8d252d68db158b4f058212eff1",
+        "raw_sha256": "4d9d35941771b7e793457068c12978d8ecc3f9c3772273d7ebb70f0db5d7483d"
+      },
+      "pokerlab/flop_suit_equity.py": {
+        "bytes": 6285,
+        "git_blob": "39cd93d44c8b2f061415edafcc39d5172b2fab17",
+        "normalized_lf_sha256": "7649fc037d7ed530a1b27b9467543a77a91d3fda87a29a6fd4fe42af214c01ec",
+        "raw_sha256": "8df1a91d1353ff6e092e665156fcc32e538b35b0e5e9a842379a188ea043546c"
+      },
+      "pokerlab/four_street_solver.py": {
+        "bytes": 1464,
+        "git_blob": "5a6d59d1bdd1239793dcae2e263b05e75e6129ee",
+        "normalized_lf_sha256": "ff30cb8f913703e06e7163147337f35bf8457123433cb38f748c4fe45a72acd4",
+        "raw_sha256": "ff30cb8f913703e06e7163147337f35bf8457123433cb38f748c4fe45a72acd4"
+      },
+      "pokerlab/game.py": {
+        "bytes": 8421,
+        "git_blob": "79bb874ce5734be03ee84d63ee39437e2e36dc77",
+        "normalized_lf_sha256": "8c7923fd21ba5f972b4a976e313f1d9b34b4f6120419869d0b7e68999541105a",
+        "raw_sha256": "a43e5e01e20a5a45343f2586b10828d472b3198e340feeab3ab70f370e1a10a6"
+      },
+      "pokerlab/matrix_free_river.py": {
+        "bytes": 11196,
+        "git_blob": "edc056dfca2e59b5674d0cd69c4880d137748db3",
+        "normalized_lf_sha256": "a3ac79370148f6dcf4c02fe7a35de6f88215ef2caea3ff90819a4fcdab1f7963",
+        "raw_sha256": "931002966a5ba1831c98ec0566aa9975c909ba376fa56bf504d07e533492d879"
+      },
+      "pokerlab/matrix_free_river_tail.py": {
+        "bytes": 12982,
+        "git_blob": "f1076eafcf5cb5ae3167b080ead4f879a5175017",
+        "normalized_lf_sha256": "835cc906c6979d9db37dc1ddd5bd27bbf478a47287fac92ae7b5602870cafbbb",
+        "raw_sha256": "6603b8b0fa711d072db72b8ef9106b2797594accca782d62ebae51817036b84c"
+      },
+      "pokerlab/matrix_free_turn.py": {
+        "bytes": 18080,
+        "git_blob": "cbeae99957c9324a370d1b4ac0d899baddda3ad1",
+        "normalized_lf_sha256": "0fd5fa336a7c0ca10a0d12c8a7dbc7be404a86638a93b39497b3f32eb18dc92a",
+        "raw_sha256": "de670ffa20d92ab615d6be6c5cb73ec883431aea6903e3d5007473776726c5ad"
+      },
+      "pokerlab/matrix_free_turn_tail.py": {
+        "bytes": 18711,
+        "git_blob": "a9f075f0eee50096ae516c5c582089a6a4202e3e",
+        "normalized_lf_sha256": "714c5ae094faf29123a9993079781efdcfe915bbd91dcbd02c8365016dafff6c",
+        "raw_sha256": "555b04ba92c10d9ef8ae98f619c74720c08fe41ece56812f582b9759c6476f4c"
+      },
+      "pokerlab/models.py": {
+        "bytes": 30436,
+        "git_blob": "e32ae0be3d0fe75703915e4f007f82276b3037d2",
+        "normalized_lf_sha256": "72f2f18fe2d8fcd58acdf2be5055abdefdd1b7b78036ed8a48ffa9f8a47b84c5",
+        "raw_sha256": "2b917be72812caa2e51138d9ca332f0fd295ba522419d9e98569ae34eaa58e66"
+      },
+      "pokerlab/native_fixed_street.py": {
+        "bytes": 21438,
+        "git_blob": "eae603f6d855c04b9b6d29f08eca7e2ac3d9956e",
+        "normalized_lf_sha256": "d6e58addca737af57e309b003c93cc0de2d1551f05665a4bfd24548b11dd78d5",
+        "raw_sha256": "ab36e2808da1c91369c9825403d751be1de3810adc945edf7934a317c0ac2fbb"
+      },
+      "pokerlab/native_flop_equity.py": {
+        "bytes": 5982,
+        "git_blob": "81a92de702ea6d45be87716d8934c33a461b8c24",
+        "normalized_lf_sha256": "2c5d3fd9341097e8ecfd04f0032343b11f70dbdd74b5dbb10bd1910f7195e8c5",
+        "raw_sha256": "29b43f08cbcd0d420e25fa5e79bb789c27553cdf8517ba0c63477ef9b618541e"
+      },
+      "pokerlab/native_preflop_equity.py": {
+        "bytes": 9649,
+        "git_blob": "d58adaa6e6904da36b6d94075bca4025cdd26cb3",
+        "normalized_lf_sha256": "d36de170d91e918f1e19166d4d9f2239ea418c327303efb20db641cfc1de42bd",
+        "raw_sha256": "10a482fe2019277b894e6380ae235f3cae945af178f471e0493585d9a1d71edb"
+      },
+      "pokerlab/native_river_solver.py": {
+        "bytes": 12468,
+        "git_blob": "131aed29991593d92f29b2c1b698271dbfdc0f7a",
+        "normalized_lf_sha256": "db54f4339319cddf83eb8ccb6c6e98d2fb566d70a72623939504d57e60b22e86",
+        "raw_sha256": "43a0fa853bafe91b627506bf497f092206bbdc63040c336f9731d976617e63cf"
+      },
+      "pokerlab/personalities.py": {
+        "bytes": 6733,
+        "git_blob": "b317dce9514c021cfa1e6fdb5678c35f566f1cff",
+        "normalized_lf_sha256": "094b9de19dea507e87909bbd325eee10874941a111d9f293418456350aa43e81",
+        "raw_sha256": "e36559586104bf8655675d68f9398a23e312cf8e72b8aacab436e89de569cbd1"
+      },
+      "pokerlab/planned_cfr.py": {
+        "bytes": 6090,
+        "git_blob": "3bad88880cb306bd6fa10fea65c0a423b04c0d77",
+        "normalized_lf_sha256": "6bbb2da068067ab0c52511f4ea810be9312fc9dea3a6ef61eec9e59cf285ab82",
+        "raw_sha256": "1bfa21bd433081b313e468b0c6bbc00d724f28502af578d5325d3d4472be5aa7"
+      },
+      "pokerlab/postflop_solver.py": {
+        "bytes": 35836,
+        "git_blob": "11d70ace0ea11a2f35474ff97c2eb5691391a5f3",
+        "normalized_lf_sha256": "85b63897a9a4ae14dfa45053f2c2aa05a83549f6f75ee1dc205e0dba8c367808",
+        "raw_sha256": "b7272e33616ab2d686f93b27c02271bec7f8980842da9dde8bd87d9738f763db"
+      },
+      "pokerlab/practice.py": {
+        "bytes": 14858,
+        "git_blob": "022f67d7593392487bc9a6e1f5ab25e3aab8cbde",
+        "normalized_lf_sha256": "357f064ff41ac2aa5902999c2575123668d8458f30b6ee59b5f97c90959fbe17",
+        "raw_sha256": "292597a1414898cb13a82e3bc62465124f65709eb4bf1eac91527fd22a2616fd"
+      },
+      "pokerlab/preflop_checkdown_budget.py": {
+        "bytes": 8917,
+        "git_blob": "ba70bc92a6ea9c5743b14d116b94525a0a4a8660",
+        "normalized_lf_sha256": "c2e6bfce1d5d5df6a7531d8a9ba39ad9b921124a3a984a9a6fd43107ee3d243c",
+        "raw_sha256": "ddc0e053438e0be634b72169e2af496057f65964b69dad146e4ea08232adcb59"
+      },
+      "pokerlab/preflop_checkdown_solver.py": {
+        "bytes": 10530,
+        "git_blob": "798e5981bba4188a0289fe3cdf4d3ee6a7ed0d55",
+        "normalized_lf_sha256": "894a2d46423d5dcf1c46e2c1310e621f283bba51958687bfb2256a70c3ecde60",
+        "raw_sha256": "96d506bf21d0e85af775dec3844acebb116842a5e53cc0447d5e617356333104"
+      },
+      "pokerlab/preflop_covered_equity.py": {
+        "bytes": 11457,
+        "git_blob": "2b56d7b142fdf7956d03ff00f8a497bc49682fb2",
+        "normalized_lf_sha256": "927cb84dfa20102e69f65f5d737a2d45ea69c92901c4d5cb91f89691d196b729",
+        "raw_sha256": "cbccc2f9c7c7f680cc6aa3f816ef38c481f65f20600f7bb0d70e3d879f82f667"
+      },
+      "pokerlab/preflop_delayed_cfrplus.py": {
+        "bytes": 6931,
+        "git_blob": "2a7f775e4f65e71eefac9884b71b7ba5713bee56",
+        "normalized_lf_sha256": "37e9676b3e3073533f6c3378eb6f40f14746568ffe17695dde5826254072e6de",
+        "raw_sha256": "3dd745f4a548b0f7fd46a6b02f519be1d98f027eaa37499f03cf8de1135a259e"
+      },
+      "pokerlab/preflop_full_board_equity.py": {
+        "bytes": 22308,
+        "git_blob": "9b3b888ad87edeb29ff420cd8e3d89bb5a92d9b8",
+        "normalized_lf_sha256": "d2e875ee45b6c7b2b339f592cea13b532192c1bf6efe211f9862da3eb3595a93",
+        "raw_sha256": "f678412ae0b02bb87517bfde14081db3598ef5485f0728e899e7abacaad04d9a"
+      },
+      "pokerlab/preflop_future_groups.py": {
+        "bytes": 5944,
+        "git_blob": "e60de8548cfc8683182c2e4f0a842ae7cd605cc2",
+        "normalized_lf_sha256": "342b60ee2cd16f4282c8c74b30317429a5bac87848bd1d521f0359655d2f7ae2",
+        "raw_sha256": "296fc9f5eb19c25fa19334da75d35159f9e17b2b5031dba9e025d029160a2106"
+      },
+      "pokerlab/preflop_private_indices.py": {
+        "bytes": 8011,
+        "git_blob": "2daab771e8b1818095bb709317a04618d72196e1",
+        "normalized_lf_sha256": "5f88aef28cb82468aa45b2917d50b15a2caa5c2762c45f1d966d8d6a104b4cdf",
+        "raw_sha256": "6d46e31d58f24a979d3881671b4e898bfa23597b1771c160dbbe43c0a47776c1"
+      },
+      "pokerlab/preflop_push_fold.py": {
+        "bytes": 11871,
+        "git_blob": "ad73c2f7f1928e40bce079ce5f84dc874ce72e3c",
+        "normalized_lf_sha256": "ff307aa9d9ef65674c18fb221b0c6228aeb8d9aa22285bc46204bc88eada98f1",
+        "raw_sha256": "6cb341017c364e5af4dc830de1c6031a4e8202580146f36857fb05d975f5ffb4"
+      },
+      "pokerlab/preflop_runout_index.py": {
+        "bytes": 6116,
+        "git_blob": "fc49099fe67c77c6f4486a3dbcb3d6c2ed648a18",
+        "normalized_lf_sha256": "7e1d95f08ecca7a8c9fc77e64fd13a81e7a996b64747edb67884062294896d71",
+        "raw_sha256": "4001b76d6f092c3c441795e1a4fa83fd5ef33d2584ab7aa05ab911a12f92806b"
+      },
+      "pokerlab/preflop_sampled_budget.py": {
+        "bytes": 3115,
+        "git_blob": "9cba26e374d0c6c007b5a5e09fb5d27d0e7c1c3d",
+        "normalized_lf_sha256": "1669c2bdde631cfa2a31ad73c87943cd8ff9f6e2759d587bbd2c8d70821c009e",
+        "raw_sha256": "60d9d0c824134f62165cd0f47741888dcd151bf0d3be592c2ee1a6b86d0e0bd5"
+      },
+      "pokerlab/preflop_sampled_cfr.py": {
+        "bytes": 13484,
+        "git_blob": "65137d3540b36f4d89f89480fc86f1a5335b31fd",
+        "normalized_lf_sha256": "05e1026aa65b9c39ba36c23fa550ed4c258c3ab442bac17b6bc2a889140e103f",
+        "raw_sha256": "aa3de838bbdc429744daceb7d5c51a6c6efeacc9083c8daae6f4d7575393ca47"
+      },
+      "pokerlab/preflop_sampled_storage.py": {
+        "bytes": 3927,
+        "git_blob": "62847e8d2e58ba78f878b0364a03b42fb442046f",
+        "normalized_lf_sha256": "f738ff4031d1e4f8af433c0d57d77a5beabd9a06af81e57030435acef9506818",
+        "raw_sha256": "768a5508a62535d64cf6d6eddd86b2db8999d7b87eef561cf41fc1c948ea5150"
+      },
+      "pokerlab/preflop_solver.py": {
+        "bytes": 61556,
+        "git_blob": "24e13891a15f28ba2fb385e8455e93edd313a1d8",
+        "normalized_lf_sha256": "7fa74f7f1a3a3b595c89543909893f1bb15b7ab541fbf659f16de67b017ce9e2",
+        "raw_sha256": "d63cddf72b5729080b20896ed9fb72ee81b0f610ecd6f40689c229822d0ffab9"
+      },
+      "pokerlab/preflop_suit_equity.py": {
+        "bytes": 5287,
+        "git_blob": "b5ba6c87e8377275331c0720fda9d53ea3b4f8b5",
+        "normalized_lf_sha256": "e242ff402b402778ce9ba5d0ed9a5b819ff9146d1b264393000dce6ac983808a",
+        "raw_sha256": "68881b4d927d5ed03e2ecff0da081e8ee0761fb0262fdef22fab6f9ad3be34cc"
+      },
+      "pokerlab/preflop_tree.py": {
+        "bytes": 12941,
+        "git_blob": "ef76802bc2f534b4badd78705d16bb186f479744",
+        "normalized_lf_sha256": "ca78968e4b8952b59305068be042ff5e61f1e52520845b578cdac234b790c194",
+        "raw_sha256": "7d57148b0eeba05535e0f2e10eadb8c3c43fdaa9a1d5b7e91f372bc38f164e2c"
+      },
+      "pokerlab/preflop_vector_budget.py": {
+        "bytes": 22042,
+        "git_blob": "166729b9aed6a5f89430a2b1b6ab8db32e695115",
+        "normalized_lf_sha256": "2ce72c1ba040da79257d9255ec5435624de75bb4d3dadf32d7af81a7fbde029d",
+        "raw_sha256": "fd7096173d042720bf9b7c1d01b1433577fa4e3b755e822fa0fc221dba2f03be"
+      },
+      "pokerlab/public_cfr.py": {
+        "bytes": 29651,
+        "git_blob": "c55549b1e12f3cdea569fc0df796ffcdeacd9739",
+        "normalized_lf_sha256": "321c9d8b6441756ab990424b42d6d005fd9de39f5d68ff637d5abbc246b4c130",
+        "raw_sha256": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd"
+      },
+      "pokerlab/public_diagnostics.py": {
+        "bytes": 10948,
+        "git_blob": "a7b3da9778032c6e5c419d77cf479be8bd149ace",
+        "normalized_lf_sha256": "f1ee8f77f90b2d03c33d45fe5a4ffd7ae3d4de78d7336823e88f69987d1098d1",
+        "raw_sha256": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0"
+      },
+      "pokerlab/ranked_river.py": {
+        "bytes": 25683,
+        "git_blob": "8966f9558a9afb37c333b68fae13db5c981010d8",
+        "normalized_lf_sha256": "b9baacda465f3c52396ff0120fe774aab07e3287211a79f6f29fcb50dfc9b240",
+        "raw_sha256": "262edd43d582dde91096859682283208b94ace7ab37b706d3a8b1366ee09c28f"
+      },
+      "pokerlab/restricted_solver.py": {
+        "bytes": 10045,
+        "git_blob": "ef75f8f31f0bd26bfc2bb764aa73c7d3a9573657",
+        "normalized_lf_sha256": "137c0ec3cd62234f3c0ffec34fe2fc9ee8461f8add3b4e90bf05ac65c98dcc68",
+        "raw_sha256": "34c77c3dc3981af6401c7f5c02e90a1bf566b3e7fcf90b65d95779fead0f54b9"
+      },
+      "pokerlab/river_config.py": {
+        "bytes": 3663,
+        "git_blob": "6b85ecf35fd57906d3d3d42940162ecbdc467281",
+        "normalized_lf_sha256": "b4cff25ad217b3d0f472062ba062bf6e7fba2701ebdfd60e0632b4ecb5f2e9b3",
+        "raw_sha256": "e4a618c50fdef46a39db598c388d16fb1770628c717fe5c525aaa2994c775874"
+      },
+      "pokerlab/river_tail_adapter.py": {
+        "bytes": 9799,
+        "git_blob": "edbae3538470067317c2996a92fb21f4c02a7911",
+        "normalized_lf_sha256": "0963a8df65d432415157a164618923bd2fcfede98ef0ed328ea8f1867e384e7d",
+        "raw_sha256": "4f74793d8a0a34c41b8238071f1d9a2dfa93e28037f13aaf76c0b16fd2fe3edf"
+      },
+      "pokerlab/river_tree.py": {
+        "bytes": 8378,
+        "git_blob": "dd7f6c9b7dea8feddc029e2644a6bb924bf009d3",
+        "normalized_lf_sha256": "3527d2405b1142014055d75b91e56480cc1e6af4d202bff867c937b70af46231",
+        "raw_sha256": "45993616e08aa01c71e7b4f076e6d115f6c857ee4ca3a3c02c8961b650ee18c8"
+      },
+      "pokerlab/server.py": {
+        "bytes": 65499,
+        "git_blob": "ce14885739685bb24378f506ddf3b41d19998e40",
+        "normalized_lf_sha256": "ffaa397b015869fb09135aef9eaaa4dcb906268964452294e37237c78e111827",
+        "raw_sha256": "2fe6a1342748bd898587fe2cddd5f6c5474ac50d319c6f1c6fb8067392bce813"
+      },
+      "pokerlab/situation_teaching.py": {
+        "bytes": 5398,
+        "git_blob": "f457dd652287ae4d25d0729a0854f8ea9fdf6c4a",
+        "normalized_lf_sha256": "b855130416fc5e823e2b5ae00d650c48203eb95061c017ce98cff94c538ce8c3",
+        "raw_sha256": "264eda5d1e54311e1dcea27321562c3549e73d62b9413840faf88cf483c6421a"
+      },
+      "pokerlab/solver.py": {
+        "bytes": 16344,
+        "git_blob": "42b823786b4ffd9d0e5b38f1a8f66e4c2f884143",
+        "normalized_lf_sha256": "e5fd91179ad1b9d3b4e3d609c20060732cd92a3480268cc117fddb47e552fe2e",
+        "raw_sha256": "afec1ecb67958f6d6b90c915d457aeef710b2de7f86af45cd8694b05488a161d"
+      },
+      "pokerlab/solver_contracts.py": {
+        "bytes": 8582,
+        "git_blob": "6738767e61abd321ba1cdfaaa049bb6942c8feea",
+        "normalized_lf_sha256": "70046e5d26e727d5316025877d2ecf535b6c845529eaa63bfd0af8e89de5d2b8",
+        "raw_sha256": "70046e5d26e727d5316025877d2ecf535b6c845529eaa63bfd0af8e89de5d2b8"
+      },
+      "pokerlab/turn_class_tail_adapter.py": {
+        "bytes": 34540,
+        "git_blob": "8625e49f7028ff75799d5e8e37386005e033fb44",
+        "normalized_lf_sha256": "252b5e91cd2c4f56f3823640f767c7691c17cbb09b37f64dcc9b019cb0d58c9a",
+        "raw_sha256": "9adb349eb4d2e10a18a2b75963304e7af10cc64d8a9950e402110831fcc56c44"
+      },
+      "pokerlab/turn_class_vector_budget.py": {
+        "bytes": 29858,
+        "git_blob": "aae95db7761c9eef6af85d4d4af3b7088664c5d9",
+        "normalized_lf_sha256": "b029504318f27771ca19bfd7076f21c6701d378e0ff6440e300d8c0efb2c7b37",
+        "raw_sha256": "a56feffd4a4ae8958677671cd4510956dd5473371cb9d0acad41a9c6387e1215"
+      },
+      "pokerlab/turn_range_kernel.py": {
+        "bytes": 29522,
+        "git_blob": "9acdc43ba12e33d0fb1a1fd7ad18d13976bc9a4e",
+        "normalized_lf_sha256": "0c817e86b01d3c84c71ec2017a66ef0faa2e9b138f85d4e48e1fbb7eff94629f",
+        "raw_sha256": "b2e61068135111f7949c20b509d6f4520d8d6de25b0b22cbb383485470d1420d"
+      },
+      "pokerlab/turn_solver.py": {
+        "bytes": 2185,
+        "git_blob": "3c5da3a4bc6356a935e854d37724e4e10667ab0c",
+        "normalized_lf_sha256": "c257994e6b74655975633b6a5017f64b5ad7fe9dddd631e44f87ae6da6bb9e90",
+        "raw_sha256": "3da2358a0a4a3019801edfdf617a966da28e045664c2fbdf9f83008b5adf075f"
+      },
+      "pokerlab/turn_tail_adapter.py": {
+        "bytes": 13543,
+        "git_blob": "683830524782b2497661c0c41d5b998a87f16df5",
+        "normalized_lf_sha256": "ecd183dedbaa967d691b8467a176203b9cb827a513425bdf660a4088813193c2",
+        "raw_sha256": "b3d6acd5c8bf5bba1ceb45380e585c2a5ee84e24e48de25a2f87db92184125cf"
+      },
+      "pokerlab/turn_terminal_cache.py": {
+        "bytes": 14970,
+        "git_blob": "b73a3f9aa5451a8160c0a0baebcfbd6553059d7a",
+        "normalized_lf_sha256": "cea7df6db83b65b7b7de403271ff4a55be708d8b983de3aa29d97af16a495092",
+        "raw_sha256": "07502ed93793174c5dd4de00d187adb5496865d53c4154fdab9b679d0575263c"
+      },
+      "scripts/audit_full_deck_raised_exact.py": {
+        "bytes": 16622,
+        "git_blob": "147dad8582f98b43f1248a1bf7357022f09d1171",
+        "normalized_lf_sha256": "897813f28f71ca91d9994ca1fa82cd5cad6dad928fcb67515d65260e88ce40ac",
+        "raw_sha256": "2cdaaed754aef9d909a2310d02cd732eda0b57a2032f433674d5928d8d4fc0d7"
+      },
+      "scripts/audit_full_deck_turn_rational.py": {
+        "bytes": 22998,
+        "git_blob": "ffdb13748473dfc95cc681f102c1820de564c8b7",
+        "normalized_lf_sha256": "03f6da1adaf182da110d97e185f47ab96b0183ba83c0dd6f68dbd90a17fb6fbb",
+        "raw_sha256": "55ccf83fc2237d86bd6e9b545321fc1731ee00906b38abb8608cccd4677792f2"
+      },
+      "scripts/audit_raised_turn_full_physical.py": {
+        "bytes": 29163,
+        "git_blob": "1e24b6bc3f8c93d99d7352f95bde61bce6b2360b",
+        "normalized_lf_sha256": "da2759d2653768cc877c2a6eb6a3ed934e884ea0498be9370282675902435522",
+        "raw_sha256": "678e101f8bb4656e39ce3246c49260bc1aace7b8cb0dfe2bb3eac338df58ddfa"
+      },
+      "scripts/audit_river_rational_certificate.py": {
+        "bytes": 39250,
+        "git_blob": "e578226735d4b48497fc960ddafed5ff81dbc03a",
+        "normalized_lf_sha256": "6af6da2995f08a2a2ddcce6a6f66d366951df09aa2f004fe6bd02eb8f5bc940f",
+        "raw_sha256": "db932a9f0f00100ebd4325d0d136d2eb59a4a5785cb5b4f3a076468413ca743d"
+      },
+      "scripts/audit_turn_rational_certificate.py": {
+        "bytes": 13920,
+        "git_blob": "7ad41c07534312b669f904f2ca4a00277eec3545",
+        "normalized_lf_sha256": "685d0b6a7fb73a2dbf57c520c32bbdbed84a71fa5cafc3153bff6b4cd907c00e",
+        "raw_sha256": "70e1c5399221afa536d17002671688e51c989127e06a050334e0f175494f2d46"
+      },
+      "scripts/audit_turn_tail_exact.py": {
+        "bytes": 22601,
+        "git_blob": "c5e1848289a01809f75d24c363a7a556446715ce",
+        "normalized_lf_sha256": "952737851f2264866ad59cdd0af27d3a90d1000d6ce59ebc84e791e37371a9ab",
+        "raw_sha256": "72edf76e3c706fcf4fb1416d7664eb6c533f8f33daf7d5ad98b003615ab6a181"
+      },
+      "scripts/benchmark_cfrplus_target.py": {
+        "bytes": 8960,
+        "git_blob": "fdd9b3b321b3c19805333d541de84fdd6b23b9da",
+        "normalized_lf_sha256": "7a0742990633cc4883556c6ecd0617fce6cb49ecb1367e586177fb5b1f5718a0",
+        "raw_sha256": "4fbd8522790459f7dbd43c6debbe2559b55f707e53e794b155fbd719fabd8fa2"
+      },
+      "scripts/benchmark_direct_flop_checkdown.py": {
+        "bytes": 6757,
+        "git_blob": "138e545a6c36dbd871904023cb97a594e7922ca2",
+        "normalized_lf_sha256": "511fe35b03559a78437ed11a49bb491b704b51844187a882e983a5c473e3625a",
+        "raw_sha256": "da244e32d14f05569a53482bf8ecb22adcdc7821b2de0803462b6dccb11bd534"
+      },
+      "scripts/benchmark_fixed_street_profile.py": {
+        "bytes": 23801,
+        "git_blob": "221b637b4d1d1b025b76bfc29b13bdbcd0376328",
+        "normalized_lf_sha256": "56b73f5b69ff2b40b97327d6e4aeeca6fdafb411ec18f33cd3f2783209dda438",
+        "raw_sha256": "71de1ddf8e8c91f329f8a5526b3124b242e25ef40fc78611e71a18ec72c7cf42"
+      },
+      "scripts/benchmark_flop_alternating.py": {
+        "bytes": 51779,
+        "git_blob": "8332248d9a13e4849987d7c50da611b3fcc9f567",
+        "normalized_lf_sha256": "aab8cb34fdf68e2da494fdc5a0c91b7bddca0307b9e419753398bbb8b68ee4bc",
+        "raw_sha256": "f2829f998a765ee1f7a59682c93e36bee2bd483db4878818f9ee667706c160d4"
+      },
+      "scripts/benchmark_flop_cfrplus.py": {
+        "bytes": 16857,
+        "git_blob": "6d57d1ac6599d6dc0960847cd1da43f10a61fda1",
+        "normalized_lf_sha256": "b658251acc2c2cb70e58a432cff5f8d1cfebd1abeaf645300cc83384e284b26d",
+        "raw_sha256": "1ea486008c61d1b9f088f11664371991ef8bf7591c008a4ffeae63046a875a10"
+      },
+      "scripts/benchmark_flop_class_cost.py": {
+        "bytes": 28974,
+        "git_blob": "5ddd20b051145a06983c5b8fe19b0487a921c4fd",
+        "normalized_lf_sha256": "255df05d8365f583a6465de1e8cb2a909f8523be2cc7b7fc9e5b640463f584cd",
+        "raw_sha256": "7e236ca77eec858b5cfcbeed822950ca50b8db091e1ce8232ffb92bb1b10e3ae"
+      },
+      "scripts/benchmark_flop_class_owned_fingerprint.py": {
+        "bytes": 23557,
+        "git_blob": "95d9a07ce301b730b583ad20a6afff8415098d0d",
+        "normalized_lf_sha256": "7811d633f4e66ca8c14fae433db15c3e5b95ceaa620f8a1042c7cdafc0f43100",
+        "raw_sha256": "f6681992c89e5f0c44052ec7ab594ada858e2232d2c63cbdb3a6b0061d6096a4"
+      },
+      "scripts/benchmark_flop_class_reweight.py": {
+        "bytes": 25545,
+        "git_blob": "131f3e1a6fccfdea2a81e709f5cd4d5a9dcf5595",
+        "normalized_lf_sha256": "6f8c505de431f482f1c76b84db43f55594eeeddbffd1b1473eec2c039cc55a9f",
+        "raw_sha256": "415c2edb65fc4c26c8759aab0abf8be89fdb0f6b41b057819950cca3bf2e8f1f"
+      },
+      "scripts/benchmark_flop_class_reweight_cfrplus.py": {
+        "bytes": 16884,
+        "git_blob": "6acd242f56f13c0c9a0e5131d6f6a90371960541",
+        "normalized_lf_sha256": "7b0317cfc6c50123230c3a3ce7e101cd2d1ac11adbd758c18894b3a716e9b7de",
+        "raw_sha256": "ca96503e7cabd679024e489b9998794ec8d5cd146cef656355774333d80ab7ea"
+      },
+      "scripts/benchmark_flop_delayed_cfrplus.py": {
+        "bytes": 37940,
+        "git_blob": "4f355d048015d741b2334ad3db257818dcc82372",
+        "normalized_lf_sha256": "cffb4f3bf8f1674b7f57a67eb0b0817eb2c06e236439e1d6c83d00043f180371",
+        "raw_sha256": "44d50fc9bca926bb9f9d0dfd581919c03819d2efcdbd4c2fd0946a885f7de532"
+      },
+      "scripts/benchmark_flop_equity_reuse.py": {
+        "bytes": 31474,
+        "git_blob": "cae1c65400655c4dee55c3336afe2f44b8d9aa98",
+        "normalized_lf_sha256": "f4dba41e2869d7d2529b50b9d6ca031008fb565f656c519ccdd26bdf4550b526",
+        "raw_sha256": "e80dfafc033723856096f15163d9f54427a810dda1788245594670693566dbb5"
+      },
+      "scripts/benchmark_flop_second_board_cfrplus.py": {
+        "bytes": 32276,
+        "git_blob": "65c64757bfbbad418b3a50e5946969ef7f9f8abb",
+        "normalized_lf_sha256": "60567257adacbc03c274c7666c6bae957f66d3d4d839f0249c9865e01cbde01a",
+        "raw_sha256": "aee1f0c7164f8a11a2c0058adb0f24128b27cea79f06fa7c2e7eef07dc8d21b9"
+      },
+      "scripts/benchmark_flop_second_board_cfrplus_replay_v2.py": {
+        "bytes": 11678,
+        "git_blob": "95841f188925bb98a978f1ecc5f430294d1c2e98",
+        "normalized_lf_sha256": "0280e11ab8797ffca77fa96419901a4fd0d589606d59b8d21e82d37f78534ea4",
+        "raw_sha256": "6724d3c3c836b927c5ae621e89a420cb0cc6de9bfa57da20d4b66dfc06167917"
+      },
+      "scripts/benchmark_flop_second_board_equivalence.py": {
+        "bytes": 23520,
+        "git_blob": "b6ae20f3b7c1c6c7639ebb9daa5c23b560d5cc52",
+        "normalized_lf_sha256": "5dc62b2c0b344e1143d07b87e0ff11af7753eaee331e1001df98d828f08209d1",
+        "raw_sha256": "a07a270755ebe4e581d4c964ffe3a2a3e18f066643f79e10fb4645edb60af8c6"
+      },
+      "scripts/benchmark_flop_second_board_reference.py": {
+        "bytes": 17246,
+        "git_blob": "25fea425b4718d39c3197297f4c1e830f0c95e6d",
+        "normalized_lf_sha256": "33d70f9bede3e4eb5d8f5b0dfe785887eb09688219fa3c1047aadb6c2927e598",
+        "raw_sha256": "18f2f5a81db0ab3a7ec1eb0134ee5944e6708f84dab1a17bbde9c2cb919b2703"
+      },
+      "scripts/benchmark_flop_suit_equity.py": {
+        "bytes": 31616,
+        "git_blob": "15da634aef7637bd53a3d681be287a7a9a7c324f",
+        "normalized_lf_sha256": "834f6260976071c1377cd87c4be1aa7aaa326986c7b0f455e655163406dbee6e",
+        "raw_sha256": "49745583b8e7c6d6a03093a438ef25cfe77b80fe2b9db0942cba39fa453900c7"
+      },
+      "scripts/benchmark_flop_weighted_eight_hand.py": {
+        "bytes": 30262,
+        "git_blob": "9087c16fc06feb9ea9b218d2baedcdadeb2b5757",
+        "normalized_lf_sha256": "448c57b7993c275851bf51c615ce48963c3e47512e69d454a2e76cfb8bc1834d",
+        "raw_sha256": "864921308d01b902687950f82acfd3b2dfdac1247e22e49de1edd52d67521f47"
+      },
+      "scripts/benchmark_four_street_integration.py": {
+        "bytes": 51146,
+        "git_blob": "95681f20e4df2d918a3eda967f8747830df05d4b",
+        "normalized_lf_sha256": "fcdad0ee26e5dfb79f51016ff732ccf1827a8fc9fbd7664d54530de24c3c7fce",
+        "raw_sha256": "fcdad0ee26e5dfb79f51016ff732ccf1827a8fc9fbd7664d54530de24c3c7fce"
+      },
+      "scripts/benchmark_full_deck_raised_turn.py": {
+        "bytes": 28314,
+        "git_blob": "dc0d16ca9e62fc1d6e257de67e8f5b510e95f7d9",
+        "normalized_lf_sha256": "25a60602e3fd24f2709d7a157560abf895317eaf481a7888035763313b1eeea9",
+        "raw_sha256": "50604a34596791bf1b0b9730914f545c96e1602fecad1a1301eb63d2d3a717d1"
+      },
+      "scripts/benchmark_full_deck_turn_accuracy.py": {
+        "bytes": 19758,
+        "git_blob": "041687b8252e75b851174a92349b196f22e6dd12",
+        "normalized_lf_sha256": "a279016f983006b55342c99d8a1aff1a62e321eed4d08b5798138ef5960e10e6",
+        "raw_sha256": "6fd81e9e9cb0598c1150ff1c5c9c02c9a858006ed47c977cf8e4d7521d6116c9"
+      },
+      "scripts/benchmark_matrix_free_river.py": {
+        "bytes": 15773,
+        "git_blob": "a4ccb5c07a671cc40e59b197b0f2aa247689a7f0",
+        "normalized_lf_sha256": "6390cc5aa1624079d8e5f774436e43f22b2f521fe25331c0bc9f9f02cbef96bd",
+        "raw_sha256": "baf8386b20bbeca5eee15217c205203b128db2deefb93d05a556a0350d684ad5"
+      },
+      "scripts/benchmark_matrix_free_turn.py": {
+        "bytes": 22431,
+        "git_blob": "217f978b8720841c99ec2b1479f287627bbcf880",
+        "normalized_lf_sha256": "ed0f8f68e62bf55a755b42c3e697ec63a8b56093a34593d38d2bf56ded5cd5f3",
+        "raw_sha256": "27dd5fd5922ea2c32f483dd5eef945f19565ef032b0118fe059cbbd32ed1cd1d"
+      },
+      "scripts/benchmark_native_cfrplus_rematch.py": {
+        "bytes": 16280,
+        "git_blob": "2b8f4bd2092db5f1b629c7814fb47d1d63fa70de",
+        "normalized_lf_sha256": "d11fb6469762369ab86c4e2e86bc067072279e63783af2bc809fac4ca1f9d970",
+        "raw_sha256": "5cff835ed73f0e17d17189f96dccade98860f97a3a2eb579a26f9e8cae91c233"
+      },
+      "scripts/benchmark_native_fixed_street.py": {
+        "bytes": 42525,
+        "git_blob": "8dec7114994e349ad4123881657a0fbec6a4a357",
+        "normalized_lf_sha256": "55a118c703f87caf49ee3a991f364703aeea564bb347b600986e76ebe8f7336c",
+        "raw_sha256": "09f0d3e70fae5cefcc6551016d50b461ca203545917f0b7336e7b24aa033a1b4"
+      },
+      "scripts/benchmark_native_fixed_street_vector.py": {
+        "bytes": 5211,
+        "git_blob": "712443187a4051dbe9a7758ff6990fe43c1d8ebf",
+        "normalized_lf_sha256": "db790c85f623a64b99d6840a4c734a84a606007cf109427ea99c82e8473331ee",
+        "raw_sha256": "eeca286946119fddc423c790fadb29f45f5e3d4bce782968075c489bed085b76"
+      },
+      "scripts/benchmark_native_flop_preparation.py": {
+        "bytes": 26549,
+        "git_blob": "200188889331b8ebe1f0b71f6881ba9fe925633a",
+        "normalized_lf_sha256": "4f093d4e47e65a1f6c06f37bb933d69e413ee97d86d8b355ff0d92bc5db31908",
+        "raw_sha256": "2390929b1c96bbf449f61695d89c9f37c2009061eee6db0c07824c161374e8b6"
+      },
+      "scripts/benchmark_native_preflop.py": {
+        "bytes": 32744,
+        "git_blob": "10f0f52f61271e9a3ce61321bba9d792b4963e40",
+        "normalized_lf_sha256": "785f58f7b769296d4e7e809e8903e25c038262a0cf29fe064dd9744399ce17fe",
+        "raw_sha256": "3f224a4e95d41e3425ba2eb6cce9fa2809f03af640d80966f6e5fcface5c9358"
+      },
+      "scripts/benchmark_native_river_range_quality.py": {
+        "bytes": 45511,
+        "git_blob": "fc334b31544eac9ddf6bc86ece6e619dad8b36a7",
+        "normalized_lf_sha256": "8b4e3d098a216e31c600b412a5382979b0269b88c909d2f8831c0466269b334e",
+        "raw_sha256": "9dd9638cb2009a385842570d7dd2561e51c9fb1fe4dc5140f0c0336ac40fd002"
+      },
+      "scripts/benchmark_postflop_solver.py": {
+        "bytes": 5639,
+        "git_blob": "976beba4f0f6e8d65d69a67569c102e04675b4df",
+        "normalized_lf_sha256": "279169ff965b836fdcde58472a6d8d82b716324fca6ab64878399f078cb5391d",
+        "raw_sha256": "3303d736ae3dcfc59f60ccb2f89e4b9e0ce34a8d4e0bd49744f141c94132697f"
+      },
+      "scripts/benchmark_preflop_aa_kk_range.py": {
+        "bytes": 12004,
+        "git_blob": "1f2334139baf759ab01032d610cc055a4fc94b22",
+        "normalized_lf_sha256": "9b6d88862c1efed3af687d715cf4c44d86d3bb7736aa27d99084b956f5a7a994",
+        "raw_sha256": "99e042f3336ded38ee19db0dcfde8218f6a12da401aedab49bb5e689b8323a25"
+      },
+      "scripts/benchmark_preflop_action_coverage.py": {
+        "bytes": 17247,
+        "git_blob": "ee83b2950f04516131e365cd2c9d56b35919eb9d",
+        "normalized_lf_sha256": "cfaa592b2472cf279439733788c720e131586f33dea11bfc123c3ff705678925",
+        "raw_sha256": "e45c96849a412a25cdf2e3f0497186ae18107f9bc77e792678fa595161ea5a3c"
+      },
+      "scripts/benchmark_preflop_active_prefixes.py": {
+        "bytes": 7391,
+        "git_blob": "3698986cc3f3c178420ccb34140096b8df86156d",
+        "normalized_lf_sha256": "b5b37393f893ad54c5324b8049cb4bc67cb8b4944bfaaab4926381d717ce314f",
+        "raw_sha256": "424c778f4a3c816e5cb26a2d7de7f35b2ce3a606ad201eed3c07f322399e1d28"
+      },
+      "scripts/benchmark_preflop_ak_kk_basis.py": {
+        "bytes": 16592,
+        "git_blob": "5cf37270f8289c9983364ca230498205ba05f8d8",
+        "normalized_lf_sha256": "b1beab4c0400b186cb05d5455b97dbb54af61d0350120a870a14614c472d1e39",
+        "raw_sha256": "10c4cf773bceb949845a8a6d6c07102ebdcd1e103d506b7186205b8eba90eedd"
+      },
+      "scripts/benchmark_preflop_averaging_delay.py": {
+        "bytes": 10127,
+        "git_blob": "ff71f2af23d5e932d662ab45ea5ba014db96924c",
+        "normalized_lf_sha256": "6f617fd40dedad84eae43838e574565582861362ee13741368461555a2a9cd73",
+        "raw_sha256": "72d56e559fd07e80b2b7c251be684a447cd535ded2d59ada8abdb29441bef842"
+      },
+      "scripts/benchmark_preflop_cfrplus.py": {
+        "bytes": 7186,
+        "git_blob": "e07a8a8e39df9459b7a8a854cde85579520cb63a",
+        "normalized_lf_sha256": "7fc010bfb88ebe138bcf1baa47bba5a43fb6e2a3e808dab8b2554e48170f5a22",
+        "raw_sha256": "2d62d6a1c41b0e8e156e78f36150f1897cc742bb8f0c215ef9ad66a42aab6112"
+      },
+      "scripts/benchmark_preflop_chance_sampled.py": {
+        "bytes": 8378,
+        "git_blob": "3ed75043838760f7d60f1058bebfba2a427ff1d1",
+        "normalized_lf_sha256": "10a916667f0daaf2adc18dbf893a002471394b8dfc80edcbd3c81ddb579ba4ea",
+        "raw_sha256": "6c29541e0928a7efca4de1128cb57e705fb60b67d2a554a4edf0c5e78f7eeb99"
+      },
+      "scripts/benchmark_preflop_checkdown.py": {
+        "bytes": 10683,
+        "git_blob": "0f161ebcd3f7fabc3d034d2f4ff573644e77313c",
+        "normalized_lf_sha256": "e0720d6ebff2a0df7b2c0921cdcde9d65b35eebd67611eedffc37c982fe733ca",
+        "raw_sha256": "81a8193bda84f073bb50d1f854f3c61ca77268b4203903a27b660d1feb261dcc"
+      },
+      "scripts/benchmark_preflop_convergence_stop.py": {
+        "bytes": 10155,
+        "git_blob": "a4ef7df46f55193c8e281eb37c2ae2e753a6f09d",
+        "normalized_lf_sha256": "78734149c06a842533113d60ce49c80711fdb14c1ac49191c8cf116275f49caf",
+        "raw_sha256": "f4bcc3012f0781a84598a78087fa30a57e9b3b7ec00bc3a3b488c14577480972"
+      },
+      "scripts/benchmark_preflop_covered_counts.py": {
+        "bytes": 16529,
+        "git_blob": "54661935cbb76c2eab81f1df488dba4a31de1f45",
+        "normalized_lf_sha256": "40f6a50290d19967bbc5d69bcba7ec0221f1f6022c176599f83cb99ab0db2228",
+        "raw_sha256": "dd2f0869248be153c409826c6de269b417c6512b415c09de62f1d5e749e3cdd0"
+      },
+      "scripts/benchmark_preflop_equity_reweight.py": {
+        "bytes": 12755,
+        "git_blob": "0c8ac11fd1b7b078b5df1de60a585993d1fdebb1",
+        "normalized_lf_sha256": "59fb8c311a014794acaf7c25e887af02080c9a462845d065067a934fc7d28cf8",
+        "raw_sha256": "a8de01a432562d3aae8dd03809526400956a3f7c9b945a3717d8bad017e45800"
+      },
+      "scripts/benchmark_preflop_exact_anchor.py": {
+        "bytes": 36907,
+        "git_blob": "35c2864eaceadd8d32cf29ea09bf44db35db3bc4",
+        "normalized_lf_sha256": "84b4c4d5cdf0cb6498906aeb2d46aa57bf94fdbcc16aa278df205944aec15776",
+        "raw_sha256": "c03195ed558a6f08df481ad98d7b66174674e7c0bafb1ba2d46c7e5688d5bf94"
+      },
+      "scripts/benchmark_preflop_expanded_range.py": {
+        "bytes": 11877,
+        "git_blob": "df32402af9b6473243585ffd08cd2700eecba838",
+        "normalized_lf_sha256": "afaf3ad4eb3ca0573b834b911dbfc6e58e885dd886baf705fac33c6a75c13e85",
+        "raw_sha256": "3fc3415273a14da9a7d80ab98b54b7ba3967149857120cae7d441af52f80c4dd"
+      },
+      "scripts/benchmark_preflop_flop_checkdown.py": {
+        "bytes": 8050,
+        "git_blob": "20f0c0435ef08413587067256839267aa2b2ff28",
+        "normalized_lf_sha256": "111534e970a1cc1c8c8398ce74602ad6b4ed9d61aabd8c86e52cfae765e57169",
+        "raw_sha256": "2d6e2a161e4a4efe8ed2130d7b12d5a50e30948f829312ef08661e43ecbac5cb"
+      },
+      "scripts/benchmark_preflop_flop_raise_coverage.py": {
+        "bytes": 13723,
+        "git_blob": "8b4e17a2a5f4a7378a85005812c4633fe607b025",
+        "normalized_lf_sha256": "b7a2d6cec2f946acb20896f8bf0feae7f776ea0c1e5239e4b373177a26a310f7",
+        "raw_sha256": "776ad167db3ba8465f7348b1e89b8c9c987ba2f0e7d8812ebaac1490de2b537b"
+      },
+      "scripts/benchmark_preflop_full_flop.py": {
+        "bytes": 7852,
+        "git_blob": "31acaf74b14977b6ce100851b73247ec880afb36",
+        "normalized_lf_sha256": "30ad2bbdf1656ca4e521a1601d424c674322ca78715b4a479f534164f420cff3",
+        "raw_sha256": "0b70de935d00d55df9cd7a301e8a666aed3d0cc3367578c70866dd409916cff4"
+      },
+      "scripts/benchmark_preflop_grouped_target_plan.py": {
+        "bytes": 11807,
+        "git_blob": "d7df17a740bd177b4bebad0e5160d68efcd00fb7",
+        "normalized_lf_sha256": "e32198453021e221ad3fc797c0a48ac0c6e9294ad2581265167f4a1b499144ad",
+        "raw_sha256": "fa3b6f9f682fc14467ab0906b1f6a85a6a160b1f5ffa1b750a42d778fb714988"
+      },
+      "scripts/benchmark_preflop_grouped_world_admission.py": {
+        "bytes": 8961,
+        "git_blob": "0dda9e167cae278a4cf8eb725817a71f23b15907",
+        "normalized_lf_sha256": "2b925ef194dc6c886ec3155341625b204798321c89101b0e37f30824c021ba64",
+        "raw_sha256": "bd903f8ac7e10ea2964ff3aa954107efed46103d4e4276cd8395821cebb9782a"
+      },
+      "scripts/benchmark_preflop_hidden_future_groups.py": {
+        "bytes": 9776,
+        "git_blob": "942e092d775297be0f3802f1774da43e0078e3d5",
+        "normalized_lf_sha256": "95377d94c4583f5fd024f95dbda1189a889ca82779b648e32dcd109431a8b97e",
+        "raw_sha256": "a347c9ac567e2ed25c77f5195397bacd25b117afb361bcb12f7ca7d330cf2471"
+      },
+      "scripts/benchmark_preflop_jj_kk_basis.py": {
+        "bytes": 30608,
+        "git_blob": "e19d1449c05c0619deb2a3e97ceb7d3541387436",
+        "normalized_lf_sha256": "0affa2020beff508a2a1fc50abb5a85b630013f59fac6427c1e3b749240a7d75",
+        "raw_sha256": "f46bf12e61f93118f5e4352863c0370ddb00ef97c220ee031d8b7cb42b7cf1b0"
+      },
+      "scripts/benchmark_preflop_mixed_range.py": {
+        "bytes": 12326,
+        "git_blob": "5c30874506d42125ce4b58bf0f7ad3a0c61790b0",
+        "normalized_lf_sha256": "a399bae668c2ba9d097ae55e5e7673af54a4b5fd7c11d7579ff55d662aa1390d",
+        "raw_sha256": "6cda3c6efe507ef4b129ca26b2b7a46fb4dc61fbf602284b331ef7f4050fb1a2"
+      },
+      "scripts/benchmark_preflop_nonnegative_normalization.py": {
+        "bytes": 15765,
+        "git_blob": "64cfa55804f548caf5f9e029690743a644f2ab6b",
+        "normalized_lf_sha256": "62922e6d6666084d00fe27ab715fa09549609f36698d9a8e9b62d209f5d73a44",
+        "raw_sha256": "bce2edf2f797ac2eeaa6fb8368bb05885755bcdc22078475bb2d7c86a8878113"
+      },
+      "scripts/benchmark_preflop_pair_mean.py": {
+        "bytes": 13661,
+        "git_blob": "772a3b0ba01630256f97d7d855d4cbfbfbaf0e58",
+        "normalized_lf_sha256": "73984c6ead4f6df2f4770aced102ea1fbe2926af6866a72fe4024c55f0c93f69",
+        "raw_sha256": "dbbca8c10e448044b5c6866c560a898a3f69dc50cb0177a091aed5fa82c6692c"
+      },
+      "scripts/benchmark_preflop_pair_mean_quality.py": {
+        "bytes": 7051,
+        "git_blob": "95ac11228e968f009153165acdba19ef8b567f39",
+        "normalized_lf_sha256": "14bc2bc9ee1d643684411dc050f4550aa10d40675879a74d20a22a1cafef69e3",
+        "raw_sha256": "1e32b6c8cdbe68cde717eec32e414134d2975e667ad9d1c80a63bf2961d680a0"
+      },
+      "scripts/benchmark_preflop_prepared_budget.py": {
+        "bytes": 8861,
+        "git_blob": "7bdb4d35fcc1314e0ad21da479d991da9e0af073",
+        "normalized_lf_sha256": "9fd809d70545e9de4ec87211bb9b6bfaa4491fb516631cf11c9af7899bd5fb42",
+        "raw_sha256": "1c808dc1cb722148c70d169408d904c87d28081c3d52c4e2b3856e19d080d73f"
+      },
+      "scripts/benchmark_preflop_private_compaction.py": {
+        "bytes": 12757,
+        "git_blob": "14f28462316d6d759fd3bafda3d828659879b707",
+        "normalized_lf_sha256": "86b5be57e209c14e5ad50ee9283092aec6ebd00e212f7a69fcf621372c971fe8",
+        "raw_sha256": "d55da085bcd56a816273dd28c48c59ca12f722bb34e2e76bce7da07ddea60e21"
+      },
+      "scripts/benchmark_preflop_public_batched.py": {
+        "bytes": 9741,
+        "git_blob": "236879c8212cc9257261280ab117f2c8ba0cd99b",
+        "normalized_lf_sha256": "d46680abc1eae0131b44a8fbadf7136cab435b09b98f6c5c8e22ceaf0a883c3f",
+        "raw_sha256": "acfdac886424a387068fb69f57fd01aa8b5cbd37f1683b9b74de213492fd3e13"
+      },
+      "scripts/benchmark_preflop_public_diagnostics.py": {
+        "bytes": 11223,
+        "git_blob": "6f646c627a65fba5ffa6c6d11363e6c20dba9585",
+        "normalized_lf_sha256": "782ca814ea3877d4873708fa32a4a6cd190bfb8a98fae7c58cec6ec9914ae2bf",
+        "raw_sha256": "1ff79c96125bdf436441aab50a3bc373cb2a437c59a216ff02c1ad2175d86a62"
+      },
+      "scripts/benchmark_preflop_push_fold.py": {
+        "bytes": 14123,
+        "git_blob": "5e2a8d790e00ffb702fdf3b7b153454543ff52cf",
+        "normalized_lf_sha256": "2d2dced6b7699b6e1348a960105c6c201abe1e305ecdd9ae9547ac1c6e78e3a6",
+        "raw_sha256": "d8437c437ec27455da77d185edba47775d4f15a3b1741783a0ecfd1d5b93d3d1"
+      },
+      "scripts/benchmark_preflop_qq_kk_basis.py": {
+        "bytes": 11211,
+        "git_blob": "649632be495e22200a231f6f8105e849ac7e8e38",
+        "normalized_lf_sha256": "a81d9323ecc37bb6a4f170a0014229666431c00c12b44f09a46d90a727f7c888",
+        "raw_sha256": "d67d81196c2bc3e1a1a73933e8f49949f4b8be54eb8ab20192fe759bcbb1eb21"
+      },
+      "scripts/benchmark_preflop_runout_index.py": {
+        "bytes": 9252,
+        "git_blob": "29f5bf81e3f836ff45a3396d644dc622a1386e56",
+        "normalized_lf_sha256": "5c92a6886c8fa35f9d1884aa1eb750b3fae45f961dda6f9877cd9f7006c98cb2",
+        "raw_sha256": "c7425530ff06b88f2a2b57bdfe0129aa6e0830fe8df3311bc1ffd9740b865157"
+      },
+      "scripts/benchmark_preflop_solver.py": {
+        "bytes": 6289,
+        "git_blob": "b8d97ab42ee400987d2934c420d5c953bb8eb75c",
+        "normalized_lf_sha256": "3235d0e7cb62aca2337a4f4686a4dbc1aed1b1928e77f4e1a15e6ea78f58bafb",
+        "raw_sha256": "c09750f7e8ecdf87a1225b1e928451f4ab1e46388c8a839456fb75db9aee40d4"
+      },
+      "scripts/benchmark_preflop_streamed_worlds.py": {
+        "bytes": 14307,
+        "git_blob": "f53235d069252242af1424bb7f35b00ba6c0b2d0",
+        "normalized_lf_sha256": "4a89472caca64f9c6639e7d0d942d5db9d22293a6e4cb9409d96ef2b80ffcf3a",
+        "raw_sha256": "d6258a1c1e7156be6bd51130cfa93fec80d1a722345806b6a2e1065286f38a10"
+      },
+      "scripts/benchmark_preflop_streamed_worlds_v2.py": {
+        "bytes": 1989,
+        "git_blob": "8fc5295065a4b691ba97fb37985164462339a349",
+        "normalized_lf_sha256": "e9c0ae3eca0092e7c9203a5bc8d33f52d880129b36eea1b9015a2db9ce2c3d46",
+        "raw_sha256": "2f0d29d53b644318a3d15d8e7e9d8a20b4b4ec54ca7597045577b28579b4726f"
+      },
+      "scripts/benchmark_preflop_suit_remap.py": {
+        "bytes": 10716,
+        "git_blob": "dc7023d2038242b52c432a86b89644d271e09b31",
+        "normalized_lf_sha256": "caadd362954102d6bbfdf210b9dc74e3138ef4a9a63269ae59de8aa4991fd8b5",
+        "raw_sha256": "787a29323536251133296c5a46220ca4bf1884b0d6cea266c7f37d4a7aa1f7cf"
+      },
+      "scripts/benchmark_preflop_target_plan_prototype.py": {
+        "bytes": 9055,
+        "git_blob": "a44a67d9c568538aa3cddfc40949da416d6f6e53",
+        "normalized_lf_sha256": "bde53ca2ec3bf1c35a4772ff9ce9673a76a814698b0baa8b3ec9d7aead846363",
+        "raw_sha256": "182f0e2c860bd2fb9b91a2b4daa1eaaaabe60c61e46bcdcd034724826b307020"
+      },
+      "scripts/benchmark_preflop_tree.py": {
+        "bytes": 11099,
+        "git_blob": "f79792061b4eb2200657800fc20894c824ff8ea3",
+        "normalized_lf_sha256": "a5db77c51ba2f909d61702bc6efd73a57d2b2b0728410078168f8af0de1081f8",
+        "raw_sha256": "7e3b1846be95827721d2cc058495d91776aa42d73c627b71c783a6bf3f16c588"
+      },
+      "scripts/benchmark_preflop_two_flops.py": {
+        "bytes": 10901,
+        "git_blob": "2f46b1653e796f8e6640cf1af95a635da47c299d",
+        "normalized_lf_sha256": "b9d1b80c83e551d2bec6b6cb898e95bfafd9a5b35795f7cc267375d17b9ec416",
+        "raw_sha256": "62c532f76e9afbda309841f1b33fcaef5b33e627e0a984c2d65c4623941a26e2"
+      },
+      "scripts/benchmark_preflop_vector_resources.py": {
+        "bytes": 10632,
+        "git_blob": "d6239245e7c6210f85f67c9df6aa9996cd8639b6",
+        "normalized_lf_sha256": "3232c53711a3464e65fb221b5cacd9ead0d55310f692473fc3bb86855e1f18a3",
+        "raw_sha256": "8854105b430aaa99d29d4d7400790c3d972bf51ee7a07053e653c355c815b75b"
+      },
+      "scripts/benchmark_preflop_weighted_range_coverage.py": {
+        "bytes": 21274,
+        "git_blob": "609ebf91a55f547a46e5196528296029585e1839",
+        "normalized_lf_sha256": "2c9debb67f2e78bcbbef267e99ae4db33e16133e6ba6844e2f71f229bed64eb2",
+        "raw_sha256": "1a19944948e62e946932bb2cc7b582f158c00c1813cc572594d4767a26d30f2b"
+      },
+      "scripts/benchmark_public_cfr.py": {
+        "bytes": 15242,
+        "git_blob": "07a20db0611c88bc74d8c2ca9229d905822dc972",
+        "normalized_lf_sha256": "35e4e1d94c41a69bcbe25b9c1996f5aa992d91919f5185d6d607336091c0ce59",
+        "raw_sha256": "e34d36978aff7ce66b649fea99ebc02b0aa1bffa16239ddbe0f53664ff8f4035"
+      },
+      "scripts/benchmark_public_diagnostics.py": {
+        "bytes": 8823,
+        "git_blob": "26a29681a4d1747d2b91eda4b264319d6d0c281f",
+        "normalized_lf_sha256": "50f4acea0aa1334f12a98997bd55504600d5b02b5bd0e23f1af8cd23e166a1c5",
+        "raw_sha256": "7d059a37bb4a22537c369ea6aee6e065378976cb2f04704ca78011660651ebd2"
+      },
+      "scripts/benchmark_ranked_river.py": {
+        "bytes": 15070,
+        "git_blob": "e82ecb7c88fc308effc8ed4a0f5ffaba84b691a5",
+        "normalized_lf_sha256": "ff8b842d6c550e9e1d9c7424ef5991ab65ee89384aa979b68aa4d3b72786a252",
+        "raw_sha256": "6857092295eb4ae21260134ccd633857d8c6f9e3c5ad137d34f205da475ab8be"
+      },
+      "scripts/benchmark_ranked_river_budget.py": {
+        "bytes": 7454,
+        "git_blob": "d56b1fb3bda3b6c7bda86e2124a5895f772d0d5c",
+        "normalized_lf_sha256": "bda54f0bc05b4b36342311ce2ad212352cdbb89c480c6ff711d4c1fcd9db765b",
+        "raw_sha256": "82b533945c004c8ae82bf7d104849e4440b3d357a42f97222300aa0e936e1878"
+      },
+      "scripts/benchmark_ranked_river_solver.py": {
+        "bytes": 11960,
+        "git_blob": "e65204207562499a502bf7436d021de7aba2f4e3",
+        "normalized_lf_sha256": "f06fa2c6e6e49d0d939f5de52f4f8d4b4731326dbcd3aeb3936dd39d0a5446c7",
+        "raw_sha256": "ead3e32dcf5ba12a74a2ced7fa1ff74389403b8d1eec2a8bda86e6f58bdde366"
+      },
+      "scripts/benchmark_river_accuracy_extension.py": {
+        "bytes": 4849,
+        "git_blob": "6bd01d9588ae17e4ffc6d0f8fed7177e8bf8be4e",
+        "normalized_lf_sha256": "9616b2d538d20d5c2440e95a343a6c34b318746c8e0d0b75ee8a456285338a6d",
+        "raw_sha256": "c7003ae7aa921212a21cee195c5a8c6326cfcc0e7436b927a288dd819dd1e484"
+      },
+      "scripts/benchmark_river_direct_long_tail.py": {
+        "bytes": 30622,
+        "git_blob": "74e9ecbc47bb39d59f6b484eededc9d5070542d8",
+        "normalized_lf_sha256": "cf79a69df6c3e71643a882359c074c7d825574d9b1b769ac9e6b377f182ca576",
+        "raw_sha256": "f5bd5d69f105251afd17df76c394c3e48240fdb20ae0fc1d5450fd8ea23baeed"
+      },
+      "scripts/benchmark_river_direct_tail.py": {
+        "bytes": 42472,
+        "git_blob": "32994902f13379ad63bbcc00a044428dcd6442a5",
+        "normalized_lf_sha256": "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+        "raw_sha256": "223ae9253ca1a6d1962f0dd1fc97b854aafc952733d86f1aa1b588137501cc95"
+      },
+      "scripts/benchmark_river_heldout_quality.py": {
+        "bytes": 40115,
+        "git_blob": "03c79b70f224da0cd40af01bb59dd7f2d15ad710",
+        "normalized_lf_sha256": "1259777db93672f513d5a1f19f245996d692820370560746c4794b1a495a9587",
+        "raw_sha256": "2ba43fceb25b08b48cc3e78f1998b969367eb0508c7632fb686018dc36ead786"
+      },
+      "scripts/benchmark_river_heldout_tail.py": {
+        "bytes": 35265,
+        "git_blob": "02784df0154aa6ae91b7f9647df070cc10506ef8",
+        "normalized_lf_sha256": "da2436a86e12b16684b8d4c26d59be77c0a8f2e6cb74fcbbe9c790d7da993d3b",
+        "raw_sha256": "0ec761d19f7ae04e080bd5f89f0165f69b708090dc1a90a6479e6989bbcc2dbc"
+      },
+      "scripts/benchmark_river_long_budget.py": {
+        "bytes": 10019,
+        "git_blob": "f5a59cc1c1f14d95a5885ee72b99d75c93865631",
+        "normalized_lf_sha256": "0308bd2e64b378fd6f3a3b57cc332c1a6fc636101dc46d0a798df5350d3bcead",
+        "raw_sha256": "8a663e0ec85eee74a8a1ab2847e6ff44633f824824ce38c4413b0a3170855ae5"
+      },
+      "scripts/benchmark_river_tail.py": {
+        "bytes": 15427,
+        "git_blob": "339691bdf600d08d242346143da42cf353d0557e",
+        "normalized_lf_sha256": "43aace8f103313cff5c857634f3f06ca94b3a9e631c8d2b08b0fe5a36ff3f7a5",
+        "raw_sha256": "15c437aaea707cee3baaf746ace64faec250ce0d4e90f24ab8ba0f9d50d4e89b"
+      },
+      "scripts/benchmark_small_river_kernels.py": {
+        "bytes": 7288,
+        "git_blob": "3326bedbff69de625c20f9e204c7f68719624d7b",
+        "normalized_lf_sha256": "94ddb40ae72d4bf4c0b5bf5e62d23223bbef9f5f3007712e4427f5eec2c85381",
+        "raw_sha256": "0066649a62740b78d52ebd68201195ef557c5da09c25b10801af0a7347245fc6"
+      },
+      "scripts/benchmark_solver.py": {
+        "bytes": 9876,
+        "git_blob": "ea5f693a05d3eec3023d6a2f34cf3ddbfa689e87",
+        "normalized_lf_sha256": "81790d12f88e127a59bf7c6fb71a553b86d6f818b1262c634e51773eace0f655",
+        "raw_sha256": "180e5586ee523fff7fb18d8966b77ecd299abdeceafd057d9fca545504a6f780"
+      },
+      "scripts/benchmark_turn_class_tail.py": {
+        "bytes": 26877,
+        "git_blob": "8db16f984b98220e117ecf6c859b856b7a12513d",
+        "normalized_lf_sha256": "d2f2776ab115b96b3f1c5701da6da217d237dd18a691c90719c2c81067b2f69b",
+        "raw_sha256": "661473fbf52b743c906c6217ba810843d1fa23aa85b1ba7d6b613c44d2f376f5"
+      },
+      "scripts/benchmark_turn_conditioned_mass.py": {
+        "bytes": 17720,
+        "git_blob": "4b9ec5822736a8f3f575e38871a24c370cbeb67e",
+        "normalized_lf_sha256": "cb10cb5bb18934183ea05815d371ceb9df53e3fa88d4e5c5ef7403fe73dcf989",
+        "raw_sha256": "b7d35de5587f9a10dbe5693ec2b35a52ea731a193e3a8e3c6e577e39baf87811"
+      },
+      "scripts/benchmark_turn_direct_tail.py": {
+        "bytes": 28058,
+        "git_blob": "9727a323c8c0dbe2401a58a3116f4c0a32d5c878",
+        "normalized_lf_sha256": "17604a38e02911de28f2484fd9a4f278deb08a8544b4a89f74beecb51b021156",
+        "raw_sha256": "301835d70f5c83d4fc1815a7ddfe02716bae142917d741dcb88ea504cb09efe3"
+      },
+      "scripts/benchmark_turn_river_accuracy.py": {
+        "bytes": 9844,
+        "git_blob": "f26c4d095fc7e6e9d1a49d78fe3c11dab79e8835",
+        "normalized_lf_sha256": "f4091f669fe353ea80dcb4321a183d51b17be4dd718a4b48f42347e600f516c1",
+        "raw_sha256": "3bb6a23a8325f5dcd8b196fe1fdd2401740fa1b5f3a9482a877b7bf7fd3d65d4"
+      },
+      "scripts/benchmark_turn_river_independent.py": {
+        "bytes": 7186,
+        "git_blob": "3450b9f649257333300f370cfe6d2dfda1c82309",
+        "normalized_lf_sha256": "07365596b1c69a070e34bfa89aafedceca3ea9e305078927039fe1d086383f71",
+        "raw_sha256": "5e5e062083a5fbbed0c7e0933a6105dcf7c59fc4d8ac6142072231fae109ebd5"
+      },
+      "scripts/benchmark_turn_river_quality.py": {
+        "bytes": 7720,
+        "git_blob": "889467df483bfe08aefbd2326e10bfb96893f932",
+        "normalized_lf_sha256": "38e8e9f98a4bf3382af0fd952249cfe141671fee99b9170e8cd908b205a4f751",
+        "raw_sha256": "1fed477289d5f75db53435974ffd1c66fde21639e30a7e02b129379a21a13969"
+      },
+      "scripts/benchmark_turn_river_scaling.py": {
+        "bytes": 9987,
+        "git_blob": "b0429d073987d00fd329b663605b1517bc2df9e6",
+        "normalized_lf_sha256": "f9ad01cd397ed83d0729198cdc1b2d83c627fde432876fcb0bea6be68dab972f",
+        "raw_sha256": "91f8cd03a6be261191c0b55a2ce417a79ca7f632083d0de1019a5fe8109dda0f"
+      },
+      "scripts/benchmark_turn_root_reach.py": {
+        "bytes": 9412,
+        "git_blob": "6880c98c9f12dafa04390b622c0faf9a540490ea",
+        "normalized_lf_sha256": "0b79b3db7bf5c71a7f3c6822e4fcf44f894e4cd989610be9f2ac453d3a861092",
+        "raw_sha256": "f103e8d28e76169ab4d7b9a6c4d1b8b1d1c27213334771bfd22bb50e37ca4bef"
+      },
+      "scripts/benchmark_turn_selected_accuracy.py": {
+        "bytes": 16022,
+        "git_blob": "21ea9bc83e0e2e68c3ee5c4a0fc71df9408ee861",
+        "normalized_lf_sha256": "4547d8d6b6acd0ed49af833ac21bc509294387c18f2d921aa1e65efdbc820cbe",
+        "raw_sha256": "3959976290e2fbb617d2f568f4c4b7e319be93be766db3a2788592ed4d83a2f2"
+      },
+      "scripts/benchmark_turn_solver.py": {
+        "bytes": 8805,
+        "git_blob": "ff36651da5b0493e7651ae64e2ff91191ef8dd5e",
+        "normalized_lf_sha256": "6b69737aa73ef6d007217f5180876dd6f112b806c07f8a2351cc366a25440b8f",
+        "raw_sha256": "24d261ab3cd7670ee8260be9978e825ea1eec542c4697aeac6c285fddb65ab7e"
+      },
+      "scripts/benchmark_turn_tail.py": {
+        "bytes": 36733,
+        "git_blob": "010498cee307a1aba92140650b8f98def80cf5b1",
+        "normalized_lf_sha256": "cb6e0bf638ce1b338fbe6a27ff09a0389b535190b7a2bbb022f6350f6982c052",
+        "raw_sha256": "21e9938028d2c7a1ed54cc8a834fab7e57d1f5a53f05654a6b258207f7f89180"
+      },
+      "scripts/benchmark_turn_terminal_cache.py": {
+        "bytes": 34722,
+        "git_blob": "8b06ace5541eda6773fd328582791bf1f6070b71",
+        "normalized_lf_sha256": "d827bedc729bc114616e1a237cc3aa4cddc6d0eccf3e7261ad10fae935371475",
+        "raw_sha256": "6a985c04bd419a85db3be157104c3644ddd79baf7fc761ca7d33999a4f12ea9c"
+      },
+      "scripts/benchmark_turn_terminal_memoization.py": {
+        "bytes": 28547,
+        "git_blob": "ebdac6f84e746b2b71c5dfeacd8268cd2c76e5b2",
+        "normalized_lf_sha256": "7e011f765331b836bc37f05a2ea82434efdc8d39dcc37f577a138b9f738e7286",
+        "raw_sha256": "47c60d40a5fe9636b293ecdcc51ca884e6785fee5cc3a95ee8b32ac447daf1be"
+      },
+      "scripts/benchmark_turn_three_hand_tail.py": {
+        "bytes": 30494,
+        "git_blob": "5dfd75710d3dc66442d7cb61e06a96147b005b63",
+        "normalized_lf_sha256": "62eb0eeebafb720f6f6a06ce855d119d9c52d882a6066b4f892c3e9157149aec",
+        "raw_sha256": "80cc007f6d926a0b855508d97db5eeeb710db2d4e0f623bc053f8fdb79f577f4"
+      },
+      "scripts/benchmark_weighted_full_deck_flop.py": {
+        "bytes": 29378,
+        "git_blob": "304823fa1e02b2eae15685c2e8af3d0a52fd6433",
+        "normalized_lf_sha256": "2484647a7b4b20ab3d7b47d4f468832c65080fb5dad2acdb56968a2af21c9633",
+        "raw_sha256": "fdc852cfae3d63e6549843cada49d23751bc4f3335bffbd2df8bb6acfbd01d65"
+      },
+      "scripts/build_native_preflop.py": {
+        "bytes": 3615,
+        "git_blob": "3826525d3af174b6146ac4be6795cef2bc85f344",
+        "normalized_lf_sha256": "ce4fe2937879284a6d4cc3429ea4e78ed39766870c06b715a248744d25811b30",
+        "raw_sha256": "367ae46bbb8f676525421833a4480e1766ba1545a0bc057c1ef11f6d3186a745"
+      },
+      "scripts/build_native_train.py": {
+        "bytes": 4088,
+        "git_blob": "5c9667faa8ac37f2f725f5a1556b068ea822eb1f",
+        "normalized_lf_sha256": "ccd47212fcd1b029d9f7f2023cb0b71a9648f8df8e78d3e6c71bacb9f4f1e019",
+        "raw_sha256": "1101f4db9e1a89b3f8b02da920547374da7bfe60b149e7939ba5618ff4380687"
+      },
+      "scripts/build_preflop_five_reference.py": {
+        "bytes": 3241,
+        "git_blob": "7017d96c9db35d53380ae37ec1bb0dfd0dd8b879",
+        "normalized_lf_sha256": "24d1d13c40a23777b03cf621fe58c9e4cd14db0dfa488d73cac8d5d47e36bf9e",
+        "raw_sha256": "60d83b1fc307de19a534a585b6687282b3cc7883901abc70b71cbe0f9ff18d06"
+      },
+      "scripts/build_raised_turn_witness.py": {
+        "bytes": 27510,
+        "git_blob": "e8b06b35d306aba1e081b1a783d0d07b6278a227",
+        "normalized_lf_sha256": "d5d7c588745015fce097798f10a3c7a42e70049f4fd49a4880d09e2744cbcd05",
+        "raw_sha256": "5f76cfc4e20374711cc5acaf0c2f86c4ea3ac685d84bd7106d12f87530d886b1"
+      },
+      "scripts/certify_preflop_mixed_sequence.py": {
+        "bytes": 7490,
+        "git_blob": "b1ba6ac4bafc04866c82e96e34a5628db3d0147a",
+        "normalized_lf_sha256": "3f1058492f435c69fa9f837df753825e523fb53cbc99fd325220e5f5e58f0b2d",
+        "raw_sha256": "b20b57fbaa22d2ddae5e509841b226863168902713d2bcbe709d9ac2e35df89c"
+      },
+      "scripts/certify_preflop_sequence.py": {
+        "bytes": 11143,
+        "git_blob": "b5542be449dbed3779c6f73a4554513fcd14f4ad",
+        "normalized_lf_sha256": "1df445f4fc1f1026cf6c806fbada256d7ff9ad4c0c61333aa9a284eb8c9cffb0",
+        "raw_sha256": "f92c760ce0b834befbbbad05fb3dd0dc5ce885aa8c2bac390bf01b9b1a5ae90a"
+      },
+      "scripts/certify_preflop_three_rank_sequence.py": {
+        "bytes": 11175,
+        "git_blob": "4abd2740cf6b2f48bfc0804f9b67d76bc1c6c99c",
+        "normalized_lf_sha256": "a8fe2e2dae9a720ff0ec5ac01426a683b34fc332b2b24a31fe798c4407fc674c",
+        "raw_sha256": "5bec74036467fea3ad71efefa36667ecc6a5c7dd95cc13e7b9644a9aa017e716"
+      },
+      "scripts/certify_preflop_three_rank_transport.py": {
+        "bytes": 6855,
+        "git_blob": "efd8827ca052d909c79ac5638f104449ee9ef3e0",
+        "normalized_lf_sha256": "079a44cb66c5c2324d25abec046226632507b3026e10446e2ef4391c0e716b74",
+        "raw_sha256": "cfd5a99e33c54dd96a817f1a3a27e6a06f56351601d63c968e6f16677b850d55"
+      },
+      "scripts/cfr_quality.py": {
+        "bytes": 18326,
+        "git_blob": "a837331ff3e19bfd5ce3a2b868a03ee6b2d040cb",
+        "normalized_lf_sha256": "28d53d057ec24e6b6ccbb196d1f0812b32daa7f4091557b3aadd94ea0cf9e9fe",
+        "raw_sha256": "dafca0225a87987a4e229e83e1cbd6b678a298ef0c704eefe8f64fc26a84e447"
+      },
+      "scripts/diagnose_flop_class_reweight_baseline.py": {
+        "bytes": 19727,
+        "git_blob": "8ade30c7cb50f0faf55785d2fad82ad608c9c40c",
+        "normalized_lf_sha256": "a2e3d3fad3e3bdf5a850b58e49bb22b848658f4ac60b7e06ffea42e4e48193e4",
+        "raw_sha256": "4ff4731122fb336125b7b504c1f812b4188a90b1b6ed9183fd1bd7a9de4db670"
+      },
+      "scripts/flop_checkdown_validation.py": {
+        "bytes": 12336,
+        "git_blob": "7e6043c4211aed915fb3c6880a47033cdf096537",
+        "normalized_lf_sha256": "6d103808f639b4e9656b89a6069c18986a193949d404f94a79ed49b7679c3082",
+        "raw_sha256": "b3904215f27ff507ab5273694537ce1c623d11164d954de2f89bb665c494bb66"
+      },
+      "scripts/flop_class_call_measurement.py": {
+        "bytes": 2638,
+        "git_blob": "896b92e53b4feb36d8b850b75d7830198cc3890f",
+        "normalized_lf_sha256": "c61071d2768157b353365c3a4a78bbcf36020a8a909902fe7348e03c40fe4ec5",
+        "raw_sha256": "7c891db799783002624961cdd916f1606d98b923417127027c88742d9c8acdeb"
+      },
+      "scripts/flop_class_cfrplus.py": {
+        "bytes": 9011,
+        "git_blob": "dba6eced20750a0ac2435d402cdb29efde7be548",
+        "normalized_lf_sha256": "33c5bf4f17bd51921667fde6a9f539104a4d54706b15094ff46aaa06f13a55c8",
+        "raw_sha256": "b2c6061a201a93f4ea89d459828c48070be0b7d8dcb0cdb26c2dc3c92a376d25"
+      },
+      "scripts/flop_class_compact_budget.py": {
+        "bytes": 9888,
+        "git_blob": "7ebdb9d74de94b9f1159ef1581ca8c639b9f59e2",
+        "normalized_lf_sha256": "2c7d9f91c2ec1eeae35ff846c6bb0192e822f229d121d11bab595aa4b39d776c",
+        "raw_sha256": "5bae388082f8c6199bbefd2eb6c4b5108c31f4d85e5efb8bb7314c26f3dc34bf"
+      },
+      "scripts/flop_class_compact_cfrplus.py": {
+        "bytes": 5487,
+        "git_blob": "c88e4083d065224301314f9b0b4eea653a036968",
+        "normalized_lf_sha256": "fce93589664ee3188de0ae99af544ea8779d67e89e737a59b4874360cbd84bd0",
+        "raw_sha256": "ed72b9c0b07a48878e7d2024e25aa527b2f5f2dc97b77096052e14f2ee962fe2"
+      },
+      "scripts/flop_class_owned_fingerprint.py": {
+        "bytes": 17838,
+        "git_blob": "41c81227aaec08b23db540917e8300d10d8fa647",
+        "normalized_lf_sha256": "bd3d1b1fbc741fdfeeb5cdc8e3c6a716da2513a7e5bc6f01f46317a0da3a7aa7",
+        "raw_sha256": "4296c865bb8351c363f7205ad1af780a38c67f95cfb7c9555f74dc3ed3260d96"
+      },
+      "scripts/flop_class_policy.py": {
+        "bytes": 4539,
+        "git_blob": "51c6ba0443ccc1d1865740efc0e826832de3fb44",
+        "normalized_lf_sha256": "5ddb773f755b323aace1f6b3dcad34507a776d0efa66e5290a0f736ed64eb1c4",
+        "raw_sha256": "8a6395677c28aed6afb39e6a2396b44c988df3a0e9db97877aa58771d10a2f3a"
+      },
+      "scripts/flop_class_reweight_cfrplus.py": {
+        "bytes": 14870,
+        "git_blob": "249042d2b75ec090b4eb3ff864ca3be0f5d0236a",
+        "normalized_lf_sha256": "02a192905ccec30096b0c70c1b34dd03d664eb9cc7bbb19d8bd86640992c19e4",
+        "raw_sha256": "c626aff9b1dd8d14d8e9d2badfbfb35277eff25a68ed847c0364822dc3360dc7"
+      },
+      "scripts/flop_class_reweight_plan.py": {
+        "bytes": 3149,
+        "git_blob": "251101cb363aca01a4b84dc863f3424ebf70294c",
+        "normalized_lf_sha256": "c7bff7a4cd9052217479b954a6356e050475f6a42825527c6f9c393be954f4ad",
+        "raw_sha256": "ad18411f7e024ab70512f3ff6e33b59c043eeea4c92b0d6de2be1fe6d84370e7"
+      },
+      "scripts/flop_class_reweight_proof.py": {
+        "bytes": 20220,
+        "git_blob": "d76f459671821f44e5e94458ae68eae8792f961f",
+        "normalized_lf_sha256": "90b67a0c909a0bee281ba56cf11fc43fb0ac32ab9397587c9695202be517c640",
+        "raw_sha256": "517cb0e64b08d9096efd8565920de2238428a129673f3c1d138efb06b573ea6d"
+      },
+      "scripts/flop_multistreet_validation.py": {
+        "bytes": 39873,
+        "git_blob": "83607bdb0df289095c1a0ec08f6b1f5455832e31",
+        "normalized_lf_sha256": "8b73fa789afbeea351b111ab41c4a5961171693b4aafe3473787fd54cb7c4413",
+        "raw_sha256": "bd235cb9fe13c43d5bdc550ebe9ca530e5a8cd9f41dd92169226a5f67ddcb7cb"
+      },
+      "scripts/flop_public_classes.py": {
+        "bytes": 29650,
+        "git_blob": "82fa24efff8285fa6b43934f629d86ed43c904b4",
+        "normalized_lf_sha256": "0027228d2dcb05f24b23ec05d75f41243ab20559530203d3ddd22156db2e9b46",
+        "raw_sha256": "f38445a83f2a333f366d84103e77a43461077a902e95339b18c8e37d185a0baf"
+      },
+      "scripts/flop_public_classes_candidate.py": {
+        "bytes": 14936,
+        "git_blob": "bc14b8ef3a628fd60c62a14a717d8deded882149",
+        "normalized_lf_sha256": "9d4e0fa372c586ed128e7a6ef6b0ea0c4b55d99d049b02d0406ee7bbc172fbf6",
+        "raw_sha256": "eaa595439ca7046d347c01beda4c520df694cabd9595df17b233af52be37bd44"
+      },
+      "scripts/flop_second_board_cfrplus.py": {
+        "bytes": 24711,
+        "git_blob": "e56d2b881b3b6f955ea4cd1f91754dfd0fcd153e",
+        "normalized_lf_sha256": "c71921146da71cc643ed3759502336cac19c09b83b5f6362763375de06b48b15",
+        "raw_sha256": "3746238434f75dc8c0707f63ec89970e4520358cfb47221bfed8f2dd2c110845"
+      },
+      "scripts/flop_second_board_cfrplus_budget.py": {
+        "bytes": 10016,
+        "git_blob": "39e146c8e1a81e5ebdf4769200e25f0f39c25fd7",
+        "normalized_lf_sha256": "3e5bfdb46c8882321bea953f8b423f3f50fe40d97889b21c6989c73d3ffb63d5",
+        "raw_sha256": "3af1e5495c23eda38166b22d67216f58210f237985c4fad3f81a698a397658e5"
+      },
+      "scripts/flop_second_board_cfrplus_replay_v2.py": {
+        "bytes": 10232,
+        "git_blob": "b44c764f6fb8563fd613921d77aebf7d5a7c6e48",
+        "normalized_lf_sha256": "0e5bdd8063ccacc6efb1ff0cec388f2813eb96257e4837e2d72069f7b2b5c682",
+        "raw_sha256": "702c94099537d49d87a3d1f6e4d92893dd2b2f0c0db596efdec6550d276c5018"
+      },
+      "scripts/flop_second_board_equivalence.py": {
+        "bytes": 20281,
+        "git_blob": "f8c99df37a518349fe0063834651b477791050da",
+        "normalized_lf_sha256": "07b63967910920b5a78e4a373015d4a176864a34fd5160f44aad589b994db2d6",
+        "raw_sha256": "ded15b3dade8c2e76309fa8941a81458357537b097cb1bca4c35b712facc82b6"
+      },
+      "scripts/flop_second_board_partition_proof.py": {
+        "bytes": 21826,
+        "git_blob": "340180df47d46188dbc81a0e756d29f62eb755cb",
+        "normalized_lf_sha256": "1f563a38dcb2ee7fc21ab96639fe6ca94ecfda7d4f56381c369e66cd8b37d8c4",
+        "raw_sha256": "9e07a9b9b06461f708d4fa35c4b58d0af7f3b7715b379902667802d9e0483571"
+      },
+      "scripts/flop_second_board_plan.py": {
+        "bytes": 8823,
+        "git_blob": "ec37105d6f724f1a96f9cbf6c783e81b361cad66",
+        "normalized_lf_sha256": "90012f78d8b5936fd5706cb4d4f307873c9957a1c45c97869576e5dd75cf5a34",
+        "raw_sha256": "d791f5e7e1487b5931fba416cbfe3243048c5a23347ebe4f09793b9c30acb13f"
+      },
+      "scripts/flop_second_board_reference.py": {
+        "bytes": 30698,
+        "git_blob": "defd5e4b657cd46e1a4d0048385f9e4f75aaf8f1",
+        "normalized_lf_sha256": "94b247d227b3d2d40ba2aa963b7ce812ded881538a13b0f387f3ea71d9034581",
+        "raw_sha256": "8d90db1b97518af945960bf2003d3c36db7df6a4142c1d6e51745c86e61d8376"
+      },
+      "scripts/four_street_certificate.py": {
+        "bytes": 48183,
+        "git_blob": "98a26aed90aa67be1c9a8344b3efa78abc68e94e",
+        "normalized_lf_sha256": "b185ab5905e201a8354f7a19158ecbd344ea31df45067f6e6fa6459d6a0d3c28",
+        "raw_sha256": "b185ab5905e201a8354f7a19158ecbd344ea31df45067f6e6fa6459d6a0d3c28"
+      },
+      "scripts/four_street_validation.py": {
+        "bytes": 32118,
+        "git_blob": "2e6a2e60d7b6c3e1713861c889712654f0057670",
+        "normalized_lf_sha256": "01f7f8da4973b936f436467c6936933ca5b970ca41af59f1d5446037351df464",
+        "raw_sha256": "01f7f8da4973b936f436467c6936933ca5b970ca41af59f1d5446037351df464"
+      },
+      "scripts/full_deck_raised_fixture.py": {
+        "bytes": 12401,
+        "git_blob": "0bcf3d5c66458d089a873ba580d9080c74e95bd3",
+        "normalized_lf_sha256": "8f4003806ab2c0a5b13bb10822c9b4a71fc9d756f1928bc91fa4832beb1951ce",
+        "raw_sha256": "aa8ef1abfbc309e2cfa1497d7ea8835c6287b6b4e523cd6045c5546928dd777f"
+      },
+      "scripts/full_deck_raised_reference.py": {
+        "bytes": 14774,
+        "git_blob": "67f00db5d5a716209fca9db3d5ae98c78b4a3dc1",
+        "normalized_lf_sha256": "c0028a879aaf42a3b9c7c06819315a4c4a5547d37c4df5637da550187f85d704",
+        "raw_sha256": "38cfca75ce007eda67a3720caf62e23d764ba7c75f9f2ebcada8051a52ab4aca"
+      },
+      "scripts/full_physical_exact_oracle.py": {
+        "bytes": 18327,
+        "git_blob": "832016a3039b2af367905d41a9f324fc2dcbbb1e",
+        "normalized_lf_sha256": "14825abd9921ce6dde493c22dc86c7c2c7d2412f2116c91bb47f93143ef64d98",
+        "raw_sha256": "f53731cb5af66850f9550e0752de3d10eef4515da697b7173a7981a2e1bfbf36"
+      },
+      "scripts/historical_turn_sources.py": {
+        "bytes": 2491,
+        "git_blob": "07dcbcf0f8edf4a8623b6f5a211306b9580da5f9",
+        "normalized_lf_sha256": "7d354ad39932170df30b1974d45b7b3d13a9929250c1d95ef64bc931dba0d4a5",
+        "raw_sha256": "49696a447f160fd92dc134c934cb1cec5d0ea8a2aeba1b8027fcc6732369ced1"
+      },
+      "scripts/preflop_aa_kk_reference.py": {
+        "bytes": 7663,
+        "git_blob": "8d76567a4c0451e1c42c8c36cc175d80bbff2e45",
+        "normalized_lf_sha256": "30a6f758e6aa74a79dfdeb0d453a5c95c3d85f2715c3a23d2483ceed059b006a",
+        "raw_sha256": "4bab8d6994402086046d024579e3c3cbaa09a82bafe10d0eea2b7b0b241d4601"
+      },
+      "scripts/preflop_ak_kk_basis_plan.py": {
+        "bytes": 7800,
+        "git_blob": "1041fafe0c0da2bb52de6f79f8963b264a19fcef",
+        "normalized_lf_sha256": "4798aa46046cc15992b4c8f7f071a8e1b52ea1aec447a14eac9c756eca216fe3",
+        "raw_sha256": "1368b07ce8d3c8c40fb86a37afc13a6540c6b3ea7f2956b78ae52d7353ee11e9"
+      },
+      "scripts/preflop_checkdown_validation.py": {
+        "bytes": 23861,
+        "git_blob": "37a2a6b7b8c51db2b3d23959b9f23becd4e7b459",
+        "normalized_lf_sha256": "b9450e965ddcf1a3f197050f545b2170009887a21e8d906f4721ccdf4cdedda5",
+        "raw_sha256": "0b0d8a390927cb857982b8621ea2bcd3c7125f4fa7b93ed2c942f4e5628a1788"
+      },
+      "scripts/preflop_exact_anchor_validation.py": {
+        "bytes": 12869,
+        "git_blob": "f1ec0c34a332b2c22e58985869a94726ec7a58f1",
+        "normalized_lf_sha256": "0845cf4cc8d72280f09f437b634b23e4f9dd27f6820690dc77c47cd5a8bf5df5",
+        "raw_sha256": "baf59e6861a628a970ecd852c6cf891aa0edb360cb8ce5ded1f1f6c440878651"
+      },
+      "scripts/preflop_five_count_reference.py": {
+        "bytes": 7809,
+        "git_blob": "56a93a984664b0b92763bc764004126ce96a8437",
+        "normalized_lf_sha256": "dbcdb2fa42afa9df65a49420295da62d74629b82404ff3f1d7b88651a01132af",
+        "raw_sha256": "1ab01239d3bfef61713663369462b7a11d074cf8c21b6ddedfd490435cf8f543"
+      },
+      "scripts/preflop_jj_kk_basis_plan.py": {
+        "bytes": 15182,
+        "git_blob": "73200e997c26cf2410fe17e034e5dcb496bab15c",
+        "normalized_lf_sha256": "badd490a6605029b06aa83a2a7d100c1fc01983bfdf6ee9ab012c59940e5bcf0",
+        "raw_sha256": "df50026591f096470d7ee1a0cd6f417c34e5075058dec1517556429f989649d7"
+      },
+      "scripts/preflop_mixed_pure_response.py": {
+        "bytes": 24979,
+        "git_blob": "c319ffd925be36c434c58f067dd25545518e7d98",
+        "normalized_lf_sha256": "89cc07f265b10a8cd93af6717f91168048d9743a0f51953d260f116c1b7fb9a4",
+        "raw_sha256": "317b7ce7bd5521301ddde0edf6d95dfd7ca0129765babb125e20ac5bb0a8c1e9"
+      },
+      "scripts/preflop_mixed_range_reference.py": {
+        "bytes": 6421,
+        "git_blob": "5ed158afc6defb04aa660ac048fab44b84e1d48b",
+        "normalized_lf_sha256": "8c281e29abfa4623c76aae0d5cf5e0b4ee41a2fd5edb5889010d7837620ca5b5",
+        "raw_sha256": "a240c379fe0ff810afd46687b4544c369854751e6bac8434d464a7cda7e03a1f"
+      },
+      "scripts/preflop_mixed_sequence_candidate.py": {
+        "bytes": 7117,
+        "git_blob": "8b744c7f6a4f4e25e1c2df6399a128613c484815",
+        "normalized_lf_sha256": "fcd47da0578718d2e99a60943e51e34a76877aacdbb900f3d217e7b8b3740007",
+        "raw_sha256": "42b6006e37defd77200cc6237c35eb795d13a30b4383eb3779cfec85843e6800"
+      },
+      "scripts/preflop_monetary_validation.py": {
+        "bytes": 8040,
+        "git_blob": "82209143df7d8bfd6ea147142d553de6cae812cf",
+        "normalized_lf_sha256": "6e9cc70d1867f4fd4670faadc4451f47ede5979e9c94a91df4e52ac722f37e17",
+        "raw_sha256": "768263bbbf4f3bde4dde845fc3cbea317e1c964df0e4a4efd4efe061b8e03e4b"
+      },
+      "scripts/preflop_publication_source_history.py": {
+        "bytes": 2326,
+        "git_blob": "7d9d781dd96bdc45206eebe87a2c6e53452cc265",
+        "normalized_lf_sha256": "4c2e27b30eebfa7d5ce0e286d484b22a1a811c2e910082093ca6d9ea664b69a1",
+        "raw_sha256": "8ca96a8506b14ae377d81507b500932f32d5e424d10a87fba7b77aef1477e00f"
+      },
+      "scripts/preflop_push_fold_equilibrium.py": {
+        "bytes": 16632,
+        "git_blob": "f55a0a41a07891bfa955d265f3c3328fa6da1199",
+        "normalized_lf_sha256": "ff4927592cf88217f21b920a31757164a083cbcc59a2b16497a68c2544abfb3e",
+        "raw_sha256": "70168d60dbd55e2ed0c774bd29bd87cfcea4893d8945cd3132dbd1c84a5d7f05"
+      },
+      "scripts/preflop_push_fold_validation.py": {
+        "bytes": 11419,
+        "git_blob": "c802046373a21b7c0d4d35390ff51901b6abc3f6",
+        "normalized_lf_sha256": "c341275c7e3825fccab1d770d519ae6cc85137b1d0aaeb8845a36178f5effc10",
+        "raw_sha256": "e103e2983476a5e65aa1a03f8abcd8ea936809dbfb225012032cc3b2a5223d45"
+      },
+      "scripts/preflop_sequence_equilibrium.py": {
+        "bytes": 20455,
+        "git_blob": "7e585e6ea98fc75af31b80e8f21cefbcc9261456",
+        "normalized_lf_sha256": "2c64f23b3eb177bb0e6e47497f47398c64a6a355df70f40c041e08a815224ec9",
+        "raw_sha256": "519fcdbcfbf3032c6f31e5ebb7837494387f04ebad935c902dd36bb673b89ef8"
+      },
+      "scripts/preflop_sequence_fixture.py": {
+        "bytes": 6232,
+        "git_blob": "17fd854849d777e33ef20a0cce45bb1fe618b8ec",
+        "normalized_lf_sha256": "a11cc8dd976b9a5011b9f113b260a17e561247cd40263d623ddf4e588104c6b4",
+        "raw_sha256": "aa81b355cbc731735249069b61e847e30dd3ef85989cfd00416afdb6ebf4b15e"
+      },
+      "scripts/preflop_sequence_pure_response.py": {
+        "bytes": 25648,
+        "git_blob": "fd89c26959e2ca4380136ce8abba47f4e39bca95",
+        "normalized_lf_sha256": "b48344c5e4c08e6e61705675809178e6d7221c6a149c8483442ceda6713842c6",
+        "raw_sha256": "20f96539476672fd4321ae3934907b337e0ed9104b33dd41a468ad8938f8871f"
+      },
+      "scripts/preflop_suit_validation.py": {
+        "bytes": 8202,
+        "git_blob": "0710945c33baa51a878962be407bb3780d989156",
+        "normalized_lf_sha256": "23f0b565526f40401c80a9b511f850a028cad6ae24701ca8402e6b2a70c7da75",
+        "raw_sha256": "0b05d26fc176d2b1dcc590d5eaefae454c1627f03c3e3bb074e31b8101873d2b"
+      },
+      "scripts/preflop_target_plan_prototype.py": {
+        "bytes": 15181,
+        "git_blob": "48fd9600e88c5d13545ea640bcdd2a2d033d7a27",
+        "normalized_lf_sha256": "4f08cd546e45bf732e9b424aa00cfff07e4c6f63eb7c4bdccab74c4abfb19821",
+        "raw_sha256": "790ce234ec7068b08a518cb8c77cea24b01bc0984921018951870058094803e8"
+      },
+      "scripts/preflop_three_rank_pure_response.py": {
+        "bytes": 21597,
+        "git_blob": "8b58f64d5ae7d4c895918bad0efec8b56391249b",
+        "normalized_lf_sha256": "461b23f13548c25997c9410ca246d37adddc1e97ae76bb4a6edb70be15ccf7e9",
+        "raw_sha256": "6510ddb32ea3c829ed6b4ffa0916a347f5948f89bd39a5b2f343a8d4eb0c74d5"
+      },
+      "scripts/preflop_three_rank_sequence_candidate.py": {
+        "bytes": 17923,
+        "git_blob": "0df30c32d9db366702f6eccd816a0b8f20d83330",
+        "normalized_lf_sha256": "dede2cec0488a174696bb1350c0a11a77158547a8a58907eb3b773c3438e99ec",
+        "raw_sha256": "452eb957a32a9271f3b7d0ccc1a7f150a55dba612a58204b2717c1ad61a9c0ef"
+      },
+      "scripts/preflop_three_rank_transport.py": {
+        "bytes": 6254,
+        "git_blob": "8570fc05149807b42850d07b284b97eccf92bd95",
+        "normalized_lf_sha256": "147974b4d15e4b6a73239f5220fb8108df0b5df2a5f4f1c463cce848848b5537",
+        "raw_sha256": "4733c12118224b297f786ffde85d024ed272a0ff3fbb2e3dca842d0b177fee7d"
+      },
+      "scripts/preflop_three_rank_transport_validation.py": {
+        "bytes": 19026,
+        "git_blob": "c077ba435d7e6cac923415157d27f72fc389e51a",
+        "normalized_lf_sha256": "8b26ee6becd3f221581012952822a1b06b2c8cc609d1be82f590ced19bad0e23",
+        "raw_sha256": "301f1762d03f5d54b14c138c2274e3565a71fe89223c9e1a34824fd0e6d95fac"
+      },
+      "scripts/preflop_validation.py": {
+        "bytes": 23835,
+        "git_blob": "a6dd8a2c8b6e8f54f0d42fa5d138426cc94c656d",
+        "normalized_lf_sha256": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+        "raw_sha256": "c0689b40ea48da4c378e282038636fbc309ba4a46df91a933b781e6205d1054b"
+      },
+      "scripts/probe_preflop_raise_admission.py": {
+        "bytes": 13525,
+        "git_blob": "564653279ccbdcdf223eb4617b65080ae33552d3",
+        "normalized_lf_sha256": "cf4d9d6977fbeef0c4b29120b3de730c60a20396e7b33d3c1cc9318746d0f28d",
+        "raw_sha256": "2863341068701754d58747c4a34c03eedf076cb9db8ea30269f977c81442f448"
+      },
+      "scripts/probe_preflop_raise_grid.py": {
+        "bytes": 3734,
+        "git_blob": "df6f05d058237c24fa66868ab720a52e91d0bc00",
+        "normalized_lf_sha256": "941a93e35dcd21afd088bff5bed1f1e4cf97a80b18512995fa0a9bc413f14c41",
+        "raw_sha256": "cad79e4330d609f84d555a003a4ebcd2aaab7ce17776a8a192dded741199aae1"
+      },
+      "scripts/profile_flop_class_phases.py": {
+        "bytes": 10462,
+        "git_blob": "3fc8ddde4f843166efa4e432b1d2239373e84e26",
+        "normalized_lf_sha256": "9d702584fdcf7de668e49b5c7d696dfdc8446d59823b3885c35d30abc216a7a8",
+        "raw_sha256": "d37dc0a434b07e3df7662aea9cc9ecb5709cd6979c8b394ac9166034ae49853d"
+      },
+      "scripts/profile_preflop_local_costs.py": {
+        "bytes": 8749,
+        "git_blob": "04fa97d68b040b6b8f7d75f772fb6fe4c6920d55",
+        "normalized_lf_sha256": "de00360b48d1c67ede01d3e40cbc292a257f6befa1446a7ceee0c7d49e389e43",
+        "raw_sha256": "a6a9f876ea2484fd4636c9e8e5b21b8100ed7760eab75af2eb6834d0114554c8"
+      },
+      "scripts/raised_turn_argmax_control.py": {
+        "bytes": 5712,
+        "git_blob": "5d363b8092cd88d35866690431896512cc628907",
+        "normalized_lf_sha256": "02de6e840ba16eaef83a9a541b39ab62bb6cebc4a5e3dc79028f79f62d40e74d",
+        "raw_sha256": "1376076aafe2812cc3b3262707501d3b754607256531b157fb7ff6a787823f94"
+      },
+      "scripts/replay_river_accuracy_extension.py": {
+        "bytes": 5185,
+        "git_blob": "724ba206f05e68ddfd9db4414c421c0b499c3258",
+        "normalized_lf_sha256": "305c2d93bbccc020a75b479a9ec449521a96ca79f07c835f0e92ee3898388cb3",
+        "raw_sha256": "5e95100c7a28c1c93e0e3f5296136b57aab023c40e763f23e47d5c4ac3a851d5"
+      },
+      "scripts/river_analytical.py": {
+        "bytes": 5383,
+        "git_blob": "1d25ab62390685d1afa08390fe6aa5a8b3d99f83",
+        "normalized_lf_sha256": "bb4fa8fee9def0b84e20433069d311f603415482fdb5f89bb90f1894e05770f6",
+        "raw_sha256": "4015fcd80934fbe189d72c99a5718561313a4ea546477d93d7fa70f46dd398fd"
+      },
+      "scripts/river_blocker_equilibrium.py": {
+        "bytes": 15661,
+        "git_blob": "400a52d4654b04e223415f28357a1c2e56cee791",
+        "normalized_lf_sha256": "2767a440a1439adf7cf6b56afa9e8ffde5467deed2ea8039f3e1eb8b304c6c92",
+        "raw_sha256": "54d89833b4ffc82bb10d19916de8f04108d7f79b46d0a26762c6099b5078cffc"
+      },
+      "scripts/river_blocker_fixture.py": {
+        "bytes": 495,
+        "git_blob": "030cdbb82dbefbcf8553bbafdb41b66cb539d7a1",
+        "normalized_lf_sha256": "fc1606f60d2bce4ade472a20ee37bbb0f928965b9a60809e46cbf3ec936de25a",
+        "raw_sha256": "bb15c485ebc3b942d6b3e819efdae35dd58c5a95797e31e96ad2337e9cae2142"
+      },
+      "scripts/river_blocker_profiles.py": {
+        "bytes": 13518,
+        "git_blob": "b8d7c8dc191e196a19ed244924fc72e232168fc4",
+        "normalized_lf_sha256": "1d6d1e462df3c1ed162ab1042e9dc9d7b928a94eb8a5f08819223fb097488e71",
+        "raw_sha256": "e8b2e85169a25a7f05fb4627e44df98da3be04735434e72852405db09d549eb0"
+      },
+      "scripts/river_heldout_preflight.py": {
+        "bytes": 21465,
+        "git_blob": "6a083601b9d6d04864ed25dd1a5960cf1a35993c",
+        "normalized_lf_sha256": "35216d3ca1ae60bdb8232783ed33917ef2a7bbb42ec8ae637981925328385a74",
+        "raw_sha256": "1e01c1285ee98674e314216d78a0a7deab6391f399e4c4a46db2ba5638228a28"
+      },
+      "scripts/river_sequence_form.py": {
+        "bytes": 36823,
+        "git_blob": "203bb3996d69127b401d914f46fbe62b2047c35b",
+        "normalized_lf_sha256": "570c05c67a02b6266ce539ed37ea98e1d3a483c410bdceb1870f187332b2af22",
+        "raw_sha256": "db3c17aa129171d5be9ee4fc13a950dee43d125195b1b62cf6a2c8a29886975c"
+      },
+      "scripts/river_tail_realization.py": {
+        "bytes": 16776,
+        "git_blob": "cc8e429c9cf7259855168716e8ea732fb81d0da9",
+        "normalized_lf_sha256": "a52558fc741d32d3ef519e6e7f9cf458832a9196a34ddc5a0140a7bd1ec698ca",
+        "raw_sha256": "34a21bf2d1fd9411f34d07062d3c437d8025013dc00027b64239755b44255273"
+      },
+      "scripts/turn_blocker_profiles.py": {
+        "bytes": 21575,
+        "git_blob": "4314c759fe8aa8c274549e3f60118d22160fab2e",
+        "normalized_lf_sha256": "42798c5153841991b8c8c775f863dab97acbec96b2df6c0afba9e6ce37a7907c",
+        "raw_sha256": "506e50efb11a8fed9dc3628619782dc4047de720eb0c34f1499e4a5386178b95"
+      },
+      "scripts/turn_blocker_sequence_equilibrium.py": {
+        "bytes": 39540,
+        "git_blob": "c41094844c8b116d8dc90613daf5452567411aac",
+        "normalized_lf_sha256": "635cd60d7744a7e974d23bd9bb502f1d3fb1b8c88ac4eef3045a2eba73d25c69",
+        "raw_sha256": "11111a230bf38df17f0570f2a1eac068b6d211e717f2f658a75763b2689895a0"
+      },
+      "scripts/turn_blocker_sequence_fixture.py": {
+        "bytes": 473,
+        "git_blob": "9ab3a6a35c0d7971a13d405db6634b2c47d643b0",
+        "normalized_lf_sha256": "7ad2acc8a8eebeb8f3913cbf798ddad928441bd6e860e5836a2046064e18b0c6",
+        "raw_sha256": "15119a80f32b3556e4b615b051930e507d1aa6665b7ef9256ace3881f207b56e"
+      },
+      "scripts/turn_rational_certificate.py": {
+        "bytes": 18816,
+        "git_blob": "cc90fd825fcb42a7e2cfc67152782c4bfb69dac4",
+        "normalized_lf_sha256": "0c94bee344871a47d34a1291f65f85ac3e80a1a9389d7785e4baf6695b3967fb",
+        "raw_sha256": "bc77a0420a3ed22ac30bf901db7d93eb5f8f78161a6c8b0a47ac059691cdbf39"
+      },
+      "scripts/turn_river_validation.py": {
+        "bytes": 33366,
+        "git_blob": "4eb434355f4de775378b293d32860384c3c20ed9",
+        "normalized_lf_sha256": "779b8f1d47566e071d0ee24b82c99e79de46a0edcddbd43ecd08f4ee6e84c3c1",
+        "raw_sha256": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1"
+      },
+      "scripts/turn_sequence_compact_lp.py": {
+        "bytes": 13072,
+        "git_blob": "c939f9eee9fdeed4a0f0eff8094f20261c7907dd",
+        "normalized_lf_sha256": "d8341648a533b5258e1c8fa978bcd6f6897cab67081dfb2a22ad70c91017db60",
+        "raw_sha256": "1c8593378f6883e90cc860a356dba74aa748c43a1bbe8aad3aece14dfa68ba18"
+      },
+      "scripts/turn_sequence_equilibrium.py": {
+        "bytes": 36843,
+        "git_blob": "14a88f13d750c68b6e78f36c12eb1ac1f6ea233f",
+        "normalized_lf_sha256": "59ccb523a6c162f95ec04cc36b3db1adfbdb7ef2b3139a179c98c6122296a354",
+        "raw_sha256": "26170c1a6e2965450f64adedfb67aa162cbbf18025062698f590c4d4893853f9"
+      },
+      "scripts/turn_sequence_fixture.py": {
+        "bytes": 431,
+        "git_blob": "7ebc90d8ba9de8d0d2f5020898c6273e806ad7eb",
+        "normalized_lf_sha256": "45d20f0435c91284cb8e1542d96ecdd7c4690f140b65c5d4ca585e65be2426ed",
+        "raw_sha256": "7b41b68cb94c41e4fbfaebc858b499493d259a75c781afd29ae1f7e084112371"
+      },
+      "scripts/turn_suit_reference.py": {
+        "bytes": 9626,
+        "git_blob": "40be5a39bed6bdf8a97ff76b8754b1f44fcb5c1a",
+        "normalized_lf_sha256": "e4ef08ddf96e77e52de059fd9bcb9bded1272d18452edca7f55f4015faa1bef0",
+        "raw_sha256": "63f716a1e469eb9d4559da4c9b0b3e4b54ef0dfc551626f4eb9e4a37a374d76e"
+      },
+      "scripts/turn_suit_transport.py": {
+        "bytes": 12651,
+        "git_blob": "5d59f8a92c07730b7360aa5fcdff51b991f6c095",
+        "normalized_lf_sha256": "7776d2a868c90492e114e960f0951c6baf471f1051d46ba2ddb6a3876c27fb9c",
+        "raw_sha256": "78ae74d0dc1ae553fac1d8e455b6878eee566acca8ee6b0df2c92c19e4dab787"
+      },
+      "scripts/turn_suit_validation.py": {
+        "bytes": 37368,
+        "git_blob": "5430840f4a2f92705235365c2f15dd70932b2084",
+        "normalized_lf_sha256": "883a46e3c5efc76611904aadfc8b34e25e35c1bd9a847399370c37a1e571d153",
+        "raw_sha256": "3dc28e9445657d2b06f30a01ce125aee5035df11a8834d8af87190958b7d4019"
+      },
+      "scripts/turn_tail_capture.py": {
+        "bytes": 8740,
+        "git_blob": "8189dcd35e12f1c08d86dbe17b4e154b0fea6130",
+        "normalized_lf_sha256": "7539aadc1470c0f10b3083c92dad4a7ba1ea58cec602479ec735f764994f0460",
+        "raw_sha256": "2c5953b03343d5ea13715d28a975d3b22ac134259dd43ed7fec6ee2d6260d860"
+      },
+      "scripts/turn_terminal_memoization.py": {
+        "bytes": 13133,
+        "git_blob": "0ef5f089b0e69a45064e4e858259a37233ad753a",
+        "normalized_lf_sha256": "c287ed43265db12dd50dde0e499ffb95fd3ba3c62b9974e8e74833eb61850d84",
+        "raw_sha256": "b452fc1588c621973ec7af2725ef65c11fdfa114f61c7a191c0e5d3ce308683b"
+      },
+      "scripts/turn_three_hand_classes.py": {
+        "bytes": 31709,
+        "git_blob": "cd62edf118e5fb19374b1f19f9ac6483a9c08c30",
+        "normalized_lf_sha256": "cc742428373dbcb9a931ee4463547641307864d67ae38c8cf37303008ad5ef1f",
+        "raw_sha256": "bdf6b6a25c6c4e1b621e8f0080f3b286424b0a3c18733d4948198a8be6d19bdd"
+      },
+      "scripts/turn_three_hand_exact_oracle.py": {
+        "bytes": 18564,
+        "git_blob": "4cc109b407136a12f7fca9e4c986fd8105daf978",
+        "normalized_lf_sha256": "788e3a1d490f442db786d1f4749acf8f9a9190d60c8ef60795d1878885973f27",
+        "raw_sha256": "febdccac987327941965d32a3a958f977ccdf7a642c57eb36331953e8992ce31"
+      },
+      "scripts/turn_three_hand_reference.py": {
+        "bytes": 26070,
+        "git_blob": "e8e644976d230ddd480e905dda88b80c9e095028",
+        "normalized_lf_sha256": "ab030981ec6a5b1f66d4518f21912ee3b1ff0b173105f00c3694ef8ecf428d7a",
+        "raw_sha256": "3285f1c1744febc45d299a475367cd17a5c2c4d30151a9eea1009efb374013e3"
+      },
+      "scripts/turn_weighted_profiles.py": {
+        "bytes": 20787,
+        "git_blob": "207775a0ef074beaa9410e8fbb9626058ada231f",
+        "normalized_lf_sha256": "7716c5032cce3f499abdb8b30bdc8457f9c0070b0dd7f010c2c495e77c3e650e",
+        "raw_sha256": "546eb2e9105efd7a2ee7cabf3bf526b5a648488f4f32b4cd21f18da021a1fcdc"
+      },
+      "scripts/turn_weighted_sequence_equilibrium.py": {
+        "bytes": 38108,
+        "git_blob": "de53c1088779a6bd0834ac7f69bbf36e13072505",
+        "normalized_lf_sha256": "3e369b5f4832acee657606e1dca080bbf1e8a047f178c4fb78de6e6cd64b81e4",
+        "raw_sha256": "89ac4b961d8f8fe15b114cdb8433a8ec12e2b1176824310a4a28a222614b0c37"
+      },
+      "scripts/turn_weighted_sequence_fixture.py": {
+        "bytes": 448,
+        "git_blob": "91c0778745a0b4947c4ebc551aec36266a863d07",
+        "normalized_lf_sha256": "7076d358a75895bba5cb006e0fc0891c711b825a71321d22018cb7d99e73e2f8",
+        "raw_sha256": "bc2205298234f10dc70996d293ffaccf5377fa832cb9e2346bcab9f2e782600b"
+      },
+      "scripts/validate_cfr_quality.py": {
+        "bytes": 8071,
+        "git_blob": "2b903c4e96f122967f7483cf2bb86ca7adf8d278",
+        "normalized_lf_sha256": "43b84575cdafd0b2491b0cb9f176c3cf42198f2d21cc7618a7e8f09ca2dceb39",
+        "raw_sha256": "ca58bb1dc08b633ee4c062a057e689e3c53b6d5ded2054322b794842af41513e"
+      },
+      "scripts/validate_docs.py": {
+        "bytes": 2569,
+        "git_blob": "5dccfc5dfb7c10b2e73ee446a6458990df4093e8",
+        "normalized_lf_sha256": "b499919b8460d01348b188dff8d52b6c693426854e4a73b2f9bb39cc0132cd3f",
+        "raw_sha256": "3e7a2c58d70adfd0c7141dbbe0ada3f0efc3df3b54a94442e68558a3c033f029"
+      },
+      "scripts/validate_evaluator.py": {
+        "bytes": 502,
+        "git_blob": "5a0f23b107fae002052c9ff064788104f616bde3",
+        "normalized_lf_sha256": "58dd1b9a1ca2d399c0fbb3e1e0d3dbbf4e4338aa1112fe7e08582f07bb3de94b",
+        "raw_sha256": "97bee2cd84678f98a007f4eeb40601265b260fc693898964abc01808895cf78f"
+      },
+      "scripts/validate_native_preflop_evaluator.py": {
+        "bytes": 8174,
+        "git_blob": "1019d73764e502e94dedc54504776f233bb57d10",
+        "normalized_lf_sha256": "355a6bbc437f537c2a8a5c128a9768755c492052b75bef7f13aae87bd0424ff3",
+        "raw_sha256": "504f61bba60fb8dc065bdbb67cf1eb1bc0fcb917602e7c013d2e53b12370d293"
+      },
+      "scripts/validate_preflop_five_reference.py": {
+        "bytes": 15434,
+        "git_blob": "f51ddfde98ea74b528a2c31a0d995ce3403d2bed",
+        "normalized_lf_sha256": "2bac8ac0d49df54187e8b8293cb0aba0e7c410921be38f5dd1369e586ff7bfc3",
+        "raw_sha256": "69be58444374a855945d6bc08d42cf0d27061eb5be61f6d41f8a487f101b6582"
+      },
+      "scripts/validate_river_long_parity.py": {
+        "bytes": 6664,
+        "git_blob": "6968909b2c97ce1642c8345df6ad4df065b8acf6",
+        "normalized_lf_sha256": "1a3e3a3856a4e1b773653afc9ac62088f1e52693c6116056a9939c3dd35ce046",
+        "raw_sha256": "155afcf5e95c68f86aa8ef402a31fbd7caa35eb29b38c71eab80ae070de3ec54"
+      },
+      "scripts/validate_solver.py": {
+        "bytes": 2699,
+        "git_blob": "7582c17ce8bfa558b63395bbb62553ea52bdeac0",
+        "normalized_lf_sha256": "161ef45719b84fdea4846619f9c223313a13fcf02f2f66e6b5137b4748978b7a",
+        "raw_sha256": "1a1b11b9a2f2891484a71cf96f03854a3e5897975351bbe508ce01f225647f9c"
+      },
+      "scripts/validate_turn_conditioning_parity.py": {
+        "bytes": 8801,
+        "git_blob": "889dfd2aa326dee535a882939480a0c4b4ab6b9a",
+        "normalized_lf_sha256": "33c71e2e901c7d54b0896884cd9a54354372de328f865a4df9d6bdaa18c62ac6",
+        "raw_sha256": "e3b34035063f8ea2d75538199f46574dd6f8ded5bf4338279e260f55dffa6a32"
+      },
+      "scripts/validate_turn_reach_parity.py": {
+        "bytes": 9159,
+        "git_blob": "dbf88c345455204a7293919c000278f08379447d",
+        "normalized_lf_sha256": "985b1b2d37130a8b7547ab7a6368ad02769d29a5f8febb819fe5daea80bd33bb",
+        "raw_sha256": "76cda198b248ee8c0df36d2c303d828c1447c2e2f8c9506fbc9c9fdaaa83f4be"
+      },
+      "scripts/validate_turn_river_gain_parity.py": {
+        "bytes": 4894,
+        "git_blob": "c51607c6651d632f98fb5c80606b3af83ac2abe4",
+        "normalized_lf_sha256": "e46376a725783eee961412d955364cb657d445fe472841efc586b6592959fcab",
+        "raw_sha256": "9c9bad4d1811966e9385683c40a4ba111fbdcb3bcf217f40b6f998bafbbf32be"
+      },
+      "scripts/verify_flop_alternating_publication.py": {
+        "bytes": 13058,
+        "git_blob": "735a6913dcd9972072a033c9efe77fe7c6c09dbb",
+        "normalized_lf_sha256": "d0edf344dab4f8184e62beea6a478fda218c93b43aedf9c8b790bd26e672c85e",
+        "raw_sha256": "fcc89211c03fed1107767302811c796f9916d5c077c611118cb1f301919697ea"
+      },
+      "scripts/verify_flop_cfrplus_publication.py": {
+        "bytes": 2517,
+        "git_blob": "a7c0e74e112524c45d154f115a48c8af3c5e7ff9",
+        "normalized_lf_sha256": "465b84402f9186eddd044f552ce600a19ed15afb12bfba6d56fa2d2b01dfabfd",
+        "raw_sha256": "cec1b8a22b2784fbadce653e44e7132fc2d5a1fd77336e28bcb20ef5d123a379"
+      },
+      "scripts/verify_flop_class_cfrplus.py": {
+        "bytes": 5714,
+        "git_blob": "e6b8c7ccd7b452fd6f0b443a4bf3604c913c7046",
+        "normalized_lf_sha256": "6c3e91042259b36c2c73c01d52296515d548c2688856e312523299e0482d5a47",
+        "raw_sha256": "2138f9a2d5ac43c026afb3978f99936fca28119d11e3bcd2841257dcc552b7fb"
+      },
+      "scripts/verify_flop_class_cfrplus_publication.py": {
+        "bytes": 4797,
+        "git_blob": "46a1f1c5848660ff35a6e0daf72f80c64b45e821",
+        "normalized_lf_sha256": "69dce48766119f474d5672a2dc6b577fe540e1f782b7a3274ff9373729019670",
+        "raw_sha256": "d4b9d48f9dd23792d80999af251de61bfb67ff1d176ef3c943464cb77fab4e77"
+      },
+      "scripts/verify_flop_class_compact_cfrplus.py": {
+        "bytes": 5519,
+        "git_blob": "da3cda2b6ba3810dfc3c40f258c5f03f3a6c6fce",
+        "normalized_lf_sha256": "2e85d71eddc9e84c3a398a4f7eaad28d820e452e53ec5169055c31b951381c81",
+        "raw_sha256": "9a56e614e14e14a71b1f344b5cdce787a96bdbbd35f9475c1ca7e178601f6129"
+      },
+      "scripts/verify_flop_class_compact_cfrplus_publication.py": {
+        "bytes": 5256,
+        "git_blob": "c22e768044d0b00d8743ab02d13abdd93d14b9f8",
+        "normalized_lf_sha256": "02474f70dbe292ba8ab250dea230f9aaa9f1f2900171b77e6eb5a047e72fff1c",
+        "raw_sha256": "46f3efcd334863335bff2e3a4e30dbf84b5e88d3606b4d582e0a399b316ac146"
+      },
+      "scripts/verify_flop_class_cost_publication.py": {
+        "bytes": 3382,
+        "git_blob": "f5c915a7ea07f27b5b74bc36f4b0c2a0164728bd",
+        "normalized_lf_sha256": "9145a7d3973828f8978fb4117b516364dbc45a352aae5dfdd585457b4ed2967d",
+        "raw_sha256": "4e8ad146ef497031b70a8f0345922e5baf355c49ab46ee7fdb6bea5b910e9ff4"
+      },
+      "scripts/verify_flop_class_owned_fingerprint_publication.py": {
+        "bytes": 13257,
+        "git_blob": "57fb2f34e94e7ab773cca7fe3e14c6e7687e878b",
+        "normalized_lf_sha256": "01277b57f286e5eab53a2be3c0996ff8a0c3a58982be806a57535c227edea4eb",
+        "raw_sha256": "b2384949d70156d42f0266483f985da19913f1f987a86beeb93242a7433e1e9d"
+      },
+      "scripts/verify_flop_class_phase_profile_publication.py": {
+        "bytes": 10381,
+        "git_blob": "58c57b0036ccf4c2e270dac0f3eb0e5eff758e9c",
+        "normalized_lf_sha256": "410e414c0fcf1f59c4ca31cabb07afb7954795452c4be8c87fd1ea9ee6fe5597",
+        "raw_sha256": "6a141aa37220fed8d6ffcaa78d792346271fdb7b3d60a3cf70f292f3739b3d9d"
+      },
+      "scripts/verify_flop_class_reweight_baseline_diagnostic_publication.py": {
+        "bytes": 18237,
+        "git_blob": "53f9e70a96ed7b92512dbe74601ae33ed9bb1b56",
+        "normalized_lf_sha256": "99300c02a8c48981fb8feefb6cf47b0ad870025af796c23bc0a987c29465ce54",
+        "raw_sha256": "716409fcfac2b4b6d6ebc5055e81c5e8e58b3f4af0672b1f2f7cd1ce91d5be10"
+      },
+      "scripts/verify_flop_class_reweight_cfrplus.py": {
+        "bytes": 15467,
+        "git_blob": "233ac17c7c0921210ebb63b66345fb7e8e212c7f",
+        "normalized_lf_sha256": "b262ec6aefece43edaeb2e820c10fccdafc70aef2a2c6da0b0e306319f1f2c61",
+        "raw_sha256": "5faf8fbc2d14849b6f5327cd3683b523f88a5ecb38d8961c570f4e15b26be7fc"
+      },
+      "scripts/verify_flop_class_reweight_cfrplus_publication.py": {
+        "bytes": 21880,
+        "git_blob": "eefa9b064926bddcc975560071e6f2b72f7089d9",
+        "normalized_lf_sha256": "c1733d1000e9c4a5bc6f6b2bcc03b39851a3b2295e46f8db5d272777d3a9824a",
+        "raw_sha256": "ef047bb9296458e546ca6a00922af2904c8c8bac1726019c00673324ab1d6004"
+      },
+      "scripts/verify_flop_class_reweight_publication.py": {
+        "bytes": 24717,
+        "git_blob": "b8bf2b2b48aef68f43cec93ad9cce489580ad7ec",
+        "normalized_lf_sha256": "152146347892d3ec134c9fca6c0c8031d40b0a5e2a7ada6e95df3120fb637412",
+        "raw_sha256": "eeaffa6cba411aa4abd69ec682c54ba77040e3e94e4d6842b940e63e04c350d9"
+      },
+      "scripts/verify_flop_delayed_publication.py": {
+        "bytes": 2592,
+        "git_blob": "0d0487952d5a81592c371eb6541f10cd6eec75e6",
+        "normalized_lf_sha256": "5e76a8bda530bc4ed519bce6534f5b6ad36646ed45e0b406bb63a61b08194685",
+        "raw_sha256": "3085284e736ad5cf6f964730216c1f13e3d7c0c4072e7dac94abe359080183be"
+      },
+      "scripts/verify_flop_public_classes_publication.py": {
+        "bytes": 4578,
+        "git_blob": "ffe119dfd72007d29f57ddf5a606720444f18a81",
+        "normalized_lf_sha256": "7f2a69f9636dbdebf17ed5a22517fb9e26dbbc925fc0435362328879164b6b1a",
+        "raw_sha256": "8bb30bcd0bde75b3e74b30b965aac16ee39a1fc385fb4d7ffff04279017c1b31"
+      },
+      "scripts/verify_flop_second_board_cfrplus_failure_publication.py": {
+        "bytes": 25163,
+        "git_blob": "c9909f7a8bdb55bbc86abc88af670c0bfa021694",
+        "normalized_lf_sha256": "a2524da849518de7d01bb67321d63235fe9223f55068e2cb41f7cf59946c2554",
+        "raw_sha256": "6342f266a720bc833b211caf820c952b4edfe4f1434101ad44298d5547fbf421"
+      },
+      "scripts/verify_flop_second_board_cfrplus_replay_v2_publication.py": {
+        "bytes": 28766,
+        "git_blob": "4a8218129ef146447fd858337a8ac2f0936b9966",
+        "normalized_lf_sha256": "93a9943c3d2b8533f09365156b45b87cbda4f181ad1855bed6e441beeb7bdb11",
+        "raw_sha256": "609ec38a3c4c2ca1e2625a3894c02841125a2822f2e354dff5925ed6eb853b35"
+      },
+      "scripts/verify_flop_second_board_equivalence_publication.py": {
+        "bytes": 31012,
+        "git_blob": "b11686d4f1d2c4dcdfd14c52a381c094327b9818",
+        "normalized_lf_sha256": "ea7fdc67b07830299625522f6779ab8f3cf89cc8e3a6a3d784502e17ee30ca2b",
+        "raw_sha256": "af2d08c30d6b49a1915e1d1fb336f678c0c7a9abbfb2177e9a770bf284bdec9f"
+      },
+      "scripts/verify_flop_second_board_reference_publication.py": {
+        "bytes": 12699,
+        "git_blob": "b10812c1e57834d3cad9f6fa5313b0bd078b92ee",
+        "normalized_lf_sha256": "6a983e0877dafd2eae265131467659c4c7ddc496441b0420cd84f01ce422cf85",
+        "raw_sha256": "f8fffa40d4e18bea6df3d2b48c59c5640b82ed83389f8e8eb115a22edb199af2"
+      },
+      "scripts/verify_four_street_integration_publication.py": {
+        "bytes": 34372,
+        "git_blob": "13a035c8d36f3859533792b9ac13dedd460d5efa",
+        "normalized_lf_sha256": "82bc12da543a848802c6f0b8be3b94ffc7dbba456ca609cf1dac198209461fa6",
+        "raw_sha256": "82bc12da543a848802c6f0b8be3b94ffc7dbba456ca609cf1dac198209461fa6"
+      },
+      "scripts/verify_preflop_ak_kk_basis_publication.py": {
+        "bytes": 38865,
+        "git_blob": "3c0dd12bb558cedc4cc1ee822c6891c4d4d36c26",
+        "normalized_lf_sha256": "f683676dfa51a3350e9baaab8f72109f184beff2df570da84972d9f1e00476f2",
+        "raw_sha256": "d24770e2f6a5ffee4fff75a92b0df4b3e32e38888f296b5ae056b600bed6178f"
+      },
+      "scripts/verify_preflop_jj_kk_basis_publication.py": {
+        "bytes": 32982,
+        "git_blob": "cc304355caafe8c9787660e2544a76d7d24b92a9",
+        "normalized_lf_sha256": "689d5c55e090973d684c0d683e51060eefcab6fae63a462eb957403dea2547ef",
+        "raw_sha256": "20f95867b098d4c2eb2ce8fc5f1a1952d598c314d3cb3363a9249e89b5529a6a"
+      },
+      "scripts/verify_preflop_mixed_anchor.py": {
+        "bytes": 3126,
+        "git_blob": "e4674b58132e490bbfdb3388889e68b659e5c076",
+        "normalized_lf_sha256": "1e660adc7895c1c59990278a2ed2a0d832bbde274a9e58e86bca517eb9bcd9ee",
+        "raw_sha256": "511d53e0be565edc86ead57413db507f19a8efe620fddc423fc18451a365d887"
+      },
+      "scripts/verify_preflop_sequence.py": {
+        "bytes": 48409,
+        "git_blob": "5aaca7b0f5f447a60da1cd1ec91f5fde5336c2c2",
+        "normalized_lf_sha256": "1c4c23ed2130a2ec5c52f48f91635af181f19c354b443a025f865a5a6dfddace",
+        "raw_sha256": "5c2c5487b7def260798e81a05ca2b2ce0bcc478694ff3f25a66afc8d92b4b815"
+      },
+      "scripts/verify_preflop_three_rank_sequence_publication.py": {
+        "bytes": 11523,
+        "git_blob": "20f761756923bd3b18f9b16e2c1237d70a088ec8",
+        "normalized_lf_sha256": "fb98723fa5131d97f60943f4d1d183c9994bb8d2d4143f91e52df1ce9a17e851",
+        "raw_sha256": "76e1f2f7dde896c52d86789db7d53f0102ddd4831795749e95d2c97a563f5a24"
+      },
+      "scripts/verify_preflop_three_rank_transport_publication.py": {
+        "bytes": 14448,
+        "git_blob": "11c9b5da97488ccbb2b9880a16207a9316054d1e",
+        "normalized_lf_sha256": "0f0b5a37bf3058352f65df35402ee742fa2ef50760dce348bead5be930fa124b",
+        "raw_sha256": "f710d4a99ad7e568183ad8bfbb13f04c2634958defb10c75c449bb87ba37d994"
+      },
+      "scripts/verify_river_blocker_equilibrium.py": {
+        "bytes": 37678,
+        "git_blob": "e7277e3b3c466dabdce849f5c2cf02792c350505",
+        "normalized_lf_sha256": "38b2f86819b8955082ac8658ff06db4ce288e79a9e067b7257481a8878a4ab20",
+        "raw_sha256": "881df25a15ae13d0ac1f9d41c789cd7880b10e7c429749bc493de0f733c06396"
+      },
+      "scripts/verify_river_sequence.py": {
+        "bytes": 37386,
+        "git_blob": "34a553fb9c62cc02d5c641d5606e872a04e6b574",
+        "normalized_lf_sha256": "19efd8ab1fedf8b610802d8c115a7bb21a6902beb63be1cf8c20d7e0bb39683f",
+        "raw_sha256": "94f409118ac63433774ec1fbb7e0ba9ebeaf9659254d2738d7ac2b1ef7791121"
+      },
+      "scripts/verify_turn_blocker_profiles_independent.py": {
+        "bytes": 9514,
+        "git_blob": "3248a84f8362a1d112835e526c51588f2a8d3080",
+        "normalized_lf_sha256": "685bd44e1c5d6919a77ff14dfa3f0433d4169c53c492f7486aeee34ee20674c7",
+        "raw_sha256": "da7fc70d9e217bfaa9a54d66696cf89061406faf5921852cae94543ca7c952d9"
+      },
+      "scripts/verify_turn_blocker_sequence.py": {
+        "bytes": 50990,
+        "git_blob": "8726c4478066c7770ce8f175c5329124ed5a8bdb",
+        "normalized_lf_sha256": "2cb229d6a4aba97dca363196ee387d57272aebcb1be2c3a8aa44f5b700256428",
+        "raw_sha256": "4dc3989bf6d83a965626a5450eee0d9a8911ff0a788097950d39ad450f53be96"
+      },
+      "scripts/verify_turn_class_tail_experiment.py": {
+        "bytes": 21575,
+        "git_blob": "15b148b26d248b8a86704dc4f9721d9e4122daae",
+        "normalized_lf_sha256": "c1e16bf608c6c84b10f0dffb27159d75aab852aae4e548ef82c01ec95b1adb72",
+        "raw_sha256": "88144506f925f132ccb23be550d1f5caa32cbaf52a405a62da742433d36f7c9e"
+      },
+      "scripts/verify_turn_sequence.py": {
+        "bytes": 42151,
+        "git_blob": "bbfeb686db079c1d3c43bf9ed5868e3eadf1bf4d",
+        "normalized_lf_sha256": "4d9aef7ec85ff6d5491ec172c0e73eb96d8af56db3881efb88491e466364b79d",
+        "raw_sha256": "fe681c218b24930387cbfa606d0b6fdff8a5e6f70078ad2573d6b2cbfb2fb6c5"
+      },
+      "scripts/verify_turn_suit_equivariance.py": {
+        "bytes": 22719,
+        "git_blob": "09aa4a11dc73c34e29af29206cedf45a4899feac",
+        "normalized_lf_sha256": "75e4dd31ab18817a6032e60cfdbec53916ab553d60f472cac179df769ed5f13e",
+        "raw_sha256": "0c3dbb428447f826b7ee96dbce9ef9b49125139ac83583a83e8c2de4c01e0a86"
+      },
+      "scripts/verify_turn_weighted_profiles_independent.py": {
+        "bytes": 8071,
+        "git_blob": "ef5803ba07121a34231da44bc19bd3f7eaca17b2",
+        "normalized_lf_sha256": "f0f47dc54c2ebdb7c18b68be8156f6eb74fe76d19ccf6978898bd329a7abb2fe",
+        "raw_sha256": "e0e63215b2ff6fa3024371976fbcd5ba7425af3b57545878299e34bded462d07"
+      },
+      "scripts/verify_turn_weighted_sequence.py": {
+        "bytes": 48052,
+        "git_blob": "8a1eed9395839806e49851171d18489219f8e4bc",
+        "normalized_lf_sha256": "ee4b2785e151e8768b42a017341b58cfe7e4554a7c0e2ed51c4b6420c34983ed",
+        "raw_sha256": "6b12864835509ff2c879ea126e4c8bfe4fdd88b8d2a5beb117daead9f36823c6"
+      },
+      "scripts/verify_weighted_flop_publication.py": {
+        "bytes": 2269,
+        "git_blob": "8b5e439764d6304e8b1459e1c71e1ee56505f288",
+        "normalized_lf_sha256": "34ac474d68a24389e04da438d06847e447ddf638e0d702c9ebb4bf766e1850aa",
+        "raw_sha256": "cdf4cddd218419f05e79fad7fbd2bcca1f3709dbb3d756ea54e3f8bd4e0d8761"
+      }
+    },
+    "head": "bf1c21b17e84162dea3a3a68104e785b19269b40",
+    "inventory_policy": "all committed pokerlab and scripts Python, plus pinned U5 fixture/protocol and reused river protocol",
+    "status": "clean"
+  }
+}

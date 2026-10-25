@@ -464,3 +464,18 @@ separate from all unchanged mathematical and production admission caps. This
 accepts implementation controls, not a frozen production quality result. The
 single T1000 call still requires clean committed source, fresh official admissions
 and publication verification. No additional owner review gate is introduced.
+
+D043 (2026-10-25): the sole fixed U5 production attempt completed and passed its
+exact normalized whole-game NashConv target of 1/1000 BB. Frozen source is
+bf1c21b17e84162dea3a3a68104e785b19269b40, with all 24 pre-run CI checks green.
+Both official admissions preceded the claim and the one production call. The
+complete 1,200-row policy has exact NashConv approximately 0.000399738815144135 BB;
+all seven subsequent source checks match the original 314-file snapshot. Fresh
+saved-only replay authenticated the pinned report and entire numeric/exact ledger
+with zero solver/trainer calls. Accept this named finite conditioned game to its
+declared tolerance; no unrestricted/full-deck quality or performance claim follows.
+Publish the byte-identical twelve-artifact corpus and verification receipt, keep
+the frozen protocol/fixture unchanged as historical execution inputs, and preserve
+all earlier failures and misses. See the [complete result](../four-street-integration-result.md).
+The next integration expansion may be scoped only with a fresh joint law and
+full requested forecasts under unchanged caps, before any new training.

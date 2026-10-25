@@ -1,0 +1,128 @@
+{
+  "schema": "four-street-integration-publication-v1",
+  "benchmark_id": "four-street-integration-v1",
+  "attempt_id": "04f675c5-8222-4a11-9139-5c2dfc1e8bc9",
+  "source_commit": "bf1c21b17e84162dea3a3a68104e785b19269b40",
+  "execution_mode": "frozen-production",
+  "outcome": "completed-met",
+  "scope": "finite heads-up selected-outcome game; two weighted physical hands per seat; six boards across two flops; live decisions on all four streets",
+  "report_sha256": "c2f905ab698b086d96abbaae46b120c6202e95e65990a745a6d1cc703ced9a8e",
+  "gate": {
+    "criterion": "exact-normalized-complete-policy-whole-game-nash-conv",
+    "target_big_blinds": "1/1000",
+    "met": true,
+    "nash_conv_fraction": "1015492021675479022455601306992607204298440591481944977372879383259331868871907878915776655353011562997932047884537057899475983885412462556470687666679479530506079549934700868528234243251819129113145272738197915748210606448060505350192685534278989988913816340442422146499639077368208065728557806198725923783771623841256665274536782662796603145000233886960575259610281172485255536245566101263098126596424062115481076834940156041516575052068343846507182481644696390660486598433117957017738006103701351006346695131028825791708314931461859867868087301995570577052877119320289057773182120562593078327215725073460778481953436169703257428286398069629854054081768814894842243405045999791773359291344139735209884264178742897046876106839844607910495868601204070875282367400701473672384151645048742610638806120061616955567095605906032596050698974718344203921654894561984476692520154138566144092772740980334455331/2540388831915959936674648546199644477011070898737431240006804853867464444488460148285611466035623919277983359182916025003919263151685992641515518069350693731419658824089845605123583494118867585388307650725606872322182268427334183743163630199544779340068663450985927800184011776805764105532610167912203033843426640639571094115541806761298693385481891669266437966539187541543154556674701806972341021834524592758123505078669517650870573252797536705401724130721594569967204469943403448185316467223300158727098761529808933829956807319939713227274441456859190227609813373115477814199945694029901183559299889348786212329360415600059709125588042935953830900586644675014372173147047927393582330847769817398874938665290045608447872537735091840707978408137023175107609225289084822813741493805122901423119372583330663404831953141089048370087355391658070022312809934483495143184380658364420213896107630288663740416000",
+    "nash_conv_approx_big_blinds": 0.0003997388151441352,
+    "exploitability_approx_big_blinds": 0.00019986940757206755
+  },
+  "policy": {
+    "rows": 1200,
+    "rows_by_street": {
+      "preflop": 8,
+      "flop": 48,
+      "turn": 270,
+      "river": 874
+    },
+    "action_slots": 2402,
+    "normalized_policy_sha256": "6b07d526140ac739d16bda285b99ac1bd499263e495790b0f109950424e8c403"
+  },
+  "training": {
+    "completed_iterations_returned": null,
+    "fixed_iteration_source_inference": "the pinned fixed-iteration path implies 1000 completed iterations",
+    "iterations_requested": 1000,
+    "modelled_expected_training_passes": 3000,
+    "training_pass_count_status": "returned-by-solver",
+    "training_passes_per_iteration_returned": 3,
+    "training_passes_returned": 3000,
+    "training_schedule_returned": "alternating-player-0-then-player-1; linear-own-reach-average-after-each-sweep"
+  },
+  "production_calls_entered": 1,
+  "work": {
+    "actual": 92534,
+    "forecast": 98298,
+    "cap": 100000
+  },
+  "verification": {
+    "path": "verification.json",
+    "bytes": 64108,
+    "sha256": "3240cf44fd1f88bcf9f98e32f55c44756a59ce908af5c9a7677d1ba85c5bd7fc",
+    "saved_only": true,
+    "verifier_production_calls": 0,
+    "source_files_verified": 314
+  },
+  "artifacts": [
+    {
+      "path": "attempt/attempt.json",
+      "bytes": 1034,
+      "sha256": "c4d1e4e65a02e9b119efc87c8eebed83268f86abe4b7fb7ea83f934c0b67fb48",
+      "git_blob": "d5a34e9f06a7a0bac66456d7973b88703aaf88a3"
+    },
+    {
+      "path": "attempt/claim.json",
+      "bytes": 23361,
+      "sha256": "c75a2b5c99fb2b66df0ccc7a18a581fa690362be47d90bf511bd53f5f0c546bd",
+      "git_blob": "22dcc03b8b176e46af4bc9eb33152bec12878a89"
+    },
+    {
+      "path": "attempt/exact-admission.json",
+      "bytes": 10288,
+      "sha256": "2925722f1bcd2d6ac61849fff7882b902860d0b5d839e11f76850bf6c06110dc",
+      "git_blob": "ca2f09272231af42928c909b783bae6ed776a4c1"
+    },
+    {
+      "path": "attempt/exact-certificate.json",
+      "bytes": 2585121,
+      "sha256": "f59a61850f600192f72ab4ac5003f46527b0cf8e03ba66f7ba5a2c9cb40514e3",
+      "git_blob": "b948083560f2ab4168c690bac8954280a1d46212"
+    },
+    {
+      "path": "attempt/numeric-replay.json",
+      "bytes": 3015,
+      "sha256": "39513804df930fb1805e4402e0c05da000d80c8bee22557ca2ec852937befb9e",
+      "git_blob": "e17355e4c635db5572fed5feddac0df52ab0ec23"
+    },
+    {
+      "path": "attempt/production-admission.json",
+      "bytes": 10255,
+      "sha256": "321204d97cc485dc3e27a1b93f2bc349d83763732b26621a5edb91315ff4e489",
+      "git_blob": "6b8252154096a1d987b0ad8f22b003ade8ea507c"
+    },
+    {
+      "path": "attempt/raw-envelope.json",
+      "bytes": 475233,
+      "sha256": "37b3c61cbca982dd44078da22b9c8e1c3acd3ef5171c01272def8cdf4580596e",
+      "git_blob": "6969d0eaea0454cfb4af439666f444a546eadadf"
+    },
+    {
+      "path": "attempt/raw-receipt.json",
+      "bytes": 304,
+      "sha256": "a1e007eeef6f99565e555f1196794159abeea172eb7fb69331c5fa8385a72d67",
+      "git_blob": "02f4e51f6a75db26105744b5969e2134c6c17b56"
+    },
+    {
+      "path": "attempt/report.json",
+      "bytes": 96734,
+      "sha256": "c2f905ab698b086d96abbaae46b120c6202e95e65990a745a6d1cc703ced9a8e",
+      "git_blob": "6e11cb993378e4901e314c3f26b2a1a6fac49efa"
+    },
+    {
+      "path": "attempt/source-after.json",
+      "bytes": 106990,
+      "sha256": "0b526000d61062a61b51f8fe2cbd34c78fc1b91639c1b75b6637f7604a922a72",
+      "git_blob": "ef6c54cee31bbdb45b9cee5c4a855fa54f6a0b83"
+    },
+    {
+      "path": "attempt/source-before.json",
+      "bytes": 105591,
+      "sha256": "27c9666dec09534d25401037aaacfc9887a06b1634ac67586dfafa80e3544633",
+      "git_blob": "c6cc8f495f61f4691555aed1c3851d6bdc6f025e"
+    },
+    {
+      "path": "attempt/status.json",
+      "bytes": 2092,
+      "sha256": "72d2f753c3d81a818b113ec0c8facc544175544e1847285e4c63fdb91c21a78e",
+      "git_blob": "7deee69460dcf6618987009b53203607dea1f4e8"
+    }
+  ],
+  "total_original_artifact_bytes": 3420018
+}

@@ -13,9 +13,11 @@ as an additive single-call boundary (D037). The independent
 [numeric corpus controls](four-street-integration-protocol.md) are accepted (D038),
 and the [exact prescribed-policy controls](four-street-certificate.md) pass (D040).
 The frozen runner and saved-only verifier are implemented and their seventeen
-lifecycle controls pass normally and under optimized Python (D042). Clean source
-freezing and the production accuracy call remain next; synthetic controls are not
-a trained quality result.
+lifecycle controls pass normally and under optimized Python (D042). The
+[first frozen production game](four-street-integration-result.md) now passes its
+exact normalized whole-game NashConv <= 1/1000 BB target, with complete saved
+independent replay (D043). Later support expansion remains next; the initial audit
+and pre-run protocol below preserve their original dated scope.
 
 October 24, 2026. **Status: audit complete; architecture and implementation tasks
 proposed for owner review. Implementation has not launched.**

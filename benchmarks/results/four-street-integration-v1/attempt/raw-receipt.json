@@ -1,0 +1,8 @@
+{
+  "attempt_id": "04f675c5-8222-4a11-9139-5c2dfc1e8bc9",
+  "bytes": 475233,
+  "path": "raw-envelope.json",
+  "schema": "four-street-raw-receipt-v1",
+  "serialization": "original FourStreetSolveResult.to_json UTF-8 bytes",
+  "sha256": "37b3c61cbca982dd44078da22b9c8e1c3acd3ef5171c01272def8cdf4580596e"
+}

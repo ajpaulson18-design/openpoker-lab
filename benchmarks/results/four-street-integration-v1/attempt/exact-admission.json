@@ -1,0 +1,477 @@
+{
+  "attempt_id": "04f675c5-8222-4a11-9139-5c2dfc1e8bc9",
+  "receipt": {
+    "admitted": true,
+    "attempted_training": false,
+    "forecast": {
+      "action_slots": 2402,
+      "admitted": true,
+      "budget_schedule_version": "four-street-exact-work-v2",
+      "excess_work": 0,
+      "information_rows": 1200,
+      "input_case_canonical_sha256": "371ca3f45080a3ac2b422a0b6c0213a672509808359a411bac5623beebdbda93",
+      "maximum_depth": 32,
+      "maximum_fraction_bits": 65536,
+      "model_sha256": "e3bea2c8d35b97443f4aa9225487758484893e262b77244fd513612dc1cd156a",
+      "preparation_receipts": {
+        "independent_model_build": {
+          "decisions": 628,
+          "information_rows": 1200,
+          "public_states": 1414,
+          "worlds": 22
+        },
+        "model_identity_hash": {
+          "action_slots": 2402,
+          "information_rows": 1200,
+          "tree_nodes": 1414,
+          "worlds": 22
+        },
+        "structural_graph_validation": {
+          "admitted": true,
+          "entry_limit": 8000000,
+          "full_call_upper_bounds": {
+            "copied_world_references": 62216,
+            "information_key_iterations": 27632,
+            "physical_mass_validation_additions": 44,
+            "world_scan_entries": 248864
+          },
+          "owned_graph_validation_walks": 2,
+          "per_walk_upper_bounds": {
+            "copied_world_references": 31108,
+            "information_key_iterations": 13816,
+            "physical_mass_validation_additions": 22,
+            "world_scan_entries": 124432
+          },
+          "scope": "Separately bounded structural scans, reference copies, information indexing and identity validation. Existing named exact node/edge and mass charges remain unchanged. These conservative envelopes can overlap; they are not Python-operation, byte, runtime or RSS totals.",
+          "total_entries_upper_bound": 338756
+        }
+      },
+      "source_identity": "four-street-independent-exact-v2",
+      "tree_decisions": 628,
+      "tree_depth": 14,
+      "tree_nodes": 1414,
+      "work": 98298,
+      "work_by_kind": {
+        "br_node_group_visits": 5413,
+        "br_opponent_action_group_slots": 2402,
+        "br_opponent_action_sum_operations": 2402,
+        "br_opponent_group_copies": 5654,
+        "br_opponent_group_scans": 5654,
+        "br_opponent_reach_multiplications": 5654,
+        "br_own_action_selection_operations": 1202,
+        "br_own_action_slots": 2402,
+        "br_own_hand_group_copies": 44,
+        "br_own_hand_group_scans": 88,
+        "br_own_hand_response_sums": 4,
+        "br_own_hand_setup": 44,
+        "br_reveal_branch_slots": 1210,
+        "br_reveal_branch_sum_operations": 605,
+        "br_reveal_bucket_references": 1364,
+        "br_reveal_group_scans": 1364,
+        "br_terminal_conversions": 5720,
+        "br_terminal_fraction_operations": 11440,
+        "br_terminal_group_scans": 5720,
+        "certificate_output_entries": 3626,
+        "final_metric_fraction_operations": 12,
+        "fused_profile_opponent_additions": 1144,
+        "fused_profile_own_action_additions": 1146,
+        "fused_profile_own_action_multiplications": 1146,
+        "fused_profile_own_row_lookups": 572,
+        "fused_profile_reveal_additions": 293,
+        "fused_profile_root_additions": 2,
+        "fused_result_slots": 2640,
+        "normalization_ledger_action_slots": 2402,
+        "normalization_ledger_row_slots": 1200,
+        "normalized_output_action_slots": 2402,
+        "normalized_output_row_slots": 1200,
+        "physical_mass_normalization_operations": 44,
+        "physical_mass_validation_additions": 22,
+        "physical_world_setup_entries": 22,
+        "policy_action_conversion_entries": 2402,
+        "policy_fraction_operation_slots": 10808,
+        "policy_hash_row_action_slots": 3602,
+        "policy_row_index_entries": 1200,
+        "policy_row_sort_entries": 1200,
+        "tree_preflight_edges": 1413,
+        "tree_preflight_nodes": 1414
+      },
+      "work_limit": 100000,
+      "worlds": 22
+    },
+    "pair_probabilities": [
+      {
+        "bb_hand": "JdJh",
+        "fraction": "3/17",
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "KdKs",
+        "fraction": "9/17",
+        "sb_hand": "AdAs"
+      },
+      {
+        "bb_hand": "JdJh",
+        "fraction": "5/68",
+        "sb_hand": "QdQs"
+      },
+      {
+        "bb_hand": "KdKs",
+        "fraction": "15/68",
+        "sb_hand": "QdQs"
+      }
+    ],
+    "production_support_comparison": {
+      "collapsed_chance_structure_counted_separately": true,
+      "independent_numeric_tree_nodes": 1414,
+      "mass_tolerance": 1e-12,
+      "pairs_compared": 4,
+      "production_public_states": 1462,
+      "sign_counts": {
+        "bb_win": 8,
+        "sb_win": 10,
+        "tie": 4
+      },
+      "support_matches": true,
+      "worlds_compared": 22
+    },
+    "schema": "four-street-exact-admission-v1",
+    "world_sign_counts": {
+      "bb_win": 8,
+      "sb_win": 10,
+      "tie": 4
+    },
+    "world_support": [
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Qd",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": 0,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "AdAs",
+          "JdJh"
+        ],
+        "sign": -1,
+        "weight": "1/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Qd",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 0,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "AdAs",
+          "KdKs"
+        ],
+        "sign": 1,
+        "weight": "3/34"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/68"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/68"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 1,
+        "weight": "1/68"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": 0,
+        "weight": "1/68"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "QdQs",
+          "JdJh"
+        ],
+        "sign": -1,
+        "weight": "1/68"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/68"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "7h",
+          "Kc"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/68"
+      },
+      {
+        "board": [
+          "2c",
+          "3c",
+          "4d",
+          "Kc",
+          "8h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/68"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "9h"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": 0,
+        "weight": "3/68"
+      },
+      {
+        "board": [
+          "5c",
+          "6d",
+          "7s",
+          "8c",
+          "Jc"
+        ],
+        "hands": [
+          "QdQs",
+          "KdKs"
+        ],
+        "sign": -1,
+        "weight": "3/68"
+      }
+    ]
+  },
+  "schema": "four-street-exact-admission-record-v1"
+}
