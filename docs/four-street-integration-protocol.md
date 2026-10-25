@@ -104,6 +104,44 @@ raw-floating-point interval or proof of unrestricted Hold'em equilibrium.
 
 ## Evidence lifecycle
 
+The [single-attempt runner](../scripts/benchmark_four_street_integration.py)
+accepts `--expected-source-commit` and an absolute external
+`--attempt-directory`. Its source closure includes every committed Python file
+under `pokerlab/` and `scripts/`, this protocol, the literal benchmark and the
+reused river protocol. It checks the committed and working inventories, clean
+status and source hashes around both preparations, claim creation, the sole
+solve call and both audits. A fresh directory is exclusive; interrupted attempts
+cannot resume. The original facade serialization is flushed and hashed before
+any policy validation. The facade's inner unrecorded-source fields remain intact;
+the companion claim supplies the actual frozen execution provenance.
+
+The [saved-only verifier](../scripts/verify_four_street_integration_publication.py)
+accepts `--directory` and `--expected-index-sha256`. The external index pin is the
+SHA256 of the original `report.json` bytes. Before importing mathematical code,
+it authenticates that pin, bounded artifact inventory and the frozen Git/current
+LF source closure. It checks the full fixed request, raw bytes, admissions and
+source checks, then recomputes independent physical support, the complete numeric
+receipt and the entire exact certificate, including all off-path rows and the
+normalization ledger. It never calls production preparation, solving or training.
+Raw source size/hash remains a pinned historical receipt; Git blobs independently
+authenticate normalized content and permit a different checkout line ending.
+
+Complete outcomes are `completed-met`, `completed-missed` or
+`completed-unknown`. A saved exact capacity failure must reproduce with the
+authenticated source; replay cannot promote it to a passed gate. General failures
+retain their first error and receipt-backed artifacts, with no quality claim.
+Unreceipted partial bytes remain explicitly unauthenticated observations. Test
+services are marked `injected-test-services`; publication verification requires
+`frozen-production`. Synthetic lifecycle tests do not establish actual training
+or a production quality result.
+
+Artifact I/O limits are fixed before the production attempt: 16 MiB for the raw
+envelope, 32 MiB for each replay/certificate/source/report JSON, 1 MiB for each
+attempt/claim/failure/status JSON, at most 14 files and 256 MiB total. Strict JSON
+also limits nesting to 80 and nodes to 1,000,000. These storage/parser limits do
+not change the independent mathematical shape, 100,000-work, depth-32 or
+65,536-bit limits, or any production admission cap.
+
 Use a fresh external attempt directory and exclusive claim. Admit the complete
 literal request before creating the claim. Retain source/fixture/protocol hashes,
 clean source status before/after, raw envelope/policy, numeric replay, exact audit,

@@ -12,7 +12,10 @@ The first [immutable request/result interface](four-street-solver.md) is impleme
 as an additive single-call boundary (D037). The independent
 [numeric corpus controls](four-street-integration-protocol.md) are accepted (D038),
 and the [exact prescribed-policy controls](four-street-certificate.md) pass (D040).
-Frozen-runner implementation and the production accuracy call remain next.
+The frozen runner and saved-only verifier are implemented and their seventeen
+lifecycle controls pass normally and under optimized Python (D042). Clean source
+freezing and the production accuracy call remain next; synthetic controls are not
+a trained quality result.
 
 October 24, 2026. **Status: audit complete; architecture and implementation tasks
 proposed for owner review. Implementation has not launched.**

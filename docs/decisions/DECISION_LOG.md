@@ -448,3 +448,19 @@ pass. The combined 57-test suite and thirteen focused optimized tests pass.
 This closes U4's qualified mathematical/control review. The unexecuted production
 quality call remains gated by runner/authenticator validation, clean source
 authentication and both official admission receipts.
+
+D042 (2026-10-25): Sol/root review accepts the single-attempt runner and saved-only
+publication verifier for clean-source freezing. Seventeen lifecycle/integration
+controls pass normally (163.405 seconds) and with optimized Python (193.238 seconds).
+They use the full real source closure and actual no-training preparations, with
+synthetic complete policies; production solve/trainer tripwires remain untouched.
+Fresh independent support, numeric replay and full exact certificates/ledgers
+authenticate retained misses. Altered raw/numeric/source/ledger artifacts reject;
+a partial pre-training claim remains a failure, and a forged exact capacity
+failure rejects when fresh replay succeeds. Numeric exploitability comparison
+derives NashConv/2 from the preserved oracle. The scripts directory remains a
+namespace package. Pin the 16 MiB raw-artifact bound before execution; it is
+separate from all unchanged mathematical and production admission caps. This
+accepts implementation controls, not a frozen production quality result. The
+single T1000 call still requires clean committed source, fresh official admissions
+and publication verification. No additional owner review gate is introduced.
