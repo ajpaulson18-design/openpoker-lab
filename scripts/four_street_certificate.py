@@ -16,9 +16,11 @@ MAX_EXACT_WORK = 100_000
 MAX_CENSUS_WORK = 8_000_000
 MAX_FRACTION_BITS = 65_536
 MAX_EXACT_DEPTH = 32
+MAX_CASE_SNAPSHOT_NODES = 1_024
 MAX_SERIALIZED_JSON_NODES = 100_000
 THRESHOLD = Fraction(1, 1000)
-SOURCE_IDENTITY = "four-street-independent-exact-v1"
+SOURCE_IDENTITY = "four-street-independent-exact-v2"
+BUDGET_SCHEDULE_VERSION = "four-street-exact-work-v2"
 
 
 def _need(condition, message):
@@ -61,11 +63,32 @@ def _safe_json_value(value, depth=0, budget=None):
 def _snapshot_case(case):
     if type(case) is not dict:
         raise ValueError("case must be a plain bounded dictionary")
+    budget = [0]
 
     def clone(value, depth=0):
+        budget[0] += 1
+        if budget[0] > MAX_CASE_SNAPSHOT_NODES:
+            raise ValueError("case exceeds bounded total node count")
         if depth > 8:
             raise ValueError("case exceeds bounded configuration depth")
-        if value is None or type(value) in (str, int, float, bool, Fraction):
+        if value is None or type(value) is bool:
+            return value
+        if type(value) is str:
+            if len(value) > numeric.MAX_RANGE_EXPRESSION_LENGTH:
+                raise ValueError("case string exceeds bounded input length")
+            return value
+        if type(value) is int:
+            if value.bit_length() > MAX_FRACTION_BITS:
+                raise ValueError("case integer exceeds bounded bit width")
+            return value
+        if type(value) is float:
+            if not isfinite(value):
+                raise ValueError("case float must be finite")
+            return value
+        if type(value) is Fraction:
+            if (value.numerator.bit_length() > MAX_FRACTION_BITS or
+                    value.denominator.bit_length() > MAX_FRACTION_BITS):
+                raise ValueError("case fraction exceeds bounded bit width")
             return value
         if type(value) in (list, tuple):
             if len(value) > 128:
@@ -73,7 +96,9 @@ def _snapshot_case(case):
             return tuple(clone(item, depth + 1) for item in value) if type(value) is tuple else [
                 clone(item, depth + 1) for item in value]
         if type(value) is dict:
-            if len(value) > 32 or any(type(key) is not str for key in value):
+            if len(value) > 32 or any(
+                    type(key) is not str or
+                    len(key) > numeric.MAX_RANGE_EXPRESSION_LENGTH for key in value):
                 raise ValueError("case mapping exceeds bounded plain-string fields")
             return {key: clone(item, depth + 1) for key, item in value.items()}
         raise ValueError("case must contain only bounded scalar/list/tuple/dict values")
@@ -129,9 +154,10 @@ def _validate_graph(model, budget=None):
         _need(type(world["sign"]) is int and world["sign"] in (-1, 0, 1),
               "numeric world showdown sign must be -1, zero or one")
         if budget is not None:
-            total_mass = budget.add(total_mass,
-                                    budget.fraction(world["weight"], "physical world mass"),
-                                    "physical world normalizer")
+            budget.charge("physical_mass_validation_additions")
+            total_mass = budget.fraction(
+                total_mass + budget.fraction(world["weight"], "physical world mass"),
+                "physical world normalizer")
         else:
             total_mass += world["weight"]
     _need(total_mass == 1, "numeric physical world masses must sum exactly to one")
@@ -291,11 +317,6 @@ class _Counter:
             raise ValueError("physical mass exceeds the 65536-bit fraction limit")
         return value
 
-    def add(self, left, right, label):
-        self.charge("fraction_operations")
-        return self.fraction(left + right, label)
-
-
 class _ObservedBudget(rational._Budget):
     """Keep the source helper's fixed caps while retaining first-failure work."""
 
@@ -315,27 +336,38 @@ class _ObservedBudget(rational._Budget):
         return self._with_receipt(lambda item, name: super(_ObservedBudget, self).fraction(item, name),
                                   value, label)
 
+    def named_add(self, kind, left, right, label):
+        self.charge(kind)
+        return self.fraction(left + right, label)
 
-def _profile_structure(root, worlds, counter):
-    def visit(node, world, depth):
-        counter.charge("profile_node_world_visits")
-        _need(depth <= MAX_EXACT_DEPTH, "profile forecast exceeds depth 32")
-        if isinstance(node, numeric._Terminal):
-            counter.charge("profile_terminal_conversions")
-            return
-        if isinstance(node, numeric.Reveal):
-            counter.charge("profile_reveal_lookups")
-            child = node.branches[world["board"][:node.board_length]]
-            visit(child, world, depth + 1)
-            return
-        counter.charge("profile_action_edges", len(node.children))
-        for child in node.children:
-            counter.charge("profile_fraction_operations", 2)
-            visit(child, world, depth + 1)
+    def named_subtract(self, kind, left, right, label):
+        self.charge(kind)
+        return self.fraction(left - right, label)
 
-    for world in worlds:
-        counter.charge("profile_world_weight_operations", 2)
-        visit(root, world, 1)
+    def named_multiply(self, kind, left, right, label):
+        self.charge(kind)
+        return self.fraction(left * right, label)
+
+    def named_divide(self, kind, left, right, label):
+        if right == 0:
+            raise ZeroDivisionError(f"{label} has a zero denominator")
+        self.charge(kind)
+        return self.fraction(left / right, label)
+
+    def named_negate(self, kind, value, label):
+        self.charge(kind)
+        return self.fraction(-value, label)
+
+    def named_abs(self, kind, value, label):
+        self.charge(kind)
+        return self.fraction(abs(value), label)
+
+
+def _budget_add(budget, kind, left, right, label):
+    if isinstance(budget, _ObservedBudget):
+        return budget.named_add(kind, left, right, label)
+    budget.charge(kind)
+    return budget.fraction(left + right, label)
 
 
 def _br_structure(root, worlds, player, counter):
@@ -364,12 +396,21 @@ def _br_structure(root, worlds, player, counter):
             for prefix, child in node.branches.items():
                 visit(child, own_hand, tuple(buckets[prefix]), depth + 1)
             counter.charge("br_reveal_branch_sum_operations", branch_count)
+            if player == 0:
+                counter.charge("fused_profile_reveal_additions", branch_count)
+                counter.charge("fused_result_slots", 2)
             return
         if node.player == player:
             counter.charge("br_own_action_slots", len(node.children))
+            if player == 0:
+                counter.charge("fused_profile_own_row_lookups")
+                counter.charge("fused_profile_own_action_multiplications", len(node.children))
+                counter.charge("fused_profile_own_action_additions", len(node.children))
             for child in node.children:
                 visit(child, own_hand, group, depth + 1)
             counter.charge("br_own_action_selection_operations", max(0, len(node.children) - 1))
+            if player == 0:
+                counter.charge("fused_result_slots", 2)
             return
         action_count = len(node.children)
         counter.charge("br_opponent_action_group_slots", action_count)
@@ -381,6 +422,9 @@ def _br_structure(root, worlds, player, counter):
             # payload's zero probabilities.
             visit(child, own_hand, group, depth + 1)
         counter.charge("br_opponent_action_sum_operations", action_count)
+        if player == 0:
+            counter.charge("fused_profile_opponent_additions", action_count)
+            counter.charge("fused_result_slots", 2)
 
     for own_hand in hands:
         counter.charge("br_own_hand_group_scans", len(worlds))
@@ -389,6 +433,10 @@ def _br_structure(root, worlds, player, counter):
         counter.charge("br_own_hand_group_copies", len(group))
         visit(root, own_hand, group, 1)
         counter.charge("br_own_hand_response_sums")
+        if player == 0:
+            counter.charge("fused_profile_root_additions")
+    if player == 0:
+        counter.charge("fused_result_slots", 2)
 
 
 def _forecast_model(model):
@@ -407,7 +455,6 @@ def _forecast_model(model):
     counter.charge("normalized_output_row_slots", len(infos))
     counter.charge("normalized_output_action_slots", action_slots)
     counter.charge("policy_hash_row_action_slots", len(infos) + action_slots)
-    _profile_structure(model.root, worlds, counter)
     _br_structure(model.root, worlds, 0, counter)
     _br_structure(model.root, worlds, 1, counter)
     counter.charge("final_metric_fraction_operations", 12)
@@ -429,6 +476,7 @@ def forecast_exact(case):
     model = numeric.build_model(safe_case)
     forecast = _forecast_model(model)
     forecast.update({"source_identity": SOURCE_IDENTITY,
+                     "budget_schedule_version": BUDGET_SCHEDULE_VERSION,
                      "model_sha256": _model_identity(model),
                      "input_case_canonical_sha256": _canonical_hash(model.case),
                      "preparation_receipts": {
@@ -447,16 +495,19 @@ def forecast_exact(case):
 
 def _normalise_policy(model, payload, checked, budget):
     rows = payload["strategy"]
-    budget.charge("serialized_row_index_entries", len(rows))
+    budget.charge("policy_row_index_entries", len(rows))
+    budget.charge("policy_row_sort_entries", len(model.expected_infos))
     source_rows = {}
     for row in rows:
         key = numeric._row_key(row)
         source_rows[key] = row
     keys = sorted(checked)
-    budget.charge("policy_sort_entries", len(keys))
     action_slot_count = sum(len(node.actions) for node in model.expected_infos.values())
+    budget.charge("policy_action_conversion_entries", action_slot_count)
     budget.charge("normalization_ledger_row_slots", len(keys))
     budget.charge("normalization_ledger_action_slots", action_slot_count)
+    budget.charge("normalized_output_row_slots", len(keys))
+    budget.charge("normalized_output_action_slots", action_slot_count)
     normalized = {}
     ledger = []
     normalized_rows = []
@@ -464,22 +515,26 @@ def _normalise_policy(model, payload, checked, budget):
     for key in keys:
         row = source_rows[key]
         raw_values = checked[key]
-        budget.charge("row_normalization_action_entries", len(raw_values))
         raw = tuple(rational._input_fraction(value, budget, "serialized probability")
                     for value in raw_values)
         total = Fraction(0)
         for value in raw:
-            total = budget.add(total, value, "serialized row probability sum")
+            total = budget.named_add("policy_fraction_operation_slots", total, value,
+                                     "serialized row probability sum")
         if total <= 0:
             raise ValueError("serialized policy row has zero probability mass")
-        probabilities = tuple(budget.divide(value, total, "normalized row probability")
+        probabilities = tuple(budget.named_divide("policy_fraction_operation_slots", value,
+                                                   total, "normalized row probability")
                               for value in raw)
         normalized[key] = probabilities
         action_entries = []
         normalized_actions = []
         for index, (before, after, action) in enumerate(zip(raw, probabilities, row["actions"])):
-            adjustment = budget.add(after, -before, "policy normalization adjustment")
-            max_adjustment = max(max_adjustment, abs(adjustment))
+            adjustment = budget.named_subtract("policy_fraction_operation_slots", after,
+                                               before, "policy normalization adjustment")
+            magnitude = budget.named_abs("policy_fraction_operation_slots", adjustment,
+                                         "policy normalization adjustment magnitude")
+            max_adjustment = max(max_adjustment, magnitude)
             action_entries.append({"index": index, "name": action["name"],
                                    "history_key": action["history_key"],
                                    "raw_binary64_fraction": str(before),
@@ -512,35 +567,134 @@ def _terminal_value(node, world, budget):
     payoff = float(sign) * float(matched)
     if not isfinite(payoff):
         raise ValueError("exact terminal payoff is nonfinite")
-    budget.charge("terminal_binary64_conversion")
+    budget.charge("br_terminal_conversions")
     return rational._input_fraction(payoff, budget, "binary64 terminal payoff")
 
 
-def _profile_value(model, policies, budget):
-    def visit(node, world, depth):
-        budget.charge("profile_node_world_visits")
-        if depth > MAX_EXACT_DEPTH:
-            raise ValueError("profile traversal exceeds depth 32")
-        if isinstance(node, numeric._Terminal):
-            return _terminal_value(node, world, budget)
-        if isinstance(node, numeric.Reveal):
-            budget.charge("profile_reveal_lookups")
-            return visit(node.branches[world["board"][:node.board_length]], world, depth + 1)
-        key = (node.player, "".join(world["hands"][node.player]), node.history)
-        row = policies[key]
-        total = Fraction(0)
-        for probability, child in zip(row, node.children):
-            total = budget.add(total, budget.multiply(
-                probability, visit(child, world, depth + 1), "profile action value"),
-                "profile action sum")
-        return total
+def _fused_sb(model, policies, budget):
+    """Compute SB legal BR and profile EV together, sharing terminal/future work."""
+    worlds = model.worlds
+    budget.charge("br_own_hand_setup", len(worlds))
+    own_hands = sorted({world["hands"][0] for world in worlds})
 
-    value = Fraction(0)
-    for world in model.worlds:
-        contribution = budget.multiply(world["weight"], visit(model.root, world, 1),
-                                       "physical world profile contribution")
-        value = budget.add(value, contribution, "profile value sum")
-    return value
+    def visit(node, own_hand, group, depth):
+        budget.charge("br_node_group_visits")
+        if depth > MAX_EXACT_DEPTH:
+            raise ValueError("fused SB traversal exceeds depth 32")
+        if not group:
+            return Fraction(0)
+        if isinstance(node, numeric._Terminal):
+            budget.charge("br_terminal_group_scans", len(group))
+            total = Fraction(0)
+            for world, mass in group:
+                payoff = _terminal_value(node, world, budget)
+                total = _budget_add(
+                    budget, "br_terminal_fraction_operations", total,
+                    budget.named_multiply("br_terminal_fraction_operations", mass,
+                                          payoff, "fused terminal contribution"),
+                    "fused terminal sum")
+            return total
+        if isinstance(node, numeric.Reveal):
+            budget.charge("br_reveal_branch_slots", 2 * len(node.branches))
+            budget.charge("br_reveal_group_scans", len(group))
+            budget.charge("br_reveal_bucket_references", len(group))
+            buckets = {prefix: [] for prefix in node.branches}
+            for entry in group:
+                buckets[entry[0]["board"][:node.board_length]].append(entry)
+            best_total = Fraction(0)
+            profile_total = Fraction(0)
+            for prefix, child in node.branches.items():
+                result = visit(child, own_hand, tuple(buckets[prefix]), depth + 1)
+                if type(result) is tuple:
+                    best, profile = result
+                else:
+                    best = profile = result
+                best_total = _budget_add(
+                    budget, "br_reveal_branch_sum_operations", best_total, best,
+                    "fused BR reveal sum")
+                profile_total = _budget_add(
+                    budget, "fused_profile_reveal_additions", profile_total, profile,
+                    "fused profile reveal sum")
+            budget.charge("fused_result_slots", 2)
+            return best_total, profile_total
+        if node.player == 0:
+            budget.charge("br_own_action_slots", len(node.children))
+            budget.charge("fused_profile_own_row_lookups")
+            key = (0, "".join(own_hand), node.history)
+            row = policies[key]
+            best_values = []
+            profile_total = Fraction(0)
+            for probability, child in zip(row, node.children):
+                result = visit(child, own_hand, group, depth + 1)
+                if type(result) is tuple:
+                    best, profile = result
+                else:
+                    best = profile = result
+                best_values.append(best)
+                weighted = budget.named_multiply(
+                    "fused_profile_own_action_multiplications", probability,
+                    profile, "fused own action profile value")
+                profile_total = _budget_add(
+                    budget, "fused_profile_own_action_additions", profile_total,
+                    weighted, "fused own action profile sum")
+            budget.charge("br_own_action_selection_operations", max(0, len(best_values) - 1))
+            budget.charge("fused_result_slots", 2)
+            return max(best_values), profile_total
+
+        action_count = len(node.children)
+        budget.charge("br_opponent_action_group_slots", action_count)
+        budget.charge("br_opponent_group_scans", len(group) * action_count)
+        budget.charge("br_opponent_group_copies", len(group) * action_count)
+        action_groups = [[] for _ in node.children]
+        for world, mass in group:
+            key = (1, "".join(world["hands"][1]), node.history)
+            row = policies[key]
+            for index, probability in enumerate(row):
+                if probability:
+                    updated = budget.named_multiply(
+                        "br_opponent_reach_multiplications", mass, probability,
+                        "BB policy reach")
+                    action_groups[index].append((world, updated))
+        best_total = Fraction(0)
+        profile_total = Fraction(0)
+        for child, action_group in zip(node.children, action_groups):
+            result = visit(child, own_hand, tuple(action_group), depth + 1)
+            if type(result) is tuple:
+                best, profile = result
+            else:
+                best = profile = result
+            best_total = _budget_add(
+                budget, "br_opponent_action_sum_operations", best_total, best,
+                "fused BR opponent action sum")
+            profile_total = _budget_add(
+                budget, "fused_profile_opponent_additions", profile_total, profile,
+                "fused profile opponent action sum")
+        budget.charge("fused_result_slots", 2)
+        return best_total, profile_total
+
+    def root_value():
+        best_total = Fraction(0)
+        profile_total = Fraction(0)
+        for own_hand in own_hands:
+            budget.charge("br_own_hand_group_scans", len(worlds))
+            group = tuple((world, world["weight"]) for world in worlds
+                          if world["hands"][0] == own_hand)
+            budget.charge("br_own_hand_group_copies", len(group))
+            result = visit(model.root, own_hand, group, 1)
+            if type(result) is tuple:
+                best, profile = result
+            else:
+                best = profile = result
+            best_total = _budget_add(
+                budget, "br_own_hand_response_sums", best_total, best,
+                "fused SB root response sum")
+            profile_total = _budget_add(
+                budget, "fused_profile_root_additions", profile_total, profile,
+                "fused profile root sum")
+        budget.charge("fused_result_slots", 2)
+        return best_total, profile_total
+
+    return root_value()
 
 
 def _best_response(model, policies, player, budget):
@@ -558,8 +712,11 @@ def _best_response(model, policies, player, budget):
             budget.charge("br_terminal_group_scans", len(group))
             total = Fraction(0)
             for world, mass in group:
-                total = budget.add(total, budget.multiply(
-                    mass, _terminal_value(node, world, budget), "BR terminal contribution"),
+                total = _budget_add(
+                    budget, "br_terminal_fraction_operations", total,
+                    budget.named_multiply("br_terminal_fraction_operations", mass,
+                                          _terminal_value(node, world, budget),
+                                          "BR terminal contribution"),
                     "BR terminal group sum")
             return total
         if isinstance(node, numeric.Reveal):
@@ -572,12 +729,14 @@ def _best_response(model, policies, player, budget):
             total = Fraction(0)
             for prefix, child in node.branches.items():
                 branch = visit(child, own_hand, tuple(buckets[prefix]), depth + 1)
-                total = budget.add(total, branch, "BR reveal branch sum")
+                total = _budget_add(budget, "br_reveal_branch_sum_operations", total,
+                                    branch, "BR reveal branch sum")
             return total
         if node.player == player:
             budget.charge("br_own_action_slots", len(node.children))
             values = [visit(child, own_hand, group, depth + 1)
                       for child in node.children]
+            budget.charge("br_own_action_selection_operations", max(0, len(values) - 1))
             if player == 0:
                 return max(values)
             return min(values)
@@ -591,14 +750,16 @@ def _best_response(model, policies, player, budget):
             row = policies[key]
             for index, probability in enumerate(row):
                 if probability:
-                    budget.charge("br_opponent_reach_multiplications")
                     action_groups[index].append((
-                        world, budget.multiply(mass, probability, "opponent policy reach")))
+                        world, budget.named_multiply("br_opponent_reach_multiplications",
+                                                     mass, probability,
+                                                     "opponent policy reach")))
         total = Fraction(0)
         for child, action_group in zip(node.children, action_groups):
             if action_group:
-                total = budget.add(total, visit(child, own_hand, tuple(action_group), depth + 1),
-                                   "BR opponent action sum")
+                total = _budget_add(budget, "br_opponent_action_sum_operations", total,
+                                    visit(child, own_hand, tuple(action_group), depth + 1),
+                                    "BR opponent action sum")
         return total
 
     response = Fraction(0)
@@ -607,8 +768,9 @@ def _best_response(model, policies, player, budget):
         group = tuple((world, world["weight"]) for world in worlds
                       if world["hands"][player] == own_hand)
         budget.charge("br_own_hand_group_copies", len(group))
-        response = budget.add(response, visit(model.root, own_hand, group, 1),
-                              "BR own-hand response sum")
+        response = _budget_add(budget, "br_own_hand_response_sums", response,
+                               visit(model.root, own_hand, group, 1),
+                               "BR own-hand response sum")
     return response if player == 0 else response
 
 
@@ -630,25 +792,37 @@ def evaluate_exact(case, payload):
             f"forecast={forecast['work']} limit={MAX_EXACT_WORK} "
             f"counters={forecast['work_by_kind']!r}")
     budget = _ObservedBudget(MAX_EXACT_WORK, MAX_EXACT_DEPTH, MAX_FRACTION_BITS)
+    budget.charge("physical_world_setup_entries", len(model.worlds))
+    budget.charge("physical_mass_normalization_operations", 2 * len(model.worlds))
     _validate_graph(model, budget)
     policies_float = numeric.validate_policy(model, payload)
     normalized, ledger, normalized_rows, max_adjustment = _normalise_policy(
         model, payload, policies_float, budget)
-    value = _profile_value(model, normalized, budget)
-    br_sb = _best_response(model, normalized, 0, budget)
+    br_sb, value = _fused_sb(model, normalized, budget)
     min_sb = _best_response(model, normalized, 1, budget)
-    br_bb = -min_sb
-    lower = -br_bb
+    br_bb = budget.named_negate("final_metric_fraction_operations", min_sb,
+                                "BB best response in SB coordinates")
+    lower = min_sb
     upper = br_sb
     if not lower <= value <= upper:
         raise ValueError("exact legal-response interval does not contain policy value")
-    gain_sb = budget.add(upper, -value, "SB unilateral response gain")
-    gain_bb = budget.add(value, -lower, "BB unilateral response gain")
+    negative_value = budget.named_negate("final_metric_fraction_operations", value,
+                                         "negative profile value")
+    negative_lower = budget.named_negate("final_metric_fraction_operations", lower,
+                                         "negative lower response bound")
+    gain_sb = budget.named_add("final_metric_fraction_operations", upper, negative_value,
+                               "SB unilateral response gain")
+    gain_bb = budget.named_add("final_metric_fraction_operations", value, negative_lower,
+                               "BB unilateral response gain")
     if gain_sb < 0 or gain_bb < 0:
         raise ValueError("exact unilateral response gain is negative")
-    nash_conv = budget.add(upper, -lower, "exact NashConv")
-    exploitability = budget.divide(nash_conv, Fraction(2), "exact exploitability")
-    metrics = {"value_sb": value, "value_bb": -value,
+    nash_conv = budget.named_add("final_metric_fraction_operations", upper, negative_lower,
+                                 "exact NashConv")
+    exploitability = budget.named_divide("final_metric_fraction_operations", nash_conv,
+                                         Fraction(2), "exact exploitability")
+    budget.charge("certificate_output_entries", 24 + len(normalized_rows) +
+                  sum(len(row["actions"]) for row in normalized_rows))
+    metrics = {"value_sb": value, "value_bb": negative_value,
                "sb_best_response_value": br_sb, "bb_best_response_value": br_bb,
                "sb_best_response_gain": gain_sb, "bb_best_response_gain": gain_bb,
                "nash_conv": nash_conv, "exploitability": exploitability,
@@ -671,16 +845,25 @@ def evaluate_exact(case, payload):
             raise ValueError(f"exact and independent floating replay disagree for {key}")
         float_comparison[key] = {"exact_float": exact_float, "independent_float": observed,
                                  "absolute_difference": difference}
-    budget.charge("exact_metric_output_entries", len(metrics))
-    budget.charge("normalized_output_row_slots", len(normalized_rows))
-    budget.charge("normalized_output_action_slots",
-                  sum(len(row["actions"]) for row in normalized_rows))
-    budget.charge("certificate_output_entries", 24 + len(normalized_rows) +
-                  sum(len(row["actions"]) for row in normalized_rows))
     actual_work = budget.work
+    forecast_by_kind = forecast["work_by_kind"]
+    actual_by_kind = budget.counters
+    unknown_actual = set(actual_by_kind) - set(forecast_by_kind)
+    if unknown_actual:
+        raise ValueError(f"actual exact work has unforecast families: {sorted(unknown_actual)!r}")
+    if sum(forecast_by_kind.values()) != forecast["work"]:
+        raise ValueError("shape-only forecast family counters do not sum to total work")
+    if sum(actual_by_kind.values()) != actual_work:
+        raise ValueError("runtime family counters do not sum to actual work")
+    exceeded = {kind: (count, forecast_by_kind[kind])
+                for kind, count in actual_by_kind.items()
+                if count > forecast_by_kind[kind]}
+    if exceeded:
+        raise ValueError(f"actual exact work exceeded forecast families: {exceeded!r}")
     if actual_work > forecast["work"]:
         raise ValueError("actual exact work exceeded the shape-only forecast")
     return {"schema_version": 1, "source_identity": SOURCE_IDENTITY,
+            "budget_schedule_version": BUDGET_SCHEDULE_VERSION,
             "model_sha256": _model_identity(model),
             "input_case_canonical_sha256": _canonical_hash(model.case),
             "input_policy_canonical_sha256": input_policy_hash,

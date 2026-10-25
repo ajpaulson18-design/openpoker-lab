@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "benchmark_id": "four-street-integration-v1",
-  "status": "numeric-controls-verified-no-quality-run",
+  "status": "exact-controls-verified-no-quality-run",
   "case": {
     "id": "four-street-weighted-shared-future-v1",
     "sb_range": "AsAd:0.5,QsQd:0.25",

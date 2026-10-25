@@ -1,8 +1,8 @@
 # Four-street integration v1: staged acceptance protocol
 
 Status: the [literal fixture](../benchmarks/four-street-integration-v1.json) has
-passed bounded independent numeric controls under D038. The exact certificate
-and frozen quality run remain unexecuted.
+passed bounded independent numeric controls under D038 and exact prescribed-policy
+controls under D040. The frozen production quality run remains unexecuted.
 The Sol-reviewed architecture fixes one coupled game, one complete policy and
 one whole-game legal-response gap. Interface or backend agreement alone cannot
 satisfy this gate.
@@ -39,7 +39,20 @@ The combined numeric/interface/legacy suite passed 44 tests in 14.799 seconds.
 A separate development T10 vanilla recursive result validated all 1,200 rows;
 the largest production-versus-independent scalar gap was
 `2.498001805406602e-16`. This control is not the frozen accuracy run. The exact
-generic rational evaluator and its known zero/nonzero-gap controls remain U4.
+generic rational evaluator and its known zero/nonzero-gap controls were pending
+at that numeric-only milestone.
+
+The [exact evaluator v2](four-street-certificate.md) now passes ten focused tests
+normally and under optimized Python. The combined certificate/numeric/interface/
+legacy suite passes 54 tests (11.465 seconds in the lead's final control run).
+Its all-positive literal forecast is 98,298 under the unchanged 100,000 cap;
+the prescribed check/call policy uses 48,577 named entries. Full normalized rows
+and per-family runtime/forecast dominance are checked. The exact whole-game
+value moves `1/34 -> 5/34` after the one prescribed river-row change, with legal
+response values unchanged. Known zero/nonzero gaps, hidden-future cheating,
+mixed/zero/subnormal probabilities, fractional money and an independent slow
+exact profile replay pass. This accepts control evidence for runner development;
+final source/admission review still precedes the frozen production call.
 
 The first U4 development census rejected the unchanged fixture: 118,261 modeled
 work exceeds the fixed 100,000 cap. No literal exact policy evaluation or quality

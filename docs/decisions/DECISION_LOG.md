@@ -419,3 +419,17 @@ complete normalization/output ledgers and existing caps/fixture/threshold. Add
 common named actual/forecast events and per-family dominance checks, preserving
 the v1 capacity miss. Require fresh census and exact mixed/zero/tiny-probability,
 hidden-future and literal coupling controls before the frozen runner is eligible.
+
+D040 (2026-10-25): root review accepts the v2 prescribed-policy controls for
+bounded frozen-runner implementation. Sol's fused profile/response proof and
+storage correction retain the same game/caps; the full forecast is 98,298,
+including two root result slots. All ten exact-control tests pass normally and
+under optimized Python; the combined 54-test suite passes. The literal check/call
+value is 1/34, the prescribed one-row river change yields 5/34, and the same legal
+response bounds remain. Complete normalization ledgers, slow exact profile
+comparison and familywise runtime/forecast checks pass. Case snapshot copying
+now has a 1,024-node bound before expansion. Preserve D039's rejected source and
+census. The runner may be implemented with inert tests; final architectural
+accounting/preparation disclosure, clean source authentication, both official
+admissions and runner/authenticator review must pass before any production
+quality call. No trained-policy quality outcome is claimed by these controls.

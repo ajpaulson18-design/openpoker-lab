@@ -10,8 +10,9 @@ and are performed autonomously by the Sol-led team.
 
 The first [immutable request/result interface](four-street-solver.md) is implemented
 as an additive single-call boundary (D037). The independent
-[numeric corpus controls](four-street-integration-protocol.md) are accepted (D038);
-the exact certificate and frozen accuracy run remain the next milestones.
+[numeric corpus controls](four-street-integration-protocol.md) are accepted (D038),
+and the [exact prescribed-policy controls](four-street-certificate.md) pass (D040).
+Frozen-runner implementation and the production accuracy call remain next.
 
 October 24, 2026. **Status: audit complete; architecture and implementation tasks
 proposed for owner review. Implementation has not launched.**

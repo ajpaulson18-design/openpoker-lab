@@ -13,7 +13,12 @@ independently rebuild the bounded physical game and validate complete serialized
 policies, including zero-reach rows, hidden future cards, cumulative money and
 joint blocker-conditioned reach. The 15 focused tests pass normally and under
 optimized Python; the combined 44-test numeric/interface/legacy suite passes.
-The exact whole-game certificate and frozen quality run remain pending (D038).
+The [exact whole-game certificate](../four-street-certificate.md) now passes its
+prescribed-policy controls: ten focused tests normal/optimized and 54 combined
+certificate/numeric/interface/legacy tests. Its fused profile/SB-response forecast
+admits the same 22-world fixture under unchanged caps; the first capacity miss
+is preserved. Runner development proceeds under D040, while final source review
+and the frozen production quality run remain pending.
 
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness

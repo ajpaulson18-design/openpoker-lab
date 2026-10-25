@@ -83,20 +83,103 @@ def _bb_no_bluff(player, _hand, _history, actions):
     return tuple(1.0 if action.name == selected else 0.0 for action in actions)
 
 
+def _independent_exact_profile(model, payload):
+    """Slow exact per-world replay; deliberately separate from certificate traversal."""
+    policies = {}
+    for row in payload["strategy"]:
+        player = 0 if row["player"] == "sb" else 1
+        key = (player, row["hand"], tuple(row["history"]))
+        raw = tuple(Fraction.from_float(float(action["probability"]))
+                    for action in row["actions"])
+        total = sum(raw, Fraction(0))
+        policies[key] = tuple(value / total for value in raw)
+
+    def utility(node, world):
+        matched = min(node.contributions)
+        sign = (1 if node.winner == 0 else -1) if node.kind == "fold" else world["sign"]
+        binary64_payoff = float(sign) * float(matched)
+        return Fraction.from_float(binary64_payoff)
+
+    def play(node, world):
+        if isinstance(node, validation._Terminal):
+            return utility(node, world)
+        if isinstance(node, validation.Reveal):
+            return play(node.branches[world["board"][:node.board_length]], world)
+        key = (node.player, "".join(world["hands"][node.player]), node.history)
+        probabilities = policies[key]
+        return sum((probability * play(child, world)
+                    for probability, child in zip(probabilities, node.children)), Fraction(0))
+
+    return sum((world["weight"] * play(model.root, world) for world in model.worlds),
+               Fraction(0))
+
+
+def _assert_family_schedule(testcase, result):
+    forecast = result["forecast"]
+    actual = result["actual_work_by_kind"]
+    limit = forecast["work_by_kind"]
+    testcase.assertEqual(sum(actual.values()), result["actual_work"])
+    testcase.assertEqual(sum(limit.values()), forecast["work"])
+    testcase.assertLessEqual(result["actual_work"], forecast["work"])
+    testcase.assertFalse(set(actual) - set(limit))
+    testcase.assertFalse(any(name.startswith("profile_") for name in actual))
+    for name, count in actual.items():
+        testcase.assertLessEqual(count, limit[name], (name, count, limit[name]))
+
+
 class FourStreetCertificateTests(unittest.TestCase):
     def test_forecast_is_probability_independent_and_retains_full_overcap_receipt(self):
         first = certificate.forecast_exact(CASE)
         second = certificate.forecast_exact(copy.deepcopy(CASE))
         self.assertEqual(first, second)
-        self.assertEqual(first["work"], 118_261)
-        self.assertFalse(first["admitted"])
-        self.assertEqual(first["excess_work"], 18_261)
+        self.assertEqual(first["source_identity"], "four-street-independent-exact-v2")
+        self.assertEqual(first["budget_schedule_version"], "four-street-exact-work-v2")
+        self.assertEqual(first["work"], 98_298)
+        self.assertTrue(first["admitted"])
+        self.assertEqual(first["excess_work"], 0)
         self.assertEqual(first["tree_nodes"], 1414)
         self.assertEqual(first["tree_depth"], 14)
-        self.assertGreater(first["work_by_kind"]["br_opponent_reach_multiplications"], 0)
+        self.assertEqual({key: first["work_by_kind"][key] for key in (
+            "fused_profile_own_row_lookups", "fused_profile_own_action_multiplications",
+            "fused_profile_own_action_additions", "fused_profile_reveal_additions",
+            "fused_profile_opponent_additions", "fused_profile_root_additions",
+            "fused_result_slots")}, {
+                "fused_profile_own_row_lookups": 572,
+                "fused_profile_own_action_multiplications": 1146,
+                "fused_profile_own_action_additions": 1146,
+                "fused_profile_reveal_additions": 293,
+                "fused_profile_opponent_additions": 1144,
+                "fused_profile_root_additions": 2,
+                "fused_result_slots": 2640})
+        self.assertFalse(any(name.startswith("profile_") for name in first["work_by_kind"]))
         literal_model = validation.build_model(CASE)
-        with self.assertRaisesRegex(ValueError, "forecast exceeds its hard work limit"):
-            certificate.evaluate_exact(CASE, _payload(literal_model, _check_call))
+        base = certificate.evaluate_exact(CASE, _payload(literal_model, _check_call))
+        self.assertEqual(Fraction(base["metrics"]["value_sb"]), Fraction(1, 34))
+        self.assertEqual(len(base["normalized_policy_rows"]), 1200)
+        _assert_family_schedule(self, base)
+
+        changed = _payload(literal_model, _check_call)
+        target_history = ["call", "check", "flop@2c3c4d", "check", "check",
+                          "turn@7h", "check", "check", "river@8h", "check"]
+        target = next(row for row in changed["strategy"]
+                      if row["player"] == "sb" and row["hand"] == "AdAs" and
+                      row["revealed_board"] == ["2c", "3c", "4d", "7h", "8h"] and
+                      row["history"] == target_history)
+        self.assertEqual([(action["name"], action["amount"], action["raise_to"])
+                          for action in target["actions"]], [("check", 0.0, 0.0),
+                                                               ("bet", 1.0, 2.0)])
+        target["actions"][0]["probability"] = 0.0
+        target["actions"][1]["probability"] = 1.0
+        alternative = certificate.evaluate_exact(CASE, changed)
+        self.assertEqual(Fraction(alternative["metrics"]["value_sb"]), Fraction(5, 34))
+        self.assertEqual(Fraction(alternative["metrics"]["value_sb"]) -
+                         Fraction(base["metrics"]["value_sb"]), Fraction(2, 17))
+        self.assertEqual(alternative["metrics"]["sb_best_response_value"],
+                         base["metrics"]["sb_best_response_value"])
+        self.assertEqual(alternative["metrics"]["bb_best_response_value"],
+                         base["metrics"]["bb_best_response_value"])
+        self.assertEqual(len(alternative["normalized_policy_rows"]), 1200)
+        _assert_family_schedule(self, alternative)
 
     def test_sure_winner_zero_gap_and_nonzero_gap_controls(self):
         case = _case()
@@ -145,6 +228,43 @@ class FourStreetCertificateTests(unittest.TestCase):
         self.assertLessEqual(result["actual_work"], result["forecast"]["work"])
         self.assertLessEqual(max(item["absolute_difference"]
                                  for item in result["floating_comparison"].values()), 1e-9)
+        _assert_family_schedule(self, result)
+
+    def test_fused_profile_matches_independent_exact_per_world_replay(self):
+        case = copy.deepcopy(CASE)
+        model = validation.build_model(case)
+
+        def mixed(player, hand, history, actions):
+            hand_index = sum(ord(character) for character in hand)
+            offset = (player + len(history) + hand_index) % len(actions)
+            weights = [float(index + 1 + offset) for index in range(len(actions))]
+            total = sum(weights)
+            return tuple(value / total for value in weights)
+
+        payloads = [_payload(model, mixed), _payload(model, _check_call)]
+        tiny = _payload(model, mixed)
+        tiny_row = next(row for row in tiny["strategy"] if len(row["actions"]) > 1)
+        tiny_row["actions"][0]["probability"] = 5e-324
+        tiny_row["actions"][1]["probability"] = 1.0
+        for action in tiny_row["actions"][2:]:
+            action["probability"] = 0.0
+        payloads.append(tiny)
+
+        for payload in payloads:
+            with self.subTest(policy=payload is not tiny and
+                              payload["strategy"][0]["actions"][0]["probability"]):
+                exact = certificate.evaluate_exact(case, payload)
+                self.assertEqual(Fraction(exact["metrics"]["value_sb"]),
+                                 _independent_exact_profile(model, payload))
+                _assert_family_schedule(self, exact)
+
+        fractional_case = _case(stacks=[2.01, 2.01])
+        fractional_model = validation.build_model(fractional_case)
+        fractional_payload = _payload(fractional_model, _check_call)
+        fractional_result = certificate.evaluate_exact(fractional_case, fractional_payload)
+        self.assertEqual(Fraction(fractional_result["metrics"]["value_sb"]),
+                         _independent_exact_profile(fractional_model, fractional_payload))
+        _assert_family_schedule(self, fractional_result)
 
     def test_policy_mutations_reject_under_normal_and_optimized_python(self):
         case = _case()
@@ -222,6 +342,27 @@ class FourStreetCertificateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "plain bounded dictionary"):
             certificate.evaluate_exact(original, {})
 
+    def test_case_snapshot_rejects_exponential_dag_and_unbounded_scalars(self):
+        # Reusing one nested list 128 times per level used to be cloned as an
+        # exponentially large tree despite every individual container being small.
+        shared = ["leaf"]
+        for _ in range(3):
+            shared = [shared] * 128
+        with self.assertRaisesRegex(ValueError, "total node count"):
+            certificate._snapshot_case({"id": "dag", "nested": shared})
+
+        case = {"bool": True, "finite": 1.25}
+        self.assertEqual(certificate._snapshot_case(case), case)
+        with self.assertRaisesRegex(ValueError, "mapping"):
+            certificate._snapshot_case({"x" * (validation.MAX_RANGE_EXPRESSION_LENGTH + 1): 1})
+        for value, message in (
+                (float("inf"), "finite"),
+                ("x" * (validation.MAX_RANGE_EXPRESSION_LENGTH + 1), "string"),
+                (1 << (certificate.MAX_FRACTION_BITS + 1), "integer"),
+                (Fraction(1, 1 << certificate.MAX_FRACTION_BITS), "fraction")):
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                certificate._snapshot_case({"value": value})
+
     def test_zero_probability_policy_keeps_same_shape_forecast(self):
         case = _case()
         model = validation.build_model(case)
@@ -230,6 +371,9 @@ class FourStreetCertificateTests(unittest.TestCase):
         result = certificate.evaluate_exact(case, zero_heavy)
         self.assertEqual(result["forecast"]["work"], certificate.forecast_exact(case)["work"])
         self.assertLess(result["actual_work"], result["forecast"]["work"])
+        self.assertLess(result["actual_work_by_kind"]["br_opponent_reach_multiplications"],
+                        result["forecast"]["work_by_kind"]["br_opponent_reach_multiplications"])
+        _assert_family_schedule(self, result)
 
         extreme = _payload(model, _check_call)
         row = next(row for row in extreme["strategy"]
@@ -242,6 +386,9 @@ class FourStreetCertificateTests(unittest.TestCase):
         self.assertEqual(extreme_result["forecast"]["work"], result["forecast"]["work"])
         self.assertLessEqual(extreme_result["actual_work"],
                              extreme_result["forecast"]["work"])
+        self.assertEqual(Fraction(extreme_result["metrics"]["value_sb"]),
+                         _independent_exact_profile(model, extreme))
+        _assert_family_schedule(self, extreme_result)
 
     def test_rational_width_and_forecast_counter_fail_closed_at_boundary(self):
         budget = certificate.rational._Budget(100_000, 32, 65_536)
