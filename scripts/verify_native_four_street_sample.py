@@ -33,7 +33,8 @@ def verify(directory, report_sha256, output):
         raise ValueError("Benchmark source was not clean and stable")
     for name, digest in before["source_sha256"].items():
         path = (ROOT / name).resolve(strict=True)
-        if ROOT not in path.parents or hashlib.sha256(_read(path)).hexdigest() != digest:
+        if ROOT not in path.parents or hashlib.sha256(
+                _read(path).replace(b"\r\n", b"\n")).hexdigest() != digest:
             raise ValueError("Current source disagrees with benchmark source: " + name)
     manifest = json.loads(_read(ROOT / "benchmarks/native-four-street-v1.json"))
     sample_id = "repeat-1-native"

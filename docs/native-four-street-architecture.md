@@ -61,6 +61,8 @@ authenticates an externally pinned benchmark report, its clean/stable source
 closure and first native raw envelope before importing the independent rational
 certificate. It performs no production solve, native call or training. Its exact
 normalization ledger and whole-game gap are retained separately from timing.
+Source hashes normalize CRLF to LF for cross-platform saved replay; raw report
+and policy hashes authenticate their exact bytes.
 
 ## Invariants
 

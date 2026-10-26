@@ -64,7 +64,8 @@ def _source_snapshot() -> dict:
         path = ROOT / relative
         if not path.is_file():
             raise FileNotFoundError(f"Benchmark source is missing: {relative}")
-        files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        files[relative] = hashlib.sha256(
+            path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     head = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
         capture_output=True, text=True,
