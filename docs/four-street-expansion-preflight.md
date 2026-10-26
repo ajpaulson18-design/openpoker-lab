@@ -22,9 +22,37 @@ is serialized through its established contract. The old production helper's
 literal stage menus therefore remain applicable.
 
 One real preparation test passes with solver/trainer tripwires, all 26 physical
-worlds, exact pair masses and the three river signs checked. This accepts the
-implementation for a clean-source measurement; its official admission outcome
-has not been recorded in this pre-run specification.
+worlds, exact pair masses and the three river signs checked. The subsequent
+clean-source measurement rejected the complete exact-work forecast before any
+training. Its original source and receipt remain fixed.
+
+## Recorded admission result
+
+The [full receipt](../benchmarks/results/four-street-expansion-preflight-v2/receipt.json)
+and [publication index](../benchmarks/results/four-street-expansion-preflight-v2/publication.json)
+preserve the complete forecast and matching physical support. Source is
+`644eae2b3036dff71d81a1e445d675476beb155a`; both clean 315-file snapshots match.
+The original 236,309-byte receipt has SHA256
+`0025236b3c71c23991bd2b0db6df95ba7b84d89e786d7041daaabeb8c63334ba`.
+
+| Quantity | Observed |
+| --- | ---: |
+| Physical worlds / private pairs | 26 / 4 |
+| Independent states / decisions | 1,585 / 704 |
+| Information rows / action slots | 1,352 / 2,706 |
+| Production states | 1,641 |
+| Modeled production vector work / cap | 188,281,040 / 500,000,000 |
+| Exact all-positive work forecast / cap | **113,078 / 100,000** |
+| Exact work excess | **13,078** |
+
+Production admits the full request. Independent support, signs and masses match,
+but the unchanged exact-work guard rejects it. The receipt reports zero production
+calls, no attempted training and a null quality gate. This is an admission
+rejection, not a convergence miss or an expanded-game quality result.
+
+The next mathematical review may reduce complete-certificate work under the same
+cap. The measured rejection is retained before any such separately versioned
+correction; no smaller case or altered threshold replaces it.
 
 ## Frozen receipt
 

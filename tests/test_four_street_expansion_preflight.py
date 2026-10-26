@@ -65,6 +65,11 @@ class FourStreetExpansionPreflightTests(unittest.TestCase):
         self.assertTrue(comparison["support_matches"])
         self.assertEqual(comparison["worlds_compared"], 26)
         self.assertEqual(comparison["pairs_compared"], 4)
+        # The clean-source receipt pins this version's complete admission miss.
+        self.assertFalse(independent["forecast"]["admitted"])
+        self.assertEqual(independent["forecast"]["work"], 113078)
+        self.assertEqual(independent["forecast"]["excess_work"], 13078)
+        self.assertEqual(result["first_rejection"]["stage"], "exact-work-admission")
 
         probabilities = {
             (row["sb_hand"], row["bb_hand"]): row["fraction"]

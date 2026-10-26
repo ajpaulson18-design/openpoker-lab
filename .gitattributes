@@ -177,3 +177,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the original complete four-street attempt and saved-only replay bytes.
 /benchmarks/results/four-street-integration-v1/** -text
 /benchmarks/results/four-street-integration-v1/verification.json -text whitespace=cr-at-eol
+
+# Preserve the complete no-training expanded-chance admission rejection.
+/benchmarks/results/four-street-expansion-preflight-v2/** -text

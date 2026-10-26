@@ -490,3 +490,17 @@ analytic pair masses, the added winner reversal and zero solver/trainer access.
 Keep all old sources, corpus bytes, thresholds and caps unchanged. The fresh
 source-frozen receipt is still required; no expanded-game solve is authorized by
 this implementation acceptance. See the [preflight specification](../four-street-expansion-preflight.md).
+
+D045 (2026-10-25): the official M5 preflight on clean committed source
+644eae2b3036dff71d81a1e445d675476beb155a preserves a complete admission rejection.
+Both 315-file snapshots match; production admits 26 worlds and 188,281,040 modeled
+vector work under 500 million. Independent support and all signs/masses match,
+but the exact all-positive forecast is 113,078 against 100,000, a 13,078 deficit.
+No production solve or training ran and quality remains unknown. Publish the
+unaltered full receipt before a separate certificate correction. Sol's analytical
+proposal combines first-mass signed terminal accumulation with one maximum
+normalization-adjustment absolute value per row, retaining every ledger entry;
+the proposed 99,119 forecast is not executable admission evidence. Keep all v1
+sources/corpora, game/threshold and hard caps unchanged. A fresh direct-graph
+census, same-policy exact parity and normal/optimized controls must precede any
+corrected preflight, and training remains gated by observed complete admission.
