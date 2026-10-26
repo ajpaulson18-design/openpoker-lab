@@ -21,6 +21,12 @@ SOURCES = ("pokerlab/preflop_solver.py", "pokerlab/preflop_tree.py",
            "benchmarks/preflop-rounding-boundary-v1.json")
 
 
+def _require(condition, details=None):
+    """Retain evidence checks when Python assertions are disabled."""
+    if not condition:
+        raise AssertionError(details)
+
+
 def midpoint_anchor():
     """Hand-derived local/whole-hand amounts; no production numeric helpers."""
     origin = Decimal("0.691357802")
@@ -32,11 +38,11 @@ def midpoint_anchor():
     whole_hand = round(float(origin) + local_rounded, 9)
     exact_global = origin + exact_local
     historical_global = round(float(Fraction(str(exact_global))), 9)
-    assert exact_local == Decimal("0.6017373445")
-    assert Decimal.from_float(local_binary) < exact_local
-    assert local_rounded == .601737344
-    assert whole_hand == 1.293095146
-    assert historical_global == 1.293095147
+    _require(exact_local == Decimal("0.6017373445"))
+    _require(Decimal.from_float(local_binary) < exact_local)
+    _require(local_rounded == .601737344)
+    _require(whole_hand == 1.293095146)
+    _require(historical_global == 1.293095147)
     return {"origin": str(origin), "initial_postflop_pot": str(pot),
             "local_bet": str(bet), "exact_local_midpoint": str(exact_local),
             "local_binary_value": str(Decimal.from_float(local_binary)),
@@ -68,21 +74,21 @@ def main():
             checked = replay_policy(candidate, fixture["sb"], fixture["bb"],
                                     monetary_mode="configured", **kwargs)
             gaps = compare_result(candidate, checked)
-            assert checked["checked_information_sets"] == len(candidate["strategy"])
+            _require(checked["checked_information_sets"] == len(candidate["strategy"]))
             posterior = {(row["sb_hand"], row["bb_hand"]): row["probability"]
                          for row in candidate["private_pair_probabilities"]}
             expected = {(row["sb"], row["bb"]): row["probability"]
                         for row in checked["private_pair_probabilities"]}
-            assert posterior.keys() == expected.keys()
-            assert max(abs(posterior[key] - expected[key]) for key in posterior) <= 1e-12
+            _require(posterior.keys() == expected.keys())
+            _require(max(abs(posterior[key] - expected[key]) for key in posterior) <= 1e-12)
             if "known_sb_best_response_value" in scenario:
-                assert abs(checked["sb_best_response_value"] - scenario["known_sb_best_response_value"]) <= 1e-12
+                _require(abs(checked["sb_best_response_value"] - scenario["known_sb_best_response_value"]) <= 1e-12)
             if scenario["id"] == "recorded-rounding-boundary":
                 matching = [row for row in candidate["strategy"]
                             if row["history"] == fixture["mismatch"]["history_prefix"]]
-                assert len(matching) == 1
-                assert any(action["history_key"] == "raise@1.293095146"
-                           for action in matching[0]["actions"])
+                _require(len(matching) == 1)
+                _require(any(action["history_key"] == "raise@1.293095146"
+                           for action in matching[0]["actions"]))
             try:
                 reference = replay_policy(candidate, fixture["sb"], fixture["bb"],
                                           monetary_mode="global-rational", **kwargs)
@@ -90,10 +96,10 @@ def main():
             except AssertionError as error:
                 diagnostic = {"outcome": "rejected", "exception": "AssertionError", "detail": str(error)}
             if "global_reference_expected" in scenario:
-                assert diagnostic["outcome"] == scenario["global_reference_expected"], diagnostic
+                _require(diagnostic["outcome"] == scenario["global_reference_expected"], diagnostic)
             if scenario["id"] == "recorded-rounding-boundary":
-                assert "raise@1.293095146" in diagnostic["detail"], diagnostic
-                assert "raise@1.293095147" in diagnostic["detail"], diagnostic
+                _require("raise@1.293095146" in diagnostic["detail"], diagnostic)
+                _require("raise@1.293095147" in diagnostic["detail"], diagnostic)
             record = {"scenario": scenario["id"], "algorithm": algorithm, "traversal": traversal,
                       "iterations": specification["iterations"], "worlds": candidate["worlds"],
                       "information_sets": candidate["info_sets"],
@@ -107,7 +113,7 @@ def main():
         for algorithm in {entry[0] for entry in peers}:
             routes = [candidate for name, candidate in peers if name == algorithm]
             for field in ("value_sb", "nash_conv", "sb_best_response_value", "bb_best_response_value"):
-                assert max(item[field] for item in routes) - min(item[field] for item in routes) <= 1e-10
+                _require(max(item[field] for item in routes) - min(item[field] for item in routes) <= 1e-10)
     report = {"schema_version": 1, "benchmark_id": specification["benchmark_id"],
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "source_revision": git_revision(None), "worktree_dirty": worktree_dirty(),

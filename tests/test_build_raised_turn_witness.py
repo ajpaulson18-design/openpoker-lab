@@ -149,7 +149,7 @@ class RaisedTurnWitnessTests(unittest.TestCase):
 
     def test_source_map_uses_full_proof_and_numeric_capture_paths(self):
         expected = (set(witness.exact_audit.SOURCES) |
-                    set(witness.numeric_tail.REQUIRED_SOURCES) |
+                    set(witness.numeric_tail.REQUIRED_SOURCES) | set(witness.OPERATION_INPUTS) |
                     {"scripts/build_raised_turn_witness.py",
                      "tests/test_build_raised_turn_witness.py"})
         self.assertEqual(set(witness._source_files()), expected)

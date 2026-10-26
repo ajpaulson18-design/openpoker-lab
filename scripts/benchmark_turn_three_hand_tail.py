@@ -8,6 +8,7 @@ import json
 import math
 import os
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 import re
 import subprocess
 import sys
@@ -431,6 +432,7 @@ def _build_report(head, producer, verification, payload, audit, elapsed, policy_
 
 
 def _verify_bundle(report_raw, policy_raw, *, root, head, verification, bundle_guard=None):
+    operation_before = operation_fingerprints(())
     if type(report_raw) is not bytes or type(policy_raw) is not bytes:
         raise ValueError("Saved report/policy must be bytes")
     if len(report_raw) > BYTE_CAP or len(policy_raw) > BYTE_CAP:
@@ -447,7 +449,7 @@ def _verify_bundle(report_raw, policy_raw, *, root, head, verification, bundle_g
         raise ValueError("Saved report requested schedule differs")
     if report["policy_sha256"] != base._sha(policy_raw):
         raise ValueError("Saved policy hash differs")
-    if report.get("verification_source_sha256") != verification:
+    if not compatible_exact_source_maps(report.get("verification_source_sha256"), verification, root):
         raise ValueError("Saved verification source map differs from current committed math")
     if bundle_guard:
         bundle_guard()
@@ -476,6 +478,8 @@ def _verify_bundle(report_raw, policy_raw, *, root, head, verification, bundle_g
         raise ValueError("Saved report differs from complete independent reconstruction")
     if bundle_guard:
         bundle_guard()
+    if operation_fingerprints(()) != operation_before:
+        raise RuntimeError("Bridge source changed during saved verification")
     return expected
 
 

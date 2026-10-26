@@ -7,6 +7,8 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
+from scripts.historical_foundation_sources import (BRIDGE_INPUTS, historical_preflop_rank_source_matches)
+
 from pokerlab.cards import expand_range
 from scripts import turn_river_validation as validator
 from scripts.benchmark_turn_river_independent import CONFIG, ROOT, source_hashes
@@ -83,6 +85,8 @@ def _source_fingerprints():
                  "turn_rational_certificate.py", "audit_turn_rational_certificate.py"):
         path = ROOT / "scripts" / name
         values[path.relative_to(ROOT).as_posix()] = _sha256(path.read_bytes())
+    for path in BRIDGE_INPUTS:
+        values[path.relative_to(ROOT).as_posix()] = _sha256(path.read_bytes())
     return dict(sorted(values.items()))
 
 
@@ -110,7 +114,8 @@ def _source_fingerprint_matches_report(report_hashes):
               for path in current_paths}
     archived = {str(name).replace("\\", "/"): digest
                 for name, digest in report_hashes.items()}
-    return all(name in archived and archived[name] in candidates
+    return all(name in archived and (archived[name] in candidates or
+               historical_preflop_rank_source_matches(ROOT / name, archived[name]))
                for name, candidates in actual.items())
 
 

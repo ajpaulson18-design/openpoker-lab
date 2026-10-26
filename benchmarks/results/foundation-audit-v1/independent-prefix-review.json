@@ -1,0 +1,42 @@
+{
+  "schema": "foundation-sol-independent-prefix-review-v1",
+  "baseline_commit": "901726e55caa0c45495b19668285162a04918cdc",
+  "candidate_state": "uncommitted audit implementation; hashes authenticate reviewed bytes",
+  "working_directory": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-openpoker\\work\\repo",
+  "python_executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "source_raw_sha256": {
+    "pokerlab/full_deck_prefix_mass.py": "a6efc9da89e77fc997cac2fff2bcc8b23f92f34fb4cf7b16a49b5563030744c6",
+    "tests/test_full_deck_prefix_independent.py": "efdf4a8e99e7c8c815307ba75197ea4c860a3d541ba7a52a7408b6e6dc7559e2"
+  },
+  "independent_controls": {
+    "seed": 83441,
+    "random_models": 40,
+    "prefixes": 160,
+    "literal_private_pair_checks": 11520,
+    "side_rescaling": "SB weights multiplied by 8, BB weights divided by 4; exact prefix mass and marginal equality",
+    "additional_anchors": [
+      "fixed private pair unordered flop probability 6/(48*47*46)",
+      "fixed private pair turn and river probabilities multiply by 1/45 and 1/44",
+      "minimum positive binary64 subnormal retains exact positive pair mass and own-hand marginal"
+    ],
+    "oracle_scope": "literal private-pair enumeration and independent sequential-deal counts; no candidate card-total, blocker or divisor helpers"
+  },
+  "executed_runs": [
+    {
+      "command": "& 'C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe' -B -m unittest tests.test_full_deck_prefix_independent -v",
+      "exit_code": 0,
+      "tests_run": 3,
+      "unittest_seconds": 0.481,
+      "result": "OK"
+    },
+    {
+      "command": "& 'C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe' -B -O -m unittest tests.test_full_deck_prefix_independent -v",
+      "exit_code": 0,
+      "tests_run": 3,
+      "unittest_seconds": 0.415,
+      "result": "OK"
+    }
+  ],
+  "scope_limit": "No training, ranking, game-tree construction, future-world enumeration, performance comparison or full-game equilibrium claim. Test durations are execution receipts, not benchmarks."
+}

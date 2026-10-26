@@ -10,6 +10,7 @@ import json
 import math
 import os
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 import subprocess
 import sys
 import tempfile
@@ -420,6 +421,7 @@ def _historical_map(value, required):
 
 def _verify_payload(report_raw, policy_raw, *, root, verification,
                     current_head, inputs, old_tail, bundle_guard=None):
+    operation_before = operation_fingerprints(())
     _need(_canonical(_decode(report_raw, "Report")) == report_raw,
           "Report is not canonical JSON")
     _need(_canonical(_decode(policy_raw, "Policy")) == policy_raw,
@@ -437,7 +439,7 @@ def _verify_payload(report_raw, policy_raw, *, root, verification,
     _need(type(value) is str and len(value) == 40 and
           all(char in "0123456789abcdef" for char in value),
           "Invalid historical generation commit")
-    _need(report.get("verification_source_sha256") == verification,
+    _need(compatible_exact_source_maps(report.get("verification_source_sha256"), verification, root),
           "Verification source fingerprints differ")
     _need(report.get("policy_file") == POLICY.name and report.get("policy_sha256") == _sha(policy_raw),
           "Report policy identity differs")
@@ -450,8 +452,10 @@ def _verify_payload(report_raw, policy_raw, *, root, verification,
                            old_tail=old_tail,
                            elapsed=report.get("completed_call_seconds"),
                            bundle_guard=bundle_guard)
+    rebuilt["verification_source_sha256"] = report["verification_source_sha256"]
     _need(_canonical(rebuilt) == report_raw,
           "Saved report differs from full no-training reconstruction")
+    _need(operation_fingerprints(()) == operation_before, "Bridge source changed during saved verification")
     return report
 
 

@@ -25,10 +25,7 @@ class TurnTailArtifactTests(unittest.TestCase):
         cls.report = cls.directory / 'report.json'
         cls.policies = cls.directory / 'policies'
         cls.baseline = runner._baseline_pins()
-        cls.sources = {p: hashlib.sha256(('synthetic:' + p).encode()).hexdigest()
-                       for p in runner.REQUIRED_SOURCES}
-        cls.sources.update({name: TRANSITIONS[name][1] for name in runner.REQUIRED_SOURCES
-                            if name in TRANSITIONS})
+        cls.sources = runner.fingerprints()
         with patch.object(runner, 'fingerprints', return_value=cls.sources), \
                 patch.object(runner, '_head', return_value='a' * 40), \
                 patch.object(runner, 'capture', side_effect=cls.snapshots), patch('builtins.print'):

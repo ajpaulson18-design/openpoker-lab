@@ -16,7 +16,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-from scripts.historical_turn_sources import compatible_source_maps
+from scripts.historical_turn_sources import OPERATION_INPUTS, compatible_source_maps
 from scripts import audit_full_deck_raised_exact as quotient
 
 
@@ -81,7 +81,7 @@ def _head():
 
 def fingerprints():
     return {path: _sha((ROOT / path).read_bytes().replace(b"\r\n", b"\n"))
-            for path in SOURCES}
+            for path in sorted(set(SOURCES) | set(OPERATION_INPUTS))}
 
 
 def _guard(source_map, head):

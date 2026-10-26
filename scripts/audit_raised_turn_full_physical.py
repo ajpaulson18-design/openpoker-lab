@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 import subprocess
 
 from scripts import full_deck_raised_reference as reference
@@ -288,7 +289,7 @@ def _preflight_saved_report(root, report):
              "Unsupported saved physical audit report")
     loaded = _load_inputs(root)
     current_sources = _source_fingerprints(root)
-    _require(report.get("source_sha256") == current_sources,
+    _require(compatible_exact_source_maps(report.get("source_sha256"), current_sources, root),
              "Saved physical audit source fingerprints differ")
     expected_input_hashes = {
         relpath: _sha(raw) for relpath, raw in loaded["accepted"].items()
@@ -582,11 +583,13 @@ def verify_report(report_path=REPORT, root=ROOT):
         report_path = root / report_path
     initial_head = _head(root)
     initial_sources = _source_fingerprints(root)
+    operation_before = operation_fingerprints(())
     raw = _read_capped(report_path, MAX_REPORT_BYTES, "Physical audit report")
     report = _read_json(raw, "Physical audit report", canonical=True)
     loaded = _preflight_saved_report(root, report)
     expected = _audit(root, generation_head=report["audit_head"],
                        require_committed=True)
+    expected["source_sha256"] = report["source_sha256"]
     _require(_canonical(expected) == raw,
              "Saved physical audit report differs from complete reconstruction")
     final_raw = _read_capped(report_path, MAX_REPORT_BYTES,
@@ -595,6 +598,7 @@ def verify_report(report_path=REPORT, root=ROOT):
              "Saved physical audit report changed during reconstruction")
     _guard_sources(root, initial_sources, initial_head)
     _guard_inputs(root, loaded["accepted"])
+    _require(operation_fingerprints(()) == operation_before, "Bridge source changed during saved verification")
     return expected
 
 

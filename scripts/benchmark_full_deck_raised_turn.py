@@ -15,7 +15,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from scripts.historical_turn_sources import compatible_source
+from scripts.historical_turn_sources import OPERATION_INPUTS, compatible_source, validate_current_context
 from scripts import full_deck_raised_fixture as fixture
 from scripts import full_deck_raised_reference as reference
 from scripts.benchmark_turn_river_independent import ROOT, solve
@@ -89,17 +89,19 @@ def _guard(expected_sources, expected_head):
 def fingerprints():
     paths = {p.relative_to(ROOT).as_posix() for p in (ROOT / "pokerlab").glob("*.py")}
     paths.update(REQUIRED_SOURCES)
+    paths.update(OPERATION_INPUTS)
     hashes = {}
     for relative in sorted(paths):
         path = ROOT / relative
         raw = path.read_bytes()
-        if path.suffix == ".py":
+        if path.suffix == ".py" or relative in OPERATION_INPUTS:
             raw = raw.replace(b"\r\n", b"\n")
         hashes[relative] = _sha(raw)
     return hashes
 
 
 def _validate_fingerprint_map(saved, current, strict):
+    validate_current_context(current)
     _require(type(saved) is dict, "Source fingerprint map must be an object")
     required = set(REQUIRED_SOURCES)
     _require(required.issubset(saved), "Saved source fingerprints omit required current sources")

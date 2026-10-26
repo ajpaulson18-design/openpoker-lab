@@ -26,6 +26,13 @@ and [solver progress](solver-progress.md) for shipped scope at that revision.
 
 ## Evidence rules
 
+Current owner priority (October 26): read the
+[foundation-first audit](foundation-first-audit.md), its dependency map and ranked
+register, then the [execution record](foundation-first-execution.md). Resolve
+probability correctness and representation/storage feasibility before expanding
+features. This priority supersedes an automatic expand-the-fixture next step;
+existing frozen evidence and unfinished expansion work remain preserved.
+
 | Label | Meaning |
 | --- | --- |
 | Confirmed owner decision | Explicit supplied owner instruction, or repository record reporting an owner decision; distinguish those two sources |

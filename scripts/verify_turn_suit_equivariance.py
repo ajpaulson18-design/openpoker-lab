@@ -1,5 +1,6 @@
 """Independent suit-equivariance acceptance; no transport/trainer/LP/exact-helper imports."""
 from pathlib import Path
+from scripts.historical_foundation_sources import BRIDGE_INPUTS, foundation_source_accepts
 from fractions import Fraction as F
 from itertools import permutations
 import copy,hashlib,json,math,subprocess
@@ -214,6 +215,7 @@ LIMITATIONS=[
 
 def source_inputs():
     names=set(REQUIRED_SOURCE_PATHS)
+    names.update(path.relative_to(ROOT).as_posix() for path in BRIDGE_INPUTS)
     names.update(p.relative_to(ROOT).as_posix() for p in (ROOT/'pokerlab').glob('*.py'))
     values={}
     for name in sorted(names):
@@ -229,7 +231,7 @@ def verify_source_pins(saved,current):
         need(type(name) is str and name and '\\' not in name and not Path(name).is_absolute() and not Path(name).drive and all(part not in ('','.','..') for part in name.split('/')),'Unsafe source inventory path')
         need(type(digest) is str and len(digest)==64 and all(c in '0123456789abcdef' for c in digest),'Malformed source digest')
         if name in REQUIRED_SOURCE_PATHS:
-            need(name in current and digest==current[name],'Required current proof source/input changed: '+name)
+            need(name in current and foundation_source_accepts(ROOT/name,digest,{current[name]}),'Required current proof source/input changed: '+name)
 
 
 def negative_expected():

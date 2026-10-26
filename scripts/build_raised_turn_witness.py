@@ -5,7 +5,7 @@ No training occurs. Both accepted input reports are pinned before publication.
 from copy import deepcopy
 from fractions import Fraction
 from hashlib import sha256
-from scripts.historical_turn_sources import compatible_source_maps
+from scripts.historical_turn_sources import OPERATION_INPUTS, compatible_source_maps
 import argparse
 import json
 import math
@@ -129,6 +129,7 @@ def cleanup_policy(source, *, tau=TAU):
 
 def _source_files():
     paths = set(exact_audit.SOURCES) | set(numeric_tail.REQUIRED_SOURCES)
+    paths.update(OPERATION_INPUTS)
     paths.update({"scripts/build_raised_turn_witness.py",
                   "tests/test_build_raised_turn_witness.py"})
     files = {name: reference.ROOT / name for name in sorted(paths)}

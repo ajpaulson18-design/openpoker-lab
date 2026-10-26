@@ -31,7 +31,12 @@ def _read(path, limit, expected):
                       parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)))
 
 
-def authenticate():
+def authenticate_record():
+    """Authenticate immutable historical evidence, without executing its proof.
+
+    The saved source manifest describes that historical observation. Binding
+    today's executable source to it is a separate requirement in authenticate().
+    """
     report = _read(RESULT, 2*1024*1024, RAW_SHA256)
     interruption = _read(INTERRUPTION, 4096, INTERRUPTION_SHA256)
     unsigned = {k: v for k, v in report.items() if k != "artifact_sha256"}
@@ -44,13 +49,20 @@ def authenticate():
     audit._need(interruption["status"] == "execution-interrupted-no-final-output",
                 "Initial execution interruption must remain explicit")
     audit._need(report["physical_worlds_sha256"] == audit.PHYSICAL_WORLDS_SHA256 and
-                report["physical_tree_sha256"] == audit.PHYSICAL_TREE_SHA256 and
-                report["source_lf_sha256"] == audit._source_hashes(),
-                "Frozen proof sources or physical anchors differ")
+                report["physical_tree_sha256"] == audit.PHYSICAL_TREE_SHA256,
+                "Frozen proof physical anchors differ")
     audit._need(type(report["forbidden_production_calls"]) is dict and
                 len(report["forbidden_production_calls"]) == 41 and
                 all(type(v) is int and v == 0 for v in report["forbidden_production_calls"].values()),
                 "Frozen proof called production authorities")
+    return report
+
+
+def authenticate():
+    """Require the original proof source closure before current-code replay."""
+    report = authenticate_record()
+    audit._need(report["source_lf_sha256"] == audit._source_hashes(),
+                "Frozen proof sources or physical anchors differ")
     return report
 
 

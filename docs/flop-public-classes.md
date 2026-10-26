@@ -1,5 +1,16 @@
 # Fixed flop public-chance equivalence audit
 
+Historical-record inspection after later verifier changes: use
+`scripts.verify_flop_public_classes_publication.authenticate_record()` to
+authenticate the unchanged published bytes, source manifest and policy records.
+This performs no proof execution or current-source attestation. The existing
+`authenticate()`, `verify()` and CLI retain the exact original six-source guard
+before reconstruction. The October 26 preflop-validator hardening changes that
+old source closure, so current-source reconstruction deliberately rejects; use
+the pinned historical source revision for a full historical replay. No original
+artifact, hash, miss or execution-admission rule is replaced. See
+[the foundation execution record](foundation-first-execution.md).
+
 This is a no-training audit for the same weighted full-future flop game used by
 [the completed alternating study](flop-alternating-study.md). Its three original
 0.005-chip quality misses remain unchanged. The class audit establishes a

@@ -14,6 +14,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
+from scripts.historical_foundation_sources import BRIDGE_INPUTS, historical_preflop_rank_source_matches
 
 from pokerlab.cards import expand_range
 from scripts import turn_river_validation as validator
@@ -107,7 +108,8 @@ def _source_fingerprint_matches_report(report_hashes):
                 for name, digest in report_hashes.items()}
     return all(
         path_string in archived and
-        archived[path_string] in _source_hash_candidates(ROOT / Path(path_string))
+        (archived[path_string] in _source_hash_candidates(ROOT / Path(path_string)) or
+         historical_preflop_rank_source_matches(ROOT / path_string, archived[path_string]))
         for path_string in MODEL_SOURCE_PATHS
     )
 
@@ -123,6 +125,7 @@ def _source_fingerprints():
         PARENT_REPORT,
         ROOT / "benchmarks" / "results" / ".gitattributes",
     ]
+    paths.extend(BRIDGE_INPUTS)
     paths.extend(POLICY_DIRECTORY / filename for filename, _ in
                  EXPECTED_POLICIES.values())
     for path in paths:

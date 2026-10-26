@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import tempfile
 
+from scripts.historical_foundation_sources import compatible_historical_reference_sources, operation_fingerprints
 from scripts import full_deck_raised_reference as reference
 from scripts import turn_rational_certificate as exact
 from scripts import turn_river_validation as rules
@@ -252,6 +253,7 @@ def reconstruct():
 def verify_saved_artifact(path=REPORT):
     raw = bounded(path, MAX_REPORT_BYTES)
     source_map, head = fingerprints(), reference.head()
+    operation_before = operation_fingerprints(SOURCES)
     report = json.loads(raw)
     need(canonical(report) == raw and set(report) == {'schema_version', 'generation_git_commit', 'source_sha256', 'audit'},
          'Unsupported exact audit envelope')
@@ -260,7 +262,8 @@ def verify_saved_artifact(path=REPORT):
     generation = report['generation_git_commit']
     need(type(generation) is str and len(generation) == 40 and
          all(c in '0123456789abcdef' for c in generation), 'Invalid historical generation HEAD')
-    need(report['source_sha256'] == source_map, 'Exact audit source pin differs')
+    need(compatible_historical_reference_sources(report['source_sha256'], source_map, SOURCES),
+         'Exact audit source pin differs')
     expected, saved = reconstruct(), deepcopy(report['audit'])
     need(type(saved) is dict and set(saved) == set(expected) and
          type(saved.get('results')) is list and len(saved['results']) == 6,
@@ -278,6 +281,7 @@ def verify_saved_artifact(path=REPORT):
                  'Saved numeric replay observations differ')
     need(canonical(saved) == canonical(expected), 'Saved exact audit differs from reconstruction')
     need(bounded(path, MAX_REPORT_BYTES) == raw, 'Exact audit report changed during verification')
+    need(operation_fingerprints(SOURCES) == operation_before, 'Audit source changed during verification')
     guard(source_map, head)
     return {'status': 'VERIFIED_EXACT_FULL_DECK_RAISED_POLICIES', 'training_calls': 0,
             'profiles': 6, 'report_sha256': sha256(raw).hexdigest()}

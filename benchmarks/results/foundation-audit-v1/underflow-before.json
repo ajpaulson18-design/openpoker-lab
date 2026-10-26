@@ -1,0 +1,54 @@
+{
+  "baseline_commit": "901726e55caa0c45495b19668285162a04918cdc",
+  "scope": "pre-change accepted-input probability reproduction; no training",
+  "cases": [
+    {
+      "sb_range": "AsAh:1e-160,QsQh:1e-161",
+      "bb_range": "KsKh:1e-156",
+      "returned_pair_probabilities": [
+        {
+          "sb_hand": "AhAs",
+          "bb_hand": "KhKs",
+          "probability": 1.0
+        },
+        {
+          "sb_hand": "QhQs",
+          "bb_hand": "KhKs",
+          "probability": 0.0
+        }
+      ],
+      "exact_input_binary64_posterior": [
+        "50653266221691808/55718592843860989",
+        "5065326622169181/55718592843860989"
+      ],
+      "exact_posterior_numeric": [
+        0.9090909090909091,
+        0.09090909090909091
+      ]
+    },
+    {
+      "sb_range": "AsAh:1e-160,QsQh:5e-161",
+      "bb_range": "KsKh:2e-156",
+      "returned_pair_probabilities": [
+        {
+          "sb_hand": "AhAs",
+          "bb_hand": "KhKs",
+          "probability": 0.5
+        },
+        {
+          "sb_hand": "QhQs",
+          "bb_hand": "KhKs",
+          "probability": 0.5
+        }
+      ],
+      "exact_input_binary64_posterior": [
+        "2/3",
+        "1/3"
+      ],
+      "exact_posterior_numeric": [
+        0.6666666666666666,
+        0.3333333333333333
+      ]
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "schema": "foundation-historical-integration-v1",
+  "baseline_commit": "901726e55caa0c45495b19668285162a04918cdc",
+  "previous_published_head": "96ebcd941bb1788eb34ecc293a3a356ed951b456",
+  "immutable_records": "Original benchmark/policy/report/source hash values remain unchanged",
+  "scope": [
+    "Rank-only old/new preflop bridge; not old/new chance equivalence",
+    "Normal-mass postflop arithmetic identity; subnormal input now rejects",
+    "Exact pinned provenance-only wrapper transitions with archived math AST checks",
+    "Current source/HEAD/input guards remain separate from historical identity"
+  ],
+  "rank_transition": {
+    "scope": "rank-functions-only; not chance normalization or policy validation",
+    "archived_lf_sha256": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "current_lf_sha256": "f9e81b318b78b3e4d9af43095d1a99bf6a0e1c5604d27dd0ba3e4ac02116f06f",
+    "preserved_function_ast_sha256": {
+      "_five_rank": "bb3f75bd79fb3ed6999d6e7a571cdab3ecdb4fcb0e0d7105df38517382ee4c22",
+      "independent_rank": "fac60f4125c31805a44835ff90b5411a98eb245ac65dc9e0e87512d1718984b2",
+      "Counter": "ebc5418aa2e2b1598f42819438ea6d2860169f26d5d629c02c052f1e83676a36",
+      "combinations": "40a563c3ea6bd814e811210fa0356dc0a8b27209e3f0a58728877f2eec0b1044"
+    }
+  },
+  "postflop_transition": {
+    "scope": "normal-supported-mass identity; underflow now rejects",
+    "archived_lf_sha256": "85b63897a9a4ae14dfa45053f2c2aa05a83549f6f75ee1dc205e0dba8c367808",
+    "current_lf_sha256": "75d15ac3945f38ee827a8cf887cc3a5755ae51ae177014dc0f266725d8586ca1",
+    "probability_guard_lf_sha256": "1c250ebddf2f000c97e47001237ec50b0a6506583ca8e0df2cdea5de0a2b3a03"
+  },
+  "turn_wrapper_transitions": {
+    "scripts/benchmark_full_deck_raised_turn.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "25a60602e3fd24f2709d7a157560abf895317eaf481a7888035763313b1eeea9",
+      "current_lf_sha256": "8bace93997409e1c81bb8fdfcb26f99ceda9fee3066b3d59fdf8e024442edcdd"
+    },
+    "scripts/benchmark_turn_tail.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "cb6e0bf638ce1b338fbe6a27ff09a0389b535190b7a2bbb022f6350f6982c052",
+      "current_lf_sha256": "6c20525fd25504c06ce30a1866cd59b0c184d0b1106110ef182584d82bd1725f"
+    },
+    "scripts/audit_turn_tail_exact.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "952737851f2264866ad59cdd0af27d3a90d1000d6ce59ebc84e791e37371a9ab",
+      "current_lf_sha256": "4a3afd0e632bb6f9f69e89368b85e388677339c368f90bf10e7fad05f2a1fa1c"
+    },
+    "scripts/build_raised_turn_witness.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "d5d7c588745015fce097798f10a3c7a42e70049f4fd49a4880d09e2744cbcd05",
+      "current_lf_sha256": "1963bb3b93aa28ce8308ca781e91dd070d68da6ab3c180b16a86cdb5cf02bfb7"
+    },
+    "tests/test_benchmark_turn_tail.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "65cb0619ff4982e070fa8cdd35b55b1dd3464117e57a4d63b3ff847a11025544",
+      "current_lf_sha256": "da94d4ee3cce775855e7441c72438d59d9dc3f53db410333b71c484d062b8a2f"
+    },
+    "tests/test_turn_tail_artifacts.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "42b453a254e04214828d650dfd8092d74e4f68464bdf1f6b894691fbeb717754",
+      "current_lf_sha256": "9bb73ab8e10b5b51e943d767b5faec80d6df70917c40cf9fa514b1331b5412b4"
+    },
+    "tests/test_build_raised_turn_witness.py": {
+      "scope": "reviewed provenance-only functions; all other AST unchanged",
+      "archived_lf_sha256": "b310ed3ec3834c75185a3be67c179fbbe86cc7a620b5c5349b36287506d6f36a",
+      "current_lf_sha256": "10a58c21019ace5db28c5690feb190689940d28241062c4be89ab42215f0d471"
+    }
+  },
+  "source_transitions": {
+    "scripts/turn_blocker_profiles.py": [
+      "42798c5153841991b8c8c775f863dab97acbec96b2df6c0afba9e6ce37a7907c",
+      "b2f80637acaaf8c6a8fae3a18342ba8bde7cbb032333f1b3118e0e2b898fcebf",
+      [
+        "inputs",
+        "source_pins"
+      ]
+    ],
+    "scripts/turn_weighted_profiles.py": [
+      "7716c5032cce3f499abdb8b30bdc8457f9c0070b0dd7f010c2c495e77c3e650e",
+      "d4e752666deb31d70bc277883554231bab2ad49a7b18bbf1a409fa84bf3b7974",
+      [
+        "inputs",
+        "source_pins"
+      ]
+    ],
+    "scripts/verify_turn_sequence.py": [
+      "4d9aef7ec85ff6d5491ec172c0e73eb96d8af56db3881efb88491e466364b79d",
+      "53293d819de49d39a47dc07dad36dc9d13e7053ab2346bd34a754f9d2e98d75b",
+      [
+        "_inputs",
+        "_provenance"
+      ]
+    ],
+    "scripts/verify_turn_blocker_sequence.py": [
+      "2cb229d6a4aba97dca363196ee387d57272aebcb1be2c3a8aa44f5b700256428",
+      "e5f813d11b45571b237a25ee0607a039cb304ae6aa12858e04c804327dab9302",
+      [
+        "_inputs",
+        "_provenance"
+      ]
+    ],
+    "scripts/verify_turn_weighted_sequence.py": [
+      "ee4b2785e151e8768b42a017341b58cfe7e4554a7c0e2ed51c4b6420c34983ed",
+      "acc78e6b7de650fc1976c043eaa84791f37a28b537c7be07f70bab0d6e5dee38",
+      [
+        "_inputs",
+        "_provenance"
+      ]
+    ],
+    "scripts/verify_turn_suit_equivariance.py": [
+      "75e4dd31ab18817a6032e60cfdbec53916ab553d60f472cac179df769ed5f13e",
+      "6a8c4685b116fb2ccd3410e5bff775f039dfbaea12da6e4c65e2cb7c503526b2",
+      [
+        "source_inputs",
+        "verify_source_pins"
+      ]
+    ],
+    "scripts/river_blocker_profiles.py": [
+      "1d6d1e462df3c1ed162ab1042e9dc9d7b928a94eb8a5f08819223fb097488e71",
+      "e24611dcacdca2345efd16d65c225937207e9ca47bc8c5351ad9ea0a31e73de0",
+      [
+        "_sources"
+      ]
+    ],
+    "scripts/benchmark_river_direct_tail.py": [
+      "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+      "4eeb90812297f41a5eb25bb144482ed59284f17ab8b395b6dc0dbeb9c161d9a0",
+      [
+        "_verify_bundle"
+      ]
+    ],
+    "scripts/benchmark_river_direct_long_tail.py": [
+      "cf79a69df6c3e71643a882359c074c7d825574d9b1b769ac9e6b377f182ca576",
+      "1cbd4b4b69065edde3019308245c9a1cf6510e60e2d4f55c9b4f1b0d7da7514e",
+      [
+        "_validate_report_context",
+        "_verify_bundle"
+      ]
+    ],
+    "scripts/benchmark_turn_direct_tail.py": [
+      "17604a38e02911de28f2484fd9a4f278deb08a8544b4a89f74beecb51b021156",
+      "0c955d193f754ecfc2a0e6509ebcf5df62b6985fbeb84705d32b34f59e0b99b5",
+      [
+        "_verify_payload"
+      ]
+    ],
+    "scripts/benchmark_turn_three_hand_tail.py": [
+      "62eb0eeebafb720f6f6a06ce855d119d9c52d882a6066b4f892c3e9157149aec",
+      "c5fc79fc9f8ab70063d6ce9df69e2d4c5af9e6415920bce1a92e205077cfa903",
+      [
+        "_verify_bundle"
+      ]
+    ],
+    "scripts/audit_raised_turn_full_physical.py": [
+      "da2759d2653768cc877c2a6eb6a3ed934e884ea0498be9370282675902435522",
+      "08b9cf6e43158177deeb887d52bf8a543d6fd40a5f80a73993bd5cfa8e866188",
+      [
+        "_preflight_saved_report",
+        "verify_report"
+      ]
+    ]
+  },
+  "current_operation_inputs": [
+    "scripts/historical_turn_sources.py",
+    "scripts/historical_foundation_sources.py",
+    "tests/fixtures/preflop_validation_before_foundation.py.txt",
+    "tests/fixtures/postflop_solver_before_foundation.py.txt",
+    "pokerlab/probability_guard.py",
+    "tests/fixtures/benchmark_full_deck_raised_turn_before_foundation.py.txt",
+    "tests/fixtures/benchmark_turn_tail_before_foundation.py.txt",
+    "tests/fixtures/audit_turn_tail_exact_before_foundation.py.txt",
+    "tests/fixtures/build_raised_turn_witness_before_foundation.py.txt",
+    "tests/fixtures/test_benchmark_turn_tail_before_foundation.py.txt",
+    "tests/fixtures/test_turn_tail_artifacts_before_foundation.py.txt",
+    "tests/fixtures/test_build_raised_turn_witness_before_foundation.py.txt",
+    "tests/fixtures/audit_river_rational_certificate_before_foundation.py.txt",
+    "tests/fixtures/full_deck_raised_reference.py.before_foundation.txt",
+    "tests/fixtures/audit_full_deck_raised_exact.py.before_foundation.txt",
+    "tests/fixtures/test_full_deck_raised_exact.py.before_foundation.txt",
+    "tests/fixtures/turn_blocker_profiles.py.before_foundation.txt",
+    "tests/fixtures/turn_weighted_profiles.py.before_foundation.txt",
+    "tests/fixtures/verify_turn_sequence.py.before_foundation.txt",
+    "tests/fixtures/verify_turn_blocker_sequence.py.before_foundation.txt",
+    "tests/fixtures/verify_turn_weighted_sequence.py.before_foundation.txt",
+    "tests/fixtures/verify_turn_suit_equivariance.py.before_foundation.txt",
+    "tests/fixtures/river_blocker_profiles.py.before_foundation.txt",
+    "tests/fixtures/benchmark_river_direct_tail.py.before_foundation.txt",
+    "tests/fixtures/benchmark_river_direct_long_tail.py.before_foundation.txt",
+    "tests/fixtures/benchmark_turn_direct_tail.py.before_foundation.txt",
+    "tests/fixtures/benchmark_turn_three_hand_tail.py.before_foundation.txt",
+    "tests/fixtures/audit_raised_turn_full_physical.py.before_foundation.txt"
+  ],
+  "intermediate_failures": [
+    {
+      "head": "aa06b46bbf9affb0d6261f3bfc5017c7986db435",
+      "ci_tests": 2250,
+      "ci_seconds": 736.057,
+      "failures": 8,
+      "errors": 39,
+      "cause": "Historical whole-file source pins reject upgraded files"
+    },
+    {
+      "run": "first local integrated historical replay",
+      "tests": 179,
+      "seconds": 635.593,
+      "failures": 1,
+      "errors": 15,
+      "cause": "Additional downstream source pins, uncommitted-source checks, source-closure fixture expectation",
+      "source_stable": true,
+      "head_stable": true
+    }
+  ],
+  "completed_validation": [
+    {
+      "scope": "rank/rational/native/held-out saved evidence",
+      "tests": 56,
+      "seconds": 41.331,
+      "result": "pass",
+      "executor": "Terra"
+    },
+    {
+      "scope": "raised bridge and exact saved audit",
+      "tests": 20,
+      "seconds": 33.728,
+      "result": "pass",
+      "executor": "Terra"
+    },
+    {
+      "scope": "root turn audit and source closure",
+      "tests": 12,
+      "seconds": 11.755,
+      "result": "pass",
+      "executor": "root"
+    },
+    {
+      "scope": "final source transitions/adversarial/source closure",
+      "tests": 18,
+      "seconds": 7.61,
+      "result": "pass",
+      "executor": "root"
+    },
+    {
+      "scope": "river blocker saved profiles",
+      "tests": 13,
+      "seconds": 17.103,
+      "result": "pass",
+      "executor": "Terra"
+    },
+    {
+      "scope": "saved blocker witness, suit proof and two-game river direct bundle",
+      "result": "pass",
+      "executor": "Terra",
+      "limitation": "Public entry points requiring committed source await commit"
+    }
+  ],
+  "remaining_acceptance": "Post-commit public saved verification and final full GitHub CI",
+  "bridge_input_lf_sha256": {
+    "scripts/historical_foundation_sources.py": "2b471c5bc7c692c5fed3af6de2704d1bf7d2d7c160c83296a9868afb8ba641b3",
+    "tests/fixtures/preflop_validation_before_foundation.py.txt": "c4abe50a3f3ff814910ad2eaf653e6e2b29f7c31b28e6618f1718283794cfaa8",
+    "tests/fixtures/audit_river_rational_certificate_before_foundation.py.txt": "6af6da2995f08a2a2ddcce6a6f66d366951df09aa2f004fe6bd02eb8f5bc940f",
+    "tests/fixtures/full_deck_raised_reference.py.before_foundation.txt": "c0028a879aaf42a3b9c7c06819315a4c4a5547d37c4df5637da550187f85d704",
+    "tests/fixtures/audit_full_deck_raised_exact.py.before_foundation.txt": "897813f28f71ca91d9994ca1fa82cd5cad6dad928fcb67515d65260e88ce40ac",
+    "tests/fixtures/test_full_deck_raised_exact.py.before_foundation.txt": "c3402ad1343a2757d8c222020aadbccb0fab938a21679f6b8267b18891983494",
+    "tests/fixtures/turn_blocker_profiles.py.before_foundation.txt": "42798c5153841991b8c8c775f863dab97acbec96b2df6c0afba9e6ce37a7907c",
+    "tests/fixtures/turn_weighted_profiles.py.before_foundation.txt": "7716c5032cce3f499abdb8b30bdc8457f9c0070b0dd7f010c2c495e77c3e650e",
+    "tests/fixtures/verify_turn_sequence.py.before_foundation.txt": "4d9aef7ec85ff6d5491ec172c0e73eb96d8af56db3881efb88491e466364b79d",
+    "tests/fixtures/verify_turn_blocker_sequence.py.before_foundation.txt": "2cb229d6a4aba97dca363196ee387d57272aebcb1be2c3a8aa44f5b700256428",
+    "tests/fixtures/verify_turn_weighted_sequence.py.before_foundation.txt": "ee4b2785e151e8768b42a017341b58cfe7e4554a7c0e2ed51c4b6420c34983ed",
+    "tests/fixtures/verify_turn_suit_equivariance.py.before_foundation.txt": "75e4dd31ab18817a6032e60cfdbec53916ab553d60f472cac179df769ed5f13e",
+    "tests/fixtures/river_blocker_profiles.py.before_foundation.txt": "1d6d1e462df3c1ed162ab1042e9dc9d7b928a94eb8a5f08819223fb097488e71",
+    "tests/fixtures/benchmark_river_direct_tail.py.before_foundation.txt": "7362280470f9fa3aea575de981242e383e11dfa7acdba6669a820d2548bbf486",
+    "tests/fixtures/benchmark_river_direct_long_tail.py.before_foundation.txt": "cf79a69df6c3e71643a882359c074c7d825574d9b1b769ac9e6b377f182ca576",
+    "tests/fixtures/benchmark_turn_direct_tail.py.before_foundation.txt": "17604a38e02911de28f2484fd9a4f278deb08a8544b4a89f74beecb51b021156",
+    "tests/fixtures/benchmark_turn_three_hand_tail.py.before_foundation.txt": "62eb0eeebafb720f6f6a06ce855d119d9c52d882a6066b4f892c3e9157149aec",
+    "tests/fixtures/audit_raised_turn_full_physical.py.before_foundation.txt": "da2759d2653768cc877c2a6eb6a3ed934e884ea0498be9370282675902435522"
+  },
+  "local_log_sha256": {
+    "foundation-provenance-combined.log": "41d2ab13464eb2c88711d783038e36bc1d5840da553dd53ead188b661e07a250",
+    "foundation-review-fixes.log": "6d0677a8adb9312530a423030f6952a69b2fe35920f1d98602fb3dca7557713b",
+    "foundation-provenance-final-fast.log": "5aa55837add14f5fbb2aafa2f917c91b972615d597878f67ebe63131f4f3f45e",
+    "foundation-provenance-optimized.log": "12f0049bac4293934192b2ce4c4a3beb6ae59e37aa883359977b02d57eca5a68"
+  }
+}

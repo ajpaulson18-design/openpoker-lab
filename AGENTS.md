@@ -6,6 +6,22 @@ Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifi
 
 ## Project
 
+The October 26 owner priority is the [foundation-first assessment and critical
+path](docs/foundation-first-audit.md). Preserve its distinction between scoped
+finite-game evidence and full-deck/product readiness. Materialized preflop,
+postflop and river producers reject zero/subnormal/nonfinite raw or normalized
+joint masses through `probability_guard.py`; do not remove these guards or
+silently repair weights without independent numerical acceptance. The separate
+`full_deck_prefix_mass.py` operator is exact research-only probability work, not
+a trainer, selected-runout replacement, payoff operator or production capability.
+Keep actual/counterfactual reach, strategy storage and coaching action values as
+separate unresolved gates. Record executed checks in the linked execution record.
+Historical source repairs use `historical_foundation_sources.py` and
+`historical_turn_sources.py`: retain frozen records and exact archived/current
+pins, identify the preserved semantic dependency, and guard current operation
+inputs separately. A rank-only transition never establishes whole-validator or
+chance-law equivalence. Do not execute archived source or bypass source admission.
+
 For matrix-free turn `terminal_cache="ranked-lru"`, preserve the literal default
 path and all legacy payload fields. Keep caches private to a solve through
 branch composition, restore original references on every exit, validate before

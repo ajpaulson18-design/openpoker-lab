@@ -17,6 +17,7 @@ import uuid
 from datetime import datetime, timezone
 from fractions import Fraction as F
 from pathlib import Path
+from scripts.historical_foundation_sources import BRIDGE_INPUTS, foundation_source_accepts
 
 from scripts import turn_river_validation as rules
 from scripts import turn_rational_certificate as exact_helper
@@ -95,6 +96,7 @@ def hash_candidates(path):
 
 def inputs():
     inventory = set(REQUIRED)
+    inventory.update(path.relative_to(ROOT).as_posix() for path in BRIDGE_INPUTS)
     inventory.update(path.relative_to(ROOT).as_posix()
                      for path in (ROOT / "pokerlab").glob("*.py"))
     result = {}
@@ -131,7 +133,7 @@ def source_pins(saved, current):
         if name not in current:
             raise ValueError("Pinned source disappeared: " + name)
         if name.endswith(".py"):
-            if digest not in hash_candidates(ROOT / name):
+            if not foundation_source_accepts(ROOT / name, digest, hash_candidates(ROOT / name)):
                 raise ValueError("Pinned source differs: " + name)
         elif digest != current[name]:
             raise ValueError("Pinned mathematical artifact differs: " + name)
