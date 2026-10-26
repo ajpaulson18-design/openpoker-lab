@@ -97,6 +97,36 @@ and [legacy review](../benchmarks/results/foundation-audit-v1/legacy-review.json
 Documentation validation and whitespace checks pass. Final PR checks are a
 separate live publication requirement and are not inferred from these local runs.
 
+## Historical-source integration follow-up
+
+The first full GitHub run at `aa06b46` executed 2,250 tests in 736.057 seconds
+with 39 errors and eight failures. The failures exposed further whole-file
+historical source coupling; they were not treated as a passing full suite.
+A stable-source local integration pass then executed 179 tests in 635.593
+seconds with 15 errors and one failure, narrowing the remaining work to
+downstream source pins, committed-source requirements and one test's expected
+input inventory. Both source and HEAD remained unchanged during that run.
+
+The completed compatibility layer retains every frozen artifact and original
+source pin. It authenticates inert archived files, exact reviewed current file
+identities and unchanged mathematical ASTs; only named provenance functions
+and three synthetic source-map fixtures differ. The independent rank bridge
+has rank-only scope; it is not equivalence of the old/new chance laws. Current
+source/HEAD/byte guards remain active, including introduced bridge/archive/guard
+dependencies. LF/CRLF archive handling is tested explicitly. Source acceptance
+still precedes mathematical reconstruction, with a regression that asserts the
+reconstructor is never called after a source rejection.
+
+Terra implemented the difficult integration after that model became available,
+and root reviewed the diffs and corrected the authentication order and archive
+line-ending handling before final acceptance. Focused bridge, rational, saved
+native/held-out, raised-reference, blocker and suit checks pass. Public verifiers
+that require committed source run after committing the integration; they were
+never bypassed for local convenience. The exact scopes, intermediate failures,
+reviewed transitions, source hashes and executed focused checks are preserved in
+[the integration receipt](../benchmarks/results/foundation-audit-v1/provenance-integration.json).
+Final clean-head CI remains required before merging.
+
 ## Remaining work
 
 The [ranked register](foundation-first-audit.md#ranked-improvement-register)

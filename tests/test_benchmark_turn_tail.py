@@ -82,8 +82,7 @@ class TurnTailRunnerSafetyTests(unittest.TestCase):
 
     def test_report_generation_head_is_historical_and_source_pins_are_strict(self):
         baseline = {"report_sha256": "b" * 64}
-        current_pins = {name: TRANSITIONS[name][1] if name in TRANSITIONS else "d" * 64
-                        for name in runner.REQUIRED_SOURCES}
+        current_pins = runner.fingerprints()
         source_pins = dict(current_pins)
         source_pins["pokerlab/unrelated-historical.py"] = "a" * 64
         report = {
@@ -126,13 +125,7 @@ class TurnTailRunnerSafetyTests(unittest.TestCase):
             report_path, policies_path = temp / "report.json", temp / "policies"
             baseline = runner._baseline_pins()
             original_bytes = dict(baseline["policies"])
-            source_map = {
-                name: hashlib.sha256(("synthetic:" + name).encode()).hexdigest()
-                for name in runner.REQUIRED_SOURCES
-            }
-            # Synthetic observations still need authenticated protected source endpoints.
-            source_map.update({name: TRANSITIONS[name][1] for name in runner.REQUIRED_SOURCES
-                               if name in TRANSITIONS})
+            source_map = runner.fingerprints()
             fake_head = "a" * 40
             calls = []
 

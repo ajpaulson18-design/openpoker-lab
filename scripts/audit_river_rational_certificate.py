@@ -12,6 +12,9 @@ from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
 
+from scripts.historical_foundation_sources import (BRIDGE_INPUTS, historical_preflop_rank_source_matches,
+    historical_river_audit_source_matches)
+
 from pokerlab.cards import expand_range
 from scripts import turn_river_validation as validator
 from scripts.benchmark_turn_river_independent import ROOT, source_hashes
@@ -270,7 +273,8 @@ def _check_historical_model_sources(reports):
         for path in relevant:
             relative = path.relative_to(ROOT).as_posix()
             digest = archived.get(relative)
-            if digest is None or digest not in _source_hash_candidates(path):
+            if digest is None or (digest not in _source_hash_candidates(path) and
+                                  not historical_preflop_rank_source_matches(path, digest)):
                 raise ValueError(
                     f"{source} historical numeric-model source differs at {relative}")
 def _source_fingerprints():
@@ -284,6 +288,7 @@ def _source_fingerprints():
         ROOT / "tests" / "test_audit_river_rational_certificate.py",
         ROOT / "tests" / "test_river_rational_review.py",
     ]
+    extra.extend(BRIDGE_INPUTS)
     for info in ARCHIVES.values():
         extra.append(info["report_path"])
     extra.append(HARDENED_REPLAY_BRIDGE)
@@ -665,7 +670,9 @@ def _validate_saved_provenance(saved):
     relevant.extend(_policy_paths(key[0], POLICY_PINS[key][0]) for key in POLICY_PINS)
     for path in relevant:
         rel = path.relative_to(ROOT).as_posix()
-        if inventory[rel] not in _source_hash_candidates(path):
+        if (inventory[rel] not in _source_hash_candidates(path) and
+                not historical_preflop_rank_source_matches(path, inventory[rel]) and
+                not historical_river_audit_source_matches(path, inventory[rel])):
             raise ValueError(f"Saved provenance differs for a pinned audit input: {rel}")
     return baseline
 

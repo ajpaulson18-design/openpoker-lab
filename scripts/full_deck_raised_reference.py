@@ -12,6 +12,7 @@ from math import isfinite
 from pathlib import Path
 import subprocess
 
+from scripts.historical_foundation_sources import compatible_historical_reference_sources, operation_fingerprints
 from scripts import turn_river_validation as rules
 from scripts.verify_turn_blocker_sequence import rank as best_five_rank
 
@@ -224,6 +225,7 @@ def verify_saved_artifact(path=REPORT):
     raw = path.read_bytes()
     require(len(raw) <= MAX_REPORT_BYTES, "Reference report grew beyond byte cap")
     before, before_head = fingerprints(), head()
+    operation_before = operation_fingerprints(SOURCE_PATHS)
     report = json.loads(raw)
     require(set(report) == {"schema_version", "baseline_git_commit", "source_sha256", "reference"}
             and type(report["schema_version"]) is int and report["schema_version"] == 1,
@@ -231,7 +233,8 @@ def verify_saved_artifact(path=REPORT):
     baseline = report["baseline_git_commit"]
     require(type(baseline) is str and len(baseline) == 40
             and all(c in "0123456789abcdef" for c in baseline), "Invalid historical generation commit")
-    require(report["source_sha256"] == before, "Current reference sources differ")
+    require(compatible_historical_reference_sources(report["source_sha256"], before, SOURCE_PATHS),
+            "Current reference sources differ")
     expected = reconstruct()
     saved = deepcopy(report["reference"])
     require(type(saved) is dict and set(saved) == set(expected), "Reference field set differs")
@@ -242,7 +245,8 @@ def verify_saved_artifact(path=REPORT):
                     and abs(observed[k] - projected[k]) <= 1e-12 for k in METRICS),
             "All-check float reference differs beyond1e-12")
     require(canonical(saved) == canonical(expected), "Independent full-deck reference differs")
-    require(fingerprints() == before and head() == before_head and path.read_bytes() == raw,
+    require(fingerprints() == before and operation_fingerprints(SOURCE_PATHS) == operation_before
+            and head() == before_head and path.read_bytes() == raw,
             "Source, HEAD or accepted reference changed during replay")
     return report
 

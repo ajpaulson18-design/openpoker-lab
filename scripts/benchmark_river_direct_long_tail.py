@@ -8,6 +8,7 @@ import json
 import math
 import os
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 import re
 import sys
 import time
@@ -370,7 +371,7 @@ def _validate_report_context(report, expected_math):
     _validate_historical_map(report.get("historical_producer_source_sha256"), producer_required,
                              producer=True)
     _validate_historical_map(report.get("verification_source_sha256"), set(VERIFY_PATHS))
-    if report["verification_source_sha256"] != expected_math:
+    if not compatible_exact_source_maps(report["verification_source_sha256"], expected_math, ROOT):
         raise ValueError("Saved verification map differs from current committed math sources")
     elapsed = report.get("actual_complete_call_seconds")
     if (isinstance(elapsed, bool) or not isinstance(elapsed, (int, float))
@@ -381,6 +382,7 @@ def _validate_report_context(report, expected_math):
 
 def _verify_bundle(report_raw, policy_raw, *, root, expected_math, inputs,
                    current_head, bundle_guard=None):
+    operation_before = operation_fingerprints(())
     if type(report_raw) is not bytes or type(policy_raw) is not bytes:
         raise ValueError("Saved report and policy must be bytes")
     if len(report_raw) > REPORT_CAP or len(policy_raw) > POLICY_CAP:
@@ -416,6 +418,8 @@ def _verify_bundle(report_raw, policy_raw, *, root, expected_math, inputs,
         raise ValueError("Saved report differs from complete independent reconstruction")
     if bundle_guard:
         bundle_guard()
+    if operation_fingerprints(()) != operation_before:
+        raise RuntimeError("Bridge source changed during saved verification")
     return expected
 
 

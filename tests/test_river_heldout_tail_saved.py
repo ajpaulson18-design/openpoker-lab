@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from contextlib import ExitStack
 from fractions import Fraction
+from scripts.historical_foundation_sources import historical_preflop_rank_source_matches
+
 import hashlib
 import json
 from pathlib import Path
@@ -198,7 +200,8 @@ class SavedHeldoutTailTests(unittest.TestCase):
             self.assertEqual(source_map[relative]["normalized_lf_sha256"],
                              expected_lf_hash, relative)
             current = (ROOT / relative).read_bytes()
-            self.assertEqual(_sha(_lf(current)), expected_lf_hash, relative)
+            self.assertTrue(_sha(_lf(current)) == expected_lf_hash or
+                            historical_preflop_rank_source_matches(ROOT / relative, expected_lf_hash), relative)
 
     def test_four_policies_replay_with_independent_numeric_and_fraction_auditors(self):
         self.assertEqual(len(self.replays), 4)

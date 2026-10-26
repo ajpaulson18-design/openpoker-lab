@@ -171,7 +171,7 @@ class FullDeckRaisedExactAuditTests(unittest.TestCase):
             path.unlink(missing_ok=True)
 
     def test_source_head_policy_and_report_drift_guards(self):
-        source_map = {"source": "pinned"}
+        source_map = audit.fingerprints()
         with patch.object(audit, "fingerprints", return_value=source_map), \
              patch.object(reference, "head", return_value="head-a"):
             audit.guard(source_map, "head-a")
@@ -225,7 +225,7 @@ class FullDeckRaisedExactAuditTests(unittest.TestCase):
 
     def test_saved_policy_and_immutable_report_byte_drift_are_rejected(self):
         baseline_bytes = audit.bounded(audit.BASELINE, 1_000_000)
-        source_map = {"test-source": "stable"}
+        source_map = audit.fingerprints()
         original_bounded = audit.bounded
 
         reads = {}

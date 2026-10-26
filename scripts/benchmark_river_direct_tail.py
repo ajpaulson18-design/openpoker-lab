@@ -11,6 +11,7 @@ import json
 import math
 import os
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 import re
 import subprocess
 import sys
@@ -566,6 +567,7 @@ def _expected_map_shape(mapping, *, exact_keys=None):
 
 def _verify_bundle(report_raw, policy_raws, *, root=ROOT, expected_math=None,
                    expected_inputs=None, current_head=None, bundle_guard=None):
+    operation_before = operation_fingerprints(())
     if type(report_raw) is not bytes or len(report_raw) > REPORT_CAP:
         raise ValueError("Report exceeds cap or is not bytes")
     report = json.loads(report_raw)
@@ -580,7 +582,7 @@ def _verify_bundle(report_raw, policy_raws, *, root=ROOT, expected_math=None,
     _expected_map_shape(report.get("verification_source_sha256"), exact_keys=VERIFY_PATHS)
     if expected_math is None:
         expected_math = _verification_hashes(root)
-    if report["verification_source_sha256"] != expected_math:
+    if not compatible_exact_source_maps(report["verification_source_sha256"], expected_math, root):
         raise ValueError("Current independent verification sources differ from saved report pins")
     if expected_inputs is None:
         expected_inputs = _load_inputs(root)
@@ -621,10 +623,12 @@ def _verify_bundle(report_raw, policy_raws, *, root=ROOT, expected_math=None,
         guard()
     rebuilt = _build_report(report["historical_producer_head"],
                             report["historical_producer_source_sha256"],
-                            expected_math, expected_inputs, outputs, policy_raws)
+                            report["verification_source_sha256"], expected_inputs, outputs, policy_raws)
     if _canonical(rebuilt) != report_raw:
         raise ValueError("Saved report differs from complete no-training reconstruction")
     guard()
+    if operation_fingerprints(()) != operation_before:
+        raise RuntimeError("Bridge source changed during saved verification")
     return report
 
 

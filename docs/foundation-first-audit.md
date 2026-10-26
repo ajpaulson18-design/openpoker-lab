@@ -102,6 +102,7 @@ Effort is relative (S: bounded change, M: multiple components, L: research progr
 | F09 P2 | Native backend is explicit and supports a bounded subset; legacy defaults remain Python. Build/IPC/preparation/diagnostic cost for larger cases is unmeasured. | Operational selection and full-call costs; high. | Profile phases before moving more code, M; never silently fall back. |
 | F10 P2 | CPU parallelism/SIMD/GPU and alternate CFR/DCFR schedules lack same-game equal-budget evidence on intended scale. | Throughput, reproducibility, work models; medium. | Potential speed gains, M/L; downstream of memory/layout/representation. |
 | F11 P2 | Hosting, worker admission, queueing, actual RSS, corpus storage and cost per active learner are unmeasured. Local server is intentionally loopback-only. | Commercial reliability and economics; high. | Required before hosted release, M/L; do not turn the research server into a public worker. |
+| F11b P1 | Historical replay coupled complete source files to small unchanged helpers, preventing reviewed numerical repairs without breaking saved checks. **Reproduced; explicit transition layer implemented.** | Independent evidence, maintenance and acceptance of every future kernel change; high. | Preserve evidence while evolving code, M; source transitions require exact archives, semantic scope and current-operation guards. |
 | F12 P3 | UI expansion, cosmetic refinements, additional abstractions and isolated micro-optimizations. **Deferred.** | Lower immediate foundation impact; high. | No prerequisite benefit established; defer behind P0/P1. |
 
 ### F01: numerical correctness and implemented containment
@@ -150,6 +151,21 @@ malformed payloads/references in each normal/optimized subprocess. These tests
 establish rejection mechanics, not physical count provenance or solver quality.
 The four named tools now retain these checks in optimized mode; other validators
 are not implicitly certified, and historical source-pinned records were not rewritten.
+
+Full CI exposed F11b: older records pin whole source files even when a historical
+consumer only uses the unchanged independent hand-ranker. The integration now
+authenticates inert archived source, exact reviewed current bytes, and the rank
+functions plus their imports. It does **not** assert equivalence of the repaired
+chance normalizer or policy acceptance rules. Historical postflop compatibility
+is separately limited to the unchanged normal-mass arithmetic path; underflow
+continues to reject. Provenance-only wrapper edits have exact old/current pins
+and AST comparison outside named provenance functions. Both LF and CRLF historical
+hashes are recognized only through those authenticated bytes. Unknown matching
+hashes, reversed turn transitions, changed archives, missing dependencies and
+source changes during replay remain rejected. Current operation fingerprints
+include the new bridge, archives and probability guard. Archived code is parsed
+as inert evidence and never executed. See the
+[integration receipt](../benchmarks/results/foundation-audit-v1/provenance-integration.json).
 
 ### F02/F03: decisive structural comparison and implemented prototype
 

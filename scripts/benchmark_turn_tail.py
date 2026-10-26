@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from fractions import Fraction
 from pathlib import Path
 
-from scripts.historical_turn_sources import compatible_source
+from scripts.historical_turn_sources import OPERATION_INPUTS, compatible_source, validate_current_context
 from scripts import full_deck_raised_fixture as fixture
 from scripts import full_deck_raised_reference as reference
 from scripts import river_tail_realization as realization
@@ -82,10 +82,11 @@ def _head():
 def fingerprints():
     paths = {p.relative_to(ROOT).as_posix() for p in (ROOT / "pokerlab").glob("*.py")}
     paths.update(REQUIRED_SOURCES)
+    paths.update(OPERATION_INPUTS)
     result = {}
     for relative in sorted(paths):
         raw = (ROOT / relative).read_bytes()
-        if relative.endswith(".py"):
+        if relative.endswith(".py") or relative in OPERATION_INPUTS:
             raw = raw.replace(b"\r\n", b"\n")
         result[relative] = _sha(raw)
     return result
@@ -276,6 +277,7 @@ def process_capture(case, backend, discard, total, interval=None):
 
 
 def _check_report_envelope(report, sources, current_head, baseline):
+    validate_current_context(sources)
     _require(type(report) is dict and type(report.get("schema_version")) is int and
              report["schema_version"] == SCHEMA_VERSION and
              report.get("benchmark_id") == BENCHMARK_ID, "Unsupported report envelope")
@@ -296,7 +298,7 @@ def _check_report_envelope(report, sources, current_head, baseline):
                  for name in REQUIRED_SOURCES),
              "A required proof source fingerprint differs")
     for name, digest in saved_sources.items():
-        _require(type(name) is str and (name in REQUIRED_SOURCES or
+        _require(type(name) is str and (name in REQUIRED_SOURCES or name in OPERATION_INPUTS or
                  (name.startswith("pokerlab/") and name.count("/") == 1 and
                   name.endswith(".py") and ".." not in name)) and _valid_sha(digest),
                  "Malformed historical source context")

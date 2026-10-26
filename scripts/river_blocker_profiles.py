@@ -13,6 +13,7 @@ import uuid
 from datetime import datetime, timezone
 from fractions import Fraction as F
 from pathlib import Path
+from scripts.historical_foundation_sources import compatible_exact_source_maps, foundation_source_accepts, operation_fingerprints
 
 from scripts import audit_river_rational_certificate as audit
 from scripts import turn_rational_certificate as exact
@@ -94,7 +95,7 @@ def _sources(saved, current):
         if relative.startswith("benchmarks/"):
             if digest != current[relative]:
                 raise ValueError("Pinned mathematical artifact differs")
-        elif digest not in audit._source_hash_candidates(ROOT / relative):
+        elif not foundation_source_accepts(ROOT / relative, digest, audit._source_hash_candidates(ROOT / relative)):
             raise ValueError("Pinned replay source differs at " + relative)
 
 

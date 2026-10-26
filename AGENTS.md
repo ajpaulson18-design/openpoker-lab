@@ -16,6 +16,11 @@ silently repair weights without independent numerical acceptance. The separate
 a trainer, selected-runout replacement, payoff operator or production capability.
 Keep actual/counterfactual reach, strategy storage and coaching action values as
 separate unresolved gates. Record executed checks in the linked execution record.
+Historical source repairs use `historical_foundation_sources.py` and
+`historical_turn_sources.py`: retain frozen records and exact archived/current
+pins, identify the preserved semantic dependency, and guard current operation
+inputs separately. A rank-only transition never establishes whole-validator or
+chance-law equivalence. Do not execute archived source or bypass source admission.
 
 For matrix-free turn `terminal_cache="ranked-lru"`, preserve the literal default
 path and all legacy payload fields. Keep caches private to a solve through

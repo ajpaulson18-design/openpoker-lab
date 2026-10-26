@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from scripts.historical_foundation_sources import BRIDGE_INPUTS, foundation_source_accepts
 import subprocess
 from scripts import turn_river_validation as rules
 from scripts.turn_weighted_sequence_fixture import FIXTURE
@@ -321,7 +322,7 @@ def dot(left, right):
 
 
 def _inputs():
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in REQUIRED_SOURCES}
+    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in (*REQUIRED_SOURCES, *(path.relative_to(ROOT).as_posix() for path in BRIDGE_INPUTS))}
 
 def _hash_candidates(path):
     raw = path.read_bytes()
@@ -336,7 +337,7 @@ def _provenance(report):
     sources = report.get('source_sha256')
     _require(type(sources) is dict and set(sources)==set(REQUIRED_SOURCES), 'Source inventory differs')
     for name in REQUIRED_SOURCES:
-        _require(sources[name] in _hash_candidates(ROOT / name), 'Source provenance differs: '+name)
+        _require(foundation_source_accepts(ROOT / name, sources[name], _hash_candidates(ROOT / name)), 'Source provenance differs: '+name)
     _require(report.get('generator_sha256') in _hash_candidates(ROOT / 'scripts/turn_weighted_sequence_equilibrium.py'), 'Generator identity differs')
 
 def verify_saved_artifact(path=OUTPUT):
