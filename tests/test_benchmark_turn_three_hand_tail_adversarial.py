@@ -131,7 +131,8 @@ class TurnThreeHandTailAdversarialTests(unittest.TestCase):
         for name in ("api_numeric_replay_deltas", "exact_numeric_replay_deltas"):
             mutable["results"][name][runner.METRICS[0]] = 5e-10
         raw_report = runner._canonical(mutable)
-        with patch.object(runner, "_control", return_value=_control()), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_control", return_value=_control()), \
              patch.object(runner, "_audit", return_value=_audit()):
             replayed = runner._verify_bundle(raw_report, raw_policy, root=self.root,
                                              head="b" * 40, verification=verification)
@@ -140,7 +141,8 @@ class TurnThreeHandTailAdversarialTests(unittest.TestCase):
         self.assertEqual(replayed["results"]["exact_numeric_replay_deltas"][runner.METRICS[0]],
                          5e-10)
         mutable["results"]["exact_numeric_replay_deltas"][runner.METRICS[0]] = 1.1e-9
-        with patch.object(runner, "_control", return_value=_control()), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_control", return_value=_control()), \
              patch.object(runner, "_audit", return_value=_audit()):
             with self.assertRaisesRegex(ValueError, "tolerance"):
                 runner._verify_bundle(runner._canonical(mutable), raw_policy,
@@ -150,7 +152,8 @@ class TurnThreeHandTailAdversarialTests(unittest.TestCase):
     def test_complete_reconstruction_rejects_unknown_report_section(self):
         raw_report, raw_policy, report, _, verification = self._bundle()
         report["unverified_extra"] = {"claim": True}
-        with patch.object(runner, "_control", return_value=_control()), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_control", return_value=_control()), \
              patch.object(runner, "_audit", return_value=_audit()):
             with self.assertRaisesRegex(ValueError, "complete independent reconstruction"):
                 runner._verify_bundle(runner._canonical(report), raw_policy,
@@ -256,7 +259,8 @@ class TurnThreeHandTailAdversarialTests(unittest.TestCase):
         targets["report"].write_bytes(report_raw)
         targets["policy"].write_bytes(policy_raw)
         head = "b" * 40
-        with patch.object(runner, "_verification_context", return_value=(head, verification)), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_verification_context", return_value=(head, verification)), \
              patch.object(runner, "_guard_replay", return_value=None), \
              patch.object(runner, "_control", return_value=_control()), \
              patch.object(runner, "_audit", return_value=_audit()), \

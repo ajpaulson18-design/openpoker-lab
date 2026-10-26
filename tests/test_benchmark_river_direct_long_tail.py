@@ -150,7 +150,8 @@ class RiverDirectLongTailTests(unittest.TestCase):
         report = runner._build_report("a" * 40, producer, verification, inputs,
                                       payload, audit, 0.25, policy_raw)
         report_raw = base._canonical(report)
-        with patch.object(runner, "_audit_math", return_value=audit):
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_audit_math", return_value=audit):
             rebuilt = runner._verify_bundle(
                 report_raw, policy_raw, root=REFERENCE_ROOT,
                 expected_math=verification, inputs=inputs, current_head=None)
@@ -178,7 +179,8 @@ class RiverDirectLongTailTests(unittest.TestCase):
             report = runner._build_report(head, producer, verification, inputs,
                                           payload, audit, 0.125, policy_raw)
             report_raw = base._canonical(report)
-            with patch.object(runner, "_guard_generation"), \
+            with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+                 patch.object(runner, "_guard_generation"), \
                  patch.object(runner, "_audit_math", return_value=audit), \
                  patch.object(base, "_head", return_value=head):
                 runner._publish_bundle(report_raw, policy_raw, root=root, head=head,
@@ -218,7 +220,8 @@ class RiverDirectLongTailTests(unittest.TestCase):
         ):
             changed = copy.deepcopy(report)
             mutation(changed)
-            with self.subTest(pattern=pattern), patch.object(runner, "_audit_math", return_value=audit):
+            with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+                 self.subTest(pattern=pattern), patch.object(runner, "_audit_math", return_value=audit):
                 with self.assertRaisesRegex(ValueError, pattern):
                     runner._verify_bundle(base._canonical(changed), policy_raw,
                                           root=REFERENCE_ROOT, expected_math=verification,

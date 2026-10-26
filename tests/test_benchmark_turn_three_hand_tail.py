@@ -124,7 +124,8 @@ class TurnThreeHandTailTests(unittest.TestCase):
             self.assertEqual(kwargs, {"iterations": 750, "discard": 250})
             return copy.deepcopy(payload)
 
-        with patch.object(runner, "_source_context",
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_source_context",
                           return_value=(actual_head, producer, verification)), \
              patch.object(runner, "_guard_generation", return_value=None), \
              patch.object(runner, "_control", side_effect=controlled), \
@@ -140,7 +141,8 @@ class TurnThreeHandTailTests(unittest.TestCase):
         self.assertEqual(report["results"]["exact_counters"]["structural_node_visits"], 27351)
         self.assertTrue(runner._targets(self.root)["report"].is_file())
         self.assertTrue(runner._targets(self.root)["policy"].is_file())
-        with patch.object(runner, "_verification_context",
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_verification_context",
                           return_value=(actual_head, verification)), \
              patch.object(runner, "_guard_replay", return_value=None), \
              patch.object(turn_tail_adapter, "solve_turn_tail",

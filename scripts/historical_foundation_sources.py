@@ -229,7 +229,8 @@ def historical_foundation_source_matches(path, historical_digest):
                 return (compatible_historical_reference_sources({name: old_pin}, {name: current_pin}, (name,)) and
                         historical_digest in (_line_ending_hashes(archive.read_bytes()) |
                                               _line_ending_hashes((ROOT / name).read_bytes())))
-        return _turn_verifier_matches(path, historical_digest)
+        return (_turn_verifier_matches(path, historical_digest) or
+                _synthetic_test_matches(path, historical_digest))
     except (ValueError, OSError, SyntaxError, UnicodeError):
         return False
 
@@ -287,11 +288,59 @@ def _turn_verifier_matches(path, digest):
         return False
 
 
+# These exact changes patch only synthetic equality plumbing contexts. The
+# normalized AST must reproduce the complete archived test file.
+SYNTHETIC_TEST_TRANSITIONS = {
+    "tests/test_benchmark_river_direct_tail.py": ("5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71", "2656d22814fa63cdc143c5f667527c93aad424158b1f98b0567b83931cc0261f", 3),
+    "tests/test_benchmark_river_direct_long_tail.py": ("9aa292830ba25d2d39f84bfec2737e8198c1774866c83e0338cd97d6f010bf75", "a2a4a0c9fe30c00504c2fe11f5d92907f04fc944b0afc8c1687194388db29b9a", 3),
+    "tests/test_benchmark_turn_three_hand_tail.py": ("9bd0168502fa43ee7c09a1ed3a54c7599593626aa1d8888b00cd1ac637ec9eb8", "c9ae3f7307f50252735941e071b29ceda61a11228df94474a4201e7850cc1550", 2),
+    "tests/test_benchmark_turn_three_hand_tail_adversarial.py": ("10372f01d917e8bd0654bb1f1dd598a9fb931557fb1a97582f0ba2f188f6199d", "375cbf5c15ac2ee01355a48e4e5ec38a5758cd03dd1f732d9ffc08009ab8dfc0", 4),
+}
+BRIDGE_INPUTS = BRIDGE_INPUTS + tuple(
+    ROOT / "tests/fixtures" / (Path(name).name + ".before_synthetic_bridge.txt")
+    for name in SYNTHETIC_TEST_TRANSITIONS)
+_SYNTHETIC_PATCH_AST = ast.dump(ast.parse(
+    'patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current)',
+    mode="eval").body, include_attributes=False)
+
+
+def _synthetic_test_ast(raw, *, strip):
+    tree = ast.parse(raw.decode("utf-8"))
+    count = 0
+    for node in ast.walk(tree):
+        if isinstance(node, ast.With):
+            kept = []
+            for item in node.items:
+                matched = (item.optional_vars is None and
+                           ast.dump(item.context_expr, include_attributes=False) == _SYNTHETIC_PATCH_AST)
+                if matched and strip:
+                    count += 1
+                else:
+                    kept.append(item)
+            node.items = kept
+    return ast.dump(tree, include_attributes=False), count
+
+
+def _synthetic_test_matches(path, digest):
+    try:
+        name = Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
+        old_pin, current_pin, expected_count = SYNTHETIC_TEST_TRANSITIONS[name]
+        archived = ROOT / "tests/fixtures" / (Path(name).name + ".before_synthetic_bridge.txt")
+        old, current = _lf(archived.read_bytes()), _lf((ROOT / name).read_bytes())
+        old_ast, old_count = _synthetic_test_ast(old, strip=True)
+        current_ast, current_count = _synthetic_test_ast(current, strip=True)
+        return (_sha(old) == old_pin and _sha(current) == current_pin and
+                old_count == 0 and current_count == expected_count and old_ast == current_ast and
+                digest in (_line_ending_hashes(old) | _line_ending_hashes(current)))
+    except (KeyError, ValueError, OSError, SyntaxError, UnicodeError):
+        return False
+
+
 def foundation_source_accepts(path, historical_digest, direct_candidates):
     """Require reviewed transitions for protected sources; retain ordinary strict pins otherwise."""
     try:
         name = Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
-        protected = (name in TURN_VERIFIER_TRANSITIONS or name in RAISED_TRANSITIONS or
+        protected = (name in TURN_VERIFIER_TRANSITIONS or name in SYNTHETIC_TEST_TRANSITIONS or name in RAISED_TRANSITIONS or
                      name in ("scripts/preflop_validation.py", "scripts/audit_river_rational_certificate.py"))
         if protected:
             return historical_foundation_source_matches(path, historical_digest)
@@ -311,7 +360,7 @@ def compatible_exact_source_maps(historical, current, root=ROOT):
             if not foundation_source_accepts(path, digest, {candidate}):
                 return False
             # Protected transitions must bind the current supplied hash to disk.
-            if name in TURN_VERIFIER_TRANSITIONS or name in RAISED_TRANSITIONS or name in (
+            if name in TURN_VERIFIER_TRANSITIONS or name in SYNTHETIC_TEST_TRANSITIONS or name in RAISED_TRANSITIONS or name in (
                     "scripts/preflop_validation.py", "scripts/audit_river_rational_certificate.py"):
                 if candidate != _sha(_lf(path.read_bytes())):
                     return False

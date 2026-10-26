@@ -190,7 +190,8 @@ class RiverDirectTailEvidenceTests(unittest.TestCase):
                         "dense_hand_state_pass_work",
                     }}
 
-        with patch.object(runner, "_audit_policy", side_effect=stub_audit), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_audit_policy", side_effect=stub_audit), \
              patch.object(runner, "_guard_replay") as replay_guard:
             checked = runner._verify_bundle(
                 raw_report, policies, root=runner.ROOT,
@@ -221,7 +222,8 @@ class RiverDirectTailEvidenceTests(unittest.TestCase):
 
         changed = deepcopy(report)
         changed["fixtures"]["river-polarised-bluffcatcher"]["purpose"] = "forged"
-        with patch.object(runner, "_audit_policy", side_effect=accept_stub), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_audit_policy", side_effect=accept_stub), \
              patch.object(runner, "_guard_replay"):
             with self.assertRaisesRegex(ValueError, "reconstruction"):
                 runner._verify_bundle(runner._canonical(changed), policies,
@@ -230,7 +232,8 @@ class RiverDirectTailEvidenceTests(unittest.TestCase):
 
         changed = deepcopy(report)
         changed["results"]["river-weighted-raises"]["actual_complete_call_seconds"] = True
-        with patch.object(runner, "_audit_policy", side_effect=accept_stub), \
+        with patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current), \
+             patch.object(runner, "_audit_policy", side_effect=accept_stub), \
              patch.object(runner, "_guard_replay"):
             with self.assertRaisesRegex(ValueError, "time"):
                 runner._verify_bundle(runner._canonical(changed), policies,

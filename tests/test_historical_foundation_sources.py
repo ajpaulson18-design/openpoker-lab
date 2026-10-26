@@ -146,6 +146,18 @@ class HistoricalFoundationSourceTests(unittest.TestCase):
                                       expected_math=current)
             audit.assert_not_called()
 
+    def test_synthetic_test_transitions_preserve_all_other_ast(self):
+        for name, (old_pin, new_pin, count) in bridge.SYNTHETIC_TEST_TRANSITIONS.items():
+            path = bridge.ROOT / name
+            self.assertGreater(count, 0)
+            self.assertTrue(bridge.historical_foundation_source_matches(path, old_pin))
+            self.assertTrue(bridge.historical_foundation_source_matches(path, new_pin))
+            self.assertFalse(bridge.foundation_source_accepts(path, "0" * 64, {"0" * 64}))
+            source = path.read_bytes()
+            actual, actual_count = bridge._synthetic_test_ast(source, strip=True)
+            self.assertEqual(actual_count, count)
+            self.assertNotEqual(actual, bridge._synthetic_test_ast(source + b"\nextra = 1\n", strip=True)[0])
+
     def test_rank_dependencies_detect_changes(self):
         source = bridge.PREFLOP_SOURCE.read_bytes()
         reference = bridge._rank_asts(source)

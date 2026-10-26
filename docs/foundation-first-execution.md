@@ -127,6 +127,41 @@ reviewed transitions, source hashes and executed focused checks are preserved in
 [the integration receipt](../benchmarks/results/foundation-audit-v1/provenance-integration.json).
 Final clean-head CI remains required before merging.
 
+## Synthetic-fixture integration correction
+
+The full Python 3.11 matrix job at published head `e7717ae` ran 2,387 tests
+in 965.278 seconds and failed with six errors and five failures (32 skipped).
+The other matrix jobs were canceled by the workflow's failure policy; they are
+not counted as completed passes. The seven other workflow runs passed.
+The 25 public saved-policy replay tests and 198 optimized tests at that head
+passed, but their coverage did not include four synthetic plumbing suites.
+
+Those suites supplied invented verification digests and temporary artifact-only
+roots. The new strict transition matcher correctly rejects those maps before
+the tests reach their intended reconstruction, timing and ownership assertions.
+This is a test-fixture integration issue, not a probability, ranking or frozen
+policy failure. Production must continue rejecting unknown equal protected
+hashes. The correction therefore isolates source-map stubs within the synthetic
+plumbing tests and preserves the actual provenance adversarial checks. Any
+changed pinned test file needs an inert archive and an explicitly reviewed
+transition; no saved report is re-signed to accept the change.
+
+The correction adds 12 explicitly scoped source-equality mocks around existing
+synthetic audit/publication blocks in four suites. Removing only those exact
+mock contexts reproduces each complete archived test AST; original assertion
+bodies and actual provenance adversarial checks are preserved. The four
+archives are included in current operation fingerprints. Production replay
+scripts and frozen policies/reports are unchanged.
+
+All 68 focused tests passed normally (47.659 seconds) and optimized (47.219
+seconds), using a process-local shorter temporary directory for one existing
+Windows path-length failure. With the original path, both modes passed 67/68;
+the remaining staging path exceeded the Windows limit and had passed in Linux
+CI. That environmental workaround changes no repository code and is not a
+substitute for the final Linux matrix. Three real saved source maps also pass
+their actual, unmocked source authentication. See the
+[synthetic-fixture follow-up receipt](../benchmarks/results/foundation-audit-v1/synthetic-fixture-followup.json).
+
 ## Remaining work
 
 The [ranked register](foundation-first-audit.md#ranked-improvement-register)
