@@ -196,6 +196,40 @@ preserves the finding, scope and implementation identities.
 
 ## Remaining work
 
+### Subsequent selected-operator training milestone
+
+The owner's next scalable-foundation goal now has a concrete
+[non-materialized four-street integration](selected-operator-four-street.md),
+measured at clean source `a3f289eeccff6f7357801d543872b11f632e3b61`. Sol defined
+the globally conditioned selected-law/reach/payoff boundary; Luna implemented
+the provider; Terra supplied independent physical tests and artifact scrutiny.
+No model substitution was needed for this milestone.
+
+Both the old and new paths produced identical complete strategies and exact
+normalized metric maps on the 22-world T1000 game, meeting <=1/1000 BB with
+numeric NashConv about 0.000399739 BB. The new producer/trainer/diagnostics store
+no complete physical worlds or prefix/pair edges. Independent mathematical
+validators may still materialize this bounded reference support deliberately.
+The separate T10 miss, changed-reduction policy failure, restricted Windows
+temporary-folder failures and interrupted first measurement are retained in
+the [receipt and compressed raw studies](../benchmarks/results/selected-operator-four-street-v1/receipt.json).
+
+Normal and optimized focused/reference/contract suites pass 46 tests; a committed
+normal run excluding the three temporary-folder evidence tests passes 43. The
+paired T10 runner records complete-call timings, traced Python allocation and
+process working-set peaks, followed by numeric and exact saved replay. The
+additional fixed T1000 orchestration makes one call per backend without retry.
+A fresh process then repeats saved-only verification from the pinned manifest
+with zero training. Complete artifact/source snapshots and manifests bind each
+operation. Existing frozen historical artifacts and protected source modules
+remain unchanged.
+
+This is a representation and bounded accuracy milestone, with a measured runtime
+regression (126.4 s vs 31.2 s T1000) and no tiny-game total-memory improvement.
+Explicit tree/strategy storage and repeated pair/board/rank work are the next
+limits. The rank-free 16/32/64-hand census rejections are preserved. The overall
+foundation goal stays active; no full-deck trainer or commercial-scale claim.
+
 The [ranked register](foundation-first-audit.md#ranked-improvement-register)
 remains authoritative. No full-deck trainer integration, broad-game convergence,
 storage solution, action-value coaching feed, corpus/query service, production

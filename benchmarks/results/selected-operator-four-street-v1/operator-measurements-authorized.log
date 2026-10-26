@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\repo\scripts\benchmark_selected_operator.py", line 225, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\repo\scripts\benchmark_selected_operator.py", line 180, in main
+    raise ValueError("Use a fresh output directory; retained evidence is immutable.")
+ValueError: Use a fresh output directory; retained evidence is immutable.

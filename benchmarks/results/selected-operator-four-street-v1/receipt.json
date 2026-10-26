@@ -1,0 +1,91 @@
+{
+  "accuracy_t1000_manifest_sha256": "06d6b9aef226fde11ad473ceaf1bab02bbe373d3059763ccbcc757339af19a76",
+  "archives": {
+    "accuracy-t1000.zip": {
+      "bytes": 495383,
+      "sha256": "8d833ce2236e6f7cc69066d93201b95b2ecc31c2cb9c3421e4845f8b1e95ac8b"
+    },
+    "interrupted-t10.zip": {
+      "bytes": 323669,
+      "sha256": "f6e77a320de04adbf7ba1b9024b2277141c6ca8b0fe441b7945926af9b40f19c"
+    },
+    "paired-t10.zip": {
+      "bytes": 629129,
+      "sha256": "d441d7c0e288e4c078c77b23f854c170dec5a1c10029c1960d2f6014747d878d"
+    }
+  },
+  "baseline_commit": "43e8e5dfc835be14e8dad846f31dfbce553fb19e",
+  "ci_status": "Separate live final-head gate; not inferred from local tests.",
+  "independent_review": {
+    "accepted_scope": "Bounded selected-game integration and accuracy only",
+    "complete_strategy_and_exact_metric_equality_checked": true,
+    "manifest_and_sample_hashes_checked": true,
+    "model_role": "Terra"
+  },
+  "intermediate_failures": [
+    "Initial policy comparison failed after changed floating reduction order; fixed pair-ordered reductions before final source freeze.",
+    "Restricted TemporaryDirectory writes failed with Windows access errors; retained log, normal-access normal and optimized checks passed.",
+    "First T10 measurements reached raw artifacts, then were interrupted during verification; archive retained. Fresh formal T10 run completed.",
+    "Reusing interrupted output path correctly rejected; fresh directory used without overwriting evidence."
+  ],
+  "limitations": [
+    "No full-deck solver",
+    "No total-memory or speed improvement on tiny fixture",
+    "Explicit tree/strategy/action storage remains",
+    "Larger support census is not training quality",
+    "No native operator backend",
+    "Overall foundation goal remains active"
+  ],
+  "local_tests": {
+    "committed_normal_without_temp_tests": {
+      "count": 43,
+      "seconds": 8.249
+    },
+    "normal": {
+      "count": 46,
+      "seconds": 7.822
+    },
+    "optimized": {
+      "count": 46,
+      "seconds": 7.003
+    }
+  },
+  "paired_t10_manifest_sha256": "f8addb799553b5df7c7597ec24ca2681ff328853d5bd7f3f189aed311e1b6889",
+  "same_game": "four-street-weighted-shared-future-v1",
+  "saved_only_replay": {
+    "immutable_existing_audits_compared": true,
+    "native_calls": 0,
+    "same_source": true,
+    "separate_process": true,
+    "training_calls": 0
+  },
+  "source_commit": "a3f289eeccff6f7357801d543872b11f632e3b61",
+  "t10": {
+    "exact_targets_met": [
+      false,
+      false
+    ],
+    "numeric_nash_conv_bb": 0.6580882578562965,
+    "operator_median_seconds": 1.715154600002279,
+    "operator_python_peak_allocation_bytes": 2780711,
+    "reference_median_seconds": 0.3049084000012954,
+    "reference_python_peak_allocation_bytes": 2553239
+  },
+  "t1000": {
+    "calls_per_backend": 1,
+    "exact_metrics_identical": true,
+    "exact_target_bb": "1/1000",
+    "exact_targets_met": [
+      true,
+      true
+    ],
+    "numeric_nash_conv_bb": 0.0003997388151442405,
+    "operator_post_constructor_pair_board_checks": 7547036,
+    "operator_rank_calls": 991485,
+    "operator_seconds": 126.43705439999758,
+    "rank_vector_peak_entries": 4,
+    "reference_seconds": 31.159303000000364,
+    "retries": 0,
+    "strategy_rows_identical": true
+  }
+}
