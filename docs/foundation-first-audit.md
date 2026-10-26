@@ -43,6 +43,15 @@ The historical documentation can lag current source. For example, the dated
 system overview calls public traversal Python-only; PR #243 subsequently added
 the explicit native path. Follow dated pins and the later native specification.
 
+Historical record authentication and proof reconstruction are separate gates.
+The fixed-flop class publication's `authenticate_record()` inspects externally
+pinned historical evidence; its original `authenticate()`/`verify()` still
+require the original active source closure before execution. The upgraded
+preflop verifier intentionally breaks that old source match. The old artifact
+is preserved and authentic; this audit does not claim a fresh class-proof
+reconstruction under the changed source. See the execution record for the
+observed rejection and six explicit authentication controls.
+
 ## Dependency map and downstream rework
 
 ```mermaid

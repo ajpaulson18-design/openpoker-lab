@@ -1,0 +1,39 @@
+{
+  "schema": "foundation-historical-record-authentication-v1",
+  "parent_commit": "aa06b46bbf9affb0d6261f3bfc5017c7986db435",
+  "source_lf_sha256": {
+    "scripts/verify_flop_public_classes_publication.py": "16089b7321036aef784fa4ebde516e53dea403db6a645402d87e0caf5f64c410",
+    "tests/test_flop_public_classes_publication.py": "54a086cf51c9a27345e18709b6c885c1e79f055c5a3a866276545cf2b8973165"
+  },
+  "runs": [
+    {
+      "mode": "normal",
+      "command": "python -B -m unittest tests.test_flop_public_classes_publication -v",
+      "tests": 6,
+      "seconds": 0.183,
+      "result": "OK",
+      "log_sha256": "007573490960ca2454f3bd4902e40d6c82a187b2cf5a927e1b2a4045c340f4c7"
+    },
+    {
+      "mode": "optimized",
+      "command": "python -B -O -m unittest tests.test_flop_public_classes_publication -v",
+      "tests": 6,
+      "seconds": 0.173,
+      "result": "OK",
+      "log_sha256": "ec319c7be997f5234f7d135c52868bec04fc3e598e4d71cb425c8cb02423db25"
+    }
+  ],
+  "preserved_boundaries": [
+    "All original raw/artifact/interruption/source pins unchanged",
+    "authenticate and verify require original active source closure",
+    "Source drift rejects before build_model",
+    "authenticate_record authenticates historical metadata only"
+  ],
+  "earlier_frozen_source_replay": {
+    "seconds": 207.233,
+    "tests": 2,
+    "alternating_saved_replay": "passed",
+    "class_proof_current_source_binding": "rejected because legacy verifier source evolved"
+  },
+  "initial_new_test_environment": "Restricted temp-folder access errors; rerun with required access"
+}

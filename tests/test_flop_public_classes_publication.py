@@ -8,8 +8,8 @@ from scripts import verify_flop_public_classes_publication as publication
 
 
 class FlopPublicClassesPublicationTests(unittest.TestCase):
-    def test_published_record_authenticates_all_sources_and_policy_rows(self):
-        record = publication.authenticate()
+    def test_published_record_authenticates_historical_manifest_and_policy_rows(self):
+        record = publication.authenticate_record()
         self.assertEqual(len(record["source_lf_sha256"]), 6)
         self.assertEqual(len(record["controls"]), 4)
         for control in record["controls"].values():
@@ -42,6 +42,21 @@ class FlopPublicClassesPublicationTests(unittest.TestCase):
         with patch.object(publication.audit, "_source_hashes", return_value=sources):
             with self.assertRaisesRegex(ValueError, "sources"):
                 publication.authenticate()
+
+    def test_historical_record_authentication_does_not_claim_current_source_replay(self):
+        with patch.object(publication.audit, "_source_hashes",
+                          side_effect=AssertionError("No current-source claim")), \
+                patch.object(publication.audit, "build_model",
+                             side_effect=AssertionError("No proof execution")):
+            record = publication.authenticate_record()
+        self.assertEqual(record["artifact_sha256"], publication.ARTIFACT_SHA256)
+
+    def test_source_mismatch_still_rejects_execution_before_physical_work(self):
+        with patch.object(publication.audit, "_source_hashes", return_value={}), \
+                patch.object(publication.audit, "build_model") as build:
+            with self.assertRaisesRegex(ValueError, "sources"):
+                publication.verify()
+            build.assert_not_called()
 
 
 if __name__ == "__main__":

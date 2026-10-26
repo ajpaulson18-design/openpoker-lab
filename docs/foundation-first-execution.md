@@ -51,6 +51,25 @@ run is **not a full-suite pass**. Do not weaken provenance checks or rewrite
 historical evidence to suppress a source-race rejection. Final clean-head GitHub
 CI is the full-suite acceptance authority for this change.
 
+After freezing published source `aa06b46`, alternating-flop saved-only replay
+passed. The class-proof check still rejected its frozen legacy source pin:
+`scripts/preflop_validation.py` had intentionally evolved. That persistent
+rejection was not a source race and must not be labeled one. The two-test run
+finished in 207.233 seconds with one pass and that one source-pin rejection.
+
+Historical proof-record inspection now has a distinct `authenticate_record()`
+function. It checks unchanged external raw/artifact/interruption pins, physical
+anchors, source manifest and saved policy data, without claiming today's code
+can reconstruct the old proof. Existing `authenticate()`, `verify()` and the CLI
+still require the exact original six-source closure before physical work;
+reconstruction under evolved source remains rejected. Re-execute the historical
+proof from its pinned historical revision, never by substituting metadata
+authentication into an execution gate. No frozen record, hash or source guard
+was changed. All six authentication/tampering/ordering tests pass normally
+(0.183 seconds) and optimized (0.173 seconds); an initial restricted run hit
+temporary-folder access errors and was rerun with required access. See the
+[follow-up receipt](../benchmarks/results/foundation-audit-v1/record-authentication.json).
+
 ## Final local checks
 
 Using bundled CPython 3.12.14 and the existing authenticated MSVC native-public
