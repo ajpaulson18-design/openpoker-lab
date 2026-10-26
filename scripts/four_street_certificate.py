@@ -397,7 +397,7 @@ def _br_structure(root, worlds, player, counter, terminal_group_forecast_operato
         if not group:
             return
         if isinstance(node, numeric._Terminal):
-            terminal_group_forecast_operator(counter, len(group))
+            terminal_group_forecast_operator(counter, len(group), node=node, group=group, worlds=worlds)
             return
         if isinstance(node, numeric.Reveal):
             branch_count = len(node.branches)
@@ -454,13 +454,13 @@ def _br_structure(root, worlds, player, counter, terminal_group_forecast_operato
         counter.charge("fused_result_slots", 2)
 
 
-def _forecast_terminal_group_literal(counter, group_size):
+def _forecast_terminal_group_literal(counter, group_size, **_context):
     counter.charge("br_terminal_group_scans", group_size)
     counter.charge("br_terminal_conversions", group_size)
     counter.charge("br_terminal_fraction_operations", 2 * group_size)
 
 
-def _forecast_model(model, terminal_group_forecast_operator):
+def _forecast_model(model, terminal_group_forecast_operator, *, normalization_action_factor=4):
     counter = _Counter()
     nodes, decisions, infos = _validate_graph(model, counter)
     worlds = model.worlds
@@ -470,7 +470,7 @@ def _forecast_model(model, terminal_group_forecast_operator):
     counter.charge("policy_row_sort_entries", len(infos))
     action_slots = sum(len(node.actions) for node in infos.values())
     counter.charge("policy_action_conversion_entries", action_slots)
-    counter.charge("policy_fraction_operation_slots", 4 * action_slots + len(infos))
+    counter.charge("policy_fraction_operation_slots", normalization_action_factor * action_slots + len(infos))
     counter.charge("normalization_ledger_row_slots", len(infos))
     counter.charge("normalization_ledger_action_slots", action_slots)
     counter.charge("normalized_output_row_slots", len(infos))
@@ -524,7 +524,7 @@ def _structural_preparation_receipt(census, passes):
     }
 
 
-def _forecast_model_record(model, forecast, source_identity, budget_schedule_version):
+def _forecast_model_record(model, forecast, source_identity, budget_schedule_version, model_forecaster=None):
     forecast.update({"source_identity": source_identity,
                      "budget_schedule_version": budget_schedule_version,
                      "model_sha256": _model_identity(model),
@@ -558,7 +558,7 @@ def forecast_exact(case):
                                   BUDGET_SCHEDULE_VERSION)
 
 
-def _normalise_policy(model, payload, checked, budget):
+def _normalise_policy(model, payload, checked, budget, *, row_extremum=False):
     rows = payload["strategy"]
     budget.charge("policy_row_index_entries", len(rows))
     budget.charge("policy_row_sort_entries", len(model.expected_infos))
@@ -594,12 +594,19 @@ def _normalise_policy(model, payload, checked, budget):
         normalized[key] = probabilities
         action_entries = []
         normalized_actions = []
+        row_max_raw = None
+        row_max_adjustment = None
         for index, (before, after, action) in enumerate(zip(raw, probabilities, row["actions"])):
             adjustment = budget.named_subtract("policy_fraction_operation_slots", after,
                                                before, "policy normalization adjustment")
-            magnitude = budget.named_abs("policy_fraction_operation_slots", adjustment,
-                                         "policy normalization adjustment magnitude")
-            max_adjustment = max(max_adjustment, magnitude)
+            if row_extremum:
+                if row_max_raw is None or before > row_max_raw:
+                    row_max_raw = before
+                    row_max_adjustment = adjustment
+            else:
+                magnitude = budget.named_abs("policy_fraction_operation_slots", adjustment,
+                                             "policy normalization adjustment magnitude")
+                max_adjustment = max(max_adjustment, magnitude)
             action_entries.append({"index": index, "name": action["name"],
                                    "history_key": action["history_key"],
                                    "raw_binary64_fraction": _fraction_text(before),
@@ -611,6 +618,13 @@ def _normalise_policy(model, payload, checked, budget):
                                        "raise_to": action["raise_to"],
                                        "history_key": action["history_key"],
                                        "probability_fraction": _fraction_text(after)})
+        if row_extremum:
+            _need(row_max_adjustment is not None,
+                  "normalized policy row has no action for its adjustment extremum")
+            magnitude = budget.named_abs(
+                "policy_fraction_operation_slots", row_max_adjustment,
+                "policy normalization row-extremum adjustment magnitude")
+            max_adjustment = max(max_adjustment, magnitude)
         ledger.append({"player": row["player"], "hand": row["hand"],
                       "revealed_board": row["revealed_board"],
                       "history": row["history"],
@@ -841,7 +855,7 @@ def _best_response(model, policies, player, budget, terminal_group_operator):
 
 def _evaluate_with_operators(case, payload, *, terminal_group_operator,
                              terminal_group_forecast_operator, normalizer,
-                             source_identity, budget_schedule_version):
+                             source_identity, budget_schedule_version, model_forecaster=None):
     """Private orchestration for fixed trusted exact operators."""
     safe_case = _snapshot_case(case)
     if type(payload) is not dict:
@@ -851,7 +865,11 @@ def _evaluate_with_operators(case, payload, *, terminal_group_operator,
         raise ValueError("payload exceeds bounded four-street result shape")
     json_nodes = [0]
     _safe_json_value(payload, budget=json_nodes)
-    model, forecast = _prepare_forecast(safe_case, terminal_group_forecast_operator)
+    if model_forecaster is None:
+        model, forecast = _prepare_forecast(safe_case, terminal_group_forecast_operator)
+    else:
+        model = numeric.build_model(safe_case)
+        forecast = model_forecaster(model, 3)
     if not forecast["admitted"]:
         raise ValueError(
             f"exact certificate forecast exceeds its hard work limit: "

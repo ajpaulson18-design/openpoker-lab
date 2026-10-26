@@ -504,3 +504,30 @@ the proposed 99,119 forecast is not executable admission evidence. Keep all v1
 sources/corpora, game/threshold and hard caps unchanged. A fresh direct-graph
 census, same-policy exact parity and normal/optimized controls must precede any
 corrected preflight, and training remains gated by observed complete admission.
+
+D046 (2026-10-26 UTC): Sol/root review accepts the narrow private trusted
+operator seam rather than duplicate hundreds of lines of verified response and
+ledger orchestration. Extract the literal terminal-group loop, retain fixed
+public signatures and fresh owned-model boundaries, and preserve default-v2
+arithmetic, counters and complete receipts. All 15 certificate controls pass
+normally and with assertions disabled; a byte-authenticated regression compares
+the entire published certificate. Historical source/corpora stay immutable in
+Git. Implement the distinct v3 signed-first-mass and row-extremum operators next,
+with fresh bounded census and complete mathematical/output parity controls
+before corrected preflight. No cap increase or training result is established.
+See [operator scope and acceptance](../four-street-exact-operators-v3.md).
+
+D047 (2026-10-26 UTC): Sol/root accepts the distinct v3 first-mass signed
+terminal and maximum-individual-adjustment operators after static review and all
+31 certificate/preflight controls pass normally (59.246 seconds) and with
+assertions disabled (58.735 seconds). Preserve complete default-v2 certificate
+and original113078 rejection parity, all signed ledger entries, exact configured
+binary64 payoffs and all caps. Fresh all-positive census piggybacks on the shared
+response forecast with explicit fixed/per-group logical setup/output/reference
+charges and aggregate graph/census preparation admission. Positive and pruned
+policies fit every forecast family; independent coupling anchors are -1/20 and
++1/20 BB. The fixed corrected preflight reuses source capture/exclusive writing,
+uses distinct validator identities and exposes no caller-selected callback.
+Freeze clean source and measure the actual corrected no-training admission next;
+no expanded-game quality outcome follows from prescribed-policy controls. See
+[the implementation and scope](../four-street-exact-operators-v3.md).

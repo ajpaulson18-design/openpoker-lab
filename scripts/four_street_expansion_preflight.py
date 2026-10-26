@@ -79,10 +79,10 @@ def _failure(stage, exc):
     return {"stage": stage, "error_type": type(exc).__name__, "message": str(exc)}
 
 
-def _base_receipt(case, request):
+def _base_receipt(case, request, *, schema="four-street-expansion-preflight-v1", benchmark_id="four-street-shared-river-expansion-v2", independent_schema="four-street-expansion-independent-admission-v1"):
     return {
-        "schema": "four-street-expansion-preflight-v1",
-        "benchmark_id": "four-street-shared-river-expansion-v2",
+        "schema": schema,
+        "benchmark_id": benchmark_id,
         "outcome": "rejected",
         "quality_gate": None,
         "production_calls_entered": 0,
@@ -96,16 +96,18 @@ def _base_receipt(case, request):
     }
 
 
-def prepare_expansion():
+def _prepare_expansion(*, forecast_operator=None, schema="four-street-expansion-preflight-v1", benchmark_id="four-street-shared-river-expansion-v2", independent_schema="four-street-expansion-independent-admission-v1", expected_source_identity=None, expected_budget_schedule_version=None):
     """Build and cross-check the proposed game without entering any trainer."""
+    if forecast_operator is None:
+        forecast_operator = certificate.forecast_exact
     try:
         case, request = _candidate_inputs()
     except Exception as exc:
-        receipt = _base_receipt({}, {})
+        receipt = _base_receipt({}, {}, schema=schema, benchmark_id=benchmark_id, independent_schema=independent_schema)
         receipt["first_rejection"] = _failure("candidate-inputs", exc)
         return receipt
 
-    receipt = _base_receipt(case, request)
+    receipt = _base_receipt(case, request, schema=schema, benchmark_id=benchmark_id, independent_schema=independent_schema)
     try:
         receipt["production_admission"] = runner._production_admission(request)
     except Exception as exc:
@@ -115,7 +117,7 @@ def prepare_expansion():
     try:
         model = numeric.build_model(case)
         independent = {
-            "schema": "four-street-expansion-independent-admission-v1",
+            "schema": independent_schema,
             "counts": _model_counts(model),
             **_world_receipt(model),
             "attempted_training": False,
@@ -126,7 +128,7 @@ def prepare_expansion():
         return receipt
 
     try:
-        forecast = certificate.forecast_exact(case)
+        forecast = forecast_operator(case)
         independent["forecast"] = forecast
         admitted = forecast.get("admitted")
         if type(admitted) is not bool:
@@ -152,6 +154,13 @@ def prepare_expansion():
         receipt["first_rejection"] = _failure("support-comparison", exc)
         return receipt
 
+    if expected_source_identity is not None and forecast.get("source_identity") != expected_source_identity:
+        receipt["first_rejection"] = _failure("exact-work-forecast-identity", ValueError("independent forecast source identity differs from the fixed v3 source"))
+        return receipt
+    if (expected_budget_schedule_version is not None and forecast.get("budget_schedule_version") != expected_budget_schedule_version):
+        receipt["first_rejection"] = _failure("exact-work-forecast-identity", ValueError("independent forecast budget schedule differs from the fixed v3 schedule"))
+        return receipt
+
     if not forecast.get("admitted"):
         receipt["first_rejection"] = {
             "stage": "exact-work-admission",
@@ -162,6 +171,11 @@ def prepare_expansion():
 
     receipt["outcome"] = "admitted"
     return receipt
+
+
+def prepare_expansion():
+    """Build and cross-check the v2 game without entering any trainer."""
+    return _prepare_expansion()
 
 
 def _json_bytes(value):
@@ -183,13 +197,13 @@ def _write_receipt_exclusive(directory: Path, receipt):
             "sha256": hashlib.sha256(data).hexdigest()}
 
 
-def run_preflight(expected_source_commit: str, output_directory: str | os.PathLike):
+def _run_preflight(expected_source_commit: str, output_directory: str | os.PathLike, *, prepare=prepare_expansion, initial_receipt=None):
     if (type(expected_source_commit) is not str or
             not EXPECTED_SOURCE_RE.fullmatch(expected_source_commit)):
         raise ValueError("expected source commit must be a 40-character lowercase Git SHA")
     directory = runner._safe_output_directory(output_directory)
     directory.mkdir(exist_ok=False)
-    receipt = _base_receipt({}, {})
+    receipt = initial_receipt() if initial_receipt is not None else _base_receipt({}, {})
     receipt.update({"source_commit": expected_source_commit,
                     "source_before": None, "source_after": None,
                     "source_matches": None})
@@ -198,7 +212,7 @@ def run_preflight(expected_source_commit: str, output_directory: str | os.PathLi
     except Exception as exc:
         receipt["first_rejection"] = _failure("source-before", exc)
     if receipt["first_rejection"] is None:
-        prepared = prepare_expansion()
+        prepared = prepare()
         receipt.update(prepared)
         receipt["source_commit"] = expected_source_commit
         try:
@@ -222,6 +236,10 @@ def run_preflight(expected_source_commit: str, output_directory: str | os.PathLi
         raise
     receipt["saved_receipt"] = saved
     return receipt
+
+
+def run_preflight(expected_source_commit: str, output_directory: str | os.PathLike):
+    return _run_preflight(expected_source_commit, output_directory)
 
 
 def main(argv=None):
