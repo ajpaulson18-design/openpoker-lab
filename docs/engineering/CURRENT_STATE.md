@@ -1,5 +1,11 @@
 # Current engineering state
 
+The opt-in [selected-runout operator integration](../selected-operator-four-street.md)
+connects streamed chance/payoff queries to the shared four-street trainer without
+stored complete worlds or prefix/pair edges. Explicit tree and strategy storage
+remain; bounded integration is separate from full-deck solving and commercial
+scalability. Source-frozen measurements and independent replay are separate gates.
+
 The [foundation-first audit](../foundation-first-audit.md) is the October 26
 priority and readiness assessment. It contains a reproduced/contained joint-mass
 underflow defect and a separate exact full-deck public-prefix probability

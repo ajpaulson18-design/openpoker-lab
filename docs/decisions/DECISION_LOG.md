@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D054: Non-materialized selected-game training foundation (October 26, 2026)
+
+Authority: owner's supplied scalable-solver goal. Sol leads architecture; Terra
+provides independent criticism; Luna implements the operator. Introduce a
+separate opt-in selected-runout chance/payoff provider into the shared betting
+and CFR architecture, preserving global conditioning and original numerical
+rules. Retain the materialized solver as the small-game reference. Do not
+substitute full-deck prefix probabilities for selected-board conditioning.
+Require independent physical reach/payoff and serialized-policy/BR replay,
+source-pinned paired measurement and quantitative tree/strategy census. This
+bounded milestone leaves overall foundation work active. D052 remains reserved
+for the separate paused expansion. See [contracts and protocol](../selected-operator-four-street.md).
+
 D014 (2026-10-16): engineering decision under the owner's authorized compiled
 backend development scope: implement bounded native preflop count preparation as
 a separate explicit source-built API. Preserve the default Python reference,
