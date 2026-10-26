@@ -1,0 +1,52 @@
+{
+  "schema": "four-street-expansion-preflight-publication-v2",
+  "candidate_id": "four-street-shared-river-expansion-v2",
+  "source_commit": "98c3a779b079ee838c92727ed852af6d447e2f39",
+  "validator_entrypoint": "scripts.four_street_certificate_v3.forecast_exact",
+  "source_identity": "four-street-independent-exact-v3",
+  "budget_schedule_version": "four-street-exact-work-v3",
+  "receipt": {
+    "path": "receipt.json",
+    "bytes": 242557,
+    "sha256": "fe6f378c9af6c3cfcdc7f58e2d9c60d50bd75944dc0dd80ffa9d62f60fb0ce56",
+    "git_blob": "6cc8b8764d6cc08f73994c4b42db05858569c325"
+  },
+  "outcome": "admitted",
+  "attempted_training": false,
+  "production_calls_entered": 0,
+  "quality_gate": null,
+  "source_matches": true,
+  "source_files": 317,
+  "counts": {
+    "action_slots": 2706,
+    "decisions": 704,
+    "information_rows": 1352,
+    "public_states": 1585,
+    "worlds": 26
+  },
+  "production": {
+    "admitted": true,
+    "vector_work": 188281040,
+    "vector_work_limit": 500000000
+  },
+  "exact": {
+    "admitted": true,
+    "work": 99119,
+    "limit": 100000,
+    "headroom": 881
+  },
+  "preparation": {
+    "census_work": 15901,
+    "forecast_graph_walks": 2,
+    "total_entries_upper_bound": 464661,
+    "entry_limit": 8000000
+  },
+  "support_matches": true,
+  "first_rejection": null,
+  "preserved_prior_receipt": {
+    "path": "../four-street-expansion-preflight-v2/receipt.json",
+    "sha256": "0025236b3c71c23991bd2b0db6df95ba7b84d89e786d7041daaabeb8c63334ba",
+    "exact_work": 113078,
+    "outcome": "rejected"
+  }
+}

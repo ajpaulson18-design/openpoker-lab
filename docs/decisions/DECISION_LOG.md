@@ -504,3 +504,44 @@ the proposed 99,119 forecast is not executable admission evidence. Keep all v1
 sources/corpora, game/threshold and hard caps unchanged. A fresh direct-graph
 census, same-policy exact parity and normal/optimized controls must precede any
 corrected preflight, and training remains gated by observed complete admission.
+
+D046 (2026-10-26 UTC): Sol/root review accepts the narrow private trusted
+operator seam rather than duplicate hundreds of lines of verified response and
+ledger orchestration. Extract the literal terminal-group loop, retain fixed
+public signatures and fresh owned-model boundaries, and preserve default-v2
+arithmetic, counters and complete receipts. All 15 certificate controls pass
+normally and with assertions disabled; a byte-authenticated regression compares
+the entire published certificate. Historical source/corpora stay immutable in
+Git. Implement the distinct v3 signed-first-mass and row-extremum operators next,
+with fresh bounded census and complete mathematical/output parity controls
+before corrected preflight. No cap increase or training result is established.
+See [operator scope and acceptance](../four-street-exact-operators-v3.md).
+
+D047 (2026-10-26 UTC): Sol/root accepts the distinct v3 first-mass signed
+terminal and maximum-individual-adjustment operators after static review and all
+31 certificate/preflight controls pass normally (59.246 seconds) and with
+assertions disabled (58.735 seconds). Preserve complete default-v2 certificate
+and original113078 rejection parity, all signed ledger entries, exact configured
+binary64 payoffs and all caps. Fresh all-positive census piggybacks on the shared
+response forecast with explicit fixed/per-group logical setup/output/reference
+charges and aggregate graph/census preparation admission. Positive and pruned
+policies fit every forecast family; independent coupling anchors are -1/20 and
++1/20 BB. The fixed corrected preflight reuses source capture/exclusive writing,
+uses distinct validator identities and exposes no caller-selected callback.
+Freeze clean source and measure the actual corrected no-training admission next;
+no expanded-game quality outcome follows from prescribed-policy controls. See
+[the implementation and scope](../four-street-exact-operators-v3.md).
+
+D048 (2026-10-26 UTC): the corrected source-frozen preflight on clean committed
+98c3a779b079ee838c92727ed852af6d447e2f39 completed with exit code 0 and admits
+99,119/100,000 exact work units. Production admits188,281,040/500million; all26
+worlds and four pair/sign/mass support match. Both317-file source snapshots match.
+The15,901-entry fresh census plus448,760 graph-preparation envelope totals464,661
+under8million. Preserve the original113,078 rejection and the new full raw receipt;
+zero production calls and qualitynull distinguish admission from trained quality.
+All61 wider solver/interface/lifecycle tests pass (271.068 seconds), together with
+the31 normal/optimized focused controls and documentation validation. Proceed
+with a separately identified frozen26world/T1000 quality-runner and saved-only
+verifier through private fixed-experiment reuse seams; retain originalv1 behavior
+and source-authentication-before-mathematics. No cap, iteration or game-rule
+change follows. See [corrected admission and scope](../four-street-exact-operators-v3.md).

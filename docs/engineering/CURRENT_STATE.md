@@ -44,6 +44,17 @@ no training ran and expanded-game quality remains unknown. The complete receipt
 is retained before a separately reviewed mathematical correction. All original
 caps and the successful v1 evidence stay fixed.
 
+The [private exact-operator seam](../four-street-exact-operators-v3.md) now
+preserves the entire published v2 certificate under a byte-authenticated golden
+regression. All 15 certificate controls pass normally and with assertions disabled
+(D046). The distinct v3 operators and corrected preflight now pass all 31
+certificate/preflight controls normally and with assertions disabled (D047).
+They preserve the full original certificate and preflight rejection while
+checking candidate coupling and every work family. The actual corrected clean-source
+preflight now admits 99,119/100,000 exact work units with matching 26-world support
+and 317 source files (D048). All 61 wider solver/interface/lifecycle controls also
+pass. Expanded-game training and quality remain unmeasured.
+
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
 completed one frozen physical batch: 5,940 worlds, 30,812 public states and
