@@ -479,3 +479,28 @@ the frozen protocol/fixture unchanged as historical execution inputs, and preser
 all earlier failures and misses. See the [complete result](../four-street-integration-result.md).
 The next integration expansion may be scoped only with a fresh joint law and
 full requested forecasts under unchanged caps, before any new training.
+
+D044 (2026-10-25): after v1 passed saved-only authentication and its code/evidence
+merged in PRs #237/#240, Sol accepts the next M5 ticket as preflight only. Append
+`5c6d7s8cKc` to the six existing outcomes and change only the case ID; all public
+request fields except runouts remain literal v1. Reuse both preparations and the
+generic complete-game forecast, preserving the full false forecast and support
+comparison before any rejection. One real test verifies 26-world support, four
+analytic pair masses, the added winner reversal and zero solver/trainer access.
+Keep all old sources, corpus bytes, thresholds and caps unchanged. The fresh
+source-frozen receipt is still required; no expanded-game solve is authorized by
+this implementation acceptance. See the [preflight specification](../four-street-expansion-preflight.md).
+
+D045 (2026-10-25): the official M5 preflight on clean committed source
+644eae2b3036dff71d81a1e445d675476beb155a preserves a complete admission rejection.
+Both 315-file snapshots match; production admits 26 worlds and 188,281,040 modeled
+vector work under 500 million. Independent support and all signs/masses match,
+but the exact all-positive forecast is 113,078 against 100,000, a 13,078 deficit.
+No production solve or training ran and quality remains unknown. Publish the
+unaltered full receipt before a separate certificate correction. Sol's analytical
+proposal combines first-mass signed terminal accumulation with one maximum
+normalization-adjustment absolute value per row, retaining every ledger entry;
+the proposed 99,119 forecast is not executable admission evidence. Keep all v1
+sources/corpora, game/threshold and hard caps unchanged. A fresh direct-graph
+census, same-policy exact parity and normal/optimized controls must precede any
+corrected preflight, and training remains gated by observed complete admission.

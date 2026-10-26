@@ -1,0 +1,42 @@
+{
+  "schema": "four-street-expansion-preflight-publication-v1",
+  "candidate_id": "four-street-shared-river-expansion-v2",
+  "source_commit": "644eae2b3036dff71d81a1e445d675476beb155a",
+  "receipt": {
+    "path": "receipt.json",
+    "bytes": 236309,
+    "sha256": "0025236b3c71c23991bd2b0db6df95ba7b84d89e786d7041daaabeb8c63334ba",
+    "git_blob": "fd990b73837fc1d03d4420f47e85b5a0dfb19e2e"
+  },
+  "outcome": "rejected",
+  "attempted_training": false,
+  "production_calls_entered": 0,
+  "quality_gate": null,
+  "source_matches": true,
+  "source_files": 315,
+  "counts": {
+    "action_slots": 2706,
+    "decisions": 704,
+    "information_rows": 1352,
+    "public_states": 1585,
+    "worlds": 26
+  },
+  "production": {
+    "admitted": true,
+    "public_states": 1641,
+    "vector_work": 188281040,
+    "vector_work_limit": 500000000
+  },
+  "exact": {
+    "admitted": false,
+    "work": 113078,
+    "limit": 100000,
+    "excess_work": 13078
+  },
+  "support_matches": true,
+  "first_rejection": {
+    "error_type": "AdmissionRejected",
+    "message": "independent exact forecast exceeds its configured work limit",
+    "stage": "exact-work-admission"
+  }
+}
