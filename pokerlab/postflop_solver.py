@@ -10,6 +10,7 @@ import math
 from numbers import Real
 
 from .cards import DECK, cards, expand_range, rank_hand
+from .probability_guard import normal_positive_mass
 from .cfr import train, evaluate, best_response
 from .cfr_plus import train as train_plus
 from .planned_cfr import train as train_planned, MAX_PLAN_OPS
@@ -119,7 +120,8 @@ def _enumerate_worlds(board, oop_range, ip_range, runouts=None, iterations=10):
             if not pair_worlds:
                 continue
             compatible_pairs += 1
-            raw_mass = ranges[0][oop_hand] * ranges[1][ip_hand] / denominator
+            raw_mass = normal_positive_mass(
+                ranges[0][oop_hand] * ranges[1][ip_hand] / denominator)
             for future in pair_worlds:
                 # Hold'em showdown rank depends on the final board, not reveal
                 # order. Keep ordered worlds distinct for strategy/chance while
@@ -142,7 +144,7 @@ def _enumerate_worlds(board, oop_range, ip_range, runouts=None, iterations=10):
     normalizer = fsum(world[2] for world in worlds)
     if normalizer <= 0:
         raise ValueError("Ranges and future runouts contain no compatible physical deals.")
-    normalized = [(world[0], world[1], world[2] / normalizer, *world[3:])
+    normalized = [(world[0], world[1], normal_positive_mass(world[2] / normalizer), *world[3:])
                   for world in worlds]
     return hands, normalized, selected, compatible_pairs
 

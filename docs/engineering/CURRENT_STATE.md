@@ -1,5 +1,13 @@
 # Current engineering state
 
+The [foundation-first audit](../foundation-first-audit.md) is the October 26
+priority and readiness assessment. It contains a reproduced/contained joint-mass
+underflow defect and a separate exact full-deck public-prefix probability
+experiment. The experiment has no trainer/payoff/reach integration and does not
+expand supported solving. Full-deck representation, strategy storage, actual
+legal-action coverage and solver-backed coaching remain unresolved. See
+[executed checks and limitations](../foundation-first-execution.md).
+
 An explicit [C++ four-street training backend](../native-four-street-architecture.md)
 migrates coupled public-chance CFR+ sweeps behind the existing API. Python retains
 preparation, admission, numeric diagnostics and independent exact audits. Existing

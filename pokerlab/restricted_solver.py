@@ -8,6 +8,7 @@ by exact information-set best responses, not by looking at hidden cards.
 """
 from .cards import cards, expand_range, rank_hand
 from .analysis import number
+from .probability_guard import normal_positive_mass
 
 
 def strategy(regret):
@@ -78,12 +79,12 @@ def solve(board, oop_range, ip_range, pot=100, bet=50, iterations=1000, lock=Non
     h0, h1 = list(r0), list(r1)
     ranks0 = [rank_hand(h+board) for h in h0]
     ranks1 = [rank_hand(h+board) for h in h1]
-    deals = [(i, j, r0[a]*r1[b], (ranks0[i] > ranks1[j])-(ranks0[i] < ranks1[j]))
+    deals = [(i, j, normal_positive_mass(r0[a]*r1[b]), (ranks0[i] > ranks1[j])-(ranks0[i] < ranks1[j]))
              for i, a in enumerate(h0) for j, b in enumerate(h1) if not set(a).intersection(b)]
     mass = sum(d[2] for d in deals)
     if not mass:
         raise ValueError("Ranges contain no compatible pair of hands.")
-    deals = [(i, j, w/mass, sign) for i, j, w, sign in deals]
+    deals = [(i, j, normal_positive_mass(w/mass), sign) for i, j, w, sign in deals]
     # a: OOP opening, d: OOP responding; b: IP after check, c: IP responding.
     sizes = {"a": len(h0), "d": len(h0), "b": len(h1), "c": len(h1)}
     regrets = {k: [[0., 0.] for _ in range(n)] for k, n in sizes.items()}

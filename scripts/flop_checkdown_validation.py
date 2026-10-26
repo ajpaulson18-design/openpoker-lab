@@ -11,6 +11,12 @@ from pokerlab.cards import cards, expand_range
 from scripts.preflop_validation import independent_rank
 
 
+def _require(condition, details=None):
+    """Retain evidence checks when Python assertions are disabled."""
+    if not condition:
+        raise AssertionError(details)
+
+
 def _money(x):
     return round(float(x), 9)
 
@@ -83,7 +89,7 @@ def prepare_oracle(board, oop_range, ip_range, config, *, _trusted_counts=None):
                         cache[key] = independent_rank(hand + final)
                     ranked.append(cache[key])
                 counts[(ranked[0] > ranked[1]) - (ranked[0] < ranked[1])] += 1
-            assert sum(counts.values()) == 1980
+            _require(sum(counts.values()) == 1980)
             prior = weight / total
             name_a, name_b = "".join(a), "".join(b)
             deals.append((name_a, name_b, float(prior), (counts[1] - counts[-1]) / 1980))
@@ -180,31 +186,31 @@ def replay(result, oracle, tolerance=1e-10):
     for row in result["strategy"]:
         player = {"oop":0,"ip":1}[row["player"]]
         key = player, row["hand"], tuple(row["history"])
-        assert key not in rows, "Duplicate policy row"
-        assert row["street"] == "flop" and tuple(row["board"]) == oracle["board"]
-        assert row["hand"] in active[player], "Inactive hand policy"
+        _require(key not in rows, "Duplicate policy row")
+        _require(row["street"] == "flop" and tuple(row["board"]) == oracle["board"])
+        _require(row["hand"] in active[player], "Inactive hand policy")
         node = oracle["nodes"][(player,key[2])]
-        assert len(row["actions"]) == len(node[3])
+        _require(len(row["actions"]) == len(node[3]))
         probabilities = []
         for a, expected in zip(row["actions"],node[3]):
             name, amount, target, _ = expected
-            assert (a["name"],a["amount"],a["raise_to"],a["history_key"]) == (name,amount,target,_token(name,target)), "Action differs from numeric rules"
+            _require((a["name"],a["amount"],a["raise_to"],a["history_key"]) == (name,amount,target,_token(name,target)), "Action differs from numeric rules")
             p=float(a["probability"])
-            assert isfinite(p) and 0 <= p <= 1
+            _require(isfinite(p) and 0 <= p <= 1)
             probabilities.append(p)
-        assert abs(fsum(probabilities)-1) <= 1e-9
+        _require(abs(fsum(probabilities)-1) <= 1e-9)
         rows[key] = probabilities
     expected = {(p,h,history) for p,history in oracle["nodes"] for h in active[p]}
-    assert set(rows)==expected, "Missing or unexpected information sets"
-    assert result["info_sets"]==len(expected)
-    assert result["public_nodes"]==len(oracle["nodes"])
-    assert result["public_states"]==oracle["public_states"]
-    assert result["physical_worlds"]==1980*len(oracle["deals"])
-    assert len(result["pair_equities"])==len(oracle["counts"])
+    _require(set(rows)==expected, "Missing or unexpected information sets")
+    _require(result["info_sets"]==len(expected))
+    _require(result["public_nodes"]==len(oracle["nodes"]))
+    _require(result["public_states"]==oracle["public_states"])
+    _require(result["physical_worlds"]==1980*len(oracle["deals"]))
+    _require(len(result["pair_equities"])==len(oracle["counts"]))
     for actual, wanted in zip(result["pair_equities"],oracle["counts"]):
         for k in ("oop_hand","ip_hand","wins","ties","losses","ordered_outcomes"):
-            assert actual[k]==wanted[k], "Chance count mismatch"
-        assert abs(actual["pair_probability"]-wanted["pair_probability"])<=1e-12
+            _require(actual[k]==wanted[k], "Chance count mismatch")
+        _require(abs(actual["pair_probability"]-wanted["pair_probability"])<=1e-12)
     def payoff(node, deal):
         unit = oracle["pot"]/2 + min(node[2])
         return unit*((1 if node[3]==0 else -1) if node[1]=="fold" else deal[3])
@@ -228,6 +234,6 @@ def replay(result, oracle, tolerance=1e-10):
     metrics={"value_oop":value,"value_ip":-value,"oop_best_response_value":br0,
              "ip_best_response_value":br1,"nash_conv":gap,"exploitability":gap/2}
     deltas={k:abs(result[k]-v) for k,v in metrics.items()}
-    assert all(isfinite(v) and v<=tolerance for v in deltas.values()), deltas
+    _require(all(isfinite(v) and v<=tolerance for v in deltas.values()), deltas)
     return {**metrics,"scalar_absolute_gaps":deltas,"checked_information_sets":len(rows),
             "checked_physical_worlds":result["physical_worlds"]}

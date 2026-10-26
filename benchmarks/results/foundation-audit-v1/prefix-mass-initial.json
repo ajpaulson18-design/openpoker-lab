@@ -1,0 +1,202 @@
+{
+  "schema": "foundation-prefix-mass-v1",
+  "timestamp_utc": "2026-10-26T14:58:15.762621+00:00",
+  "source_revision": "901726e55caa0c45495b19668285162a04918cdc",
+  "source_lf_sha256_before": {
+    "pokerlab/full_deck_prefix_mass.py": "a6efc9da89e77fc997cac2fff2bcc8b23f92f34fb4cf7b16a49b5563030744c6",
+    "scripts/benchmark_foundation_prefix_mass.py": "a71010b6e8d7b6204417a6dc4b5f186a0418e7cdde8d10aebb8801bf55dce209",
+    "tests/test_full_deck_prefix_mass.py": "f316424a2911ad192fe0b7136180a2acf4405a0b3e5d0680cddccf0774b688e4",
+    "tests/test_full_deck_prefix_independent.py": "efdf4a8e99e7c8c815307ba75197ea4c860a3d541ba7a52a7408b6e6dc7559e2"
+  },
+  "source_lf_sha256_after": {
+    "pokerlab/full_deck_prefix_mass.py": "a6efc9da89e77fc997cac2fff2bcc8b23f92f34fb4cf7b16a49b5563030744c6",
+    "scripts/benchmark_foundation_prefix_mass.py": "a71010b6e8d7b6204417a6dc4b5f186a0418e7cdde8d10aebb8801bf55dce209",
+    "tests/test_full_deck_prefix_mass.py": "f316424a2911ad192fe0b7136180a2acf4405a0b3e5d0680cddccf0774b688e4",
+    "tests/test_full_deck_prefix_independent.py": "efdf4a8e99e7c8c815307ba75197ea4c860a3d541ba7a52a7408b6e6dc7559e2"
+  },
+  "source_status": [
+    " M pokerlab/postflop_solver.py",
+    " M pokerlab/preflop_solver.py",
+    " M pokerlab/restricted_solver.py",
+    " M pokerlab/solver.py",
+    "?? pokerlab/full_deck_prefix_mass.py",
+    "?? pokerlab/probability_guard.py",
+    "?? scripts/benchmark_foundation_prefix_mass.py",
+    "?? tests/test_full_deck_prefix_independent.py",
+    "?? tests/test_full_deck_prefix_mass.py",
+    "?? tests/test_probability_underflow.py"
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "cases": [
+    {
+      "hands_per_player": 2,
+      "repetitions_seconds": [
+        0.0005920999974478036,
+        0.0004826000003959052,
+        0.0004769000006490387
+      ],
+      "median_seconds": 0.0004826000003959052,
+      "timed_work": "construct exact operator and query four prefixes",
+      "reference_outside_timer": "independent-literal-pairs-sequential-deal",
+      "prefixes": [
+        [],
+        [
+          7,
+          19,
+          31
+        ],
+        [
+          7,
+          19,
+          31,
+          42
+        ],
+        [
+          7,
+          19,
+          31,
+          42,
+          50
+        ]
+      ],
+      "exact_prefix_masses": [
+        "1",
+        "3/86480",
+        "1/1297200",
+        "1/85615200"
+      ],
+      "independent_exact_match": true
+    },
+    {
+      "hands_per_player": 16,
+      "repetitions_seconds": [
+        0.0015571999974781647,
+        0.0015205999989120755,
+        0.001480200000514742
+      ],
+      "median_seconds": 0.0015205999989120755,
+      "timed_work": "construct exact operator and query four prefixes",
+      "reference_outside_timer": "independent-literal-pairs-sequential-deal",
+      "prefixes": [
+        [],
+        [
+          7,
+          19,
+          31
+        ],
+        [
+          7,
+          19,
+          31,
+          42
+        ],
+        [
+          7,
+          19,
+          31,
+          42,
+          50
+        ]
+      ],
+      "exact_prefix_masses": [
+        "1",
+        "8/225929",
+        "8/10166805",
+        "617/35787153600"
+      ],
+      "independent_exact_match": true
+    },
+    {
+      "hands_per_player": 128,
+      "repetitions_seconds": [
+        0.020878499999525957,
+        0.017179800001031253,
+        0.01697250000142958
+      ],
+      "median_seconds": 0.017179800001031253,
+      "timed_work": "construct exact operator and query four prefixes",
+      "reference_outside_timer": "independent-literal-pairs-sequential-deal",
+      "prefixes": [
+        [],
+        [
+          7,
+          19,
+          31
+        ],
+        [
+          7,
+          19,
+          31,
+          42
+        ],
+        [
+          7,
+          19,
+          31,
+          42,
+          50
+        ]
+      ],
+      "exact_prefix_masses": [
+        "1",
+        "30721/651678688",
+        "7249/7331385240",
+        "1609/78201442560"
+      ],
+      "independent_exact_match": true
+    },
+    {
+      "hands_per_player": 1326,
+      "repetitions_seconds": [
+        0.18234239999947022,
+        0.17088919999878271,
+        0.22420070000225678
+      ],
+      "median_seconds": 0.18234239999947022,
+      "timed_work": "construct exact operator and query four prefixes",
+      "reference_outside_timer": "uniform-complete-range-deck-symmetry",
+      "prefixes": [
+        [],
+        [
+          7,
+          19,
+          31
+        ],
+        [
+          7,
+          19,
+          31,
+          42
+        ],
+        [
+          7,
+          19,
+          31,
+          42,
+          50
+        ]
+      ],
+      "exact_prefix_masses": [
+        "1",
+        "1/22100",
+        "1/1082900",
+        "1/51979200"
+      ],
+      "independent_exact_match": true
+    }
+  ],
+  "structural_counts": {
+    "full_range_hands_per_player": 1326,
+    "compatible_ordered_private_pairs": 1624350,
+    "ordered_public_outcomes_per_pair": 34246080,
+    "literal_complete_world_rows": 55627620048000,
+    "one_8_byte_mass_per_world_payload_bytes": 445020960384000
+  },
+  "limits": [
+    "No training, ranking, tree, action values or native invocation",
+    "No baseline speedup, RSS, allocation or full-solver latency claim",
+    "Linear rational-operation/entry count is not bit complexity",
+    "Full-deck law differs from selected-outcome conditional law"
+  ]
+}

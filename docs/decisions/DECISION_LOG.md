@@ -575,3 +575,30 @@ Python 3.11-3.13 and sanitizer checks passed at the code freeze; final PR-head
 checks still govern merge. Python preparation/API and independent oracles remain
 justified by the measured boundary. No memory/RSS, Rust comparison, wider support
 or algorithm/convergence-mode migration follows. See [retained evidence](../native-four-street-result.md).
+
+D053 (2026-10-26, America/New_York): the owner prioritizes a foundation-first
+audit against a commercial four-street educational solver and authorizes
+evidence-backed action, preserving functioning and frozen work. Sol/root finds
+and contains an accepted-input underflow defect: materialized joint masses could
+erase a roughly 9% posterior or change a 2:1 distribution into 1:1. Reject
+zero/subnormal/nonfinite raw and normalized masses in four existing producers;
+preserve literal admitted arithmetic. Sol independently accepts the bounded
+full-deck prefix-mass experiment implemented by Luna, with global root
+normalization, exact binary64-image fractions and no pair/future-world storage.
+This is research probability work, not a new trainer or selected-game parity
+claim. Preserve current native/finite-game achievements and unresolved broader
+quality misses. Resolve game-law, representation/storage, scalable verification
+and per-action educational evidence before further product expansion. Terra was
+unavailable; root handled difficult numerical work. D052 is reserved for the
+paused expanded-runner workstream. See [assessment and gates](../foundation-first-audit.md)
+and [executed record](../foundation-first-execution.md).
+
+The same audit also exposed assertion-dependent legacy evidence acceptance.
+Harden all 84 original predicates in four named validators to explicit checks;
+independently normalize legacy preflop replay's parsed-input chance weights
+exactly before one float conversion and reject nonfinite comparison data.
+Configured binary64 action/payoff rules remain fixed. The final combined 175
+tests pass normally and optimized, including compiled controls and adversarial
+subprocesses; mechanical conversion of three validators preserves complete AST
+predicates/messages. Local full-suite execution was interrupted after source-drift
+guards fired during ongoing edits; final clean-head CI remains a separate gate.

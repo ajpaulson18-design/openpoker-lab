@@ -6,6 +6,7 @@ information-set level, without exposing either player's hidden cards.
 """
 from .analysis import number
 from .cards import cards, expand_range, rank_hand
+from .probability_guard import normal_positive_mass
 from .cfr import best_response as _cfr_best_response
 from .cfr import evaluate as _cfr_evaluate
 from .cfr import strategy, train as _cfr_train
@@ -199,14 +200,15 @@ def _solve_configured(board, oop_range, ip_range, pot=100, bet=50, iterations=10
     hands = (list(r0), list(r1))
     ranks0 = [rank_hand(hand + board) for hand in hands[OOP]]
     ranks1 = [rank_hand(hand + board) for hand in hands[IP]]
-    deals = [(i, j, r0[h0] * r1[h1],
+    deals = [(i, j, normal_positive_mass(r0[h0] * r1[h1]),
               (ranks0[i] > ranks1[j]) - (ranks0[i] < ranks1[j]))
              for i, h0 in enumerate(hands[OOP]) for j, h1 in enumerate(hands[IP])
              if not set(h0).intersection(h1)]
     mass = sum(deal[2] for deal in deals)
     if not mass:
         raise ValueError("Ranges contain no compatible pair of hands.")
-    deals = [(i, j, weight / mass, sign) for i, j, weight, sign in deals]
+    deals = [(i, j, normal_positive_mass(weight / mass), sign)
+             for i, j, weight, sign in deals]
     root, public_nodes = _build_tree(config)
     if len(deals) * public_nodes * iterations > 30_000_000:
         raise ValueError("Configured solver workload exceeds 30 million deal-node iterations.")

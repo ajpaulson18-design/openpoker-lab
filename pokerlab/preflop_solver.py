@@ -12,6 +12,7 @@ from . import cfr
 from .cfr_plus import train as train_cfrplus
 from . import postflop_solver as _postflop
 from .cards import DECK, cards, expand_range, rank_hand
+from .probability_guard import normal_positive_mass
 from .planned_cfr import MAX_PLAN_OPS, train as train_planned
 from .preflop_tree import PreflopConfig, PreflopContinuation, build_preflop_tree
 from .preflop_vector_budget import MAX_INFO_ACTION_SLOTS, MAX_TOTAL_LOOP_ENTRIES, estimate_vector_budget
@@ -201,7 +202,8 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
     physical_denominator = _OUTCOMES_PER_UNBLOCKED_PAIR
     for sb_index, bb_index, valid_count in compatible_counts:
         sb_hand, bb_hand = hands[0][sb_index], hands[1][bb_index]
-        pair_mass = ranges[0][sb_hand] * ranges[1][bb_hand] / physical_denominator
+        pair_mass = normal_positive_mass(
+            ranges[0][sb_hand] * ranges[1][bb_hand] / physical_denominator)
         pair_key = (sb_index, bb_index)
         pair_masses[pair_key] = pair_mass * valid_count
         for selected_index in runout_index.iter_valid_indices(sb_hand + bb_hand):
@@ -216,12 +218,12 @@ def _enumerate_physical_worlds(sb_range, bb_range, runouts, iterations, *,
     normalizer = fsum(world[2] for world in raw_worlds)
     if not isfinite(normalizer) or normalizer <= 0:
         raise ValueError("Selected ranges and runouts have no positive joint mass.")
-    worlds = [(world[0], world[1], world[2] / normalizer, *world[3:])
+    worlds = [(world[0], world[1], normal_positive_mass(world[2] / normalizer), *world[3:])
               for world in raw_worlds]
     pair_probabilities = [
         {"sb_hand": "".join(hands[0][sb_index]),
          "bb_hand": "".join(hands[1][bb_index]),
-         "probability": mass / normalizer}
+         "probability": normal_positive_mass(mass / normalizer)}
         for (sb_index, bb_index), mass in sorted(pair_masses.items())
     ]
     return hands, worlds, len(compatible_counts), pair_probabilities, selected, preflight_checks

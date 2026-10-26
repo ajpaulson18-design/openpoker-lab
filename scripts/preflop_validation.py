@@ -8,9 +8,15 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, replace
 from fractions import Fraction
 from itertools import combinations
-from math import comb, fsum, isfinite
+from math import fsum, isfinite
 
 from pokerlab.cards import cards, expand_range
+
+
+def _require(condition, details=None):
+    """Validation is required even when Python runs with assertions disabled."""
+    if not condition:
+        raise AssertionError(details)
 
 
 def _q(value):
@@ -62,7 +68,6 @@ def physical_worlds(sb_range, bb_range, runouts):
         if outcome in outcomes:
             raise ValueError("Duplicate physical outcome")
         outcomes.append(outcome)
-    denominator = comb(48, 3) * 45 * 44
     pending = []
     rank_cache = {}
     for sb, sb_weight in sorted(ranges[0].items()):
@@ -79,13 +84,22 @@ def physical_worlds(sb_range, bb_range, runouts):
                         rank_cache[key] = independent_rank(key)
                     ranks.append(rank_cache[key])
                 sign = (ranks[0] > ranks[1]) - (ranks[0] < ranks[1])
+                # Uniform physical-board likelihood is common to every world
+                # and cancels. Normalize exact parsed binary64 products before
+                # one float conversion; never duplicate production underflow.
                 pending.append(("".join(sb), "".join(bb),
-                                sb_weight * bb_weight / denominator, sign, board))
-    normalizer = fsum(world[2] for world in pending)
+                                Fraction.from_float(sb_weight) *
+                                Fraction.from_float(bb_weight), sign, board))
+    normalizer = sum((world[2] for world in pending), Fraction(0))
     if normalizer <= 0:
         raise ValueError("No compatible worlds")
-    return [(sb, bb, mass / normalizer, sign, board)
-            for sb, bb, mass, sign, board in pending]
+    worlds = []
+    for sb, bb, mass, sign, board in pending:
+        probability = float(mass / normalizer)
+        if not isfinite(probability) or probability <= 0:
+            raise ValueError("Independent normalized chance mass cannot be represented positively")
+        worlds.append((sb, bb, probability, sign, board))
+    return worlds
 
 
 @dataclass(frozen=True)
@@ -155,7 +169,7 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
     rows = {}
     for row in result["strategy"]:
         key = (row["player"], row["hand"], tuple(row["history"]))
-        assert key not in rows, "Duplicate serialized information set"
+        _require(key not in rows, "Duplicate serialized information set")
         rows[key] = row
     checked = set()
 
@@ -269,27 +283,27 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
 
     def policy(state, hand, expected):
         key = (("sb", "bb")[state.player], hand, state.history)
-        assert key in rows, f"Missing information set: {key}"
+        _require(key in rows, f"Missing information set: {key}")
         row = rows[key]
         actual = row["actions"]
         if key not in checked:
-            assert row["street"] == {0: "preflop", 3: "flop", 4: "turn", 5: "river"}[state.street]
-            assert tuple(row["revealed_board"]) == state.board, "Future/private-card leak"
-            assert len(actual) == len(expected), (key, actual, expected)
+            _require(row["street"] == {0: "preflop", 3: "flop", 4: "turn", 5: "river"}[state.street])
+            _require(tuple(row["revealed_board"]) == state.board, "Future/private-card leak")
+            _require(len(actual) == len(expected), (key, actual, expected))
             for item, expected_action in zip(actual, expected):
                 name, amount, target, _ = expected_action[:4]
-                assert item["name"] == name, (key, item, name, state)
+                _require(item["name"] == name, (key, item, name, state))
                 if configured:
-                    assert item["amount"] == float(amount), (key, item, amount)
-                    assert item["raise_to"] == float(target), (key, item, target)
+                    _require(item["amount"] == float(amount), (key, item, amount))
+                    _require(item["raise_to"] == float(target), (key, item, target))
                 else:
-                    assert abs(item["amount"] - float(amount)) < 1e-8, (key, item, amount)
-                    assert abs(item["raise_to"] - float(target)) < 1e-8, (key, item, target)
-                assert item["history_key"] == _token(name, target), (
-                    key, item["history_key"], _token(name, target))
+                    _require(abs(item["amount"] - float(amount)) < 1e-8, (key, item, amount))
+                    _require(abs(item["raise_to"] - float(target)) < 1e-8, (key, item, target))
+                _require(item["history_key"] == _token(name, target), (
+                    key, item["history_key"], _token(name, target)))
             probs = [item["probability"] for item in actual]
-            assert all(isfinite(value) and value >= 0 for value in probs)
-            assert abs(fsum(probs) - 1) < 1e-10
+            _require(all(isfinite(value) and value >= 0 for value in probs))
+            _require(abs(fsum(probs) - 1) < 1e-10)
             checked.add(key)
         return [item["probability"] for item in actual]
 
@@ -401,7 +415,7 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
         probabilities = {hand: policy(state, hand, expected) for hand in {world[state.player] for world in group}}
         if responder == state.player:
             # The root call has already separated the responder's own hand.
-            assert len({world[responder] for world in group}) == 1
+            _require(len({world[responder] for world in group}) == 1)
             values = [child(group, state, action, responder) for action in expected]
             return (max if responder == 0 else min)(values)
         values = []
@@ -438,7 +452,7 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
             best = fsum(visit(group, initial, player) for group in groups.values())
             br.append(best if player == 0 else -best)
         br_sb, br_bb = br
-    assert checked == set(rows), f"Unreachable information sets: {set(rows) - checked}"
+    _require(checked == set(rows), f"Unreachable information sets: {set(rows) - checked}")
     pair_probabilities = defaultdict(float)
     for sb, bb, mass, _, _ in worlds:
         pair_probabilities[(sb, bb)] += mass
@@ -455,7 +469,12 @@ def replay_policy(result, sb_range, bb_range, *, config, runouts,
 def compare_result(result, oracle, tolerance=1e-10):
     """Reject candidate metrics that disagree with independent legal replay."""
     fields = ("value_sb", "value_bb", "sb_best_response_value", "bb_best_response_value", "nash_conv")
+    _require(type(tolerance) in (int, float) and isfinite(tolerance) and tolerance >= 0,
+             "Replay tolerance must be finite and nonnegative")
+    for source in (result, oracle):
+        _require(all(type(source[field]) in (int, float) and isfinite(source[field])
+                     for field in fields), "Replay metrics must be finite numbers")
     gaps = {field: abs(result[field] - oracle[field]) for field in fields}
-    assert max(gaps.values()) <= tolerance, gaps
-    assert result["worlds"] == oracle["worlds"]
+    _require(max(gaps.values()) <= tolerance, gaps)
+    _require(result["worlds"] == oracle["worlds"])
     return gaps

@@ -1,0 +1,47 @@
+{
+  "schema": "foundation-sol-legacy-acceptance-hardening-v1",
+  "baseline_commit": "901726e55caa0c45495b19668285162a04918cdc",
+  "scope": "Mechanical always-on validation only; no mathematical predicate, payoff, probability, protocol or frozen benchmark edits in these three modules",
+  "preserved_predicate_counts": {
+    "scripts/flop_checkdown_validation.py": 17,
+    "scripts/preflop_push_fold_validation.py": 35,
+    "scripts/preflop_monetary_validation.py": 15
+  },
+  "total_preserved_predicates": 67,
+  "source_raw_sha256": {
+    "scripts/flop_checkdown_validation.py": "f972eb7f043627e2f37d684354be1837834dd14507cd4d151ffaa627c3b42ff7",
+    "scripts/preflop_push_fold_validation.py": "40255290f029b8942d35e9e99d9fdf6ae9c8b3b8dc94b45f39f5ef2b2c933675",
+    "scripts/preflop_monetary_validation.py": "e6c68b38a595c2c63046b47cc02668262f5e4fc0e05746ee0fba9b1dac9dcd67",
+    "tests/test_legacy_replay_optimized.py": "5717c56c1d2eac3194fa9c872e65bde000ff4f2b0b1a97b896669b4de76fcb68"
+  },
+  "AST_verification": {
+    "result": "passed: replacing calls by Assert and removing the helper recovers the complete original module AST identically",
+    "script": "work/verify_sol_legacy_predicate_preservation.py",
+    "retained_result": "work/foundation-sol-legacy-ast.json",
+    "command_from_repo": "& 'C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe' -B 'C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-openpoker\\work\\verify_sol_legacy_predicate_preservation.py'"
+  },
+  "working_directory": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-openpoker\\work\\repo",
+  "python_executable": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "python_version": "3.12.14",
+  "unittest_targets": [
+    "tests.test_legacy_replay_optimized",
+    "tests.test_preflop_push_fold_validation",
+    "tests.test_preflop_monetary_replay",
+    "tests.test_flop_checkdown_solver",
+    "tests.test_fixed_street_profile.FixedStreetProfileTests.test_rank_free_count_oracle_recomputes_exact_collision_priors",
+    "tests.test_fixed_street_profile.FixedStreetProfileTests.test_count_oracle_rejects_missing_or_malformed_rows_without_ranking"
+  ],
+  "executed_runs": [
+    {"argv_prefix": ["-B", "-m", "unittest"], "argv_suffix": ["-v"], "targets": "unittest_targets above", "tests_run": 18, "unittest_seconds": 17.707, "exit_code": 0, "result": "OK"},
+    {"argv_prefix": ["-B", "-O", "-m", "unittest"], "argv_suffix": ["-v"], "targets": "unittest_targets above", "tests_run": 18, "unittest_seconds": 17.352, "exit_code": 0, "result": "OK"}
+  ],
+  "adversarial_controls": {
+    "valid_hand_written_synthetic_payloads": 2,
+    "rejected_controls_per_child": 17,
+    "child_modes_in_each_parent_test": ["normal", "optimized"],
+    "covered_failures": ["board visibility", "action money", "NaN probability", "duplicate policy", "missing policy", "chance counts", "scalar metric", "wrong scope", "wrong exact-certificate support", "corrupted monetary midpoint reference"],
+    "limitation": "Synthetic trusted W/T/L counts exercise evidence acceptance mechanics, not physical ranking or training quality. Existing targeted controls separately exercise independent ranking, configured monetary replay and learned finite games."
+  },
+  "not_executed": ["full repository suite", "exhaustive evaluator", "native builds", "frozen experiment CLI reruns"],
+  "publication": "No commit or push by Sol; root owns independent diff review and integration"
+}
