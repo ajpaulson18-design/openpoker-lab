@@ -531,3 +531,17 @@ uses distinct validator identities and exposes no caller-selected callback.
 Freeze clean source and measure the actual corrected no-training admission next;
 no expanded-game quality outcome follows from prescribed-policy controls. See
 [the implementation and scope](../four-street-exact-operators-v3.md).
+
+D048 (2026-10-26 UTC): the corrected source-frozen preflight on clean committed
+98c3a779b079ee838c92727ed852af6d447e2f39 completed with exit code 0 and admits
+99,119/100,000 exact work units. Production admits188,281,040/500million; all26
+worlds and four pair/sign/mass support match. Both317-file source snapshots match.
+The15,901-entry fresh census plus448,760 graph-preparation envelope totals464,661
+under8million. Preserve the original113,078 rejection and the new full raw receipt;
+zero production calls and qualitynull distinguish admission from trained quality.
+All61 wider solver/interface/lifecycle tests pass (271.068 seconds), together with
+the31 normal/optimized focused controls and documentation validation. Proceed
+with a separately identified frozen26world/T1000 quality-runner and saved-only
+verifier through private fixed-experiment reuse seams; retain originalv1 behavior
+and source-authentication-before-mathematics. No cap, iteration or game-rule
+change follows. See [corrected admission and scope](../four-street-exact-operators-v3.md).

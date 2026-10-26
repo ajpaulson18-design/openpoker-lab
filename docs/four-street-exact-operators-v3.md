@@ -80,7 +80,14 @@ the executable. Preparation disclosure separates production preparation, the
 explicit independent support build, the forecaster's fresh independent build,
 its own graph/census receipts and source captures. The forecaster's preparation
 ceiling does not bound the whole preflight. No training occurs and quality
-remains unknown. The actual frozen corrected receipt remains pending.
+remains unknown. The actual frozen corrected receipt is admitted at 99,119 exact work units
+against 100,000, with 881 units of headroom. Production remains admitted at
+188,281,040 against 500 million. All 26 worlds, four pair masses and signs match;
+the two 317-file source snapshots match clean commit
+`98c3a779b079ee838c92727ed852af6d447e2f39`. The fresh census uses 15,901 logical
+preparation entries and its aggregate with two graph walks is 464,661 against
+8,000,000. These are separately scoped logical units, not whole-preflight runtime
+or memory bounds.
 
 ```powershell
 python -B -m scripts.four_street_expansion_preflight_v3 --expected-source-commit <clean-40-character-commit> --output-directory <new-directory-outside-repository>
@@ -90,3 +97,19 @@ Keep the original rejected receipt and successful v1 corpus byte-identical.
 The expanded-game quality runner and saved-only verifier require distinct fixed
 experiment identities and full lifecycle/source-authentication checks before
 a new frozen complete-game solve.
+
+## Measured receipt and publication
+
+The original corrected CLI completed with exit code 0, no rejection, zero
+production calls and an unknown quality gate. Its byte-identical [receipt](../benchmarks/results/four-street-expansion-preflight-v3/receipt.json)
+and [publication index](../benchmarks/results/four-street-expansion-preflight-v3/publication.json)
+retain the complete forecast, source closure, production and independent support
+and preparation disclosures. Receipt SHA-256 is
+`fe6f378c9af6c3cfcdc7f58e2d9c60d50bd75944dc0dd80ffa9d62f60fb0ce56`
+(242,557 bytes). The wider solver/interface/lifecycle suite also passed all
+61 tests (271.068 seconds); documentation validation passed.
+
+The original rejected [v2 receipt](../benchmarks/results/four-street-expansion-preflight-v2/receipt.json)
+remains immutable at 113,078 work. The corrected admission supports implementing
+a distinct frozen expanded-game runner and saved-only verifier. It establishes
+capacity for validation, while expanded-game strategy quality remains unmeasured.

@@ -50,8 +50,10 @@ regression. All 15 certificate controls pass normally and with assertions disabl
 (D046). The distinct v3 operators and corrected preflight now pass all 31
 certificate/preflight controls normally and with assertions disabled (D047).
 They preserve the full original certificate and preflight rejection while
-checking candidate coupling and every work family. A fresh clean-source corrected
-preflight is pending; no expanded-game training result is claimed.
+checking candidate coupling and every work family. The actual corrected clean-source
+preflight now admits 99,119/100,000 exact work units with matching 26-world support
+and 317 source files (D048). All 61 wider solver/interface/lifecycle controls also
+pass. Expanded-game training and quality remain unmeasured.
 
 The [second-board flop reference](../flop-second-board-reference.md) is a
 separate no-training preparation for `7c8d9h`. Its planner and bounded harness
