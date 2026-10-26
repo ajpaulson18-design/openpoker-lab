@@ -1,0 +1,43 @@
+{
+  "metric_gaps": {
+    "bb_best_response_value": 8.326672684688674e-17,
+    "nash_conv": 8.326672684688674e-17,
+    "sb_best_response_value": 0.0,
+    "value_bb": 5.551115123125783e-17,
+    "value_sb": 5.551115123125783e-17
+  },
+  "oracle": {
+    "bb_best_response_value": -0.24480825363121853,
+    "checked_information_sets": 1200,
+    "monetary_mode": "configured",
+    "nash_conv": 0.00039973881514432374,
+    "private_pair_probabilities": [
+      {
+        "bb": "JdJh",
+        "probability": 0.17647058823529413,
+        "sb": "AdAs"
+      },
+      {
+        "bb": "KdKs",
+        "probability": 0.5294117647058824,
+        "sb": "AdAs"
+      },
+      {
+        "bb": "JdJh",
+        "probability": 0.07352941176470588,
+        "sb": "QdQs"
+      },
+      {
+        "bb": "KdKs",
+        "probability": 0.22058823529411767,
+        "sb": "QdQs"
+      }
+    ],
+    "sb_best_response_value": 0.24520799244636285,
+    "value_bb": -0.245057763853449,
+    "value_sb": 0.245057763853449,
+    "worlds": 22
+  },
+  "raw_sha256": "d1f9d85a3ee4a7eb0b700b36a084471eaae1862c7a6dd641c7d3fe834e84df63",
+  "sample_id": "repeat-1-native"
+}

@@ -41,6 +41,11 @@ to reduce the language inventory.
 
 ## Evidence and acceptance
 
+The [retained T1000 comparison and exact certificate](native-four-street-result.md)
+now validate this migration boundary: 66.6150 ratio of complete-call medians,
+identical policy probabilities and an independent exact gap below 1/1000 BB
+on the named 22-world fixture. Larger-support and memory claims remain unmeasured.
+
 A diagnostic cProfile of the existing 22-world fixture at T100 on bundled
 CPython 3.12 observed 14.923 seconds: 14.444 seconds in `train_public_batched`,
 0.144 in tree merge and 0.124 in public diagnostics. Instrumentation perturbs
