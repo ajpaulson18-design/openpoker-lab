@@ -162,6 +162,38 @@ substitute for the final Linux matrix. Three real saved source maps also pass
 their actual, unmocked source authentication. See the
 [synthetic-fixture follow-up receipt](../benchmarks/results/foundation-audit-v1/synthetic-fixture-followup.json).
 
+## Committed bridge closure correction
+
+Independent final review accepted the synthetic isolation but reproduced a
+predecessor P1 gap: a pre-existing edit to the compatibility helper could remain
+stable throughout replay. The old source inventory's committed checks passed,
+while the added helper was compared only against its operation-start bytes.
+This was demonstrated without changing files by substituting an added comment
+through `Path.read_bytes`; it is an evidence-provenance gap, not a changed poker
+result. The final 2150452 local runs passed 199 optimized tests (74.919 seconds)
+and 25 public saved replay tests (161.542 seconds), but did not discharge this
+newly identified requirement.
+
+`require_committed_bridge()` now authenticates every introduced bridge/archive
+dependency, including both compatibility modules, against blobs from one captured
+current HEAD before accepting source transitions or reconstructing evidence.
+The check rejects missing/untracked inputs and malformed/truncated Git responses,
+normalizes line endings only for committed text comparison, retains raw-byte
+operation fingerprints, and rechecks HEAD before returning. Operation snapshots
+also bind the revision, so revision drift cannot pass with unchanged file bytes.
+The shared matchers and historical turn context use the same gate; rational,
+profile, suit and sequence consumers are covered alongside direct replay.
+Historical source-map inventories, all frozen records and production replay
+script bytes are unchanged.
+
+Regressions cover pre-existing helper edits before reconstruction, missing bridge
+blobs, complete closure inventories and a HEAD change during snapshot collection.
+Because this evidence-operation API requires committed helper source, acceptance
+tests run after committing this correction. Clean-source focused/public replay
+and final CI remain required. The
+[closure follow-up receipt](../benchmarks/results/foundation-audit-v1/source-closure-followup.json)
+preserves the finding, scope and implementation identities.
+
 ## Remaining work
 
 The [ranked register](foundation-first-audit.md#ranked-improvement-register)

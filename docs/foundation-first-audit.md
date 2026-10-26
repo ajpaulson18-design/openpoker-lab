@@ -162,8 +162,13 @@ continues to reject. Provenance-only wrapper edits have exact old/current pins
 and AST comparison outside named provenance functions. Both LF and CRLF historical
 hashes are recognized only through those authenticated bytes. Unknown matching
 hashes, reversed turn transitions, changed archives, missing dependencies and
-source changes during replay remain rejected. Current operation fingerprints
-include the new bridge, archives and probability guard. Archived code is parsed
+source changes during replay remain rejected. Final review also exposed stable
+pre-existing edits to introduced helpers that operation-only hashes did not
+bind to committed source. The shared source-transition gates now require the
+bridge/archive closure to match one captured HEAD before reconstruction and
+recheck that HEAD before returning. Raw operation hashes still detect changes
+during replay. Current fingerprints include the new bridge, archives and
+probability guard. Archived code is parsed
 as inert evidence and never executed. See the
 [integration receipt](../benchmarks/results/foundation-audit-v1/provenance-integration.json).
 

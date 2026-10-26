@@ -67,8 +67,55 @@ class HistoricalFoundationSourceTests(unittest.TestCase):
                 data = original(path)
                 return data + b"\n# drift\n" if path == bridge.ARCHIVED_RAISED_REFERENCE else data
             with patch.object(Path, "read_bytes", altered):
-                self.assertNotEqual(before, bridge.operation_fingerprints(paths))
+                with self.assertRaisesRegex(ValueError, "Committed bridge source differs"):
+                    bridge.operation_fingerprints(paths)
                 self.assertFalse(bridge.compatible_historical_reference_sources(historical, current, paths))
+            self.assertEqual(before, bridge.operation_fingerprints(paths))
+
+    def test_preexisting_bridge_edit_rejects_before_reconstruction(self):
+        from scripts import benchmark_river_direct_tail as direct
+        original = Path.read_bytes
+        helper = Path(bridge.__file__).resolve()
+        def altered(path):
+            data = original(path)
+            return data + b"\n# preexisting uncommitted edit\n" if path.resolve() == helper else data
+        with patch.object(Path, "read_bytes", altered), patch.object(direct, "_audit_policy") as audit:
+            with self.assertRaisesRegex(ValueError, "Committed bridge source differs"):
+                direct._verify_bundle(b"{}", {})
+            audit.assert_not_called()
+
+    def test_operation_snapshot_binds_head_and_all_bridge_inputs(self):
+        import subprocess
+        from scripts import historical_turn_sources as turn
+        before = bridge.operation_fingerprints(())
+        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=bridge.ROOT,
+                                       text=True).strip()
+        self.assertEqual(before["__git_head__"], head)
+        self.assertTrue({path.relative_to(bridge.ROOT).as_posix() for path in bridge.BRIDGE_INPUTS}
+                        <= set(before))
+        self.assertTrue(set(turn.OPERATION_INPUTS) <= set(before))
+        self.assertNotEqual(before, dict(before, __git_head__="0" * 40))
+
+    def test_untracked_bridge_input_and_head_race_reject(self):
+        import subprocess
+        missing = bridge.ROOT / "tests/fixtures/__untracked_bridge_input__.txt"
+        self.assertFalse(missing.exists())
+        with patch.object(bridge, "BRIDGE_INPUTS", bridge.BRIDGE_INPUTS + (missing,)):
+            with self.assertRaisesRegex(ValueError, "not committed at HEAD"):
+                bridge.operation_fingerprints(())
+        original = subprocess.run
+        head_reads = 0
+        def moved_head(args, **kwargs):
+            nonlocal head_reads
+            result = original(args, **kwargs)
+            if args == ["git", "rev-parse", "HEAD"]:
+                head_reads += 1
+                if head_reads == 2:
+                    return subprocess.CompletedProcess(args, 0, "0" * 40 + "\n", "")
+            return result
+        with patch.object(bridge.subprocess, "run", moved_head):
+            with self.assertRaisesRegex(ValueError, "HEAD changed"):
+                bridge.operation_fingerprints(())
 
     def test_exact_audit_rejects_source_drift_before_reconstruction(self):
         from scripts import audit_full_deck_raised_exact as audit

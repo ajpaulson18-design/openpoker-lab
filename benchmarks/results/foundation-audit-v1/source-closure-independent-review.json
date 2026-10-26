@@ -1,0 +1,90 @@
+{
+  "schema": "foundation-independent-final-review-v1",
+  "reviewed_head": "21504520c67d4da38db0607c008579a4fdb41238",
+  "reviewer": "independent Sol acceptance review",
+  "source_changes": false,
+  "suite_runs": false,
+  "scope": "Commit 2150452 synthetic plumbing isolation, explicit test-source transitions, archive and operation-input closure; narrow inspection of predecessor replay guards",
+  "completed_checks": [
+    "All four inert synthetic-test archives exactly equal the corresponding files at 2150452 parent after LF normalization",
+    "Independent AST traversal removes exactly 3,3,2,4 scoped synthetic patch contexts and reproduces each complete archived AST",
+    "All original assertion bodies and surrounding existing audit/publication stubs remain unchanged",
+    "Each new mock occurs within an existing synthetic reconstruction/publication/timing block; no global matcher override is introduced",
+    "Each archive is included in BRIDGE_INPUTS and historical turn OPERATION_INPUTS",
+    "Exact old/current test identities pass the production matcher",
+    "Unknown equal protected digests reject for all four test files",
+    "Simulated current-file byte tampering rejects for all four test transitions",
+    "Existing real-source rejection tests remain unmocked, including rejection before policy audit",
+    "Production replay scripts were not changed by 2150452"
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "New bridge inputs are guarded against during-operation drift but not pre-existing uncommitted helper edits in direct saved replay",
+      "origin": "Predecessor compatibility layer at e7717ae; not introduced by synthetic mock contexts",
+      "files": [
+        "scripts/historical_foundation_sources.py:154",
+        "scripts/benchmark_river_direct_tail.py:858",
+        "scripts/benchmark_river_direct_long_tail.py:583",
+        "scripts/benchmark_turn_three_hand_tail.py:610"
+      ],
+      "observation": "Public direct replay computes committed-source checks from historical VERIFY_PATHS inventories, which exclude historical_foundation_sources.py. operation_fingerprints captures bridge and archive bytes before/after work but does not compare them with current HEAD. A bridge edit already present at operation start therefore passes that snapshot guard.",
+      "read_only_reproduction": {
+        "method": "Patch Path.read_bytes only for historical_foundation_sources.py to append a comment; leave filesystem unchanged; use real river direct saved/current source maps",
+        "bridge_in_historical_verification_map": false,
+        "simulated_edit_changes_bridge_operation_hash": true,
+        "original_current_map_require_committed_passes": true,
+        "real_saved_current_transition_accepted": true,
+        "operation_before_equals_after": true
+      },
+      "recommendation": "Authenticate introduced operation-input closure against committed current HEAD before reconstruction, keeping historical source-map fields unchanged. Add a regression for a pre-existing helper edit separately from during-operation drift.",
+      "limit": "The probe establishes an identity/closure gap, not incorrect poker mathematics or acceptance of a tampered policy. Exact pinned archive/test checks and during-operation drift checks still pass. The final GitHub checkout is clean and committed."
+    }
+  ],
+  "limitations": [
+    "No full test suites or saved mathematical reconstruction were rerun during this review",
+    "No claim of full-deck solving, convergence or commercial readiness",
+    "No filesystem source bytes were edited; targeted tampering used process-local mocks only"
+  ],
+  "proposed_central_fix_review": {
+    "status": "design accepted; implementation not yet reviewed",
+    "proposal": "At each operation_fingerprints invocation, authenticate every BRIDGE_INPUT against one captured current HEAD using batched Git blob reads, compare LF-normalized committed/current text, retain raw source hashes and add HEAD identity to snapshot",
+    "compatibility": "Inspected consumers compare operation snapshots for equality; historical source-map shape remains unchanged and production verifier script pins need not change",
+    "requirements": [
+      "Batch against exact captured HEAD, rejecting absent/untracked inputs, malformed or truncated responses and Git failures",
+      "Retain raw-byte hashes after committed text comparison to preserve during-operation drift detection",
+      "Use a reserved snapshot key for HEAD identity",
+      "Do not introduce dirty-source or temporary-root bypasses; pure transition inspectors remain separate from committed-source evidence operations",
+      "Prefer a second HEAD read at the end of snapshot collection to reject a race within one collection",
+      "Regress pre-existing helper edits before reconstruction, missing/untracked archive blobs, and HEAD changes"
+    ]
+  },
+  "implemented_central_fix_review": {
+    "status": "No blocking finding in read-only working-tree review; committed-source regression tests pending root commit",
+    "scope": [
+      "scripts/historical_foundation_sources.py",
+      "scripts/historical_turn_sources.py",
+      "tests/test_historical_foundation_sources.py"
+    ],
+    "reviewed_lf_sha256": {
+      "scripts/historical_foundation_sources.py": "2c3deae098a7a3937c910e03126fc69e431730d9836d661dd7484f3ed5a35702",
+      "scripts/historical_turn_sources.py": "420ff9f5814f9dfcac4e1a142d2814c311814a9799c5036141fdd7863cc6cdcf",
+      "tests/test_historical_foundation_sources.py": "1596e7bca9f76936b978eea85cf22d4a3fb82d6050ac5a51e84aeaecf9d738e4"
+    },
+    "verified_by_inspection": [
+      "One captured exact HEAD addresses batched Git blob requests",
+      "Missing, malformed, truncated or trailing response bytes reject",
+      "Committed text comparison normalizes LF while snapshot retains actual raw bytes",
+      "Final HEAD read rejects a race inside snapshot collection",
+      "Reserved HEAD snapshot key participates in equality checks",
+      "Historical turn helper is itself in committed closure",
+      "Public direct entrypoints and matcher APIs gate before mathematical reconstruction",
+      "Historical turn context/postflop/wrapper authentication and rational rank consumers are gated",
+      "Regression source covers pre-existing helper drift, missing blob, HEAD race and closure inventory",
+      "Historical report source-map formats and production replay-script bytes remain unchanged"
+    ],
+    "nonblocking_observation": "Nested matchers and transition authenticators repeat the batched Git check; measure focused and CI overhead before considering bounded operation-context reuse",
+    "tests_executed_during_implementation_review": false,
+    "finding_disposition": "Original source-closure finding addressed by implementation subject to committed-source test results"
+  }
+}

@@ -8,6 +8,7 @@ this only when their sole dependency is the independently unchanged rank pair.
 import ast
 import hashlib
 from pathlib import Path
+import subprocess
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,7 +22,8 @@ ARCHIVED_RIVER_AUDIT = ROOT / "tests/fixtures/audit_river_rational_certificate_b
 ARCHIVED_RAISED_REFERENCE = ROOT / "tests/fixtures/full_deck_raised_reference.py.before_foundation.txt"
 ARCHIVED_RAISED_AUDIT = ROOT / "tests/fixtures/audit_full_deck_raised_exact.py.before_foundation.txt"
 ARCHIVED_RAISED_AUDIT_TEST = ROOT / "tests/fixtures/test_full_deck_raised_exact.py.before_foundation.txt"
-BRIDGE_INPUTS = (Path(__file__).resolve(), ARCHIVED_PREFLOP_SOURCE, ARCHIVED_RIVER_AUDIT,
+BRIDGE_INPUTS = (Path(__file__).resolve(), ROOT / "scripts/historical_turn_sources.py",
+                 ARCHIVED_PREFLOP_SOURCE, ARCHIVED_RIVER_AUDIT,
                  ARCHIVED_RAISED_REFERENCE, ARCHIVED_RAISED_AUDIT, ARCHIVED_RAISED_AUDIT_TEST)
 
 # Each legacy verifier keeps its historical inventory; these archives are
@@ -37,6 +39,18 @@ TURN_VERIFIER_NAMES = (
 TURN_VERIFIER_ARCHIVES = tuple(ROOT / "tests/fixtures" / (Path(name).name + ".before_foundation.txt")
                                for name in TURN_VERIFIER_NAMES)
 BRIDGE_INPUTS = BRIDGE_INPUTS + TURN_VERIFIER_ARCHIVES
+TURN_CONTEXT_INPUTS = (
+    "pokerlab/probability_guard.py",
+    "tests/fixtures/postflop_solver_before_foundation.py.txt",
+    "tests/fixtures/benchmark_full_deck_raised_turn_before_foundation.py.txt",
+    "tests/fixtures/benchmark_turn_tail_before_foundation.py.txt",
+    "tests/fixtures/audit_turn_tail_exact_before_foundation.py.txt",
+    "tests/fixtures/build_raised_turn_witness_before_foundation.py.txt",
+    "tests/fixtures/test_benchmark_turn_tail_before_foundation.py.txt",
+    "tests/fixtures/test_turn_tail_artifacts_before_foundation.py.txt",
+    "tests/fixtures/test_build_raised_turn_witness_before_foundation.py.txt",
+)
+BRIDGE_INPUTS = BRIDGE_INPUTS + tuple(ROOT / name for name in TURN_CONTEXT_INPUTS)
 
 
 def _lf(raw):
@@ -81,6 +95,7 @@ def authenticate_preflop_rank_transition():
     The returned receipt is provenance for rank-only historical replay, not a
     new strategy-quality certificate or whole-validator equivalence statement.
     """
+    require_committed_bridge()
     old = _lf(ARCHIVED_PREFLOP_SOURCE.read_bytes())
     current = _lf(PREFLOP_SOURCE.read_bytes())
     if _sha(old) != OLD_PREFLOP_LF_SHA256:
@@ -132,6 +147,7 @@ def historical_river_audit_source_matches(path, historical_digest):
     if Path(path).resolve() != RIVER_AUDIT_SOURCE.resolve():
         return False
     try:
+        require_committed_bridge()
         old = _lf(ARCHIVED_RIVER_AUDIT.read_bytes())
         current = _lf(RIVER_AUDIT_SOURCE.read_bytes())
         return (_sha(old) == OLD_RIVER_AUDIT_LF_SHA256 and
@@ -151,11 +167,55 @@ RAISED_TRANSITIONS = {
 }
 
 
+def require_committed_bridge():
+    """Return a raw bridge snapshot only after binding every input to HEAD."""
+    try:
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+                              check=True, capture_output=True, text=True).stdout.strip()
+        names = sorted({path.relative_to(ROOT).as_posix() for path in BRIDGE_INPUTS})
+        requests = "".join(f"{head}:{name}\n" for name in names).encode("utf-8")
+        committed = subprocess.run(["git", "cat-file", "--batch"], cwd=ROOT,
+                                   input=requests, check=True, capture_output=True).stdout
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise ValueError("Cannot authenticate committed bridge source closure") from error
+    offset = 0
+    snapshot = {}
+    for name in names:
+        end = committed.find(b"\n", offset)
+        header = committed[offset:end].split() if end >= 0 else []
+        if len(header) != 3 or header[1] != b"blob" or not header[2].isdigit():
+            raise ValueError(f"Bridge source is not committed at HEAD: {name}")
+        size = int(header[2])
+        start = end + 1
+        stop = start + size
+        if stop >= len(committed) or committed[stop:stop + 1] != b"\n":
+            raise ValueError("Malformed committed bridge source response")
+        working = (ROOT / name).read_bytes()
+        if _lf(committed[start:stop]) != _lf(working):
+            raise ValueError(f"Committed bridge source differs from working bytes: {name}")
+        snapshot[name] = _sha(working)
+        offset = stop + 1
+    if offset != len(committed):
+        raise ValueError("Unexpected committed bridge source response")
+    try:
+        final_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+                                    check=True, capture_output=True, text=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise ValueError("Cannot recheck committed bridge HEAD") from error
+    if final_head != head:
+        raise ValueError("Git HEAD changed while authenticating bridge source closure")
+    return {"__git_head__": head, **snapshot}
+
+
 def operation_fingerprints(source_paths):
-    """Raw operation inputs, separate from the historical report's source map."""
-    paths = {ROOT / path for path in source_paths} | set(BRIDGE_INPUTS)
-    return {str(path.relative_to(ROOT)).replace("\\", "/"): _sha(path.read_bytes())
-            for path in paths}
+    """Bind introduced dependencies to HEAD and retain raw operation hashes.
+
+    Historical inventories remain unchanged. Stable pre-existing helper edits
+    reject before reconstruction; raw hashes and HEAD also detect operation drift.
+    """
+    snapshot = require_committed_bridge()
+    return {**snapshot, **{str(path).replace("\\", "/"): _sha((ROOT / path).read_bytes())
+                          for path in source_paths}}
 
 
 def _raised_test_ast(raw, *, archive):
@@ -186,6 +246,7 @@ def compatible_historical_reference_sources(historical, current, expected_paths)
             set(historical) != set(expected_paths) or set(current) != set(expected_paths)):
         return False
     try:
+        require_committed_bridge()
         for name in expected_paths:
             old_digest, current_digest = historical[name], current[name]
             if name == "scripts/preflop_validation.py":
@@ -215,6 +276,7 @@ def compatible_historical_reference_sources(historical, current, expected_paths)
 def historical_foundation_source_matches(path, historical_digest):
     """Match only authenticated, explicitly reviewed foundation transitions."""
     try:
+        require_committed_bridge()
         resolved = Path(path).resolve()
         if resolved == PREFLOP_SOURCE.resolve():
             authenticate_preflop_rank_transition()
@@ -339,6 +401,7 @@ def _synthetic_test_matches(path, digest):
 def foundation_source_accepts(path, historical_digest, direct_candidates):
     """Require reviewed transitions for protected sources; retain ordinary strict pins otherwise."""
     try:
+        require_committed_bridge()
         name = Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
         protected = (name in TURN_VERIFIER_TRANSITIONS or name in SYNTHETIC_TEST_TRANSITIONS or name in RAISED_TRANSITIONS or
                      name in ("scripts/preflop_validation.py", "scripts/audit_river_rational_certificate.py"))
@@ -354,6 +417,7 @@ def compatible_exact_source_maps(historical, current, root=ROOT):
     if type(historical) is not dict or type(current) is not dict or set(historical) != set(current):
         return False
     try:
+        require_committed_bridge()
         for name, digest in historical.items():
             path = Path(root) / name
             candidate = current[name]

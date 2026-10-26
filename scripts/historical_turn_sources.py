@@ -25,7 +25,7 @@ TRANSITIONS = {'pokerlab/postflop_solver.py': ('a9d54a39a558ef1e72dea0b84f2b1df8
 from pathlib import Path
 import ast
 import hashlib
-from scripts.historical_foundation_sources import BRIDGE_INPUTS, RAISED_TRANSITIONS, TURN_VERIFIER_TRANSITIONS, historical_foundation_source_matches
+from scripts.historical_foundation_sources import BRIDGE_INPUTS, RAISED_TRANSITIONS, TURN_VERIFIER_TRANSITIONS, historical_foundation_source_matches, require_committed_bridge
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,6 +79,7 @@ def authenticate_postflop_transition():
     The archive is inert source. This does not equate old underflow behavior
     with the new rejection, nor authorize new training from historical pins.
     """
+    require_committed_bridge()
     old, current = _lf(POSTFLOP_ARCHIVE), _lf("pokerlab/postflop_solver.py")
     if (_sha(old) != TRANSITIONS["pokerlab/postflop_solver.py"][1]
             or _sha(current) != POSTFLOP_FOUNDATION_SHA256
@@ -110,6 +111,7 @@ def authenticate_postflop_transition():
 
 def authenticate_wrapper_transition(name):
     """Bind exact reviewed provenance-only wrapper edits, preserving math AST."""
+    require_committed_bridge()
     archived = "tests/fixtures/" + Path(name).stem + "_before_foundation.py.txt"
     old, current = _lf(archived), _lf(name)
     old_pin = TRANSITIONS[name][1] if name in TRANSITIONS else PRE_FOUNDATION_TESTS[name][0]
@@ -183,6 +185,7 @@ def compatible_source(name, historical, current):
 
 def validate_current_context(current):
     """Bind newly introduced source dependencies when running the new path."""
+    require_committed_bridge()
     if (current.get("pokerlab/postflop_solver.py") != POSTFLOP_FOUNDATION_SHA256
             and current.get("scripts/preflop_validation.py") !=
             "f9e81b318b78b3e4d9af43095d1a99bf6a0e1c5604d27dd0ba3e4ac02116f06f"):
