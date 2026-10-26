@@ -1,5 +1,13 @@
 # Dependency, tooling and licensing record
 
+The [public-chance native trainer](../native-four-street-architecture.md) adds
+project-owned C++20 source and an explicit installed-compiler build step. It
+imports no third-party solver/evaluator implementation or generated tables.
+Normal builds add no Python runtime package. Standard-library/compiler runtime
+packaging and redistribution remain distribution-specific checks; source-only
+publication does not establish binary packaging clearance. Optional sanitizer
+builds are development/CI checks, separate from normal executable deployment.
+
 Baseline: [pyproject.toml](../../pyproject.toml) declares no runtime dependencies,
 Python >=3.11 and setuptools >=68 as the build requirement. Python standard
 library, plain JavaScript/HTML/CSS and SQLite through the standard library form

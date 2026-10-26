@@ -4,7 +4,8 @@ from . import preflop_solver
 from .solver_contracts import FourStreetSolveRequest, FourStreetSolveResult
 
 
-def solve_four_street(request: FourStreetSolveRequest) -> FourStreetSolveResult:
+def solve_four_street(request: FourStreetSolveRequest, *,
+                      native_executable=None) -> FourStreetSolveResult:
     """Delegate one bounded request to the existing selected-runout solver.
 
     The complete engine payload is snapshotted as finite JSON in the returned
@@ -14,6 +15,8 @@ def solve_four_street(request: FourStreetSolveRequest) -> FourStreetSolveResult:
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
 
+    native_options = ({} if native_executable is None else
+                      {"native_executable": native_executable})
     payload = preflop_solver.solve_preflop(
         request.sb_range,
         request.bb_range,
@@ -30,5 +33,6 @@ def solve_four_street(request: FourStreetSolveRequest) -> FourStreetSolveResult:
         traversal=request.traversal,
         diagnostics=request.diagnostics,
         resource_model=request.resource_model,
+        **native_options,
     )
     return FourStreetSolveResult._from_payload(request, payload)

@@ -1,5 +1,11 @@
 # Current engineering state
 
+An explicit [C++ four-street training backend](../native-four-street-architecture.md)
+migrates coupled public-chance CFR+ sweeps behind the existing API. Python retains
+preparation, admission, numeric diagnostics and independent exact audits. Existing
+reference defaults remain available. This migration does not expand game scope;
+separate same-work benchmarks and compiled controls govern its claims.
+
 The [unified four-street interface](../four-street-solver.md) adds an immutable
 request and complete-result envelope around the existing single-root all-streets
 preflop solver. It preserves its kernels, histories, joint chance law, numerical

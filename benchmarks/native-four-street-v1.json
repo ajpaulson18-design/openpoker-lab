@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "native-four-street-v1",
+  "status": "fresh-comparison-protocol",
+  "scope": "Bounded selected-runout four-street CFR+ complete-call comparison. This protocol is not the frozen four-street quality corpus and makes no convergence, general speed, memory or RSS claim.",
+  "case": {
+    "id": "four-street-weighted-shared-future-v1",
+    "sb_range": "AsAd:0.5,QsQd:0.25",
+    "bb_range": "KsKd:0.75,JhJd:0.25",
+    "config": {
+      "small_blind": 0.5,
+      "big_blind": 1,
+      "starting_stack": [8, 8],
+      "raise_sizes": [0.5],
+      "max_raises": 1,
+      "include_all_in": false
+    },
+    "runouts": [
+      "2c3c4d7h8h",
+      "2c3c4d7hKc",
+      "2c3c4dKc8h",
+      "2c3c4dQd8h",
+      "5c6d7s8c9h",
+      "5c6d7s8cJc"
+    ],
+    "flop_config": {"bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": false},
+    "turn_config": {"bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": false},
+    "river_config": {"bet_sizes": [0.5], "raise_sizes": [], "max_raises": 0, "include_all_in": false}
+  },
+  "comparison": {
+    "algorithm": "cfrplus",
+    "iterations": 1000,
+    "traversal": "public-batched",
+    "diagnostics": "public-batched",
+    "resource_model": "public-vector",
+    "repeats": 3,
+    "order_by_repeat": [["python", "native"], ["native", "python"], ["python", "native"]],
+    "independent_replay": "scripts.preflop_validation.replay_policy + compare_result",
+    "policy_probability_tolerance": 1e-6,
+    "diagnostic_tolerance": 1e-10,
+    "timing_scope": "Complete facade call including preparation, CFR+ training, diagnostics and result serialization; capture per-phase metadata only when returned by the implementation. No tracemalloc during timed samples."
+  }
+}

@@ -545,3 +545,17 @@ with a separately identified frozen26world/T1000 quality-runner and saved-only
 verifier through private fixed-experiment reuse seams; retain originalv1 behavior
 and source-authentication-before-mathematics. No cap, iteration or game-rule
 change follows. See [corrected admission and scope](../four-street-exact-operators-v3.md).
+
+D050 (2026-10-25, America/New_York): the owner explicitly requests language
+optimization and implementation without preserving Python for convenience. Sol
+selects a C++ public-chance CFR+ computational backend with Python preparation,
+API and independent numeric/exact validation. Profiling the existing coupled
+fixture identifies repeated training as the first migration boundary. Terra
+implements the bounded chance-aware engine/transport/build; Luna owns compiled
+controls, reproducible complete-call comparison and CI. Native selection is
+explicit, retains all original admission and zero-delay alternating semantics,
+and rejects unsupported configurations without fallback. Existing frozen
+engines, evidence and defaults are preserved. Rust remains a credible alternative;
+there is no equal-work Rust comparison or universal language-optimality claim.
+Acceptance requires compiled controls, independent whole-game replay, same-work
+timing and source/build provenance. See the [architecture and language assessment](../native-four-street-architecture.md).

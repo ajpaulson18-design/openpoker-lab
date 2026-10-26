@@ -538,7 +538,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                   sampling_seed=0, samples_per_iteration=1, tree_admission="decision-count",
                   target_nash_conv=None, convergence_check_interval=None,
                   private_indexing="original", future_indexing="original",
-                  world_admission="world-iterations"):
+                  world_admission="world-iterations", native_executable=None):
     """Solve a bounded heads-up preflop-to-river game.
 
     ``runouts`` is a required bounded list of five-card outcomes. The first
@@ -584,6 +584,11 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
     remains the requested ceiling; ``completed_iterations`` records actual work.
     Positive ``averaging_delay`` optionally applies CFR+ weights
     ``max(iteration-delay, 0)`` after each completed alternating sweep.
+
+    ``native_executable`` explicitly selects the source-built C++ public-tree
+    CFR+ trainer for all-streets, zero-delay public-vector solves. Preparation,
+    admission and exact numeric diagnostics retain their existing Python paths.
+    Unsupported native combinations reject rather than silently falling back.
     """
     if config is None:
         config = PreflopConfig()
@@ -674,6 +679,16 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
             raise ValueError("Convergence check interval must be a positive integer.")
         if (algorithm != "cfrplus" or not averaging_delay or not vector_budget_enabled):
             raise ValueError("Convergence stopping requires positive-delay public-vector CFR+.")
+    if native_executable is not None and not (
+            algorithm == "cfrplus" and traversal == "public-batched" and
+            diagnostics == "public-batched" and vector_budget_enabled and
+            postflop_scope == "all-streets" and averaging_delay == 0 and
+            not convergence_enabled and private_indexing == "original" and
+            future_indexing == "original" and world_admission == "world-iterations"):
+        raise ValueError(
+            "Native public-tree training requires all-streets zero-delay CFR+ "
+            "with public-batched training/diagnostics, public-vector admission "
+            "and original indexing/world admission without convergence stopping.")
     specs = _stage_configs(flop_config, turn_config, river_config)
 
     hands, worlds, compatible_pairs, pair_probabilities, selected, preflight_checks = \
@@ -799,6 +814,7 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         diagnostic_view_states = 0
         diagnostic_view_source = None
         completed_iterations = iterations if infos else 0
+        native_training = None
         convergence_checkpoints = []
         convergence_reached = False
         if not infos and (algorithm == "cfrplus" or traversal == "public-batched" or
@@ -838,7 +854,22 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                 return reached
 
             try:
-                if averaging_delay:
+                if native_executable is not None:
+                    from .native_public_cfr import (
+                        train_native_public, executable_identity, arithmetic_identity)
+                    native_training = dict(executable_identity(native_executable),
+                                           **arithmetic_identity())
+                    averages, native_admission = train_native_public(
+                        training_root, worlds, infos, iterations,
+                        pot=2 * training_pot_anchor, chance_type=_Chance,
+                        executable=native_executable,
+                        return_receipt=True,
+                    )
+                    if dict(executable_identity(native_executable),
+                            **arithmetic_identity()) != native_training:
+                        raise RuntimeError("Native training provenance changed during solve.")
+                    native_training.update(native_admission)
+                elif averaging_delay:
                     averages = train_delayed_public_cfrplus(
                         training_root, worlds, infos, iterations,
                         averaging_delay=averaging_delay,
@@ -952,7 +983,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
                             else "preflop-strategy-v1"),
         "strategy_schema": "preflop-strategy-v1",
         "algorithm": algorithm,
-        "execution_backend": f"{traversal}-python",
+        "execution_backend": ("public-batched-cpp" if native_training is not None
+                              else f"{traversal}-python"),
         "preflop_config": config.to_dict(),
         "postflop_action_configs": {
             stage: {key: list(value) if isinstance(value, tuple) else value
@@ -1000,6 +1032,8 @@ def solve_preflop(sb_range, bb_range, config=None, *, runouts=None,
         "scope": "Approximate equilibrium of the configured heads-up finite betting abstraction and selected physical runouts; no unrestricted preflop or Hold'em GTO claim.",
         "strategy": strategy,
     }
+    if native_training is not None:
+        result["native_training"] = native_training
     if postflop_scope == "flop-checkdown":
         result["postflop_scope"] = "flop-checkdown"
         result["scope"] = (

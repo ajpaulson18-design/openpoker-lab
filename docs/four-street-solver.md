@@ -6,6 +6,13 @@ It delegates exactly once to `solve_preflop(postflop_scope="all-streets")`.
 Preflop, flop, turn and river decisions belong to one game and one trained policy;
 there are no independent street-equilibrium calls or fixed continuation policies.
 
+The explicit `native_executable=` call option selects the
+[C++ public-chance CFR+ backend](native-four-street-architecture.md) for zero-delay
+public-batched training/diagnostics with public-vector admission. It migrates
+training across the same coupled game. Preparation, numeric diagnostics and the
+immutable mathematical request retain their existing boundaries; native source
+and build identity appear in the returned payload.
+
 ```python
 from pokerlab.four_street_solver import solve_four_street
 from pokerlab.preflop_tree import PreflopConfig
@@ -42,7 +49,9 @@ multiplied and substituted for the correlated joint game.
 
 The complete underlying `preflop-strategy-v1` rows, values, legal best responses,
 resource receipts and other fields remain in `payload`. There is no new state
-machine, payoff recurrence, policy normalization, diagnostic pass or numerical rule.
+machine or diagnostic pass in the reference facade. The optional native trainer
+has separately tested binary64 recurrence and normalization; it does not change
+the game, money rules or independent diagnostics.
 See [the underlying solver](preflop-solver.md) and
 [monetary replay](preflop-monetary-replay.md) for precise existing semantics.
 
