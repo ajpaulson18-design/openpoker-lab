@@ -18,6 +18,15 @@ OpenPoker Lab is a standard-library Python research application with a plain Jav
 
 ## Setup and validation
 
+The optional [C++ public-chance four-street trainer](docs/native-four-street-architecture.md)
+is source-built explicitly outside the checkout and selected through
+`native_executable=`. Preserve existing Python admission/reference paths and
+independent diagnostics, versioned binary64 reduction mode, native full-request
+loop/storage bounds and source/build provenance. Its
+[retained comparison](docs/native-four-street-result.md) is specific to the named
+conditioned finite game. Native compilation implies no wider solver scope,
+memory/RSS gain or universal speedup.
+
 Use Python 3.11 or newer. There are no runtime dependencies.
 
 - Run the application with `python -m pokerlab.server`.

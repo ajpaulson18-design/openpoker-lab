@@ -545,3 +545,33 @@ with a separately identified frozen26world/T1000 quality-runner and saved-only
 verifier through private fixed-experiment reuse seams; retain originalv1 behavior
 and source-authentication-before-mathematics. No cap, iteration or game-rule
 change follows. See [corrected admission and scope](../four-street-exact-operators-v3.md).
+
+D050 (2026-10-25, America/New_York): the owner explicitly requests language
+optimization and implementation without preserving Python for convenience. Sol
+selects a C++ public-chance CFR+ computational backend with Python preparation,
+API and independent numeric/exact validation. Profiling the existing coupled
+fixture identifies repeated training as the first migration boundary. Terra
+implements the bounded chance-aware engine/transport/build; Luna owns compiled
+controls, reproducible complete-call comparison and CI. Native selection is
+explicit, retains all original admission and zero-delay alternating semantics,
+and rejects unsupported configurations without fallback. Existing frozen
+engines, evidence and defaults are preserved. Rust remains a credible alternative;
+there is no equal-work Rust comparison or universal language-optimality claim.
+Acceptance requires compiled controls, independent whole-game replay, same-work
+timing and source/build provenance. See the [architecture and language assessment](../native-four-street-architecture.md).
+
+D051 (2026-10-26, America/New_York): Sol accepts the scoped C++ public-chance
+CFR+ migration after Terra implementation, independent Sol resource/recurrence
+review and Luna compiled/lifecycle validation. The clean published source freeze
+0985645 completed all six T1000 complete-call comparisons: Python median
+54.243413 seconds, native median 0.814282 seconds, ratio 66.6150, and zero policy
+probability difference across each of the three pairs. Every independent numeric
+replay passed; a separately authenticated saved native policy passed the unchanged
+exact normalized 1/1000 BB gate at approximately 0.000399738815144135 BB, with
+92,534/100,000 exact work. Retain full raw policies, timing samples, source/build
+identities and exact normalization ledger. Twenty-four focused controls pass
+normally/optimized; 53 legacy controls pass, together with docs. Linux native
+Python 3.11-3.13 and sanitizer checks passed at the code freeze; final PR-head
+checks still govern merge. Python preparation/API and independent oracles remain
+justified by the measured boundary. No memory/RSS, Rust comparison, wider support
+or algorithm/convergence-mode migration follows. See [retained evidence](../native-four-street-result.md).

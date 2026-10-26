@@ -1,5 +1,15 @@
 # Current engineering state
 
+An explicit [C++ four-street training backend](../native-four-street-architecture.md)
+migrates coupled public-chance CFR+ sweeps behind the existing API. Python retains
+preparation, admission, numeric diagnostics and independent exact audits. Existing
+reference defaults remain available. This migration does not expand game scope;
+separate same-work benchmarks and compiled controls govern its claims.
+The [retained T1000 result](../native-four-street-result.md) records a 66.6150
+complete-call median ratio on the 22-world fixture, identical policies and an
+independent exact normalized gap about 0.000399739 BB under the 0.001 BB target.
+This is a scoped speed/quality result; memory and larger-support gains are unmeasured.
+
 The [unified four-street interface](../four-street-solver.md) adds an immutable
 request and complete-result envelope around the existing single-root all-streets
 preflop solver. It preserves its kernels, histories, joint chance law, numerical
