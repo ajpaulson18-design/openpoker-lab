@@ -387,7 +387,7 @@ def _budget_add(budget, kind, left, right, label):
     return budget.fraction(left + right, label)
 
 
-def _br_structure(root, worlds, player, counter):
+def _br_structure(root, worlds, player, counter, terminal_group_forecast_operator):
     counter.charge("br_own_hand_setup", len(worlds))
     hands = sorted({world["hands"][player] for world in worlds})
 
@@ -397,9 +397,7 @@ def _br_structure(root, worlds, player, counter):
         if not group:
             return
         if isinstance(node, numeric._Terminal):
-            counter.charge("br_terminal_group_scans", len(group))
-            counter.charge("br_terminal_conversions", len(group))
-            counter.charge("br_terminal_fraction_operations", 2 * len(group))
+            terminal_group_forecast_operator(counter, len(group))
             return
         if isinstance(node, numeric.Reveal):
             branch_count = len(node.branches)
@@ -456,7 +454,13 @@ def _br_structure(root, worlds, player, counter):
         counter.charge("fused_result_slots", 2)
 
 
-def _forecast_model(model):
+def _forecast_terminal_group_literal(counter, group_size):
+    counter.charge("br_terminal_group_scans", group_size)
+    counter.charge("br_terminal_conversions", group_size)
+    counter.charge("br_terminal_fraction_operations", 2 * group_size)
+
+
+def _forecast_model(model, terminal_group_forecast_operator):
     counter = _Counter()
     nodes, decisions, infos = _validate_graph(model, counter)
     worlds = model.worlds
@@ -472,8 +476,8 @@ def _forecast_model(model):
     counter.charge("normalized_output_row_slots", len(infos))
     counter.charge("normalized_output_action_slots", action_slots)
     counter.charge("policy_hash_row_action_slots", len(infos) + action_slots)
-    _br_structure(model.root, worlds, 0, counter)
-    _br_structure(model.root, worlds, 1, counter)
+    _br_structure(model.root, worlds, 0, counter, terminal_group_forecast_operator)
+    _br_structure(model.root, worlds, 1, counter, terminal_group_forecast_operator)
     counter.charge("final_metric_fraction_operations", 12)
     counter.charge("certificate_output_entries", 24 + len(infos) + action_slots)
     return {"work": counter.work, "work_limit": MAX_EXACT_WORK,
@@ -520,13 +524,9 @@ def _structural_preparation_receipt(census, passes):
     }
 
 
-def forecast_exact(case):
-    """Admit the full shape/support without consulting trained probabilities."""
-    safe_case = _snapshot_case(case)
-    model = numeric.build_model(safe_case)
-    forecast = _forecast_model(model)
-    forecast.update({"source_identity": SOURCE_IDENTITY,
-                     "budget_schedule_version": BUDGET_SCHEDULE_VERSION,
+def _forecast_model_record(model, forecast, source_identity, budget_schedule_version):
+    forecast.update({"source_identity": source_identity,
+                     "budget_schedule_version": budget_schedule_version,
                      "model_sha256": _model_identity(model),
                      "input_case_canonical_sha256": _canonical_hash(model.case),
                      "preparation_receipts": {
@@ -542,6 +542,20 @@ def forecast_exact(case):
                              "action_slots": forecast["action_slots"],
                              "worlds": forecast["worlds"]}}})
     return forecast
+
+
+def _prepare_forecast(safe_case, terminal_group_forecast_operator):
+    model = numeric.build_model(safe_case)
+    forecast = _forecast_model(model, terminal_group_forecast_operator)
+    return model, forecast
+
+
+def forecast_exact(case):
+    """Admit the full shape/support without consulting trained probabilities."""
+    safe_case = _snapshot_case(case)
+    model, forecast = _prepare_forecast(safe_case, _forecast_terminal_group_literal)
+    return _forecast_model_record(model, forecast, SOURCE_IDENTITY,
+                                  BUDGET_SCHEDULE_VERSION)
 
 
 def _normalise_policy(model, payload, checked, budget):
@@ -622,7 +636,21 @@ def _terminal_value(node, world, budget):
     return rational._input_fraction(payoff, budget, "binary64 terminal payoff")
 
 
-def _fused_sb(model, policies, budget):
+def _terminal_group_literal(node, group, budget, contribution_label, sum_label):
+    """Preserve the v2 per-world terminal conversion and summation order."""
+    budget.charge("br_terminal_group_scans", len(group))
+    total = Fraction(0)
+    for world, mass in group:
+        payoff = _terminal_value(node, world, budget)
+        total = _budget_add(
+            budget, "br_terminal_fraction_operations", total,
+            budget.named_multiply("br_terminal_fraction_operations", mass,
+                                  payoff, contribution_label),
+            sum_label)
+    return total
+
+
+def _fused_sb(model, policies, budget, terminal_group_operator):
     """Compute SB legal BR and profile EV together, sharing terminal/future work."""
     worlds = model.worlds
     budget.charge("br_own_hand_setup", len(worlds))
@@ -635,16 +663,9 @@ def _fused_sb(model, policies, budget):
         if not group:
             return Fraction(0)
         if isinstance(node, numeric._Terminal):
-            budget.charge("br_terminal_group_scans", len(group))
-            total = Fraction(0)
-            for world, mass in group:
-                payoff = _terminal_value(node, world, budget)
-                total = _budget_add(
-                    budget, "br_terminal_fraction_operations", total,
-                    budget.named_multiply("br_terminal_fraction_operations", mass,
-                                          payoff, "fused terminal contribution"),
-                    "fused terminal sum")
-            return total
+            return terminal_group_operator(
+                node, group, budget,
+                "fused terminal contribution", "fused terminal sum")
         if isinstance(node, numeric.Reveal):
             budget.charge("br_reveal_branch_slots", 2 * len(node.branches))
             budget.charge("br_reveal_group_scans", len(group))
@@ -748,7 +769,7 @@ def _fused_sb(model, policies, budget):
     return root_value()
 
 
-def _best_response(model, policies, player, budget):
+def _best_response(model, policies, player, budget, terminal_group_operator):
     worlds = model.worlds
     budget.charge("br_own_hand_setup", len(worlds))
     own_hands = sorted({world["hands"][player] for world in worlds})
@@ -760,16 +781,9 @@ def _best_response(model, policies, player, budget):
         if not group:
             return Fraction(0)
         if isinstance(node, numeric._Terminal):
-            budget.charge("br_terminal_group_scans", len(group))
-            total = Fraction(0)
-            for world, mass in group:
-                total = _budget_add(
-                    budget, "br_terminal_fraction_operations", total,
-                    budget.named_multiply("br_terminal_fraction_operations", mass,
-                                          _terminal_value(node, world, budget),
-                                          "BR terminal contribution"),
-                    "BR terminal group sum")
-            return total
+            return terminal_group_operator(
+                node, group, budget,
+                "BR terminal contribution", "BR terminal group sum")
         if isinstance(node, numeric.Reveal):
             budget.charge("br_reveal_branch_slots", 2 * len(node.branches))
             budget.charge("br_reveal_group_scans", len(group))
@@ -825,8 +839,10 @@ def _best_response(model, policies, player, budget):
     return response if player == 0 else response
 
 
-def evaluate_exact(case, payload):
-    """Return exact profile EV, legal grouped BR bounds and normalization proof."""
+def _evaluate_with_operators(case, payload, *, terminal_group_operator,
+                             terminal_group_forecast_operator, normalizer,
+                             source_identity, budget_schedule_version):
+    """Private orchestration for fixed trusted exact operators."""
     safe_case = _snapshot_case(case)
     if type(payload) is not dict:
         raise ValueError("payload must be a plain serialized mapping")
@@ -835,8 +851,7 @@ def evaluate_exact(case, payload):
         raise ValueError("payload exceeds bounded four-street result shape")
     json_nodes = [0]
     _safe_json_value(payload, budget=json_nodes)
-    model = numeric.build_model(safe_case)
-    forecast = _forecast_model(model)
+    model, forecast = _prepare_forecast(safe_case, terminal_group_forecast_operator)
     if not forecast["admitted"]:
         raise ValueError(
             f"exact certificate forecast exceeds its hard work limit: "
@@ -847,10 +862,10 @@ def evaluate_exact(case, payload):
     budget.charge("physical_mass_normalization_operations", 2 * len(model.worlds))
     _validate_graph(model, budget)
     policies_float = numeric.validate_policy(model, payload)
-    normalized, ledger, normalized_rows, max_adjustment = _normalise_policy(
+    normalized, ledger, normalized_rows, max_adjustment = normalizer(
         model, payload, policies_float, budget)
-    br_sb, value = _fused_sb(model, normalized, budget)
-    min_sb = _best_response(model, normalized, 1, budget)
+    br_sb, value = _fused_sb(model, normalized, budget, terminal_group_operator)
+    min_sb = _best_response(model, normalized, 1, budget, terminal_group_operator)
     br_bb = budget.named_negate("final_metric_fraction_operations", min_sb,
                                 "BB best response in SB coordinates")
     lower = min_sb
@@ -913,8 +928,8 @@ def evaluate_exact(case, payload):
         raise ValueError(f"actual exact work exceeded forecast families: {exceeded!r}")
     if actual_work > forecast["work"]:
         raise ValueError("actual exact work exceeded the shape-only forecast")
-    return {"schema_version": 1, "source_identity": SOURCE_IDENTITY,
-            "budget_schedule_version": BUDGET_SCHEDULE_VERSION,
+    return {"schema_version": 1, "source_identity": source_identity,
+            "budget_schedule_version": budget_schedule_version,
             "model_sha256": _model_identity(model),
             "input_case_canonical_sha256": _canonical_hash(model.case),
             "input_policy_canonical_sha256": input_policy_hash,
@@ -946,3 +961,14 @@ def evaluate_exact(case, payload):
             "fraction_bit_limit": MAX_FRACTION_BITS,
             "work_limit": MAX_EXACT_WORK,
             "depth_limit": MAX_EXACT_DEPTH}
+
+
+def evaluate_exact(case, payload):
+    """Return exact profile EV, legal grouped BR bounds and normalization proof."""
+    return _evaluate_with_operators(
+        case, payload,
+        terminal_group_operator=_terminal_group_literal,
+        terminal_group_forecast_operator=_forecast_terminal_group_literal,
+        normalizer=_normalise_policy,
+        source_identity=SOURCE_IDENTITY,
+        budget_schedule_version=BUDGET_SCHEDULE_VERSION)
