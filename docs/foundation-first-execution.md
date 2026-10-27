@@ -347,3 +347,20 @@ fractional shifted terminal utility. Source-frozen paired complete-call runtime,
 allocation/process observations, saved T1000 exact/numeric replay and final CI
 remain publication gates. The direct shared builder, native shared traversal,
 strategy-history growth and larger exact-verifier limits remain unresolved.
+
+The [frozen shared study](../benchmarks/results/shared-public-topology-v1/receipt.json)
+at source `e0e50a60264fe995074570ea4a72f666cec9c017` now preserves all five paired
+complete policies, numeric diagnostics, private-pair probabilities and operator
+counters. Both T1000 exact targets pass with identical exact metrics; T100
+misses remain. Separate saved-only replay has zero training/native calls, and
+Terra authenticates all source/artifact hashes and paired policies independently.
+
+The full-call performance result is negative: T100 medians are 5.317529 s literal
+versus 6.703550 s shared; T1000 single calls are 54.050178 s versus 69.816158 s.
+The separate traced T100 peak is 2,362,920 versus 2,906,499 bytes. An initial
+interrupted six-sample attempt is preserved alongside the full second batch,
+not incorporated selectively into its statistics. A separate instrumented T10
+profile finds lower current allocation at shared trainer entry but a higher
+cumulative peak already reached before training. This is not retained-object
+proof or a full-call memory gain. Direct shared construction is the next storage
+dependency; all negative observations and exact-verifier limits remain explicit.

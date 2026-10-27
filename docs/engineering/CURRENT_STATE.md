@@ -6,8 +6,13 @@ strategy row. The original 1,462-node tree has 99 shared vertices; all 1,200
 information rows remain. The existing CFR+ buffers and independent diagnostics
 traverse lazy cursors after releasing the expanded source tree, without a second
 expanded training view. Source preparation still builds the literal tree first;
-entry compression alone is not a full-call memory result. Native shared mode
-rejects explicitly, and frozen performance/quality publication remains separate.
+entry compression alone is not a full-call memory result. Its frozen study now
+preserves all paired policies and T1000 exact targets while recording slower
+calls (69.82 s versus 54.05 s single T1000 calls) and higher traced T100 peak
+(2,906,499 versus 2,362,920 bytes). The negative result is retained; this bridge
+is not a full-call memory improvement. Phase observations place the shared peak
+before trainer entry without attributing it to one component. Native shared mode
+rejects explicitly; direct shared construction and native integration remain open.
 
 The explicit [native selected operator](../native-selected-operator.md) connects
 C++ CFR+ to hand/board chance and payoff queries with flat strategy arrays.

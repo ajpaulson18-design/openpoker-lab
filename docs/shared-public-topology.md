@@ -90,7 +90,45 @@ asymmetric-index, fractional-blind, refund, tie and short-all-in controls.
 Independent numeric replay and a bounded exact short-all-in certificate agree.
 Rank-free shared admission and rejection before training are separately tested.
 
-Source-frozen complete-call runtime/allocation/process observations, saved T1000
-policy/BR/exact replay, broader workload checks and final CI remain gates. No
-total-memory improvement, native shared-topology support, full-deck capability or
-overall scalable-foundation completion is claimed from these focused controls.
+## Frozen complete-call result: correct policies, higher measured cost
+
+The [receipt and raw archives](../benchmarks/results/shared-public-topology-v1/receipt.json)
+pin clean source `e0e50a60264fe995074570ea4a72f666cec9c017`. All five paired
+complete policies, pair probabilities, numeric diagnostics and operator counters
+match. Independent exact metric maps match; both T1000 <=1/1000 BB targets pass
+with numeric NashConv 0.0003997388151442405 BB. T100 target misses remain.
+
+| Complete-call observation | Literal packed | Shared packed |
+| --- | ---: | ---: |
+| T100 median, three fresh untraced calls | 5.317529 s | 6.703550 s |
+| T1000, one fresh untraced call each | 54.050178 s | 69.816158 s |
+| T100 traced Python peak, separate call each | 2,362,920 bytes | 2,906,499 bytes |
+
+This bridge is slower and has about 23% higher traced peak on this fixture. It
+is not a successful full-call memory optimization. Process peaks are separate
+descriptive lifetime observations and establish no general RSS result. T1000
+has no runtime distribution; traced calls are excluded from runtime medians.
+
+A fresh saved-only process repeats both budgets' numeric/exact replay with zero
+training/native calls and maximum numeric discrepancy about 1.11e-16. Terra
+independently authenticates both manifests, every listed artifact, all 1,668
+captured source hashes, five complete policy pairs and exact threshold flags.
+The first batch was interrupted after six untraced calls; its raw samples and
+source identity are preserved. The old handle was missing and no matching OS
+process existed before starting a distinct full second batch. Termination cause
+is unknown; no completed sample was silently selected or replaced.
+
+A separate instrumented T10 phase profile records current traced allocation at
+trainer entry of 953,544 bytes literal versus 804,478 shared. The shared call's
+cumulative peak of 2,773,601 bytes was already reached before trainer entry and
+remains its full-call peak, versus 2,141,728 literal in those instrumentation
+calls. This places the peak in the broad pre-training interval; it does not
+identify the compiler as its sole cause. Current snapshots include imports and
+instrumentation and do not prove retained-object savings. These calls are
+separate from the formal T100 measurements and do not replace their memory miss.
+
+The next storage dependency is direct shared construction, independently matched
+against the literal builders' complete action/history/monetary/chance behavior.
+Native shared-topology support, broader workload quality, strategy-history growth
+and full-deck solving remain unresolved. Final evidence-head CI and merge state
+are separate live checks; the overall scalable-foundation objective stays active.

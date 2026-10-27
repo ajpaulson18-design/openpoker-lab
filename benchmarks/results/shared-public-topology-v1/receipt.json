@@ -1,0 +1,259 @@
+{
+  "engineering_review": "Sol integrated existing packed trainer/diagnostics. Luna implemented compiler/benchmark; Terra supplied independent controls and later independently audited source hashes, five policy pairs, exact metrics/targets and phase scope. Worker sessions were refreshed after environment transition; no role-model substitution.",
+  "files": {
+    "phase-profile-v1.zip": {
+      "bytes": 602278,
+      "sha256": "afda20643e91dd12d6d401651189999189bbf7add0cd91457916ec046e0a99bb"
+    },
+    "separate-saved-replay.json": {
+      "bytes": 236328,
+      "sha256": "b0f7ea24d5810de41c1151104da04349f893859bb0db14515ff12c23be956212"
+    },
+    "shared-topology-first-integration.log": {
+      "bytes": 3635,
+      "sha256": "309758dcb59b9b530e967cffcbf828e1a918718b0df8226dff67beee119f36c0"
+    },
+    "shared-topology-normal.log": {
+      "bytes": 24156,
+      "sha256": "ec2ceb52da90a1ce103076d61bb402329defa1e2d8a66dcfafd34ff0a24ef068"
+    },
+    "shared-topology-optimized.log": {
+      "bytes": 24156,
+      "sha256": "6563b56d54f3c608354b144be03f0eba9a8ace8e4b5c9692ae1cffb812a4c899"
+    },
+    "shared-topology-phase-profile.log": {
+      "bytes": 1725,
+      "sha256": "d4b3a01639f867ac5da28b274c30ca91847ceca0f611c1f8217ba44bff329e9a"
+    },
+    "shared-topology-saved-replay.log": {
+      "bytes": 147,
+      "sha256": "cb4ff0df1f7b30bc4cbc603503d0dd84ca8f78c863452d02f5dd95592b67b0f5"
+    },
+    "shared-topology-study-v1.log": {
+      "bytes": 318,
+      "sha256": "0de5f0bcd2bb042839361994e0823de4784bda3a8b2a4fec5b97701481ef0391"
+    },
+    "shared-topology-study-v2.log": {
+      "bytes": 869,
+      "sha256": "7e7a4eeaa79c4b11f864e78aa8a625d8e548df65c7ea4d055e388620d5c0cfdd"
+    },
+    "study-v1-interrupted.zip": {
+      "bytes": 401951,
+      "sha256": "bb631ac915d7810b077a8dc908f88a582b9ee9ffb6bf852d52571c3c940044b0"
+    },
+    "study-v2.zip": {
+      "bytes": 2287100,
+      "sha256": "cb68aa9b8eda665e1e842e658d303fd36fe3a73e5f64ee81047db27a3d4defc2"
+    }
+  },
+  "game": "Original22-world globally conditioned selected four-street game; packed zero-delay alternating CFR+, cache64; literal vsshared Python topology.",
+  "local_tests": {
+    "normal": {
+      "count": 113,
+      "seconds": 31.553
+    },
+    "optimized": {
+      "count": 113,
+      "seconds": 33.011
+    }
+  },
+  "manifest_sha256": {
+    "100": "ce8c5275cad2235f962627b877f17a964173debdc13b006bdcf652acfd20da44",
+    "1000": "bee5ea2917451439823276f6b4759b7a27647d9ca608339389aa13df65379d43"
+  },
+  "medians_seconds": {
+    "100": {
+      "literal": 5.317528700000025,
+      "shared": 6.7035501000000295
+    },
+    "1000": {
+      "literal": 54.05017829999997,
+      "shared": 69.81615799999997
+    }
+  },
+  "native_calls": 0,
+  "outcome": "complete",
+  "phase_profile": {
+    "helper_sha256": "80f641b6c06ad0f65e4534206d10be2ae24a5262c9583f6a27d320b314050abb",
+    "interpretation": "Shared cumulative peak is reached in broad pre-training interval. Boundary current is a snapshot, not retained-object proof; profile calls are not interchangeable with fixed T100 measurements.",
+    "literal": {
+      "boundaries": [
+        {
+          "entry": {
+            "cumulative_peak_bytes": 967452,
+            "current_bytes": 953544,
+            "label": "entry"
+          },
+          "exit": {
+            "cumulative_peak_bytes": 1532612,
+            "current_bytes": 1334968,
+            "label": "exit"
+          },
+          "phase": "packed-trainer"
+        },
+        {
+          "entry": {
+            "cumulative_peak_bytes": 1532612,
+            "current_bytes": 1476791,
+            "label": "entry"
+          },
+          "exit": {
+            "cumulative_peak_bytes": 1532612,
+            "current_bytes": 1481615,
+            "label": "exit"
+          },
+          "phase": "vector-diagnostics"
+        }
+      ],
+      "complete_returned_output": true,
+      "exception_exit_snapshot": null,
+      "full_call_after_return": {
+        "cumulative_peak_bytes": 2141728,
+        "current_bytes": 2002873,
+        "label": "full-call-after-return"
+      },
+      "instrumentation": "unittest.mock wrappers call each original exactly once; tracemalloc starts before solve",
+      "interpretation": "Boundary peaks are cumulative since tracemalloc.start and include prior phases. Boundary current bytes are separate observations; they are not retained-object claims.",
+      "mode": "literal"
+    },
+    "shared": {
+      "boundaries": [
+        {
+          "entry": {
+            "cumulative_peak_bytes": 2773601,
+            "current_bytes": 804478,
+            "label": "entry"
+          },
+          "exit": {
+            "cumulative_peak_bytes": 2773601,
+            "current_bytes": 1079281,
+            "label": "exit"
+          },
+          "phase": "packed-trainer"
+        },
+        {
+          "entry": {
+            "cumulative_peak_bytes": 2773601,
+            "current_bytes": 1221040,
+            "label": "entry"
+          },
+          "exit": {
+            "cumulative_peak_bytes": 2773601,
+            "current_bytes": 1225552,
+            "label": "exit"
+          },
+          "phase": "vector-diagnostics"
+        }
+      ],
+      "complete_returned_output": true,
+      "exception_exit_snapshot": null,
+      "full_call_after_return": {
+        "cumulative_peak_bytes": 2773601,
+        "current_bytes": 2280490,
+        "label": "full-call-after-return"
+      },
+      "instrumentation": "unittest.mock wrappers call each original exactly once; tracemalloc starts before solve",
+      "interpretation": "Boundary peaks are cumulative since tracemalloc.start and include prior phases. Boundary current bytes are separate observations; they are not retained-object claims.",
+      "mode": "shared"
+    },
+    "version": "separate instrumented T10 calls; not fixed timing samples"
+  },
+  "policy_pairs_identical": 5,
+  "quality": {
+    "t100": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_operator_checks_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_numeric_replay_passed": true
+    },
+    "t1000": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_operator_checks_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_exact_targets_met": true,
+      "sample_zero_numeric_replay_passed": true
+    }
+  },
+  "remaining": [
+    "Literal construction still occurs beforecompiler; remove it via direct shared builder before construction-memory claim.",
+    "Native shared topology unsupported and explicitly rejects.",
+    "Full strategy histories/rows and complete outputs remain materialized.",
+    "Private pair/board scans remain.",
+    "No full-deck, general speed/RSS or commercial-readiness claim.",
+    "Overall scalable foundation goal remains active."
+  ],
+  "retained_misses": [
+    "T100 target misses retained.",
+    "Shared complete calls slower and traced peak higher on fixture; not a successful full-call memory optimization.",
+    "Initialv1 interrupted aftersix untraced samples; missing handle and no matching OS process verified before fresh distinct v2. Cause unknown; raw bytes and interruption receipt preserved.",
+    "Initialunfrozen unit assertion incorrectly required strict compression ofone-node tree; corrected to <= with named99-vertex fixture assertion. Firstintegration log retained as development context, not frozen-study evidence."
+  ],
+  "separate_saved_replay": {
+    "maximum_numeric_gap": 1.1102230246251565e-16,
+    "native_calls": 0,
+    "training_calls": 0
+  },
+  "shared_layout": {
+    "action_slots": 2402,
+    "decisions": 628,
+    "dense_decision_hand_slots": 1256,
+    "dense_lookup_payload_bytes": 0,
+    "history_lookup_work_entries": 5374498,
+    "history_lookup_work_limit": 500000000,
+    "information_sets": 1200,
+    "layout_loop_limit": 500000000,
+    "lazy_training_and_diagnostic_cursor_bound": 444448,
+    "maximum_actions": 3,
+    "numeric_buffer_bytes": 76864,
+    "numeric_buffers": 4,
+    "per_sweep_vector_entry_bound": 160656,
+    "public_states": 1462,
+    "requested_layout_loop_entries": 23782088,
+    "retained_dense_lookup_slots": 0,
+    "retained_terminal_records": 11,
+    "row_offset_and_count_payload_bytes": 9600,
+    "scope": "Logical work and scalar payloads; original bridge construction, history keys, metadata, dictionaries, cursors and complete output remain separate memory costs.",
+    "semantic_row_history_token_bytes": 70370,
+    "semantic_row_history_token_entries": 11716,
+    "semantic_row_lookup_entries": 1200,
+    "setup_occurrence_walks": 3,
+    "version": "selected-shared-topology-packed-v1"
+  },
+  "source_commit": "e0e50a60264fe995074570ea4a72f666cec9c017",
+  "structural_census": {
+    "action_slots": null,
+    "build_scratch_peak_entries": 3030,
+    "chance_occurrences": 129,
+    "decision_occurrences": 628,
+    "expanded_logical_visits": 1462,
+    "information_rows": null,
+    "logical_history_token_bytes": 99058,
+    "logical_history_token_work": 16862,
+    "maximum_depth": 14,
+    "prefix_storage": [],
+    "terminal_occurrences": 705,
+    "unique_edges": 173,
+    "unique_source_edges": 1461,
+    "unique_source_nodes": 1462,
+    "unique_vertices": 99
+  },
+  "t1000_numeric_nash_conv_bb": 0.0003997388151442405,
+  "t1000_targets_met": [
+    true,
+    true
+  ],
+  "t100_allocation_peak_bytes": {
+    "increase_fraction": 0.23004545223706263,
+    "literal": 2362920,
+    "shared": 2906499,
+    "shared_minus_literal": 543579
+  },
+  "t100_targets_met": [
+    false,
+    false
+  ]
+}

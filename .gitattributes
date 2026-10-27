@@ -186,3 +186,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve native selected-operator policies, receipts and original log bytes.
 /benchmarks/results/native-selected-operator-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/native-selected-heldout-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/shared-public-topology-v1/** -text whitespace=cr-at-eol
