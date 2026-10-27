@@ -1,5 +1,14 @@
 # Current engineering state
 
+The explicit Python packed [direct shared constructor](../direct-shared-topology.md)
+builds the same selected-game DAG without literal postflop source nodes or compiler
+snapshots. It retains only the small original preflop skeleton during setup,
+preserves local monetary rounding/translation and distinct history-policy rows,
+and charges global/template logical work before new branches or cached reuse.
+Independent structural, solver and admission controls pass; complete-call memory,
+runtime, saved T1000 quality and final publication remain separate gates. Native
+direct/shared traversal, large information-history storage and pair scans remain open.
+
 The explicit Python packed [shared public topology](../shared-public-topology.md)
 interns local transition vertices while preserving each full visible-history
 strategy row. The original 1,462-node tree has 99 shared vertices; all 1,200

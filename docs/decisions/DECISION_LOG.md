@@ -36,6 +36,20 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D059: Construct shared topology without a literal postflop source tree (October 27, 2026)
+
+Engineering decision after the shared compiler bridge's measured full-call memory
+and runtime regressions: build immutable selected-game vertices directly from
+the original small preflop skeleton and exact local betting-state recurrence.
+Reuse original action helpers, clean only at original fresh-street/translation
+boundaries, retain ordered public reveals and full history-policy identities.
+Preserve all old logical limits; separately charge canonical contexts/support,
+memo/scratch/transition work and every unfolded cached occurrence before growth.
+Require literal full-path/action/terminal parity, independent policy/BR replay,
+source-frozen complete-call measurements and retained misses. Native DAG traversal
+and strategy-history compression remain separate work. See the
+[construction contract](../direct-shared-topology.md).
+
 ### D058: Share topology while preserving complete information histories (October 26, 2026)
 
 Engineering decision under the owner's foundation goal: intern exact immutable

@@ -364,3 +364,30 @@ profile finds lower current allocation at shared trainer entry but a higher
 cumulative peak already reached before training. This is not retained-object
 proof or a full-call memory gain. Direct shared construction is the next storage
 dependency; all negative observations and exact-verifier limits remain explicit.
+
+### Direct construction after the compiler bridge's negative result
+
+The [direct shared constructor](direct-shared-topology.md) uses the original
+bounded preflop skeleton and local action helpers while creating postflop DAG
+vertices directly. Sol integrated preparation with the unchanged selected chance
+operator, shared packed trainer and diagnostics; Luna implemented the direct
+recurrence and resource ledger; Terra independently found and reviewed fixes for
+early carry cleanup and late combined logical admission. No reachable numerical
+output mismatch was established for the cleanup issue; source order was corrected
+before acceptance. Cache hits now charge every unfolded occurrence, support maps
+are canonicalized once, and streamed parser reservations precede input growth.
+
+The original 22-world receipt retains 10 materialized preflop source states,
+including three continuation records, but zero postflop source nodes and compiler
+snapshots. Its 99 DAG vertices retain the same 1,462 logical visits, 628 decisions,
+1,200 information rows and 2,402 action slots. The direct path prohibits all old
+literal postflop builders/merger/clone/compiler and second training-view entry.
+
+The broad 136-control suite passes normally (33.612 s) and optimized (30.786 s),
+with two further independent cache/parser controls passing in each mode. Complete
+policy/diagnostic parity and independent numeric/exact early-all-in controls pass.
+The native source guard initially rejected an older helper built from different
+checkout line-ending bytes; its failure is preserved and a separately built
+current-checkout helper passes. No manifest or admission guard was bypassed.
+Frozen complete-call runtime/memory, saved T1000 replay and final CI remain gates;
+native direct traversal, information-history growth and pair scans remain open.

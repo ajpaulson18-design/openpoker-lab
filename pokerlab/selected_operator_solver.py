@@ -49,9 +49,11 @@ def _tokens(board):
             ("".join(board[:3]),) + tuple(board[3:]))
 
 
-def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
+def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None,
+             public_topology="literal"):
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
+    _validate_public_topology(request, strategy_storage, native_executable, public_topology)
     if (request.traversal != "public-batched" or
             request.diagnostics != "public-batched" or
             request.resource_model != "public-vector"):
@@ -78,17 +80,38 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
     # These O(R) records describe PUBLIC TOPOLOGY ONLY. There is no private
     # hand/pair, probability or payoff in this projection. The shared builder
     # reads future-board tokens; actual support and work are charged separately.
-    topology = [(0, 0, 1.0, 0, "".join(flop), turn, river)
-                for flop, turn, river in selected]
     specs = reference._stage_configs(
         request.flop_actions.to_dict(),
         None if request.turn_actions is None else request.turn_actions.to_dict(),
         None if request.river_actions is None else request.river_actions.to_dict())
-    tree = build_preflop_tree(request.preflop_config)
-    (root, states, decisions, _, _, template_states, template_decisions) = reference._merge_preflop_tree(
-        tree, topology, specs, "public-batched", request.iterations,
-        enforce_world_work=False)
-    nodes = reference._all_nodes(root)
+    direct_receipt = None
+    if public_topology == "direct":
+        from collections import namedtuple
+        from .direct_shared_topology import build_direct_shared_topology
+        from .shared_public_topology import DecisionVertex
+        root, direct_receipt = build_direct_shared_topology(request.preflop_config, specs, selected)
+        states, decisions = root.census.expanded_logical_visits, root.census.decision_occurrences
+        # No literal postflop template is allocated by the direct builder.
+        template_states = template_decisions = 0
+        Menu = namedtuple("DirectSerializationMenu", "actions")
+        Descriptor = namedtuple("DirectDecisionDescriptor", "player history actions menu")
+        menus = tuple(Menu(v.actions) if isinstance(v, DecisionVertex) else None for v in root.vertices)
+
+        def direct_decisions():
+            for occurrence in root.iter_occurrences():
+                vertex = root.vertices[occurrence.vertex_id]
+                if isinstance(vertex, DecisionVertex):
+                    yield Descriptor(vertex.player, occurrence.history, vertex.actions,
+                                     menus[occurrence.vertex_id])
+        nodes = direct_decisions()
+    else:
+        topology = [(0, 0, 1.0, 0, "".join(flop), turn, river)
+                    for flop, turn, river in selected]
+        tree = build_preflop_tree(request.preflop_config)
+        (root, states, decisions, _, _, template_states, template_decisions) = reference._merge_preflop_tree(
+            tree, topology, specs, "public-batched", request.iterations,
+            enforce_world_work=False)
+        nodes = reference._all_nodes(root)
     infos, metadata = {}, {}
     slots = 0
     legal_marker = None
@@ -106,11 +129,15 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
                 raise ValueError("Operator information-set action slots exceed 1,000,000.")
             key = (node.player, hand_index, node.history)
             infos[key] = len(node.actions)
-            metadata[key] = node
+            metadata[key] = node.menu if public_topology == "direct" else node
             slots += len(node.actions)
     terminals = chances = 0
     maximum_actions = 1
-    pending = [root]
+    pending = [root] if public_topology != "direct" else []
+    if public_topology == "direct":
+        terminals, chances = root.census.terminal_occurrences, root.census.chance_occurrences
+        maximum_actions = max((len(v.actions) for v in root.vertices
+                               if isinstance(v, DecisionVertex)), default=1)
     while pending:
         node = pending.pop()
         if isinstance(node, _Terminal):
@@ -153,6 +180,10 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
         "temporary_template_peak_decisions": template_decisions,
         "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit.",
     }
+    if public_topology == "direct":
+        census["scope"] = ("Original logical tree/scan limits remain; public topology is built directly "
+                           "as a shared DAG, while full information-history rows/output remain explicit. "
+                           "Logical counts are not byte, runtime or process-RSS guarantees.")
     if rank_cache_boards > 1:
         # One LRU lookup per requested sign, with constant-time move/evict.
         # On a miss, building vectors scans every private hand. Keep the old
@@ -174,8 +205,16 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
             "scope": "Logical slots/loops; default scan/rank caps remain unchanged. No bytes or RSS guarantee.",
         }
     if strategy_storage == "packed":
-        from .packed_operator_cfr import layout_census
-        census["strategy_storage"] = layout_census(root, infos, operator.hand_counts, request.iterations)
+        if public_topology == "direct":
+            from dataclasses import asdict
+            from .shared_topology_view import SharedPublicView, layout_census_shared
+            census["direct_public_topology"] = direct_receipt
+            census["shared_public_topology"] = asdict(root.census)
+            census["strategy_storage"] = census["shared_strategy_storage"] = layout_census_shared(
+                SharedPublicView(root), infos, operator.hand_counts, request.iterations)
+        else:
+            from .packed_operator_cfr import layout_census
+            census["strategy_storage"] = layout_census(root, infos, operator.hand_counts, request.iterations)
     if native_executable is not None:
         from .native_selected_operator import prepare
         census["native_operator_admission"] = prepare(root, infos, request.iterations, operator=operator)[-1]
@@ -183,12 +222,12 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
 
 
 def _validate_public_topology(request, strategy_storage, native_executable, public_topology):
-    if public_topology not in ("literal", "shared"):
-        raise ValueError("public_topology must be literal or shared.")
-    if public_topology == "shared" and (
+    if public_topology not in ("literal", "shared", "direct"):
+        raise ValueError("public_topology must be literal, shared or direct.")
+    if public_topology in ("shared", "direct") and (
             strategy_storage != "packed" or native_executable is not None or
             not isinstance(request, FourStreetSolveRequest) or request.algorithm != "cfrplus"):
-        raise ValueError("Shared topology requires explicit Python packed CFR+ training.")
+        raise ValueError("Shared/direct topology requires explicit Python packed CFR+ training.")
 
 
 def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows",
@@ -196,7 +235,7 @@ def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storag
     """Rank-free bounded preparation and strategy-storage census; no training."""
     _validate_public_topology(request, strategy_storage, native_executable, public_topology)
     prepared = _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
-                        native_executable=native_executable)
+                        native_executable=native_executable, public_topology=public_topology)
     operator, root, infos, _metadata, _specs, census = prepared
     if public_topology == "shared":
         from dataclasses import asdict
@@ -219,33 +258,34 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
     _validate_public_topology(request, strategy_storage, native_executable, public_topology)
     operator, root, infos, metadata, specs, census = _prepare(
         request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
-        native_executable=native_executable)
+        native_executable=native_executable, public_topology=public_topology)
     shared_view = None
     chance_type = _Chance
-    if public_topology == "shared":
+    if public_topology in ("shared", "direct"):
         from collections import namedtuple
         from dataclasses import asdict
         from .shared_public_topology import compile_shared_public_topology, DecisionVertex
         from .shared_topology_view import (
             SharedPublicView, ChanceCursor, layout_census_shared,
         )
-        topology = compile_shared_public_topology(root)
+        topology = root if public_topology == "direct" else compile_shared_public_topology(root)
         shared_view = SharedPublicView(topology)
         shared_layout = layout_census_shared(shared_view, infos, operator.hand_counts, request.iterations)
         # Preserve the entire semantic key set and action output while dropping
         # every metadata reference to the expanded source tree before training.
-        Menu = namedtuple("SharedSerializationMenu", "actions")
-        menus = tuple(Menu(vertex.actions) if isinstance(vertex, DecisionVertex) else None
-                      for vertex in topology.vertices)
-        for occurrence in topology.iter_occurrences():
-            node = topology.vertices[occurrence.vertex_id]
-            if isinstance(node, DecisionVertex):
-                menu = menus[occurrence.vertex_id]
-                for hand in range(operator.hand_counts[node.player]):
-                    key = (node.player, hand, occurrence.history)
-                    if key in metadata:
-                        metadata[key] = menu
-        node = menu = occurrence = menus = None
+        if public_topology != "direct":
+            Menu = namedtuple("SharedSerializationMenu", "actions")
+            menus = tuple(Menu(vertex.actions) if isinstance(vertex, DecisionVertex) else None
+                          for vertex in topology.vertices)
+            for occurrence in topology.iter_occurrences():
+                node = topology.vertices[occurrence.vertex_id]
+                if isinstance(node, DecisionVertex):
+                    menu = menus[occurrence.vertex_id]
+                    for hand in range(operator.hand_counts[node.player]):
+                        key = (node.player, hand, occurrence.history)
+                        if key in metadata:
+                            metadata[key] = menu
+            node = menu = occurrence = menus = None
         root = None
         training_root, anchor, view_states = shared_view.root, shared_view.anchor, 0
         chance_type = ChanceCursor
@@ -377,7 +417,9 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
         result["execution_backend"] = ("selected-operator-packed-cpp" if native_training["calls"]
                                         else "selected-operator-python-no-information-sets")
         result["operator_statistics"]["scope"] = "Python preparation/diagnostics only; native counters are reported separately."
-    if public_topology == "shared":
-        result["public_topology"] = "shared-public-topology-v1"
-        result["execution_backend"] = "selected-operator-packed-shared-python"
+    if public_topology in ("shared", "direct"):
+        result["public_topology"] = ("direct-shared-public-topology-v1" if public_topology == "direct"
+                                     else "shared-public-topology-v1")
+        result["execution_backend"] = ("selected-operator-packed-direct-python" if public_topology == "direct"
+                                       else "selected-operator-packed-shared-python")
     return result
