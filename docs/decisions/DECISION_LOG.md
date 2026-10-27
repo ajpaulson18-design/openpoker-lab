@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D058: Share topology while preserving complete information histories (October 26, 2026)
+
+Engineering decision under the owner's foundation goal: intern exact immutable
+public transition structure and reconstruct logical histories during traversal,
+without merging strategy rows for different histories or public boards. Preserve
+action/reveal order, exact numeric bits, global seats and shifted utility. Extend
+the existing packed CFR+ kernel explicitly rather than redefine probability or
+regret arithmetic. Keep old builders/defaults and all prior admission limits;
+charge shared structure, expanded logical work, histories, rows and transient
+compiler/cursor state separately. The first bridge consumes a literal tree and
+does not remove construction peak; native support and direct shared building are
+later integrations. See [contract and evidence gates](../shared-public-topology.md).
+
 ### D057: Native selected probability/payoff computation (October 26, 2026)
 
 Engineering decision under the owner's foundation-first goal: integrate native

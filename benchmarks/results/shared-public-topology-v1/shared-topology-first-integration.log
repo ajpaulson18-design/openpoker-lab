@@ -1,0 +1,32 @@
+test_fractional_blinds_refunds_and_tie (tests.test_shared_topology_solver.SharedTopologySolverTests.test_fractional_blinds_refunds_and_tie) ... ok
+test_history_work_rejects_before_training (tests.test_shared_topology_solver.SharedTopologySolverTests.test_history_work_rejects_before_training) ... ok
+test_original_twenty_two_world_complete_game (tests.test_shared_topology_solver.SharedTopologySolverTests.test_original_twenty_two_world_complete_game) ... ok
+test_rank_free_shared_admission_and_unsupported_selection (tests.test_shared_topology_solver.SharedTopologySolverTests.test_rank_free_shared_admission_and_unsupported_selection) ... ok
+test_source_tree_is_released_before_training_and_on_training_error (tests.test_shared_topology_solver.SharedTopologySolverTests.test_source_tree_is_released_before_training_and_on_training_error) ... ok
+test_weighted_shared_futures_and_inactive_private_indices (tests.test_shared_topology_solver.SharedTopologySolverTests.test_weighted_shared_futures_and_inactive_private_indices) ... ok
+test_zero_information_sets_and_exact_short_all_in (tests.test_shared_topology_solver.SharedTopologySolverTests.test_zero_information_sets_and_exact_short_all_in) ... FAIL
+test_asymmetric_ranges_and_inactive_private_index_holes (tests.test_packed_operator_cfr.PackedOperatorTests.test_asymmetric_ranges_and_inactive_private_index_holes) ... ok
+test_cyclic_or_uncovered_identity_rejects (tests.test_packed_operator_cfr.PackedOperatorTests.test_cyclic_or_uncovered_identity_rejects) ... ok
+test_exact_rational_small_game (tests.test_packed_operator_cfr.PackedOperatorTests.test_exact_rational_small_game) ... ok
+test_rank_free_admission_and_dense_slot_cap (tests.test_packed_operator_cfr.PackedOperatorTests.test_rank_free_admission_and_dense_slot_cap) ... ok
+test_reference_twenty_two_world_game (tests.test_packed_operator_cfr.PackedOperatorTests.test_reference_twenty_two_world_game) ... ok
+test_short_all_in_ties_and_refunds (tests.test_packed_operator_cfr.PackedOperatorTests.test_short_all_in_ties_and_refunds) ... ok
+test_terminal_failure_releases_training_buffers_and_rank_cache (tests.test_packed_operator_cfr.PackedOperatorTests.test_terminal_failure_releases_training_buffers_and_rank_cache) ... ok
+test_unsupported_algorithms_reject_before_operator (tests.test_packed_operator_cfr.PackedOperatorTests.test_unsupported_algorithms_reject_before_operator) ... ok
+test_weighted_blocker_shared_futures_both_cache_modes (tests.test_packed_operator_cfr.PackedOperatorTests.test_weighted_blocker_shared_futures_both_cache_modes) ... ok
+
+======================================================================
+FAIL: test_zero_information_sets_and_exact_short_all_in (tests.test_shared_topology_solver.SharedTopologySolverTests.test_zero_information_sets_and_exact_short_all_in)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\topology-repo\tests\test_shared_topology_solver.py", line 56, in test_zero_information_sets_and_exact_short_all_in
+    actual, expected = self.check_case(case)
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\topology-repo\tests\test_shared_topology_solver.py", line 33, in check_case
+    self.assertLess(actual["operator_census"]["shared_public_topology"]["unique_vertices"],
+AssertionError: 1 not less than 1
+
+----------------------------------------------------------------------
+Ran 16 tests in 11.723s
+
+FAILED (failures=1)

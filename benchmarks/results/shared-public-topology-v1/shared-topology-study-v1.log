@@ -1,0 +1,6 @@
+T100 literal sample=0 traced=False seconds=7.662707
+T100 shared sample=0 traced=False seconds=10.779440
+T100 shared sample=1 traced=False seconds=10.741303
+T100 literal sample=1 traced=False seconds=7.352982
+T100 literal sample=2 traced=False seconds=7.818151
+T100 shared sample=2 traced=False seconds=10.736385

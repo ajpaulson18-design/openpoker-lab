@@ -1,0 +1,11 @@
+T100 literal sample=0 traced=False seconds=5.141314
+T100 shared sample=0 traced=False seconds=6.731210
+T100 shared sample=1 traced=False seconds=6.506186
+T100 literal sample=1 traced=False seconds=5.317529
+T100 literal sample=2 traced=False seconds=6.109141
+T100 shared sample=2 traced=False seconds=6.703550
+T100 literal sample=traced traced=True seconds=66.655384
+T100 shared sample=traced traced=True seconds=85.559206
+T1000 literal sample=0 traced=False seconds=54.050178
+T1000 shared sample=0 traced=False seconds=69.816158
+{"manifest_sha256": {"100": "ce8c5275cad2235f962627b877f17a964173debdc13b006bdcf652acfd20da44", "1000": "bee5ea2917451439823276f6b4759b7a27647d9ca608339389aa13df65379d43"}, "outcome": "complete", "report": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\shared-topology-study-v2\\report.json"}

@@ -1,0 +1,48 @@
+{
+  "failures": [],
+  "outcome": "complete",
+  "parent_peak_scope": "Coordinator process only; child solve working sets are separate processes.",
+  "parent_process_peak_working_set_bytes": 40275968,
+  "parity": {
+    "all_requested_parity_checks_passed": true,
+    "checks": {
+      "complete_policy_rows_identical": true,
+      "five_diagnostics_identical": true,
+      "literal_complete_policy_present": true,
+      "literal_five_diagnostics_present_finite": true,
+      "literal_operator_counters_present": true,
+      "literal_pair_probabilities_present": true,
+      "operator_counters_identical": true,
+      "private_pair_probabilities_identical": true,
+      "shared_complete_policy_present": true,
+      "shared_five_diagnostics_present_finite": true,
+      "shared_operator_counters_present": true,
+      "shared_pair_probabilities_present": true
+    },
+    "diagnostic_fields": {
+      "bb_best_response_value": {
+        "literal": 0.17938152713505934,
+        "shared": 0.17938152713505934
+      },
+      "nash_conv": {
+        "literal": 0.6580882578562965,
+        "shared": 0.6580882578562965
+      },
+      "sb_best_response_value": {
+        "literal": 0.47870673072123715,
+        "shared": 0.47870673072123715
+      },
+      "value_bb": {
+        "literal": -0.2122445762835583,
+        "shared": -0.2122445762835583
+      },
+      "value_sb": {
+        "literal": 0.2122445762835583,
+        "shared": 0.2122445762835583
+      }
+    }
+  },
+  "script_sha256_after": "80f641b6c06ad0f65e4534206d10be2ae24a5262c9583f6a27d320b314050abb",
+  "script_sha256_before": "80f641b6c06ad0f65e4534206d10be2ae24a5262c9583f6a27d320b314050abb",
+  "source_unchanged": true
+}

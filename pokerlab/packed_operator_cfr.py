@@ -96,10 +96,32 @@ def layout_census(root, infos, hand_counts, iterations):
             "scope": "Array payload bytes only; keys, tree, dictionaries, output, Python headers and recursion scratch excluded."}
 
 
-def train_packed(root, infos, iterations, *, operator, marginals, return_receipt=False):
+def train_packed(root, infos, iterations, *, operator, marginals, return_receipt=False,
+                 shared_view=None):
     """Train zero-delay alternating CFR+ without per-row numeric dictionaries."""
     hand_counts = operator.hand_counts
-    census = layout_census(root, infos, hand_counts, iterations)
+    chance_type = _Chance
+    if shared_view is None:
+        census = layout_census(root, infos, hand_counts, iterations)
+    else:
+        from .shared_topology_view import (
+            SharedPublicView, ChanceCursor, DecisionCursor, layout_census_shared,
+        )
+        if type(shared_view) is not SharedPublicView:
+            raise TypeError("Packed shared traversal requires its compiled public view.")
+        expected_root = shared_view.root
+        if isinstance(expected_root, _Terminal):
+            valid_root = root is expected_root
+        else:
+            valid_root = (type(root) is type(expected_root) and
+                          type(root) in (ChanceCursor, DecisionCursor) and
+                          root.view is shared_view and
+                          root.vertex_id == expected_root.vertex_id and
+                          root.history == expected_root.history)
+        if not valid_root:
+            raise ValueError("Packed shared root is not the admitted topology root.")
+        census = layout_census_shared(shared_view, infos, hand_counts, iterations)
+        chance_type = ChanceCursor
     keys = tuple(infos)
     offsets, counts = array("I"), array("I")
     locations = {}
@@ -110,7 +132,7 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
         locations[key] = cursor
         cursor += infos[key]
     rows = {}
-    pending = [root]
+    pending = [root] if shared_view is None else []
     while pending:
         node = pending.pop()
         if isinstance(node, _Chance):
@@ -120,7 +142,16 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
                                          for h in range(hand_counts[node.player])))
             pending.extend(node.children)
     # The temporary semantic-key -> offset map is not retained in training.
-    locations = None
+    if shared_view is None:
+        locations = None
+
+    def row_offsets(node):
+        if shared_view is None:
+            return rows[id(node)]
+        # Semantic histories remain distinct even when their physical vertex
+        # is shared. No cursor identity or expanded node plan is retained.
+        return tuple(locations.get((node.player, h, node.history), -1)
+                     for h in range(hand_counts[node.player]))
     regrets = array("d", [0.0]) * cursor
     sums = array("d", [0.0]) * cursor
     current = array("d", [0.0]) * cursor
@@ -134,7 +165,7 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
                 current[offset + a] = positive[a] / mass if mass else 1.0 / count
 
     def target_values(node, prefix, opponent_reach, target):
-        if isinstance(node, _Chance):
+        if isinstance(node, chance_type):
             value = [0.0] * hand_counts[target]
             for card, child in node.branches.items():
                 child_value = target_values(child, prefix + (card,), opponent_reach, target)
@@ -144,7 +175,7 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
         if isinstance(node, _Terminal):
             return operator.values(node, opponent_reach, target, prefix)
         player, count = node.player, len(node.children)
-        slots = rows[id(node)]
+        slots = row_offsets(node)
         uniform = [1.0 / count] * count
         probabilities = [current[offset:offset + count] if offset >= 0 else uniform
                          for offset in slots]
@@ -169,12 +200,12 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
     def average(node, prefix, reach0, reach1, factor):
         if isinstance(node, _Terminal):
             return
-        if isinstance(node, _Chance):
+        if isinstance(node, chance_type):
             for card, child in node.branches.items():
                 average(child, prefix + (card,), reach0, reach1, factor)
             return
         player, count = node.player, len(node.children)
-        slots = rows[id(node)]
+        slots = row_offsets(node)
         for h, offset in enumerate(slots):
             if offset >= 0:
                 own_mass = marginals[prefix][player][h]
@@ -211,8 +242,8 @@ def train_packed(root, infos, iterations, *, operator, marginals, return_receipt
     finally:
         # Break recursive closure cycles on success and exceptions; no buffers
         # or history-to-slot plan survives the training operation.
-        target_values = average = rematch = None
+        target_values = average = rematch = row_offsets = None
         regrets = sums = current = deltas = None
         rows.clear()
-        keys = offsets = counts = None
+        keys = offsets = counts = locations = None
     return (result, census) if return_receipt else result

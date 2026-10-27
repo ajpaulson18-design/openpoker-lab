@@ -182,22 +182,78 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
     return operator, root, infos, metadata, specs, census
 
 
-def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
+def _validate_public_topology(request, strategy_storage, native_executable, public_topology):
+    if public_topology not in ("literal", "shared"):
+        raise ValueError("public_topology must be literal or shared.")
+    if public_topology == "shared" and (
+            strategy_storage != "packed" or native_executable is not None or
+            not isinstance(request, FourStreetSolveRequest) or request.algorithm != "cfrplus"):
+        raise ValueError("Shared topology requires explicit Python packed CFR+ training.")
+
+
+def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows",
+                                 native_executable=None, public_topology="literal"):
     """Rank-free bounded preparation and strategy-storage census; no training."""
-    return _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
-                    native_executable=native_executable)[-1]
+    _validate_public_topology(request, strategy_storage, native_executable, public_topology)
+    prepared = _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
+                        native_executable=native_executable)
+    operator, root, infos, _metadata, _specs, census = prepared
+    if public_topology == "shared":
+        from dataclasses import asdict
+        from .shared_public_topology import compile_shared_public_topology
+        from .shared_topology_view import SharedPublicView, layout_census_shared
+        topology = compile_shared_public_topology(root)
+        census["shared_public_topology"] = asdict(topology.census)
+        census["shared_strategy_storage"] = layout_census_shared(
+            SharedPublicView(topology), infos, operator.hand_counts, request.iterations)
+    return census
 
 
-def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
+def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows",
+                               native_executable=None, public_topology="literal"):
     """Return replay-compatible complete policy using no stored physical worlds.
 
     The existing request's public-vector selectors are required explicitly.
     No native, sampled, delayed-average or full-deck mode is inferred.
     """
+    _validate_public_topology(request, strategy_storage, native_executable, public_topology)
     operator, root, infos, metadata, specs, census = _prepare(
         request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
         native_executable=native_executable)
-    training_root, anchor, view_states = reference._positive_pot_training_view(root)
+    shared_view = None
+    chance_type = _Chance
+    if public_topology == "shared":
+        from collections import namedtuple
+        from dataclasses import asdict
+        from .shared_public_topology import compile_shared_public_topology, DecisionVertex
+        from .shared_topology_view import (
+            SharedPublicView, ChanceCursor, layout_census_shared,
+        )
+        topology = compile_shared_public_topology(root)
+        shared_view = SharedPublicView(topology)
+        shared_layout = layout_census_shared(shared_view, infos, operator.hand_counts, request.iterations)
+        # Preserve the entire semantic key set and action output while dropping
+        # every metadata reference to the expanded source tree before training.
+        Menu = namedtuple("SharedSerializationMenu", "actions")
+        menus = tuple(Menu(vertex.actions) if isinstance(vertex, DecisionVertex) else None
+                      for vertex in topology.vertices)
+        for occurrence in topology.iter_occurrences():
+            node = topology.vertices[occurrence.vertex_id]
+            if isinstance(node, DecisionVertex):
+                menu = menus[occurrence.vertex_id]
+                for hand in range(operator.hand_counts[node.player]):
+                    key = (node.player, hand, occurrence.history)
+                    if key in metadata:
+                        metadata[key] = menu
+        node = menu = occurrence = menus = None
+        root = None
+        training_root, anchor, view_states = shared_view.root, shared_view.anchor, 0
+        chance_type = ChanceCursor
+        census["shared_public_topology"] = asdict(topology.census)
+        census["shared_strategy_storage"] = shared_layout
+        topology = None
+    else:
+        training_root, anchor, view_states = reference._positive_pot_training_view(root)
     operator.pot = 2 * anchor
     marginals = _Marginals(operator)
     native_training = None
@@ -218,8 +274,11 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
         elif strategy_storage == "packed" and infos:
             from .packed_operator_cfr import train_packed
             averages, layout = train_packed(training_root, infos, request.iterations,
-                                            operator=operator, marginals=marginals, return_receipt=True)
-            if layout != census["strategy_storage"]:
+                                            operator=operator, marginals=marginals, return_receipt=True,
+                                            shared_view=shared_view)
+            expected_layout = (census["shared_strategy_storage"] if shared_view is not None
+                               else census["strategy_storage"])
+            if layout != expected_layout:
                 raise RuntimeError("Packed training view and admitted source layout differ.")
         else:
             averages = (_train_prepared(
@@ -228,11 +287,12 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
                 edges={}, marginals=marginals, prefix_kernel=operator) if infos else {})
         policies, _ = _normalize_policies(averages)
         value, br0, br1 = _evaluate_prepared(
-            training_root, policies, pot=operator.pot, chance_type=_Chance,
+            training_root, policies, pot=operator.pot, chance_type=chance_type,
             hand_counts=operator.hand_counts, edges={}, marginals=marginals,
             prefix_kernel=operator)
     finally:
         training_root = None
+        shared_view = None
         operator.clear_rank_cache()
     if not all(isfinite(x) for x in (value, br0, br1)):
         raise ValueError("Operator diagnostics returned a nonfinite value.")
@@ -317,4 +377,7 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
         result["execution_backend"] = ("selected-operator-packed-cpp" if native_training["calls"]
                                         else "selected-operator-python-no-information-sets")
         result["operator_statistics"]["scope"] = "Python preparation/diagnostics only; native counters are reported separately."
+    if public_topology == "shared":
+        result["public_topology"] = "shared-public-topology-v1"
+        result["execution_backend"] = "selected-operator-packed-shared-python"
     return result
