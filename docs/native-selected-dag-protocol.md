@@ -1,10 +1,10 @@
 # Native selected DAG protocol: implementation contract
 
-This contract describes an implemented integration under validation. Local
-compiled/parity controls are recorded in the [execution record](foundation-first-execution.md);
-source-frozen complete-call and final CI acceptance remain separate gates.
+This contract describes an implemented integration with [frozen independent
+verification and complete-call evidence](native-selected-dag-result.md). Final
+evidence-head CI and merge state remain separate publication gates.
 The old native selected-tree protocol and source remain unchanged. The new backend
-will explicitly require `public_topology="direct"`, packed zero-delay CFR+ and a
+explicitly requires `public_topology="direct"`, packed zero-delay CFR+ and a
 separately source-built helper. It shares one configured four-street game with
 the existing Python path; it does not solve independent streets.
 

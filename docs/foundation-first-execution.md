@@ -1,29 +1,40 @@
 # Foundation-first execution record
 
-## Native direct-DAG integration, October 27, 2026: validation in progress
+## Native direct-DAG integration, October 27, 2026: verified frozen result
 
 PR #254 merged at `d49b85e453d6c97b6a449c536f393c12a6fc76d1` after final-head
-checks passed; its merged tree equals the reviewed `b371406` tree. Its retained
-Python performance/allocation misses remain unchanged. The next explicit
-[native DAG protocol](native-selected-dag-protocol.md) connects that direct
-constructor to C++ training without expanding public occurrences into a native
-node table or retaining per-decision dense hand maps. Distinct history rows,
-prefix support/ordinal tables and reachable context edges remain counted.
+checks; its tree equals the reviewed `b371406` tree. The subsequent explicit
+[native DAG integration](native-selected-dag-result.md), frozen at `90ede1c`,
+trains directly shared public vertices with distinct logical-history rows,
+without complete worlds, prefix/pair edges, expanded native nodes or dense
+per-decision hand maps. Original rule/probability/rounding/reduction semantics,
+all old caps and the separate context/storage/work envelopes remain.
 
-Strict MSVC C++20 `/W4 /WX /fp:strict` compilation passes. Initial 26 adapter,
-compiled, independent and direct-solver controls pass, including physical policy
-replay, exact short-all-in replay, malformed declared/recomputed graph fields,
-wrong chance ordering, input drift, blocker index holes and no fallback. A
-separate independent Sol reviewer (Terra substitute after account limits) adds
-three passing controls: a payoff/reach-sensitive repeated-context comparison
-against a separate CFR+ recursion, unsupported-board/pair-blocked holes with
-physical replay, and GC-disabled plan/operator release on success/error.
-Source-frozen measurements, cross-version/sanitizer CI and final publication
-remain pending; no speed or total-memory result is established here.
+Strict MSVC compilation and 117 affected controls pass; 36 focused controls also
+pass optimized. Independent Sol scrutiny (explicit Terra substitute after account
+limits) tests different policies at reused contexts against a separate CFR+
+recursion, unsupported-board/pair-blocked holes and GC-disabled plan release.
+Full code CI passes Python 3.11/3.12/3.13 plus native sanitizers and legacy checks.
 
+The fixed ten-call 22-world study preserves every paired complete policy,
+diagnostic, private-pair probability and game census. T100 medians are 17.221862 s
+Python and 0.562783 s native; single T1000 calls are 103.703905 s and 0.916397 s.
+Traced Python allocation rises 2,288,891 to 2,382,287 bytes. Separate Python/native
+process peaks remain separate, with no overall memory-saving claim. T100 exact
+misses remain; both T1000 exact targets pass at about 0.00039973881514413504 BB.
+Independent saved review authenticates 1,718 source files and the full raw archive,
+replays all 10 policies and recomputes two exact certificates with zero training
+or native calls; maximum numeric gap is 1.11e-16. Initial verifier-only CRLF,
+integer-parser and archive-layout failures/corrections are preserved unchanged.
 
-Audit baseline: `901726e55caa0c45495b19668285162a04918cdc`, October 26, 2026.
-See the [assessment, dependency map, ranked register and critical path](foundation-first-audit.md).
+The separate 96-world/2,224-row native-DAG probe matches historical policies and
+passes fresh independent physical replay. Its exact certificate still rejects
+the 2,048-row cap and T1000 rejects scan admission before ranking/native work.
+Both misses remain; there is no larger exact quality pass. The
+[complete receipt](../benchmarks/results/native-selected-dag-v1/receipt.json)
+pins all raw studies, helpers, failures and separate independent receipts.
+Final evidence-head CI/publication are tracked by PR #256; full-deck reach/payoff,
+strategy/history growth, pair scans and scalable verification remain unresolved.
 
 ## Completed before publication
 

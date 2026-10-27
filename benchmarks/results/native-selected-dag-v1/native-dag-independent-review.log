@@ -1,0 +1,1 @@
+{"outcome": "accepted", "receipt": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\native-dag-independent-receipt.json", "receipt_sha256": "ae4233b9935b97f4eb37391625d0c8ffe8f61c0cc66ea8025da875a96a4bd532", "source_files": 1718, "raw_samples": 10, "fresh_numeric_replays": 10, "fresh_exact_policies": 2, "max_numeric_gap": 1.1102230246251565e-16}

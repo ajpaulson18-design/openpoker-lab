@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-heldout-independent-review.py", line 26, in <module>
+    need(entries['helper.py']==helper.read_bytes(),'archive helper not byte-faithful')
+         ~~~~~~~^^^^^^^^^^^^^
+KeyError: 'helper.py'

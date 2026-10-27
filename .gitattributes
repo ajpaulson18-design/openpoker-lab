@@ -188,3 +188,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/native-selected-heldout-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/shared-public-topology-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/direct-shared-topology-v1/** -text whitespace=cr-at-eol
+
+# Preserve native DAG study, raw verifier failures and independent receipt bytes.
+/benchmarks/results/native-selected-dag-v1/** -text whitespace=cr-at-eol

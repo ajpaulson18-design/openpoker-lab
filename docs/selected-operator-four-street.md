@@ -25,7 +25,10 @@ builder for board tokens. Actual support and work are established separately.
 The public tree, information-set rows, regret/average arrays and serialized
 policy remain explicit. The compatible output also emits O(P) private-pair
 probabilities, counted separately. The **whole solver does not have linear total
-memory**. There is no full-deck, sampled, delayed-average or native operator mode.
+memory**. Full-deck, sampled and delayed-average operator modes remain unsupported.
+Later explicit [native selected](native-selected-operator.md) and
+[native direct-DAG](native-selected-dag-protocol.md) backends have separate
+protocols, admission and measured evidence.
 
 ## Mathematical and game contracts
 

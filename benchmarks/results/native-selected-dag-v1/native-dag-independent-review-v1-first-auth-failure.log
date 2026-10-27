@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 287, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 140, in main
+    authenticated = source_identity(repo, source)  # BEFORE any repository math import.
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 88, in source_identity
+    need(all(digest == blobs[name] for name, digest in zip(tracked, normalized)), "working source differs from committed normalized blobs")
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 33, in need
+    raise ValueError(message)
+ValueError: working source differs from committed normalized blobs

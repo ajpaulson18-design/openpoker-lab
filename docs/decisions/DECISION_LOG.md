@@ -52,6 +52,12 @@ Terra/Luna supplied initial review/adapter; both hit an account limit during
 validation. Root completed integration/controls; a separate Sol reviewer is the
 explicit Terra substitute for remaining independent scrutiny. See the
 [protocol and acceptance scope](../native-selected-dag-protocol.md).
+The [frozen result](../native-selected-dag-result.md) now preserves all paired
+policies and T1000 exact targets, with a scoped native speed result and slightly
+higher traced Python allocation. Separate saved reviews authenticate all source
+and raw artifacts before numerical/exact replay. The 96-world exact-cap and
+T1000-admission misses remain. Final evidence-head CI/publication remain separate.
+
 
 ### D059: Construct shared topology without a literal postflop source tree (October 27, 2026)
 

@@ -2,13 +2,17 @@
 
 The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
 connects direct shared construction to C++ packed CFR+ without an expanded
-native tree or per-decision dense hand map. It derives blocker-conditioned
-prefix support and vertex/prefix contexts, preserves distinct full-history rows,
-and repeats declared/recomputed work and storage admission. Compiled local
-policy/physical-replay controls and independent scrutiny pass; source-frozen
-complete-call measurements and final CI remain separate pending gates. Contexts
-can approach logical occurrence count; history/strategy/output and pair-scan
-growth remain unresolved.
+native tree or per-decision dense hand map. Its [frozen 22-world study](../native-selected-dag-result.md)
+preserves all five complete policy/diagnostic pairs and independently recomputed
+T1000 exact target passes. T100 medians are 17.22 s Python/0.563 s native; single
+T1000 calls are 103.70 s/0.916 s. Traced Python allocation is slightly higher, so no
+overall memory gain follows. Native receipts retain 99 vertices/259 contexts for
+1,462 logical visits while all 1,200 information rows remain distinct. The separate
+96-world probe matches complete policies and physical replay, but its 2,224 rows
+still exceed exact certification's 2,048-row cap and T1000 scan admission still
+rejects before training. Source/build/full CI and independent saved replays pass;
+final evidence-head CI/publication remain tracked in PR #256. Contexts can approach
+logical count; history/strategy/output, pair scans and full-deck solving remain open.
 
 The explicit Python packed [direct shared constructor](../direct-shared-topology.md)
 builds the same selected-game DAG without literal postflop source nodes or compiler

@@ -1,0 +1,47 @@
+{
+  "archive_entries": 8,
+  "archive_sha256": "3cf33eb1d2b63eb0b2333930c52ebf0e8a07d93ac479adfb01eba3a26236e3e0",
+  "artifact_sha256": {
+    "case.json": "c1051a013c6e3a6bca416a345fffd4722f3b245cee3ed01ed9f8313f2519c953",
+    "exact-gate.json": "8553b65c075a625cfcca81c19b86d5acff5007fdc94283ecb97da5516c1fdeef",
+    "native-policy.json": "b7dc111d49d2b3ad4982d4b0ed8875f7ca46089c75f1ed555e6e4098faaa534d",
+    "numeric-replay.json": "c0ac3204030cfa085eb36e85b3a82b836d2a7ab74fa8b70c55e20792add45105",
+    "receipt.json": "28932387c75c0826400228b35ae7a3906056b7182c6c9f4372d8d4914bd70d5a",
+    "source-before.json": "c99e443dec1f42ee2fae24fe1128b094d2f07f6337464e5141fa6798b9aed8ec",
+    "t1000-admission.json": "87987f71403706dbe46699962c842bcab5036a307c7111a5a6da3bbd956e82f7"
+  },
+  "authenticated_source_files": 1718,
+  "exact_status": "rejected unchanged2048row cap",
+  "fresh_numeric_gaps": {
+    "bb_best_response_value": 1.1102230246251565e-16,
+    "nash_conv": 5.551115123125783e-17,
+    "sb_best_response_value": 5.551115123125783e-17,
+    "value_bb": 1.1102230246251565e-16,
+    "value_sb": 1.1102230246251565e-16
+  },
+  "historical_archive_sha256": "834c84a24d371e20291ac6d4a7a915fe0e5ff9d2d9fd33f3a63a3b3947d241db",
+  "historical_checks": {
+    "bb_best_response_value": true,
+    "nash_conv": true,
+    "private_pair_probabilities": true,
+    "sb_best_response_value": true,
+    "strategy": true,
+    "value_bb": true,
+    "value_sb": true
+  },
+  "native_calls": 0,
+  "outcome": "accepted",
+  "preserved_first_review_failure_log_sha256": "05f8cd3b862c0f3b24aa1c836691500d36a8379a122fd74fb0a7611db9ef3257",
+  "preserved_first_review_helper_sha256": "d64d7c96d25a52a819d90970dbfd9dd8a9d010e905daecea883d1caf3622b26d",
+  "probe_helper_sha256": "d469dd675798f44f547975e2994a67f5add0224d5f4ac33b5b2bcf91ad2d7924",
+  "producer_helper_in_archive": false,
+  "review_helper_sha256": "5fdf11d8fba3c14c0024d7974ea3d249e3c098eb6ffa515d0ebfcc9090f5fb75",
+  "reviewer": "independent Sol substitute for unavailable Terra",
+  "rows": 2224,
+  "scope": "Heldout correctness/admission only. Historical archive read solely asdata. No larger exact qualitypass or speed/scalability claim.",
+  "source_and_artifacts_unchanged_after_review": true,
+  "source_commit": "90ede1ce2770c2e5872bd12c44abe2f2f50a66e3",
+  "t1000_status": "rejected before ranking/native by producer controls",
+  "training_calls": 0,
+  "worlds": 96
+}

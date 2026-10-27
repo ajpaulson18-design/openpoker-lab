@@ -1,5 +1,10 @@
 # Native training over selected probability/payoff queries
 
+This page describes the literal-tree selected-operator helper. Explicit
+`public_topology="direct"` instead requires the distinct [native DAG helper](native-selected-dag-protocol.md);
+its [separate measured result](native-selected-dag-result.md) preserves this
+backend and all of its original evidence.
+
 This connects C++ computation to the
 [non-materialized four-street operator](selected-operator-four-street.md), with
 [flat strategy buffers](packed-operator-strategy.md). The original
