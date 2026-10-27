@@ -49,7 +49,7 @@ def _tokens(board):
             ("".join(board[:3]),) + tuple(board[3:]))
 
 
-def _prepare(request, *, rank_cache_boards=1):
+def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows"):
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
     if (request.traversal != "public-batched" or
@@ -58,6 +58,10 @@ def _prepare(request, *, rank_cache_boards=1):
         raise ValueError("Operator solving requires public-batched training/diagnostics and public-vector resources.")
     if type(request.iterations) is not int or not 10 <= request.iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
+    if strategy_storage not in ("rows", "packed"):
+        raise ValueError("strategy_storage must be rows or packed.")
+    if strategy_storage == "packed" and request.algorithm != "cfrplus":
+        raise ValueError("Packed strategy storage currently requires CFR+.")
     operator = SelectedRunoutOperator(request.sb_range, request.bb_range,
                                      request.runouts, iterations=request.iterations,
                                      rank_cache_boards=rank_cache_boards)
@@ -167,29 +171,40 @@ def _prepare(request, *, rank_cache_boards=1):
             "bookkeeping_limit": MAX_RANK_CACHE_BOOKKEEPING_ENTRIES,
             "scope": "Logical slots/loops; default scan/rank caps remain unchanged. No bytes or RSS guarantee.",
         }
+    if strategy_storage == "packed":
+        from .packed_operator_cfr import layout_census
+        census["strategy_storage"] = layout_census(root, infos, operator.hand_counts, request.iterations)
     return operator, root, infos, metadata, specs, census
 
 
-def census_four_street_operator(request, *, rank_cache_boards=1):
+def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows"):
     """Rank-free bounded preparation and strategy-storage census; no training."""
-    return _prepare(request, rank_cache_boards=rank_cache_boards)[-1]
+    return _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage)[-1]
 
 
-def solve_four_street_operator(request, *, rank_cache_boards=1):
+def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows"):
     """Return replay-compatible complete policy using no stored physical worlds.
 
     The existing request's public-vector selectors are required explicitly.
     No native, sampled, delayed-average or full-deck mode is inferred.
     """
-    operator, root, infos, metadata, specs, census = _prepare(request, rank_cache_boards=rank_cache_boards)
+    operator, root, infos, metadata, specs, census = _prepare(
+        request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage)
     training_root, anchor, view_states = reference._positive_pot_training_view(root)
     operator.pot = 2 * anchor
     marginals = _Marginals(operator)
     try:
-        averages = (_train_prepared(
+        if strategy_storage == "packed" and infos:
+            from .packed_operator_cfr import train_packed
+            averages, layout = train_packed(training_root, infos, request.iterations,
+                                            operator=operator, marginals=marginals, return_receipt=True)
+            if layout != census["strategy_storage"]:
+                raise RuntimeError("Packed training view and admitted source layout differ.")
+        else:
+            averages = (_train_prepared(
             training_root, infos, request.iterations, request.algorithm,
             pot=operator.pot, chance_type=_Chance, hand_counts=operator.hand_counts,
-            edges={}, marginals=marginals, prefix_kernel=operator) if infos else {})
+                edges={}, marginals=marginals, prefix_kernel=operator) if infos else {})
         policies, _ = _normalize_policies(averages)
         value, br0, br1 = _evaluate_prepared(
             training_root, policies, pot=operator.pot, chance_type=_Chance,
@@ -263,4 +278,7 @@ def solve_four_street_operator(request, *, rank_cache_boards=1):
         if stats["hits"] + stats["misses"] > census["rank_cache_admission"]["lookup_upper_bound"]:
             raise RuntimeError("Rank cache exceeded its admitted lookup bound.")
         result["rank_cache"] = stats
+    if strategy_storage == "packed":
+        result["strategy_storage"] = "packed-binary64-cfrplus-v1"
+        result["execution_backend"] = "selected-operator-packed-python"
     return result

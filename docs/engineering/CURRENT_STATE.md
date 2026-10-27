@@ -1,5 +1,13 @@
 # Current engineering state
 
+An explicit [packed CFR+ strategy layout](../packed-operator-strategy.md) connects
+contiguous regret/average/current/delta buffers to the non-materialized operator.
+It retains the original row path, information-set identities, independent
+diagnostics and all old admission limits. Dense index holes and additional
+layout work are bounded separately. This reduces a representation overhead;
+public-tree and information-action counts remain explicit and source-frozen
+runtime/memory/quality acceptance is a separate gate.
+
 An explicit [bounded board-rank cache](../selected-board-rank-cache.md) extends
 the selected operator with solve-local per-board rank reuse. Capacity one
 preserves the prior path; two through 64 require separate slot/work admission.
