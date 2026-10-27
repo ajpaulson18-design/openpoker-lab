@@ -1,5 +1,12 @@
 # Current engineering state
 
+An explicit [bounded board-rank cache](../selected-board-rank-cache.md) extends
+the selected operator with solve-local per-board rank reuse. Capacity one
+preserves the prior path; two through 64 require separate slot/work admission.
+This targets repeated ranking while retaining all pair/board scan charges,
+game rules and policy identities. Executed performance and independent replay
+are separate gates.
+
 The opt-in [selected-runout operator integration](../selected-operator-four-street.md)
 connects streamed chance/payoff queries to the shared four-street trainer without
 stored complete worlds or prefix/pair edges. Explicit tree and strategy storage

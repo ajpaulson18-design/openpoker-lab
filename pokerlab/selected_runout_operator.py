@@ -7,6 +7,7 @@ once for every compatible pair/board world. No pair/world table is retained.
 """
 from math import fsum, isfinite
 from numbers import Real
+from collections import OrderedDict
 
 from .cards import DECK, expand_range, rank_hand
 from .preflop_solver import (
@@ -17,6 +18,8 @@ from .probability_guard import normal_positive_mass
 from .river_tree import _Terminal
 
 _CARD_BIT = {card: 1 << index for index, card in enumerate(DECK)}
+MAX_RANK_CACHE_BOARDS = 64
+MAX_RANK_CACHE_ENTRIES = 8192
 
 
 class SelectedRunoutOperator:
@@ -27,7 +30,11 @@ class SelectedRunoutOperator:
     by the enclosing tree builder after its positive-pot shift is established.
     """
 
-    def __init__(self, sb_range, bb_range, runouts, iterations=1):
+    def __init__(self, sb_range, bb_range, runouts, iterations=1, *,
+                 rank_cache_boards=1):
+        if (type(rank_cache_boards) is not int or
+                not 1 <= rank_cache_boards <= MAX_RANK_CACHE_BOARDS):
+            raise ValueError("rank_cache_boards must be an integer from 1 through 64.")
         if type(iterations) is not int or iterations < 1:
             raise ValueError("iterations must be a positive integer.")
         ranges = (expand_range(sb_range), expand_range(bb_range))
@@ -35,6 +42,13 @@ class SelectedRunoutOperator:
         self.weights = (tuple(ranges[0][h] for h in self.hands[0]),
                         tuple(ranges[1][h] for h in self.hands[1]))
         self.hand_counts = tuple(map(len, self.hands))
+        # Reserve an extra row for list-to-tuple construction references while
+        # the oldest retained board is evicted before a new vector is built.
+        requested_rank_entries = (rank_cache_boards + 1) * sum(self.hand_counts)
+        if rank_cache_boards > 1 and requested_rank_entries > MAX_RANK_CACHE_ENTRIES:
+            raise ValueError("Requested board-rank cache exceeds 8,192 retained-plus-active rank entries.")
+        self.rank_cache_boards = rank_cache_boards
+        self.rank_cache_requested_entries = requested_rank_entries
         self._hand_masks = tuple(tuple(_CARD_BIT[h[0]] | _CARD_BIT[h[1]] for h in side)
                                   for side in self.hands)
         self.selected = _requested_runouts(runouts)
@@ -48,8 +62,13 @@ class SelectedRunoutOperator:
         self.normalizer = 0.0
         self.rank_calls = 0
         self.rank_scratch_peak = 0
+        self.rank_cache_hits = 0
+        self.rank_cache_misses = 0
+        self.rank_cache_evictions = 0
+        self.rank_cache_retained_peak_entries = 0
         self._rank_cache_key = None
         self._rank_cache = None
+        self._board_rank_lru = OrderedDict() if rank_cache_boards > 1 else None
         self.query_pair_runout_checks = 0
         self.pot = None
 
@@ -210,6 +229,31 @@ class SelectedRunoutOperator:
                     yield i, j, mass, signed_mass
 
     def _world_sign(self, i, j, k):
+        if self.rank_cache_boards > 1:
+            ranks = self._board_rank_lru.get(k)
+            if ranks is None:
+                self.rank_cache_misses += 1
+                if len(self._board_rank_lru) >= self.rank_cache_boards:
+                    self._board_rank_lru.popitem(last=False)
+                    self.rank_cache_evictions += 1
+                hand_sum = sum(self.hand_counts)
+                construction_bound = (len(self._board_rank_lru) + 2) * hand_sum
+                if construction_bound > self.rank_cache_requested_entries:
+                    raise RuntimeError("Board-rank construction exceeded its admitted entry bound.")
+                # Nothing is published if a rank call fails. A successfully
+                # evicted old row need not be restored after an exception.
+                ranks = self._build_rank_vectors(k)
+                self._board_rank_lru[k] = ranks
+                self.rank_cache_retained_peak_entries = max(
+                    self.rank_cache_retained_peak_entries, len(self._board_rank_lru) * hand_sum)
+                self.rank_scratch_peak = max(self.rank_scratch_peak, construction_bound)
+            else:
+                self.rank_cache_hits += 1
+                self._board_rank_lru.move_to_end(k)
+            r0, r1 = ranks[0][i], ranks[1][j]
+            return (r0 > r1) - (r0 < r1)
+
+        # Preserve the original one-board reduction and ranking schedule.
         if self._rank_cache_key != k:
             flop, turn, river = self.selected[k]
             board = flop + (turn, river)
@@ -226,10 +270,32 @@ class SelectedRunoutOperator:
                 vectors.append(tuple(ranks))
             self._rank_cache_key = k
             self._rank_cache = tuple(vectors)
-            self.rank_scratch_peak = max(self.rank_scratch_peak,
-                                         sum(self.hand_counts))
+            self.rank_scratch_peak = max(self.rank_scratch_peak, sum(self.hand_counts))
         r0, r1 = self._rank_cache[0][i], self._rank_cache[1][j]
         return (r0 > r1) - (r0 < r1)
+
+    def _build_rank_vectors(self, k):
+        flop, turn, river = self.selected[k]
+        board = flop + (turn, river)
+        board_mask = self._board_masks[k]
+        vectors = []
+        for player in (0, 1):
+            ranks = []
+            for hand, mask in zip(self.hands[player], self._hand_masks[player]):
+                if board_mask & mask:
+                    ranks.append(None)
+                else:
+                    ranks.append(rank_hand(hand + board))
+                    self.rank_calls += 1
+            vectors.append(tuple(ranks))
+        return tuple(vectors)
+
+    def clear_rank_cache(self):
+        """Release retained ranks without changing counters or input snapshots."""
+        self._rank_cache_key = None
+        self._rank_cache = None
+        if self._board_rank_lru is not None:
+            self._board_rank_lru.clear()
 
     def structural_storage_counts(self):
         """Return retained input entry counts, not bytes or a memory estimate."""
