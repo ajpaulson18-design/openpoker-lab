@@ -504,7 +504,19 @@ class ExactSelectedRunoutKernel:
                            4 * self.hand_counts[1-player])
         self._reserve_entries(self._input_entries + self._cache_reserved_entries +
                               140 * sum(self.hand_counts) + 800)
-        reach = tuple(self._snapshot_nonnegative(x, "opponent_reach") for x in opponent_reach)
+        # A sized user object can lie about its length or yield indefinitely.
+        # Consume at most one sentinel beyond the opponent dimension, after
+        # reserving the full query envelope and before any reach snapshot,
+        # cache lookup, rank call, or per-board bucket allocation.
+        try:
+            raw_reach = tuple(islice(iter(opponent_reach), self.hand_counts[1-player] + 1))
+        except TypeError as exc:
+            self._unsupported += 1
+            raise ValueError("Opponent reach must be a bounded sized sequence.") from exc
+        if len(raw_reach) != self.hand_counts[1-player]:
+            self._unsupported += 1
+            raise ValueError("Opponent reach length disagrees with its bounded iterator.")
+        reach = tuple(self._snapshot_nonnegative(x, "opponent_reach") for x in raw_reach)
         self._preflight_terminal_bits(reach, scale, player, len(indexes))
         answer = [Fraction(0) for _ in self.hands[player]]
         own_side, opp_side = player, 1-player
@@ -682,6 +694,10 @@ class ExactSelectedRunoutKernel:
             "rank_cache_misses": self._cache_misses,
             "rank_cache_evictions": self._cache_evictions,
         }
+
+    def clear_rank_cache(self):
+        """Release solve-local rank vectors after terminal diagnostics finish."""
+        self._rank_cache.clear()
 
     def receipt(self):
         return MappingProxyType(self.statistics())

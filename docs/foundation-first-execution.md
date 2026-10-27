@@ -1,5 +1,39 @@
 # Foundation-first execution record
 
+## Exact-product four-street integration: controls complete, measurement pending
+
+The new [exact-product contract](exact-selected-kernel-contract.md) explicitly
+changes the selected chance arithmetic while retaining the same finite betting
+rules and complete own-hand/public-history strategy rows. Exact blocker/card
+buckets and merged rank sweeps supply marginals/terminal vectors without private-
+pair loops in the batched kernel. A strict adapter rounds each completed exact
+component once and takes original admitted terminal money directly, avoiding
+an unproven shifted-anchor reconstruction. Legacy APIs and frozen evidence remain.
+
+Terra independently found and Luna corrected sign/rank-threshold, duplicate and
+mutable inputs, unbounded prefix/mapping/runout/reach iterators, parser-work and
+scratch/bit-admission defects. Root reviewed whole-request callback/overlapping
+storage forecasts and serialization lifetimes. A separate Sol reviewer, replacing
+Terra after usage limits, added six passing admission/lifetime/fractional-money
+controls and found no remaining concrete defect in the inspected integration.
+Complete 22-world T10 policy, both BRs and metrics independently replay under the
+unchanged v3 exact certificate, but the approximately 0.6575302611616735-BB
+NashConv is a retained accuracy miss. Actual common 1e-200 weights normalize
+exactly and match the unit control's complete policy/metrics; legacy raw-product
+rejection remains intact. Full-range one-selected-board mass census matches
+1,070,190 physical deals, 1,081 active hands/seat and exact 1/1,081 marginals,
+with ranking and legacy world materialization forbidden.
+
+Whole-request admission covers prefix-weighted terminal/marginal callbacks,
+worst binary64-reach Fraction intermediates, original packed/history caps,
+all live prefix/support/history/strategy/output slots and depth scratch. Explicit
+private-pair serialization remains a separately capped quadratic setup stage
+because the unchanged validator requires it; this is not an end-to-end linear
+solver. Rank caches release on success/training/diagnostic failure; obsolete
+callback/policy state releases before serialization. Source-frozen fixed-study,
+independent saved replay, final CI and publication are the next gates.
+
+
 ## Native direct-DAG integration, October 27, 2026: verified frozen result
 
 PR #254 merged at `d49b85e453d6c97b6a449c536f393c12a6fc76d1` after final-head

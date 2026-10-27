@@ -1,7 +1,7 @@
 # Exact-product selected chance/payoff kernel: implementation contract
 
-Status: next foundation integration under development, not accepted production
-behavior. The existing legacy-binary64 selected operator, native DAG, old limits
+Status: explicit research integration under validation, with independently
+checked exact kernel and shared four-street callbacks. The existing legacy-binary64 selected operator, native DAG, old limits
 and all frozen evidence remain unchanged. The new contract is explicit research
 work for removing private-pair scans; actual four-street training integration and
 independent policy/BR acceptance are required before calling it a solver path.
@@ -152,3 +152,63 @@ LCM/product/sum bounds and all matching-board accumulation are checked before
 rank or bucket work. Cumulative operation and scratch entry receipts remain
 logical models, not actual allocator/CPU bounds. Whole-request solver admission,
 training, policy serialization, certificate quality and measured cost remain open.
+
+## Four-street integration and requested-work admission
+
+`solve_four_street_exact_selected(request, rank_cache_boards=1, kernel_limits=None)`
+in `pokerlab/exact_selected_solver.py` explicitly selects this new law. It requires
+CFR+, public-batched training/diagnostics, public-vector resources and 10..10000
+requested iterations. It constructs one direct four-street DAG and trains one
+root with the existing packed CFR+ implementation. Legacy API defaults/native
+protocols and their probability guards remain unchanged.
+
+Before information/pair-output/training allocation, a streamed logical occurrence
+census charges every public occurrence with its selected-prefix board multiplicity.
+Two complete terminal traversals per sweep plus six diagnostic terminal passes
+are reserved. Average marginal queries are bounded per decision/sweep and missing-
+policy diagnostic fallbacks by three times action/acting-hand entries. A one-
+prefix marginal cache does not excuse worst-case call accounting. Original direct,
+packed action/dense/history/loop limits remain. New exact-kernel, adapter,
+phase-overlap storage and output limits are separate, versioned logical models.
+
+For B selected boards, H total private hands and Bp matching a prefix, the kernel
+lookup charge is 64+8B; legal/marginal charges add Bp*(24H+104)/(20H+260).
+Terminal charges reserve 16+lookup+Bp*(200H+520+H*(ceil(log2(max(2,H)))+1))+4*Hopp.
+This covers rank/card bucket sweeps and sorting in logical units; one bounded
+seven-card rank evaluation is one unit, not an instruction/CPU-time estimate.
+The exact kernel uses a merged rank sweep and retains all/lower/equal card sums,
+not a card-vector snapshot for every rank. The bit forecast reserves all possible
+binary64 reach images, original payoff images, dyadic denominator LCMs, sums over
+hands/boards and global normalization before training. The receipt records actual
+forecast bit maxima and the unchanged 65,536-bit ceiling.
+
+The existing independent policy validator still requires explicit positive
+private-pair probability rows. This integration therefore has a separately billed
+O(H0*H1*B) setup/output stage, capped before training (30 million candidate-board
+scans and 2 million modeled output entries). Every positive pair mass must convert
+to normal binary64 before training starts. This is not hidden in the batched
+payoff/marginal kernel, but remains an end-to-end scalability limitation.
+
+Storage accounting includes all selected prefixes (including terminal-only
+prefixes), support lists, history-key references, infos/menus, four numeric
+strategy buffers and lookup maps, average/normalized policies, depth/action/hand
+scratch, terminal-view snapshots, pair rows and complete strategy/history output.
+A separate 25 million retained+scratch slot ceiling applies across overlapping
+phases. Entries are neither Python object bytes nor an allocator/RSS guarantee.
+Support tables are dropped before training; cache cleanup is in a finally path;
+callback/view and obsolete policy state is dropped before row serialization.
+
+The old candidate/world*iterations work caps describe a materialized pair/world
+training path. They are unchanged for those APIs. This separately selected exact
+kernel bills its actual rank/card operations with a new full-request envelope;
+it does not infer legacy support or raise the old limits. Native exact-product
+training, larger-policy independent verification and compact pair-free output
+remain separate dependencies.
+
+Initial complete controls independently certify the original 22-world T10 policy
+under the unchanged v3 exact-game oracle; all four streets, profile and both BRs
+agree within 1e-9. Exact T10 NashConv is approximately 0.6575302611616735 BB, a retained
+quality miss. A common 1e-200 input scale that makes legacy products underflow
+normalizes exactly: complete new-law policy/metrics equal the unit-weight control
+and the actual tiny-weight case independently certifies. These are bounded
+correctness controls, not source-frozen performance or convergence evidence.

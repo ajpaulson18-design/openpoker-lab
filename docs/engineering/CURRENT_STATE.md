@@ -1,5 +1,20 @@
 # Current engineering state
 
+An explicit [exact-product selected research solver](../exact-selected-kernel-contract.md)
+now connects exact rational blocker/card/rank queries to the direct shared
+four-street root and existing packed CFR+ trainer through a strict conversion
+boundary. It uses a new, named exact-product chance law; the legacy rounded
+operator and native paths remain unchanged. Independent complete policy and
+best-response controls pass, including actual tiny common weight normalization
+and fractional-money/hidden-information cases. The original 22-world T10 policy
+has an exact quality miss, approximately 0.65753 BB NashConv. Full-request logical
+work, Fraction bit and overlapping-entry admission precede info/training/output
+allocation; the existing verifier still requires explicitly billed quadratic
+pair-probability output. Frozen complete-call measurements, broader quality and
+final publication remain pending. A rank-free full-range one-selected-board
+census represents 1,070,190 deals without stored worlds; it is not full-deck solving.
+
+
 The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
 connects direct shared construction to C++ packed CFR+ without an expanded
 native tree or per-decision dense hand map. Its [frozen 22-world study](../native-selected-dag-result.md)

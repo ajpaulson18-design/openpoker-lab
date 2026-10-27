@@ -214,3 +214,17 @@ class ExactSelectedBoundaryTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             ExactSelectedRunoutKernel('AsAd', 'KsKd', DishonestRunouts())
         self.assertLessEqual(len(consumed), 65)
+
+    def test_dishonest_reach_length_is_bounded(self):
+        kernel = ExactSelectedRunoutKernel(SB, BB, RUNOUTS)
+        consumed = []
+        class Reach:
+            def __len__(self): return len(kernel.hands[1])
+            def __iter__(self):
+                for i in range(10000):
+                    consumed.append(i)
+                    yield 0
+        with self.assertRaises(ValueError):
+            kernel.terminal_values_exact((), kind='showdown', payoff=1,
+                                         player=0, opponent_reach=Reach())
+        self.assertLessEqual(len(consumed), len(kernel.hands[1]) + 1)
