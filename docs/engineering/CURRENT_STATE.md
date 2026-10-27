@@ -1,19 +1,20 @@
 # Current engineering state
 
 An explicit [exact-product selected research solver](../exact-selected-kernel-contract.md)
-now connects exact rational blocker/card/rank queries to the direct shared
-four-street root and existing packed CFR+ trainer through a strict conversion
-boundary. It uses a new, named exact-product chance law; the legacy rounded
-operator and native paths remain unchanged. Independent complete policy and
-best-response controls pass, including actual tiny common weight normalization
-and fractional-money/hidden-information cases. The original 22-world T10 policy
-has an exact quality miss, approximately 0.65753 BB NashConv. Full-request logical
-work, Fraction bit and overlapping-entry admission precede info/training/output
-allocation; the existing verifier still requires explicitly billed quadratic
-pair-probability output. Frozen complete-call measurements, broader quality and
-final publication remain pending. A rank-free full-range one-selected-board
-census represents 1,070,190 deals without stored worlds; it is not full-deck solving.
-
+connects exact rational blocker/card/rank queries to one direct shared four-street
+root and existing packed CFR+ through strict completed-vector conversions. Its
+[frozen result](../exact-selected-kernel-result.md) independently replays all eight
+saved policies and recomputes five exact certificates after authenticating 1,755
+source files. Common 1e-200 scaling preserves complete policies/metrics where the
+legacy raw-product path rejects. Original 22-world T10/T100 exact quality targets
+remain misses (NashConv about 0.65753/0.0079655 BB), and T1000 rejects work admission
+before ranking/training. Only the one-world T1000 policy reaches the unchanged
+target. Unpaired original T10 median is 6.379 s and T100 one-call cost 47.216 s;
+no general performance/memory gain is established. Full-range one-selected-board
+mass census represents 1,070,190 deals without stored worlds, with zero ranking or
+training. Pair-probability output remains explicitly quadratic; strategy/history,
+exact computation, broader quality and full-deck solving remain open. Final
+publication is tracked in PR #257; legacy probability/native behavior is unchanged.
 
 The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
 connects direct shared construction to C++ packed CFR+ without an expanded

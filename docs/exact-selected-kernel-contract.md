@@ -1,7 +1,8 @@
 # Exact-product selected chance/payoff kernel: implementation contract
 
-Status: explicit research integration under validation, with independently
-checked exact kernel and shared four-street callbacks. The existing legacy-binary64 selected operator, native DAG, old limits
+Status: explicit research integration with [frozen complete-call and independent
+saved-policy evidence](exact-selected-kernel-result.md). Final PR-head CI and
+publication remain separate gates. The existing legacy-binary64 selected operator, native DAG, old limits
 and all frozen evidence remain unchanged. The new contract is explicit research
 work for removing private-pair scans; actual four-street training integration and
 independent policy/BR acceptance are required before calling it a solver path.
@@ -212,3 +213,13 @@ quality miss. A common 1e-200 input scale that makes legacy products underflow
 normalizes exactly: complete new-law policy/metrics equal the unit-weight control
 and the actual tiny-weight case independently certifies. These are bounded
 correctness controls, not source-frozen performance or convergence evidence.
+
+## Frozen study
+
+The fixed runner `python -m scripts.benchmark_exact_selected_solver --output
+<new-external-directory>` requires a clean committed source. Its
+[retained result](exact-selected-kernel-result.md) authenticates the original
+source closure, complete raw outputs, manifests and separate saved review.
+It preserves all four finite-iteration target misses, original 22-world T1000
+pretraining admission rejection, and the small one-world T1000 target pass.
+No universal accuracy, speed, memory or full-deck claim follows.

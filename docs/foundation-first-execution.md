@@ -1,6 +1,6 @@
 # Foundation-first execution record
 
-## Exact-product four-street integration: controls complete, measurement pending
+## Exact-product four-street integration: frozen independent result
 
 The new [exact-product contract](exact-selected-kernel-contract.md) explicitly
 changes the selected chance arithmetic while retaining the same finite betting
@@ -30,8 +30,23 @@ all live prefix/support/history/strategy/output slots and depth scratch. Explici
 private-pair serialization remains a separately capped quadratic setup stage
 because the unchanged validator requires it; this is not an end-to-end linear
 solver. Rank caches release on success/training/diagnostic failure; obsolete
-callback/policy state releases before serialization. Source-frozen fixed-study,
-independent saved replay, final CI and publication are the next gates.
+callback/policy state releases before serialization. The [frozen fixed-study result](exact-selected-kernel-result.md) now preserves
+eight training calls, two zero-training requests (admitted rank-free census and
+rejected larger solve), raw policy/certificate/miss data and source identity at
+`66788d4a27b549a5cd1788649bae3e1dea047ac6`. Three original 22-world T10 calls have
+median 6.378994 s; T100 takes 47.216008 s; T1000 rejects exact-kernel work admission
+before ranking/training. Original T10/T100, unit and tiny T10 target misses remain.
+The separate one-world T1000 call takes 59.452411 s and reaches exact NashConv
+about 1.668816797967092e-05 BB, a scoped small-game pass. Unpaired timing establishes
+no legacy/native cost advantage or total-memory improvement.
+
+Independent saved-only review authenticates 1,755 source files and the full archive,
+replays all eight complete policies and recomputes five exact certificates with
+zero training/native/exact-kernel callbacks. Maximum numeric gap is 1.11e-16;
+all source/artifact bytes stay unchanged. Full common-scale policies/eight metrics/
+pair rows are identical. The [receipt](../benchmarks/results/exact-product-selected-v1/receipt.json)
+pins archive 9f14a749... and independent receipt e19c3376..., complete logs and
+unchanged targets. Final evidence-head CI/publication remain tracked in PR #257.
 
 
 ## Native direct-DAG integration, October 27, 2026: verified frozen result

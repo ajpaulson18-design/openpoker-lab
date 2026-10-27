@@ -1,0 +1,11 @@
+original-t10-0 complete 6.378994
+original-t10-1 complete 6.796544
+original-t10-2 complete 6.34546
+original-t10-traced complete 32.122762
+original-t100-0 complete 47.216008
+original-t1000-0 pretraining-rejected 0.09663
+unit-t10-0 complete 1.795976
+tiny-t10-0 complete 1.983816
+one-world-t1000-0 complete 59.452411
+full-range-census-t0-0 complete 0.364308
+{"outcome": "complete", "manifest_sha256": "1d265cdb6bbbcb913aa2945e6b18598121bdc54b8142f2b9f0722240bda48bf1", "failure": null}
