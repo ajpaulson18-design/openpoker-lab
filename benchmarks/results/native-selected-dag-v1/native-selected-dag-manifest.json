@@ -1,0 +1,23 @@
+{
+  "compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+  "compiler_version": "usage: cl [ option... ] filename... [ /link linkoption... ]\r\nMicrosoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\r\nCopyright (C) Microsoft Corporation.  All rights reserved.",
+  "executable": "native-selected-dag-train.exe",
+  "executable_sha256": "765077f305bdaf69cbf3982e648f912aa17efaf489f4d42b078e66814b0dd101",
+  "flags": [
+    "/nologo",
+    "/std:c++20",
+    "/O2",
+    "/W4",
+    "/WX",
+    "/EHsc",
+    "/MT",
+    "/fp:strict",
+    "/D_CRT_SECURE_NO_WARNINGS"
+  ],
+  "platform": "Windows-10-10.0.19045-SP0",
+  "protocol": "OPENPOKER_SELECTED_DAG_V1",
+  "schema_version": 1,
+  "source_lf_sha256": "835ba87c6e8f07ce5fb84242702917c9869a66affdd54cd7c1ffce11ff961b5b",
+  "source_sha256": "835ba87c6e8f07ce5fb84242702917c9869a66affdd54cd7c1ffce11ff961b5b",
+  "work_model": "native-selected-dag-work-v1"
+}

@@ -36,6 +36,29 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D060: Native traversal over direct shared vertices (October 27, 2026)
+
+Engineering decision under the foundation goal: add a distinct, explicitly
+source-built selected-DAG protocol, retaining the old native selected-tree
+source and helper unchanged. Derive compatible-deal prefix support and
+vertex/prefix contexts natively; retain separate occurrence row/slot bases for
+perfect recall. Remove expanded native node/hand maps while counting contexts,
+logical visits, rows and prefix ordinals separately. Preserve original probability,
+monetary, reduction and alternating CFR+ contracts and all existing limits.
+Require malformed-wire controls, physical numeric/exact saved replay, compiled
+Python-version/sanitizer conformance and source-frozen full-call measurements.
+No general memory, speed, full-deck or strategy compression claim follows.
+Terra/Luna supplied initial review/adapter; both hit an account limit during
+validation. Root completed integration/controls; a separate Sol reviewer is the
+explicit Terra substitute for remaining independent scrutiny. See the
+[protocol and acceptance scope](../native-selected-dag-protocol.md).
+The [frozen result](../native-selected-dag-result.md) now preserves all paired
+policies and T1000 exact targets, with a scoped native speed result and slightly
+higher traced Python allocation. Separate saved reviews authenticate all source
+and raw artifacts before numerical/exact replay. The 96-world exact-cap and
+T1000-admission misses remain. Final evidence-head CI/publication remain separate.
+
+
 ### D059: Construct shared topology without a literal postflop source tree (October 27, 2026)
 
 Engineering decision after the shared compiler bridge's measured full-call memory

@@ -83,8 +83,8 @@ class DirectTopologySolverTests(unittest.TestCase):
             counts = census_four_street_operator(request(CASE), strategy_storage="packed", public_topology="direct")
         self.assertEqual(counts["direct_public_topology"]["materialized_postflop_nodes"], 0)
         with patch("pokerlab.selected_operator_solver.SelectedRunoutOperator", side_effect=AssertionError("setup")):
-            for kwargs in ({}, {"strategy_storage": "packed", "native_executable": "never-read"}):
-                with self.assertRaisesRegex(ValueError, "Python packed"):
+            for kwargs in ({},):
+                with self.assertRaisesRegex(ValueError, "packed CFR"):
                     solve_four_street_operator(request(CASE), public_topology="direct", **kwargs)
 
     def test_original_mass_and_scan_guards_remain(self):

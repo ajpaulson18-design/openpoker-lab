@@ -3,8 +3,9 @@
 `public_topology="direct", strategy_storage="packed"` selects direct public DAG
 construction and the existing shared-cursor packed Python CFR+ path. Literal and
 compiler-bridge modes remain available. The selected probability operator is
-unchanged; no native fallback or new probability law is inferred. Native plus
-direct rejects before preparation.
+unchanged; no native fallback or new probability law is inferred. The later
+explicit [native DAG backend](native-selected-dag-protocol.md) supports direct
+construction with a distinct source-built helper and separate admission.
 
 ## Representation and rule boundaries
 
@@ -139,3 +140,6 @@ rows per logical history occurrence. Prefix-dependent private support must be
 validated independently; expanding the old native node/edge/dense-hand wire would
 reintroduce the structure this builder removes. Information-history rows, complete
 output, pair scans and full-deck chance remain separate scaling limits.
+
+The subsequent [native direct-DAG result](native-selected-dag-result.md) implements
+this traversal dependency; the two Python study records above remain unchanged.

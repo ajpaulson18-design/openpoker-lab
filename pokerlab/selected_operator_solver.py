@@ -216,8 +216,23 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_ex
             from .packed_operator_cfr import layout_census
             census["strategy_storage"] = layout_census(root, infos, operator.hand_counts, request.iterations)
     if native_executable is not None:
-        from .native_selected_operator import prepare
-        census["native_operator_admission"] = prepare(root, infos, request.iterations, operator=operator)[-1]
+        if public_topology == "direct":
+            from .native_selected_dag import prepare
+            from .shared_topology_view import SharedPublicView
+            # Reserve both rank-free preparation passes before support allocation.
+            extra_upper = 2 * (3 * len(selected) + 3) * scan_unit
+            if scan_bound + extra_upper > MAX_OPERATOR_SCAN_ENTRIES:
+                raise ValueError("Native DAG combined operator scan envelope exceeds 500,000,000 entries.")
+            view = SharedPublicView(root)
+            operator.pot = 2 * view.anchor
+            _plan, admission = prepare(view, infos, request.iterations, operator)
+            census["native_dag_admission"] = admission
+            census["native_dag_preparation_scan_upper_bound"] = extra_upper
+            census["pair_runout_scan_upper_bound"] += admission["additional_operator_scan_entries"]
+            census["rank_call_upper_bound"] = 2 * census["pair_runout_scan_upper_bound"]
+        else:
+            from .native_selected_operator import prepare
+            census["native_operator_admission"] = prepare(root, infos, request.iterations, operator=operator)[-1]
     return operator, root, infos, metadata, specs, census
 
 
@@ -225,9 +240,9 @@ def _validate_public_topology(request, strategy_storage, native_executable, publ
     if public_topology not in ("literal", "shared", "direct"):
         raise ValueError("public_topology must be literal, shared or direct.")
     if public_topology in ("shared", "direct") and (
-            strategy_storage != "packed" or native_executable is not None or
+            strategy_storage != "packed" or (public_topology == "shared" and native_executable is not None) or
             not isinstance(request, FourStreetSolveRequest) or request.algorithm != "cfrplus"):
-        raise ValueError("Shared/direct topology requires explicit Python packed CFR+ training.")
+        raise ValueError("Shared/direct topology requires explicit packed CFR+ training; shared requires Python packed training.")
 
 
 def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows",
@@ -297,20 +312,36 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
     operator.pot = 2 * anchor
     marginals = _Marginals(operator)
     native_training = None
+    plan = None
     try:
         if native_executable is not None:
-            from .native_selected_operator import train_native_selected, executable_identity
-            if infos:
-                averages, native_training = train_native_selected(
-                    training_root, infos, request.iterations, operator=operator, executable=native_executable)
-                for name, expected in census["native_operator_admission"].items():
-                    if native_training[name] != expected:
-                        raise RuntimeError("Native operator preparation changed from admission.")
-                native_training["calls"] = 1
+            if public_topology == "direct":
+                from .native_selected_dag import prepare, train_native_selected_dag, executable_identity
+                if infos:
+                    plan, _admission = prepare(shared_view, infos, request.iterations, operator)
+                    averages, native_training = train_native_selected_dag(plan, executable=native_executable)
+                    plan = None
+                    admitted = census["native_dag_admission"]
+                else:
+                    averages = {}
+                    native_training = {"calls": 0, "reason": "no-information-sets",
+                                       "identity": executable_identity(native_executable)}
+                    admitted = {}
             else:
-                native_training = {"calls": 0, "reason": "no-information-sets",
-                                   "identity": executable_identity(native_executable)}
-                averages = {}
+                from .native_selected_operator import train_native_selected, executable_identity
+                if infos:
+                    averages, native_training = train_native_selected(
+                        training_root, infos, request.iterations, operator=operator, executable=native_executable)
+                    admitted = census["native_operator_admission"]
+                else:
+                    averages = {}
+                    native_training = {"calls": 0, "reason": "no-information-sets",
+                                       "identity": executable_identity(native_executable)}
+                    admitted = {}
+            for name, expected in admitted.items():
+                if native_training[name] != expected:
+                    raise RuntimeError("Native operator preparation changed from admission.")
+            native_training["calls"] = int(bool(infos))
         elif strategy_storage == "packed" and infos:
             from .packed_operator_cfr import train_packed
             averages, layout = train_packed(training_root, infos, request.iterations,
@@ -331,6 +362,7 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
             hand_counts=operator.hand_counts, edges={}, marginals=marginals,
             prefix_kernel=operator)
     finally:
+        plan = None
         training_root = None
         shared_view = None
         operator.clear_rank_cache()
@@ -420,6 +452,9 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
     if public_topology in ("shared", "direct"):
         result["public_topology"] = ("direct-shared-public-topology-v1" if public_topology == "direct"
                                      else "shared-public-topology-v1")
-        result["execution_backend"] = ("selected-operator-packed-direct-python" if public_topology == "direct"
-                                       else "selected-operator-packed-shared-python")
+        if native_training is None:
+            result["execution_backend"] = ("selected-operator-packed-direct-python" if public_topology == "direct"
+                                           else "selected-operator-packed-shared-python")
+        elif native_training["calls"]:
+            result["execution_backend"] = "selected-operator-packed-dag-cpp"
     return result

@@ -1,0 +1,137 @@
+{
+  "all_10_saved_numeric_replays": true,
+  "audit_manifest_sha256": {
+    "100": "2a12b8bd85691e918dcb07f066fa7e611d230a037a97b7f195039991ea7787bf",
+    "1000": "8354f2c7b8fd1ab7ebeddf77078aea26b702e0e0e777e492e89a29d5b9f2d2a1"
+  },
+  "files": {
+    "native-dag-code-ci.json": {
+      "bytes": 3798,
+      "sha256": "8f3b49099a58c03de20a9ccdedf0de49e0057036d58e372cdff525a27f0cf364"
+    },
+    "native-dag-controls.log": {
+      "bytes": 28898,
+      "sha256": "1b5c7bc30e4fc7719af36915f04ca21c2740552fd33806703d71606598198256"
+    },
+    "native-dag-heldout-independent-receipt.json": {
+      "bytes": 2461,
+      "sha256": "badc8254f364bccc19b8f6e2a0b3b9449eadc9c4e08baa0b392183c4e543d4ae"
+    },
+    "native-dag-heldout-independent-review-v1-archive-helper-name-failure.log": {
+      "bytes": 325,
+      "sha256": "05f8cd3b862c0f3b24aa1c836691500d36a8379a122fd74fb0a7611db9ef3257"
+    },
+    "native-dag-heldout-independent-review-v1-archive-helper-name-preserved.py": {
+      "bytes": 6878,
+      "sha256": "d64d7c96d25a52a819d90970dbfd9dd8a9d010e905daecea883d1caf3622b26d"
+    },
+    "native-dag-heldout-independent-review.log": {
+      "bytes": 286,
+      "sha256": "bb191c53a8f1cfac562d5ea4e8a84dea6d843d191638282884172aa6519227c1"
+    },
+    "native-dag-heldout-independent-review.py": {
+      "bytes": 7181,
+      "sha256": "5fdf11d8fba3c14c0024d7974ea3d249e3c098eb6ffa515d0ebfcc9090f5fb75"
+    },
+    "native-dag-heldout-probe-v1.zip": {
+      "bytes": 116644,
+      "sha256": "3cf33eb1d2b63eb0b2333930c52ebf0e8a07d93ac479adfb01eba3a26236e3e0"
+    },
+    "native-dag-heldout-probe.log": {
+      "bytes": 699,
+      "sha256": "45a640af527289669becd3651e76ba6340b7ef374f3ebd28e5f70be136a5d96b"
+    },
+    "native-dag-heldout-probe.py": {
+      "bytes": 4306,
+      "sha256": "d469dd675798f44f547975e2994a67f5add0224d5f4ac33b5b2bcf91ad2d7924"
+    },
+    "native-dag-independent-receipt.json": {
+      "bytes": 355671,
+      "sha256": "ae4233b9935b97f4eb37391625d0c8ffe8f61c0cc66ea8025da875a96a4bd532"
+    },
+    "native-dag-independent-review-v1-first-auth-failure.log": {
+      "bytes": 985,
+      "sha256": "c93f74da72cd790fb4d296efa49b0703603311a03f9083818206eebb670d66b6"
+    },
+    "native-dag-independent-review-v1-preserved.py": {
+      "bytes": 19185,
+      "sha256": "1c7f1df800ef6e636f8d00035a9998beaa20abeb980420c01c274a29546d870e"
+    },
+    "native-dag-independent-review-v2-integer-parser-failure.log": {
+      "bytes": 1021,
+      "sha256": "860c43e73c0533c0d607028e259616a3636bcedc4579f73ca5dd3ade28362c67"
+    },
+    "native-dag-independent-review-v2-preserved.py": {
+      "bytes": 20182,
+      "sha256": "f727469ad6222d48860719ccf55fd0fefb1318f1dee78f8b986a2e60d1e5ef8c"
+    },
+    "native-dag-independent-review-v3-archive-ambiguity-failure.log": {
+      "bytes": 662,
+      "sha256": "9ae184238dea8f28b67a7b83b54c7863c666e156f7a859a81342dc0133da1d75"
+    },
+    "native-dag-independent-review-v3-archive-ambiguity-preserved.py": {
+      "bytes": 22719,
+      "sha256": "13fb498cb954d95f163417ff85c012214df0664bb7c260cef4b7b28aad3d98e4"
+    },
+    "native-dag-independent-review.log": {
+      "bytes": 383,
+      "sha256": "4c957fb4e5c8ff11e44b7c631b8b55967f47584ff5b83efbae55ebf7460fb2cd"
+    },
+    "native-dag-independent-review.py": {
+      "bytes": 22940,
+      "sha256": "ec14bdb9ae42d8c228f6ea717fc65365194e39bb3a9a2075a167af36ab9c0582"
+    },
+    "native-dag-study-v1.log": {
+      "bytes": 862,
+      "sha256": "52ff7774fc3ec579e48ceb09ae85624c7fb4ac9c346a4092549d4ab192705807"
+    },
+    "native-dag-study-v1.zip": {
+      "bytes": 2296050,
+      "sha256": "ae2178cd3f2c6f2b4338408cabf0cf7c16be74e81d6985ceb49742908178473d"
+    },
+    "native-selected-dag-manifest.json": {
+      "bytes": 1009,
+      "sha256": "9972fa21d61608e9599d4324319ba9720ad1c9df551522a0dea88bd04d9ae887"
+    }
+  },
+  "fresh_exact_policies": 2,
+  "independent_saved_review_calls": {
+    "native": 0,
+    "training": 0
+  },
+  "max_saved_numeric_gap": 1.1102230246251565e-16,
+  "medians_seconds": {
+    "100": {
+      "native": 0.5627829999993992,
+      "python": 17.221862200000032
+    },
+    "1000": {
+      "native": 0.9163969000001089,
+      "python": 103.70390490000136
+    }
+  },
+  "native_calls": 5,
+  "native_source_sha256": "835ba87c6e8f07ce5fb84242702917c9869a66affdd54cd7c1ffce11ff961b5b",
+  "quality": {
+    "t100": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_game_census_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_numeric_replay_passed": true
+    },
+    "t1000": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_game_census_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_exact_targets_met": true,
+      "sample_zero_numeric_replay_passed": true
+    }
+  },
+  "scope": "One conditioned22-world fixed study; T1000 timing is one complete call per backend. No general speed, memory or convergence claim. Separate96-world correctness/admission probe has no exact quality pass.",
+  "source_commit": "90ede1ce2770c2e5872bd12c44abe2f2f50a66e3",
+  "training_calls": 10
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 341, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 313, in main
+    need(len(candidates) == 1 and entries[candidates[0]] == raw, "archive saved-study byte mismatch: "+name)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\native-dag-independent-review.py", line 37, in need
+    raise ValueError(message)
+ValueError: archive saved-study byte mismatch: protocol.json

@@ -1,5 +1,19 @@
 # Current engineering state
 
+The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
+connects direct shared construction to C++ packed CFR+ without an expanded
+native tree or per-decision dense hand map. Its [frozen 22-world study](../native-selected-dag-result.md)
+preserves all five complete policy/diagnostic pairs and independently recomputed
+T1000 exact target passes. T100 medians are 17.22 s Python/0.563 s native; single
+T1000 calls are 103.70 s/0.916 s. Traced Python allocation is slightly higher, so no
+overall memory gain follows. Native receipts retain 99 vertices/259 contexts for
+1,462 logical visits while all 1,200 information rows remain distinct. The separate
+96-world probe matches complete policies and physical replay, but its 2,224 rows
+still exceed exact certification's 2,048-row cap and T1000 scan admission still
+rejects before training. Source/build/full CI and independent saved replays pass;
+final evidence-head CI/publication remain tracked in PR #256. Contexts can approach
+logical count; history/strategy/output, pair scans and full-deck solving remain open.
+
 The explicit Python packed [direct shared constructor](../direct-shared-topology.md)
 builds the same selected-game DAG without literal postflop source nodes or compiler
 snapshots. It retains only the small original preflop skeleton during setup,
@@ -10,8 +24,8 @@ studies preserve all paired policies and exact T1000 target passes while recordi
 slower complete calls and higher traced peak. The corrected study records
 91.30 s versus 73.24 s single T1000 calls and 2,713,034 versus 2,340,331 bytes
 traced T100 peak. A constructor closure-lifetime defect is corrected and directly
-tested; no total-memory or speed gain follows. Final evidence-head CI/publication,
-native direct/shared traversal, information-history storage and pair scans remain open.
+tested; no total-memory or speed gain follows. PR #254 merged after final-head CI;
+native acceptance, information-history storage and pair scans remain open.
 
 The explicit Python packed [shared public topology](../shared-public-topology.md)
 interns local transition vertices while preserving each full visible-history
@@ -25,7 +39,8 @@ calls (69.82 s versus 54.05 s single T1000 calls) and higher traced T100 peak
 (2,906,499 versus 2,362,920 bytes). The negative result is retained; this bridge
 is not a full-call memory improvement. Phase observations place the shared peak
 before trainer entry without attributing it to one component. Native shared mode
-rejects explicitly; direct shared construction and native integration remain open.
+rejects explicitly; direct construction is implemented separately above and its
+explicit native integration is under validation.
 
 The explicit [native selected operator](../native-selected-operator.md) connects
 C++ CFR+ to hand/board chance and payoff queries with flat strategy arrays.

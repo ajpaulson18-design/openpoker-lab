@@ -1,0 +1,11 @@
+T100 python sample=0 traced=False seconds=17.221862
+T100 native sample=0 traced=False seconds=0.809423
+T100 native sample=1 traced=False seconds=0.562783
+T100 python sample=1 traced=False seconds=17.379443
+T100 python sample=2 traced=False seconds=16.463422
+T100 native sample=2 traced=False seconds=0.478376
+T100 python sample=traced traced=True seconds=124.504910
+T100 native sample=traced traced=True seconds=2.458276
+T1000 python sample=0 traced=False seconds=103.703905
+T1000 native sample=0 traced=False seconds=0.916397
+{"manifest_sha256": {"100": "2a12b8bd85691e918dcb07f066fa7e611d230a037a97b7f195039991ea7787bf", "1000": "8354f2c7b8fd1ab7ebeddf77078aea26b702e0e0e777e492e89a29d5b9f2d2a1"}, "outcome": "complete", "report": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\native-dag-study-v1\\report.json"}
