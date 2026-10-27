@@ -1,0 +1,26 @@
+{
+  "exact_status": "Both 2224-row complete policies rejected by unchanged 2048-row certificate input cap.",
+  "files": {
+    "heldout-study.zip": {
+      "bytes": 288284,
+      "sha256": "834c84a24d371e20291ac6d4a7a915fe0e5ff9d2d9fd33f3a63a3b3947d241db"
+    },
+    "numerical-factorization-review.md": {
+      "bytes": 3764,
+      "sha256": "05097829e84e1ca0e17f6099792bd0464592deb7dc6973c3843f313f4f3a0ce8"
+    },
+    "rank-free-census.zip": {
+      "bytes": 83610,
+      "sha256": "e2576b57b9cacaab272be7a553cbbdeb17741969b2d42a0aab4a459d58930369"
+    },
+    "study-receipt.json": {
+      "bytes": 8484,
+      "sha256": "c5c0c66544c7eee73191f127c4a0294939042aa8a6da9c6bd178ea3dcd6f33d4"
+    }
+  },
+  "review": "Luna implemented/executed fixed held-out study; Sol reviewed receipt and admission; Terra independently scrutinized next numerical and public-topology dependencies.",
+  "scope": "Held-out 96-world complete T100 calls and rank-free growth census; numeric replay passed, exact certification rejected, T1000 training rejected. No quality pass is inferred.",
+  "source_commit": "745e4dd48614673dbc6372025d30cdb6bb35f3af",
+  "study_manifest_sha256": "0abf1a3e3c40d828f71b1f829c16cccda395db3b7fd9646f369794abf3746ccc",
+  "t1000_status": "No training: unchanged 500-million selected-operator scan envelope rejects."
+}

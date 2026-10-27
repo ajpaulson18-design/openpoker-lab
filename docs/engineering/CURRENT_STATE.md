@@ -12,6 +12,13 @@ versus 0.251 s. T100 misses remain, and memory observations show no overall
 gain. The old native edge-table backend remains unchanged. Full-deck and general
 commercial scalability remain unresolved.
 
+The subsequent [96-world held-out run and growth census](../native-selected-heldout.md)
+preserve identical native/Python T100 policies and passed independent numeric
+replay, but exact certification rejects both complete 2,224-row policies at its
+unchanged 2,048-row input cap. T1000 rejects scan admission before training.
+These are retained gates, not a larger exact quality pass. Range/board/menu
+growth confirms separate scan, public-topology, strategy and validation limits.
+
 An explicit [packed CFR+ strategy layout](../packed-operator-strategy.md) connects
 contiguous regret/average/current/delta buffers to the non-materialized operator.
 It retains the original row path, information-set identities, independent
