@@ -303,8 +303,21 @@ controls pass; original acceptance failures and source are retained as inert
 evidence. His remaining review preserves the modeled-memory, authenticated-rank
 and bounded-game limitations. No model substitution applies to this review.
 
-Local compiled/reference/independent controls pass; source-frozen paired runtime,
-separate Python/native memory measurements, saved-policy exact/numeric replay,
-Linux version controls and sanitizer CI remain publication gates. This is still
-an opt-in bounded computational backend, not full-deck training or an answer to
-explicit public-history and information-action growth.
+At clean source `02982d145c7367f2919f577e1dbd40eb6bf87c8a`, all five paired
+complete policies match and both T1000 exact targets pass, with identical exact
+metrics and numeric NashConv 0.0003997388151442405 BB. T100 misses remain.
+T100 three-call complete medians are 9.99134 s Python versus 0.251108 s native;
+T1000 single calls are 63.96154 s versus 0.604050 s. Native training retains
+zero complete worlds/prefix-pair edges. Traced Python peak is slightly higher
+on the native path, and separate parent/native process peaks demonstrate no
+overall memory gain. A fresh no-training replay confirms saved numeric/exact
+certificates. Terra independently verifies manifest bytes, policies and targets.
+
+The [complete evidence receipt](../benchmarks/results/native-selected-operator-v1/receipt.json)
+retains raw studies/certificates, the malformed partition acceptance failure and
+initial Linux synthetic-test platform-mock failure. The test-only correction
+leaves measured solver/runner sources unchanged. Ninety-seven local controls
+pass normally and optimized; Linux version controls and sanitizer CI remain
+publication gates. This is still an opt-in bounded computational backend, not
+full-deck training or an answer to explicit public-history/information-action
+growth. Private-pair scans remain despite their faster native execution.

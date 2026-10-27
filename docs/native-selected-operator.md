@@ -138,8 +138,46 @@ or buffer blocker for the supported source-authenticated path. He explicitly
 retained the modeled-memory and trusted-rank boundaries rather than accepting
 them as hard process-memory or physical-rank proof.
 
-Source-frozen paired complete-call runtime, Python allocation and process-memory
-measurement, independently replayed saved T1000 policies, broader held-out cases
-and compiled/sanitized CI remain acceptance gates. No speedup, memory
-gain, large-range quality or commercial readiness is claimed from compilation
-or focused controls. The overall scalable-foundation objective stays active.
+## Frozen bounded comparison
+
+The [receipt and complete raw archives](../benchmarks/results/native-selected-operator-v1/receipt.json)
+pin clean source `02982d145c7367f2919f577e1dbd40eb6bf87c8a`, its native build,
+ten fresh-process complete calls, manifests, complete policies and numeric/exact
+certificates. Both paths use packed strategy storage and rank-cache capacity 64
+on the original weighted, shared-future 22-world selected game. All five paired
+complete policies are identical. T100 misses remain (numeric NashConv
+0.011805990010147288 BB); both T1000 exact <=1/1000 BB targets pass, with numeric
+NashConv 0.0003997388151442405 BB and identical exact metric maps.
+
+| Complete-call observation | Python | Native training path |
+| --- | ---: | ---: |
+| T100 median, three untraced calls | 9.99134 s | 0.251108 s |
+| T1000, one untraced call | 63.96154 s | 0.604050 s |
+| T100 traced Python peak, separate call | 2,322,062 bytes | 2,346,214 bytes |
+
+These are about 39.79x and 105.89x observed runtime ratios on this fixture,
+including preparation/transport, native launch, independent Python diagnostics
+and full output. T1000 has no runtime distribution. Python process lifetime peaks
+remain roughly 25–26 MB untraced, slightly higher for the native path; its native
+child separately peaks around 3.24 MB. There is no established overall memory
+gain. Traced and untraced timings are kept separate, and peaks are not summed.
+
+The T1000 native request contains 1,462 public nodes, 1,200 information rows,
+2,402 action slots, 6 selected boards, 24 per-hand rank entries and 13 prefixes;
+stored worlds and prefix/pair edges remain zero. Native training performs
+6,240,000 terminal and 1,296,000 marginal pair/board checks. This accelerates the
+existing streamed computation without removing its pair/board scan complexity.
+
+A fresh saved-only process replays both budgets with zero training/native calls,
+externally pinned manifests and a maximum numeric discrepancy of about 1.11e-16.
+Terra independently verified all manifest entries, five policy pairs, both exact
+metric maps/targets and separate memory scope. The complete before-fix partition
+failure and initial Linux test-fixture failure are preserved. The latter arose
+because a mocked child runner intercepted the Linux platform-name query;
+`1c22a71` isolates synthetic metadata without changing runner or solver code.
+Ninety-seven local controls pass normally and with assertions disabled.
+
+Broader held-out complexity, compiled/sanitized CI, explicit history/strategy
+growth and full-deck integration remain separate gates. This bounded runtime
+improvement establishes neither large-range quality nor commercial readiness.
+The overall scalable-foundation objective stays active.
