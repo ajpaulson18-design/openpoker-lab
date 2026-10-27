@@ -1,0 +1,39 @@
+name: Native selected DAG
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-controls:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build the selected operator
+        shell: bash
+        run: |
+          python -m scripts.build_native_selected_dag --output-dir "$RUNNER_TEMP/native-selected"
+          echo "OPENPOKER_NATIVE_SELECTED_DAG_EXE=$RUNNER_TEMP/native-selected/native-selected-dag-train" >> "$GITHUB_ENV"
+      - name: Compiled and independent controls
+        run: python -m unittest tests.test_native_selected_dag tests.test_native_selected_dag_independent tests.test_native_selected_dag_compiled tests.test_native_dag_review_controls tests.test_benchmark_native_selected_dag tests.test_direct_topology_solver -v
+  sanitizer-controls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build AddressSanitizer and UBSan operator
+        shell: bash
+        run: |
+          python -m scripts.build_native_selected_dag --output-dir "$RUNNER_TEMP/native-selected-sanitized" --sanitize
+          echo "OPENPOKER_NATIVE_SELECTED_DAG_EXE=$RUNNER_TEMP/native-selected-sanitized/native-selected-dag-train" >> "$GITHUB_ENV"
+      - name: Sanitized compiled controls
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: python -m unittest tests.test_native_selected_dag_compiled tests.test_native_selected_dag_independent tests.test_native_dag_review_controls -v

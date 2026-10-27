@@ -1,5 +1,27 @@
 # Foundation-first execution record
 
+## Native direct-DAG integration, October 27, 2026: validation in progress
+
+PR #254 merged at `d49b85e453d6c97b6a449c536f393c12a6fc76d1` after final-head
+checks passed; its merged tree equals the reviewed `b371406` tree. Its retained
+Python performance/allocation misses remain unchanged. The next explicit
+[native DAG protocol](native-selected-dag-protocol.md) connects that direct
+constructor to C++ training without expanding public occurrences into a native
+node table or retaining per-decision dense hand maps. Distinct history rows,
+prefix support/ordinal tables and reachable context edges remain counted.
+
+Strict MSVC C++20 `/W4 /WX /fp:strict` compilation passes. Initial 26 adapter,
+compiled, independent and direct-solver controls pass, including physical policy
+replay, exact short-all-in replay, malformed declared/recomputed graph fields,
+wrong chance ordering, input drift, blocker index holes and no fallback. A
+separate independent Sol reviewer (Terra substitute after account limits) adds
+three passing controls: a payoff/reach-sensitive repeated-context comparison
+against a separate CFR+ recursion, unsupported-board/pair-blocked holes with
+physical replay, and GC-disabled plan/operator release on success/error.
+Source-frozen measurements, cross-version/sanitizer CI and final publication
+remain pending; no speed or total-memory result is established here.
+
+
 Audit baseline: `901726e55caa0c45495b19668285162a04918cdc`, October 26, 2026.
 See the [assessment, dependency map, ranked register and critical path](foundation-first-audit.md).
 

@@ -1,5 +1,15 @@
 # Current engineering state
 
+The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
+connects direct shared construction to C++ packed CFR+ without an expanded
+native tree or per-decision dense hand map. It derives blocker-conditioned
+prefix support and vertex/prefix contexts, preserves distinct full-history rows,
+and repeats declared/recomputed work and storage admission. Compiled local
+policy/physical-replay controls and independent scrutiny pass; source-frozen
+complete-call measurements and final CI remain separate pending gates. Contexts
+can approach logical occurrence count; history/strategy/output and pair-scan
+growth remain unresolved.
+
 The explicit Python packed [direct shared constructor](../direct-shared-topology.md)
 builds the same selected-game DAG without literal postflop source nodes or compiler
 snapshots. It retains only the small original preflop skeleton during setup,
@@ -10,8 +20,8 @@ studies preserve all paired policies and exact T1000 target passes while recordi
 slower complete calls and higher traced peak. The corrected study records
 91.30 s versus 73.24 s single T1000 calls and 2,713,034 versus 2,340,331 bytes
 traced T100 peak. A constructor closure-lifetime defect is corrected and directly
-tested; no total-memory or speed gain follows. Final evidence-head CI/publication,
-native direct/shared traversal, information-history storage and pair scans remain open.
+tested; no total-memory or speed gain follows. PR #254 merged after final-head CI;
+native acceptance, information-history storage and pair scans remain open.
 
 The explicit Python packed [shared public topology](../shared-public-topology.md)
 interns local transition vertices while preserving each full visible-history
@@ -25,7 +35,8 @@ calls (69.82 s versus 54.05 s single T1000 calls) and higher traced T100 peak
 (2,906,499 versus 2,362,920 bytes). The negative result is retained; this bridge
 is not a full-call memory improvement. Phase observations place the shared peak
 before trainer entry without attributing it to one component. Native shared mode
-rejects explicitly; direct shared construction and native integration remain open.
+rejects explicitly; direct construction is implemented separately above and its
+explicit native integration is under validation.
 
 The explicit [native selected operator](../native-selected-operator.md) connects
 C++ CFR+ to hand/board chance and payoff queries with flat strategy arrays.
