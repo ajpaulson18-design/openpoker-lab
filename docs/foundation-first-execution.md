@@ -1,5 +1,54 @@
 # Foundation-first execution record
 
+## Exact-product four-street integration: frozen independent result
+
+The new [exact-product contract](exact-selected-kernel-contract.md) explicitly
+changes the selected chance arithmetic while retaining the same finite betting
+rules and complete own-hand/public-history strategy rows. Exact blocker/card
+buckets and merged rank sweeps supply marginals/terminal vectors without private-
+pair loops in the batched kernel. A strict adapter rounds each completed exact
+component once and takes original admitted terminal money directly, avoiding
+an unproven shifted-anchor reconstruction. Legacy APIs and frozen evidence remain.
+
+Terra independently found and Luna corrected sign/rank-threshold, duplicate and
+mutable inputs, unbounded prefix/mapping/runout/reach iterators, parser-work and
+scratch/bit-admission defects. Root reviewed whole-request callback/overlapping
+storage forecasts and serialization lifetimes. A separate Sol reviewer, replacing
+Terra after usage limits, added six passing admission/lifetime/fractional-money
+controls and found no remaining concrete defect in the inspected integration.
+Complete 22-world T10 policy, both BRs and metrics independently replay under the
+unchanged v3 exact certificate, but the approximately 0.6575302611616735-BB
+NashConv is a retained accuracy miss. Actual common 1e-200 weights normalize
+exactly and match the unit control's complete policy/metrics; legacy raw-product
+rejection remains intact. Full-range one-selected-board mass census matches
+1,070,190 physical deals, 1,081 active hands/seat and exact 1/1,081 marginals,
+with ranking and legacy world materialization forbidden.
+
+Whole-request admission covers prefix-weighted terminal/marginal callbacks,
+worst binary64-reach Fraction intermediates, original packed/history caps,
+all live prefix/support/history/strategy/output slots and depth scratch. Explicit
+private-pair serialization remains a separately capped quadratic setup stage
+because the unchanged validator requires it; this is not an end-to-end linear
+solver. Rank caches release on success/training/diagnostic failure; obsolete
+callback/policy state releases before serialization. The [frozen fixed-study result](exact-selected-kernel-result.md) now preserves
+eight training calls, two zero-training requests (admitted rank-free census and
+rejected larger solve), raw policy/certificate/miss data and source identity at
+`66788d4a27b549a5cd1788649bae3e1dea047ac6`. Three original 22-world T10 calls have
+median 6.378994 s; T100 takes 47.216008 s; T1000 rejects exact-kernel work admission
+before ranking/training. Original T10/T100, unit and tiny T10 target misses remain.
+The separate one-world T1000 call takes 59.452411 s and reaches exact NashConv
+about 1.668816797967092e-05 BB, a scoped small-game pass. Unpaired timing establishes
+no legacy/native cost advantage or total-memory improvement.
+
+Independent saved-only review authenticates 1,755 source files and the full archive,
+replays all eight complete policies and recomputes five exact certificates with
+zero training/native/exact-kernel callbacks. Maximum numeric gap is 1.11e-16;
+all source/artifact bytes stay unchanged. Full common-scale policies/eight metrics/
+pair rows are identical. The [receipt](../benchmarks/results/exact-product-selected-v1/receipt.json)
+pins archive 9f14a749... and independent receipt e19c3376..., complete logs and
+unchanged targets. Final evidence-head CI/publication remain tracked in PR #257.
+
+
 ## Native direct-DAG integration, October 27, 2026: verified frozen result
 
 PR #254 merged at `d49b85e453d6c97b6a449c536f393c12a6fc76d1` after final-head

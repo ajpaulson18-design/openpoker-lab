@@ -36,6 +36,30 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D061: Explicit exact-product chance and ranked blocker sweeps (October 27, 2026)
+
+Engineering decision after the independently documented non-rank-one legacy
+rounded pair matrix: snapshot parsed binary64 weights exactly and define one
+new global exact-product selected-game prior. Use exact card buckets and merged
+rank sweeps to remove pair scans from batched marginal/terminal queries. Do not
+relabel this as bitwise legacy equivalence or alter existing defaults, guards,
+native protocols or immutable evidence. Integrate one coherent four-street root
+through once-rounded completed vectors and original terminal payoff snapshots,
+then independently certify complete serialized policies with the unchanged
+exact-product physical oracle. Separately admit whole requested work, bits,
+strategy/history/phase-overlap slots and pair-probability serialization. Preserve
+admission failures, numerical conversion rejections and quality misses. Terra
+found early sign/rank/input/resource defects; Luna corrected implementation;
+a separate Sol reviewer completed independent integration scrutiny after their
+usage limits. Formal measured and publication gates remain distinct. See the
+[contract and current evidence](../exact-selected-kernel-contract.md).
+The [frozen result](../exact-selected-kernel-result.md) now validates complete
+saved policies under independent exact-product physical replay. It retains
+original 22-world T10/T100 target misses and T1000 work rejection, plus a scoped
+one-world T1000 exact target pass. Unpaired measured costs establish no general
+speed or memory gain. The exact-product input/trajectory distinction remains.
+
+
 ### D060: Native traversal over direct shared vertices (October 27, 2026)
 
 Engineering decision under the foundation goal: add a distinct, explicitly

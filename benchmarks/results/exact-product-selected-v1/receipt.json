@@ -1,0 +1,57 @@
+{
+  "archive_sha256": "9f14a749dab150dc1f676ea3c88eab66faa951c91386b289ab0152df9da702e6",
+  "files": {
+    "exact-selected-final-controls.log": {
+      "bytes": 13796,
+      "sha256": "0bac71b958cd4cf7f45e2c24ed9e1fde054a295b6e3c484d5117ac9dd71d6990"
+    },
+    "exact-selected-independent-receipt.json": {
+      "bytes": 364069,
+      "sha256": "e19c3376b661f2fd000fdd01d5600c3feca612b4fffc0ced98aa9a15351c85db"
+    },
+    "exact-selected-independent-review.log": {
+      "bytes": 530,
+      "sha256": "04f4b1d489ae69ecee91faafd274fc6f51ab277df13644c32d0574dd84d47c7d"
+    },
+    "exact-selected-independent-review.py": {
+      "bytes": 23786,
+      "sha256": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5"
+    },
+    "exact-selected-integration-controls.log": {
+      "bytes": 6966,
+      "sha256": "081b84cdcea93f6a379f3e65ad2890d887379d0416e4efad81640fdea9cc4e41"
+    },
+    "exact-selected-integration-optimized.log": {
+      "bytes": 103,
+      "sha256": "a6b4418f9ecbe88f79d30d4cfe05704628d71757f3ba1915c4066510bee16113"
+    },
+    "exact-selected-study-v1.log": {
+      "bytes": 493,
+      "sha256": "88a548e4545c9345b3f42d759b466c89a09c2c21a90a097be3243d0b3013d233"
+    },
+    "exact-selected-study-v1.zip": {
+      "bytes": 780931,
+      "sha256": "9f14a749dab150dc1f676ea3c88eab66faa951c91386b289ab0152df9da702e6"
+    }
+  },
+  "fresh_exact_recomputations": 5,
+  "fresh_numeric_replays": 8,
+  "independent_native_calls": 0,
+  "independent_receipt_sha256": "e19c3376b661f2fd000fdd01d5600c3feca612b4fffc0ced98aa9a15351c85db",
+  "independent_training_calls": 0,
+  "manifest_sha256": "1d265cdb6bbbcb913aa2945e6b18598121bdc54b8142f2b9f0722240bda48bf1",
+  "maximum_numeric_gap": 1.1102230246251565e-16,
+  "native_calls": 0,
+  "outcome": "bounded exact-law integration verified; quality/admission misses retained",
+  "quality_flags": {
+    "one-world-t1000-0": true,
+    "original-t10-0": false,
+    "original-t100-0": false,
+    "tiny-t10-0": false,
+    "unit-t10-0": false
+  },
+  "scope": "Explicit new exact-product chance arithmetic, approximate binary64 CFR trajectory. No bitwise legacy equivalence, full-deck, commercial convergence or total-memory improvement claim. Complete private-pair diagnostic output remains quadratic.",
+  "source_commit": "66788d4a27b549a5cd1788649bae3e1dea047ac6",
+  "t10_median_seconds": 6.378993700000137,
+  "training_calls": 8
+}

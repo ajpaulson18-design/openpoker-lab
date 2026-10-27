@@ -191,3 +191,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Preserve native DAG study, raw verifier failures and independent receipt bytes.
 /benchmarks/results/native-selected-dag-v1/** -text whitespace=cr-at-eol
+
+# Preserve exact-product study policies, admission misses and independent review bytes.
+/benchmarks/results/exact-product-selected-v1/** -text whitespace=cr-at-eol
