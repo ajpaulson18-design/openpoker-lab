@@ -1,0 +1,526 @@
+﻿2026-10-27T02:15:16.1777350Z Current runner version: '2.338.0'
+2026-10-27T02:15:16.1802374Z ##[group]Runner Image Provisioner
+2026-10-27T02:15:16.1803547Z Hosted Compute Agent
+2026-10-27T02:15:16.1804353Z Version: 20261021.618
+2026-10-27T02:15:16.1805360Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-27T02:15:16.1806370Z Build Date: 2026-10-21T00:45:21Z
+2026-10-27T02:15:16.1807417Z Worker ID: {7503749e-c536-46b9-841b-1ab3e7b63b8e}
+2026-10-27T02:15:16.1808435Z Region: northcentralus
+2026-10-27T02:15:16.1809218Z Cloud: Azure
+2026-10-27T02:15:16.1810022Z ##[endgroup]
+2026-10-27T02:15:16.1812190Z ##[group]Operating System
+2026-10-27T02:15:16.1813180Z Ubuntu
+2026-10-27T02:15:16.1813873Z 24.04.5
+2026-10-27T02:15:16.1814575Z LTS
+2026-10-27T02:15:16.1815373Z ##[endgroup]
+2026-10-27T02:15:16.1816154Z ##[group]Runner Image
+2026-10-27T02:15:16.1817052Z Image: ubuntu-24.04
+2026-10-27T02:15:16.1817873Z Version: 20261012.334.1
+2026-10-27T02:15:16.1819881Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-27T02:15:16.1822227Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-27T02:15:16.1823627Z ##[endgroup]
+2026-10-27T02:15:16.1825220Z ##[group]GITHUB_TOKEN Permissions
+2026-10-27T02:15:16.1828375Z Contents: read
+2026-10-27T02:15:16.1829210Z Metadata: read
+2026-10-27T02:15:16.1830086Z ##[endgroup]
+2026-10-27T02:15:16.1832909Z Secret source: Actions
+2026-10-27T02:15:16.1834161Z Cache mode: write
+2026-10-27T02:15:16.1835357Z Prepare workflow directory
+2026-10-27T02:15:16.2161599Z Prepare all required actions
+2026-10-27T02:15:16.2208318Z Getting action download info
+2026-10-27T02:15:16.4505737Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-27T02:15:16.5409809Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-27T02:15:16.7379266Z Complete job name: compiled-controls (3.12)
+2026-10-27T02:15:16.8038724Z ##[group]Run actions/checkout@v4
+2026-10-27T02:15:16.8039554Z with:
+2026-10-27T02:15:16.8040126Z   repository: ajpaulson18-design/openpoker-lab
+2026-10-27T02:15:16.8044373Z   token: ***
+2026-10-27T02:15:16.8044867Z   ssh-strict: true
+2026-10-27T02:15:16.8045372Z   ssh-user: git
+2026-10-27T02:15:16.8045896Z   persist-credentials: true
+2026-10-27T02:15:16.8046436Z   clean: true
+2026-10-27T02:15:16.8047009Z   sparse-checkout-cone-mode: true
+2026-10-27T02:15:16.8047578Z   fetch-depth: 1
+2026-10-27T02:15:16.8048058Z   fetch-tags: false
+2026-10-27T02:15:16.8048570Z   show-progress: true
+2026-10-27T02:15:16.8049055Z   lfs: false
+2026-10-27T02:15:16.8049555Z   submodules: false
+2026-10-27T02:15:16.8050049Z   set-safe-directory: true
+2026-10-27T02:15:16.8050583Z   allow-unsafe-pr-checkout: false
+2026-10-27T02:15:16.8051453Z ##[endgroup]
+2026-10-27T02:15:16.9000045Z Syncing repository: ajpaulson18-design/openpoker-lab
+2026-10-27T02:15:16.9002198Z ##[group]Getting Git version info
+2026-10-27T02:15:16.9003487Z Working directory is '/home/runner/work/openpoker-lab/openpoker-lab'
+2026-10-27T02:15:16.9004688Z [command]/usr/bin/git version
+2026-10-27T02:15:16.9084681Z git version 2.55.0
+2026-10-27T02:15:16.9106071Z ##[endgroup]
+2026-10-27T02:15:16.9121997Z Temporarily overriding HOME='/home/runner/work/_temp/baa1c407-9b89-4004-94d7-16631945e4ef' before making global git config changes
+2026-10-27T02:15:16.9123980Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T02:15:16.9128540Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-10-27T02:15:16.9173916Z Deleting the contents of '/home/runner/work/openpoker-lab/openpoker-lab'
+2026-10-27T02:15:16.9182837Z ##[group]Initializing the repository
+2026-10-27T02:15:16.9192766Z [command]/usr/bin/git init /home/runner/work/openpoker-lab/openpoker-lab
+2026-10-27T02:15:16.9270545Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-27T02:15:16.9272447Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-27T02:15:16.9274375Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-27T02:15:16.9275537Z hint: call:
+2026-10-27T02:15:16.9276180Z hint:
+2026-10-27T02:15:16.9277010Z hint: 	git config --global init.defaultBranch <name>
+2026-10-27T02:15:16.9277897Z hint:
+2026-10-27T02:15:16.9278749Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-27T02:15:16.9280488Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-27T02:15:16.9281857Z hint:
+2026-10-27T02:15:16.9282538Z hint: 	git branch -m <name>
+2026-10-27T02:15:16.9283340Z hint:
+2026-10-27T02:15:16.9284293Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-27T02:15:16.9289720Z Initialized empty Git repository in /home/runner/work/openpoker-lab/openpoker-lab/.git/
+2026-10-27T02:15:16.9297724Z [command]/usr/bin/git remote add origin https://github.com/ajpaulson18-design/openpoker-lab
+2026-10-27T02:15:16.9350025Z ##[endgroup]
+2026-10-27T02:15:16.9351661Z ##[group]Disabling automatic garbage collection
+2026-10-27T02:15:16.9357414Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-27T02:15:16.9402280Z ##[endgroup]
+2026-10-27T02:15:16.9403574Z ##[group]Setting up auth
+2026-10-27T02:15:16.9404666Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T02:15:16.9430828Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-27T02:15:16.9750180Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T02:15:16.9780638Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-27T02:15:16.9962237Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T02:15:16.9990819Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-27T02:15:17.0169529Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-27T02:15:17.0207051Z ##[endgroup]
+2026-10-27T02:15:17.0208629Z ##[group]Fetching the repository
+2026-10-27T02:15:17.0217453Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +02982d145c7367f2919f577e1dbd40eb6bf87c8a:refs/remotes/origin/foundation/native-selected-operator
+2026-10-27T02:15:19.0008066Z From https://github.com/ajpaulson18-design/openpoker-lab
+2026-10-27T02:15:19.0011537Z  * [new ref]         02982d145c7367f2919f577e1dbd40eb6bf87c8a -> origin/foundation/native-selected-operator
+2026-10-27T02:15:19.0018891Z ##[endgroup]
+2026-10-27T02:15:19.0021666Z ##[group]Determining the checkout info
+2026-10-27T02:15:19.0024273Z ##[endgroup]
+2026-10-27T02:15:19.0025811Z [command]/usr/bin/git sparse-checkout disable
+2026-10-27T02:15:19.0073509Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-27T02:15:19.0103173Z ##[group]Checking out the ref
+2026-10-27T02:15:19.0107286Z [command]/usr/bin/git checkout --progress --force -B foundation/native-selected-operator refs/remotes/origin/foundation/native-selected-operator
+2026-10-27T02:15:19.4111107Z Switched to a new branch 'foundation/native-selected-operator'
+2026-10-27T02:15:19.4116012Z branch 'foundation/native-selected-operator' set up to track 'origin/foundation/native-selected-operator'.
+2026-10-27T02:15:19.4137084Z ##[endgroup]
+2026-10-27T02:15:19.4176420Z [command]/usr/bin/git log -1 --format=%H
+2026-10-27T02:15:19.4199249Z 02982d145c7367f2919f577e1dbd40eb6bf87c8a
+2026-10-27T02:15:19.4450274Z ##[group]Run actions/setup-python@v5
+2026-10-27T02:15:19.4450774Z with:
+2026-10-27T02:15:19.4451457Z   python-version: 3.12
+2026-10-27T02:15:19.4451829Z   check-latest: false
+2026-10-27T02:15:19.4454485Z   token: ***
+2026-10-27T02:15:19.4454871Z   update-environment: true
+2026-10-27T02:15:19.4455264Z   allow-prereleases: false
+2026-10-27T02:15:19.4455655Z   freethreaded: false
+2026-10-27T02:15:19.4456010Z ##[endgroup]
+2026-10-27T02:15:19.5704742Z ##[group]Installed versions
+2026-10-27T02:15:19.5796535Z (node:2191) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-27T02:15:19.5797406Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-27T02:15:19.5798075Z Successfully set up CPython (3.12.15)
+2026-10-27T02:15:19.5799015Z ##[endgroup]
+2026-10-27T02:15:19.5963582Z ##[group]Run python -m scripts.build_native_selected --output-dir "$RUNNER_TEMP/native-selected"
+2026-10-27T02:15:19.5964475Z [36;1mpython -m scripts.build_native_selected --output-dir "$RUNNER_TEMP/native-selected"[0m
+2026-10-27T02:15:19.5965465Z [36;1mecho "OPENPOKER_NATIVE_SELECTED_EXE=$RUNNER_TEMP/native-selected/native-selected-train" >> "$GITHUB_ENV"[0m
+2026-10-27T02:15:19.6182726Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-27T02:15:19.6183428Z env:
+2026-10-27T02:15:19.6184102Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:19.6186137Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-27T02:15:19.6186894Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:19.6187499Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:19.6188005Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:19.6188690Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-27T02:15:19.6189142Z ##[endgroup]
+2026-10-27T02:15:23.3772772Z /home/runner/work/_temp/native-selected/native-selected-manifest.json
+2026-10-27T02:15:23.3885421Z ##[group]Run python -m unittest tests.test_native_selected_operator tests.test_native_selected_independent tests.test_benchmark_native_selected_operator tests.test_packed_operator_cfr tests.test_selected_operator_independent -v
+2026-10-27T02:15:23.3886891Z [36;1mpython -m unittest tests.test_native_selected_operator tests.test_native_selected_independent tests.test_benchmark_native_selected_operator tests.test_packed_operator_cfr tests.test_selected_operator_independent -v[0m
+2026-10-27T02:15:23.3931023Z shell: /usr/bin/bash -e {0}
+2026-10-27T02:15:23.3931541Z env:
+2026-10-27T02:15:23.3931918Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:23.3932433Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-27T02:15:23.3932966Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:23.3933420Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:23.3933993Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-27T02:15:23.3934447Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-27T02:15:23.3935048Z   OPENPOKER_NATIVE_SELECTED_EXE: /home/runner/work/_temp/native-selected/native-selected-train
+2026-10-27T02:15:23.3935627Z ##[endgroup]
+2026-10-27T02:15:23.8485543Z test_native_limits_reject_before_ranking_or_spawn (tests.test_native_selected_operator.NativeSelectedAdmissionTests.test_native_limits_reject_before_ranking_or_spawn) ... ok
+2026-10-27T02:15:23.8607807Z test_rank_code_preserves_existing_tuple_order (tests.test_native_selected_operator.NativeSelectedAdmissionTests.test_rank_code_preserves_existing_tuple_order) ... ok
+2026-10-27T02:15:23.8896840Z test_rank_free_complete_request_admission (tests.test_native_selected_operator.NativeSelectedAdmissionTests.test_rank_free_complete_request_admission) ... ok
+2026-10-27T02:15:23.8901593Z test_unsupported_selection_rejects_before_operator_or_binary_access (tests.test_native_selected_operator.NativeSelectedAdmissionTests.test_unsupported_selection_rejects_before_operator_or_binary_access) ... ok
+2026-10-27T02:15:23.9210489Z test_wire_is_private_hands_boards_and_tree_not_pair_worlds (tests.test_native_selected_operator.NativeSelectedAdmissionTests.test_wire_is_private_hands_boards_and_tree_not_pair_worlds) ... ok
+2026-10-27T02:15:23.9446176Z test_exact_normalizer_midpoints_and_seeded_positive_masses (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_exact_normalizer_midpoints_and_seeded_positive_masses) ... ok
+2026-10-27T02:15:24.1343404Z test_fractional_blinds_and_local_monetary_quantization (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_fractional_blinds_and_local_monetary_quantization) ... ok
+2026-10-27T02:15:24.1713140Z test_independent_exact_short_all_in_certificate (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_independent_exact_short_all_in_certificate) ... ok
+2026-10-27T02:15:24.1727523Z test_manifest_identity_and_malformed_protocol_reject (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_manifest_identity_and_malformed_protocol_reject) ... ok
+2026-10-27T02:15:24.1843160Z test_native_failure_never_retries_python_training (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_native_failure_never_retries_python_training) ... ok
+2026-10-27T02:15:24.1888945Z test_no_information_sets_requires_identity_but_no_native_training (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_no_information_sets_requires_identity_but_no_native_training) ... ok
+2026-10-27T02:15:24.7909855Z test_same_twenty_two_world_four_street_policy (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_same_twenty_two_world_four_street_policy) ... ok
+2026-10-27T02:15:24.8219689Z test_short_all_in_tie_and_refund (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_short_all_in_tie_and_refund) ... ok
+2026-10-27T02:15:24.8403653Z test_tampered_native_census_support_normalizer_and_topology_reject (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_tampered_native_census_support_normalizer_and_topology_reject) ... ok
+2026-10-27T02:15:25.0030534Z test_weighted_blockers_shared_futures_and_index_holes (tests.test_native_selected_operator.NativeSelectedCompiledTests.test_weighted_blockers_shared_futures_and_index_holes) ... ok
+2026-10-27T02:15:25.0069389Z test_duplicate_and_missing_reveals_reject_without_census_mismatch (tests.test_native_selected_independent.NativeChancePartitionIndependentTests.test_duplicate_and_missing_reveals_reject_without_census_mismatch) ... ok
+2026-10-27T02:15:25.0114013Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0114817Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0116053Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0117107Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0118075Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0119025Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0120019Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0121135Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0122625Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0123644Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0141742Z test_audit_failure_writes_partial_receipt_with_raw_samples (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_audit_failure_writes_partial_receipt_with_raw_samples) ... ok
+2026-10-27T02:15:25.0143129Z test_child_error_retains_stdout_stderr (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_child_error_retains_stdout_stderr) ... ok
+2026-10-27T02:15:25.0149301Z test_child_native_path_is_explicit_and_never_falls_back (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_child_native_path_is_explicit_and_never_falls_back) ... ok
+2026-10-27T02:15:25.0151374Z test_exact_audit_metrics_require_both_backend_certificates (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_exact_audit_metrics_require_both_backend_certificates) ... ok
+2026-10-27T02:15:25.0152966Z test_fixed_schedule_has_required_sample_counts_and_alternates (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_fixed_schedule_has_required_sample_counts_and_alternates) ... ok
+2026-10-27T02:15:25.0189743Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0190744Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0192291Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0193052Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0194040Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0195038Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0195980Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0197910Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0199880Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0200464Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0839655Z test_full_orchestration_stages_raw_manifests_and_audits_both_budgets (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_full_orchestration_stages_raw_manifests_and_audits_both_budgets) ... ERROR
+2026-10-27T02:15:25.0879243Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0879995Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0881131Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0882624Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0883479Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0884759Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0885430Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0886306Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0888409Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0889423Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0918098Z test_missing_metrics_cannot_pass_as_matching_none_values (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_missing_metrics_cannot_pass_as_matching_none_values) ... ERROR
+2026-10-27T02:15:25.0956536Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0957539Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0958557Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0959542Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.0960521Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0961903Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.0962838Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0963781Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.0964686Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0965662Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.0972316Z test_native_binary_drift_stops_before_verifier (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_native_binary_drift_stops_before_verifier) ... ok
+2026-10-27T02:15:25.0973700Z test_native_child_requires_executable (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_native_child_requires_executable) ... ok
+2026-10-27T02:15:25.1027606Z test_nonzero_child_result_retains_output_without_identity_error_masking (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_nonzero_child_result_retains_output_without_identity_error_masking) ... ok
+2026-10-27T02:15:25.1065885Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1066782Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1068238Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1069123Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1070257Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1071265Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1072228Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1073114Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1074077Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1075487Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1104650Z test_numeric_replay_mismatch_is_retained_as_quality_miss (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_numeric_replay_mismatch_is_retained_as_quality_miss) ... ERROR
+2026-10-27T02:15:25.1110801Z test_python_child_omits_native_executable (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_python_child_omits_native_executable) ... ok
+2026-10-27T02:15:25.1151225Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1152075Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1162177Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1162885Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1163587Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1164197Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1164816Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1165637Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1166302Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1167207Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1168737Z test_source_drift_stops_before_verifier (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_source_drift_stops_before_verifier) ... ok
+2026-10-27T02:15:25.1171055Z test_strategy_comparison_requires_complete_exact_rows (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_strategy_comparison_requires_complete_exact_rows) ... ok
+2026-10-27T02:15:25.1206228Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1207392Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1208438Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1209366Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1210305Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1211422Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1212307Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1213247Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1214431Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1215445Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1254613Z test_t1000_target_miss_is_retained_as_quality_miss (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_t1000_target_miss_is_retained_as_quality_miss) ... ERROR
+2026-10-27T02:15:25.1292011Z T100 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1292984Z T100 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1302335Z T100 native sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1303193Z T100 python sample=1 traced=False seconds=1.000000
+2026-10-27T02:15:25.1303997Z T100 python sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1304693Z T100 native sample=2 traced=False seconds=1.000000
+2026-10-27T02:15:25.1305416Z T100 native sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1306131Z T100 python sample=traced traced=True seconds=1.000000
+2026-10-27T02:15:25.1307096Z T1000 python sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1307786Z T1000 native sample=0 traced=False seconds=1.000000
+2026-10-27T02:15:25.1328424Z test_t100_any_paired_policy_difference_is_rejected (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_t100_any_paired_policy_difference_is_rejected) ... ERROR
+2026-10-27T02:15:25.3538480Z test_asymmetric_ranges_and_inactive_private_index_holes (tests.test_packed_operator_cfr.PackedOperatorTests.test_asymmetric_ranges_and_inactive_private_index_holes) ... ok
+2026-10-27T02:15:25.3540432Z test_cyclic_or_uncovered_identity_rejects (tests.test_packed_operator_cfr.PackedOperatorTests.test_cyclic_or_uncovered_identity_rejects) ... ok
+2026-10-27T02:15:25.3738879Z test_exact_rational_small_game (tests.test_packed_operator_cfr.PackedOperatorTests.test_exact_rational_small_game) ... ok
+2026-10-27T02:15:25.3888626Z test_rank_free_admission_and_dense_slot_cap (tests.test_packed_operator_cfr.PackedOperatorTests.test_rank_free_admission_and_dense_slot_cap) ... ok
+2026-10-27T02:15:26.2177448Z test_reference_twenty_two_world_game (tests.test_packed_operator_cfr.PackedOperatorTests.test_reference_twenty_two_world_game) ... ok
+2026-10-27T02:15:26.2590624Z test_short_all_in_ties_and_refunds (tests.test_packed_operator_cfr.PackedOperatorTests.test_short_all_in_ties_and_refunds) ... ok
+2026-10-27T02:15:26.2660030Z test_terminal_failure_releases_training_buffers_and_rank_cache (tests.test_packed_operator_cfr.PackedOperatorTests.test_terminal_failure_releases_training_buffers_and_rank_cache) ... ok
+2026-10-27T02:15:26.2664303Z test_unsupported_algorithms_reject_before_operator (tests.test_packed_operator_cfr.PackedOperatorTests.test_unsupported_algorithms_reject_before_operator) ... ok
+2026-10-27T02:15:26.7941848Z test_weighted_blocker_shared_futures_both_cache_modes (tests.test_packed_operator_cfr.PackedOperatorTests.test_weighted_blocker_shared_futures_both_cache_modes) ... ok
+2026-10-27T02:15:26.8074819Z test_prefix_and_terminal_physical_enumeration (tests.test_selected_operator_independent.IndependentSelectedOperatorTests.test_prefix_and_terminal_physical_enumeration) ... ok
+2026-10-27T02:15:26.9083212Z test_four_street_weighted_raised_policy_replays (tests.test_selected_operator_independent.IndependentSelectedPolicyTests.test_four_street_weighted_raised_policy_replays) ... ok
+2026-10-27T02:15:26.9349604Z test_whole_game_serialized_policy_replay_with_short_all_in (tests.test_selected_operator_independent.IndependentSelectedPolicyTests.test_whole_game_serialized_policy_replay_with_short_all_in) ... ok
+2026-10-27T02:15:26.9351493Z 
+2026-10-27T02:15:26.9352063Z ======================================================================
+2026-10-27T02:15:26.9354657Z ERROR: test_full_orchestration_stages_raw_manifests_and_audits_both_budgets (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_full_orchestration_stages_raw_manifests_and_audits_both_budgets)
+2026-10-27T02:15:26.9357187Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9358181Z Traceback (most recent call last):
+2026-10-27T02:15:26.9368218Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 240, in test_full_orchestration_stages_raw_manifests_and_audits_both_budgets
+2026-10-27T02:15:26.9369642Z     report = benchmark.run(output, Path("C:/benchmark-output/native-selected-train.exe"))
+2026-10-27T02:15:26.9370336Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9371409Z   File "/home/runner/work/openpoker-lab/openpoker-lab/scripts/benchmark_native_selected_operator.py", line 350, in run
+2026-10-27T02:15:26.9372399Z     "platform": platform.platform(), "python": sys.version,
+2026-10-27T02:15:26.9372932Z                 ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9373720Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 1245, in platform
+2026-10-27T02:15:26.9374907Z     system, node, release, version, machine, processor = uname()
+2026-10-27T02:15:26.9375432Z     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9376235Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 865, in __iter__
+2026-10-27T02:15:26.9376951Z     (self.processor,)
+2026-10-27T02:15:26.9377349Z      ^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9377950Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/functools.py", line 998, in __get__
+2026-10-27T02:15:26.9378566Z     val = self.func(instance)
+2026-10-27T02:15:26.9379041Z           ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9379785Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 860, in processor
+2026-10-27T02:15:26.9380570Z     return _unknown_as_blank(_Processor.get())
+2026-10-27T02:15:26.9381201Z                              ^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9381865Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 800, in get
+2026-10-27T02:15:26.9382564Z     return func() or ''
+2026-10-27T02:15:26.9382911Z            ^^^^^^
+2026-10-27T02:15:26.9383609Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 828, in from_subprocess
+2026-10-27T02:15:26.9384415Z     return subprocess.check_output(
+2026-10-27T02:15:26.9384851Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9385745Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 466, in check_output
+2026-10-27T02:15:26.9386607Z     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-27T02:15:26.9387223Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9388323Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+2026-10-27T02:15:26.9389280Z     return self._mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9389841Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9390616Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+2026-10-27T02:15:26.9391637Z     return self._execute_mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9392153Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9392951Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+2026-10-27T02:15:26.9393815Z     result = effect(*args, **kwargs)
+2026-10-27T02:15:26.9394235Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9395061Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 168, in run
+2026-10-27T02:15:26.9395947Z     backend = command[command.index("--child") + 1]
+2026-10-27T02:15:26.9396503Z                       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9397020Z ValueError: '--child' is not in list
+2026-10-27T02:15:26.9397324Z 
+2026-10-27T02:15:26.9397546Z ======================================================================
+2026-10-27T02:15:26.9398804Z ERROR: test_missing_metrics_cannot_pass_as_matching_none_values (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_missing_metrics_cannot_pass_as_matching_none_values)
+2026-10-27T02:15:26.9400221Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9401188Z Traceback (most recent call last):
+2026-10-27T02:15:26.9403012Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 341, in test_missing_metrics_cannot_pass_as_matching_none_values
+2026-10-27T02:15:26.9404698Z     report, files, output = self._run_synthetic_batch(verifier)
+2026-10-27T02:15:26.9405519Z                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9406884Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 220, in _run_synthetic_batch
+2026-10-27T02:15:26.9408675Z     result = benchmark.run(output, Path("C:/benchmark-output/native-selected-train.exe"))
+2026-10-27T02:15:26.9409780Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9411219Z   File "/home/runner/work/openpoker-lab/openpoker-lab/scripts/benchmark_native_selected_operator.py", line 350, in run
+2026-10-27T02:15:26.9412579Z     "platform": platform.platform(), "python": sys.version,
+2026-10-27T02:15:26.9413290Z                 ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9414204Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 1245, in platform
+2026-10-27T02:15:26.9415062Z     system, node, release, version, machine, processor = uname()
+2026-10-27T02:15:26.9415703Z     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9416511Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 865, in __iter__
+2026-10-27T02:15:26.9417414Z     (self.processor,)
+2026-10-27T02:15:26.9417829Z      ^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9418556Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/functools.py", line 998, in __get__
+2026-10-27T02:15:26.9419338Z     val = self.func(instance)
+2026-10-27T02:15:26.9420269Z           ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9421307Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 860, in processor
+2026-10-27T02:15:26.9422140Z     return _unknown_as_blank(_Processor.get())
+2026-10-27T02:15:26.9422674Z                              ^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9424211Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 800, in get
+2026-10-27T02:15:26.9425239Z     return func() or ''
+2026-10-27T02:15:26.9425884Z            ^^^^^^
+2026-10-27T02:15:26.9426851Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 828, in from_subprocess
+2026-10-27T02:15:26.9427932Z     return subprocess.check_output(
+2026-10-27T02:15:26.9428405Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9429179Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 466, in check_output
+2026-10-27T02:15:26.9430170Z     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-27T02:15:26.9430799Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9431895Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+2026-10-27T02:15:26.9432755Z     return self._mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9433232Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9434134Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+2026-10-27T02:15:26.9434957Z     return self._execute_mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9435523Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9436412Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+2026-10-27T02:15:26.9437221Z     result = effect(*args, **kwargs)
+2026-10-27T02:15:26.9437742Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9438670Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 168, in run
+2026-10-27T02:15:26.9439698Z     backend = command[command.index("--child") + 1]
+2026-10-27T02:15:26.9440284Z                       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9440811Z ValueError: '--child' is not in list
+2026-10-27T02:15:26.9441351Z 
+2026-10-27T02:15:26.9441614Z ======================================================================
+2026-10-27T02:15:26.9443150Z ERROR: test_numeric_replay_mismatch_is_retained_as_quality_miss (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_numeric_replay_mismatch_is_retained_as_quality_miss)
+2026-10-27T02:15:26.9444634Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9445425Z Traceback (most recent call last):
+2026-10-27T02:15:26.9446724Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 318, in test_numeric_replay_mismatch_is_retained_as_quality_miss
+2026-10-27T02:15:26.9448014Z     report, files, output = self._run_synthetic_batch(verifier)
+2026-10-27T02:15:26.9448671Z                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9449754Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 220, in _run_synthetic_batch
+2026-10-27T02:15:26.9451402Z     result = benchmark.run(output, Path("C:/benchmark-output/native-selected-train.exe"))
+2026-10-27T02:15:26.9452560Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9453921Z   File "/home/runner/work/openpoker-lab/openpoker-lab/scripts/benchmark_native_selected_operator.py", line 350, in run
+2026-10-27T02:15:26.9455214Z     "platform": platform.platform(), "python": sys.version,
+2026-10-27T02:15:26.9455920Z                 ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9456909Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 1245, in platform
+2026-10-27T02:15:26.9458078Z     system, node, release, version, machine, processor = uname()
+2026-10-27T02:15:26.9458856Z     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9459774Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 865, in __iter__
+2026-10-27T02:15:26.9460602Z     (self.processor,)
+2026-10-27T02:15:26.9461284Z      ^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9462081Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/functools.py", line 998, in __get__
+2026-10-27T02:15:26.9462875Z     val = self.func(instance)
+2026-10-27T02:15:26.9463323Z           ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9464647Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 860, in processor
+2026-10-27T02:15:26.9465748Z     return _unknown_as_blank(_Processor.get())
+2026-10-27T02:15:26.9466338Z                              ^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9467085Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 800, in get
+2026-10-27T02:15:26.9467753Z     return func() or ''
+2026-10-27T02:15:26.9468112Z            ^^^^^^
+2026-10-27T02:15:26.9468868Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 828, in from_subprocess
+2026-10-27T02:15:26.9469669Z     return subprocess.check_output(
+2026-10-27T02:15:26.9470136Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9471069Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 466, in check_output
+2026-10-27T02:15:26.9472443Z     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-27T02:15:26.9473055Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9473710Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+2026-10-27T02:15:26.9474335Z     return self._mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9474687Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9475217Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+2026-10-27T02:15:26.9475826Z     return self._execute_mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9476202Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9476794Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+2026-10-27T02:15:26.9477320Z     result = effect(*args, **kwargs)
+2026-10-27T02:15:26.9477635Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9478254Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 168, in run
+2026-10-27T02:15:26.9478911Z     backend = command[command.index("--child") + 1]
+2026-10-27T02:15:26.9479495Z                       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9479849Z ValueError: '--child' is not in list
+2026-10-27T02:15:26.9480045Z 
+2026-10-27T02:15:26.9480210Z ======================================================================
+2026-10-27T02:15:26.9481289Z ERROR: test_t1000_target_miss_is_retained_as_quality_miss (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_t1000_target_miss_is_retained_as_quality_miss)
+2026-10-27T02:15:26.9482168Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9482621Z Traceback (most recent call last):
+2026-10-27T02:15:26.9483353Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 330, in test_t1000_target_miss_is_retained_as_quality_miss
+2026-10-27T02:15:26.9484104Z     report, files, output = self._run_synthetic_batch(verifier)
+2026-10-27T02:15:26.9484548Z                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9485217Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 220, in _run_synthetic_batch
+2026-10-27T02:15:26.9486040Z     result = benchmark.run(output, Path("C:/benchmark-output/native-selected-train.exe"))
+2026-10-27T02:15:26.9486551Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9487149Z   File "/home/runner/work/openpoker-lab/openpoker-lab/scripts/benchmark_native_selected_operator.py", line 350, in run
+2026-10-27T02:15:26.9487792Z     "platform": platform.platform(), "python": sys.version,
+2026-10-27T02:15:26.9488276Z                 ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9488793Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 1245, in platform
+2026-10-27T02:15:26.9489517Z     system, node, release, version, machine, processor = uname()
+2026-10-27T02:15:26.9489924Z     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9490492Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 865, in __iter__
+2026-10-27T02:15:26.9491072Z     (self.processor,)
+2026-10-27T02:15:26.9491364Z      ^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9491831Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/functools.py", line 998, in __get__
+2026-10-27T02:15:26.9492342Z     val = self.func(instance)
+2026-10-27T02:15:26.9492698Z           ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9493170Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 860, in processor
+2026-10-27T02:15:26.9493698Z     return _unknown_as_blank(_Processor.get())
+2026-10-27T02:15:26.9494072Z                              ^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9494554Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 800, in get
+2026-10-27T02:15:26.9495093Z     return func() or ''
+2026-10-27T02:15:26.9495379Z            ^^^^^^
+2026-10-27T02:15:26.9495853Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 828, in from_subprocess
+2026-10-27T02:15:26.9496374Z     return subprocess.check_output(
+2026-10-27T02:15:26.9496707Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9497244Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 466, in check_output
+2026-10-27T02:15:26.9497910Z     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-27T02:15:26.9498347Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9498908Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+2026-10-27T02:15:26.9499411Z     return self._mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9499790Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9500314Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+2026-10-27T02:15:26.9501031Z     return self._execute_mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9501427Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9501988Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+2026-10-27T02:15:26.9502560Z     result = effect(*args, **kwargs)
+2026-10-27T02:15:26.9502880Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9503425Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 168, in run
+2026-10-27T02:15:26.9504080Z     backend = command[command.index("--child") + 1]
+2026-10-27T02:15:26.9504473Z                       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9504843Z ValueError: '--child' is not in list
+2026-10-27T02:15:26.9505028Z 
+2026-10-27T02:15:26.9505200Z ======================================================================
+2026-10-27T02:15:26.9506019Z ERROR: test_t100_any_paired_policy_difference_is_rejected (tests.test_benchmark_native_selected_operator.NativeSelectedOperatorBenchmarkTests.test_t100_any_paired_policy_difference_is_rejected)
+2026-10-27T02:15:26.9506895Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9507347Z Traceback (most recent call last):
+2026-10-27T02:15:26.9508066Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 302, in test_t100_any_paired_policy_difference_is_rejected
+2026-10-27T02:15:26.9508878Z     report = benchmark.run(output, Path("C:/benchmark-output/native-selected-train.exe"))
+2026-10-27T02:15:26.9509373Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9510005Z   File "/home/runner/work/openpoker-lab/openpoker-lab/scripts/benchmark_native_selected_operator.py", line 350, in run
+2026-10-27T02:15:26.9510733Z     "platform": platform.platform(), "python": sys.version,
+2026-10-27T02:15:26.9511375Z                 ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9511885Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 1245, in platform
+2026-10-27T02:15:26.9512440Z     system, node, release, version, machine, processor = uname()
+2026-10-27T02:15:26.9512889Z     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9513413Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 865, in __iter__
+2026-10-27T02:15:26.9513947Z     (self.processor,)
+2026-10-27T02:15:26.9514239Z      ^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9514673Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/functools.py", line 998, in __get__
+2026-10-27T02:15:26.9515186Z     val = self.func(instance)
+2026-10-27T02:15:26.9515520Z           ^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9515991Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 860, in processor
+2026-10-27T02:15:26.9516553Z     return _unknown_as_blank(_Processor.get())
+2026-10-27T02:15:26.9516893Z                              ^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9517406Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 800, in get
+2026-10-27T02:15:26.9517904Z     return func() or ''
+2026-10-27T02:15:26.9518190Z            ^^^^^^
+2026-10-27T02:15:26.9518667Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/platform.py", line 828, in from_subprocess
+2026-10-27T02:15:26.9519196Z     return subprocess.check_output(
+2026-10-27T02:15:26.9519571Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9520071Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 466, in check_output
+2026-10-27T02:15:26.9520653Z     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-27T02:15:26.9521242Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9521789Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+2026-10-27T02:15:26.9522370Z     return self._mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9522782Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9523305Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+2026-10-27T02:15:26.9523844Z     return self._execute_mock_call(*args, **kwargs)
+2026-10-27T02:15:26.9524206Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9524783Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/unittest/mock.py", line 1204, in _execute_mock_call
+2026-10-27T02:15:26.9525344Z     result = effect(*args, **kwargs)
+2026-10-27T02:15:26.9525670Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9526250Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_benchmark_native_selected_operator.py", line 168, in run
+2026-10-27T02:15:26.9526849Z     backend = command[command.index("--child") + 1]
+2026-10-27T02:15:26.9527342Z                       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-27T02:15:26.9527682Z ValueError: '--child' is not in list
+2026-10-27T02:15:26.9527900Z 
+2026-10-27T02:15:26.9528098Z ----------------------------------------------------------------------
+2026-10-27T02:15:26.9528503Z Ran 44 tests in 3.096s
+2026-10-27T02:15:26.9528659Z 
+2026-10-27T02:15:26.9528799Z FAILED (errors=5)
+2026-10-27T02:15:26.9595419Z ##[error]Process completed with exit code 1.
+2026-10-27T02:15:26.9741524Z Post job cleanup.
+2026-10-27T02:15:27.0560374Z [command]/usr/bin/git version
+2026-10-27T02:15:27.0602384Z git version 2.55.0
+2026-10-27T02:15:27.0644191Z Temporarily overriding HOME='/home/runner/work/_temp/3a6eb0e7-7f6e-4032-9b18-cb3b450ef425' before making global git config changes
+2026-10-27T02:15:27.0645704Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-27T02:15:27.0648411Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-10-27T02:15:27.0685565Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-27T02:15:27.0718311Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-27T02:15:27.0929798Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-27T02:15:27.0952751Z http.https://github.com/.extraheader
+2026-10-27T02:15:27.0963110Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-27T02:15:27.0997253Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-27T02:15:27.1209745Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-27T02:15:27.1241513Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-27T02:15:27.1584326Z Cleaning up orphan processes
+2026-10-27T02:15:27.1818838Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

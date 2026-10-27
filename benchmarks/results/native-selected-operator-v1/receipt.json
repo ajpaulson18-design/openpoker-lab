@@ -1,0 +1,144 @@
+{
+  "algorithm_and_game": "Same alternating zero-delay CFR+, packed layout, rank cache64, named four-street-weighted-shared-future-v1 selected 22-world finite game.",
+  "complete_policy_pairs_identical": 5,
+  "engineering_review": "Sol architected/implemented/reviewed native integration. Luna implemented fixed benchmark/failure retention. Terra independently found chance partition gap, verified correction, and audited frozen study hashes/policies/replay/memory limits; no model substitution.",
+  "files": {
+    "native-selected-ci-before-fix.log": {
+      "bytes": 52671,
+      "sha256": "64721208ecf0aa3bd6e7efba14bf4a7f54b56409c9362f3dc86b6c3d4364b7f3"
+    },
+    "native-selected-final-normal.log": {
+      "bytes": 21760,
+      "sha256": "28232e7e6b43d7a2bcc1d1edaf2b042fb33a885f5c273f92edc3087d168e78ae"
+    },
+    "native-selected-final-optimized.log": {
+      "bytes": 21760,
+      "sha256": "9a2041c95627c7fb0315959f351148988a726054c3e510672113e6d83ab218d4"
+    },
+    "native-selected-saved-replay.log": {
+      "bytes": 147,
+      "sha256": "cb4ff0df1f7b30bc4cbc603503d0dd84ca8f78c863452d02f5dd95592b67b0f5"
+    },
+    "native-selected-study-v1.log": {
+      "bytes": 863,
+      "sha256": "551e8e975718d144b35720ed386dd90b5e26d8dcfe7f3a0493ea72db6dbb6965"
+    },
+    "partition-before-fix.zip": {
+      "bytes": 10603,
+      "sha256": "1ef9a5fa6063a4a63183dbac57a3e63fc568bedb2ee087f33f55aed0b722137b"
+    },
+    "separate-saved-replay.json": {
+      "bytes": 236328,
+      "sha256": "b68569c3e1dc80fc0e343e6a77c475de1df63577cccdeeac205ef83f8bc905d2"
+    },
+    "study-v1.zip": {
+      "bytes": 1990622,
+      "sha256": "efb2b57cc5845f9d6a26a577a8f80b1fd9a930d1b7692f4fe712f420f6d221de"
+    }
+  },
+  "limitations": [
+    "Only named selected finite game; at most64boards/128hands per seat/8192rank entries",
+    "T1000 one call per backend; no runtime distribution",
+    "No general speed/RSS or commercial-scale claim",
+    "Public-tree and information-action storage remain explicit",
+    "Pair/board scans remain; not a full-deck training integration",
+    "Native physical ranks supplied by authenticated adapter; parser validates shape not arbitrary physical provenance",
+    "Native storage/work envelope is modeled, not hard allocator/RSS/CPU bound",
+    "Overall scalable-foundation goal remains active"
+  ],
+  "local_tests": {
+    "normal": {
+      "count": 97,
+      "seconds": 22.217
+    },
+    "optimized": {
+      "count": 97,
+      "seconds": 21.349
+    }
+  },
+  "manifest_sha256": {
+    "100": "c9446bc8b8e4754fc2ac3750de352c67a07b0a746cb4a7bd77611dadc7c87ab3",
+    "1000": "8d5f48e58f5f594335dd97826effde65a404be26f7934f19d65d6ffe80fa0c14"
+  },
+  "medians_seconds": {
+    "100": {
+      "native": 0.2511083999997936,
+      "python": 9.991339900007006
+    },
+    "1000": {
+      "native": 0.6040498000074876,
+      "python": 63.96153709999635
+    }
+  },
+  "memory_scope": "No measured overall memory gain. Parent Python tracemalloc/process peaks and native child process lifetime peak are distinct and must not be summed as simultaneous memory.",
+  "native_child_peak_bytes_range": [
+    3235840,
+    3239936
+  ],
+  "outcome": "complete",
+  "python_over_native_observed_ratio": {
+    "100": 39.78895130555257,
+    "1000": 105.8878541126965
+  },
+  "quality": {
+    "t100": {
+      "complete_strategy_rows_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_numeric_replay_passed": true
+    },
+    "t1000": {
+      "complete_strategy_rows_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_exact_targets_met": true,
+      "sample_zero_numeric_replay_passed": true
+    }
+  },
+  "representation": {
+    "action_slots": 2402,
+    "children": 1461,
+    "dense_map_slots": 1256,
+    "hands": [
+      2,
+      2
+    ],
+    "input_bytes": 70694,
+    "modeled_heap_bytes": 134643113,
+    "modeled_work_entries": 262502692,
+    "nodes": 1462,
+    "prefix_marginal_cache_entries": 4,
+    "prefixes": 13,
+    "retained_rank_entries": 24,
+    "rows": 1200,
+    "selected_boards": 6,
+    "stored_prefix_pair_edges": 0,
+    "stored_worlds": 0
+  },
+  "retained_failures": [
+    "Initial native parser accepted duplicate/missing chance branches with honest census; exact source retained as inert .txt, original inputs/output/exit codes/source and binary hashes/manifests archived. Old binary bytes not captured; archived source never executed.",
+    "Initial Linux CI synthetic benchmark tests intercepted platform.platform subprocess through fake child runner; native controls passed. Test-only fixture isolation fix retained at1c22a71; solver/runner unchanged."
+  ],
+  "separate_saved_replay": {
+    "maximum_numeric_gap": 1.1102230246251565e-16,
+    "native_calls": 0,
+    "training_calls": 0
+  },
+  "source_commit": "02982d145c7367f2919f577e1dbd40eb6bf87c8a",
+  "t1000_numeric_nash_conv_bb": 0.0003997388151442405,
+  "t1000_targets_met": [
+    true,
+    true
+  ],
+  "t100_numeric_nash_conv_bb": 0.011805990010147288,
+  "t100_targets_met": [
+    false,
+    false
+  ],
+  "test_portability_fix_commit": "1c22a71",
+  "traced_t100_native_path_python_bytes": 2346214,
+  "traced_t100_python_bytes": 2322062,
+  "training_native_counters_t1000": {
+    "marginal_pair_board_checks": 1296000,
+    "normalization_pair_board_checks": 24,
+    "terminal_pair_board_checks": 6240000
+  }
+}

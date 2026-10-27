@@ -49,7 +49,7 @@ def _tokens(board):
             ("".join(board[:3]),) + tuple(board[3:]))
 
 
-def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows"):
+def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
     if (request.traversal != "public-batched" or
@@ -62,6 +62,8 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows"):
         raise ValueError("strategy_storage must be rows or packed.")
     if strategy_storage == "packed" and request.algorithm != "cfrplus":
         raise ValueError("Packed strategy storage currently requires CFR+.")
+    if native_executable is not None and (strategy_storage != "packed" or request.algorithm != "cfrplus"):
+        raise ValueError("Native selected training requires explicit packed CFR+ storage.")
     operator = SelectedRunoutOperator(request.sb_range, request.bb_range,
                                      request.runouts, iterations=request.iterations,
                                      rank_cache_boards=rank_cache_boards)
@@ -174,27 +176,46 @@ def _prepare(request, *, rank_cache_boards=1, strategy_storage="rows"):
     if strategy_storage == "packed":
         from .packed_operator_cfr import layout_census
         census["strategy_storage"] = layout_census(root, infos, operator.hand_counts, request.iterations)
+    if native_executable is not None:
+        from .native_selected_operator import prepare
+        census["native_operator_admission"] = prepare(root, infos, request.iterations, operator=operator)[-1]
     return operator, root, infos, metadata, specs, census
 
 
-def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows"):
+def census_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
     """Rank-free bounded preparation and strategy-storage census; no training."""
-    return _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage)[-1]
+    return _prepare(request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
+                    native_executable=native_executable)[-1]
 
 
-def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows"):
+def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage="rows", native_executable=None):
     """Return replay-compatible complete policy using no stored physical worlds.
 
     The existing request's public-vector selectors are required explicitly.
     No native, sampled, delayed-average or full-deck mode is inferred.
     """
     operator, root, infos, metadata, specs, census = _prepare(
-        request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage)
+        request, rank_cache_boards=rank_cache_boards, strategy_storage=strategy_storage,
+        native_executable=native_executable)
     training_root, anchor, view_states = reference._positive_pot_training_view(root)
     operator.pot = 2 * anchor
     marginals = _Marginals(operator)
+    native_training = None
     try:
-        if strategy_storage == "packed" and infos:
+        if native_executable is not None:
+            from .native_selected_operator import train_native_selected, executable_identity
+            if infos:
+                averages, native_training = train_native_selected(
+                    training_root, infos, request.iterations, operator=operator, executable=native_executable)
+                for name, expected in census["native_operator_admission"].items():
+                    if native_training[name] != expected:
+                        raise RuntimeError("Native operator preparation changed from admission.")
+                native_training["calls"] = 1
+            else:
+                native_training = {"calls": 0, "reason": "no-information-sets",
+                                   "identity": executable_identity(native_executable)}
+                averages = {}
+        elif strategy_storage == "packed" and infos:
             from .packed_operator_cfr import train_packed
             averages, layout = train_packed(training_root, infos, request.iterations,
                                             operator=operator, marginals=marginals, return_receipt=True)
@@ -291,4 +312,9 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
     if strategy_storage == "packed":
         result["strategy_storage"] = "packed-binary64-cfrplus-v1"
         result["execution_backend"] = "selected-operator-packed-python"
+    if native_training is not None:
+        result["native_training"] = native_training
+        result["execution_backend"] = ("selected-operator-packed-cpp" if native_training["calls"]
+                                        else "selected-operator-python-no-information-sets")
+        result["operator_statistics"]["scope"] = "Python preparation/diagnostics only; native counters are reported separately."
     return result

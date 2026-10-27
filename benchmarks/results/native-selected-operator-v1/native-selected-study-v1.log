@@ -1,0 +1,11 @@
+T100 python sample=0 traced=False seconds=9.991340
+T100 native sample=0 traced=False seconds=0.248888
+T100 native sample=1 traced=False seconds=0.418006
+T100 python sample=1 traced=False seconds=9.614456
+T100 python sample=2 traced=False seconds=10.263204
+T100 native sample=2 traced=False seconds=0.251108
+T100 native sample=traced traced=True seconds=3.056477
+T100 python sample=traced traced=True seconds=80.590604
+T1000 python sample=0 traced=False seconds=63.961537
+T1000 native sample=0 traced=False seconds=0.604050
+{"manifest_sha256": {"100": "c9446bc8b8e4754fc2ac3750de352c67a07b0a746cb4a7bd77611dadc7c87ab3", "1000": "8d5f48e58f5f594335dd97826effde65a404be26f7934f19d65d6ffe80fa0c14"}, "outcome": "complete", "report": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\native-selected-study-v1\\report.json"}

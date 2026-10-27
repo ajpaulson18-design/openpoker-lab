@@ -283,3 +283,41 @@ The [ranked register](foundation-first-audit.md#ranked-improvement-register)
 remains authoritative. No full-deck trainer integration, broad-game convergence,
 storage solution, action-value coaching feed, corpus/query service, production
 hosting or commercial readiness is claimed.
+
+### Native computation over the selected operator
+
+The next [native selected-operator integration](native-selected-operator.md)
+keeps shared betting/history construction, independent Python diagnostics and
+complete policy serialization while moving CFR+ and streamed chance/payoff
+queries into C++. It sends bounded per-hand ranks, private masks/weights and
+the public tree, with no complete worlds or prefix/private-pair edges. Python
+and native logical-work/storage admission are both retained. Exact positive
+binary64 accumulation independently verifies the configured global normalizer.
+
+Sol owns the architecture and native integration; Luna owns the fixed paired
+benchmark and its failure-retention controls. Terra independently found that
+the initial parser accepted duplicate or missing chance children. The parser
+now requires their next reveals to partition all physically supported selected
+outcomes, independent of strategy reach. His adversarial valid/duplicate/missing
+controls pass; original acceptance failures and source are retained as inert
+evidence. His remaining review preserves the modeled-memory, authenticated-rank
+and bounded-game limitations. No model substitution applies to this review.
+
+At clean source `02982d145c7367f2919f577e1dbd40eb6bf87c8a`, all five paired
+complete policies match and both T1000 exact targets pass, with identical exact
+metrics and numeric NashConv 0.0003997388151442405 BB. T100 misses remain.
+T100 three-call complete medians are 9.99134 s Python versus 0.251108 s native;
+T1000 single calls are 63.96154 s versus 0.604050 s. Native training retains
+zero complete worlds/prefix-pair edges. Traced Python peak is slightly higher
+on the native path, and separate parent/native process peaks demonstrate no
+overall memory gain. A fresh no-training replay confirms saved numeric/exact
+certificates. Terra independently verifies manifest bytes, policies and targets.
+
+The [complete evidence receipt](../benchmarks/results/native-selected-operator-v1/receipt.json)
+retains raw studies/certificates, the malformed partition acceptance failure and
+initial Linux synthetic-test platform-mock failure. The test-only correction
+leaves measured solver/runner sources unchanged. Ninety-seven local controls
+pass normally and optimized; Linux version controls and sanitizer CI remain
+publication gates. This is still an opt-in bounded computational backend, not
+full-deck training or an answer to explicit public-history/information-action
+growth. Private-pair scans remain despite their faster native execution.

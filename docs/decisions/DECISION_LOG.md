@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D057: Native selected probability/payoff computation (October 26, 2026)
+
+Engineering decision under the owner's foundation-first goal: integrate native
+whole-game CFR+ with the non-materialized selected operator, rather than restore
+complete-world/prefix-edge preparation to use the old native wire format. Keep
+the old backend unchanged as a reference, retain all existing game/scan/storage
+limits and add independent native request/storage admission. Send bounded
+per-hand board ranks, verify the global raw binary64 normalizer with an exact
+positive accumulator, preserve hidden-information keys, reach and FP reduction
+contracts, and require compiled/sanitized controls plus independent complete
+saved-policy replay and full-call measurements. No unrestricted/full-deck or
+commercial performance claim follows. See [contracts and gates](../native-selected-operator.md).
+
 ### D056: Contiguous operator strategy storage (October 26, 2026)
 
 Engineering decision under the scalable-foundation goal: establish bounded
