@@ -652,25 +652,31 @@ class _DirectBuilder:
                 stage_configs, full_support, turn, 0, 0.0, 0, True, 0, 0,
             )
 
-        self._scratch(extra=1)
-        # A template continuation is already represented by its preflop
-        # placeholder.  This chance is the replacement node, so charge it
-        # only if the skeleton placeholder was not counted (it was).
-        root = start_fresh_stage(
-            "flop", (flop,), (0.0, 0.0),
-            translation_offset, configs, support, None,
-        )
-        self._guard_summary(self.summaries[root], template=True)
-        if (self.template_logical_states != self.summaries[root][0] or
-                self.template_logical_decisions != self.summaries[root][1]):
-            raise AssertionError("Template logical reservations disagree with its subtree summary.")
-        self.template_charges.append((root, self.template_logical_states,
-                                      self.template_logical_decisions))
-        self._scratch(extra=2)
-        self.template_cache[template_key] = root
-        self.template_roots.append(root)
-        self._scratch()
-        return root
+        try:
+            self._scratch(extra=1)
+            # The preflop placeholder owns the flop-chance replacement state;
+            # the template owns all of its descendants.
+            root = start_fresh_stage(
+                "flop", (flop,), (0.0, 0.0),
+                translation_offset, configs, support, None,
+            )
+            self._guard_summary(self.summaries[root], template=True)
+            if (self.template_logical_states != self.summaries[root][0] or
+                    self.template_logical_decisions != self.summaries[root][1]):
+                raise AssertionError("Template logical reservations disagree with its subtree summary.")
+            self.template_charges.append((root, self.template_logical_states,
+                                          self.template_logical_decisions))
+            self._scratch(extra=2)
+            self.template_cache[template_key] = root
+            self.template_roots.append(root)
+            self._scratch()
+            return root
+        finally:
+            # These helpers recurse through shared closure cells and capture
+            # the builder's scratch tables. Break the cycles on every exit;
+            # returning the immutable DAG must not retain construction state.
+            translate_terminal = is_all_in = river_chance = turn_chance = None
+            settled = build_betting = start_fresh_stage = None
 
     def finish(self, root_id, initial_history=()):
         if not 0 <= root_id < len(self.summaries):

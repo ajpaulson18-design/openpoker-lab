@@ -1,0 +1,148 @@
+{
+  "corrected_controls": {
+    "lifetime_scope": "Automatic cyclic GC disabled for success, template and finish failures, trainer entry and trainer failure. Builder must release before manual collection.",
+    "normal": {
+      "count": 140,
+      "seconds": 32.364
+    },
+    "optimized": {
+      "count": 140,
+      "seconds": 31.672
+    }
+  },
+  "files": {
+    "direct-lifetime-corrected-controls.log": {
+      "bytes": 3107,
+      "sha256": "d684c4038c3809044d0b23c35520482e27af0f19637512941c9342448758b52c"
+    },
+    "direct-lifetime-probe-v1.log": {
+      "bytes": 603,
+      "sha256": "7fccc5ad546a470287585b5cfdb8191a204448ac6246fe5d44f3945b46ffdafd"
+    },
+    "direct-lifetime-probe-v1.py": {
+      "bytes": 3877,
+      "sha256": "03c0a7b21e481839107b670d91534e19d90772ab79c1c98c0b5d897944c82bf5"
+    },
+    "direct-lifetime-trainer-before.txt": {
+      "bytes": 1089,
+      "sha256": "23f6893d69353f04913dd533f7a736df3e7749aed5935e667b3c11cf9cb760a8"
+    },
+    "direct-topology-corrected-normal.log": {
+      "bytes": 32928,
+      "sha256": "33f86fd32e88aa264d305dcbe5839e74a77b555e9f9e57ff495f5b413329cb12"
+    },
+    "direct-topology-corrected-optimized.log": {
+      "bytes": 32928,
+      "sha256": "2a8fc9ff6bf13c231270732bb3f917c40b8f76d9d3838fb7e6f3d8d23c5248a5"
+    },
+    "direct-topology-development-import-failure.log": {
+      "bytes": 7747,
+      "sha256": "b6f4ac62f7330288e79af34a806cc8169f7fffd9c37127696b7e85cecd9848cb"
+    },
+    "direct-topology-independent-normal.log": {
+      "bytes": 539,
+      "sha256": "d4d01e31067d481bdecd1ad08361ae6a730dd8e8c7e722c91647975fdc56a317"
+    },
+    "direct-topology-independent-optimized.log": {
+      "bytes": 539,
+      "sha256": "d4d01e31067d481bdecd1ad08361ae6a730dd8e8c7e722c91647975fdc56a317"
+    },
+    "direct-topology-native-source-byte-rejection.log": {
+      "bytes": 46240,
+      "sha256": "e275cf5b653666fa7fc8d9a472d6599797b98f3636961943b3b0bbf7df32b166"
+    },
+    "direct-topology-normal.log": {
+      "bytes": 32098,
+      "sha256": "e99a13d889b999ebbcef9d36367857aea15fbebcb00cee49aecca99bda324d2d"
+    },
+    "direct-topology-optimized.log": {
+      "bytes": 32098,
+      "sha256": "f9e117c7531afe9e573e7be64f9a787a5353a074bdf1109ed8eea51e194f4863"
+    },
+    "direct-topology-study-v1.log": {
+      "bytes": 874,
+      "sha256": "7613e06bf98b5b71aaa3471abc6ff329f435554ca20a95b7967b1e7002a951e5"
+    },
+    "direct-topology-v1-saved-replay.log": {
+      "bytes": 147,
+      "sha256": "cb4ff0df1f7b30bc4cbc603503d0dd84ca8f78c863452d02f5dd95592b67b0f5"
+    },
+    "study-v1.zip": {
+      "bytes": 2455807,
+      "sha256": "b589f3a1f8b0628992e2042a930e5f32bab9f181865b6856a6672aa93ee26409"
+    }
+  },
+  "initial_controls": {
+    "additional_independent_normal_count": 2,
+    "additional_independent_optimized_count": 2,
+    "broad_normal": {
+      "count": 136,
+      "seconds": 33.612
+    },
+    "broad_optimized": {
+      "count": 136,
+      "seconds": 30.786
+    }
+  },
+  "initial_lifetime_probe": {
+    "both_dead_after_manual_gc": true,
+    "failure_alive_before_manual_gc": true,
+    "gc_disabled": true,
+    "independent_trainer_entry_control": "Fails before fix: builder remains alive at actual packed trainer entry with automatic cyclic GC disabled. Raw failure retained.",
+    "scope": "Demonstrates cyclic retention, not causation of the formal allocation peak or measured memory savings.",
+    "success_alive_before_manual_gc": true
+  },
+  "initial_manifest_sha256": {
+    "100": "1aaec7b39b49b6e940655f80201e2ab88fa2f609b836166be2500e2221a4cddf",
+    "1000": "10e1f9beeb67bd570682ac6aef29b31668d8f93163932c6e574560f52b687b85"
+  },
+  "initial_medians_seconds": {
+    "100": {
+      "direct": 10.518173800000113,
+      "literal": 7.152141099999881
+    },
+    "1000": {
+      "direct": 100.53118409999979,
+      "literal": 74.6230913999998
+    }
+  },
+  "initial_outcome": "complete",
+  "initial_quality": {
+    "t100": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_operator_checks_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_numeric_replay_passed": true
+    },
+    "t1000": {
+      "all_paired_complete_strategy_rows_identical": true,
+      "all_paired_diagnostics_identical": true,
+      "all_paired_operator_checks_identical": true,
+      "all_paired_private_pair_probabilities_identical": true,
+      "sample_zero_exact_metrics_identical": true,
+      "sample_zero_exact_targets_met": true,
+      "sample_zero_numeric_replay_passed": true
+    }
+  },
+  "initial_separate_saved_replay": {
+    "maximum_numeric_gap": 1.1102230246251565e-16,
+    "native_calls": 0,
+    "training_calls": 0
+  },
+  "initial_source_commit": "afd1afc45a62d07c2b1beb120bd9891e5858dece",
+  "initial_t100_traced_peak_bytes": {
+    "direct": 2711194,
+    "literal": 2340331
+  },
+  "lifetime_correction": "Sol added try/finally cleanup of seven mutually recursive helper cells after a GC-disabled pre-fix probe and independent trainer-entry failure. No probability, betting, cache, ledger or CFR arithmetic changed. Corrected complete-call measurements remain pending.",
+  "retained_misses": [
+    "Initial direct complete calls slower and traced peak higher on original22-world game.",
+    "T100 exact target misses retained; bothT1000 exact targets pass.",
+    "Constructor nested closure cycles retain builder untilcyclicGC on success/failure; tested withGCdisabled. Corrected source and measured cost are separate gates.",
+    "Old native helper rejected current-checkout rawsourcebytes; explicit fresh build passed without weakening provenance guard.",
+    "Unfrozen development test import error preserved separately."
+  ],
+  "scope": "Exact original selected finitegame/packed CFR+/cache64. All strategy histories/rows/output remain explicit; no native direct/full-deck/generalmemory/speed claim. Overall foundation remainsactive."
+}

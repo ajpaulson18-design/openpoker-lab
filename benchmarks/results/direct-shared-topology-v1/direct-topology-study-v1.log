@@ -1,0 +1,11 @@
+T100 literal sample=0 traced=False seconds=7.362123
+T100 direct sample=0 traced=False seconds=10.303079
+T100 direct sample=1 traced=False seconds=10.518174
+T100 literal sample=1 traced=False seconds=7.152141
+T100 literal sample=2 traced=False seconds=6.574347
+T100 direct sample=2 traced=False seconds=10.652964
+T100 literal sample=traced traced=True seconds=88.949553
+T100 direct sample=traced traced=True seconds=101.166175
+T1000 literal sample=0 traced=False seconds=74.623091
+T1000 direct sample=0 traced=False seconds=100.531184
+{"manifest_sha256": {"100": "1aaec7b39b49b6e940655f80201e2ab88fa2f609b836166be2500e2221a4cddf", "1000": "10e1f9beeb67bd570682ac6aef29b31668d8f93163932c6e574560f52b687b85"}, "outcome": "complete", "report": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\direct-topology-study-v1\\report.json"}

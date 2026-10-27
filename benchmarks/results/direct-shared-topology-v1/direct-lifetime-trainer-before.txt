@@ -1,0 +1,22 @@
+test_builder_released_at_real_trainer_entry_and_error (tests.test_direct_topology_independent.DirectIndependentAdmissionTests.test_builder_released_at_real_trainer_entry_and_error) ... FAIL
+
+======================================================================
+FAIL: test_builder_released_at_real_trainer_entry_and_error (tests.test_direct_topology_independent.DirectIndependentAdmissionTests.test_builder_released_at_real_trainer_entry_and_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\direct-topology-repo\tests\test_direct_topology_independent.py", line 79, in test_builder_released_at_real_trainer_entry_and_error
+    self.assertEqual(observed, [True])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [False] != [True]
+
+First differing element 0:
+False
+True
+
+- [False]
++ [True]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.909s
+
+FAILED (failures=1)

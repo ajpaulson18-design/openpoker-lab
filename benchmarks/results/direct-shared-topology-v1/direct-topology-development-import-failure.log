@@ -1,0 +1,105 @@
+test_direct_shared_topology (unittest.loader._FailedTest.test_direct_shared_topology) ... ERROR
+test_fractional_local_rounding_short_stack_and_tie (tests.test_direct_topology_solver.DirectTopologySolverTests.test_fractional_local_rounding_short_stack_and_tie) ... ok
+test_later_street_raise_reopening (tests.test_direct_topology_solver.DirectTopologySolverTests.test_later_street_raise_reopening) ... ok
+test_no_information_and_exact_early_all_in (tests.test_direct_topology_solver.DirectTopologySolverTests.test_no_information_and_exact_early_all_in) ... ok
+test_original_four_street_game (tests.test_direct_topology_solver.DirectTopologySolverTests.test_original_four_street_game) ... ok
+test_original_mass_and_scan_guards_remain (tests.test_direct_topology_solver.DirectTopologySolverTests.test_original_mass_and_scan_guards_remain) ... ok
+test_rank_free_direct_census_and_early_selector_rejection (tests.test_direct_topology_solver.DirectTopologySolverTests.test_rank_free_direct_census_and_early_selector_rejection) ... ok
+test_weighted_shared_futures_and_blocked_private_holes (tests.test_direct_topology_solver.DirectTopologySolverTests.test_weighted_shared_futures_and_blocked_private_holes) ... ok
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+test_audit_failure_keeps_raw_calls_and_partial_receipt (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_audit_failure_keeps_raw_calls_and_partial_receipt) ... ok
+test_audit_gates_require_exact_metrics_numeric_fields_and_targets (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_audit_gates_require_exact_metrics_numeric_fields_and_targets) ... ok
+test_child_passes_explicit_python_topology_and_measurement_modes (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_child_passes_explicit_python_topology_and_measurement_modes) ... ok
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+test_full_orchestration_closes_audit_manifests_and_retains_t100_miss (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_full_orchestration_closes_audit_manifests_and_retains_t100_miss) ... ok
+test_nonzero_child_retains_raw_stdout_and_stderr_without_retry (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_nonzero_child_retains_raw_stdout_and_stderr_without_retry) ... ok
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+test_policy_and_metric_mismatch_are_retained_as_quality_misses (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_policy_and_metric_mismatch_are_retained_as_quality_misses) ... ok
+test_schedule_is_alternating_and_has_fixed_call_counts (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_schedule_is_alternating_and_has_fixed_call_counts) ... ok
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+test_source_drift_prevents_saved_audit (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_source_drift_prevents_saved_audit) ... ok
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+T100 literal sample=0 traced=False seconds=1.000000
+T100 direct sample=0 traced=False seconds=1.000000
+T100 direct sample=1 traced=False seconds=1.000000
+T100 literal sample=1 traced=False seconds=1.000000
+T100 literal sample=2 traced=False seconds=1.000000
+T100 direct sample=2 traced=False seconds=1.000000
+T100 literal sample=traced traced=True seconds=1.000000
+T100 direct sample=traced traced=True seconds=1.000000
+T1000 literal sample=0 traced=False seconds=1.000000
+T1000 direct sample=0 traced=False seconds=1.000000
+test_t1000_target_miss_and_missing_metrics_fail_quality_gate (tests.test_benchmark_direct_shared_topology.DirectTopologyBenchmarkTests.test_t1000_target_miss_and_missing_metrics_fail_quality_gate) ... ok
+
+======================================================================
+ERROR: test_direct_shared_topology (unittest.loader._FailedTest.test_direct_shared_topology)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_direct_shared_topology
+Traceback (most recent call last):
+  File "C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\direct-topology-repo\tests\test_direct_shared_topology.py", line 21, in <module>
+    from test_shared_public_topology import (
+ModuleNotFoundError: No module named 'test_shared_public_topology'
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 8.946s
+
+FAILED (errors=1)

@@ -82,3 +82,29 @@ expanded counts. These are structural entry counts and establish no memory gain.
 Source-frozen complete-call cost/memory, saved-policy exact replay and final CI
 are separate gates. The compiler bridge's measured memory/runtime misses remain
 preserved in its [original evidence](shared-public-topology.md).
+
+## First frozen result and constructor-lifetime correction
+
+The [complete first-study evidence](../benchmarks/results/direct-shared-topology-v1/receipt.json)
+pins source `afd1afc45a62d07c2b1beb120bd9891e5858dece`. All five complete policy,
+diagnostic, private-pair probability and operator-counter pairs match; both
+T1000 exact targets pass with identical exact metrics, and T100 misses remain.
+A separate saved-only process repeats numeric/exact replay with zero training
+and maximum numeric discrepancy about 1.11e-16. Terra independently verifies
+the manifest bytes, raw policy pairs, exact metric maps and threshold flags.
+
+Performance remains negative on that source: T100 medians are 7.152141 seconds
+literal and 10.518174 direct; T1000 single calls are 74.623091 and 100.531184
+seconds. The separate traced T100 peak is 2,340,331 versus 2,711,194 bytes. No
+total-memory or speed improvement follows. All these samples remain immutable.
+
+After the batch, a separate no-training probe with automatic cyclic garbage
+collection disabled proves the nested recursive constructor helpers retain the
+builder after both return and injected failure; manual collection releases it.
+An independent actual trainer-entry control reproduces the retention failure.
+This establishes a lifetime defect, not causation of the formal peak. Sol's
+isolated correction clears all seven recursive helper cells in a `finally`
+block without changing construction, monetary or training arithmetic. Weakref
+controls require release without manual collection on success and error.
+Corrected-source tests and fresh full-call measurement are separate gates;
+the initial memory/runtime miss is not replaced by a lower scoped allocation.
