@@ -5,9 +5,13 @@ builds the same selected-game DAG without literal postflop source nodes or compi
 snapshots. It retains only the small original preflop skeleton during setup,
 preserves local monetary rounding/translation and distinct history-policy rows,
 and charges global/template logical work before new branches or cached reuse.
-Independent structural, solver and admission controls pass; complete-call memory,
-runtime, saved T1000 quality and final publication remain separate gates. Native
-direct/shared traversal, large information-history storage and pair scans remain open.
+Independent structural, solver and admission controls pass. Both frozen direct
+studies preserve all paired policies and exact T1000 target passes while recording
+slower complete calls and higher traced peak. The corrected study records
+91.30 s versus 73.24 s single T1000 calls and 2,713,034 versus 2,340,331 bytes
+traced T100 peak. A constructor closure-lifetime defect is corrected and directly
+tested; no total-memory or speed gain follows. Final evidence-head CI/publication,
+native direct/shared traversal, information-history storage and pair scans remain open.
 
 The explicit Python packed [shared public topology](../shared-public-topology.md)
 interns local transition vertices while preserving each full visible-history

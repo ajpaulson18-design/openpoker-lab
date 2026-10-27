@@ -108,3 +108,34 @@ block without changing construction, monetary or training arithmetic. Weakref
 controls require release without manual collection on success and error.
 Corrected-source tests and fresh full-call measurement are separate gates;
 the initial memory/runtime miss is not replaced by a lower scoped allocation.
+
+## Corrected frozen comparison
+
+The same receipt retains a second fixed batch at clean source
+`e7afde7d2457ba45063cfdb7f038d703b5272e0a`. All five paired policies,
+diagnostics, pair probabilities and counters match; corresponding direct outputs
+and construction receipts also match the first source. Both T1000 exact targets
+pass with numeric NashConv 0.0003997388151442405 BB. T100 misses remain. A fresh
+saved-only process repeats numeric/exact replay with zero training/native calls.
+Terra independently authenticates both manifests, all captured source bytes,
+raw pairs, exact metric maps and threshold flags.
+
+| Corrected complete-call observation | Literal packed | Direct packed |
+| --- | ---: | ---: |
+| T100 median, three fresh untraced calls | 6.824361 s | 9.445039 s |
+| T1000, one fresh untraced call each | 73.241903 s | 91.304704 s |
+| T100 traced Python peak, separate call each | 2,340,331 bytes | 2,713,034 bytes |
+
+The corrected direct path still has about 15.9% higher traced peak and slower
+complete calls on this fixture. Separate process peaks establish no RSS saving.
+No timing distribution exists for T1000, and the two frozen batches are not an
+equal-environment comparison of cleanup speed. Prompt builder release is proved
+by lifetime controls; neither the first peak nor the remaining peak is attributed
+to one component from those controls. This remains an explicit representation
+integration, not a successful total-memory or speed optimization.
+
+The next native integration must retain unique DAG vertices and assign strategy
+rows per logical history occurrence. Prefix-dependent private support must be
+validated independently; expanding the old native node/edge/dense-hand wire would
+reintroduce the structure this builder removes. Information-history rows, complete
+output, pair scans and full-deck chance remain separate scaling limits.

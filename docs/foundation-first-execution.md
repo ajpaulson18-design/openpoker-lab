@@ -408,3 +408,16 @@ trainer entry and trainer failure without manual collection. The corrected broad
 suite passes 140 controls normally (32.364 s) and optimized (31.672 s). The initial
 study, pre-fix failure and corrected tests are preserved. Corrected-source frozen
 measurement and final CI are separate gates; no memory improvement is inferred.
+
+Corrected source `e7afde7d2457ba45063cfdb7f038d703b5272e0a` now has its own
+complete fixed batch and fresh saved-only replay. All five paired policies,
+diagnostics/counters, exact metrics and T1000 targets match; corresponding direct
+outputs and structural receipts also match the original source. Terra independently
+verifies both manifest closures, captured source bytes and exact threshold flags.
+T100 misses remain. The corrected path still regresses complete-call runtime and
+traced peak: T100 medians 6.824361/9.445039 s, T1000 single calls
+73.241903/91.304704 s, traced T100 2,340,331/2,713,034 bytes, literal/direct.
+The lifetime fix establishes prompt release, not causation of either peak.
+Both complete studies, probes and failures remain immutable in the same receipt.
+Native DAG traversal must avoid rebuilding expanded node/dense-hand maps; strategy
+history/output and pair-scan growth remain independent limits. Overall goal active.
