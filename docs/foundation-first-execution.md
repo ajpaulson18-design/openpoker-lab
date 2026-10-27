@@ -283,3 +283,28 @@ The [ranked register](foundation-first-audit.md#ranked-improvement-register)
 remains authoritative. No full-deck trainer integration, broad-game convergence,
 storage solution, action-value coaching feed, corpus/query service, production
 hosting or commercial readiness is claimed.
+
+### Native computation over the selected operator
+
+The next [native selected-operator integration](native-selected-operator.md)
+keeps shared betting/history construction, independent Python diagnostics and
+complete policy serialization while moving CFR+ and streamed chance/payoff
+queries into C++. It sends bounded per-hand ranks, private masks/weights and
+the public tree, with no complete worlds or prefix/private-pair edges. Python
+and native logical-work/storage admission are both retained. Exact positive
+binary64 accumulation independently verifies the configured global normalizer.
+
+Sol owns the architecture and native integration; Luna owns the fixed paired
+benchmark and its failure-retention controls. Terra independently found that
+the initial parser accepted duplicate or missing chance children. The parser
+now requires their next reveals to partition all physically supported selected
+outcomes, independent of strategy reach. His adversarial valid/duplicate/missing
+controls pass; original acceptance failures and source are retained as inert
+evidence. His remaining review preserves the modeled-memory, authenticated-rank
+and bounded-game limitations. No model substitution applies to this review.
+
+Local compiled/reference/independent controls pass; source-frozen paired runtime,
+separate Python/native memory measurements, saved-policy exact/numeric replay,
+Linux version controls and sanitizer CI remain publication gates. This is still
+an opt-in bounded computational backend, not full-deck training or an answer to
+explicit public-history and information-action growth.

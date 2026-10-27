@@ -1,5 +1,13 @@
 # Current engineering state
 
+The explicit [native selected operator](../native-selected-operator.md) connects
+C++ CFR+ to hand/board chance and payoff queries with flat strategy arrays.
+It stores no complete worlds or prefix/pair edges; per-hand board ranks are
+separately bounded. Exact positive binary64 normalizer checks, parser/admission
+and compiled controls are distinct from independently replayed accuracy and
+full-call performance acceptance. The old native edge-table backend remains
+unchanged. Full-deck and general commercial scalability remain unresolved.
+
 An explicit [packed CFR+ strategy layout](../packed-operator-strategy.md) connects
 contiguous regret/average/current/delta buffers to the non-materialized operator.
 It retains the original row path, information-set identities, independent
