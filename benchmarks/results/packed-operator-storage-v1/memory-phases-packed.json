@@ -1,0 +1,89 @@
+{
+  "mode": "packed",
+  "events": [
+    {
+      "phase": "layout-census",
+      "before": [
+        755884,
+        756030
+      ],
+      "after": [
+        833392,
+        1109684
+      ]
+    },
+    {
+      "phase": "prepare",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        826784,
+        1109684
+      ]
+    },
+    {
+      "phase": "tree-view",
+      "before": [
+        826856,
+        1109684
+      ],
+      "after": [
+        1088152,
+        1109684
+      ]
+    },
+    {
+      "phase": "layout-census",
+      "before": [
+        1089664,
+        1109684
+      ],
+      "after": [
+        1090564,
+        1366856
+      ]
+    },
+    {
+      "phase": "packed-training",
+      "before": [
+        1088864,
+        1109684
+      ],
+      "after": [
+        1470472,
+        1667836
+      ]
+    },
+    {
+      "phase": "policy-normalization",
+      "before": [
+        1470696,
+        1667836
+      ],
+      "after": [
+        1612303,
+        1667836
+      ]
+    },
+    {
+      "phase": "diagnostics",
+      "before": [
+        1612831,
+        1667836
+      ],
+      "after": [
+        1617575,
+        1667836
+      ]
+    },
+    {
+      "phase": "complete",
+      "after": [
+        2073625,
+        2851165
+      ]
+    }
+  ]
+}

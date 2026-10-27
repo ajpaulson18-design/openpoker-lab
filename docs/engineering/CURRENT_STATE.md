@@ -6,7 +6,11 @@ It retains the original row path, information-set identities, independent
 diagnostics and all old admission limits. Dense index holes and additional
 layout work are bounded separately. This reduces a representation overhead;
 public-tree and information-action counts remain explicit and source-frozen
-runtime/memory/quality acceptance is a separate gate.
+runtime/memory/quality acceptance is separate. The corrected frozen 22-world
+comparison now records identical complete policies/exact target passes and
+about 16.3% lower T100 traced peak allocation, with measured runtime cost.
+The original full-call memory miss is retained. Numeric-array payloads alone
+are not total-memory evidence; public-state/strategy-entry growth remains open.
 
 An explicit [bounded board-rank cache](../selected-board-rank-cache.md) extends
 the selected operator with solve-local per-board rank reuse. Capacity one

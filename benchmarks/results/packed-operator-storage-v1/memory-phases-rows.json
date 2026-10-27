@@ -1,0 +1,67 @@
+{
+  "mode": "rows",
+  "events": [
+    {
+      "phase": "prepare",
+      "before": [
+        0,
+        0
+      ],
+      "after": [
+        749052,
+        755932
+      ]
+    },
+    {
+      "phase": "tree-view",
+      "before": [
+        749156,
+        755932
+      ],
+      "after": [
+        1010396,
+        1013420
+      ]
+    },
+    {
+      "phase": "row-training",
+      "before": [
+        1011380,
+        1013420
+      ],
+      "after": [
+        1400344,
+        2056104
+      ]
+    },
+    {
+      "phase": "policy-normalization",
+      "before": [
+        1400208,
+        2056104
+      ],
+      "after": [
+        1541759,
+        2056104
+      ]
+    },
+    {
+      "phase": "diagnostics",
+      "before": [
+        1542279,
+        2056104
+      ],
+      "after": [
+        1543799,
+        2056104
+      ]
+    },
+    {
+      "phase": "complete",
+      "after": [
+        2023981,
+        2773733
+      ]
+    }
+  ]
+}

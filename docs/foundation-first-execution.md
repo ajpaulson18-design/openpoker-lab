@@ -196,6 +196,34 @@ preserves the finding, scope and implementation identities.
 
 ## Remaining work
 
+### Contiguous strategy buffers and complete-call lifetime correction
+
+The [packed operator strategy layout](packed-operator-strategy.md) connects
+four contiguous binary64 buffers to actual unified four-street CFR+ without
+merging information sets or changing the selected game. The first frozen study
+passed policy/quality parity but **missed memory**: about 3.02 MB packed versus
+2.79 MB row traced peaks. Phase tracing exposed avoidable key-copy validation
+and output overlap. The correction preserves all coverage/cycle/menu checks
+while reusing semantic-key references and releasing obsolete packed lookup,
+policy and tree references during complete output construction.
+
+At corrected source `c6090c891f3bbede6107c2a549e283b208d3852c`, the new study
+retains identical complete policies, independent exact metrics and operator
+work. Both T1000 policies meet <=1/1000 BB. T100 traced peaks are 2,793,147 bytes
+rows and 2,337,517 packed (about 16.3% lower), while T100 medians are 7.51 s
+and 8.60 s and single T1000 calls are 123.1 s and 134.1 s. The runtime cost,
+T100 misses and complete first memory miss remain; no universal speed/RSS claim.
+
+The [receipt and compressed raw studies](../benchmarks/results/packed-operator-storage-v1/receipt.json)
+pin both source revisions, all raw policies/certificates/manifests, phase
+diagnostics and actual commands/results. A separate no-training process repeats
+saved-only independent numeric/exact replay. All 65 corrected controls pass
+normally and optimized. Sol implemented/reviewed while worker usage limits
+prevented final independent-agent engineering review; independent physical and
+legal-BR/exact mathematical oracles remain in use. This is a measured bounded
+storage integration, not a solution to exponential history/strategy growth or
+completion of the overall foundation phase.
+
 ### Bounded rank reuse after the first integration
 
 The [selected-board rank cache](selected-board-rank-cache.md) follows the

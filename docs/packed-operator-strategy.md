@@ -21,7 +21,8 @@ node/own-hand lookup stores offsets with `-1` for inactive own-hand indices.
 Regrets, average sums, current strategy and one target's deltas occupy four
 `array('d')` buffers. Original semantic keys and action order remain available
 for complete output. A temporary key-to-offset map is released before training;
-no numeric dictionary or row list is retained per information set. Missing
+no numeric dictionary or row list is retained per information set during sweeps.
+Complete compatibility policy rows are materialized after training. Missing
 private-hand rows retain the same uniform traversal fallback and never become
 new serialized information sets.
 
@@ -121,3 +122,60 @@ that is instrumented development evidence, not a frozen performance result.
 Both original miss and phase evidence remain. A separately frozen full-call
 study is required before accepting the correction; no cap or quality threshold
 was changed to obtain the observed reduction.
+
+## Corrected frozen result
+
+The [receipt and both raw studies](../benchmarks/results/packed-operator-storage-v1/receipt.json)
+retain the first miss and corrected source
+`c6090c891f3bbede6107c2a549e283b208d3852c`. All compressed members were compared
+byte-for-byte with the original files after compression. Both source-pinned
+studies preserve identical complete policy rows, independent exact metric maps
+and observed operator work across storage modes. T100 misses remain unchanged;
+both T1000 policies meet the exact <=1/1000 BB target, with numeric NashConv
+0.0003997388151442405 BB.
+
+| Corrected experiment | Row storage | Packed storage |
+| --- | ---: | ---: |
+| T100 untraced median, three calls | 7.512110 s | 8.598265 s |
+| T100 traced peak Python allocation, separate call | 2,793,147 bytes | 2,337,517 bytes |
+| T100 traced process lifetime peak working set | 31,576,064 bytes | 30,375,936 bytes |
+| T1000 untraced single call | 123.125387 s | 134.145210 s |
+| T1000 process lifetime peak working set | 26,710,016 bytes | 26,476,544 bytes |
+| T1000 independent exact quality target | pass | pass |
+
+The measured allocation reduction is 455,630 bytes (about 16.3%) in the
+separate T100 traced calls. The measured runtime cost is preserved; neither
+the three-call medians nor the single T1000 observations establish a general
+distribution or speed winner. Process peaks include interpreter/imports and do
+not prove a general RSS reduction. No cross-study hardware-load comparison is
+used to claim an improvement.
+
+The 22-world layout has 1,200 information sets, 2,402 action slots and 1,256
+dense decision/hand slots including inactive holes. Four numeric buffers hold
+76,864 payload bytes; dense lookups hold 5,024 and row offset/count payloads
+9,600 bytes. These payloads are not the total-memory measurements above.
+The extra requested layout envelope is 237,550,088/500,000,000 entries at T1000;
+all prior operator/cache caps remain unchanged. Actual ranking and pair/board
+checks are identical across storage modes.
+
+A separate process authenticated the corrected T1000 manifest and repeated
+numeric/exact saved replay with zero training or native calls, comparing existing
+audits without rewriting them. Corrected acceptance passes 65 tests normally
+(15.058 s) and optimized (16.059 s), covering independent physical, numeric and
+exact replay plus reference, cache, layout and contract controls. Documentation
+links pass. Final-head CI and merge status remain separate live gates.
+
+Corrected T100 manifest:
+`33bc8087c50a6f1a484430db8065702ecabe8db39292807e5e80f2f40d4978bc`.
+Corrected T1000 manifest:
+`6c1606fc72910930e96a3ea86ad4295b0d790750fa187d8b3082f8b3ad10c513`.
+Extract the chosen archive outside a clean checkout at that study's source
+revision, preserving the source-byte/line-ending identities captured in
+`source.json`, and invoke `--verify-saved` with the externally pinned manifest
+digest on its cohort directory. Evolved source is intentionally rejected.
+
+This step establishes a measured storage tradeoff in actual unified training.
+It does not reduce the number of public histories or information/action entries.
+The next structural work remains coherent native operator computation and
+mathematically justified game/storage reduction or decomposition; the overall
+foundation objective remains active.
