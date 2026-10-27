@@ -321,3 +321,29 @@ pass normally and optimized; Linux version controls and sanitizer CI remain
 publication gates. This is still an opt-in bounded computational backend, not
 full-deck training or an answer to explicit public-history/information-action
 growth. Private-pair scans remain despite their faster native execution.
+
+### Shared topology enters the existing training path
+
+The next [shared public topology bridge](shared-public-topology.md) preserves
+the same selected probability law, action/reveal order, information-set histories
+and packed CFR+ arithmetic. Sol integrated lazy cursors with the existing trainer
+and diagnostics; Luna implemented the immutable compiler and fixed paired study;
+Terra independently scrutinized identity, monetary shifts and work accounting.
+No model substitution applies. The native-plus-shared combination rejects early;
+native DAG integration is still a future gate.
+
+The original 1,462-node logical tree interns to 99 vertices/173 edges while keeping
+all 1,200 information rows/2,402 action slots. Source preparation still builds
+the original tree, and compiler snapshots temporarily overlap it. After metadata
+is reduced to immutable menus, a weak-reference test verifies the source root is
+released before training. The shared path does not build the second expanded
+positive-pot view. No total peak-memory reduction follows from entry counts.
+
+One hundred thirteen compiler, shared-trainer, independent, native, reference,
+contract and benchmark-orchestration controls pass normally (31.553 s) and with
+assertions disabled (33.011 s). Independent controls reject row aliases/orphans
+and source growth between preliminary edge counting and snapshot, and preserve
+fractional shifted terminal utility. Source-frozen paired complete-call runtime,
+allocation/process observations, saved T1000 exact/numeric replay and final CI
+remain publication gates. The direct shared builder, native shared traversal,
+strategy-history growth and larger exact-verifier limits remain unresolved.

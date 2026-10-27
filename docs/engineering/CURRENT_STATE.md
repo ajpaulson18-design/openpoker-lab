@@ -1,5 +1,14 @@
 # Current engineering state
 
+The explicit Python packed [shared public topology](../shared-public-topology.md)
+interns local transition vertices while preserving each full visible-history
+strategy row. The original 1,462-node tree has 99 shared vertices; all 1,200
+information rows remain. The existing CFR+ buffers and independent diagnostics
+traverse lazy cursors after releasing the expanded source tree, without a second
+expanded training view. Source preparation still builds the literal tree first;
+entry compression alone is not a full-call memory result. Native shared mode
+rejects explicitly, and frozen performance/quality publication remains separate.
+
 The explicit [native selected operator](../native-selected-operator.md) connects
 C++ CFR+ to hand/board chance and payoff queries with flat strategy arrays.
 It stores no complete worlds or prefix/pair edges; per-hand board ranks are
