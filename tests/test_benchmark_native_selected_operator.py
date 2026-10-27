@@ -57,6 +57,7 @@ class NativeSelectedOperatorBenchmarkTests(unittest.TestCase):
             patch.object(Path, "read_bytes", autospec=True, side_effect=read_bytes),
             patch.object(Path, "read_text", autospec=True, side_effect=read_text),
             patch.object(Path, "open", autospec=True, side_effect=open_path),
+            patch.object(benchmark.platform, "platform", return_value="synthetic-test-platform"),
         ]
         return files, patches
 
@@ -165,6 +166,8 @@ class NativeSelectedOperatorBenchmarkTests(unittest.TestCase):
 
     def _fake_child_runner(self, *, changed=False):
         def run(command, **_kwargs):
+            if command[1:4] != ["-B", "-m", "scripts.benchmark_native_selected_operator"]:
+                raise AssertionError(f"Unexpected subprocess command in synthetic test: {command!r}")
             backend = command[command.index("--child") + 1]
             iterations = int(command[command.index("--iterations") + 1])
             traced = "--traced" in command
