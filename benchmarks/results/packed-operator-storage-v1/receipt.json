@@ -1,0 +1,168 @@
+{
+  "algorithm_and_game": "Same zero-delay alternating CFR+ selected 22-world game; rank cache capacity 64 in both storage modes.",
+  "archives": {
+    "study-v1.zip": {
+      "bytes": 1195580,
+      "sha256": "a72742db0e7f9ba7d8f7b6d866581bdf686aca8dbb2c419d22eceaae405918e9"
+    },
+    "study-v2.zip": {
+      "bytes": 1195593,
+      "sha256": "a3b6770dc05815266d3224c6d7941ef61ee10d84cd5e05c0a7d3a693a48afdfc"
+    }
+  },
+  "corrected_source_commit": "c6090c891f3bbede6107c2a549e283b208d3852c",
+  "corrected_t1000_numeric_nash_conv_bb": 0.0003997388151442405,
+  "corrected_t100_traced_peak": {
+    "packed_bytes": 2337517,
+    "reduction_bytes": 455630,
+    "reduction_fraction": 0.1631242465935377,
+    "rows_bytes": 2793147
+  },
+  "correction": [
+    "Reuse original semantic key references during layout coverage validation without weakening coverage/cycle/menu checks.",
+    "After diagnostics, release packed lookup/policy/root references and consume metadata/averages while serializing unchanged complete policy."
+  ],
+  "engineering_review": "Sol implemented/reviewed after both worker models hit usage limits; no final independent-agent review claimed.",
+  "initial_full_call_memory_miss": {
+    "packed_peak_bytes": 3021397,
+    "rows_peak_bytes": 2793119
+  },
+  "initial_source_commit": "3a0f9b114247e7fd92c0845b30268d4866f4049e",
+  "limitations": [
+    "T100 misses retained",
+    "T1000 one call per mode; no runtime distribution",
+    "Corrected packed mode has observed runtime cost",
+    "Array payload bytes exclude metadata/tree/output",
+    "Public history and information-set/action counts remain explicit",
+    "No full-deck, general RSS or commercial readiness claim",
+    "Overall foundation goal remains active"
+  ],
+  "local_tests": {
+    "corrected_normal": {
+      "count": 65,
+      "seconds": 15.058
+    },
+    "corrected_optimized": {
+      "count": 65,
+      "seconds": 16.059
+    },
+    "initial_normal": {
+      "count": 65,
+      "seconds": 14.182
+    },
+    "initial_optimized": {
+      "count": 65,
+      "seconds": 15.245
+    }
+  },
+  "mathematical_acceptance": "Complete policy, exact metric and operator-work equality; independent numeric/legal BR and exact saved replay.",
+  "publication": "Final-head CI/merge remain separate live requirements.",
+  "separate_saved_only_replay": {
+    "existing_audits_compared_without_overwrite": true,
+    "native_calls": 0,
+    "passed": true,
+    "training_calls": 0
+  },
+  "studies": {
+    "v1": {
+      "experiments": [
+        {
+          "complete_strategy_rows_identical": true,
+          "exact_targets_met": [
+            false,
+            false
+          ],
+          "independent_exact_metrics_identical": true,
+          "iterations": 100,
+          "manifest_sha256": "ab21fad12209cc084c0a994215062bfaef349c9c6ba7a2fe43ecda7b99cf7b87",
+          "medians_seconds": {
+            "packed": 7.652398500002164,
+            "rows": 7.7463311000028625
+          },
+          "operator_statistics_identical": true
+        },
+        {
+          "complete_strategy_rows_identical": true,
+          "exact_targets_met": [
+            true,
+            true
+          ],
+          "independent_exact_metrics_identical": true,
+          "iterations": 1000,
+          "manifest_sha256": "21b0a6de5957b27fa9b598b8475a0654f26d8e8cf1e91863a5a461577f1cfbf5",
+          "medians_seconds": {
+            "packed": 74.63118430000031,
+            "rows": 75.21441700000287
+          },
+          "operator_statistics_identical": true
+        }
+      ],
+      "protocol": {
+        "case": "four-street-weighted-shared-future-v1",
+        "rank_cache_boards": 64,
+        "retries": 0,
+        "scope": "Same selected finite game; excludes full-deck, general memory/speed or storage-complexity claims.",
+        "source_commit": "3a0f9b114247e7fd92c0845b30268d4866f4049e",
+        "storage_modes": [
+          "rows",
+          "packed"
+        ],
+        "t1000_untraced_samples_per_mode": 1,
+        "t100_traced_samples_per_mode": 1,
+        "t100_untraced_samples_per_mode": 3,
+        "target_nash_conv_bb": "1/1000",
+        "version": "selected-packed-strategy-comparison-v1"
+      }
+    },
+    "v2": {
+      "experiments": [
+        {
+          "complete_strategy_rows_identical": true,
+          "exact_targets_met": [
+            false,
+            false
+          ],
+          "independent_exact_metrics_identical": true,
+          "iterations": 100,
+          "manifest_sha256": "33bc8087c50a6f1a484430db8065702ecabe8db39292807e5e80f2f40d4978bc",
+          "medians_seconds": {
+            "packed": 8.598264599997492,
+            "rows": 7.512110299998312
+          },
+          "operator_statistics_identical": true
+        },
+        {
+          "complete_strategy_rows_identical": true,
+          "exact_targets_met": [
+            true,
+            true
+          ],
+          "independent_exact_metrics_identical": true,
+          "iterations": 1000,
+          "manifest_sha256": "6c1606fc72910930e96a3ea86ad4295b0d790750fa187d8b3082f8b3ad10c513",
+          "medians_seconds": {
+            "packed": 134.1452100999959,
+            "rows": 123.12538720000157
+          },
+          "operator_statistics_identical": true
+        }
+      ],
+      "protocol": {
+        "case": "four-street-weighted-shared-future-v1",
+        "rank_cache_boards": 64,
+        "retries": 0,
+        "scope": "Same selected finite game; excludes full-deck, general memory/speed or storage-complexity claims.",
+        "source_commit": "c6090c891f3bbede6107c2a549e283b208d3852c",
+        "storage_modes": [
+          "rows",
+          "packed"
+        ],
+        "t1000_untraced_samples_per_mode": 1,
+        "t100_traced_samples_per_mode": 1,
+        "t100_untraced_samples_per_mode": 3,
+        "target_nash_conv_bb": "1/1000",
+        "version": "selected-packed-strategy-comparison-v1"
+      }
+    }
+  }
+}

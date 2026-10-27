@@ -36,6 +36,18 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D056: Contiguous operator strategy storage (October 26, 2026)
+
+Engineering decision under the scalable-foundation goal: establish bounded
+flat numeric storage for the same four-street selected game before choosing
+larger abstractions/decomposition. Preserve exact semantic information-set
+identity, all actions, separated reaches and the alternating CFR+ reduction
+schedule. Keep row storage as the default/reference and old caps unchanged;
+admit dense holes, flat arrays and complete requested layout work separately.
+Require complete-policy parity, independent policy/BR replay and full-call
+memory/cost measurements. This does not establish sublinear strategy storage
+or full-deck support. See [scope and acceptance](../packed-operator-strategy.md).
+
 ### D055: Bounded selected-board rank reuse (October 26, 2026)
 
 Engineering decision under the owner's foundation goal: profile the integrated

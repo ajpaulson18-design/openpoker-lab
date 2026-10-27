@@ -1,0 +1,11 @@
+T100 rows traced=False sample=0: 7.201770s
+T100 packed traced=False sample=0: 9.104704s
+T100 packed traced=False sample=1: 8.598265s
+T100 rows traced=False sample=1: 8.260221s
+T100 rows traced=False sample=2: 7.512110s
+T100 packed traced=False sample=2: 7.744305s
+T100 rows traced=True sample=0: 90.280754s
+T100 packed traced=True sample=0: 92.649144s
+T1000 rows traced=False sample=0: 123.125387s
+T1000 packed traced=False sample=0: 134.145210s
+[{"iterations": 100, "manifest_sha256": "33bc8087c50a6f1a484430db8065702ecabe8db39292807e5e80f2f40d4978bc", "medians_seconds": {"rows": 7.512110299998312, "packed": 8.598264599997492}, "complete_strategy_rows_identical": true, "independent_exact_metrics_identical": true, "operator_statistics_identical": true, "exact_targets_met": [false, false]}, {"iterations": 1000, "manifest_sha256": "6c1606fc72910930e96a3ea86ad4295b0d790750fa187d8b3082f8b3ad10c513", "medians_seconds": {"rows": 123.12538720000157, "packed": 134.1452100999959}, "complete_strategy_rows_identical": true, "independent_exact_metrics_identical": true, "operator_statistics_identical": true, "exact_targets_met": [true, true]}]
