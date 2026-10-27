@@ -1,5 +1,15 @@
 # Current engineering state
 
+The opt-in [selected-runout operator integration](../selected-operator-four-street.md)
+connects streamed chance/payoff queries to the shared four-street trainer without
+stored complete worlds or prefix/pair edges. Explicit tree and strategy storage
+remain; bounded integration is separate from full-deck solving and commercial
+scalability. The retained T1000 22-world comparison produces identical strategy
+rows and independent exact target passes, while taking about 126.4 s versus
+31.2 s reference in single complete calls. Its T10 allocation and process
+measurements establish no total-memory improvement. Larger-support census
+rejections and the explicit tree/action-storage bottleneck remain preserved.
+
 The [foundation-first audit](../foundation-first-audit.md) is the October 26
 priority and readiness assessment. It contains a reproduced/contained joint-mass
 underflow defect and a separate exact full-deck public-prefix probability

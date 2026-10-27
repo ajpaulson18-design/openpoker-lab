@@ -1,0 +1,191 @@
+{
+  "source_commit": "a3f289eeccff6f7357801d543872b11f632e3b61",
+  "source_clean": true,
+  "script_sha256": "1a267598d53ff2eaa1247d1b8b0bdfd7a40826c262cd557e7b8a085c55c6d020",
+  "boards": [
+    "8c8d8h8sTh",
+    "8c8d8h9cTs",
+    "8c8d8h9dJc",
+    "8c8d8h9hJd",
+    "8c8d8h9sJh",
+    "8c8d8hTcJs"
+  ],
+  "rows": [
+    {
+      "hands_per_seat": 1,
+      "admitted": true,
+      "census": {
+        "version": "selected-four-street-operator-census-v1",
+        "hands": [
+          1,
+          1
+        ],
+        "selected_boards": 6,
+        "reachable_boards": 6,
+        "physical_worlds_represented": 6,
+        "stored_complete_worlds": 0,
+        "stored_prefix_pair_edges": 0,
+        "operator_input_entries": {
+          "hand_entries": 2,
+          "hand_card_masks": 2,
+          "selected_runout_entries": 6,
+          "selected_runout_card_masks": 6,
+          "flop_prefix_keys": 6
+        },
+        "public_states": 1597,
+        "decisions": 688,
+        "terminals": 735,
+        "chance_nodes": 174,
+        "information_sets": 688,
+        "action_slots": 1377,
+        "regret_and_average_scalar_slots": 2754,
+        "serialized_pair_probability_rows_upper_bound": 1,
+        "preparation_scan_upper_bound": 3510,
+        "maximum_actions": 3,
+        "operator_query_upper_bound": 100691,
+        "pair_runout_scan_upper_bound": 1318565,
+        "scan_limit": 500000000,
+        "rank_call_upper_bound": 2637130,
+        "temporary_template_peak_states": 657,
+        "temporary_template_peak_decisions": 292,
+        "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit."
+      }
+    },
+    {
+      "hands_per_seat": 2,
+      "admitted": true,
+      "census": {
+        "version": "selected-four-street-operator-census-v1",
+        "hands": [
+          2,
+          2
+        ],
+        "selected_boards": 6,
+        "reachable_boards": 6,
+        "physical_worlds_represented": 24,
+        "stored_complete_worlds": 0,
+        "stored_prefix_pair_edges": 0,
+        "operator_input_entries": {
+          "hand_entries": 4,
+          "hand_card_masks": 4,
+          "selected_runout_entries": 6,
+          "selected_runout_card_masks": 6,
+          "flop_prefix_keys": 6
+        },
+        "public_states": 1597,
+        "decisions": 688,
+        "terminals": 735,
+        "chance_nodes": 174,
+        "information_sets": 1376,
+        "action_slots": 2754,
+        "regret_and_average_scalar_slots": 5508,
+        "serialized_pair_probability_rows_upper_bound": 4,
+        "preparation_scan_upper_bound": 9180,
+        "maximum_actions": 3,
+        "operator_query_upper_bound": 154355,
+        "pair_runout_scan_upper_bound": 5257652,
+        "scan_limit": 500000000,
+        "rank_call_upper_bound": 10515304,
+        "temporary_template_peak_states": 657,
+        "temporary_template_peak_decisions": 292,
+        "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit."
+      }
+    },
+    {
+      "hands_per_seat": 4,
+      "admitted": true,
+      "census": {
+        "version": "selected-four-street-operator-census-v1",
+        "hands": [
+          4,
+          4
+        ],
+        "selected_boards": 6,
+        "reachable_boards": 6,
+        "physical_worlds_represented": 96,
+        "stored_complete_worlds": 0,
+        "stored_prefix_pair_edges": 0,
+        "operator_input_entries": {
+          "hand_entries": 8,
+          "hand_card_masks": 8,
+          "selected_runout_entries": 6,
+          "selected_runout_card_masks": 6,
+          "flop_prefix_keys": 6
+        },
+        "public_states": 1597,
+        "decisions": 688,
+        "terminals": 735,
+        "chance_nodes": 174,
+        "information_sets": 2752,
+        "action_slots": 5508,
+        "regret_and_average_scalar_slots": 11016,
+        "serialized_pair_probability_rows_upper_bound": 16,
+        "preparation_scan_upper_bound": 31860,
+        "maximum_actions": 3,
+        "operator_query_upper_bound": 261683,
+        "pair_runout_scan_upper_bound": 30888176,
+        "scan_limit": 500000000,
+        "rank_call_upper_bound": 61776352,
+        "temporary_template_peak_states": 657,
+        "temporary_template_peak_decisions": 292,
+        "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit."
+      }
+    },
+    {
+      "hands_per_seat": 8,
+      "admitted": true,
+      "census": {
+        "version": "selected-four-street-operator-census-v1",
+        "hands": [
+          8,
+          8
+        ],
+        "selected_boards": 6,
+        "reachable_boards": 6,
+        "physical_worlds_represented": 384,
+        "stored_complete_worlds": 0,
+        "stored_prefix_pair_edges": 0,
+        "operator_input_entries": {
+          "hand_entries": 16,
+          "hand_card_masks": 16,
+          "selected_runout_entries": 6,
+          "selected_runout_card_masks": 6,
+          "flop_prefix_keys": 6
+        },
+        "public_states": 1597,
+        "decisions": 688,
+        "terminals": 735,
+        "chance_nodes": 174,
+        "information_sets": 5504,
+        "action_slots": 11016,
+        "regret_and_average_scalar_slots": 22032,
+        "serialized_pair_probability_rows_upper_bound": 64,
+        "preparation_scan_upper_bound": 122580,
+        "maximum_actions": 3,
+        "operator_query_upper_bound": 476339,
+        "pair_runout_scan_upper_bound": 216267488,
+        "scan_limit": 500000000,
+        "rank_call_upper_bound": 432534976,
+        "temporary_template_peak_states": 657,
+        "temporary_template_peak_decisions": 292,
+        "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit."
+      }
+    },
+    {
+      "hands_per_seat": 16,
+      "admitted": false,
+      "reason": "Selected operator requested scan envelope exceeds 500,000,000 entries."
+    },
+    {
+      "hands_per_seat": 32,
+      "admitted": false,
+      "reason": "Selected operator requested scan envelope exceeds 500,000,000 entries."
+    },
+    {
+      "hands_per_seat": 64,
+      "admitted": false,
+      "reason": "Selected operator requested scan envelope exceeds 500,000,000 entries."
+    }
+  ],
+  "scope": "Rank-free storage/work census only; no training, policy or convergence result."
+}
