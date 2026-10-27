@@ -37,7 +37,7 @@ def layout_census(root, infos, hand_counts, iterations):
     states = dense = decisions = decision_width = 0
     pending = [(root, 0)]
     seen = set()
-    covered = set()
+    remaining = set(infos)
     while pending:
         node, depth = pending.pop()
         if depth > MAX_DEPTH:
@@ -67,11 +67,11 @@ def layout_census(root, infos, hand_counts, iterations):
         for hand in range(hand_counts[node.player]):
             key = (node.player, hand, node.history)
             if key in infos:
-                if infos[key] != len(node.actions) or key in covered:
+                if infos[key] != len(node.actions) or key not in remaining:
                     raise ValueError("Packed information-set menu or public-history identity mismatch.")
-                covered.add(key)
+                remaining.remove(key)
         pending.extend((child, depth + 1) for child in node.children)
-    if covered != set(infos):
+    if remaining:
         raise ValueError("Packed information sets do not match the complete public tree.")
     # Buffer reset, regret matching, player updates, average/output rows and
     # dense row lookup are separately bounded. Terminal mass/rank work retains

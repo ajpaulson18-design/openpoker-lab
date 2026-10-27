@@ -92,3 +92,32 @@ Sol implemented this after worker usage limits. Existing independent oracles and
 Terra's prior physical/cache controls remain in scope, but a final independent
 agent engineering review is unavailable and is not claimed. Source-frozen
 results and publication gates are recorded after execution.
+
+## First frozen experiment and lifetime correction
+
+The first fixed experiment at `3a0f9b114247e7fd92c0845b30268d4866f4049e`
+produced identical complete policies, exact metrics and operator work in both
+storage modes. T1000 passed the unchanged exact <=1/1000 BB target. Its complete
+calls were about 75.21 s rows and 74.63 s packed, and the T100 untraced medians
+were about 7.75 s and 7.65 s. These observations establish no meaningful speed
+claim. T100 misses remain.
+
+That experiment **missed the full-call memory objective**: traced peaks were
+2,793,119 bytes rows and 3,021,397 bytes packed. The numeric buffers alone were
+smaller, but their payload was not a valid proxy for whole-operation allocation.
+The raw study and exact certificates are preserved before a distinct correction.
+
+Separate T10 phase tracing identified two avoidable lifetime costs: layout
+coverage validation retained fresh copies of all semantic-key tuples, and
+complete JSON rows overlapped diagnostic policy, lookup dictionaries and the
+original tree. The corrected layout consumes a set of original key references;
+it still rejects duplicates, missing rows and cycles. After diagnostics, packed
+serialization releases its obsolete dictionaries/root and consumes average and
+metadata entries while creating the unchanged complete output. Default row
+serialization remains unchanged in meaning and retains its dictionaries.
+
+Diagnostic tracing then observed about 2.17 MB packed versus 2.77 MB rows at T10;
+that is instrumented development evidence, not a frozen performance result.
+Both original miss and phase evidence remain. A separately frozen full-call
+study is required before accepting the correction; no cap or quality threshold
+was changed to obtain the observed reduction.

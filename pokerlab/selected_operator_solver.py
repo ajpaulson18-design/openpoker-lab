@@ -216,9 +216,18 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
     if not all(isfinite(x) for x in (value, br0, br1)):
         raise ValueError("Operator diagnostics returned a nonfinite value.")
     rows = []
-    for key in sorted(infos):
+    serialization_keys = sorted(infos)
+    info_count = len(infos)
+    if strategy_storage == "packed":
+        # Diagnostics are complete. Do not overlap obsolete policy/lookup
+        # dictionaries and the original tree root with complete JSON rows.
+        policies = None
+        infos.clear()
+        root = None
+    for key in serialization_keys:
         player, hand, history = key
-        node = metadata[key]
+        node = metadata.pop(key) if strategy_storage == "packed" else metadata[key]
+        probabilities = averages.pop(key) if strategy_storage == "packed" else averages[key]
         board = reference._revealed_board(history)
         rows.append({
             "player": "sb" if player == 0 else "bb", "hand": "".join(operator.hands[player][hand]),
@@ -226,8 +235,9 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
             "revealed_board": list(board), "history": list(history),
             "actions": [{"name": a.name, "amount": a.amount, "raise_to": a.raise_to,
                          "history_key": a.token, "probability": p}
-                        for a, p in zip(node.actions, averages[key])],
+                        for a, p in zip(node.actions, probabilities)],
         })
+    serialization_keys = None
     gain0, gain1 = max(0.0, br0 - value), max(0.0, br1 + value)
     pair_probabilities = operator.pair_probabilities()
     reachable = operator.reachable_selected()
@@ -252,7 +262,7 @@ def solve_four_street_operator(request, *, rank_cache_boards=1, strategy_storage
         "worlds": operator.world_count, "pair_runout_preflight_checks": operator.preflight_checks,
         "private_pair_probabilities": pair_probabilities,
         "public_states": census["public_states"], "decisions": census["decisions"],
-        "info_sets": len(infos), "value_sb": value, "value_bb": -value,
+        "info_sets": info_count, "value_sb": value, "value_bb": -value,
         "sb_best_response_value": br0, "bb_best_response_value": br1,
         "sb_gain": gain0, "bb_gain": gain1, "nash_conv": gain0 + gain1,
         "exploitability": (gain0 + gain1) / 2,
