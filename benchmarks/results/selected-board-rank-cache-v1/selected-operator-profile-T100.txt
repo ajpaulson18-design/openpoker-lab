@@ -1,0 +1,112 @@
+Mon Oct 26 18:22:19 2026    C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\selected-operator-profile-T100.prof
+
+         28307978 function calls (27844316 primitive calls) in 31.881 seconds
+
+   Ordered by: cumulative time
+   List reduced from 410 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001   31.896   31.896 benchmark_selected_operator.py:99(run_child)
+        1    0.009    0.009   31.892   31.892 selected_operator_solver.py:156(solve_four_street_operator)
+        1    0.659    0.659   31.156   31.156 public_cfr.py:330(_train_prepared)
+      200    0.088    0.000   26.842    0.134 public_cfr.py:135(_cfrplus_target_deltas)
+292400/200    2.385    0.000   26.754    0.134 public_cfr.py:144(visit)
+   143115    4.813    0.000   23.867    0.000 selected_runout_operator.py:244(values)
+   290290    0.732    0.000   11.759    0.000 selected_runout_operator.py:212(_world_sign)
+   100485    1.169    0.000   10.916    0.000 cards.py:43(rank_hand)
+   100485    2.000    0.000    3.910    0.000 cards.py:33(straight_high)
+  2999425    1.479    0.000    3.556    0.000 {built-in method builtins.isinstance}
+917928/913758    1.521    0.000    3.000    0.000 {built-in method builtins.sum}
+   100485    0.099    0.000    2.756    0.000 {built-in method builtins.next}
+   100485    0.421    0.000    2.657    0.000 cards.py:49(<genexpr>)
+      100    0.001    0.000    2.356    0.024 public_cfr.py:340(visitor)
+146200/100    1.089    0.000    2.355    0.024 public_cfr.py:342(visit)
+   166123    0.913    0.000    2.308    0.000 selected_runout_operator.py:114(_prefix_indexes)
+   816061    0.482    0.000    2.077    0.000 <frozen abc>:117(__instancecheck__)
+   100485    0.257    0.000    1.983    0.000 __init__.py:595(__init__)
+   100485    0.136    0.000    1.727    0.000 __init__.py:669(update)
+   816061    0.705    0.000    1.595    0.000 {built-in method _abc._abc_instancecheck}
+   917205    0.868    0.000    1.499    0.000 {built-in method builtins.all}
+   100485    0.414    0.000    1.352    0.000 {built-in method _collections._count_elements}
+   642336    0.599    0.000    1.315    0.000 selected_runout_operator.py:105(_raw_mass)
+   360000    0.775    0.000    1.203    0.000 cfr.py:4(strategy)
+  3215520    1.112    0.000    1.112    0.000 cards.py:50(<genexpr>)
+  2864736    1.028    0.000    1.028    0.000 cards.py:38(<genexpr>)
+   274012    0.669    0.000    1.005    0.000 selected_runout_operator.py:132(<genexpr>)
+   267764    0.605    0.000    0.986    0.000 {built-in method builtins.sorted}
+   120224    0.070    0.000    0.970    0.000 selected_operator_solver.py:33(__getitem__)
+   803880    0.579    0.000    0.938    0.000 cards.py:47(<genexpr>)
+    22777    0.341    0.000    0.900    0.000 selected_runout_operator.py:139(joint_marginals)
+715587/715577    0.427    0.000    0.890    0.000 <frozen abc>:121(__subclasscheck__)
+   642363    0.526    0.000    0.716    0.000 probability_guard.py:6(normal_positive_mass)
+   144858    0.238    0.000    0.567    0.000 {built-in method builtins.any}
+  1789838    0.549    0.000    0.549    0.000 {built-in method math.isfinite}
+        1    0.000    0.000    0.478    0.478 public_diagnostics.py:62(_evaluate_prepared)
+715587/715577    0.463    0.000    0.463    0.000 {built-in method _abc._abc_subclasscheck}
+   753239    0.448    0.000    0.448    0.000 {method 'get' of 'dict' objects}
+988844/988628    0.398    0.000    0.412    0.000 {built-in method builtins.max}
+   967570    0.396    0.000    0.396    0.000 {method 'join' of 'str' objects}
+1143478/1143475    0.371    0.000    0.371    0.000 {built-in method builtins.len}
+   703395    0.359    0.000    0.359    0.000 {method 'index' of 'str' objects}
+   429345    0.239    0.000    0.323    0.000 selected_runout_operator.py:321(<genexpr>)
+   734378    0.323    0.000    0.323    0.000 {method 'append' of 'list' objects}
+        2    0.000    0.000    0.261    0.131 public_diagnostics.py:142(best)
+
+
+
+TOP SELF TIME
+Mon Oct 26 18:22:19 2026    C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\selected-operator-profile-T100.prof
+
+         28307978 function calls (27844316 primitive calls) in 31.881 seconds
+
+   Ordered by: internal time
+   List reduced from 410 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   143115    4.813    0.000   23.867    0.000 selected_runout_operator.py:244(values)
+292400/200    2.385    0.000   26.754    0.134 public_cfr.py:144(visit)
+   100485    2.000    0.000    3.910    0.000 cards.py:33(straight_high)
+917928/913758    1.521    0.000    3.000    0.000 {built-in method builtins.sum}
+  2999425    1.479    0.000    3.556    0.000 {built-in method builtins.isinstance}
+   100485    1.169    0.000   10.916    0.000 cards.py:43(rank_hand)
+  3215520    1.112    0.000    1.112    0.000 cards.py:50(<genexpr>)
+146200/100    1.089    0.000    2.355    0.024 public_cfr.py:342(visit)
+  2864736    1.028    0.000    1.028    0.000 cards.py:38(<genexpr>)
+   166123    0.913    0.000    2.308    0.000 selected_runout_operator.py:114(_prefix_indexes)
+   917205    0.868    0.000    1.499    0.000 {built-in method builtins.all}
+   360000    0.775    0.000    1.203    0.000 cfr.py:4(strategy)
+   290290    0.732    0.000   11.759    0.000 selected_runout_operator.py:212(_world_sign)
+   816061    0.705    0.000    1.595    0.000 {built-in method _abc._abc_instancecheck}
+   274012    0.669    0.000    1.005    0.000 selected_runout_operator.py:132(<genexpr>)
+        1    0.659    0.659   31.156   31.156 public_cfr.py:330(_train_prepared)
+   267764    0.605    0.000    0.986    0.000 {built-in method builtins.sorted}
+   642336    0.599    0.000    1.315    0.000 selected_runout_operator.py:105(_raw_mass)
+   803880    0.579    0.000    0.938    0.000 cards.py:47(<genexpr>)
+  1789838    0.549    0.000    0.549    0.000 {built-in method math.isfinite}
+   642363    0.526    0.000    0.716    0.000 probability_guard.py:6(normal_positive_mass)
+   816061    0.482    0.000    2.077    0.000 <frozen abc>:117(__instancecheck__)
+715587/715577    0.463    0.000    0.463    0.000 {built-in method _abc._abc_subclasscheck}
+   753239    0.448    0.000    0.448    0.000 {method 'get' of 'dict' objects}
+715587/715577    0.427    0.000    0.890    0.000 <frozen abc>:121(__subclasscheck__)
+   100485    0.421    0.000    2.657    0.000 cards.py:49(<genexpr>)
+   100485    0.414    0.000    1.352    0.000 {built-in method _collections._count_elements}
+988844/988628    0.398    0.000    0.412    0.000 {built-in method builtins.max}
+   967570    0.396    0.000    0.396    0.000 {method 'join' of 'str' objects}
+1143478/1143475    0.371    0.000    0.371    0.000 {built-in method builtins.len}
+   703395    0.359    0.000    0.359    0.000 {method 'index' of 'str' objects}
+    22777    0.341    0.000    0.900    0.000 selected_runout_operator.py:139(joint_marginals)
+   734378    0.323    0.000    0.323    0.000 {method 'append' of 'list' objects}
+   690606    0.258    0.000    0.258    0.000 cards.py:53(<genexpr>)
+   100485    0.257    0.000    1.983    0.000 __init__.py:595(__init__)
+   429345    0.239    0.000    0.323    0.000 selected_runout_operator.py:321(<genexpr>)
+   144858    0.238    0.000    0.567    0.000 {built-in method builtins.any}
+   377000    0.156    0.000    0.156    0.000 public_cfr.py:195(<genexpr>)
+   100485    0.136    0.000    1.727    0.000 __init__.py:669(update)
+   131544    0.122    0.000    0.122    0.000 cards.py:67(<genexpr>)
+    59848    0.117    0.000    0.176    0.000 selected_runout_operator.py:128(<genexpr>)
+   100485    0.099    0.000    2.756    0.000 {built-in method builtins.next}
+   145506    0.091    0.000    0.091    0.000 {built-in method builtins.min}
+      200    0.088    0.000   26.842    0.134 public_cfr.py:135(_cfrplus_target_deltas)
+   140342    0.075    0.000    0.075    0.000 {method 'items' of 'dict' objects}
+
+

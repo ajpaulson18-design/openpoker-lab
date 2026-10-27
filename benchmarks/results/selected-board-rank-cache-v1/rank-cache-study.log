@@ -1,0 +1,11 @@
+T100 capacity=1 traced=False sample=0 seconds=21.219043
+T100 capacity=64 traced=False sample=0 seconds=13.049688
+T100 capacity=64 traced=False sample=1 seconds=13.061669
+T100 capacity=1 traced=False sample=1 seconds=22.220316
+T100 capacity=1 traced=False sample=2 seconds=21.812964
+T100 capacity=64 traced=False sample=2 seconds=13.732200
+T100 capacity=1 traced=True sample=0 seconds=145.688114
+T100 capacity=64 traced=True sample=0 seconds=92.802681
+T1000 capacity=1 traced=False sample=0 seconds=118.992255
+T1000 capacity=64 traced=False sample=0 seconds=80.770475
+[{"iterations": 100, "manifest_sha256": "1c2ed31d9343f23dc85cbf9c56c5cb3533a47b965f98e1a761efff2b5b42af36", "medians_seconds": {"1": 21.81296350000048, "64": 13.061669399998209}, "complete_strategy_rows_identical": true, "exact_metrics_identical": true, "targets_met": [false, false]}, {"iterations": 1000, "manifest_sha256": "256abf6ffa17f54a5d39ca217321730b35bb8022fb05af2adc919bfbb60a2ad9", "medians_seconds": {"1": 118.99225540000043, "64": 80.77047460000176}, "complete_strategy_rows_identical": true, "exact_metrics_identical": true, "targets_met": [true, true]}]

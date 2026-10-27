@@ -196,6 +196,27 @@ preserves the finding, scope and implementation identities.
 
 ## Remaining work
 
+### Bounded rank reuse after the first integration
+
+The [selected-board rank cache](selected-board-rank-cache.md) follows the
+integrated operator's phase profile rather than changing solver scope. The
+original 22-world game and one-board default remain intact. Capacity 64 reduces
+T1000 rank calls from 991,485 to 23 with identical policies/exact metrics and
+both independent <=1/1000 BB targets met. Recorded single complete calls are
+119.0 s versus 80.8 s. Three-call T100 medians are 21.8 s versus 13.1 s; T100
+accuracy misses remain. Traced allocation increases about 20 KB and process
+peaks establish no general memory improvement. Pair/board scans and explicit
+tree/action storage remain unchanged.
+
+The [frozen study receipt](../benchmarks/results/selected-board-rank-cache-v1/receipt.json)
+pins source `3ba64b386fad3ed5852182915220625232dee1bc`, compressed raw policies,
+all independent certificates, misses, profiles and failure logs. A separate
+no-training saved-only process compares the existing exact audits. Fifty-six
+focused/independent/reference/contract tests pass normally and optimized. Terra
+drafted independent tests before both workers hit usage limits; Sol completed
+and reviewed the partial implementation. No final independent-agent engineering
+review is claimed, and no full-deck or overall-goal completion follows.
+
 ### Subsequent selected-operator training milestone
 
 The owner's next scalable-foundation goal now has a concrete

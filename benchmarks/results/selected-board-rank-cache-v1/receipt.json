@@ -1,0 +1,89 @@
+{
+  "archive_bytes": 1191109,
+  "archive_sha256": "a2d90cdbdeac75eb430af6e74f11a13bfc1b68155b404fd894fd10eb65e958b4",
+  "baseline_merge_commit": "156555b6b2aca8298eeffa978c80db3de0ecd689",
+  "experiments": [
+    {
+      "complete_strategy_rows_identical": true,
+      "exact_metrics_identical": true,
+      "iterations": 100,
+      "manifest_sha256": "1c2ed31d9343f23dc85cbf9c56c5cb3533a47b965f98e1a761efff2b5b42af36",
+      "medians_seconds": {
+        "1": 21.81296350000048,
+        "64": 13.061669399998209
+      },
+      "targets_met": [
+        false,
+        false
+      ]
+    },
+    {
+      "complete_strategy_rows_identical": true,
+      "exact_metrics_identical": true,
+      "iterations": 1000,
+      "manifest_sha256": "256abf6ffa17f54a5d39ca217321730b35bb8022fb05af2adc919bfbb60a2ad9",
+      "medians_seconds": {
+        "1": 118.99225540000043,
+        "64": 80.77047460000176
+      },
+      "targets_met": [
+        true,
+        true
+      ]
+    }
+  ],
+  "independent_scope": {
+    "final_engineering_review": "Sol completed partial Luna implementation after both workers hit usage limits; no final independent-agent review claimed.",
+    "mathematical_oracle": "Separate numeric rules/best-five rank and exact whole-game replay; no production rank/tree/BR oracle.",
+    "test_draft": "Terra independently drafted physical/policy/exact cache tests before worker usage limits."
+  },
+  "intermediate_failures": [
+    "Restricted normal/optimized runs passed numerical controls but had three TemporaryDirectory permission errors each; normal-access runs passed all 56.",
+    "Initial partial cache accounting omitted active conversion references and changed the default cache branch; corrected before frozen implementation."
+  ],
+  "limitations": [
+    "Bounded selected game, not full deck",
+    "T1000 one call per mode, not median",
+    "T100 exact quality misses retained",
+    "Memory overhead measured separately",
+    "Pair/board scans unchanged",
+    "Public tree/information-action storage explicit",
+    "No general speed/RSS gain",
+    "Overall foundation goal active"
+  ],
+  "local_tests": {
+    "normal": {
+      "seconds": 18.009,
+      "tests": 56
+    },
+    "optimized": {
+      "seconds": 17.338,
+      "tests": 56
+    }
+  },
+  "predecessor_default_strategy_and_operator_statistics_identical": true,
+  "publication": "Final-head CI and merge are separate live requirements.",
+  "separate_saved_only_process": {
+    "existing_certificates_compared_without_overwrite": true,
+    "native_calls": 0,
+    "passed": true,
+    "training_calls": 0
+  },
+  "source_commit": "3ba64b386fad3ed5852182915220625232dee1bc",
+  "t1000_actual_scans_identical": true,
+  "t1000_cache_statistics": {
+    "board_capacity": 64,
+    "evictions": 0,
+    "hits": 2864284,
+    "misses": 6,
+    "released_after_diagnostics": true,
+    "retained_peak_rank_slots": 24,
+    "retained_plus_construction_peak_reference_slots": 28
+  },
+  "t1000_numeric_nash_conv_bb": 0.0003997388151442405,
+  "t1000_operator_statistics": {
+    "post_constructor_pair_board_checks": 7547036,
+    "rank_calls": 23,
+    "rank_vector_peak_entries": 28
+  }
+}

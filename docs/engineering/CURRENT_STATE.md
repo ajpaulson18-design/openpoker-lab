@@ -5,7 +5,11 @@ the selected operator with solve-local per-board rank reuse. Capacity one
 preserves the prior path; two through 64 require separate slot/work admission.
 This targets repeated ranking while retaining all pair/board scan charges,
 game rules and policy identities. Executed performance and independent replay
-are separate gates.
+are separate gates. Its retained comparison preserves identical complete policies
+and independent exact T1000 target passes while recording 80.8 s versus 119.0 s
+single calls and 23 versus 991,485 rank calls. Pair/board checks stay unchanged;
+T100 accuracy misses and the allocation increase are retained. No broader-scale
+or process-memory improvement is established.
 
 The opt-in [selected-runout operator integration](../selected-operator-four-street.md)
 connects streamed chance/payoff queries to the shared four-street trainer without
