@@ -364,3 +364,60 @@ profile finds lower current allocation at shared trainer entry but a higher
 cumulative peak already reached before training. This is not retained-object
 proof or a full-call memory gain. Direct shared construction is the next storage
 dependency; all negative observations and exact-verifier limits remain explicit.
+
+### Direct construction after the compiler bridge's negative result
+
+The [direct shared constructor](direct-shared-topology.md) uses the original
+bounded preflop skeleton and local action helpers while creating postflop DAG
+vertices directly. Sol integrated preparation with the unchanged selected chance
+operator, shared packed trainer and diagnostics; Luna implemented the direct
+recurrence and resource ledger; Terra independently found and reviewed fixes for
+early carry cleanup and late combined logical admission. No reachable numerical
+output mismatch was established for the cleanup issue; source order was corrected
+before acceptance. Cache hits now charge every unfolded occurrence, support maps
+are canonicalized once, and streamed parser reservations precede input growth.
+
+The original 22-world receipt retains 10 materialized preflop source states,
+including three continuation records, but zero postflop source nodes and compiler
+snapshots. Its 99 DAG vertices retain the same 1,462 logical visits, 628 decisions,
+1,200 information rows and 2,402 action slots. The direct path prohibits all old
+literal postflop builders/merger/clone/compiler and second training-view entry.
+
+The broad 136-control suite passes normally (33.612 s) and optimized (30.786 s),
+with two further independent cache/parser controls passing in each mode. Complete
+policy/diagnostic parity and independent numeric/exact early-all-in controls pass.
+The native source guard initially rejected an older helper built from different
+checkout line-ending bytes; its failure is preserved and a separately built
+current-checkout helper passes. No manifest or admission guard was bypassed.
+Frozen complete-call runtime/memory, saved T1000 replay and final CI remain gates;
+native direct traversal, information-history growth and pair scans remain open.
+
+The first direct [frozen study and lifetime probe](../benchmarks/results/direct-shared-topology-v1/receipt.json)
+at `afd1afc45a62d07c2b1beb120bd9891e5858dece` passes all five complete policy/
+diagnostic/counter pairs and both exact T1000 targets, with T100 misses retained.
+Fresh saved-only replay agrees within about 1.11e-16. Complete calls remain slower
+and traced peak higher: T100 medians 7.152141/10.518174 s, T1000 single calls
+74.623091/100.531184 s, and traced T100 2,340,331/2,711,194 bytes, literal/direct.
+
+A subsequent GC-disabled no-training probe and independent actual trainer-entry
+test demonstrate recursive constructor closures retaining the builder after
+return or failure. This proves cyclic lifetime retention, not that it caused the
+formal peak. Sol added isolated `finally` cleanup of seven helper cells; Terra
+independently verifies release on success, inside-template and finish failures,
+trainer entry and trainer failure without manual collection. The corrected broad
+suite passes 140 controls normally (32.364 s) and optimized (31.672 s). The initial
+study, pre-fix failure and corrected tests are preserved. Corrected-source frozen
+measurement and final CI are separate gates; no memory improvement is inferred.
+
+Corrected source `e7afde7d2457ba45063cfdb7f038d703b5272e0a` now has its own
+complete fixed batch and fresh saved-only replay. All five paired policies,
+diagnostics/counters, exact metrics and T1000 targets match; corresponding direct
+outputs and structural receipts also match the original source. Terra independently
+verifies both manifest closures, captured source bytes and exact threshold flags.
+T100 misses remain. The corrected path still regresses complete-call runtime and
+traced peak: T100 medians 6.824361/9.445039 s, T1000 single calls
+73.241903/91.304704 s, traced T100 2,340,331/2,713,034 bytes, literal/direct.
+The lifetime fix establishes prompt release, not causation of either peak.
+Both complete studies, probes and failures remain immutable in the same receipt.
+Native DAG traversal must avoid rebuilding expanded node/dense-hand maps; strategy
+history/output and pair-scan growth remain independent limits. Overall goal active.

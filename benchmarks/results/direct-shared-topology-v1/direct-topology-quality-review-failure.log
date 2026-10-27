@@ -1,0 +1,94 @@
+activation	Check daily workflow token guardrail	﻿2026-10-27T14:36:59.1647036Z ##[group]Run actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1649128Z with:
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1654211Z   github-token: ***
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1656672Z   script: const path = require('path');
+activation	Check daily workflow token guardrail	const actionsDir = path.join(process.env.RUNNER_TEMP, 'gh-aw', 'actions');
+activation	Check daily workflow token guardrail	const { setupGlobals } = require(path.join(actionsDir, 'setup_globals.cjs'));
+activation	Check daily workflow token guardrail	setupGlobals(core, github, context, exec, io, getOctokit);
+activation	Check daily workflow token guardrail	const { main } = require(path.join(actionsDir, 'check_daily_aic_workflow_guardrail.cjs'));
+activation	Check daily workflow token guardrail	await main();
+activation	Check daily workflow token guardrail	
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1659274Z   debug: false
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1659760Z   user-agent: actions/github-script
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1660343Z   result-encoding: json
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1661136Z   retries: 0
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1661652Z   retry-exempt-status-codes: 400,401,403,404,422
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1662275Z env:
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1662719Z   OTEL_EXPORTER_OTLP_ENDPOINT: 
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1663323Z   OTEL_SERVICE_NAME: gh-aw.quality-review
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1666075Z   OTEL_RESOURCE_ATTRIBUTES: gh-aw.workflow.name=OpenPoker%20Lab%20quality%20review,gh-aw.repository=ajpaulson18-design/openpoker-lab,gh-aw.run.id=40522734712,github.run_id=40522734712,gh-aw.engine.id=pi
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1668497Z   OTEL_EXPORTER_OTLP_HEADERS: 
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1669145Z   GH_AW_OTLP_ENDPOINTS: [{"url":"","headers":""}]
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1687628Z   GH_AW_OTLP_IF_MISSING: ignore
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1688895Z   GH_AW_MAX_DAILY_AI_CREDITS: 70
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1690256Z   GH_AW_RUNTIME_FEATURES: 
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1691766Z   GITHUB_AW_OTEL_TRACE_ID: 06a201c2ff52d6e9ef4721e653a25e20
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1692661Z   GITHUB_AW_OTEL_PARENT_SPAN_ID: 2b73c18158958ba8
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1693949Z   GITHUB_AW_OTEL_JOB_START_MS: 1793111817205
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1694717Z   GH_AW_WORKFLOW_NAME: OpenPoker Lab quality review
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1695511Z   GH_AW_WORKFLOW_ID: quality-review
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1697039Z   GH_AW_RUN_URL: https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/40522734712
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1698074Z   GH_AW_WORKFLOW_DISPATCH_AW_CONTEXT: 
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1699304Z   GH_AW_HAS_SLASH_COMMAND: false
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1699895Z   GH_AW_HAS_LABEL_COMMAND: false
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1712845Z   GH_AW_GITHUB_TOKEN: ***
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1714080Z   GH_AW_MAX_AI_CREDITS: 70
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.1715427Z ##[endgroup]
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.4329236Z [daily-workflow-aic] Resolved daily AIC guardrail limits: {"dailyAICThreshold":70,"perRunMaxAICredits":70,"perRunFallbackAvailable":true}
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.7775330Z [daily-workflow-aic] Started authoritative AIC scan: {"repository":"ajpaulson18-design/openpoker-lab","currentRunId":40522734712,"workflowId":375915007,"fallbackAIC":70}
+activation	Check daily workflow token guardrail	2026-10-27T14:36:59.7817946Z [daily-workflow-aic] Loaded scan observations: {"workflowId":375915007,"cachedEntries":0}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:04.4951941Z [daily-workflow-aic] Listed workflow run candidates: {"page":1,"lookupMode":"workflow_id","sourceRunCount":100,"returnedRunCount":100}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:04.7000384Z [daily-workflow-aic] Resolving run AIC: {"runId":40520034117,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:05.6433018Z [daily-workflow-aic] Computed run AIC: {"runId":40520034117,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:05.6934196Z [daily-workflow-aic] Computed run AIC: {"runId":40520034117,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:05.6944224Z [daily-workflow-aic] Resolving run AIC: {"runId":40513954497,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:06.1107786Z [daily-workflow-aic] Computed run AIC: {"runId":40513954497,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:06.1111388Z [daily-workflow-aic] Computed run AIC: {"runId":40513954497,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:06.1115503Z [daily-workflow-aic] Resolving run AIC: {"runId":40513902663,"runAttempt":1,"conclusion":"cancelled","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.4004249Z [daily-workflow-aic] Listed workflow artifacts: {"runId":40513902663,"artifactCount":2,"artifacts":[{"id":12738790753,"name":"usage"},{"id":12737724117,"name":"detection"}]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.4101519Z [daily-workflow-aic] Selected guardrail artifact: {"runId":40513902663,"artifactId":12738790753,"artifactName":"usage"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7770417Z [daily-workflow-aic] Downloaded guardrail artifact: {"runId":40513902663,"artifactId":12738790753,"artifactName":"usage","downloadPath":"/tmp/gh-aw-daily-guardrail-40513902663-OBKl1V","usageJSONLFiles":["/tmp/gh-aw-daily-guardrail-40513902663-OBKl1V/detection_usage.jsonl","/tmp/gh-aw-daily-guardrail-40513902663-OBKl1V/detection/token_usage.jsonl"]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7800199Z [daily-workflow-aic] Inspected component accounting: {"runId":40513902663,"component":"detection","jobId":122222860511,"runAttempt":1,"conclusion":"success","candidates":[{"file":"detection/token_usage.jsonl","state":"empty"},{"file":"detection_usage.jsonl","state":"non-empty"}]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7830871Z [daily-workflow-aic] Computed component AIC: {"runId":40513902663,"component":"detection","jobId":122222860511,"runAttempt":1,"conclusion":"success","aic":0,"reason":"empty_detection_accounting","source":"detection/token_usage.jsonl"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7898232Z [daily-workflow-aic] Computed component AIC: {"runId":40513902663,"component":"agent","jobId":122222862282,"runAttempt":1,"conclusion":"cancelled","aic":0,"reason":"runner_not_assigned"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7904297Z [daily-workflow-aic] Computed covered component total: {"runId":40513902663,"aic":0}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7909111Z [daily-workflow-aic] Computed run AIC from artifact: {"runId":40513902663,"artifactId":12738790753,"aic":0,"reason":"covered_components"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7914922Z [daily-workflow-aic] Computed run AIC: {"runId":40513902663,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:07.7920283Z [daily-workflow-aic] Resolving run AIC: {"runId":40444016448,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.2047898Z [daily-workflow-aic] Computed run AIC: {"runId":40444016448,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.2055407Z [daily-workflow-aic] Computed run AIC: {"runId":40444016448,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.2095727Z [daily-workflow-aic] Resolving run AIC: {"runId":40439851407,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.6241192Z [daily-workflow-aic] Computed run AIC: {"runId":40439851407,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.6273887Z [daily-workflow-aic] Computed run AIC: {"runId":40439851407,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:08.6278352Z [daily-workflow-aic] Resolving run AIC: {"runId":40438406599,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.0256378Z [daily-workflow-aic] Computed run AIC: {"runId":40438406599,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.0262400Z [daily-workflow-aic] Computed run AIC: {"runId":40438406599,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.0266800Z [daily-workflow-aic] Resolving run AIC: {"runId":40438368652,"runAttempt":1,"conclusion":"cancelled","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.2782244Z [daily-workflow-aic] Computed run AIC: {"runId":40438368652,"aic":0,"reason":"no_billable_jobs"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.2844938Z [daily-workflow-aic] Computed run AIC: {"runId":40438368652,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:09.2858262Z [daily-workflow-aic] Resolving run AIC: {"runId":40438330410,"runAttempt":1,"conclusion":"cancelled","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.0894900Z [daily-workflow-aic] Listed workflow artifacts: {"runId":40438330410,"artifactCount":5,"artifacts":[{"id":12705805249,"name":"activation"},{"id":12705665642,"name":"detection"},{"id":12705575736,"name":"info"},{"id":12705460649,"name":"usage"},{"id":12705060954,"name":"aic-usage-scan-v2"}]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.0911612Z [daily-workflow-aic] Selected guardrail artifact: {"runId":40438330410,"artifactId":12705460649,"artifactName":"usage"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3369416Z [daily-workflow-aic] Downloaded guardrail artifact: {"runId":40438330410,"artifactId":12705460649,"artifactName":"usage","downloadPath":"/tmp/gh-aw-daily-guardrail-40438330410-sTPRYD","usageJSONLFiles":["/tmp/gh-aw-daily-guardrail-40438330410-sTPRYD/detection_usage.jsonl","/tmp/gh-aw-daily-guardrail-40438330410-sTPRYD/detection/token_usage.jsonl"]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3419611Z [daily-workflow-aic] Inspected component accounting: {"runId":40438330410,"component":"detection","jobId":121972625658,"runAttempt":1,"conclusion":"success","candidates":[{"file":"detection/token_usage.jsonl","state":"empty"},{"file":"detection_usage.jsonl","state":"non-empty"}]}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3436663Z [daily-workflow-aic] Computed component AIC: {"runId":40438330410,"component":"detection","jobId":121972625658,"runAttempt":1,"conclusion":"success","aic":0,"reason":"empty_detection_accounting","source":"detection/token_usage.jsonl"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3474524Z [daily-workflow-aic] Computed component AIC: {"runId":40438330410,"component":"agent","jobId":121972626093,"runAttempt":1,"conclusion":"cancelled","aic":0,"reason":"runner_not_assigned"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3486019Z [daily-workflow-aic] Computed covered component total: {"runId":40438330410,"aic":0}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3498898Z [daily-workflow-aic] Computed run AIC from artifact: {"runId":40438330410,"artifactId":12705460649,"aic":0,"reason":"covered_components"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3505226Z [daily-workflow-aic] Computed run AIC: {"runId":40438330410,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.3525003Z [daily-workflow-aic] Resolving run AIC: {"runId":40438193234,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.7627765Z [daily-workflow-aic] Computed run AIC: {"runId":40438193234,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.7639716Z [daily-workflow-aic] Computed run AIC: {"runId":40438193234,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:10.7644998Z [daily-workflow-aic] Resolving run AIC: {"runId":40437413978,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.0953991Z [daily-workflow-aic] Computed run AIC: {"runId":40437413978,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.0974485Z [daily-workflow-aic] Computed run AIC: {"runId":40437413978,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.0981049Z [daily-workflow-aic] Resolving run AIC: {"runId":40431814513,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.5190271Z [daily-workflow-aic] Computed run AIC: {"runId":40431814513,"aic":0,"reason":"all_billable_jobs_skipped"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.5257969Z [daily-workflow-aic] Computed run AIC: {"runId":40431814513,"aic":0,"reason":"artifact_accounting"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:11.5306744Z [daily-workflow-aic] Resolving run AIC: {"runId":40430432448,"runAttempt":1,"conclusion":"success","cacheHit":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1510335Z GET /repos/ajpaulson18-design/openpoker-lab/actions/runs/40430432448/jobs?filter=all&per_page=100&page=1 - 502 with id 1B84:36DECB:5D0BB1:130C321:6AE0B717 in 10622ms
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1541799Z [daily-workflow-aic] Run AIC resolution failed: {"runId":40430432448,"runAttempt":1,"status":502,"error":"Server Error","fallbackAvailable":false}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1554094Z [daily-workflow-aic] Persisted scan observations: {"cachePath":"/tmp/gh-aw/agentic-workflow-usage-scan-v2.jsonl","entries":11}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1585640Z [daily-workflow-aic] AIC inspection failed: {"status":"transient_error","error":"Server Error"}
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1594038Z Daily AIC inspection must not retry before 2026-10-27T14:40:35.000Z
+activation	Check daily workflow token guardrail	2026-10-27T14:37:22.1864191Z ##[error]Daily workflow AI Credits are unknown: Server Error

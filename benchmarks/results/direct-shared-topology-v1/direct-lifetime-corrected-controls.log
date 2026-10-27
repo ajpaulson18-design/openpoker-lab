@@ -1,0 +1,22 @@
+test_builder_released_at_real_trainer_entry_and_error (tests.test_direct_topology_independent.DirectIndependentAdmissionTests.test_builder_released_at_real_trainer_entry_and_error) ... ok
+test_cached_template_is_charged_per_logical_occurrence_before_reuse (tests.test_direct_topology_independent.DirectIndependentAdmissionTests.test_cached_template_is_charged_per_logical_occurrence_before_reuse) ... ok
+test_parser_refuses_to_advance_iterator_when_no_scratch_is_available (tests.test_direct_topology_independent.DirectIndependentAdmissionTests.test_parser_refuses_to_advance_iterator_when_no_scratch_is_available) ... ok
+test_22_world_fixture_complete_ordered_occurrences (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_22_world_fixture_complete_ordered_occurrences) ... ok
+test_96_world_weighted_blockers_and_shared_future_controls (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_96_world_weighted_blockers_and_shared_future_controls) ... ok
+test_fractional_asymmetric_refund_tie_and_raise_reopening (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_fractional_asymmetric_refund_tie_and_raise_reopening) ... ok
+test_logical_limit_rejects_a_compact_shared_dag (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_logical_limit_rejects_a_compact_shared_dag) ... ok
+test_malformed_inputs_and_source_tree_lifetime (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_malformed_inputs_and_source_tree_lifetime) ... ok
+test_partial_logical_admission_stops_before_full_memo_growth (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_partial_logical_admission_stops_before_full_memo_growth) ... ok
+test_streaming_selected_input_reserves_before_consuming_more (tests.test_direct_shared_topology.DirectSharedTopologyTests.test_streaming_selected_input_reserves_before_consuming_more) ... ok
+test_fractional_local_rounding_short_stack_and_tie (tests.test_direct_topology_solver.DirectTopologySolverTests.test_fractional_local_rounding_short_stack_and_tie) ... ok
+test_later_street_raise_reopening (tests.test_direct_topology_solver.DirectTopologySolverTests.test_later_street_raise_reopening) ... ok
+test_no_information_and_exact_early_all_in (tests.test_direct_topology_solver.DirectTopologySolverTests.test_no_information_and_exact_early_all_in) ... ok
+test_original_four_street_game (tests.test_direct_topology_solver.DirectTopologySolverTests.test_original_four_street_game) ... ok
+test_original_mass_and_scan_guards_remain (tests.test_direct_topology_solver.DirectTopologySolverTests.test_original_mass_and_scan_guards_remain) ... ok
+test_rank_free_direct_census_and_early_selector_rejection (tests.test_direct_topology_solver.DirectTopologySolverTests.test_rank_free_direct_census_and_early_selector_rejection) ... ok
+test_weighted_shared_futures_and_blocked_private_holes (tests.test_direct_topology_solver.DirectTopologySolverTests.test_weighted_shared_futures_and_blocked_private_holes) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 6.218s
+
+OK
