@@ -1,0 +1,515 @@
+{
+  "commit": "db66ac3385bec980ff574837c80fe6e7699e0de8",
+  "git_status": "",
+  "file_sha256": {
+    "pokerlab/selected_runout_operator.py": "2f6dc4f3d105f4df6cf359174a21adedcd6276ba5cf2a1192530e86f82e63a2e",
+    "pokerlab/selected_operator_solver.py": "8ca527ac89664eafcdb4b72ce7994ecd0e557be9a81b61b6dd88522c6825350c",
+    "pokerlab/public_cfr.py": "5a7020592f05ae7561a570d853038b6f2e63281de1038f3f59f9536eced3d7cd",
+    "pokerlab/public_diagnostics.py": "6d3414be39d89aa4325d5f46997f6b16e415034caebed61b1f48b5d3eb1473a0",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/benchmark_selected_operator.py": "c18ac5ef716ffede5f46ecc6e26f39b99572d25c40659786c131bc747151c23b",
+    "benchmarks/four-street-integration-v1.json": "5b472797371498772559963a207ca189b45ed01fc047048f4164cb83197fc6e8"
+  },
+  "profile": "selected-operator-profile-T100.prof",
+  "cprofile_total_calls": 28307978,
+  "cprofile_total_seconds": 31.88066910000001,
+  "operator_statistics_from_unprofiled_same-case-call": {
+    "rank_calls": 100485,
+    "post_constructor_pair_board_checks": 764636,
+    "rank_vector_peak_entries": 4
+  },
+  "cprofile_top_cumulative": [
+    {
+      "function": "benchmark_selected_operator.py:99(run_child)",
+      "calls": 1,
+      "primitive_calls": 1,
+      "self_seconds": 0.000564,
+      "cumulative_seconds": 31.896401
+    },
+    {
+      "function": "selected_operator_solver.py:156(solve_four_street_operator)",
+      "calls": 1,
+      "primitive_calls": 1,
+      "self_seconds": 0.009381,
+      "cumulative_seconds": 31.891909
+    },
+    {
+      "function": "public_cfr.py:330(_train_prepared)",
+      "calls": 1,
+      "primitive_calls": 1,
+      "self_seconds": 0.658854,
+      "cumulative_seconds": 31.156418
+    },
+    {
+      "function": "public_cfr.py:135(_cfrplus_target_deltas)",
+      "calls": 200,
+      "primitive_calls": 200,
+      "self_seconds": 0.088495,
+      "cumulative_seconds": 26.842193
+    },
+    {
+      "function": "public_cfr.py:144(visit)",
+      "calls": 292400,
+      "primitive_calls": 200,
+      "self_seconds": 2.385453,
+      "cumulative_seconds": 26.75354
+    },
+    {
+      "function": "selected_runout_operator.py:244(values)",
+      "calls": 143115,
+      "primitive_calls": 143115,
+      "self_seconds": 4.813411,
+      "cumulative_seconds": 23.867259
+    },
+    {
+      "function": "selected_runout_operator.py:212(_world_sign)",
+      "calls": 290290,
+      "primitive_calls": 290290,
+      "self_seconds": 0.73206,
+      "cumulative_seconds": 11.758786
+    },
+    {
+      "function": "cards.py:43(rank_hand)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 1.169379,
+      "cumulative_seconds": 10.916308
+    },
+    {
+      "function": "cards.py:33(straight_high)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 1.999955,
+      "cumulative_seconds": 3.910436
+    },
+    {
+      "function": "~:0(<built-in method builtins.isinstance>)",
+      "calls": 2999425,
+      "primitive_calls": 2999425,
+      "self_seconds": 1.479274,
+      "cumulative_seconds": 3.55637
+    },
+    {
+      "function": "~:0(<built-in method builtins.sum>)",
+      "calls": 917928,
+      "primitive_calls": 913758,
+      "self_seconds": 1.521456,
+      "cumulative_seconds": 3.000423
+    },
+    {
+      "function": "~:0(<built-in method builtins.next>)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.09897,
+      "cumulative_seconds": 2.755973
+    },
+    {
+      "function": "cards.py:49(<genexpr>)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.421471,
+      "cumulative_seconds": 2.657003
+    },
+    {
+      "function": "public_cfr.py:340(visitor)",
+      "calls": 100,
+      "primitive_calls": 100,
+      "self_seconds": 0.00053,
+      "cumulative_seconds": 2.355702
+    },
+    {
+      "function": "public_cfr.py:342(visit)",
+      "calls": 146200,
+      "primitive_calls": 100,
+      "self_seconds": 1.088646,
+      "cumulative_seconds": 2.355172
+    },
+    {
+      "function": "selected_runout_operator.py:114(_prefix_indexes)",
+      "calls": 166123,
+      "primitive_calls": 166123,
+      "self_seconds": 0.913398,
+      "cumulative_seconds": 2.307759
+    },
+    {
+      "function": "<frozen abc>:117(__instancecheck__)",
+      "calls": 816061,
+      "primitive_calls": 816061,
+      "self_seconds": 0.48212,
+      "cumulative_seconds": 2.077095
+    },
+    {
+      "function": "__init__.py:595(__init__)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.256593,
+      "cumulative_seconds": 1.983115
+    },
+    {
+      "function": "__init__.py:669(update)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.135542,
+      "cumulative_seconds": 1.726523
+    },
+    {
+      "function": "~:0(<built-in method _abc._abc_instancecheck>)",
+      "calls": 816061,
+      "primitive_calls": 816061,
+      "self_seconds": 0.704756,
+      "cumulative_seconds": 1.594976
+    },
+    {
+      "function": "~:0(<built-in method builtins.all>)",
+      "calls": 917205,
+      "primitive_calls": 917205,
+      "self_seconds": 0.867996,
+      "cumulative_seconds": 1.499149
+    },
+    {
+      "function": "~:0(<built-in method _collections._count_elements>)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.414339,
+      "cumulative_seconds": 1.352225
+    },
+    {
+      "function": "selected_runout_operator.py:105(_raw_mass)",
+      "calls": 642336,
+      "primitive_calls": 642336,
+      "self_seconds": 0.599366,
+      "cumulative_seconds": 1.314995
+    },
+    {
+      "function": "cfr.py:4(strategy)",
+      "calls": 360000,
+      "primitive_calls": 360000,
+      "self_seconds": 0.774626,
+      "cumulative_seconds": 1.202965
+    },
+    {
+      "function": "cards.py:50(<genexpr>)",
+      "calls": 3215520,
+      "primitive_calls": 3215520,
+      "self_seconds": 1.111915,
+      "cumulative_seconds": 1.111915
+    },
+    {
+      "function": "cards.py:38(<genexpr>)",
+      "calls": 2864736,
+      "primitive_calls": 2864736,
+      "self_seconds": 1.028441,
+      "cumulative_seconds": 1.028441
+    },
+    {
+      "function": "selected_runout_operator.py:132(<genexpr>)",
+      "calls": 274012,
+      "primitive_calls": 274012,
+      "self_seconds": 0.668554,
+      "cumulative_seconds": 1.005349
+    },
+    {
+      "function": "~:0(<built-in method builtins.sorted>)",
+      "calls": 267764,
+      "primitive_calls": 267764,
+      "self_seconds": 0.605064,
+      "cumulative_seconds": 0.985556
+    },
+    {
+      "function": "selected_operator_solver.py:33(__getitem__)",
+      "calls": 120224,
+      "primitive_calls": 120224,
+      "self_seconds": 0.070026,
+      "cumulative_seconds": 0.970039
+    },
+    {
+      "function": "cards.py:47(<genexpr>)",
+      "calls": 803880,
+      "primitive_calls": 803880,
+      "self_seconds": 0.578574,
+      "cumulative_seconds": 0.937886
+    },
+    {
+      "function": "selected_runout_operator.py:139(joint_marginals)",
+      "calls": 22777,
+      "primitive_calls": 22777,
+      "self_seconds": 0.341081,
+      "cumulative_seconds": 0.900014
+    },
+    {
+      "function": "<frozen abc>:121(__subclasscheck__)",
+      "calls": 715587,
+      "primitive_calls": 715577,
+      "self_seconds": 0.426932,
+      "cumulative_seconds": 0.89022
+    },
+    {
+      "function": "probability_guard.py:6(normal_positive_mass)",
+      "calls": 642363,
+      "primitive_calls": 642363,
+      "self_seconds": 0.526016,
+      "cumulative_seconds": 0.715647
+    },
+    {
+      "function": "~:0(<built-in method builtins.any>)",
+      "calls": 144858,
+      "primitive_calls": 144858,
+      "self_seconds": 0.237545,
+      "cumulative_seconds": 0.567368
+    },
+    {
+      "function": "~:0(<built-in method math.isfinite>)",
+      "calls": 1789838,
+      "primitive_calls": 1789838,
+      "self_seconds": 0.549272,
+      "cumulative_seconds": 0.549272
+    }
+  ],
+  "cprofile_top_self": [
+    {
+      "function": "selected_runout_operator.py:244(values)",
+      "calls": 143115,
+      "primitive_calls": 143115,
+      "self_seconds": 4.813411,
+      "cumulative_seconds": 23.867259
+    },
+    {
+      "function": "public_cfr.py:144(visit)",
+      "calls": 292400,
+      "primitive_calls": 200,
+      "self_seconds": 2.385453,
+      "cumulative_seconds": 26.75354
+    },
+    {
+      "function": "cards.py:33(straight_high)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 1.999955,
+      "cumulative_seconds": 3.910436
+    },
+    {
+      "function": "~:0(<built-in method builtins.sum>)",
+      "calls": 917928,
+      "primitive_calls": 913758,
+      "self_seconds": 1.521456,
+      "cumulative_seconds": 3.000423
+    },
+    {
+      "function": "~:0(<built-in method builtins.isinstance>)",
+      "calls": 2999425,
+      "primitive_calls": 2999425,
+      "self_seconds": 1.479274,
+      "cumulative_seconds": 3.55637
+    },
+    {
+      "function": "cards.py:43(rank_hand)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 1.169379,
+      "cumulative_seconds": 10.916308
+    },
+    {
+      "function": "cards.py:50(<genexpr>)",
+      "calls": 3215520,
+      "primitive_calls": 3215520,
+      "self_seconds": 1.111915,
+      "cumulative_seconds": 1.111915
+    },
+    {
+      "function": "public_cfr.py:342(visit)",
+      "calls": 146200,
+      "primitive_calls": 100,
+      "self_seconds": 1.088646,
+      "cumulative_seconds": 2.355172
+    },
+    {
+      "function": "cards.py:38(<genexpr>)",
+      "calls": 2864736,
+      "primitive_calls": 2864736,
+      "self_seconds": 1.028441,
+      "cumulative_seconds": 1.028441
+    },
+    {
+      "function": "selected_runout_operator.py:114(_prefix_indexes)",
+      "calls": 166123,
+      "primitive_calls": 166123,
+      "self_seconds": 0.913398,
+      "cumulative_seconds": 2.307759
+    },
+    {
+      "function": "~:0(<built-in method builtins.all>)",
+      "calls": 917205,
+      "primitive_calls": 917205,
+      "self_seconds": 0.867996,
+      "cumulative_seconds": 1.499149
+    },
+    {
+      "function": "cfr.py:4(strategy)",
+      "calls": 360000,
+      "primitive_calls": 360000,
+      "self_seconds": 0.774626,
+      "cumulative_seconds": 1.202965
+    },
+    {
+      "function": "selected_runout_operator.py:212(_world_sign)",
+      "calls": 290290,
+      "primitive_calls": 290290,
+      "self_seconds": 0.73206,
+      "cumulative_seconds": 11.758786
+    },
+    {
+      "function": "~:0(<built-in method _abc._abc_instancecheck>)",
+      "calls": 816061,
+      "primitive_calls": 816061,
+      "self_seconds": 0.704756,
+      "cumulative_seconds": 1.594976
+    },
+    {
+      "function": "selected_runout_operator.py:132(<genexpr>)",
+      "calls": 274012,
+      "primitive_calls": 274012,
+      "self_seconds": 0.668554,
+      "cumulative_seconds": 1.005349
+    },
+    {
+      "function": "public_cfr.py:330(_train_prepared)",
+      "calls": 1,
+      "primitive_calls": 1,
+      "self_seconds": 0.658854,
+      "cumulative_seconds": 31.156418
+    },
+    {
+      "function": "~:0(<built-in method builtins.sorted>)",
+      "calls": 267764,
+      "primitive_calls": 267764,
+      "self_seconds": 0.605064,
+      "cumulative_seconds": 0.985556
+    },
+    {
+      "function": "selected_runout_operator.py:105(_raw_mass)",
+      "calls": 642336,
+      "primitive_calls": 642336,
+      "self_seconds": 0.599366,
+      "cumulative_seconds": 1.314995
+    },
+    {
+      "function": "cards.py:47(<genexpr>)",
+      "calls": 803880,
+      "primitive_calls": 803880,
+      "self_seconds": 0.578574,
+      "cumulative_seconds": 0.937886
+    },
+    {
+      "function": "~:0(<built-in method math.isfinite>)",
+      "calls": 1789838,
+      "primitive_calls": 1789838,
+      "self_seconds": 0.549272,
+      "cumulative_seconds": 0.549272
+    },
+    {
+      "function": "probability_guard.py:6(normal_positive_mass)",
+      "calls": 642363,
+      "primitive_calls": 642363,
+      "self_seconds": 0.526016,
+      "cumulative_seconds": 0.715647
+    },
+    {
+      "function": "<frozen abc>:117(__instancecheck__)",
+      "calls": 816061,
+      "primitive_calls": 816061,
+      "self_seconds": 0.48212,
+      "cumulative_seconds": 2.077095
+    },
+    {
+      "function": "~:0(<built-in method _abc._abc_subclasscheck>)",
+      "calls": 715587,
+      "primitive_calls": 715577,
+      "self_seconds": 0.463279,
+      "cumulative_seconds": 0.463351
+    },
+    {
+      "function": "~:0(<method 'get' of 'dict' objects>)",
+      "calls": 753239,
+      "primitive_calls": 753239,
+      "self_seconds": 0.448087,
+      "cumulative_seconds": 0.448087
+    },
+    {
+      "function": "<frozen abc>:121(__subclasscheck__)",
+      "calls": 715587,
+      "primitive_calls": 715577,
+      "self_seconds": 0.426932,
+      "cumulative_seconds": 0.89022
+    },
+    {
+      "function": "cards.py:49(<genexpr>)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.421471,
+      "cumulative_seconds": 2.657003
+    },
+    {
+      "function": "~:0(<built-in method _collections._count_elements>)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.414339,
+      "cumulative_seconds": 1.352225
+    },
+    {
+      "function": "~:0(<built-in method builtins.max>)",
+      "calls": 988844,
+      "primitive_calls": 988628,
+      "self_seconds": 0.397607,
+      "cumulative_seconds": 0.411509
+    },
+    {
+      "function": "~:0(<method 'join' of 'str' objects>)",
+      "calls": 967570,
+      "primitive_calls": 967570,
+      "self_seconds": 0.396266,
+      "cumulative_seconds": 0.396266
+    },
+    {
+      "function": "~:0(<built-in method builtins.len>)",
+      "calls": 1143478,
+      "primitive_calls": 1143475,
+      "self_seconds": 0.370913,
+      "cumulative_seconds": 0.370915
+    },
+    {
+      "function": "~:0(<method 'index' of 'str' objects>)",
+      "calls": 703395,
+      "primitive_calls": 703395,
+      "self_seconds": 0.359312,
+      "cumulative_seconds": 0.359312
+    },
+    {
+      "function": "selected_runout_operator.py:139(joint_marginals)",
+      "calls": 22777,
+      "primitive_calls": 22777,
+      "self_seconds": 0.341081,
+      "cumulative_seconds": 0.900014
+    },
+    {
+      "function": "~:0(<method 'append' of 'list' objects>)",
+      "calls": 734378,
+      "primitive_calls": 734378,
+      "self_seconds": 0.32289,
+      "cumulative_seconds": 0.32289
+    },
+    {
+      "function": "cards.py:53(<genexpr>)",
+      "calls": 690606,
+      "primitive_calls": 690606,
+      "self_seconds": 0.258455,
+      "cumulative_seconds": 0.258455
+    },
+    {
+      "function": "__init__.py:595(__init__)",
+      "calls": 100485,
+      "primitive_calls": 100485,
+      "self_seconds": 0.256593,
+      "cumulative_seconds": 1.983115
+    }
+  ]
+}

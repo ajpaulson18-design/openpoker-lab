@@ -36,6 +36,18 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D055: Bounded selected-board rank reuse (October 26, 2026)
+
+Engineering decision under the owner's foundation goal: profile the integrated
+non-materialized path before optimizing. Add explicit solve-local rank-vector
+LRU capacity, preserving the default one-board path, selected-board identity,
+chance/reach reductions and old scan/rank admission. Bound retained and active
+construction references separately before ranking; keep caches out of policy
+identity and never cache failed builds. Accept only after complete policy and
+independent BR replay plus source-frozen complete-call measurements. This does
+not resolve explicit tree/strategy storage or full-deck solving. See
+[scope and protocol](../selected-board-rank-cache.md).
+
 ### D054: Non-materialized selected-game training foundation (October 26, 2026)
 
 Authority: owner's supplied scalable-solver goal. Sol leads architecture; Terra

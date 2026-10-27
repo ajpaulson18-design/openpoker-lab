@@ -20,6 +20,7 @@ from .solver_contracts import FourStreetSolveRequest
 
 MAX_OPERATOR_SCAN_ENTRIES = 500_000_000
 MAX_INFO_ACTION_SLOTS = 1_000_000
+MAX_RANK_CACHE_BOOKKEEPING_ENTRIES = 1_000_000_000
 
 
 class _Marginals(Mapping):
@@ -48,7 +49,7 @@ def _tokens(board):
             ("".join(board[:3]),) + tuple(board[3:]))
 
 
-def _prepare(request):
+def _prepare(request, *, rank_cache_boards=1):
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
     if (request.traversal != "public-batched" or
@@ -58,7 +59,8 @@ def _prepare(request):
     if type(request.iterations) is not int or not 10 <= request.iterations <= 10_000:
         raise ValueError("Use 10-10,000 solver iterations.")
     operator = SelectedRunoutOperator(request.sb_range, request.bb_range,
-                                     request.runouts, iterations=request.iterations)
+                                     request.runouts, iterations=request.iterations,
+                                     rank_cache_boards=rank_cache_boards)
     pairs = operator.hand_counts[0] * operator.hand_counts[1]
     # Each query can scan the selected index, private pairs, and every
     # pair/board candidate, including when it yields no supported outcome.
@@ -145,21 +147,41 @@ def _prepare(request):
         "temporary_template_peak_decisions": template_decisions,
         "scope": "Logical entries and scans, not byte counts, runtime or process RSS. Public tree and strategy rows remain explicit.",
     }
+    if rank_cache_boards > 1:
+        # One LRU lookup per requested sign, with constant-time move/evict.
+        # On a miss, building vectors scans every private hand. Keep the old
+        # scan/rank envelope intact; disclose this additional loop envelope.
+        lookup_bound = (2 * request.iterations + 3) * terminals * pairs * len(operator.selected)
+        build_bound = lookup_bound * hand_sum
+        bookkeeping_bound = 4 * lookup_bound + build_bound
+        if bookkeeping_bound > MAX_RANK_CACHE_BOOKKEEPING_ENTRIES:
+            raise ValueError("Board-rank cache bookkeeping envelope exceeds 1,000,000,000 entries.")
+        census["rank_cache_admission"] = {
+            "version": "selected-board-rank-lru-v1", "board_capacity": rank_cache_boards,
+            "retained_rank_slots": rank_cache_boards * hand_sum,
+            "retained_plus_construction_reference_slots": operator.rank_cache_requested_entries,
+            "entry_limit": 8192, "board_key_slots": rank_cache_boards,
+            "rank_vector_reference_slots": 2 * rank_cache_boards,
+            "lookup_upper_bound": lookup_bound, "rank_vector_scan_upper_bound": build_bound,
+            "bookkeeping_upper_bound": bookkeeping_bound,
+            "bookkeeping_limit": MAX_RANK_CACHE_BOOKKEEPING_ENTRIES,
+            "scope": "Logical slots/loops; default scan/rank caps remain unchanged. No bytes or RSS guarantee.",
+        }
     return operator, root, infos, metadata, specs, census
 
 
-def census_four_street_operator(request):
+def census_four_street_operator(request, *, rank_cache_boards=1):
     """Rank-free bounded preparation and strategy-storage census; no training."""
-    return _prepare(request)[-1]
+    return _prepare(request, rank_cache_boards=rank_cache_boards)[-1]
 
 
-def solve_four_street_operator(request):
+def solve_four_street_operator(request, *, rank_cache_boards=1):
     """Return replay-compatible complete policy using no stored physical worlds.
 
     The existing request's public-vector selectors are required explicitly.
     No native, sampled, delayed-average or full-deck mode is inferred.
     """
-    operator, root, infos, metadata, specs, census = _prepare(request)
+    operator, root, infos, metadata, specs, census = _prepare(request, rank_cache_boards=rank_cache_boards)
     training_root, anchor, view_states = reference._positive_pot_training_view(root)
     operator.pot = 2 * anchor
     marginals = _Marginals(operator)
@@ -175,6 +197,7 @@ def solve_four_street_operator(request):
             prefix_kernel=operator)
     finally:
         training_root = None
+        operator.clear_rank_cache()
     if not all(isfinite(x) for x in (value, br0, br1)):
         raise ValueError("Operator diagnostics returned a nonfinite value.")
     rows = []
@@ -196,7 +219,7 @@ def solve_four_street_operator(request):
     if (operator.query_pair_runout_checks > census["pair_runout_scan_upper_bound"] or
             operator.rank_calls > census["rank_call_upper_bound"]):
         raise RuntimeError("Operator exceeded its admitted work envelope.")
-    return {
+    result = {
         "method": "full-traversal CFR", "solver_version": "preflop-strategy-v1",
         "strategy_schema": "preflop-strategy-v1", "algorithm": request.algorithm,
         "execution_backend": "selected-operator-public-python",
@@ -228,3 +251,16 @@ def solve_four_street_operator(request):
         "scope": "Conditioned finite heads-up four-street game with streamed chance/payoff queries. Binary64 reduction order may differ; no full-deck, convergence or commercial-scale claim.",
         "strategy": rows,
     }
+    if rank_cache_boards > 1:
+        stats = {
+            "board_capacity": rank_cache_boards,
+            "hits": operator.rank_cache_hits, "misses": operator.rank_cache_misses,
+            "evictions": operator.rank_cache_evictions,
+            "retained_peak_rank_slots": operator.rank_cache_retained_peak_entries,
+            "retained_plus_construction_peak_reference_slots": operator.rank_scratch_peak,
+            "released_after_diagnostics": True,
+        }
+        if stats["hits"] + stats["misses"] > census["rank_cache_admission"]["lookup_upper_bound"]:
+            raise RuntimeError("Rank cache exceeded its admitted lookup bound.")
+        result["rank_cache"] = stats
+    return result
