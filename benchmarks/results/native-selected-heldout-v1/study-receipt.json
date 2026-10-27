@@ -1,0 +1,255 @@
+{
+  "binary_unchanged": true,
+  "case": {
+    "bb_range": "5c5d,5c5h,5c5s,5c6c",
+    "config": {
+      "big_blind": 1,
+      "include_all_in": false,
+      "max_raises": 1,
+      "raise_sizes": [
+        0.5
+      ],
+      "small_blind": 0.5,
+      "starting_stack": [
+        8,
+        8
+      ]
+    },
+    "flop_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "include_all_in": false,
+      "max_raises": 0,
+      "raise_sizes": []
+    },
+    "id": "native-selected-heldout-96-worlds-v1",
+    "river_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "include_all_in": false,
+      "max_raises": 0,
+      "raise_sizes": []
+    },
+    "runouts": [
+      "8c8d8h9h9s",
+      "8c8d8h9hTc",
+      "8c8d8h9hTd",
+      "8s9c9d9h9s",
+      "8s9c9d9hTc",
+      "8s9c9d9hTd"
+    ],
+    "sb_range": "2c2d,2c2h,2c2s,2c3c",
+    "turn_config": {
+      "bet_sizes": [
+        0.5
+      ],
+      "include_all_in": false,
+      "max_raises": 0,
+      "raise_sizes": []
+    }
+  },
+  "certificate_audit": {
+    "actual_complete_strategy_rows": 2224,
+    "both_backends_rejected": true,
+    "configured_max_rows": 2048,
+    "error": "payload exceeds bounded four-street result shape"
+  },
+  "comparisons": {
+    "complete_strategy_rows_identical": true,
+    "diagnostics": {
+      "bb_best_response_value": {
+        "equal": true,
+        "native": 0.5020569859870578,
+        "python": 0.5020569859870578
+      },
+      "nash_conv": {
+        "equal": true,
+        "native": 0.002056985987057891,
+        "python": 0.002056985987057891
+      },
+      "sb_best_response_value": {
+        "equal": true,
+        "native": -0.49999999999999994,
+        "python": -0.49999999999999994
+      },
+      "value_bb": {
+        "equal": true,
+        "native": 0.5011193174421705,
+        "python": 0.5011193174421705
+      },
+      "value_sb": {
+        "equal": true,
+        "native": -0.5011193174421705,
+        "python": -0.5011193174421705
+      }
+    },
+    "exact_certificate_metrics_identical": false,
+    "independent_numeric_replay": {
+      "native": {
+        "gaps": {
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 5.551115123125783e-17,
+          "sb_best_response_value": 5.551115123125783e-17,
+          "value_bb": 1.1102230246251565e-16,
+          "value_sb": 1.1102230246251565e-16
+        },
+        "independent_metrics": {
+          "bb_best_response_value": 0.502056985987058,
+          "nash_conv": 0.0020569859870579466,
+          "sb_best_response_value": -0.5,
+          "value_bb": 0.5011193174421706,
+          "value_sb": -0.5011193174421706
+        },
+        "passed": true,
+        "worlds": 96
+      },
+      "python": {
+        "gaps": {
+          "bb_best_response_value": 1.1102230246251565e-16,
+          "nash_conv": 5.551115123125783e-17,
+          "sb_best_response_value": 5.551115123125783e-17,
+          "value_bb": 1.1102230246251565e-16,
+          "value_sb": 1.1102230246251565e-16
+        },
+        "independent_metrics": {
+          "bb_best_response_value": 0.502056985987058,
+          "nash_conv": 0.0020569859870579466,
+          "sb_best_response_value": -0.5,
+          "value_bb": 0.5011193174421706,
+          "value_sb": -0.5011193174421706
+        },
+        "passed": true,
+        "worlds": 96
+      }
+    },
+    "private_pair_probabilities_identical": true
+  },
+  "native_calls": 1,
+  "outcome": "exact-audit-rejected-bounded-result-shape",
+  "protocol": "native-heldout-selected-operator-t100-v1",
+  "samples": [
+    {
+      "backend": "python",
+      "iterations": 100,
+      "native_process_lifetime_peak_working_set_bytes": null,
+      "native_training": null,
+      "operator_statistics": {
+        "post_constructor_pair_board_checks": 3057312,
+        "rank_calls": 48,
+        "rank_vector_peak_entries": 56
+      },
+      "python_process_lifetime_peak_working_set_bytes": 27705344,
+      "rank_cache": {
+        "board_capacity": 64,
+        "evictions": 0,
+        "hits": 1266714,
+        "misses": 6,
+        "released_after_diagnostics": true,
+        "retained_peak_rank_slots": 48,
+        "retained_plus_construction_peak_reference_slots": 56
+      },
+      "raw_sha256": "868c56709798cfaafbbafad61c58c33b4fb9e6f0da197a13e65dad842bab7068",
+      "seconds": 16.017698099996778,
+      "strategy_rows": 2224
+    },
+    {
+      "backend": "native",
+      "iterations": 100,
+      "native_process_lifetime_peak_working_set_bytes": 3387392,
+      "native_training": {
+        "action_slots": 4452,
+        "arithmetic_mode": "compensated",
+        "calls": 1,
+        "children": 1299,
+        "dense_map_slots": 2224,
+        "hands": [
+          4,
+          4
+        ],
+        "heap_limit": 268435456,
+        "identity": {
+          "compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+          "compiler_version": "usage: cl [ option... ] filename... [ /link linkoption... ]\r\nMicrosoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\r\nCopyright (C) Microsoft Corporation.  All rights reserved.",
+          "executable": "native-selected-train.exe",
+          "executable_sha256": "627fb1c687b7e0b577aa91b25460688606e355c1a2afb00dc3230b42bf95a466",
+          "flags": [
+            "/nologo",
+            "/std:c++20",
+            "/O2",
+            "/W4",
+            "/WX",
+            "/EHsc",
+            "/MT",
+            "/fp:strict",
+            "/D_CRT_SECURE_NO_WARNINGS"
+          ],
+          "platform": "Windows-10-10.0.19045-SP0",
+          "protocol": "OPENPOKER_SELECTED_OPERATOR_V1",
+          "schema_version": 1,
+          "source_lf_sha256": "59b45ba450542a9e2ef8e5aa3504e88c65e8aef4d5e0b0134bb109cee55c93cb",
+          "source_sha256": "59b45ba450542a9e2ef8e5aa3504e88c65e8aef4d5e0b0134bb109cee55c93cb",
+          "work_model": "native-selected-operator-work-v1"
+        },
+        "input_bytes": 77321,
+        "marginal_pair_board_checks": 518400,
+        "modeled_heap_bytes": 134878089,
+        "modeled_work_entries": 63688728,
+        "native_process_lifetime_peak_working_set_bytes": 3387392,
+        "nodes": 1300,
+        "normalization_pair_board_checks": 96,
+        "normalizer_verification": "exact-positive-binary64-superaccumulator-v1",
+        "prefix_marginal_cache_entries": 8,
+        "prefixes": 11,
+        "python_version": "3.12.14",
+        "retained_rank_entries": 48,
+        "rows": 2224,
+        "scope": "Whole-request logical loops and conservative storage model, not CPU/RSS guarantees.",
+        "selected_boards": 6,
+        "stored_prefix_pair_edges": 0,
+        "stored_worlds": 0,
+        "structural_counters": [
+          12480,
+          12288,
+          4452,
+          4452,
+          186,
+          1113
+        ],
+        "terminal_pair_board_checks": 2496000,
+        "version": "native-selected-operator-work-v1",
+        "work_limit": 500000000
+      },
+      "operator_statistics": {
+        "post_constructor_pair_board_checks": 43200,
+        "rank_calls": 96,
+        "rank_vector_peak_entries": 56,
+        "scope": "Python preparation/diagnostics only; native counters are reported separately."
+      },
+      "python_process_lifetime_peak_working_set_bytes": 28037120,
+      "rank_cache": {
+        "board_capacity": 64,
+        "evictions": 0,
+        "hits": 18714,
+        "misses": 6,
+        "released_after_diagnostics": true,
+        "retained_peak_rank_slots": 48,
+        "retained_plus_construction_peak_reference_slots": 56
+      },
+      "raw_sha256": "c2f6dbce891543664003158073521a3c71b5d9d45c59d231c12f67f6ab40f74a",
+      "seconds": 0.6052548000006936,
+      "strategy_rows": 2224
+    }
+  ],
+  "scope": "Single untraced T100 call per backend on one 96-world held-out finite game; exact certificate rejected by its existing 2,048-row input cap; no T1000 training, retries, or general quality/performance claim.",
+  "source_commit": "745e4dd48614673dbc6372025d30cdb6bb35f3af",
+  "source_unchanged": true,
+  "t1000_preflight_rejection": {
+    "admitted": false,
+    "error": "Selected operator requested scan envelope exceeds 500,000,000 entries.",
+    "error_type": "ValueError",
+    "iterations": 1000
+  },
+  "training_calls": 2
+}
