@@ -1,5 +1,17 @@
 # Current engineering state
 
+The [exact storage census](../exact-storage-frontier.md) now shares the actual
+solver's admitted rank-free preparation and counts supported information/action
+rows, complete histories and conservative weighted-game suit orbits. Its
+[frozen frontier](../exact-storage-frontier-result.md) independently replays sixteen
+exported graphs after authenticating 1,828 files: 16 hands/seat retain 8,128
+rows/16,272 slots while the DAG stays 56 vertices. That range case has identity-only
+suit symmetry; the 24-board case has 7,504 rows/4,716 conditional orbits. The
+48-board work rejection is preserved. Independent physical/S4 checks pass on two
+small games, but larger witness replay is conditional on the graph, not a betting
+legality or quality proof. No policy rows are merged. Actual quotient/reach
+correctness and final PR #261 CI remain open; no RAM saving follows.
+
 An opt-in [integer query core](../exact-dyadic-arithmetic.md) connects exact dyadic
 blocker/rank arithmetic to the same four-street trainer. Its [frozen result](../exact-dyadic-result.md)
 preserves all six complete policy/eight-metric pairs, twelve independent numeric
@@ -9,8 +21,10 @@ target passes in both modes. T10 medians are 7.110251/4.176621 s Fraction/intege
 but T100 single calls are 54.122940/57.405023 s and traced allocation is higher.
 No general speed/RAM gain or larger choice game follows. Additional integer
 payload is admitted before training. Separate profiles identify repeated
-Fraction/dyadic preflights; profiler times are not benchmarks. Final PR #260 CI,
-native exact computation and strategy/history scaling remain open.
+Fraction/dyadic preflights; profiler times are not benchmarks. Final PR #260 checks
+passed and merged at `9ce11ab58337f2ffd6ae2dc6f96f11dda5499f6c`; fetched main
+matches the reviewed tree exactly. Native exact computation and strategy/history
+scaling remain open.
 
 The explicit [compact exact-product output](../compact-exact-policy.md) removes
 production pair queries/table storage and substitutes a linear input snapshot.
@@ -21,7 +35,8 @@ two identical exact T10 target misses. Small-game compact median is higher
 no general speed/RAM improvement follows. A full-range single-board forced
 blind-all-in completes with no decisions/training, while expanded output rejects
 before pair/rank/train work. Its independent certificate still rejects the
-unchanged hand cap before building worlds. Final CI/publication is PR #259;
+unchanged hand cap before building worlds. PR #259 final checks passed and merged
+at `038327b705c0fb245c478db473b26d702b5301db`, with the reviewed tree verified;
 strategy/history growth, native exact computation and scalable certification
 remain open.
 

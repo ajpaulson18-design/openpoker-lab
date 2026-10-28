@@ -36,6 +36,24 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D064: Measure supported information/history growth before quotienting (October 28, 2026)
+
+Sol accepts shared rank-free preparation for the actual exact-product solve and
+its storage census, preserving original complete-request admission. Count supported
+full actor/hand/visible-history rows, actions, history tokens/bytes and overlapping
+storage phases separately from compact public topology. Enumerate only global
+suit maps preserving both exact role-ordered priors and the whole selected ordered
+board set. Orbit counts are conservative structural opportunities, never approved
+strategy merging or independent BR equivalence. Preserve first cap rejections and
+unknown downstream counts; perform no solving/ranking/pair queries. The
+[contract and independent controls](../exact-storage-frontier.md) establish bounded
+census fidelity; a frozen growth frontier and actual quotient proof remain gates.
+The [frozen result](../exact-storage-frontier-result.md) now independently counts
+sixteen conditional graph witnesses and retains one work rejection. It shows
+linear row/history growth despite a fixed DAG, and identity-only symmetry on
+the 16-hand range case. Both reviewer schema repairs remain preserved. Actual
+strategy/regret quotienting, reach/average proofs and final CI remain separate.
+
 ### D063: Integer query arithmetic under the exact-product law (October 27, 2026)
 
 Sol architecture, Terra independent criticism/execution and Luna implementation

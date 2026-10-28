@@ -1,0 +1,30 @@
+{
+  "formal_source_commit": "ad455d7cb5e033feea4ca695b167765383ffb5c2",
+  "scope": "Original producer archive immutable. Independent structural replay conditional on exported public graph; both reviewer-only repairs and failed attempts retained. No solver quality or independent larger betting-game legality proof.",
+  "sha256": {
+    "authentication.py": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5",
+    "combined-regression.log": "a3ef8232c0038d5ffb98116b808cd4fcc12bb1cc48d0e9bfc3b967e254c9e140",
+    "manifest.json": "3bce2d7b10fcda2e69367347e97d6b05a6e336adab8625102cdb6903085a87e3",
+    "optimized-controls.log": "170a7ef607731d0eb8b40ce505476b874304a4cbaa00424a7ec8417bd99222b1",
+    "preparation-ast-receipt.json": "8330c4360ad3ef8b0230245ece9749a129d939109d7216fcaca5e63ced48ecd5",
+    "preparation-ast-review.py": "57a1d60b6ff3e8a2d14c74506d39a795aeb1233d2d3a7ab9989746aa122b2981",
+    "preparation-controls.zip": "c5f1237a7c7bd6a3686dba39268c7afbd1dcdd42e9bd96a82ec143241c019c4c",
+    "protocol.json": "3f4cfc7a4c3de7bb27dc5943cbd43cc96ca8cdad7bed89f0a2d55a63fd916718",
+    "receipt.json": "8f19f9d5e42674418b7cbff4ce74150c40cfc9ea22d5be38ff1d5f7914db8126",
+    "report.json": "5f742d916927f155805057acda1698f2ed55301f9b1ab652bd7d71e521d6715c",
+    "review-attempt1.log": "073c7ce7fc3f528078f159c8ded0d00dd7f9bf2240ab863280098be0d099851e",
+    "review-attempt1.py": "e7e3ffaf948082fe48ed9e7673846013fce54aa526ec1be73d22ba9466555368",
+    "review-attempt2.log": "0d98c8dfae471491ba4ba7db135f11e5309f96fe1e209bbc1079af8ceccfce6c",
+    "review-attempt2.py": "eb37b4c618710c3c04dacb33d2f9d7bb58e82db14c548381e8bb099006d4521a",
+    "review-controls-final.log": "94e3f10b6d422ef8f878c89fc5d027f18f5a6d2e33e6b5cac36c86a85bb84621",
+    "review-controls-initial.log": "4903373b8bac9aca6dae39e71ab35d5f206ab791946d8dd04840f87d7a488bc3",
+    "review-controls-order.log": "0579370497b3081dee6981301d032971ff41e3fc99dfd4e1d62a1ade6f16e0cd",
+    "review-controls.py": "dcdd4980b5bdeead9cc6f64a6d2a38bff96ffaa554d809caf890333da5fd8a4f",
+    "review-repair-history-v2.json": "0e93d02748dd72c8c902ce2bf1ea2eaf933e9073ad778890c549c1c40e32f2cc",
+    "review-repair-history.json": "ae94ed887be24e10f14f2cf171659410a5aad2a0fff4e8bdcd57faaa7cad1e09",
+    "review.log": "886fa639bcdb60cfca236e3c65618779ef3ac685d2f26a642238ecaacd1ab26e",
+    "review.py": "c8089556c1da7d66aff72623663ed0a664566a40b02eeec88eed69aeaafdb74f",
+    "run.log": "5854ce111fecb06e6dff941f5c754f97ff5f9af3603e6c30e74457515b3a48e1",
+    "study.zip": "5c00895aeb8455b8ed3becafdd6185ca644a3a144147501dde95c8e0ed92e178"
+  }
+}

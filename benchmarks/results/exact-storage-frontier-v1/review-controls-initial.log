@@ -1,0 +1,31 @@
+review_helper_sha256=e7e3ffaf948082fe48ed9e7673846013fce54aa526ec1be73d22ba9466555368
+test_chance_branch_not_in_requested_board_rejected (__main__.ExternalStructuralReviewControls.test_chance_branch_not_in_requested_board_rejected) ... ok
+test_cycle_rejected (__main__.ExternalStructuralReviewControls.test_cycle_rejected) ... ok
+test_depth_forecast_rejected (__main__.ExternalStructuralReviewControls.test_depth_forecast_rejected) ... ok
+test_duplicate_action_token_rejected (__main__.ExternalStructuralReviewControls.test_duplicate_action_token_rejected) ... ok
+test_duplicate_chance_branch_rejected (__main__.ExternalStructuralReviewControls.test_duplicate_chance_branch_rejected) ... ok
+test_duplicate_selected_outcome_rejected (__main__.ExternalStructuralReviewControls.test_duplicate_selected_outcome_rejected) ... ok
+test_exponential_path_forecast_rejects_before_stream (__main__.ExternalStructuralReviewControls.test_exponential_path_forecast_rejects_before_stream) ... ok
+test_forged_input_weight_rejected (__main__.ExternalStructuralReviewControls.test_forged_input_weight_rejected) ... ok
+test_future_card_in_action_token_rejected (__main__.ExternalStructuralReviewControls.test_future_card_in_action_token_rejected) ... ok
+test_initial_history_tamper_rejected (__main__.ExternalStructuralReviewControls.test_initial_history_tamper_rejected) ... ok
+test_invalid_prior_exponent_rejected (__main__.ExternalStructuralReviewControls.test_invalid_prior_exponent_rejected) ... ok
+test_json_preparse_depth_and_scalar_caps (__main__.ExternalStructuralReviewControls.test_json_preparse_depth_and_scalar_caps) ... ok
+test_large_hex_exponent_rejected (__main__.ExternalStructuralReviewControls.test_large_hex_exponent_rejected) ... ok
+test_minimal_one_board_counts_and_supported_shape (__main__.ExternalStructuralReviewControls.test_minimal_one_board_counts_and_supported_shape) ... ok
+test_negative_money_rejected (__main__.ExternalStructuralReviewControls.test_negative_money_rejected) ... ok
+test_noncanonical_flop_rejected (__main__.ExternalStructuralReviewControls.test_noncanonical_flop_rejected) ... ok
+test_nonfinite_prior_rejected (__main__.ExternalStructuralReviewControls.test_nonfinite_prior_rejected) ... ok
+test_rejection_classifier_is_whole_word_only (__main__.ExternalStructuralReviewControls.test_rejection_classifier_is_whole_word_only) ... ok
+test_reveal_order_rejected (__main__.ExternalStructuralReviewControls.test_reveal_order_rejected) ... ok
+test_shared_child_context_edges_preserve_action_labels (__main__.ExternalStructuralReviewControls.test_shared_child_context_edges_preserve_action_labels) ... ok
+test_suit_group_without_supported_menu_closure_rejected (__main__.ExternalStructuralReviewControls.test_suit_group_without_supported_menu_closure_rejected) ... ok
+test_suit_varying_terminal_payoff_rejected_despite_identical_menus (__main__.ExternalStructuralReviewControls.test_suit_varying_terminal_payoff_rejected_despite_identical_menus) ... ok
+test_terminal_money_above_stack_rejected (__main__.ExternalStructuralReviewControls.test_terminal_money_above_stack_rejected) ... ok
+test_unreachable_vertex_rejected (__main__.ExternalStructuralReviewControls.test_unreachable_vertex_rejected) ... ok
+test_zero_prior_rejected (__main__.ExternalStructuralReviewControls.test_zero_prior_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.030s
+
+OK

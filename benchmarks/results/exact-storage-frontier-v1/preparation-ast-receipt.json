@@ -1,0 +1,18 @@
+{
+  "audit_helper_sha256": "57a1d60b6ff3e8a2d14c74506d39a795aeb1233d2d3a7ab9989746aa122b2981",
+  "baseline_commit": "96e9fb1af560ad6ccf9c851679b0708c50bc74f4",
+  "baseline_solver_sha256": "22c51a47d2e5cade29bde1087727755afd073d7b74e45264f3a62d4525f24626",
+  "current_raw_solver_sha256": "8f3693be7ca71f847fb8f02c8a35b6f4c4d14471b4dc72913b7faf2f6b7fcdab",
+  "outcome": "passed",
+  "post_preparation_ast_identical": true,
+  "post_preparation_statement_count": 34,
+  "preparation_ast_identical": true,
+  "preparation_statement_count": 32,
+  "repository_code_executed": false,
+  "repository_files_edited": false,
+  "repository_status_unchanged": true,
+  "scope": "Mechanical AST equality ignores docstrings, source locations and formatting. Baseline git blob is parsed as data; no solver or repository code is imported/executed. Object lifetimes were separately reviewed by inspection.",
+  "signature_equivalence": true,
+  "solver_path": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\storage-frontier-repo\\pokerlab\\exact_selected_solver.py",
+  "solver_raw_bytes_unchanged": true
+}

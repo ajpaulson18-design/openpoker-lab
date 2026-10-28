@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Mapping
+from dataclasses import dataclass
 from fractions import Fraction
 from math import ceil, isfinite, log2
 from sys import float_info
@@ -34,6 +35,30 @@ MAX_PAIR_CANDIDATES = 1_800_000
 MAX_PAIR_BOARD_SCANS = 30_000_000
 MAX_WHOLE_REQUEST_ENTRIES = 25_000_000
 MAX_DYADIC_INTEGER_PAYLOAD_BITS = 1 << 30
+
+
+@dataclass(frozen=True, slots=True)
+class _ExactSelectedPreparation:
+    """Admitted, rank-free preparation shared by solve and census callers."""
+
+    kernel: object
+    specs: object
+    topology: object
+    direct_receipt: object
+    view: object
+    adapter: object
+    reachable: object
+    prefix_counts: object
+    unique_prefixes: object
+    decisions: object
+    action_hand_queries: object
+    terminal_counts: object
+    layout_upper: object
+    admission: object
+    bit_forecast: object
+    action_slots_upper: int
+    pair_candidates: int
+    output_pairs: int
 
 
 def _tokens(board):
@@ -399,14 +424,14 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
             "scope": "Whole-request logical bounds include exact kernel rank/card sweeps, pair diagnostic board scans, adapter conversions, direct-topology occurrence traversal, packed layout/training loops, semantic-history lookup and serialized entries. Units are not runtime or memory bytes."}
 
 
-def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
-                                    pair_diagnostics="expanded", exact_arithmetic="fraction"):
-    """Solve one bounded four-street game under exact-product selected chance.
+def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
+                            pair_diagnostics="expanded", exact_arithmetic="fraction"):
+    """Build and admit the direct exact-selected solve without ranking or rows.
 
-    Requires CFR+, direct shared topology, packed public-vector training, and
-    public-batched diagnostics. The exact prior law differs from legacy
-    per-occurrence binary64 normalization; this API never silently replaces
-    the legacy solver.
+    This shared preparation stage preserves every existing input, topology,
+    layout, bit, work, and retained-entry guard in its original order. It does
+    not issue pair-probability queries, rank hands, allocate information rows,
+    or enter training.
     """
     _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
@@ -505,6 +530,40 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             "an envelope for the counted integer query-core/completed Fraction-output subset model only. "
             "It excludes Fraction GCD/LCM input/bit preflights, setup normalization, adapter conversion and runtime; "
             "not a complete arithmetic/CPU bound or smaller replacement admission.")
+    return _ExactSelectedPreparation(
+        kernel=kernel, specs=specs, topology=topology, direct_receipt=direct_receipt, view=view,
+        adapter=adapter, reachable=reachable, prefix_counts=prefix_counts,
+        unique_prefixes=unique_prefixes, decisions=decisions,
+        action_hand_queries=action_hand_queries, terminal_counts=terminal_counts,
+        layout_upper=layout_upper, admission=admission, bit_forecast=bit_forecast,
+        action_slots_upper=action_slots_upper, pair_candidates=pair_candidates,
+        output_pairs=output_pairs)
+
+
+def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
+                                    pair_diagnostics="expanded", exact_arithmetic="fraction"):
+    """Solve one bounded four-street game under exact-product selected chance.
+
+    Requires CFR+, direct shared topology, packed public-vector training, and
+    public-batched diagnostics. The exact prior law differs from legacy
+    per-occurrence binary64 normalization; this API never silently replaces
+    the legacy solver.
+    """
+    prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
+                                       kernel_limits=kernel_limits,
+                                       pair_diagnostics=pair_diagnostics,
+                                       exact_arithmetic=exact_arithmetic)
+    kernel, specs, topology, direct_receipt = (prepared.kernel, prepared.specs,
+                                               prepared.topology, prepared.direct_receipt)
+    view, adapter, reachable = prepared.view, prepared.adapter, prepared.reachable
+    unique_prefixes = prepared.unique_prefixes
+    layout_upper, admission, bit_forecast = (prepared.layout_upper, prepared.admission,
+                                             prepared.bit_forecast)
+    action_slots_upper, pair_candidates, output_pairs = (prepared.action_slots_upper,
+                                                          prepared.pair_candidates,
+                                                          prepared.output_pairs)
+    del prepared
+    h0, h1 = kernel.hand_counts
     pair_rows = []
     supported_pair_count = 0
     for i in range(h0 if pair_diagnostics == "expanded" else 0):

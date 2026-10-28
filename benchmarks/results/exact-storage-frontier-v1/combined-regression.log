@@ -1,0 +1,21 @@
+range-scale-1 accepted
+range-scale-2 accepted
+range-scale-4 accepted
+range-scale-8 accepted
+range-scale-16 resource-rejected
+board-scale-1 accepted
+board-scale-6 accepted
+board-scale-12 accepted
+board-scale-24 accepted
+board-scale-48 accepted
+menu-scale-0 accepted
+menu-scale-1 accepted
+menu-scale-2 accepted
+heldout-96-worlds accepted
+original-22-world-anchor accepted
+club-diamond-symmetric accepted
+club-diamond-weight-broken accepted
+----------------------------------------------------------------------
+Ran 50 tests in 71.074s
+
+OK

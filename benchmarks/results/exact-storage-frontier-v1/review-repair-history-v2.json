@@ -1,0 +1,32 @@
+{
+  "current_helper_sha256": "c8089556c1da7d66aff72623663ed0a664566a40b02eeec88eed69aeaafdb74f",
+  "full_review_rerun": false,
+  "outcome": "reviewer-repaired-study-review-not-rerun",
+  "preserved_review_history": [
+    {
+      "confirmed_terminal_handle": "71396",
+      "failure_log_file": "exact-storage-independent-review-v1.log",
+      "failure_log_sha256": "073c7ce7fc3f528078f159c8ded0d00dd7f9bf2240ab863280098be0d099851e",
+      "helper_file": "exact-storage-independent-review-attempt1.py",
+      "helper_sha256": "e7e3ffaf948082fe48ed9e7673846013fce54aa526ec1be73d22ba9466555368",
+      "repair_scope": "Reviewer-only canonical selected-outcome ordering: sort complete outcomes lexicographically by all five DECK indices after canonicalizing each flop, preserving ordered turn/river positions and duplicate rejection. No producer source, study evidence, admission cap, or mathematical count changed.",
+      "terminal_exit_code": 1
+    },
+    {
+      "failure_log_file": "exact-storage-independent-review-v2.log",
+      "failure_log_sha256": "0d98c8dfae471491ba4ba7db135f11e5309f96fe1e209bbc1079af8ceccfce6c",
+      "helper_file": "exact-storage-independent-review-attempt2.py",
+      "helper_sha256": "eb37b4c618710c3c04dacb33d2f9d7bb58e82db14c548381e8bb099006d4521a",
+      "repair_scope": "Reviewer-only restoration of the frozen producer's conservative physical shape action-slot screen, max(actual supported action slots, independently derived dense action-slot upper). Actual supported counts remain separately recorded. The previous actual-only comparison followed a stale runner reading; no producer source, study evidence, cap, or quality claim changed.",
+      "terminal_completion_confirmed_by_lead": true,
+      "terminal_exit_code": 1
+    }
+  ],
+  "producer_source_changed": false,
+  "repair_scope": "Reviewer-only restoration of the frozen producer's conservative physical shape action-slot screen, max(actual supported action slots, independently derived dense action-slot upper). Actual supported counts remain separately recorded. The previous actual-only comparison followed a stale runner reading; no producer source, study evidence, cap, or quality claim changed.",
+  "study_artifacts_changed": false,
+  "synthetic_controls_log_file": "exact-storage-independent-review-controls-v4.log",
+  "synthetic_controls_log_sha256": "94e3f10b6d422ef8f878c89fc5d027f18f5a6d2e33e6b5cac36c86a85bb84621",
+  "synthetic_controls_passed": 27,
+  "synthetic_controls_sha256": "dcdd4980b5bdeead9cc6f64a6d2a38bff96ffaa554d809caf890333da5fd8a4f"
+}
