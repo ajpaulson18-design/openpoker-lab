@@ -1,5 +1,25 @@
 # Foundation-first execution record
 
+## Shared preparation and exact storage frontier: bounded controls
+
+The [storage frontier contract](exact-storage-frontier.md) shares actual admitted
+four-street preparation with the solve, streams supported rows/actions/full
+histories and separately admits conservative suit-orbit census storage. Sol's
+mechanical AST audit verifies all 32 setup/34 tail statements and signatures
+against `96e9fb1af560ad6ccf9c851679b0708c50bc74f4`; same-runtime complete captures
+match. The solver releases the preparation wrapper before row/pair allocation.
+Original 99 vertices/259 contexts/321 labeled context edges/1,462 logical visits
+and 1,200 rows/2,402 slots match without rank/train/pair calls. Independent physical
+and S4 tests compare all row/slot/history/orbit counts, including real blocker
+support and weight-broken holdings exchanged by the suit map. Review corrected
+an initially ineffective weight-breaking fixture and scalar-query metadata
+assumption before measurement. Fifty combined solver/storage/runner regressions
+pass (71.074 s); final runner eleven controls and all 24 final optimized
+storage/preparation/runner controls pass (19.732 s); docs links pass. The compact witness retains unique topology and
+inputs only, with no expanded histories/policies/worlds. Independent saved replay
+will be conditional on that graph and cannot establish larger-game legality or
+quality. Frozen 17-case growth study, saved replay and publication remain gates.
+
 ## Dyadic integer query core: integration and independent controls
 
 The explicit [integer arithmetic contract](exact-dyadic-arithmetic.md) connects

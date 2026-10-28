@@ -1,5 +1,13 @@
 # Current engineering state
 
+The [exact storage census](../exact-storage-frontier.md) now shares the actual
+solver's admitted rank-free preparation and counts supported information/action
+rows, complete histories and conservative weighted-game suit orbits. Original
+1,200 rows/2,402 slots and 259 contexts match; independent literal physical/S4
+checks pass on two small games. No policy rows are merged. The frozen growth
+frontier and actual quotient/sequence correctness remain pending, so this does
+not close strategy/history scaling or establish RAM savings.
+
 An opt-in [integer query core](../exact-dyadic-arithmetic.md) connects exact dyadic
 blocker/rank arithmetic to the same four-street trainer. Its [frozen result](../exact-dyadic-result.md)
 preserves all six complete policy/eight-metric pairs, twelve independent numeric
