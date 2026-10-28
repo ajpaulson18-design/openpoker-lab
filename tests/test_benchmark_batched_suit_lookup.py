@@ -2,6 +2,9 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
+import json
+import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -42,13 +45,46 @@ class BatchedSuitLookupBenchmarkTests(unittest.TestCase):
             source = {"commit": "test", "status": "", "sha256": {}}
             failed = SimpleNamespace(returncode=1, stdout=b"partial child", stderr=b"failure")
             with patch.object(study, "_identity", return_value=source), \
-                 patch.object(study.subprocess, "run", return_value=failed) as calls:
+                 patch.object(study, "_run_child", return_value=failed) as calls:
                 result = study.run(output)
             self.assertEqual(calls.call_count, 1)
             self.assertEqual(result["outcome"], "failed")
             self.assertEqual((output / "original-22-t10-per-row-0.json").read_bytes(), b"partial child")
             self.assertEqual((output / "original-22-t10-per-row-0.stderr.txt").read_bytes(), b"failure")
             self.assertTrue((output / "manifest.json").is_file())
+
+    def test_failed_child_mock_leaves_real_parent_platform_probe_text(self):
+        # A fresh interpreter confines private platform caches to this control.
+        # Python 3.12/Linux probes the processor through subprocess. Reproduce
+        # that metadata branch on every host with a portable real text probe.
+        program = r'''
+import json
+import platform
+import subprocess
+import sys
+from unittest.mock import patch
+from tests.test_benchmark_batched_suit_lookup import BatchedSuitLookupBenchmarkTests
+platform._uname_cache = platform.uname_result(
+    "Linux", "isolated-control", "test", "test", "x86_64")
+platform._platform_cache.clear()
+def processor_probe():
+    return subprocess.check_output(
+        [sys.executable, "-c", "print('parent-text-probe', end='')"], text=True)
+with patch.object(platform._Processor, "get", new=processor_probe):
+    BatchedSuitLookupBenchmarkTests(
+        "test_first_failed_child_stream_is_retained_without_retry"
+    ).test_first_failed_child_stream_is_retained_without_retry()
+    processor = platform.uname().processor
+    metadata = platform.platform()
+    assert type(processor) is str and processor == "parent-text-probe"
+    assert type(metadata) is str and "parent-text-probe" in metadata
+print(json.dumps({"processor": processor, "metadata_is_text": True}))
+'''
+        completed = subprocess.run([sys.executable, "-B", "-c", program],
+            cwd=study.ROOT, capture_output=True, text=True, timeout=30)
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        self.assertEqual(json.loads(completed.stdout),
+            {"processor": "parent-text-probe", "metadata_is_text": True})
 
 
 if __name__ == "__main__":

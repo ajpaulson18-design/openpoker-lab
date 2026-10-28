@@ -8,6 +8,11 @@
   },
   "contract": "batched-suit-lookup-publication-v1",
   "files_sha256": {
+    "batched-suit-ci-pr-first-failure.log.gz": "31c05291d835ba42e2786beef5ba7549309e113e4ce228a51a9f301d9c9b4be8",
+    "batched-suit-ci-push-first-failure.log.gz": "1ebea65d7ce7b82aca50d3c068d862abe7f88249080bf457cc224fe5c42ce308",
+    "batched-suit-ci-repair-controls-optimized.log": "028b76a28e6d7b34af613dffd3ffffce4fa9cdbd0fa8f75c0e9c56984663d5cc",
+    "batched-suit-ci-repair-controls-python311.log": "e52bb135a8d4060d4b2df3a4a1bbceca825fe1f5d925f7b697e6e931945b9712",
+    "batched-suit-ci-repair-controls.log": "7cfcd5241e04dcec8394f8b55db43ae12ef8848756db78cb5422850109b92537",
     "batched-suit-lookup-independent-receipt.json.gz": "321742ebeb49383167c57ba4e88388f1992d132961d3909f13b9466f0d54dcd6",
     "batched-suit-lookup-independent-review-v1.log": "0d6e7381eba0fc89fb3e6a44368ceff98223cf7ac819460f7ba82010bab8f4b2",
     "batched-suit-lookup-independent-review.py": "6c100c685beec64c05100284c452ec255558762fa58c11f64687dd6db7d5a9f3",
@@ -16,12 +21,21 @@
     "batched-suit-lookup-protocol-controls.log": "0a96837f995955235529df944da192c599628ba16f3ef0365e72ddea0a52d807",
     "batched-suit-lookup-study-v1.log": "a319887cb717545f94ed2d236127a4c41068ac47f5a8175f6c1dfb60c5e3227e",
     "batched-suit-lookup-study-v1.zip": "01f372b971891a7275a1e5b6c8cb7f514c5f47b9652c42c238bc3e6f0768731d",
+    "batched-suit-platform-cache-repro-attempt1.py": "bbfee8e5af00cd096a00168bea3ec1757c413fa5081049fc24661b2d1eb4a6de",
+    "batched-suit-platform-cache-repro-first.log": "49015bd8386af34538b44075f0e69bbe2826c11190d89b311346975cee92c2d0",
+    "batched-suit-platform-cache-repro-second.log": "3524acf957e9a620eb75e87ae3282f580da9ca1bc660d894bfdb3ad728101d5e",
+    "batched-suit-platform-cache-repro.py": "bb8818005a136a852219f1eb3f6055fe0b01b0306d2d72a0a422ea9ce8942358",
     "batched-suit-row-lookup-controls.log": "4872e75d48bba0a5a8857ea0850d95788ddb75268e5a882baf588d969a7c5b35",
     "batched-suit-row-lookup-regression.log": "5f81892c33a63d0458c58560e57cae44727a8bd7e1cd5107d2d11e71111917f6",
+    "ci-repair-receipt.json": "7d35f8b9284fb6b73dfaf2a5eeb6442e2e3eb3f0bb8251b2f3b95cee5f22d63e",
     "exact-selected-independent-review.py": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5",
     "manifest.json": "a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32",
     "protocol.json": "8533ab03d897fa0c8968d7c08b1ba1cb44b983cada6e198f00ddd2ea2aa02922",
     "report.json": "24ccdb77f0daa8715a713f9d1aac4ee9f9413cbc9dccf7858b01ad379d93da8c"
+  },
+  "later_ci_repair": {
+    "receipt": "ci-repair-receipt.json",
+    "scope": "First CI failure retained and parent test mock isolated. Frozen measured child/production source unchanged; no study rerun."
   },
   "later_independent_engineering_review": {
     "receipt": "batched-suit-lookup-luna-review.json",

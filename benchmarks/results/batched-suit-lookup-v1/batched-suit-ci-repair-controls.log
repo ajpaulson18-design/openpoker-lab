@@ -1,0 +1,13 @@
+test_failed_child_mock_leaves_real_parent_platform_probe_text (tests.test_benchmark_batched_suit_lookup.BatchedSuitLookupBenchmarkTests.test_failed_child_mock_leaves_real_parent_platform_probe_text) ... ok
+test_first_failed_child_stream_is_retained_without_retry (tests.test_benchmark_batched_suit_lookup.BatchedSuitLookupBenchmarkTests.test_first_failed_child_stream_is_retained_without_retry) ... ok
+test_real_blocker_children_and_protected_independent_policy_replay (tests.test_benchmark_batched_suit_lookup.BatchedSuitLookupBenchmarkTests.test_real_blocker_children_and_protected_independent_policy_replay) ... ok
+test_schedule_separates_repeats_traces_and_payoff_controls (tests.test_benchmark_batched_suit_lookup.BatchedSuitLookupBenchmarkTests.test_schedule_separates_repeats_traces_and_payoff_controls) ... ok
+test_batched_member_corruption_still_rejects_phase_before_result (tests.test_batched_suit_row_lookup.BatchedSuitRowLookupTests.test_batched_member_corruption_still_rejects_phase_before_result) ... ok
+test_complete_payoff_varying_and_identity_games_match_policy_metrics_and_exact_br (tests.test_batched_suit_row_lookup.BatchedSuitRowLookupTests.test_complete_payoff_varying_and_identity_games_match_policy_metrics_and_exact_br) ... ok
+test_every_member_and_hole_matches_reference_without_per_hand_history_replay (tests.test_batched_suit_row_lookup.BatchedSuitRowLookupTests.test_every_member_and_hole_matches_reference_without_per_hand_history_replay) ... ok
+test_malformed_actor_history_menu_and_mode_reject (tests.test_batched_suit_row_lookup.BatchedSuitRowLookupTests.test_malformed_actor_history_menu_and_mode_reject) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.383s
+
+OK

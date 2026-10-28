@@ -111,6 +111,11 @@ def validate(raw, entry):
           "Actual trainer/kernel storage receipt mismatch")
 
 
+def _run_child(command):
+    """Launch one study child without replacing shared subprocess functions."""
+    return subprocess.run(command, cwd=ROOT, capture_output=True)
+
+
 def run(output):
     output = Path(output).resolve()
     _need(output != ROOT and ROOT not in output.parents and not output.exists(), "Use a new external output directory")
@@ -131,7 +136,7 @@ def run(output):
         try:
             args = [sys.executable, "-B", "-m", "scripts.benchmark_batched_suit_lookup", "--child", name,
                     "--lookup", mode, "--sample", str(sample)] + (["--traced"] if traced else [])
-            process = subprocess.run(args, cwd=ROOT, capture_output=True)
+            process = _run_child(args)
             (output / (identifier + ".json")).write_bytes(process.stdout)
             (output / (identifier + ".stderr.txt")).write_bytes(process.stderr)
             _need(process.returncode == 0, "Child failed: " + str(process.returncode))

@@ -66,6 +66,26 @@ seven lookup/real-child/protocol controls pass optimized. Tests authenticate eve
 member and blocker hole against per-row lookup, verify one history route and G
 transforms per decision, retain malformed/menu checks and inject duplicate
 member corruption. Per-row remains the default/reference. Final publication
-CI remains a gate. Native exact computation,
+CI remains a gate.
+
+The first final-head Python 3.12/Linux CI runs failed because the benchmark's
+failed-child test replaced shared `subprocess.run`. Python's processor probe
+received the fake child's bytes and cached them, causing later platform metadata
+formatting to fail. The [repair receipt](../benchmarks/results/batched-suit-lookup-v1/ci-repair-receipt.json)
+preserves both complete first CI logs, the incomplete Windows reproduction and
+the successful isolated Linux-formatting reproduction. A dedicated parent
+child-launch seam now confines the mock; a fresh-process regression runs a real
+text subprocess probe through that metadata branch and verifies subsequent
+metadata remains valid. Eight focused tests pass on Python 3.12 normally and
+optimized. A separate embedded Python 3.11 attempt failed to import this checkout;
+its log is retained and contributes no validation claim.
+
+AST comparison authenticates every existing runner function except the single
+parent launch replacement, including the unchanged measured child and timer.
+Five production source files remain identical to frozen study source after
+line-ending normalization. The original archive and manifest remain byte-identical;
+the study was not rerun. Full CI on the repaired head remains required.
+
+Native exact computation,
 asymmetric strategy growth, expanded diagnostics/output and scalable independent
 certification remain unresolved; the overall foundation goal remains active.
