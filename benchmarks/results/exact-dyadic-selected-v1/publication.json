@@ -1,0 +1,30 @@
+{
+  "formal_source_commit": "9d8a084a08ddf24dded3a4c76b1bb60ba914df3e",
+  "scope": "Formal producer archive and independent receipt remain unchanged. Profiles are separate source-authenticated instrumented solves with exact saved-policy/metric equality; profiler durations are not benchmarks.",
+  "sha256": {
+    "authentication.py": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5",
+    "combined-regression.log": "73ffc434e75d52183c5ac4d8b3948d8cf204cedcb07626a5579f2c89c1721435",
+    "independent-controls-final.log": "0e5bed6159d07464f6e4094c1cf3a385d53cebbe46f55ba09e40abeb155c562f",
+    "independent-controls-initial.log": "857cfed77f36ffde5820c6610f8e22d4a3d6c6a0f9fddacb1ebcd65bd4068288",
+    "independent-controls.py": "26f6602eb17b4ecb1aae4d9ea20aa8fce35bb2507cfe0a8c59bc1a4400632884",
+    "manifest.json": "c87f2f8fbadd708a89910a8ba359238a4030f775786b36f066ead0c8a5b5a378",
+    "optimized-controls.log": "289b084574c953f3d493c255cebbafed6d7f578860c7bb168d86df9f73a536d2",
+    "profile-helper.py": "b17a4600be209316943d00ec4dad4d3795eead004e7e5f4a5e92172195794ed7",
+    "profiles/dyadic/profile.json": "47bf99c4fe16f725853d19a2cc920b3b6f8382f60ee9d587c88ed7bae835556e",
+    "profiles/dyadic/profile.pstats": "9082c5f655c588fb9a29e802f669b91c0ed0ca65285c336365134a0ba5289738",
+    "profiles/dyadic/profile.txt": "6c412b9612b0c75d028b92286745ba875eb9ebc43c76f9217733ca319119450c",
+    "profiles/dyadic/run.log": "ab973caf2d084170681513de9b2c0e8830c676e7df6373ac3c2355baecbb626a",
+    "profiles/fraction/profile.json": "6afa529da53b126b2b3a531bbcdcbec1eaa314f8a8fc910e4c600ba531ddf615",
+    "profiles/fraction/profile.pstats": "2edb3897fb127d96bfb61bb98984b2fed6f11f7cae8eea25818f33daf7176d45",
+    "profiles/fraction/profile.txt": "5977a3e8876fba2cdc6e4c1fb3cda60fbe675c7bf33cac57af729d45085dba8d",
+    "profiles/fraction/run.log": "abd00002a730259c98775d277c56d6ca9e30e9aa17a1ac94b69f4051571f3345",
+    "protocol.json": "fb8320b683d8a044684a511a2866df766f6b9d5e4f31ee8caca3b42db41051db",
+    "receipt.json": "4aa87554c3bf217345e88ca2a6c9c0041e0c2dfef41351413082a941fbf71490",
+    "report.json": "a33da8879f7639a367640ec9fd1ebec279e6d2c5576311fe683fcc7702b09045",
+    "review.log": "64aa9cc03163388a539e08ec097d635b904acf348ffbce31d88a317760e01dff",
+    "review.py": "9e1defa5a246827619e9d4ae3039030632798c28671296baffb697cae40d7839",
+    "run.log": "8049a9c779bdcfb853defa99dfe44e1ce299b18e48f238e0356109a45d80cf6b",
+    "runner-controls.log": "4be4715d48bf9616980b18260fcddaea2719b93a5814da368ba3257c6d18afe7",
+    "study.zip": "453da51f159adbded47096e5841ffd05961357857edce80a97e217b2a5736872"
+  }
+}

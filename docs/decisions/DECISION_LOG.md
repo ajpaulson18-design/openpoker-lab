@@ -36,6 +36,23 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D063: Integer query arithmetic under the exact-product law (October 27, 2026)
+
+Sol architecture, Terra independent criticism/execution and Luna implementation
+accept an explicit dyadic integer bucket/sweep core inside the current unified
+direct-DAG packed solver, retaining Fraction default/reference and completed
+rational-to-binary64 conversion. All global normalization, blockers, ranks,
+monetary signs and visible-history rows remain. Reject unsupported non-dyadic
+query inputs without fallback; preserve old admission even if runtime improves.
+Admit integer bit widths/payload separately and distinguish counted query-core
+limb models from full arithmetic/CPU. The [contract and current checks](../exact-dyadic-arithmetic.md)
+record bounded parity and adversarial controls. The [frozen result](../exact-dyadic-result.md)
+now authenticates source before twelve numeric/six exact saved replays. All
+paired policies/metrics/certificates match; accuracy misses and old admission
+rejection remain. T10 median improves but T100 single call and traced allocation
+do not; retain those misses and the separately scoped profiles. Final publication
+remains a gate; no native/full-deck or strategy compression claim follows.
+
 ### D062: Compact exact-product chance diagnostics (October 27, 2026)
 
 Engineering decision under the foundation goal: make pair-table-free output an

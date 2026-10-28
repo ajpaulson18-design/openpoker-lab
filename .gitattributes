@@ -197,3 +197,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Preserve compact policies, source authentication, and first review failure.
 /benchmarks/results/compact-exact-policy-v1/** -text whitespace=cr-at-eol
+
+# Preserve exact integer study, independent controls and separate raw profiles.
+/benchmarks/results/exact-dyadic-selected-v1/** -text whitespace=cr-at-eol

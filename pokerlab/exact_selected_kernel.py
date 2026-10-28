@@ -103,7 +103,8 @@ class ExactSelectedRunoutKernel:
 
     _IMMUTABLE_INPUTS = frozenset({"limits", "rank_cache_boards", "hands", "weights",
                                    "hand_counts", "selected", "normalizer", "_hand_masks",
-                                   "_board_masks", "_flop_keys", "_hand_indexes", "_weight_maps"})
+                                   "_board_masks", "_flop_keys", "_hand_indexes", "_weight_maps",
+                                   "arithmetic", "_arithmetic_plan"})
 
     def __setattr__(self, name, value):
         if getattr(self, "_initialized", False) and name in self._IMMUTABLE_INPUTS:
@@ -111,7 +112,9 @@ class ExactSelectedRunoutKernel:
         object.__setattr__(self, name, value)
 
     def __init__(self, sb_range, bb_range, runouts, *, rank_cache_boards=1,
-                 limits=None):
+                 limits=None, arithmetic="fraction"):
+        if type(arithmetic) is not str or arithmetic not in ("fraction", "dyadic"):
+            raise ValueError("arithmetic must be fraction or dyadic.")
         if limits is None:
             limits = ExactSelectedKernelLimits()
         if not isinstance(limits, ExactSelectedKernelLimits):
@@ -119,6 +122,8 @@ class ExactSelectedRunoutKernel:
         if type(rank_cache_boards) is not int or not 1 <= rank_cache_boards <= _MAX_RANK_CACHE_BOARDS:
             raise ValueError("rank_cache_boards must be an integer from 1 through 64.")
         self.limits = limits
+        self.arithmetic = arithmetic
+        self._arithmetic_plan = None
         self._work = 0
         self._entries_peak = 0
         self._unsupported = 0
@@ -234,6 +239,16 @@ class ExactSelectedRunoutKernel:
             raise ValueError("Selected runouts contain no positive compatible physical deals.")
         self._input_entries = base_entries
         self._cache_reserved_entries = cache_entries
+        if arithmetic == "dyadic":
+            # Keep the established conservative query envelope. Additional
+            # integer snapshots are admitted before their constructor runs;
+            # representation speed never silently widens requested capacity.
+            retained = 8 * sum(self.hand_counts) + 128
+            self._reserve_entries(base_entries + cache_entries + retained)
+            self._reserve_work(20 * sum(self.hand_counts) + 128)
+            from .dyadic_selected_arithmetic import DyadicSelectedArithmeticPlan
+            self._arithmetic_plan = DyadicSelectedArithmeticPlan(self)
+            self._input_entries += retained
         self._initialized = True
 
     def _reserve_work(self, amount):
@@ -387,6 +402,8 @@ class ExactSelectedRunoutKernel:
         self._reserve_work(work)
         self._reserve_entries(self._input_entries + self._cache_reserved_entries +
                               12 * sum(self.hand_counts) + 600)
+        if self._arithmetic_plan is not None:
+            return self._arithmetic_plan.marginals(indexes)
         out = [[Fraction(0) for _ in self.hands[p]] for p in (0, 1)]
         for k in indexes:
             blocked = self._board_masks[k]
@@ -518,6 +535,9 @@ class ExactSelectedRunoutKernel:
             raise ValueError("Opponent reach length disagrees with its bounded iterator.")
         reach = tuple(self._snapshot_nonnegative(x, "opponent_reach") for x in raw_reach)
         self._preflight_terminal_bits(reach, scale, player, len(indexes))
+        if self._arithmetic_plan is not None:
+            return self._arithmetic_plan.terminal(indexes, kind=kind, payoff=scale,
+                         player=player, opponent_reach=reach)
         answer = [Fraction(0) for _ in self.hands[player]]
         own_side, opp_side = player, 1-player
         sign = 1 if player == 0 else -1
@@ -678,7 +698,7 @@ class ExactSelectedRunoutKernel:
             raise ValueError("Exact terminal integer-bit preflight exceeded.")
 
     def statistics(self):
-        return {
+        result = {
             "contract": _VERSION,
             "hands": self.hand_counts,
             "boards": len(self.selected),
@@ -694,6 +714,10 @@ class ExactSelectedRunoutKernel:
             "rank_cache_misses": self._cache_misses,
             "rank_cache_evictions": self._cache_evictions,
         }
+        if self._arithmetic_plan is not None:
+            result["arithmetic"] = "exact-dyadic-integer-buckets-v1"
+            result["integer_arithmetic"] = self._arithmetic_plan.receipt()
+        return result
 
     def clear_rank_cache(self):
         """Release solve-local rank vectors after terminal diagnostics finish."""

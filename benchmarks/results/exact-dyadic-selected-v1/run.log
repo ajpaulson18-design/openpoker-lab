@@ -1,0 +1,15 @@
+original-T10-fraction-0 complete 5.498559
+original-T10-dyadic-0 complete 4.176621
+original-T10-dyadic-1 complete 3.972726
+original-T10-fraction-1 complete 7.311709
+original-T10-fraction-2 complete 7.110251
+original-T10-dyadic-2 complete 4.253157
+original-T10-fraction-traced complete 39.052869
+original-T10-dyadic-traced complete 26.951499
+original-T100-fraction-0 complete 54.122940
+original-T100-dyadic-0 complete 57.405023
+one-world-T1000-fraction-0 complete 100.762431
+one-world-T1000-dyadic-0 complete 78.299612
+original-T1000-dyadic-resource-control pretraining-rejected 0.070502
+full-range-forced-all-in-T10-dyadic-0 complete 0.565094
+{"outcome": "complete", "manifest_sha256": "c87f2f8fbadd708a89910a8ba359238a4030f775786b36f066ead0c8a5b5a378", "failure": null}

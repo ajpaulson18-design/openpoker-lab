@@ -1,5 +1,33 @@
 # Foundation-first execution record
 
+## Dyadic integer query core: integration and independent controls
+
+The explicit [integer arithmetic contract](exact-dyadic-arithmetic.md) connects
+integer blocker/rank sweeps to the existing exact-product direct-DAG four-street
+trainer. It retains Fraction setup/reference and once-per-completed-component
+binary64 conversion. All existing logical caps remain, and integer bit/payload
+forecasts are added before training. The original T1000 early rejection remains.
+The combined 60-control exact-product/dyadic/adapter/compact selection passes;
+all 18 new arithmetic/integration/independent controls pass optimized Python.
+Terra separately executes seven adversarial controls with 288 literal physical
+comparisons, cancellation, rounding and early-limit rejection. Root's complete
+four-street policy/eight-metric and independent exact certificate comparison
+passes while Fraction query-loop fallback is forbidden. Sol independently
+inspects allocation, arithmetic and weak ownership; counted limb-model scope
+explicitly excludes Fraction validation/GCD preflights and runtime.
+The fixed paired measurement runner's eight controls pass. Its first 14-call
+[frozen study](exact-dyadic-result.md) completes at `9d8a084a08ddf24dded3a4c76b1bb60ba914df3e`.
+Independent saved-only review authenticates 1,791 files before twelve numeric
+replays and six exact certificates, forbidding production/training/constructors/
+query callbacks/native/subprocesses. All six paired policies/eight metrics and
+exact certificates match; original T10/T100 misses, one-world T1000 passes and
+original T1000 pretraining rejection remain. T10 median improves 7.110251 to
+4.176621 s, T100 single call worsens 54.122940 to 57.405023 s, and traced Python
+allocation rises 2,246,871 to 2,313,635 bytes. No general speed/RAM claim follows.
+Separate source-authenticated profiles reproduce full outputs and identify
+repeated reference/dyadic bit preflights; their durations are not speed evidence.
+Final PR #260 CI/publication remain distinct gates. Overall foundation goal active.
+
 ## Compact exact-product output: independently replayed frozen result
 
 The explicit [compact contract](compact-exact-policy.md) replaces the final

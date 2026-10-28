@@ -1,5 +1,17 @@
 # Current engineering state
 
+An opt-in [integer query core](../exact-dyadic-arithmetic.md) connects exact dyadic
+blocker/rank arithmetic to the same four-street trainer. Its [frozen result](../exact-dyadic-result.md)
+preserves all six complete policy/eight-metric pairs, twelve independent numeric
+replays and six exact certificates after source authentication. Original T10/T100
+quality misses and the original T1000 work rejection remain; the one-world T1000
+target passes in both modes. T10 medians are 7.110251/4.176621 s Fraction/integer,
+but T100 single calls are 54.122940/57.405023 s and traced allocation is higher.
+No general speed/RAM gain or larger choice game follows. Additional integer
+payload is admitted before training. Separate profiles identify repeated
+Fraction/dyadic preflights; profiler times are not benchmarks. Final PR #260 CI,
+native exact computation and strategy/history scaling remain open.
+
 The explicit [compact exact-product output](../compact-exact-policy.md) removes
 production pair queries/table storage and substitutes a linear input snapshot.
 Its [frozen ten-call result](../compact-exact-policy-result.md) preserves all

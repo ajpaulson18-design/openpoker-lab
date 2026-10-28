@@ -1,0 +1,3585 @@
+{
+  "functions": [
+    {
+      "calls": 26,
+      "cumulative_seconds": 0.0009188000000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\collections\\__init__.py",
+      "function": "update",
+      "line": 669,
+      "primitive_calls": 26,
+      "self_seconds": 7.97e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 3.1000000000000004e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "fix_flags",
+      "line": 953,
+      "primitive_calls": 2,
+      "self_seconds": 2.5e-06
+    },
+    {
+      "calls": 39,
+      "cumulative_seconds": 1.9900000000000003e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__next",
+      "line": 240,
+      "primitive_calls": 39,
+      "self_seconds": 1.9900000000000003e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 0.000921,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\__init__.py",
+      "function": "fullmatch",
+      "line": 169,
+      "primitive_calls": 4,
+      "self_seconds": 8.8e-06
+    },
+    {
+      "calls": 10,
+      "cumulative_seconds": 4.85e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\__init__.py",
+      "function": "sub",
+      "line": 179,
+      "primitive_calls": 10,
+      "self_seconds": 1.7100000000000002e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0009561000000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\__init__.py",
+      "function": "split",
+      "line": 199,
+      "primitive_calls": 2,
+      "self_seconds": 1.0500000000000001e-05
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 0.0005432000000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__getitem__",
+      "line": 168,
+      "primitive_calls": 12,
+      "self_seconds": 0.0005387
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 2.1000000000000002e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_bytes_to_codes",
+      "line": 396,
+      "primitive_calls": 2,
+      "self_seconds": 1.22e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 5.9800000000000003e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "__and__",
+      "line": 1561,
+      "primitive_calls": 4,
+      "self_seconds": 2.32e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 3.6000000000000003e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "groups",
+      "line": 83,
+      "primitive_calls": 4,
+      "self_seconds": 2.5e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 3.7e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "isstring",
+      "line": 575,
+      "primitive_calls": 4,
+      "self_seconds": 2.7e-06
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 7.9e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__init__",
+      "line": 231,
+      "primitive_calls": 2,
+      "self_seconds": 5.2e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 6.6e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_simple",
+      "line": 403,
+      "primitive_calls": 1,
+      "self_seconds": 3.8e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 1.8000000000000001e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_get_iscased",
+      "line": 433,
+      "primitive_calls": 4,
+      "self_seconds": 1.8000000000000001e-06
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 2.09e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "_get_value",
+      "line": 1543,
+      "primitive_calls": 12,
+      "self_seconds": 1.32e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 6.43e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_mk_bitmap",
+      "line": 391,
+      "primitive_calls": 4,
+      "self_seconds": 5.7900000000000005e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0013548000000000002,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_code",
+      "line": 578,
+      "primitive_calls": 2,
+      "self_seconds": 3.54e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 5.600000000000001e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_get_literal_prefix",
+      "line": 441,
+      "primitive_calls": 2,
+      "self_seconds": 4.5e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 6.300000000000001e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "__get__",
+      "line": 202,
+      "primitive_calls": 4,
+      "self_seconds": 4.800000000000001e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 4.3e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "__new__",
+      "line": 1128,
+      "primitive_calls": 4,
+      "self_seconds": 4.3e-06
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 2.5300000000000002e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_compile_charset",
+      "line": 216,
+      "primitive_calls": 5,
+      "self_seconds": 1.59e-05
+    },
+    {
+      "calls": 16,
+      "cumulative_seconds": 0.0018575000000000002,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\__init__.py",
+      "function": "_compile",
+      "line": 280,
+      "primitive_calls": 16,
+      "self_seconds": 6.340000000000001e-05
+    },
+    {
+      "calls": 1462,
+      "cumulative_seconds": 1.4163632000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "profile",
+      "line": 102,
+      "primitive_calls": 1,
+      "self_seconds": 0.0217462
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0002842,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "_parse_sub",
+      "line": 452,
+      "primitive_calls": 2,
+      "self_seconds": 4.55e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.3700000000000001e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "getwidth",
+      "line": 178,
+      "primitive_calls": 2,
+      "self_seconds": 9.5e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 5e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "_class_escape",
+      "line": 312,
+      "primitive_calls": 1,
+      "self_seconds": 3.6000000000000003e-06
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 6.500000000000001e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_compile_info",
+      "line": 516,
+      "primitive_calls": 2,
+      "self_seconds": 2.8000000000000003e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.0012535,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_compile",
+      "line": 37,
+      "primitive_calls": 2,
+      "self_seconds": 8.44e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.001714,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "compile",
+      "line": 745,
+      "primitive_calls": 2,
+      "self_seconds": 2.86e-05
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 0.0005970000000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_optimize_charset",
+      "line": 243,
+      "primitive_calls": 5,
+      "self_seconds": 0.0004758
+    },
+    {
+      "calls": 5852,
+      "cumulative_seconds": 0.1419167,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_public_topology.py",
+      "function": "iter_occurrences",
+      "line": 169,
+      "primitive_calls": 5852,
+      "self_seconds": 0.08142390000000001
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 1.3700000000000001e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_compiler.py",
+      "function": "_get_charset_prefix",
+      "line": 472,
+      "primitive_calls": 2,
+      "self_seconds": 1.06e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.00023410000000000003,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "_parse",
+      "line": 512,
+      "primitive_calls": 2,
+      "self_seconds": 0.00011570000000000001
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 1.5700000000000002e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "__call__",
+      "line": 720,
+      "primitive_calls": 4,
+      "self_seconds": 1.1400000000000001e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.3e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__init__",
+      "line": 113,
+      "primitive_calls": 3,
+      "self_seconds": 1.3e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 1.5e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\enum.py",
+      "function": "value",
+      "line": 1291,
+      "primitive_calls": 4,
+      "self_seconds": 1.5e-06
+    },
+    {
+      "calls": 39,
+      "cumulative_seconds": 2.2100000000000002e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\collections\\__init__.py",
+      "function": "__missing__",
+      "line": 609,
+      "primitive_calls": 39,
+      "self_seconds": 2.2100000000000002e-05
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 4.3e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__len__",
+      "line": 164,
+      "primitive_calls": 5,
+      "self_seconds": 2.9e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 6.000000000000001e-07,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__setitem__",
+      "line": 172,
+      "primitive_calls": 1,
+      "self_seconds": 6.000000000000001e-07
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 1.6000000000000001e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "__init__",
+      "line": 77,
+      "primitive_calls": 2,
+      "self_seconds": 1.6000000000000001e-06
+    },
+    {
+      "calls": 26,
+      "cumulative_seconds": 0.0010863000000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\collections\\__init__.py",
+      "function": "__init__",
+      "line": 595,
+      "primitive_calls": 26,
+      "self_seconds": 0.0001675
+    },
+    {
+      "calls": 31,
+      "cumulative_seconds": 1.11e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "match",
+      "line": 256,
+      "primitive_calls": 31,
+      "self_seconds": 1.04e-05
+    },
+    {
+      "calls": 8,
+      "cumulative_seconds": 8.3e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "tell",
+      "line": 293,
+      "primitive_calls": 8,
+      "self_seconds": 5.8e-06
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 5.4e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "append",
+      "line": 176,
+      "primitive_calls": 5,
+      "self_seconds": 3.6000000000000003e-06
+    },
+    {
+      "calls": 35,
+      "cumulative_seconds": 4.0100000000000006e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "get",
+      "line": 261,
+      "primitive_calls": 35,
+      "self_seconds": 2.3100000000000002e-05
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 1.9e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "_uniq",
+      "line": 449,
+      "primitive_calls": 5,
+      "self_seconds": 1.11e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0003196,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\re\\_parser.py",
+      "function": "parse",
+      "line": 969,
+      "primitive_calls": 2,
+      "self_seconds": 2.2800000000000002e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0023635,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_range_snapshot",
+      "line": 55,
+      "primitive_calls": 2,
+      "self_seconds": 9.03e-05
+    },
+    {
+      "calls": 41818,
+      "cumulative_seconds": 0.0485376,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__eq__",
+      "line": 912,
+      "primitive_calls": 41818,
+      "self_seconds": 0.0485376
+    },
+    {
+      "calls": 21,
+      "cumulative_seconds": 0.0001275,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "_asdict_inner",
+      "line": 1332,
+      "primitive_calls": 2,
+      "self_seconds": 7.02e-05
+    },
+    {
+      "calls": 29470,
+      "cumulative_seconds": 0.29405390000000003,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "_add",
+      "line": 710,
+      "primitive_calls": 29470,
+      "self_seconds": 0.15392340000000002
+    },
+    {
+      "calls": 108404,
+      "cumulative_seconds": 0.6854937000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "_richcmp",
+      "line": 933,
+      "primitive_calls": 108404,
+      "self_seconds": 0.2742636
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.00022170000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "finish",
+      "line": 681,
+      "primitive_calls": 1,
+      "self_seconds": 7.94e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.1077864,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "build_direct_shared_topology",
+      "line": 761,
+      "primitive_calls": 1,
+      "self_seconds": 0.00023980000000000003
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 0.0920696,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "turn_chance",
+      "line": 497,
+      "primitive_calls": 12,
+      "self_seconds": 0.0003866
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0024962,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "reachable_selected",
+      "line": 454,
+      "primitive_calls": 1,
+      "self_seconds": 0.0001045
+    },
+    {
+      "calls": 5028,
+      "cumulative_seconds": 0.1492262,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "policy",
+      "line": 91,
+      "primitive_calls": 5028,
+      "self_seconds": 0.0229168
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.54e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "_is_dataclass_instance",
+      "line": 1296,
+      "primitive_calls": 6,
+      "self_seconds": 9.4e-06
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 3.4500000000000005e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "fields",
+      "line": 1278,
+      "primitive_calls": 2,
+      "self_seconds": 2.1400000000000002e-05
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 4.2000000000000004e-06,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "<genexpr>",
+      "line": 1373,
+      "primitive_calls": 5,
+      "self_seconds": 3.1000000000000004e-06
+    },
+    {
+      "calls": 18,
+      "cumulative_seconds": 1e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "<genexpr>",
+      "line": 1293,
+      "primitive_calls": 18,
+      "self_seconds": 1e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0001553,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\dataclasses.py",
+      "function": "asdict",
+      "line": 1308,
+      "primitive_calls": 2,
+      "self_seconds": 1.94e-05
+    },
+    {
+      "calls": 95566,
+      "cumulative_seconds": 0.7644729,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "_mul",
+      "line": 742,
+      "primitive_calls": 95566,
+      "self_seconds": 0.3912079
+    },
+    {
+      "calls": 11,
+      "cumulative_seconds": 1.72e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__int__",
+      "line": 859,
+      "primitive_calls": 11,
+      "self_seconds": 1.27e-05
+    },
+    {
+      "calls": 183350,
+      "cumulative_seconds": 0.7335091,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__neg__",
+      "line": 851,
+      "primitive_calls": 183350,
+      "self_seconds": 0.29207500000000003
+    },
+    {
+      "calls": 26091,
+      "cumulative_seconds": 0.11136220000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\numbers.py",
+      "function": "__float__",
+      "line": 308,
+      "primitive_calls": 26091,
+      "self_seconds": 0.0901707
+    },
+    {
+      "calls": 340842,
+      "cumulative_seconds": 0.8921076,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "_from_coprime_ints",
+      "line": 317,
+      "primitive_calls": 340842,
+      "self_seconds": 0.6787488
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 32.1661169,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "solve_four_street_exact_selected",
+      "line": 402,
+      "primitive_calls": 1,
+      "self_seconds": 0.032244800000000004
+    },
+    {
+      "calls": 18575,
+      "cumulative_seconds": 1.7360512000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_prefix_indexes",
+      "line": 331,
+      "primitive_calls": 18575,
+      "self_seconds": 0.7346721
+    },
+    {
+      "calls": 16215,
+      "cumulative_seconds": 2.1022946,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_preflight_terminal_bits",
+      "line": 643,
+      "primitive_calls": 16215,
+      "self_seconds": 1.0252055
+    },
+    {
+      "calls": 2044487,
+      "cumulative_seconds": 5.6910511,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__new__",
+      "line": 186,
+      "primitive_calls": 2044487,
+      "self_seconds": 4.5266872000000005
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0247939,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "_normalize_policies",
+      "line": 44,
+      "primitive_calls": 1,
+      "self_seconds": 0.0113735
+    },
+    {
+      "calls": 502,
+      "cumulative_seconds": 0.0027173,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_reserve_logical",
+      "line": 170,
+      "primitive_calls": 502,
+      "self_seconds": 0.0018374
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.1023633,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "continuation",
+      "line": 859,
+      "primitive_calls": 3,
+      "self_seconds": 9.95e-05
+    },
+    {
+      "calls": 144138,
+      "cumulative_seconds": 5.425017,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_mul",
+      "line": 292,
+      "primitive_calls": 144138,
+      "self_seconds": 1.8599109
+    },
+    {
+      "calls": 782,
+      "cumulative_seconds": 0.0013229000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_guard_summary",
+      "line": 147,
+      "primitive_calls": 782,
+      "self_seconds": 0.0013229000000000001
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 27.602086900000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "train_packed",
+      "line": 99,
+      "primitive_calls": 1,
+      "self_seconds": 0.0690631
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0004846,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__init__",
+      "line": 114,
+      "primitive_calls": 1,
+      "self_seconds": 0.00016600000000000002
+    },
+    {
+      "calls": 14620,
+      "cumulative_seconds": 5.3980581,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "average",
+      "line": 200,
+      "primitive_calls": 10,
+      "self_seconds": 0.234333
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.6600000000000003e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_validate_request",
+      "line": 78,
+      "primitive_calls": 1,
+      "self_seconds": 2.44e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 4.8400000000000004e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "register_support",
+      "line": 195,
+      "primitive_calls": 2,
+      "self_seconds": 1.66e-05
+    },
+    {
+      "calls": 48,
+      "cumulative_seconds": 0.0633253,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "river_chance",
+      "line": 472,
+      "primitive_calls": 48,
+      "self_seconds": 0.0011385
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.0002853,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "_make_stage_spec",
+      "line": 63,
+      "primitive_calls": 3,
+      "self_seconds": 6.65e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0003391,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "_requested_runouts",
+      "line": 88,
+      "primitive_calls": 1,
+      "self_seconds": 3.55e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.13e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "__post_init__",
+      "line": 41,
+      "primitive_calls": 1,
+      "self_seconds": 9.800000000000001e-06
+    },
+    {
+      "calls": 669,
+      "cumulative_seconds": 0.0075969,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_extend_summary",
+      "line": 225,
+      "primitive_calls": 669,
+      "self_seconds": 0.0036045
+    },
+    {
+      "calls": 3290,
+      "cumulative_seconds": 0.13996820000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "_revealed_board",
+      "line": 232,
+      "primitive_calls": 3290,
+      "self_seconds": 0.06696690000000001
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.0008104000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "_template_config",
+      "line": 309,
+      "primitive_calls": 3,
+      "self_seconds": 9.89e-05
+    },
+    {
+      "calls": 18563,
+      "cumulative_seconds": 0.20869910000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "_assert_snapshot",
+      "line": 89,
+      "primitive_calls": 18563,
+      "self_seconds": 0.100772
+    },
+    {
+      "calls": 16215,
+      "cumulative_seconds": 23.965858400000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "values",
+      "line": 124,
+      "primitive_calls": 16215,
+      "self_seconds": 0.414619
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0004929,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_binary64_reach_bit_forecast",
+      "line": 100,
+      "primitive_calls": 1,
+      "self_seconds": 7.070000000000001e-05
+    },
+    {
+      "calls": 29240,
+      "cumulative_seconds": 21.772758,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "target_values",
+      "line": 167,
+      "primitive_calls": 20,
+      "self_seconds": 0.5687212
+    },
+    {
+      "calls": 1895,
+      "cumulative_seconds": 0.0266237,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_scratch",
+      "line": 133,
+      "primitive_calls": 1895,
+      "self_seconds": 0.0151692
+    },
+    {
+      "calls": 15,
+      "cumulative_seconds": 0.0009035,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "__post_init__",
+      "line": 24,
+      "primitive_calls": 15,
+      "self_seconds": 0.0002367
+    },
+    {
+      "calls": 30,
+      "cumulative_seconds": 0.00046120000000000004,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "_sizes",
+      "line": 74,
+      "primitive_calls": 30,
+      "self_seconds": 0.00024260000000000002
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.0001476,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "_continuation",
+      "line": 144,
+      "primitive_calls": 3,
+      "self_seconds": 5.94e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 3.94e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_layout_upper",
+      "line": 214,
+      "primitive_calls": 1,
+      "self_seconds": 3.2800000000000004e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.1000000000000002e-05,
+      "file": "<string>",
+      "function": "__init__",
+      "line": 2,
+      "primitive_calls": 1,
+      "self_seconds": 9.7e-06
+    },
+    {
+      "calls": 21070,
+      "cumulative_seconds": 6.071166600000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_bucket",
+      "line": 311,
+      "primitive_calls": 21070,
+      "self_seconds": 1.7813416000000002
+    },
+    {
+      "calls": 48645,
+      "cumulative_seconds": 2.1176120000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_snapshot_nonnegative",
+      "line": 621,
+      "primitive_calls": 48645,
+      "self_seconds": 0.3497191
+    },
+    {
+      "calls": 41818,
+      "cumulative_seconds": 0.47545430000000005,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "_convert",
+      "line": 99,
+      "primitive_calls": 41818,
+      "self_seconds": 0.20424440000000002
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.10558440000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_source_to_vertex",
+      "line": 355,
+      "primitive_calls": 1,
+      "self_seconds": 0.000661
+    },
+    {
+      "calls": 238,
+      "cumulative_seconds": 0.099751,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "build_betting",
+      "line": 528,
+      "primitive_calls": 4,
+      "self_seconds": 0.012824200000000001
+    },
+    {
+      "calls": 472,
+      "cumulative_seconds": 0.008774200000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_intern",
+      "line": 239,
+      "primitive_calls": 472,
+      "self_seconds": 0.0022378000000000003
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 0.0048497,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "rank_hand",
+      "line": 43,
+      "primitive_calls": 23,
+      "self_seconds": 0.0005612000000000001
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.0021022000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "expand_range",
+      "line": 75,
+      "primitive_calls": 2,
+      "self_seconds": 6.81e-05
+    },
+    {
+      "calls": 67003,
+      "cumulative_seconds": 0.5469046000000001,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__lt__",
+      "line": 955,
+      "primitive_calls": 67003,
+      "self_seconds": 0.10202860000000001
+    },
+    {
+      "calls": 41400,
+      "cumulative_seconds": 0.2932023,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__gt__",
+      "line": 959,
+      "primitive_calls": 41400,
+      "self_seconds": 0.0526061
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.6700000000000002e-05,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__le__",
+      "line": 963,
+      "primitive_calls": 1,
+      "self_seconds": 5.2e-06
+    },
+    {
+      "calls": 32456,
+      "cumulative_seconds": 0.42965210000000004,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "from_float",
+      "line": 291,
+      "primitive_calls": 32456,
+      "self_seconds": 0.1508345
+    },
+    {
+      "calls": 125036,
+      "cumulative_seconds": 1.4006429,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "forward",
+      "line": 613,
+      "primitive_calls": 125036,
+      "self_seconds": 0.2778707
+    },
+    {
+      "calls": 844991,
+      "cumulative_seconds": 0.34279020000000004,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "numerator",
+      "line": 397,
+      "primitive_calls": 844991,
+      "self_seconds": 0.34279020000000004
+    },
+    {
+      "calls": 933405,
+      "cumulative_seconds": 0.37443600000000005,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "denominator",
+      "line": 401,
+      "primitive_calls": 933405,
+      "self_seconds": 0.37443600000000005
+    },
+    {
+      "calls": 782408,
+      "cumulative_seconds": 0.615967,
+      "file": "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib\\fractions.py",
+      "function": "__bool__",
+      "line": 971,
+      "primitive_calls": 782408,
+      "self_seconds": 0.615967
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 8.000000000000001e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "receipt",
+      "line": 141,
+      "primitive_calls": 1,
+      "self_seconds": 6.900000000000001e-06
+    },
+    {
+      "calls": 2090,
+      "cumulative_seconds": 0.0066866,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_tokens",
+      "line": 39,
+      "primitive_calls": 2090,
+      "self_seconds": 0.005075700000000001
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.4400000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 116,
+      "primitive_calls": 6,
+      "self_seconds": 1e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.5e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 117,
+      "primitive_calls": 6,
+      "self_seconds": 1.04e-05
+    },
+    {
+      "calls": 24,
+      "cumulative_seconds": 6.400000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 120,
+      "primitive_calls": 24,
+      "self_seconds": 4.13e-05
+    },
+    {
+      "calls": 24,
+      "cumulative_seconds": 6.54e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 121,
+      "primitive_calls": 24,
+      "self_seconds": 4.2800000000000004e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.81e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 115,
+      "primitive_calls": 6,
+      "self_seconds": 1.3300000000000001e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.3000000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 123,
+      "primitive_calls": 6,
+      "self_seconds": 9.2e-06
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 4.0300000000000004e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 140,
+      "primitive_calls": 12,
+      "self_seconds": 3.09e-05
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 3.03e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 138,
+      "primitive_calls": 12,
+      "self_seconds": 2.04e-05
+    },
+    {
+      "calls": 6760,
+      "cumulative_seconds": 0.019205200000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 457,
+      "primitive_calls": 6760,
+      "self_seconds": 0.0111115
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.4000000000000003e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "__init__",
+      "line": 62,
+      "primitive_calls": 1,
+      "self_seconds": 2.4000000000000003e-06
+    },
+    {
+      "calls": 106,
+      "cumulative_seconds": 0.0014986,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "_amount_label",
+      "line": 14,
+      "primitive_calls": 106,
+      "self_seconds": 0.0004899
+    },
+    {
+      "calls": 102,
+      "cumulative_seconds": 0.0032673000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "_add_action",
+      "line": 47,
+      "primitive_calls": 102,
+      "self_seconds": 0.0011200000000000001
+    },
+    {
+      "calls": 18,
+      "cumulative_seconds": 0.0005174,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_config_key",
+      "line": 59,
+      "primitive_calls": 18,
+      "self_seconds": 0.0002478
+    },
+    {
+      "calls": 29943,
+      "cumulative_seconds": 0.9738580000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_compatible",
+      "line": 323,
+      "primitive_calls": 29943,
+      "self_seconds": 0.1951378
+    },
+    {
+      "calls": 48215,
+      "cumulative_seconds": 0.2215706,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "_cursor",
+      "line": 131,
+      "primitive_calls": 48215,
+      "self_seconds": 0.1510795
+    },
+    {
+      "calls": 409,
+      "cumulative_seconds": 0.009237,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_action_record",
+      "line": 50,
+      "primitive_calls": 409,
+      "self_seconds": 0.0029855000000000003
+    },
+    {
+      "calls": 205,
+      "cumulative_seconds": 0.012274,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "terminal",
+      "line": 317,
+      "primitive_calls": 205,
+      "self_seconds": 0.0036566000000000003
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 6.1000000000000005e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "to_dict",
+      "line": 89,
+      "primitive_calls": 1,
+      "self_seconds": 5.1e-06
+    },
+    {
+      "calls": 202,
+      "cumulative_seconds": 0.016375,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "translate_terminal",
+      "line": 460,
+      "primitive_calls": 202,
+      "self_seconds": 0.0013123000000000002
+    },
+    {
+      "calls": 35,
+      "cumulative_seconds": 0.000165,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 221,
+      "primitive_calls": 35,
+      "self_seconds": 0.000165
+    },
+    {
+      "calls": 282502,
+      "cumulative_seconds": 1.1596071000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 267,
+      "primitive_calls": 282502,
+      "self_seconds": 0.6896231
+    },
+    {
+      "calls": 19285,
+      "cumulative_seconds": 0.022359,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 410,
+      "primitive_calls": 19285,
+      "self_seconds": 0.022359
+    },
+    {
+      "calls": 140,
+      "cumulative_seconds": 0.0001862,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 445,
+      "primitive_calls": 140,
+      "self_seconds": 0.0001862
+    },
+    {
+      "calls": 35,
+      "cumulative_seconds": 2.29e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 461,
+      "primitive_calls": 35,
+      "self_seconds": 2.29e-05
+    },
+    {
+      "calls": 409,
+      "cumulative_seconds": 0.0023686000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_public_topology.py",
+      "function": "_action_key",
+      "line": 562,
+      "primitive_calls": 409,
+      "self_seconds": 0.0009592000000000001
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 5.7000000000000005e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 563,
+      "primitive_calls": 4,
+      "self_seconds": 4.6e-06
+    },
+    {
+      "calls": 14,
+      "cumulative_seconds": 1.1200000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 261,
+      "primitive_calls": 14,
+      "self_seconds": 1.1200000000000001e-05
+    },
+    {
+      "calls": 15,
+      "cumulative_seconds": 1.4400000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "<genexpr>",
+      "line": 77,
+      "primitive_calls": 15,
+      "self_seconds": 1.02e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 3.1100000000000004e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "<lambda>",
+      "line": 118,
+      "primitive_calls": 6,
+      "self_seconds": 2.04e-05
+    },
+    {
+      "calls": 13072,
+      "cumulative_seconds": 0.008067600000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "<genexpr>",
+      "line": 236,
+      "primitive_calls": 13072,
+      "self_seconds": 0.008067600000000001
+    },
+    {
+      "calls": 12224,
+      "cumulative_seconds": 4.8526077,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "__getitem__",
+      "line": 65,
+      "primitive_calls": 12224,
+      "self_seconds": 0.017957400000000002
+    },
+    {
+      "calls": 138,
+      "cumulative_seconds": 0.0003016,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 23,
+      "primitive_calls": 138,
+      "self_seconds": 0.000218
+    },
+    {
+      "calls": 10,
+      "cumulative_seconds": 9e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "reserve",
+      "line": 183,
+      "primitive_calls": 10,
+      "self_seconds": 9e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.4000000000000003e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "initialize_preflop_ledger",
+      "line": 163,
+      "primitive_calls": 1,
+      "self_seconds": 2.4000000000000003e-06
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.29e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\solver_contracts.py",
+      "function": "to_dict",
+      "line": 43,
+      "primitive_calls": 3,
+      "self_seconds": 1.29e-05
+    },
+    {
+      "calls": 114566,
+      "cumulative_seconds": 0.371726,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "__setattr__",
+      "line": 109,
+      "primitive_calls": 114566,
+      "self_seconds": 0.3018457
+    },
+    {
+      "calls": 100,
+      "cumulative_seconds": 7.010000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "<lambda>",
+      "line": 66,
+      "primitive_calls": 100,
+      "self_seconds": 7.010000000000001e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 9.000000000000001e-07,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "<lambda>",
+      "line": 97,
+      "primitive_calls": 2,
+      "self_seconds": 9.000000000000001e-07
+    },
+    {
+      "calls": 200,
+      "cumulative_seconds": 0.00036970000000000004,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "edge_count",
+      "line": 309,
+      "primitive_calls": 200,
+      "self_seconds": 0.0002346
+    },
+    {
+      "calls": 99,
+      "cumulative_seconds": 5.8800000000000006e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "edge_count",
+      "line": 313,
+      "primitive_calls": 99,
+      "self_seconds": 5.8800000000000006e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.6400000000000002e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_query_costs",
+      "line": 148,
+      "primitive_calls": 1,
+      "self_seconds": 1.11e-05
+    },
+    {
+      "calls": 250,
+      "cumulative_seconds": 0.0009369000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_table_id",
+      "line": 268,
+      "primitive_calls": 250,
+      "self_seconds": 0.000449
+    },
+    {
+      "calls": 204,
+      "cumulative_seconds": 0.0151579,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "decision",
+      "line": 345,
+      "primitive_calls": 204,
+      "self_seconds": 0.0025436
+    },
+    {
+      "calls": 62205,
+      "cumulative_seconds": 0.45461510000000005,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__getitem__",
+      "line": 30,
+      "primitive_calls": 62205,
+      "self_seconds": 0.23223570000000002
+    },
+    {
+      "calls": 10989,
+      "cumulative_seconds": 0.0827321,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "items",
+      "line": 58,
+      "primitive_calls": 10989,
+      "self_seconds": 0.038100300000000004
+    },
+    {
+      "calls": 60,
+      "cumulative_seconds": 0.0001697,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\analysis.py",
+      "function": "number",
+      "line": 6,
+      "primitive_calls": 60,
+      "self_seconds": 0.00011760000000000001
+    },
+    {
+      "calls": 36,
+      "cumulative_seconds": 1.0700000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "<genexpr>",
+      "line": 118,
+      "primitive_calls": 36,
+      "self_seconds": 1.0700000000000001e-05
+    },
+    {
+      "calls": 15,
+      "cumulative_seconds": 3.4200000000000005e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "action_dict",
+      "line": 59,
+      "primitive_calls": 15,
+      "self_seconds": 3.4200000000000005e-05
+    },
+    {
+      "calls": 138,
+      "cumulative_seconds": 8.93e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 24,
+      "primitive_calls": 138,
+      "self_seconds": 8.93e-05
+    },
+    {
+      "calls": 654,
+      "cumulative_seconds": 0.00041670000000000005,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 38,
+      "primitive_calls": 654,
+      "self_seconds": 0.00041670000000000005
+    },
+    {
+      "calls": 736,
+      "cumulative_seconds": 0.0004248,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 50,
+      "primitive_calls": 736,
+      "self_seconds": 0.0004248
+    },
+    {
+      "calls": 158,
+      "cumulative_seconds": 0.00010240000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 53,
+      "primitive_calls": 158,
+      "self_seconds": 0.00010240000000000001
+    },
+    {
+      "calls": 18563,
+      "cumulative_seconds": 0.070416,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "_reserve",
+      "line": 82,
+      "primitive_calls": 18563,
+      "self_seconds": 0.049025400000000004
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0005851000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "build_preflop_tree",
+      "line": 164,
+      "primitive_calls": 1,
+      "self_seconds": 4.2800000000000004e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.000212,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "_preflight_work",
+      "line": 255,
+      "primitive_calls": 1,
+      "self_seconds": 0.00011740000000000001
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.0006384,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "__init__",
+      "line": 29,
+      "primitive_calls": 1,
+      "self_seconds": 0.0002681
+    },
+    {
+      "calls": 7,
+      "cumulative_seconds": 0.0004605,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_iter_selected_records",
+      "line": 70,
+      "primitive_calls": 7,
+      "self_seconds": 4.2900000000000006e-05
+    },
+    {
+      "calls": 13,
+      "cumulative_seconds": 0.0214482,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "legal_hands",
+      "line": 437,
+      "primitive_calls": 13,
+      "self_seconds": 0.000897
+    },
+    {
+      "calls": 394553,
+      "cumulative_seconds": 2.5088537,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_add",
+      "line": 273,
+      "primitive_calls": 394553,
+      "self_seconds": 1.0278815000000001
+    },
+    {
+      "calls": 1410,
+      "cumulative_seconds": 2.4115799,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "terminal_vector",
+      "line": 67,
+      "primitive_calls": 1410,
+      "self_seconds": 0.0034404
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 7.13e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "_raise_actions",
+      "line": 69,
+      "primitive_calls": 2,
+      "self_seconds": 2.1000000000000002e-05
+    },
+    {
+      "calls": 32,
+      "cumulative_seconds": 0.0008559,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "cards",
+      "line": 14,
+      "primitive_calls": 32,
+      "self_seconds": 0.00028460000000000003
+    },
+    {
+      "calls": 16215,
+      "cumulative_seconds": 22.9449621,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "terminal_values_exact",
+      "line": 495,
+      "primitive_calls": 16215,
+      "self_seconds": 2.7024891
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 0.24024920000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "layout_census_shared",
+      "line": 146,
+      "primitive_calls": 2,
+      "self_seconds": 0.044575800000000006
+    },
+    {
+      "calls": 5388,
+      "cumulative_seconds": 0.0618623,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_rank_vectors",
+      "line": 469,
+      "primitive_calls": 5388,
+      "self_seconds": 0.029379100000000002
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.008022900000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "__init__",
+      "line": 114,
+      "primitive_calls": 1,
+      "self_seconds": 0.0003458
+    },
+    {
+      "calls": 2924,
+      "cumulative_seconds": 2.5700715,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "visit",
+      "line": 144,
+      "primitive_calls": 2,
+      "self_seconds": 0.038692300000000006
+    },
+    {
+      "calls": 2347,
+      "cumulative_seconds": 4.4839678,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "joint_marginals_exact",
+      "line": 399,
+      "primitive_calls": 2347,
+      "self_seconds": 0.1627049
+    },
+    {
+      "calls": 2347,
+      "cumulative_seconds": 4.834650300000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "joint_marginals",
+      "line": 115,
+      "primitive_calls": 2347,
+      "self_seconds": 0.0664217
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 2.9500000000000002e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "statistics",
+      "line": 700,
+      "primitive_calls": 5,
+      "self_seconds": 2.72e-05
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.2e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "__init__",
+      "line": 101,
+      "primitive_calls": 1,
+      "self_seconds": 1.2e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 0.1011066,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "build_template",
+      "line": 435,
+      "primitive_calls": 6,
+      "self_seconds": 0.00026470000000000004
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 0.0005093000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "build",
+      "line": 206,
+      "primitive_calls": 1,
+      "self_seconds": 0.00011700000000000001
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 0.0016195,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "straight_high",
+      "line": 33,
+      "primitive_calls": 23,
+      "self_seconds": 0.0008571000000000001
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 0.0010466,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 49,
+      "primitive_calls": 23,
+      "self_seconds": 0.0001767
+    },
+    {
+      "calls": 99,
+      "cumulative_seconds": 0.0030643000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_summary_for",
+      "line": 213,
+      "primitive_calls": 99,
+      "self_seconds": 0.0007736
+    },
+    {
+      "calls": 100,
+      "cumulative_seconds": 0.00025110000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 127,
+      "primitive_calls": 100,
+      "self_seconds": 0.0001562
+    },
+    {
+      "calls": 421,
+      "cumulative_seconds": 0.0020458,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "token",
+      "line": 25,
+      "primitive_calls": 421,
+      "self_seconds": 0.0005472000000000001
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 2.5701113,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "best",
+      "line": 142,
+      "primitive_calls": 2,
+      "self_seconds": 3.44e-05
+    },
+    {
+      "calls": 514,
+      "cumulative_seconds": 0.0011375,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "stacks",
+      "line": 46,
+      "primitive_calls": 514,
+      "self_seconds": 0.0007631000000000001
+    },
+    {
+      "calls": 18,
+      "cumulative_seconds": 2.5300000000000002e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "stacks",
+      "line": 77,
+      "primitive_calls": 18,
+      "self_seconds": 1.9e-05
+    },
+    {
+      "calls": 24,
+      "cumulative_seconds": 0.00022950000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_reserve_fixed",
+      "line": 280,
+      "primitive_calls": 24,
+      "self_seconds": 3.03e-05
+    },
+    {
+      "calls": 376,
+      "cumulative_seconds": 0.006404300000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_reserve_transient",
+      "line": 298,
+      "primitive_calls": 376,
+      "self_seconds": 0.0008298
+    },
+    {
+      "calls": 165,
+      "cumulative_seconds": 0.0002234,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 337,
+      "primitive_calls": 165,
+      "self_seconds": 0.0002234
+    },
+    {
+      "calls": 678,
+      "cumulative_seconds": 0.0023603,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_public_topology.py",
+      "function": "_token_bytes",
+      "line": 567,
+      "primitive_calls": 678,
+      "self_seconds": 0.0013806
+    },
+    {
+      "calls": 33,
+      "cumulative_seconds": 6.38e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "<genexpr>",
+      "line": 62,
+      "primitive_calls": 33,
+      "self_seconds": 5.19e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 3.4e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "root",
+      "line": 141,
+      "primitive_calls": 2,
+      "self_seconds": 1.15e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 6.1e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 213,
+      "primitive_calls": 3,
+      "self_seconds": 6.1e-06
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 6e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 215,
+      "primitive_calls": 3,
+      "self_seconds": 6e-06
+    },
+    {
+      "calls": 30796,
+      "cumulative_seconds": 0.21320440000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 376,
+      "primitive_calls": 30796,
+      "self_seconds": 0.1424301
+    },
+    {
+      "calls": 18840,
+      "cumulative_seconds": 0.374392,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "row_offsets",
+      "line": 148,
+      "primitive_calls": 18840,
+      "self_seconds": 0.12680750000000002
+    },
+    {
+      "calls": 32,
+      "cumulative_seconds": 5.9800000000000003e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 67,
+      "primitive_calls": 32,
+      "self_seconds": 5.9800000000000003e-05
+    },
+    {
+      "calls": 1190,
+      "cumulative_seconds": 0.005533000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "_clean",
+      "line": 9,
+      "primitive_calls": 1190,
+      "self_seconds": 0.0023347000000000003
+    },
+    {
+      "calls": 3602,
+      "cumulative_seconds": 0.0029387000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "<genexpr>",
+      "line": 52,
+      "primitive_calls": 3602,
+      "self_seconds": 0.0029387000000000003
+    },
+    {
+      "calls": 45,
+      "cumulative_seconds": 7.2e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "<genexpr>",
+      "line": 78,
+      "primitive_calls": 45,
+      "self_seconds": 3.29e-05
+    },
+    {
+      "calls": 2115,
+      "cumulative_seconds": 0.0017311000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "<genexpr>",
+      "line": 114,
+      "primitive_calls": 2115,
+      "self_seconds": 0.0017311000000000002
+    },
+    {
+      "calls": 38,
+      "cumulative_seconds": 9.070000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "_clean",
+      "line": 17,
+      "primitive_calls": 38,
+      "self_seconds": 3.8900000000000004e-05
+    },
+    {
+      "calls": 9,
+      "cumulative_seconds": 2.0700000000000002e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 147,
+      "primitive_calls": 9,
+      "self_seconds": 7.6e-06
+    },
+    {
+      "calls": 9,
+      "cumulative_seconds": 1.8e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 148,
+      "primitive_calls": 9,
+      "self_seconds": 5.8e-06
+    },
+    {
+      "calls": 9,
+      "cumulative_seconds": 2.2000000000000003e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 204,
+      "primitive_calls": 9,
+      "self_seconds": 8.7e-06
+    },
+    {
+      "calls": 54,
+      "cumulative_seconds": 0.0001206,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 62,
+      "primitive_calls": 54,
+      "self_seconds": 5.5900000000000004e-05
+    },
+    {
+      "calls": 36,
+      "cumulative_seconds": 6.31e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 63,
+      "primitive_calls": 36,
+      "self_seconds": 3.18e-05
+    },
+    {
+      "calls": 18,
+      "cumulative_seconds": 1.01e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 64,
+      "primitive_calls": 18,
+      "self_seconds": 1.01e-05
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 5.2e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 209,
+      "primitive_calls": 6,
+      "self_seconds": 4.1000000000000006e-06
+    },
+    {
+      "calls": 205,
+      "cumulative_seconds": 0.0001762,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 253,
+      "primitive_calls": 205,
+      "self_seconds": 0.0001762
+    },
+    {
+      "calls": 615,
+      "cumulative_seconds": 0.0006491,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 319,
+      "primitive_calls": 615,
+      "self_seconds": 0.0006491
+    },
+    {
+      "calls": 615,
+      "cumulative_seconds": 0.0014234,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 326,
+      "primitive_calls": 615,
+      "self_seconds": 0.0006270000000000001
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.56e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 135,
+      "primitive_calls": 6,
+      "self_seconds": 1.1400000000000001e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 3.0600000000000005e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_solver.py",
+      "function": "<genexpr>",
+      "line": 134,
+      "primitive_calls": 3,
+      "self_seconds": 6.4000000000000006e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 0.00029600000000000004,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "_stage_configs",
+      "line": 81,
+      "primitive_calls": 1,
+      "self_seconds": 1.0700000000000001e-05
+    },
+    {
+      "calls": 184,
+      "cumulative_seconds": 0.00040950000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\cards.py",
+      "function": "<genexpr>",
+      "line": 47,
+      "primitive_calls": 184,
+      "self_seconds": 0.0002484
+    },
+    {
+      "calls": 102,
+      "cumulative_seconds": 6.46e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "<genexpr>",
+      "line": 53,
+      "primitive_calls": 102,
+      "self_seconds": 6.46e-05
+    },
+    {
+      "calls": 3602,
+      "cumulative_seconds": 0.004809600000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "<genexpr>",
+      "line": 55,
+      "primitive_calls": 3602,
+      "self_seconds": 0.0037719000000000003
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 6.5000000000000004e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 242,
+      "primitive_calls": 3,
+      "self_seconds": 3.8e-06
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 7.100000000000001e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 274,
+      "primitive_calls": 3,
+      "self_seconds": 4.6e-06
+    },
+    {
+      "calls": 9,
+      "cumulative_seconds": 1.43e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_solver.py",
+      "function": "<genexpr>",
+      "line": 315,
+      "primitive_calls": 9,
+      "self_seconds": 1.1900000000000001e-05
+    },
+    {
+      "calls": 333,
+      "cumulative_seconds": 1.3988581,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "<genexpr>",
+      "line": 109,
+      "primitive_calls": 9,
+      "self_seconds": 0.0012907
+    },
+    {
+      "calls": 45,
+      "cumulative_seconds": 0.0001399,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "<genexpr>",
+      "line": 29,
+      "primitive_calls": 45,
+      "self_seconds": 6.14e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 0.00016,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "settled",
+      "line": 197,
+      "primitive_calls": 3,
+      "self_seconds": 9.7e-06
+    },
+    {
+      "calls": 45,
+      "cumulative_seconds": 3.16e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_config.py",
+      "function": "<genexpr>",
+      "line": 81,
+      "primitive_calls": 45,
+      "self_seconds": 2.5500000000000003e-05
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 4.85e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "fold",
+      "line": 202,
+      "primitive_calls": 3,
+      "self_seconds": 1.81e-05
+    },
+    {
+      "calls": 100,
+      "cumulative_seconds": 0.004503200000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\river_tree.py",
+      "function": "_opening_actions",
+      "line": 58,
+      "primitive_calls": 100,
+      "self_seconds": 0.0006849
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 3.9865141000000004,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "_evaluate_prepared",
+      "line": 62,
+      "primitive_calls": 1,
+      "self_seconds": 3.96e-05
+    },
+    {
+      "calls": 37158,
+      "cumulative_seconds": 0.2416531,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_reserve_entries",
+      "line": 260,
+      "primitive_calls": 37158,
+      "self_seconds": 0.10618530000000001
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 6.000000000000001e-07,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "pot",
+      "line": 84,
+      "primitive_calls": 2,
+      "self_seconds": 6.000000000000001e-07
+    },
+    {
+      "calls": 10426,
+      "cumulative_seconds": 0.0054837,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<lambda>",
+      "line": 566,
+      "primitive_calls": 10426,
+      "self_seconds": 0.0054837
+    },
+    {
+      "calls": 10444,
+      "cumulative_seconds": 0.0051403,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<lambda>",
+      "line": 570,
+      "primitive_calls": 10444,
+      "self_seconds": 0.0051403
+    },
+    {
+      "calls": 3770,
+      "cumulative_seconds": 0.0019329000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\public_diagnostics.py",
+      "function": "<genexpr>",
+      "line": 167,
+      "primitive_calls": 3770,
+      "self_seconds": 0.0019329000000000002
+    },
+    {
+      "calls": 9,
+      "cumulative_seconds": 4.2000000000000004e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\preflop_tree.py",
+      "function": "<genexpr>",
+      "line": 150,
+      "primitive_calls": 9,
+      "self_seconds": 4.2000000000000004e-06
+    },
+    {
+      "calls": 2258,
+      "cumulative_seconds": 0.0042725,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_public_topology.py",
+      "function": "_float_bits",
+      "line": 558,
+      "primitive_calls": 2258,
+      "self_seconds": 0.002457
+    },
+    {
+      "calls": 7,
+      "cumulative_seconds": 3.71e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 207,
+      "primitive_calls": 7,
+      "self_seconds": 8.400000000000001e-06
+    },
+    {
+      "calls": 174770,
+      "cumulative_seconds": 2.0176729,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_sub",
+      "line": 328,
+      "primitive_calls": 174770,
+      "self_seconds": 0.37298610000000004
+    },
+    {
+      "calls": 73900,
+      "cumulative_seconds": 0.0738718,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 351,
+      "primitive_calls": 73900,
+      "self_seconds": 0.0738718
+    },
+    {
+      "calls": 21766,
+      "cumulative_seconds": 0.0246198,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 558,
+      "primitive_calls": 21766,
+      "self_seconds": 0.0246198
+    },
+    {
+      "calls": 20693,
+      "cumulative_seconds": 0.014444400000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__init__",
+      "line": 67,
+      "primitive_calls": 20693,
+      "self_seconds": 0.014444400000000001
+    },
+    {
+      "calls": 82496,
+      "cumulative_seconds": 0.1237409,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "player",
+      "line": 74,
+      "primitive_calls": 82496,
+      "self_seconds": 0.0804615
+    },
+    {
+      "calls": 4257,
+      "cumulative_seconds": 0.0030441,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__init__",
+      "line": 90,
+      "primitive_calls": 4257,
+      "self_seconds": 0.0030441
+    },
+    {
+      "calls": 200,
+      "cumulative_seconds": 7.93e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 228,
+      "primitive_calls": 200,
+      "self_seconds": 7.93e-05
+    },
+    {
+      "calls": 234,
+      "cumulative_seconds": 0.0038006000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_reserve_transition",
+      "line": 291,
+      "primitive_calls": 234,
+      "self_seconds": 0.0005272
+    },
+    {
+      "calls": 6528,
+      "cumulative_seconds": 0.0360961,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 374,
+      "primitive_calls": 6528,
+      "self_seconds": 0.0242659
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 2.1000000000000002e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_release_fixed",
+      "line": 286,
+      "primitive_calls": 2,
+      "self_seconds": 2.1000000000000002e-06
+    },
+    {
+      "calls": 276,
+      "cumulative_seconds": 0.0002553,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "_release_transient",
+      "line": 304,
+      "primitive_calls": 276,
+      "self_seconds": 0.0002553
+    },
+    {
+      "calls": 41818,
+      "cumulative_seconds": 1.9613631,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_divide",
+      "line": 419,
+      "primitive_calls": 41818,
+      "self_seconds": 0.19871860000000002
+    },
+    {
+      "calls": 12,
+      "cumulative_seconds": 0.0001428,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 464,
+      "primitive_calls": 12,
+      "self_seconds": 1.6800000000000002e-05
+    },
+    {
+      "calls": 15832,
+      "cumulative_seconds": 0.021252700000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 568,
+      "primitive_calls": 15832,
+      "self_seconds": 0.021252700000000003
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.02e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 156,
+      "primitive_calls": 6,
+      "self_seconds": 1.02e-05
+    },
+    {
+      "calls": 56520,
+      "cumulative_seconds": 0.21900860000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "<genexpr>",
+      "line": 153,
+      "primitive_calls": 56520,
+      "self_seconds": 0.0955308
+    },
+    {
+      "calls": 56,
+      "cumulative_seconds": 6.950000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 257,
+      "primitive_calls": 56,
+      "self_seconds": 6.950000000000001e-05
+    },
+    {
+      "calls": 150,
+      "cumulative_seconds": 0.09211470000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "settled",
+      "line": 521,
+      "primitive_calls": 12,
+      "self_seconds": 0.0004089
+    },
+    {
+      "calls": 88,
+      "cumulative_seconds": 0.0998678,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "start_fresh_stage",
+      "line": 646,
+      "primitive_calls": 4,
+      "self_seconds": 0.0007387
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 1.2100000000000001e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 842,
+      "primitive_calls": 6,
+      "self_seconds": 8.200000000000001e-06
+    },
+    {
+      "calls": 7041,
+      "cumulative_seconds": 0.2410882,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_float_adapter.py",
+      "function": "<genexpr>",
+      "line": 122,
+      "primitive_calls": 7041,
+      "self_seconds": 0.024256200000000002
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.2e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 205,
+      "primitive_calls": 3,
+      "self_seconds": 6.6e-06
+    },
+    {
+      "calls": 7,
+      "cumulative_seconds": 9.800000000000001e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 209,
+      "primitive_calls": 7,
+      "self_seconds": 7.100000000000001e-06
+    },
+    {
+      "calls": 14082,
+      "cumulative_seconds": 0.5922719000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 417,
+      "primitive_calls": 14082,
+      "self_seconds": 0.018832400000000003
+    },
+    {
+      "calls": 48645,
+      "cumulative_seconds": 1.620902,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 536,
+      "primitive_calls": 48645,
+      "self_seconds": 0.0718295
+    },
+    {
+      "calls": 48645,
+      "cumulative_seconds": 0.09746540000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 690,
+      "primitive_calls": 48645,
+      "self_seconds": 0.0681991
+    },
+    {
+      "calls": 25832,
+      "cumulative_seconds": 0.0652591,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 168,
+      "primitive_calls": 25832,
+      "self_seconds": 0.039113600000000005
+    },
+    {
+      "calls": 615,
+      "cumulative_seconds": 0.0009641000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 321,
+      "primitive_calls": 615,
+      "self_seconds": 0.0007353
+    },
+    {
+      "calls": 96,
+      "cumulative_seconds": 0.0012075,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "is_all_in",
+      "line": 468,
+      "primitive_calls": 96,
+      "self_seconds": 0.0004337
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 1.6000000000000003e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 199,
+      "primitive_calls": 5,
+      "self_seconds": 1.25e-05
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 1e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 200,
+      "primitive_calls": 5,
+      "self_seconds": 7.4e-06
+    },
+    {
+      "calls": 26130,
+      "cumulative_seconds": 0.0359909,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 551,
+      "primitive_calls": 26130,
+      "self_seconds": 0.0359909
+    },
+    {
+      "calls": 48645,
+      "cumulative_seconds": 1.4568638,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 619,
+      "primitive_calls": 48645,
+      "self_seconds": 0.06894020000000001
+    },
+    {
+      "calls": 32430,
+      "cumulative_seconds": 0.0282051,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "checked_product_bits",
+      "line": 647,
+      "primitive_calls": 32430,
+      "self_seconds": 0.0282051
+    },
+    {
+      "calls": 168793,
+      "cumulative_seconds": 0.0943273,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "vertex",
+      "line": 70,
+      "primitive_calls": 168793,
+      "self_seconds": 0.0943273
+    },
+    {
+      "calls": 24092,
+      "cumulative_seconds": 0.0666642,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__len__",
+      "line": 27,
+      "primitive_calls": 24092,
+      "self_seconds": 0.041658
+    },
+    {
+      "calls": 10989,
+      "cumulative_seconds": 0.006626300000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "vertex",
+      "line": 93,
+      "primitive_calls": 10989,
+      "self_seconds": 0.006626300000000001
+    },
+    {
+      "calls": 4257,
+      "cumulative_seconds": 0.0117325,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "branches",
+      "line": 97,
+      "primitive_calls": 4257,
+      "self_seconds": 0.009379
+    },
+    {
+      "calls": 44816,
+      "cumulative_seconds": 0.0227885,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__init__",
+      "line": 24,
+      "primitive_calls": 44816,
+      "self_seconds": 0.0227885
+    },
+    {
+      "calls": 44816,
+      "cumulative_seconds": 0.10957280000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "children",
+      "line": 82,
+      "primitive_calls": 44816,
+      "self_seconds": 0.08678430000000001
+    },
+    {
+      "calls": 4257,
+      "cumulative_seconds": 0.0023535,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "__init__",
+      "line": 42,
+      "primitive_calls": 4257,
+      "self_seconds": 0.0023535
+    },
+    {
+      "calls": 99,
+      "cumulative_seconds": 0.00031800000000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_public_topology.py",
+      "function": "_vertex_degree",
+      "line": 603,
+      "primitive_calls": 99,
+      "self_seconds": 0.00019160000000000002
+    },
+    {
+      "calls": 141251,
+      "cumulative_seconds": 1.9155934000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_check_bits",
+      "line": 266,
+      "primitive_calls": 141251,
+      "self_seconds": 0.3254203
+    },
+    {
+      "calls": 63,
+      "cumulative_seconds": 0.0038971,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "chance",
+      "line": 329,
+      "primitive_calls": 63,
+      "self_seconds": 0.0006698
+    },
+    {
+      "calls": 613,
+      "cumulative_seconds": 0.0030691000000000004,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 352,
+      "primitive_calls": 613,
+      "self_seconds": 0.0007005000000000001
+    },
+    {
+      "calls": 13,
+      "cumulative_seconds": 0.0005643,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 394,
+      "primitive_calls": 13,
+      "self_seconds": 3.35e-05
+    },
+    {
+      "calls": 24,
+      "cumulative_seconds": 0.0005673000000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 437,
+      "primitive_calls": 24,
+      "self_seconds": 4.99e-05
+    },
+    {
+      "calls": 276,
+      "cumulative_seconds": 0.0002068,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 470,
+      "primitive_calls": 276,
+      "self_seconds": 0.0002068
+    },
+    {
+      "calls": 714,
+      "cumulative_seconds": 0.001881,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 540,
+      "primitive_calls": 714,
+      "self_seconds": 0.0010468
+    },
+    {
+      "calls": 264,
+      "cumulative_seconds": 0.0010328000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 649,
+      "primitive_calls": 264,
+      "self_seconds": 0.00029150000000000004
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 8.000000000000001e-07,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 700,
+      "primitive_calls": 1,
+      "self_seconds": 8.000000000000001e-07
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.7e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 192,
+      "primitive_calls": 3,
+      "self_seconds": 1.7e-06
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 6.200000000000001e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 835,
+      "primitive_calls": 6,
+      "self_seconds": 4.9000000000000005e-06
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 5e-06,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\direct_shared_topology.py",
+      "function": "<genexpr>",
+      "line": 838,
+      "primitive_calls": 6,
+      "self_seconds": 3.9e-06
+    },
+    {
+      "calls": 1832,
+      "cumulative_seconds": 0.0018847000000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 372,
+      "primitive_calls": 1832,
+      "self_seconds": 0.0018847000000000002
+    },
+    {
+      "calls": 33,
+      "cumulative_seconds": 1.91e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 128,
+      "primitive_calls": 33,
+      "self_seconds": 1.91e-05
+    },
+    {
+      "calls": 39,
+      "cumulative_seconds": 5.25e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 452,
+      "primitive_calls": 39,
+      "self_seconds": 5.25e-05
+    },
+    {
+      "calls": 15814,
+      "cumulative_seconds": 0.013565500000000001,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 565,
+      "primitive_calls": 15814,
+      "self_seconds": 0.013565500000000001
+    },
+    {
+      "calls": 15814,
+      "cumulative_seconds": 0.012826700000000002,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "<genexpr>",
+      "line": 572,
+      "primitive_calls": 15814,
+      "self_seconds": 0.012826700000000002
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.3100000000000002e-05,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "clear_rank_cache",
+      "line": 722,
+      "primitive_calls": 1,
+      "self_seconds": 7.3e-06
+    },
+    {
+      "calls": 25832,
+      "cumulative_seconds": 0.0205355,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\shared_topology_view.py",
+      "function": "<genexpr>",
+      "line": 163,
+      "primitive_calls": 25832,
+      "self_seconds": 0.0205355
+    },
+    {
+      "calls": 37700,
+      "cumulative_seconds": 0.0320842,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "<genexpr>",
+      "line": 186,
+      "primitive_calls": 37700,
+      "self_seconds": 0.0320842
+    },
+    {
+      "calls": 64860,
+      "cumulative_seconds": 0.29482790000000003,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "lcm_bounded",
+      "line": 653,
+      "primitive_calls": 64860,
+      "self_seconds": 0.1841327
+    },
+    {
+      "calls": 53370,
+      "cumulative_seconds": 0.3320872,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\exact_selected_kernel.py",
+      "function": "_reserve_work",
+      "line": 254,
+      "primitive_calls": 53370,
+      "self_seconds": 0.1496134
+    },
+    {
+      "calls": 30,
+      "cumulative_seconds": 0.2341823,
+      "file": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\exact-dyadic-kernel-repo\\pokerlab\\packed_operator_cfr.py",
+      "function": "rematch",
+      "line": 160,
+      "primitive_calls": 30,
+      "self_seconds": 0.16696360000000002
+    },
+    {
+      "calls": 16,
+      "cumulative_seconds": 1.0500000000000001e-05,
+      "file": "<frozen _collections_abc>",
+      "function": "__subclasshook__",
+      "line": 435,
+      "primitive_calls": 16,
+      "self_seconds": 1.0500000000000001e-05
+    },
+    {
+      "calls": 8,
+      "cumulative_seconds": 2.9800000000000003e-05,
+      "file": "<frozen importlib._bootstrap>",
+      "function": "parent",
+      "line": 645,
+      "primitive_calls": 8,
+      "self_seconds": 1.7800000000000002e-05
+    },
+    {
+      "calls": 224,
+      "cumulative_seconds": 0.0775499,
+      "file": "<frozen _collections_abc>",
+      "function": "get",
+      "line": 804,
+      "primitive_calls": 224,
+      "self_seconds": 0.00026460000000000003
+    },
+    {
+      "calls": 32455,
+      "cumulative_seconds": 0.0895774,
+      "file": "<frozen abc>",
+      "function": "__subclasscheck__",
+      "line": 121,
+      "primitive_calls": 32440,
+      "self_seconds": 0.0346044
+    },
+    {
+      "calls": 62205,
+      "cumulative_seconds": 0.5779834,
+      "file": "<frozen _collections_abc>",
+      "function": "__iter__",
+      "line": 1022,
+      "primitive_calls": 62205,
+      "self_seconds": 0.12336830000000001
+    },
+    {
+      "calls": 221964,
+      "cumulative_seconds": 0.5523869,
+      "file": "<frozen abc>",
+      "function": "__instancecheck__",
+      "line": 117,
+      "primitive_calls": 221964,
+      "self_seconds": 0.22304290000000002
+    },
+    {
+      "calls": 2385329,
+      "cumulative_seconds": 1.3478771,
+      "file": "~",
+      "function": "<built-in method __new__ of type object at 0x00007FFBF7A918F0>",
+      "line": 0,
+      "primitive_calls": 2385329,
+      "self_seconds": 1.3478771
+    },
+    {
+      "calls": 221964,
+      "cumulative_seconds": 0.329344,
+      "file": "~",
+      "function": "<built-in method _abc._abc_instancecheck>",
+      "line": 0,
+      "primitive_calls": 221964,
+      "self_seconds": 0.23976660000000002
+    },
+    {
+      "calls": 32455,
+      "cumulative_seconds": 0.054986900000000005,
+      "file": "~",
+      "function": "<built-in method _abc._abc_subclasscheck>",
+      "line": 0,
+      "primitive_calls": 32440,
+      "self_seconds": 0.054962500000000004
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 0.0006133,
+      "file": "~",
+      "function": "<built-in method _collections._count_elements>",
+      "line": 0,
+      "primitive_calls": 23,
+      "self_seconds": 0.00020380000000000002
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 5.8e-06,
+      "file": "~",
+      "function": "<method 'fullmatch' of 're.Pattern' objects>",
+      "line": 0,
+      "primitive_calls": 4,
+      "self_seconds": 5.8e-06
+    },
+    {
+      "calls": 10,
+      "cumulative_seconds": 1.59e-05,
+      "file": "~",
+      "function": "<method 'sub' of 're.Pattern' objects>",
+      "line": 0,
+      "primitive_calls": 10,
+      "self_seconds": 1.59e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 1e-05,
+      "file": "~",
+      "function": "<method 'split' of 're.Pattern' objects>",
+      "line": 0,
+      "primitive_calls": 2,
+      "self_seconds": 1e-05
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 4.4e-06,
+      "file": "~",
+      "function": "<built-in method _sre.compile>",
+      "line": 0,
+      "primitive_calls": 2,
+      "self_seconds": 4.4e-06
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 1.5e-06,
+      "file": "~",
+      "function": "<built-in method _sre.unicode_iscased>",
+      "line": 0,
+      "primitive_calls": 5,
+      "self_seconds": 1.5e-06
+    },
+    {
+      "calls": 20,
+      "cumulative_seconds": 6.300000000000001e-06,
+      "file": "~",
+      "function": "<built-in method _sre.unicode_tolower>",
+      "line": 0,
+      "primitive_calls": 20,
+      "self_seconds": 6.300000000000001e-06
+    },
+    {
+      "calls": 2258,
+      "cumulative_seconds": 0.0018155,
+      "file": "~",
+      "function": "<built-in method _struct.pack>",
+      "line": 0,
+      "primitive_calls": 2258,
+      "self_seconds": 0.0018155
+    },
+    {
+      "calls": 2400,
+      "cumulative_seconds": 0.0012979,
+      "file": "~",
+      "function": "<method 'append' of 'array.array' objects>",
+      "line": 0,
+      "primitive_calls": 2400,
+      "self_seconds": 0.0012979
+    },
+    {
+      "calls": 48651,
+      "cumulative_seconds": 0.0351563,
+      "file": "~",
+      "function": "<built-in method math.ceil>",
+      "line": 0,
+      "primitive_calls": 48651,
+      "self_seconds": 0.0351563
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.3e-06,
+      "file": "~",
+      "function": "<built-in method math.frexp>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 2.3e-06
+    },
+    {
+      "calls": 641946,
+      "cumulative_seconds": 0.4442303,
+      "file": "~",
+      "function": "<built-in method math.gcd>",
+      "line": 0,
+      "primitive_calls": 641946,
+      "self_seconds": 0.4442303
+    },
+    {
+      "calls": 61458,
+      "cumulative_seconds": 0.0373959,
+      "file": "~",
+      "function": "<built-in method math.isfinite>",
+      "line": 0,
+      "primitive_calls": 61458,
+      "self_seconds": 0.0373959
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.9e-06,
+      "file": "~",
+      "function": "<built-in method math.ldexp>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 1.9e-06
+    },
+    {
+      "calls": 48651,
+      "cumulative_seconds": 0.045625200000000005,
+      "file": "~",
+      "function": "<built-in method math.log2>",
+      "line": 0,
+      "primitive_calls": 48651,
+      "self_seconds": 0.045625200000000005
+    },
+    {
+      "calls": 11,
+      "cumulative_seconds": 4.5e-06,
+      "file": "~",
+      "function": "<built-in method _operator.index>",
+      "line": 0,
+      "primitive_calls": 11,
+      "self_seconds": 4.5e-06
+    },
+    {
+      "calls": 67003,
+      "cumulative_seconds": 0.040649000000000005,
+      "file": "~",
+      "function": "<built-in method _operator.lt>",
+      "line": 0,
+      "primitive_calls": 67003,
+      "self_seconds": 0.040649000000000005
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 5.000000000000001e-07,
+      "file": "~",
+      "function": "<built-in method _operator.le>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 5.000000000000001e-07
+    },
+    {
+      "calls": 41400,
+      "cumulative_seconds": 0.0252005,
+      "file": "~",
+      "function": "<built-in method _operator.gt>",
+      "line": 0,
+      "primitive_calls": 41400,
+      "self_seconds": 0.0252005
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 1.5100000000000001e-05,
+      "file": "~",
+      "function": "<method 'find' of 'bytearray' objects>",
+      "line": 0,
+      "primitive_calls": 23,
+      "self_seconds": 1.5100000000000001e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 4.800000000000001e-06,
+      "file": "~",
+      "function": "<method 'translate' of 'bytearray' objects>",
+      "line": 0,
+      "primitive_calls": 4,
+      "self_seconds": 4.800000000000001e-06
+    },
+    {
+      "calls": 16215,
+      "cumulative_seconds": 0.031742200000000005,
+      "file": "~",
+      "function": "<method 'get' of 'mappingproxy' objects>",
+      "line": 0,
+      "primitive_calls": 16215,
+      "self_seconds": 0.031742200000000005
+    },
+    {
+      "calls": 73665,
+      "cumulative_seconds": 0.10548410000000001,
+      "file": "~",
+      "function": "<method 'get' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 73665,
+      "self_seconds": 0.10548410000000001
+    },
+    {
+      "calls": 2404,
+      "cumulative_seconds": 0.0012923000000000001,
+      "file": "~",
+      "function": "<method 'pop' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 2404,
+      "self_seconds": 0.0012923000000000001
+    },
+    {
+      "calls": 44,
+      "cumulative_seconds": 4.16e-05,
+      "file": "~",
+      "function": "<method 'items' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 44,
+      "self_seconds": 4.16e-05
+    },
+    {
+      "calls": 10,
+      "cumulative_seconds": 8.7e-06,
+      "file": "~",
+      "function": "<method 'values' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 10,
+      "self_seconds": 8.7e-06
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 4.5e-06,
+      "file": "~",
+      "function": "<method 'update' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 3,
+      "self_seconds": 4.5e-06
+    },
+    {
+      "calls": 5,
+      "cumulative_seconds": 7.9e-06,
+      "file": "~",
+      "function": "<built-in method fromkeys>",
+      "line": 0,
+      "primitive_calls": 5,
+      "self_seconds": 7.9e-06
+    },
+    {
+      "calls": 6,
+      "cumulative_seconds": 6.81e-05,
+      "file": "~",
+      "function": "<method 'clear' of 'dict' objects>",
+      "line": 0,
+      "primitive_calls": 6,
+      "self_seconds": 6.81e-05
+    },
+    {
+      "calls": 32456,
+      "cumulative_seconds": 0.058042100000000006,
+      "file": "~",
+      "function": "<method 'as_integer_ratio' of 'float' objects>",
+      "line": 0,
+      "primitive_calls": 32456,
+      "self_seconds": 0.058042100000000006
+    },
+    {
+      "calls": 18568,
+      "cumulative_seconds": 0.10794240000000001,
+      "file": "~",
+      "function": "<method 'hex' of 'float' objects>",
+      "line": 0,
+      "primitive_calls": 18568,
+      "self_seconds": 0.10794240000000001
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 1.2000000000000002e-06,
+      "file": "~",
+      "function": "<method 'clear' of 'list' objects>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 1.2000000000000002e-06
+    },
+    {
+      "calls": 84301,
+      "cumulative_seconds": 0.06103310000000001,
+      "file": "~",
+      "function": "<method 'append' of 'list' objects>",
+      "line": 0,
+      "primitive_calls": 84301,
+      "self_seconds": 0.06103310000000001
+    },
+    {
+      "calls": 3478,
+      "cumulative_seconds": 0.016981,
+      "file": "~",
+      "function": "<method 'extend' of 'list' objects>",
+      "line": 0,
+      "primitive_calls": 3478,
+      "self_seconds": 0.0089134
+    },
+    {
+      "calls": 5868,
+      "cumulative_seconds": 0.0042293,
+      "file": "~",
+      "function": "<method 'pop' of 'list' objects>",
+      "line": 0,
+      "primitive_calls": 5868,
+      "self_seconds": 0.0042293
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 3.69e-05,
+      "file": "~",
+      "function": "<method 'sort' of 'list' objects>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 5.8e-06
+    },
+    {
+      "calls": 1247059,
+      "cumulative_seconds": 0.7225649000000001,
+      "file": "~",
+      "function": "<method 'bit_length' of 'int' objects>",
+      "line": 0,
+      "primitive_calls": 1247059,
+      "self_seconds": 0.7225649000000001
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 6.1e-06,
+      "file": "~",
+      "function": "<method 'tolist' of 'memoryview' objects>",
+      "line": 0,
+      "primitive_calls": 2,
+      "self_seconds": 6.1e-06
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 1.5e-06,
+      "file": "~",
+      "function": "<method 'cast' of 'memoryview' objects>",
+      "line": 0,
+      "primitive_calls": 2,
+      "self_seconds": 1.5e-06
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 5.8e-06,
+      "file": "~",
+      "function": "<method 'clear' of 'collections.OrderedDict' objects>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 5.8e-06
+    },
+    {
+      "calls": 5382,
+      "cumulative_seconds": 0.0068246,
+      "file": "~",
+      "function": "<method 'move_to_end' of 'collections.OrderedDict' objects>",
+      "line": 0,
+      "primitive_calls": 5382,
+      "self_seconds": 0.0068246
+    },
+    {
+      "calls": 330,
+      "cumulative_seconds": 0.0003436,
+      "file": "~",
+      "function": "<method 'add' of 'set' objects>",
+      "line": 0,
+      "primitive_calls": 330,
+      "self_seconds": 0.0003436
+    },
+    {
+      "calls": 2,
+      "cumulative_seconds": 3.5000000000000004e-06,
+      "file": "~",
+      "function": "<method 'clear' of 'set' objects>",
+      "line": 0,
+      "primitive_calls": 2,
+      "self_seconds": 3.5000000000000004e-06
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 4.000000000000001e-06,
+      "file": "~",
+      "function": "<method 'intersection' of 'set' objects>",
+      "line": 0,
+      "primitive_calls": 4,
+      "self_seconds": 4.000000000000001e-06
+    },
+    {
+      "calls": 2610,
+      "cumulative_seconds": 0.0029698000000000003,
+      "file": "~",
+      "function": "<method 'remove' of 'set' objects>",
+      "line": 0,
+      "primitive_calls": 2610,
+      "self_seconds": 0.0029698000000000003
+    },
+    {
+      "calls": 280198,
+      "cumulative_seconds": 0.5516474,
+      "file": "~",
+      "function": "<method 'index' of 'tuple' objects>",
+      "line": 0,
+      "primitive_calls": 280198,
+      "self_seconds": 0.5516474
+    },
+    {
+      "calls": 30242,
+      "cumulative_seconds": 0.022470200000000003,
+      "file": "~",
+      "function": "<method 'encode' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 30242,
+      "self_seconds": 0.022470200000000003
+    },
+    {
+      "calls": 50,
+      "cumulative_seconds": 1.7e-05,
+      "file": "~",
+      "function": "<method 'replace' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 50,
+      "self_seconds": 1.7e-05
+    },
+    {
+      "calls": 111430,
+      "cumulative_seconds": 0.08475150000000001,
+      "file": "~",
+      "function": "<method 'join' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 111430,
+      "self_seconds": 0.08475150000000001
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 2.4000000000000003e-06,
+      "file": "~",
+      "function": "<method 'partition' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 4,
+      "self_seconds": 2.4000000000000003e-06
+    },
+    {
+      "calls": 161,
+      "cumulative_seconds": 0.0001611,
+      "file": "~",
+      "function": "<method 'index' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 161,
+      "self_seconds": 0.0001611
+    },
+    {
+      "calls": 110,
+      "cumulative_seconds": 4.3400000000000005e-05,
+      "file": "~",
+      "function": "<method 'lower' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 110,
+      "self_seconds": 4.3400000000000005e-05
+    },
+    {
+      "calls": 212,
+      "cumulative_seconds": 0.0002591,
+      "file": "~",
+      "function": "<method 'rstrip' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 212,
+      "self_seconds": 0.0002591
+    },
+    {
+      "calls": 8,
+      "cumulative_seconds": 1.2e-05,
+      "file": "~",
+      "function": "<method 'rpartition' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 8,
+      "self_seconds": 1.2e-05
+    },
+    {
+      "calls": 4,
+      "cumulative_seconds": 2.2e-06,
+      "file": "~",
+      "function": "<method 'strip' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 4,
+      "self_seconds": 2.2e-06
+    },
+    {
+      "calls": 106,
+      "cumulative_seconds": 4.25e-05,
+      "file": "~",
+      "function": "<method 'upper' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 106,
+      "self_seconds": 4.25e-05
+    },
+    {
+      "calls": 90069,
+      "cumulative_seconds": 0.051908300000000004,
+      "file": "~",
+      "function": "<method 'startswith' of 'str' objects>",
+      "line": 0,
+      "primitive_calls": 90069,
+      "self_seconds": 0.051908300000000004
+    },
+    {
+      "calls": 739678,
+      "cumulative_seconds": 0.37719640000000004,
+      "file": "~",
+      "function": "<built-in method builtins.abs>",
+      "line": 0,
+      "primitive_calls": 739678,
+      "self_seconds": 0.37719640000000004
+    },
+    {
+      "calls": 246,
+      "cumulative_seconds": 0.0006761,
+      "file": "~",
+      "function": "<built-in method builtins.all>",
+      "line": 0,
+      "primitive_calls": 246,
+      "self_seconds": 0.00040080000000000004
+    },
+    {
+      "calls": 31573,
+      "cumulative_seconds": 0.3644897,
+      "file": "~",
+      "function": "<built-in method builtins.any>",
+      "line": 0,
+      "primitive_calls": 31573,
+      "self_seconds": 0.12010390000000001
+    },
+    {
+      "calls": 3,
+      "cumulative_seconds": 1.4000000000000001e-06,
+      "file": "~",
+      "function": "<built-in method builtins.callable>",
+      "line": 0,
+      "primitive_calls": 3,
+      "self_seconds": 1.4000000000000001e-06
+    },
+    {
+      "calls": 106,
+      "cumulative_seconds": 0.0003284,
+      "file": "~",
+      "function": "<built-in method builtins.format>",
+      "line": 0,
+      "primitive_calls": 106,
+      "self_seconds": 0.0003284
+    },
+    {
+      "calls": 114804,
+      "cumulative_seconds": 0.0700342,
+      "file": "~",
+      "function": "<built-in method builtins.getattr>",
+      "line": 0,
+      "primitive_calls": 114804,
+      "self_seconds": 0.0700342
+    },
+    {
+      "calls": 10,
+      "cumulative_seconds": 8.1e-06,
+      "file": "~",
+      "function": "<built-in method builtins.hasattr>",
+      "line": 0,
+      "primitive_calls": 10,
+      "self_seconds": 8.1e-06
+    },
+    {
+      "calls": 16267,
+      "cumulative_seconds": 0.0147153,
+      "file": "~",
+      "function": "<built-in method builtins.id>",
+      "line": 0,
+      "primitive_calls": 16267,
+      "self_seconds": 0.0147153
+    },
+    {
+      "calls": 730173,
+      "cumulative_seconds": 1.1533120000000001,
+      "file": "~",
+      "function": "<built-in method builtins.isinstance>",
+      "line": 0,
+      "primitive_calls": 730173,
+      "self_seconds": 0.6009251
+    },
+    {
+      "calls": 34796,
+      "cumulative_seconds": 0.0255605,
+      "file": "~",
+      "function": "<built-in method builtins.iter>",
+      "line": 0,
+      "primitive_calls": 34796,
+      "self_seconds": 0.0255605
+    },
+    {
+      "calls": 494168,
+      "cumulative_seconds": 0.33576890000000004,
+      "file": "~",
+      "function": "<built-in method builtins.len>",
+      "line": 0,
+      "primitive_calls": 470073,
+      "self_seconds": 0.28189810000000004
+    },
+    {
+      "calls": 692954,
+      "cumulative_seconds": 2.112791,
+      "file": "~",
+      "function": "<built-in method builtins.max>",
+      "line": 0,
+      "primitive_calls": 551701,
+      "self_seconds": 0.9682023000000001
+    },
+    {
+      "calls": 430,
+      "cumulative_seconds": 0.00041450000000000005,
+      "file": "~",
+      "function": "<built-in method builtins.min>",
+      "line": 0,
+      "primitive_calls": 430,
+      "self_seconds": 0.00041450000000000005
+    },
+    {
+      "calls": 30,
+      "cumulative_seconds": 0.0015709,
+      "file": "~",
+      "function": "<built-in method builtins.next>",
+      "line": 0,
+      "primitive_calls": 30,
+      "self_seconds": 6.38e-05
+    },
+    {
+      "calls": 23,
+      "cumulative_seconds": 6.8e-06,
+      "file": "~",
+      "function": "<built-in method builtins.ord>",
+      "line": 0,
+      "primitive_calls": 23,
+      "self_seconds": 6.8e-06
+    },
+    {
+      "calls": 1228,
+      "cumulative_seconds": 0.0032501,
+      "file": "~",
+      "function": "<built-in method builtins.round>",
+      "line": 0,
+      "primitive_calls": 1228,
+      "self_seconds": 0.0032501
+    },
+    {
+      "calls": 30100,
+      "cumulative_seconds": 0.18506550000000002,
+      "file": "~",
+      "function": "<built-in method builtins.sorted>",
+      "line": 0,
+      "primitive_calls": 30100,
+      "self_seconds": 0.13939010000000002
+    },
+    {
+      "calls": 161758,
+      "cumulative_seconds": 1.6853137,
+      "file": "~",
+      "function": "<built-in method builtins.sum>",
+      "line": 0,
+      "primitive_calls": 156562,
+      "self_seconds": 0.1756677
+    },
+    {
+      "calls": 1,
+      "cumulative_seconds": 2.6900000000000003e-05,
+      "file": "~",
+      "function": "<method 'disable' of '_lsprof.Profiler' objects>",
+      "line": 0,
+      "primitive_calls": 1,
+      "self_seconds": 2.6900000000000003e-05
+    }
+  ],
+  "helper_sha256": "b17a4600be209316943d00ec4dad4d3795eead004e7e5f4a5e92172195794ed7",
+  "iterations": 10,
+  "mode": "fraction",
+  "profiled_policy_and_eight_metrics_match_frozen": true,
+  "scope": "One instrumented T10 complete solve. cProfile overhead changes timing; function counts/cumulative attribution are profiling evidence, not a same-work speed benchmark.",
+  "source_commit": "9d8a084a08ddf24dded3a4c76b1bb60ba914df3e",
+  "source_files": 1791,
+  "source_unchanged_after": true
+}
