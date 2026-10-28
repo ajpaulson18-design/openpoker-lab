@@ -1,5 +1,24 @@
 # Foundation-first execution record
 
+## Dyadic integer query core: integration and independent controls
+
+The explicit [integer arithmetic contract](exact-dyadic-arithmetic.md) connects
+integer blocker/rank sweeps to the existing exact-product direct-DAG four-street
+trainer. It retains Fraction setup/reference and once-per-completed-component
+binary64 conversion. All existing logical caps remain, and integer bit/payload
+forecasts are added before training. The original T1000 early rejection remains.
+The combined 60-control exact-product/dyadic/adapter/compact selection passes;
+all 18 new arithmetic/integration/independent controls pass optimized Python.
+Terra separately executes seven adversarial controls with 288 literal physical
+comparisons, cancellation, rounding and early-limit rejection. Root's complete
+four-street policy/eight-metric and independent exact certificate comparison
+passes while Fraction query-loop fallback is forbidden. Sol independently
+inspects allocation, arithmetic and weak ownership; counted limb-model scope
+explicitly excludes Fraction validation/GCD preflights and runtime.
+The fixed paired measurement runner's eight controls pass. Its 14-call frozen
+study, retained misses, independent saved replay and final CI/publication are
+still gates; no measured speed/RAM or broader quality claim follows yet.
+
 ## Compact exact-product output: independently replayed frozen result
 
 The explicit [compact contract](compact-exact-policy.md) replaces the final

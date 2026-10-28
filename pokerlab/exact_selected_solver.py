@@ -33,6 +33,7 @@ MAX_OUTPUT_ENTRIES = 2_000_000
 MAX_PAIR_CANDIDATES = 1_800_000
 MAX_PAIR_BOARD_SCANS = 30_000_000
 MAX_WHOLE_REQUEST_ENTRIES = 25_000_000
+MAX_DYADIC_INTEGER_PAYLOAD_BITS = 1 << 30
 
 
 def _tokens(board):
@@ -74,7 +75,9 @@ class _OnePrefixMarginals(Mapping):
         raise TypeError("The exact marginal map is not materialized.")
 
 
-def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics):
+def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic):
+    if type(exact_arithmetic) is not str or exact_arithmetic not in ("fraction", "dyadic"):
+        raise ValueError("exact_arithmetic must be fraction or dyadic.")
     if pair_diagnostics not in ("expanded", "compact"):
         raise ValueError("pair_diagnostics must be expanded or compact.")
     if not isinstance(request, FourStreetSolveRequest):
@@ -158,6 +161,54 @@ def _query_costs(kernel, prefix_boards):
         "pair_per_board": 4,
         "sort_work": sort_work,
     }
+
+
+def _dyadic_reach_bit_forecast(kernel, payoff_fractions, board_count):
+    """Admit common-exponent integer buffers for every binary64 callback.
+
+    This adds a logical integer-payload ceiling, while retaining the existing
+    conservative logical-loop and Fraction-size admission. It is not a new
+    cheaper work model and cannot reopen a request rejected by that model.
+    """
+    exponents = [[w.denominator.bit_length() - 1 for w in side] for side in kernel.weights]
+    side_exponents = [max(side) for side in exponents]
+    weight_bits = [max(w.numerator.bit_length() + common - exp
+                      for w, exp in zip(weights, powers))
+                   for weights, powers, common in zip(kernel.weights, exponents, side_exponents)]
+    z_bits = (kernel.normalizer.numerator.bit_length() + sum(side_exponents) -
+              (kernel.normalizer.denominator.bit_length() - 1))
+    setup_bits = max(*weight_bits, z_bits, sum(side_exponents) + 1)
+    payoff_num_bits = max((abs(p.numerator).bit_length() for p in payoff_fractions), default=1)
+    payoff_exp = max((p.denominator.bit_length() - 1 for p in payoff_fractions), default=0)
+    forecasts = []
+    for player in (0, 1):
+        opp = 1 - player
+        weighted = weight_bits[opp] + 1075
+        bucket = weighted + ceil(log2(max(1, kernel.hand_counts[opp]))) + 2
+        signed = bucket + 4
+        own_product = weight_bits[player] + signed + payoff_num_bits
+        summed = own_product + ceil(log2(max(1, board_count))) + 2
+        denominator = z_bits + 1074 + payoff_exp
+        forecasts.append(max(1075, weighted, bucket, signed, own_product, summed, denominator, z_bits))
+    maximum = max(setup_bits, *forecasts)
+    if maximum > kernel.limits.max_integer_bits:
+        raise ValueError("Dyadic selected whole-request integer-bit forecast exceeded before training.")
+    hsum = sum(kernel.hand_counts)
+    retained = 8 * hsum + 128
+    scratch = 140 * hsum + 800
+    payload = retained * setup_bits + scratch * maximum
+    if payload > MAX_DYADIC_INTEGER_PAYLOAD_BITS:
+        raise ValueError("Dyadic selected whole-request integer-payload admission exceeded before training.")
+    return {"version": "dyadic-binary64-callback-bit-forecast-v1",
+            "side_weight_max_bits": weight_bits, "normalizer_bits": z_bits,
+            "setup_maximum_bits_upper": setup_bits,
+            "worst_common_reach_exponent": 1074, "worst_scaled_reach_bits": 1075,
+            "per_player_maximum_bits_upper": forecasts, "maximum_bits_upper": maximum,
+            "retained_integer_entries_upper": retained, "scratch_integer_entries_upper": scratch,
+            "logical_integer_payload_bits_upper": payload,
+            "logical_integer_payload_bit_limit": MAX_DYADIC_INTEGER_PAYLOAD_BITS,
+            "limbs64_per_value_upper": (maximum + 63) // 64,
+            "scope": "Integer payload only, excluding Python headers/allocator and retained Fraction reference inputs. Conservative old logical work admission remains in force; no CPU/RSS guarantee."}
 
 
 def _layout_upper(topology, kernel, request, layout_counts):
@@ -349,7 +400,7 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
 
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
-                                    pair_diagnostics="expanded"):
+                                    pair_diagnostics="expanded", exact_arithmetic="fraction"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -357,11 +408,11 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     per-occurrence binary64 normalization; this API never silently replaces
     the legacy solver.
     """
-    _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics)
+    _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
                                        request.runouts,
                                        rank_cache_boards=rank_cache_boards,
-                                       limits=kernel_limits)
+                                       limits=kernel_limits, arithmetic=exact_arithmetic)
     specs = reference._stage_configs(
         request.flop_actions.to_dict(),
         None if request.turn_actions is None else request.turn_actions.to_dict(),
@@ -421,6 +472,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         if isinstance(vertex, TerminalVertex):
             payoffs.append(Fraction.from_float(float(min(vertex.contributions))))
     bit_forecast = _binary64_reach_bit_forecast(kernel, payoffs, len(kernel.selected))
+    if exact_arithmetic == "dyadic":
+        bit_forecast["dyadic_integer"] = _dyadic_reach_bit_forecast(kernel, payoffs, len(kernel.selected))
     payoffs = None
 
     # Pair probabilities are an explicitly bounded O(H0*H1*B) compatibility
@@ -442,6 +495,16 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                                 32 * len(topology.vertices) + 16 * topology.census.unique_edges + 8192,
                                 compact_prior_entries=(6 * sum(kernel.hand_counts) + 32
                                     if pair_diagnostics == "compact" else 0))
+    if exact_arithmetic == "dyadic":
+        integer_forecast = bit_forecast["dyadic_integer"]
+        integer_forecast["whole_request_limb_work_upper"] = (
+            admission["kernel"]["whole_request_upper_work"] *
+            integer_forecast["limbs64_per_value_upper"] ** 2)
+        integer_forecast["limb_work_scope"] = (
+            "Existing conservative logical kernel-operation upper times worst admitted 64-bit limb width squared; "
+            "an envelope for the counted integer query-core/completed Fraction-output subset model only. "
+            "It excludes Fraction GCD/LCM input/bit preflights, setup normalization, adapter conversion and runtime; "
+            "not a complete arithmetic/CPU bound or smaller replacement admission.")
     pair_rows = []
     supported_pair_count = 0
     for i in range(h0 if pair_diagnostics == "expanded" else 0):
@@ -528,6 +591,14 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     kernel_stats = kernel.statistics()
     if kernel_stats["work_units_cumulative"] > admission["kernel"]["whole_request_upper_work"]:
         raise RuntimeError("Exact kernel work exceeded its whole-request admission.")
+    if exact_arithmetic == "dyadic":
+        actual_integer = kernel_stats["integer_arithmetic"]
+        integer_upper = bit_forecast["dyadic_integer"]
+        if (actual_integer["peak_operand_bits"] > integer_upper["maximum_bits_upper"] or
+                actual_integer["peak_forecast_bits"] > integer_upper["maximum_bits_upper"] or
+                actual_integer["peak_integer_payload_bits"] > integer_upper["logical_integer_payload_bits_upper"] or
+                actual_integer["modeled_limb_work_upper"] > integer_upper["whole_request_limb_work_upper"]):
+            raise RuntimeError("Dyadic integer arithmetic exceeded its whole-request bit/payload/work forecast.")
     if adapter_receipt["modeled_work_entries"] > admission["adapter"]["whole_request_work_upper"]:
         raise RuntimeError("Exact adapter work exceeded its whole-request admission.")
     census = {

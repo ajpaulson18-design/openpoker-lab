@@ -1,5 +1,13 @@
 # Current engineering state
 
+An opt-in [integer query core](../exact-dyadic-arithmetic.md) now connects exact
+dyadic blocker/rank arithmetic to the same four-street trainer. Focused complete
+policies/metrics match the Fraction reference, and independent physical-deal,
+cancellation/rounding/admission controls pass. The old whole-request cap remains;
+the original T1000 work rejection is preserved. Additional integer payload is
+admitted before training. Frozen performance/saved replay/final publication are
+pending; no speed, RAM, larger game or native exact capability is claimed.
+
 The explicit [compact exact-product output](../compact-exact-policy.md) removes
 production pair queries/table storage and substitutes a linear input snapshot.
 Its [frozen ten-call result](../compact-exact-policy-result.md) preserves all
