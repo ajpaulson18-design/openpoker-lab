@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 642, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 600, in main
+    need(screen["version"] == "exact-selected-certificate-shape-screen-v1" and screen["status"] == "screen-only" and
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 41, in need
+    raise ValueError(message)
+ValueError: independently derived physical shape screen differs

@@ -200,3 +200,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 
 # Preserve exact integer study, independent controls and separate raw profiles.
 /benchmarks/results/exact-dyadic-selected-v1/** -text whitespace=cr-at-eol
+
+# Preserve source-frozen structural census and all independent review repairs.
+/benchmarks/results/exact-storage-frontier-v1/** -text whitespace=cr-at-eol

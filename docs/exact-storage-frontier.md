@@ -1,7 +1,7 @@
 # Exact selected-game strategy and history storage frontier
 
-Status: shared preparation and rank-free census implementation with independent
-small-game checks; source-frozen growth study and publication are pending.
+Status: shared preparation and rank-free census with independently replayed
+[source-frozen growth results](exact-storage-frontier-result.md); final publication is pending.
 This addresses the storage dependency left open by the
 [foundation audit](foundation-first-audit.md), [direct topology](direct-shared-topology.md)
 and [integer query integration](exact-dyadic-arithmetic.md). Removing private
@@ -98,8 +98,9 @@ orbit-disabled count parity and rejection before support/orbit allocation.
 Terra independently reconstructs physical support and all 24 suit transformations
 for symmetric and weight-asymmetric small games. Complete supported row/slot/
 history counts, stabilizer permutations and row-orbit counts match. These are
-bounded structural checks. The fixed source-frozen range/board/menu/symmetry
-frontier, preserved first misses and independent saved census replay remain
-required before selecting a compression frontier. The eventual choice must make
+bounded structural checks. The linked frozen range/board/menu/symmetry frontier
+now retains sixteen independently replayed conditional structural witnesses and
+the 48-board work rejection. Actual quotient/reach proofs and final publication
+remain gates. The eventual choice must make
 the complete solver's storage scalable; another standalone probability result
 would not resolve this dependency.

@@ -48,6 +48,11 @@ strategy merging or independent BR equivalence. Preserve first cap rejections an
 unknown downstream counts; perform no solving/ranking/pair queries. The
 [contract and independent controls](../exact-storage-frontier.md) establish bounded
 census fidelity; a frozen growth frontier and actual quotient proof remain gates.
+The [frozen result](../exact-storage-frontier-result.md) now independently counts
+sixteen conditional graph witnesses and retains one work rejection. It shows
+linear row/history growth despite a fixed DAG, and identity-only symmetry on
+the 16-hand range case. Both reviewer schema repairs remain preserved. Actual
+strategy/regret quotienting, reach/average proofs and final CI remain separate.
 
 ### D063: Integer query arithmetic under the exact-product law (October 27, 2026)
 

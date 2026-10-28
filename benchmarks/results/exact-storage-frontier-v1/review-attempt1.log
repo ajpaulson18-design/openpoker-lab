@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 629, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 562, in main
+    derived = replay(c["structural_witness"], case["request"])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 290, in replay
+    priors, selected, vertices, edges, root, admission = graph_shape(witness, request)
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 154, in graph_shape
+    need(witness["selected_runouts"] == [list(value) for value in selected], "witness selected outcomes differ from canonical requested outcomes")
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-storage-independent-review.py", line 35, in need
+    raise ValueError(message)
+ValueError: witness selected outcomes differ from canonical requested outcomes

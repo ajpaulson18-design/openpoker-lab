@@ -1,0 +1,18 @@
+range-scale-1 accepted
+range-scale-2 accepted
+range-scale-4 accepted
+range-scale-8 accepted
+range-scale-16 accepted
+board-scale-1 accepted
+board-scale-6 accepted
+board-scale-12 accepted
+board-scale-24 accepted
+board-scale-48 resource-rejected
+menu-scale-0 accepted
+menu-scale-1 accepted
+menu-scale-2 accepted
+heldout-96-worlds accepted
+original-22-world-anchor accepted
+club-diamond-symmetric accepted
+club-diamond-weight-broken accepted
+{"outcome": "complete", "cases": 17, "manifest_sha256": "3bce2d7b10fcda2e69367347e97d6b05a6e336adab8625102cdb6903085a87e3", "failure": null}
