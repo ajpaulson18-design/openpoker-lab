@@ -1,5 +1,28 @@
 # Foundation-first execution record
 
+## Compact exact-product output: independently replayed frozen result
+
+The explicit [compact contract](compact-exact-policy.md) replaces the final
+quadratic production pair-probability stage with linear canonical range input
+snapshots. The [fixed result](compact-exact-policy-result.md) retains all ten
+first-run fresh-process calls, full raw policies, misses and output-cap rejection.
+All four complete paired policies/eight diagnostics match; eight fresh numeric
+and two exact saved replays authenticate 1,771 committed source files first,
+with production training/native/exact callbacks forbidden. Both T10 exact
+NashConv targets still miss. Small-game median and modeled retained peak are
+higher in compact mode; structural removal does not imply speed/RAM improvement.
+Full-range one-board forced all-in completes without choices/training, but its
+unchanged independent certificate rejects before world construction. It is not
+full-range choice-bearing training. Twenty-four local compact/runner controls
+pass; twelve runner controls also pass optimized. The first independent review's
+pair-order comparison failure and corrected hand-key comparison remain preserved;
+the producer was never rerun. PR #259 final-head CI/publication remain separate.
+
+PR #257's exact-product integration merged at
+`038eb4ac5ea69d352d7827947a6ce09fdaff8125` after all checks passed. Fetch verifies
+reviewed head `ef88fb930fffcf04c6b19acab869a59d32082c72` is an ancestor of main
+and the merge tree equals the exact reviewed tree. Overall foundation goal active.
+
 ## Exact-product four-street integration: frozen independent result
 
 The new [exact-product contract](exact-selected-kernel-contract.md) explicitly

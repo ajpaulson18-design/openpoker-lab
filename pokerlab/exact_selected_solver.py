@@ -74,7 +74,9 @@ class _OnePrefixMarginals(Mapping):
         raise TypeError("The exact marginal map is not materialized.")
 
 
-def _validate_request(request, rank_cache_boards, kernel_limits):
+def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics):
+    if pair_diagnostics not in ("expanded", "compact"):
+        raise ValueError("pair_diagnostics must be expanded or compact.")
     if not isinstance(request, FourStreetSolveRequest):
         raise TypeError("request must be a FourStreetSolveRequest.")
     if (request.algorithm != "cfrplus" or request.traversal != "public-batched" or
@@ -202,7 +204,7 @@ def _layout_upper(topology, kernel, request, layout_counts):
 def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
                     action_hand_queries, terminal_counts, pair_candidates,
                     layout_upper, unique_prefixes, topology_states,
-                    topology_entries):
+                    topology_entries, compact_prior_entries=0):
     costs = _query_costs(kernel, prefix_counts)
     # Setup support queries and complete legacy-compatible pair output.
     future_kernel = sum(costs["lookup"] + n * costs["legal_per_board"]
@@ -248,14 +250,15 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
     if adapter_work > adapter._max_work or adapter_retained + adapter_temp > adapter._max_storage:
         raise ValueError("Exact selected whole-request adapter work/storage admission exceeded before training.")
 
-    output_entries = (8 * pair_candidates + 20 * layout_upper["upper_dense_decision_hand_slots"] +
+    output_entries = (compact_prior_entries + 8 * pair_candidates + 20 * layout_upper["upper_dense_decision_hand_slots"] +
                       2 * layout_upper["upper_history_token_entries"] +
                       12 * layout_upper["upper_action_slots"] + 8192)
     if output_entries > MAX_OUTPUT_ENTRIES:
         raise ValueError("Exact selected serialized pair/policy output entry limit exceeded before training.")
     if pair_candidates > MAX_PAIR_CANDIDATES:
         raise ValueError("Exact selected pair-output candidate limit exceeded before training.")
-    whole_work = (kernel_total + adapter_work +
+    compact_snapshot_work = 4 * compact_prior_entries
+    whole_work = (kernel_total + adapter_work + compact_snapshot_work +
                   layout_upper["upper_requested_layout_loop_entries"] +
                   layout_upper["upper_history_lookup_work_entries"] +
                   4 * topology_states)
@@ -274,7 +277,8 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
     prefix_counters = 64 * prefixes + 8192
     legal_support = len(unique_prefixes) * (2 * hsum + 8)
     pair_output_entries = 8 * pair_candidates
-    shared_base = kernel_peak + adapter_peak + topology_entries + prefix_counters + pair_output_entries
+    shared_base = (kernel_peak + adapter_peak + topology_entries + prefix_counters +
+                   pair_output_entries + compact_prior_entries)
     histories = layout_upper["upper_history_token_entries"]
     info_and_menus = 12 * rows + histories
     packed_training = 4 * slots + 12 * rows
@@ -325,6 +329,7 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
                                  "prefix_counters_upper": prefix_counters,
                                  "legal_support_entries_upper": legal_support,
                                  "pair_output_entries_upper": pair_output_entries,
+                                 "compact_prior_snapshot_entries_upper": compact_prior_entries,
                                  "information_and_menu_entries_upper": info_and_menus,
                                  "packed_numeric_and_lookup_entries_upper": packed_training,
                                  "average_rows_entries_upper": averages,
@@ -337,12 +342,14 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
                                  "scope": "Logical retained and scratch slots across overlapping solve phases; not Python bytes or RSS."},
             "packed_layout": layout_upper,
             "direct_topology_occurrence_walk_upper": 4 * topology_states,
+            "compact_input_snapshot_work_upper": compact_snapshot_work,
             "combined_modeled_work_upper": whole_work,
             "whole_request_limit": MAX_WHOLE_REQUEST_WORK,
             "scope": "Whole-request logical bounds include exact kernel rank/card sweeps, pair diagnostic board scans, adapter conversions, direct-topology occurrence traversal, packed layout/training loops, semantic-history lookup and serialized entries. Units are not runtime or memory bytes."}
 
 
-def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None):
+def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
+                                    pair_diagnostics="expanded"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -350,7 +357,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     per-occurrence binary64 normalization; this API never silently replaces
     the legacy solver.
     """
-    _validate_request(request, rank_cache_boards, kernel_limits)
+    _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
                                        request.runouts,
                                        rank_cache_boards=rank_cache_boards,
@@ -421,20 +428,23 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     # so support loss can never be discovered after spending training work.
     h0, h1 = kernel.hand_counts
     pair_candidates = h0 * h1
-    if pair_candidates > MAX_PAIR_CANDIDATES:
+    output_pairs = pair_candidates if pair_diagnostics == "expanded" else 0
+    if output_pairs > MAX_PAIR_CANDIDATES:
         raise ValueError("Exact selected pair-output candidate limit exceeded before training.")
-    if pair_candidates * len(kernel.selected) > MAX_PAIR_BOARD_SCANS:
+    if output_pairs * len(kernel.selected) > MAX_PAIR_BOARD_SCANS:
         raise ValueError("Exact selected pair-output board-scan cap exceeded before training.")
     unique_prefixes = {prefix: prefix_counts[prefix] for prefix in decisions}
     layout_upper["upper_action_slots"] = action_slots_upper
     admission = _preflight_work(kernel, adapter, request, prefix_counts,
                                 decisions, action_hand_queries, terminal_counts,
-                                pair_candidates, layout_upper, unique_prefixes,
+                                output_pairs, layout_upper, unique_prefixes,
                                 topology.census.expanded_logical_visits,
-                                32 * len(topology.vertices) + 16 * topology.census.unique_edges + 8192)
+                                32 * len(topology.vertices) + 16 * topology.census.unique_edges + 8192,
+                                compact_prior_entries=(6 * sum(kernel.hand_counts) + 32
+                                    if pair_diagnostics == "compact" else 0))
     pair_rows = []
     supported_pair_count = 0
-    for i in range(h0):
+    for i in range(h0 if pair_diagnostics == "expanded" else 0):
         for j in range(h1):
             probability = kernel.pair_probability_exact(i, j)
             if probability:
@@ -552,7 +562,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         "iterations": request.iterations, "candidate_private_pairs": pair_candidates,
         "compatible_private_pairs": supported_pair_count,
         "worlds": kernel.statistics()["support_pair_board_occurrences"],
-        "pair_runout_preflight_checks": pair_candidates * len(kernel.selected),
+        "pair_runout_preflight_checks": output_pairs * len(kernel.selected),
         "private_pair_probabilities": pair_rows,
         "public_states": topology.census.expanded_logical_visits,
         "decisions": topology.census.decision_occurrences,
@@ -569,6 +579,20 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                   "vectors; finite-iteration accuracy remains a separate certificate question. No full-deck, "
                   "unrestricted NLHE, or commercial-scale claim."),
     }
+    if pair_diagnostics == "compact":
+        result.pop("private_pair_probabilities")
+        result.pop("compatible_private_pairs")
+        result["pair_diagnostics"] = "compact-exact-product-inputs-v1"
+        result["chance_input_snapshot"] = {
+            "contract": "exact-product-selected-v1",
+            "ranges": [[{"hand": "".join(hand), "weight_hex": float(weight).hex()}
+                        for hand, weight in zip(hands, weights)]
+                       for hands, weights in zip(kernel.hands, kernel.weights)],
+        }
+        result["operator_census"]["exact_pair_output"]["quadratic_diagnostic_stage"] = False
+        result["operator_census"]["exact_pair_output"]["format"] = "compact-exact-product-inputs-v1"
+        result["scope"] += (" Compact diagnostics preserve linear input snapshots and omit the private-pair table; "
+                            "independent bounded verification separately reconstructs its own physical support.")
     if rank_cache_boards > 1:
         result["rank_cache"] = {"board_capacity": rank_cache_boards,
                                 "hits": kernel_stats["rank_cache_hits"],

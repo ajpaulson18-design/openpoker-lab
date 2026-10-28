@@ -1,0 +1,37 @@
+GitHub Actions original job 122608700123, run 40625310269, head 4ddfd550fe40bfa8d0c1447e7455fd840f11aea8.
+Failure tail preserved from connector-fetched original job log. No producer study was rerun.
+FAIL: test_expanded_default_preserves_frozen_original_study_policy (test_compact_exact_policy_independent.CompactExactPolicyIndependentTests.test_expanded_default_preserves_frozen_original_study_policy)
+2026-10-28T03:33:01.2915558Z ----------------------------------------------------------------------
+2026-10-28T03:33:01.2916006Z Traceback (most recent call last):
+2026-10-28T03:33:01.2919291Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_compact_exact_policy_independent.py", line 98, in test_expanded_default_preserves_frozen_original_study_policy
+2026-10-28T03:33:01.2920225Z     self.assertEqual(actual[key],prior[key],key)
+2026-10-28T03:33:01.2921036Z AssertionError: Lists differ: [{'pl[291 chars]277461}, {'name': 'raise', 'amount': 1.5, 'rai[519118 chars]8}]}] != [{'pl[291 chars]2774603}, {'name': 'raise', 'amount': 1.5, 'ra[519057 chars]8}]}]
+2026-10-28T03:33:01.2921867Z 
+2026-10-28T03:33:01.2921974Z First differing element 0:
+2026-10-28T03:33:01.2922335Z {'pla[290 chars]277461}, {'name': 'raise', 'amount': 1.5, 'rai[70 chars]39}]}
+2026-10-28T03:33:01.2922839Z {'pla[290 chars]2774603}, {'name': 'raise', 'amount': 1.5, 'ra[71 chars]39}]}
+2026-10-28T03:33:01.2923138Z 
+2026-10-28T03:33:01.2923389Z Diff is 1052648 characters long. Set self.maxDiff to None to see it. : strategy
+2026-10-28T03:33:01.2923726Z 
+2026-10-28T03:33:01.2923902Z ----------------------------------------------------------------------
+2026-10-28T03:33:01.2924281Z Ran 2624 tests in 1247.283s
+2026-10-28T03:33:01.2924450Z 
+2026-10-28T03:33:01.2924551Z FAILED (failures=1, skipped=56)
+2026-10-28T03:33:03.6197871Z ##[error]Process completed with exit code 1.
+2026-10-28T03:33:03.6332358Z Post job cleanup.
+2026-10-28T03:33:03.7068265Z [command]/usr/bin/git version
+2026-10-28T03:33:03.7139443Z git version 2.56.0
+2026-10-28T03:33:03.7177103Z Temporarily overriding HOME='/home/runner/work/_temp/501a60cf-2752-4891-86ff-45ae3f9aa339' before making global git config changes
+2026-10-28T03:33:03.7178035Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T03:33:03.7180859Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-10-28T03:33:03.7228199Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T03:33:03.7271134Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T03:33:03.7509968Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T03:33:03.7536646Z http.https://github.com/.extraheader
+2026-10-28T03:33:03.7548201Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T03:33:03.7590273Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T03:33:03.7835239Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T03:33:03.7881162Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T03:33:03.8273280Z Cleaning up orphan processes
+2026-10-28T03:33:03.8586648Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

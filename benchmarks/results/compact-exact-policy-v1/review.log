@@ -1,0 +1,1 @@
+{"outcome": "accepted", "receipt_sha256": "61a9d079eaadaf695b2df9e1dc90ac350c0c0be37e3f1d0e0303dca6297d7097", "source_files": 1771, "numeric_replays": 8, "exact_recomputations": 2, "exact_threshold_flags": {"expanded": false, "compact": false}}

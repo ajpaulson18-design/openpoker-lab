@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\compact-exact-independent-review.py", line 308, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\compact-exact-independent-review.py", line 230, in main
+    need(pair_rows == reference["private_pair_probabilities"], "Independent physical pair probabilities differ")
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-selected-independent-review.py", line 34, in need
+    raise ValueError(message)
+ValueError: Independent physical pair probabilities differ
