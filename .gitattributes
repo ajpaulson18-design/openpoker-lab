@@ -206,3 +206,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/equivariant-selected-v1/** -text
 /benchmarks/results/suit-quotient-storage-v1/** -text
 /benchmarks/results/batched-suit-lookup-v1/** -text
+/third_party/boost-multiprecision-1.92.0/headers.zip -text
+/third_party/boost-multiprecision-1.92.0/manifest.json -text
+/third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt -text
+/benchmarks/results/native-exact-conversion-v1/** -text

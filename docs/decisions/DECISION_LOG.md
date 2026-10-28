@@ -36,6 +36,23 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D068: Admit native exact arithmetic before whole-game migration (October 28, 2026)
+
+Sol selects a separate [native exact-product boundary](../native-exact-four-street.md)
+to move exact callback computation and Q learning into one process while keeping
+Python rules/preparation and independent replay where justified. Legacy rounded
+native protocols are not relabeled as exact-product. Reuse pinned standalone
+Boost integer arithmetic with retained license and complete source/build closure;
+own the game's arithmetic, strict rounding and pre-allocation resource policy.
+Luna implements integer-only nearest-ties-even binary64 conversion, Terra
+independently challenges it with exact rational boundaries, and Sol owns
+dependency packaging, builder, integration and acceptance. Conversion accepts
+exact zero as positive zero and nonzero results only if rounded finite normal.
+Keep the 65,536-bit input cap and explicit additional 53-bit conversion scratch
+cap separate. Neither converter correctness nor successful compilation proves
+a poker kernel, native training, speed, memory savings or broader solver quality.
+Full-game integration, frozen evidence and final CI remain required.
+
 ### D067: Share authenticated public-history work within one decision (October 28, 2026)
 
 Sol uses the frozen Q profile to implement an explicit

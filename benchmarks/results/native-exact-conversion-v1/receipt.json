@@ -1,0 +1,57 @@
+{
+  "archive_bytes": 1094318,
+  "archive_entries": 40,
+  "archive_sha256": "06980116071fcbb99269cf497f8cd5670f621019987a08e5103da036bea5a7bf",
+  "build": {
+    "exe_sha256": "3594d700380eb4127a12a6ff56ba723b2b6ea1baa5aa83797b48cb18d27059e5",
+    "manifest_sha256": "493389b14dc53aa5485714241cf4762a4e871fc5970fb25f206b59aea2769102",
+    "toolchain": "MSVC 19.44.35229 x64 C++20 strict floating point"
+  },
+  "compiled_controls": {
+    "normal": {
+      "exit_code": 0,
+      "seconds": 9.331,
+      "tests": 12
+    },
+    "optimized": {
+      "exit_code": 0,
+      "seconds": 7.165,
+      "tests": 12
+    }
+  },
+  "contract": "native-exact-conversion-publication-v1",
+  "files_sha256": {
+    "compiled-controls-optimized.log": "ab91273122377003ef0190f5484b4779a0ee3e552984cdcfa9904738a58f92e3",
+    "compiled-controls.log": "8f9c44a36ea2b68ecba1d1d9a6187af202c33efc376c2ddce3f5b2cd2d397719",
+    "development-failure-summary.log": "e3f2f129058b9d47b072b593185aefe787ac05dc90d44c271752f1657de2daf0",
+    "independent-receipt.json": "6e8f722ada8950b76b80f7a47c3bdd6d83e3e1e78277c29c30439b47f56ae941",
+    "manifest.json": "72e20d9180aeda36c66d46f12249c95d7ee5a57992424387c17ddfdd21db47a4",
+    "native-exact-converter-packaging.log": "61820951ad0a4a67df929f215197412c34a9781621fdaf09ac9f24a57889f27e",
+    "native-exact-converter-study-v1.zip": "06980116071fcbb99269cf497f8cd5670f621019987a08e5103da036bea5a7bf",
+    "native-exact-terra-controls.py": "e55c59f0fe4aedf8526267ae5252096eb308a57c2a319d57f1aa5762f27d4408",
+    "native-exact-whole-design-review.md": "726e3d4af08930c5ab99e4490e8c0ff1e95ae6c4671254b7f0237b0a9d1adb94",
+    "saved-only-replay.json": "27fc8ad0c068f28c5c41f863a6b8df51fe7524461d3fe7ce59dc38679274bb52"
+  },
+  "independent_oracle": {
+    "accepted": 5956,
+    "author": "Terra",
+    "cases": 5966,
+    "required_rejections": 10,
+    "saved_inputs_outputs": true,
+    "seed": 328142
+  },
+  "manifest_sha256": "72e20d9180aeda36c66d46f12249c95d7ee5a57992424387c17ddfdd21db47a4",
+  "preserved_failures": [
+    "Driver oversize-token classification failure and stale build rejection are retained only as contemporaneous summaries; original raw streams unavailable.",
+    "Terra reviewer smoke failed its final source recheck because a local source-key variable was shadowed. The raw first input/stdout/stderr/status and traceback plus superseded reviewer helpers are retained. Production converter was unchanged."
+  ],
+  "saved_only_replay": {
+    "author": "Sol/root",
+    "candidate_calls": 0,
+    "cases": 5966,
+    "full_raw_git_source_authentication_before_math": true
+  },
+  "scope": "Conversion prerequisite only. Source/build and saved IEEE rounding checked. No native poker mass/payoff kernel, Q trainer, full-game strategy/certificate, complete-call benchmark, broader quality or scalability claim. Final publication-head CI required.",
+  "source_commit": "015d20f5f37173333a0a4cdbe7954ecbd2588b5b",
+  "source_files_authenticated": 1988
+}

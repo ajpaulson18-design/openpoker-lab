@@ -1,5 +1,19 @@
 # Foundation-first execution record
 
+## Native exact arithmetic prerequisite (October 28)
+
+The [native exact boundary](native-exact-four-street.md) now implements integer-only
+binary64 rounding with separate 65,536-bit input and 65,589-bit conversion scratch
+caps. Sol packages the complete pinned 198-header Boost standalone source/license
+closure and offline compiler manifest. Luna implements the converter/probe and
+four focused compiled controls; Terra independently compares 5,966 signed rational
+cases, including midpoint and normal/overflow boundaries, against Python Fraction.
+Those recorded MSVC checks pass; original summarized development failures remain
+distinct from raw retained evidence. Build-input controls authenticate headers and
+reject drift, foreign cache entries and extraction escape. Windows/Linux and
+sanitizer final-source CI remain gates. Native poker vectors/traversal, saved-policy
+certification and complete-call measurement remain future work under the same goal.
+
 ## Per-decision Q-row lookup: measured-hotspot candidate
 
 The [new lookup option](batched-suit-row-lookup.md) responds to the separately

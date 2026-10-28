@@ -1,0 +1,59 @@
+name: Native exact conversion boundary
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-boundary:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build pinned converter boundary
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --output-dir "$RUNNER_TEMP/native-exact"
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_EXACT_BINARY64_EXE=$RUNNER_TEMP/native-exact/native-exact-binary64-probe$suffix" >> "$GITHUB_ENV"
+      - name: Required compiled and dependency controls
+        run: python -m unittest tests.test_native_exact_binary64 tests.test_build_native_exact_four_street -v
+      - name: Retain first compiler and failure records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-exact-boundary-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/native-exact/*.log
+            ${{ runner.temp }}/native-exact/*.json
+  sanitized-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build pinned ASan and UBSan converter
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --output-dir "$RUNNER_TEMP/native-exact-sanitized" --sanitize
+          echo "OPENPOKER_NATIVE_EXACT_BINARY64_EXE=$RUNNER_TEMP/native-exact-sanitized/native-exact-binary64-probe" >> "$GITHUB_ENV"
+      - name: Required sanitized boundary controls
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: python -m unittest tests.test_native_exact_binary64 tests.test_build_native_exact_four_street -v
+      - name: Retain first compiler and failure records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-exact-boundary-sanitized
+          path: |
+            ${{ runner.temp }}/native-exact-sanitized/*.log
+            ${{ runner.temp }}/native-exact-sanitized/*.json

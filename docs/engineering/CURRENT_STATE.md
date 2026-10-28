@@ -1,5 +1,12 @@
 # Current engineering state
 
+An implemented [native exact conversion prerequisite](../native-exact-four-street.md)
+provides bounded integer-only rational rounding and an offline, source-pinned
+Boost build. Focused MSVC and 5,966 independent Fraction controls pass at the
+recorded development source. Cross-platform/sanitizer CI remains a gate. This
+is a conversion boundary; native exact poker mass/payoff computation and the
+whole four-street training loop remain in progress. No performance claim follows.
+
 An explicit [per-decision suit-row lookup candidate](../batched-suit-row-lookup.md)
 shares one authenticated public-history route and G transformations across a
 decision's physical own hands. It retains the per-row reference and all existing

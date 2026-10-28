@@ -1,5 +1,15 @@
 # Dependency, tooling and licensing record
 
+The in-progress [native exact four-street path](../native-exact-four-street.md)
+adds a pinned build-time Boost.Multiprecision 1.92 standalone header package.
+Its [source/license inventory](../../third_party/boost-multiprecision-1.92.0/README.md)
+retains all upstream include bytes/notices and the unchanged Boost Software
+License 1.0. This is integer arithmetic reuse, not third-party poker solver or
+evaluator code. The build is offline and source-authenticated; no global install
+or Python runtime dependency is added. BSL source notice obligations remain in
+the package. Binary/compiler-runtime distribution scope is still checked
+separately; this addition does not establish broader commercial/patent clearance.
+
 The [public-chance native trainer](../native-four-street-architecture.md) adds
 project-owned C++20 source and an explicit installed-compiler build step. It
 imports no third-party solver/evaluator implementation or generated tables.

@@ -1,0 +1,13 @@
+Development-only first failures (preserved after correction)
+
+1) Initial focused run before oversized-token classification fix:
+   test_protocol_and_hostile_input_caps failed at the expectation for a 16,385-hex-digit token.
+   Expected: ERR<TAB>input_bit_limit
+   Observed: ERR<TAB>invalid_record
+   Cause: token-length rejection used invalid_argument. Corrected to a bounded length_error mapped to input_bit_limit.
+
+2) Provenance validation against an executable built before the final header/probe edits:
+   setUpClass rejected the provided binary because its adjacent manifest source hashes did not match current bytes.
+   This was expected stale-artifact detection; rebuilt through scripts.build_native_exact_four_street.build and reran using the new manifest.
+
+Final focused run after these corrections: 4 tests passed with the root source-authenticated converter executable.
