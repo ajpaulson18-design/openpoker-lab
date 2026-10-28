@@ -7,8 +7,12 @@ commit. It procedurally regenerates membership without an R-to-Q table and
 releases the numeric buffers before expanded policy output and diagnostics.
 Complete policy/eight-metric/exact-certificate comparisons and nine independent
 adversarial controls pass; 71 combined controls pass optimized. Identity-only
-groups give Q=R. Source-frozen costs, saved-policy replay and final CI remain
-gates; this is not a whole-solve RAM or general speed claim.
+groups give Q=R. Its [frozen 23-call result](../suit-quotient-storage-result.md)
+retains eleven bitwise complete policy/eight-metric pairs and 22 fresh independent
+certificates after authenticating 1,900 files. Symmetric rows halve; identity-only
+games do not compress. Eighteen T10 misses, four T100 passes and the original
+T1000 rejection remain. Complete calls are slower and traced allocation is
+higher. Final publication CI remains; this is not a whole-solve RAM/speed gain.
 
 An explicit [suit-equivariant numerical reference](../equivariant-selected-training.md)
 now trains the same complete exact-product four-street game with sorted finite
@@ -22,7 +26,10 @@ mapped full-policy bit checks. Twelve T10 misses, two one-world T1000 passes and
 the original T1000 admission rejection remain. Original 22-world policies differ
 by up to 0.5 despite metric differences near binary64 precision; this is an
 explicit new trajectory. Larger single calls and traced allocation regress.
-Actual Q storage, its phase proof and final publication CI remain gates.
+The reference merged in PR #262 at `728cdd7ca0679f3b05442e295e47647b2d27c5af`
+after all final Python/native checks passed; fetched main exactly matches the
+reviewed tree. Its optional AI review agent job was skipped, not an independent
+review pass. Actual Q work is scoped separately above.
 
 The [exact storage census](../exact-storage-frontier.md) now shares the actual
 solver's admitted rank-free preparation and counts supported information/action

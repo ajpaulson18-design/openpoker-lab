@@ -1,0 +1,75 @@
+test_average_member_mismatch_before_commit (__main__.Controls.test_average_member_mismatch_before_commit) ... ok
+test_duplicate_average_before_commit (__main__.Controls.test_duplicate_average_before_commit) ... ok
+test_duplicate_responder_before_commit (__main__.Controls.test_duplicate_responder_before_commit) ... ok
+test_member_regret_mismatch_before_commit (__main__.Controls.test_member_regret_mismatch_before_commit) ... ok
+test_mismatched_menu_rejects (__main__.Controls.test_mismatched_menu_rejects) ... ok
+test_no_reference_R_map_and_q_arrays_release_before_expansion (__main__.Controls.test_no_reference_R_map_and_q_arrays_release_before_expansion) ... ok
+test_omitted_average_before_commit (__main__.Controls.test_omitted_average_before_commit) ... ERROR
+test_omitted_responder_before_commit (__main__.Controls.test_omitted_responder_before_commit) ... ERROR
+
+======================================================================
+ERROR: test_omitted_average_before_commit (__main__.Controls.test_omitted_average_before_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 91, in test_omitted_average_before_commit
+    def test_omitted_average_before_commit(self):self.omitted('average')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 87, in omitted
+    with self.assertRaisesRegex(ValueError,'Incomplete Q member coverage'):solve()
+                                                                           ^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 11, in solve
+    def solve():return solve_four_street_exact_selected(REQ(),pair_diagnostics='compact',training_reduction='suit-equivariant',strategy_storage='suit-quotient')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\exact_selected_solver.py", line 679, in solve_four_street_exact_selected
+    averages, training_receipt = trainer(
+                                 ^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 382, in train_suit_quotient
+    average_pass(float(iteration))
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 363, in average_pass
+    average(root, (), [1.0] * hand_counts[0], [1.0] * hand_counts[1], factor)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 327, in average
+    slots = row_slots(node)
+            ^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 208, in row_slots
+    supported = plan.supported_hand_indices(prefix, node.player)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 81, in support
+    omitted[0]=True;return vals[1:]
+                           ~~~~^^^^
+TypeError: 'frozenset' object is not subscriptable
+
+======================================================================
+ERROR: test_omitted_responder_before_commit (__main__.Controls.test_omitted_responder_before_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 90, in test_omitted_responder_before_commit
+    def test_omitted_responder_before_commit(self):self.omitted('target_values')
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 87, in omitted
+    with self.assertRaisesRegex(ValueError,'Incomplete Q member coverage'):solve()
+                                                                           ^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 11, in solve
+    def solve():return solve_four_street_exact_selected(REQ(),pair_diagnostics='compact',training_reduction='suit-equivariant',strategy_storage='suit-quotient')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\exact_selected_solver.py", line 679, in solve_four_street_exact_selected
+    averages, training_receipt = trainer(
+                                 ^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 378, in train_suit_quotient
+    responder(0)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 299, in responder
+    target_values(root, (), [1.0] * hand_counts[1 - target], target)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 242, in target_values
+    slots = row_slots(node)
+            ^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-storage-repo\pokerlab\suit_quotient_cfr.py", line 208, in row_slots
+    supported = plan.supported_hand_indices(prefix, node.player)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 81, in support
+    omitted[0]=True;return vals[1:]
+                           ~~~~^^^^
+TypeError: 'frozenset' object is not subscriptable
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.273s
+
+FAILED (errors=2)

@@ -1,0 +1,8 @@
+test_plan_binds_admitted_iterations (__main__.Review.test_plan_binds_admitted_iterations) ... ok
+test_public_graph_work_rejects_before_validation_when_budget_one (__main__.Review.test_public_graph_work_rejects_before_validation_when_budget_one) ... ok
+test_suit_maps_are_immutable (__main__.Review.test_suit_maps_are_immutable) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.043s
+
+OK

@@ -1,8 +1,8 @@
 # Exact suit-orbit strategy storage in the selected four-street game
 
-Status: integrated opt-in candidate with complete small-game policy/certificate
-comparisons and independent adversarial controls. Source-frozen saved-policy
-replay, cost measurements and publication remain acceptance gates.
+Status: integrated opt-in implementation with a [frozen 23-call result](suit-quotient-storage-result.md),
+22 independently replayed policies/certificates and eleven independently
+reconstructed row-orbit checks. Final publication CI remains an acceptance gate.
 This page does not declare the storage backend accepted or commercially scalable.
 
 The [storage frontier](exact-storage-frontier-result.md) established that own-hand
@@ -113,6 +113,7 @@ Nine independent external adversarial controls verify responder and average
 phase failures before commit, menu corruption, actual Q array dimensions,
 release before expanded output and partial-allocation cleanup. Initial
 reviewer-only test errors remain preserved. A source-frozen paired study,
-independent saved-policy replay, measured costs and final CI remain gates. The
+independent saved-policy replay and measured costs are recorded in the linked
+frozen result; final publication CI remains. The
 fixed study has 23 calls, including private-flush T10/T100 pairs. Twelve runner
 controls pass, including actual child execution and protected independent replay.

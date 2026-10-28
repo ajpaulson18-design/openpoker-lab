@@ -1,0 +1,24 @@
+symmetric-t10-expanded-0 complete
+symmetric-t10-suit-quotient-0 complete
+symmetric-t10-suit-quotient-1 complete
+symmetric-t10-expanded-1 complete
+symmetric-t10-expanded-2 complete
+symmetric-t10-suit-quotient-2 complete
+symmetric-t10-expanded-traced complete
+symmetric-t10-suit-quotient-traced complete
+blocker-18-expanded-0 complete
+blocker-18-suit-quotient-0 complete
+asymmetric-weighted-expanded-0 complete
+asymmetric-weighted-suit-quotient-0 complete
+mixed-stabilizer-expanded-0 complete
+mixed-stabilizer-suit-quotient-0 complete
+symmetric-t100-expanded-0 complete
+symmetric-t100-suit-quotient-0 complete
+payoff-varied-t10-expanded-0 complete
+payoff-varied-t10-suit-quotient-0 complete
+payoff-varied-t100-expanded-0 complete
+payoff-varied-t100-suit-quotient-0 complete
+original-22-t10-expanded-0 complete
+original-22-t10-suit-quotient-0 complete
+original-22-qreject-suit-quotient-0 pretraining-rejected
+{"outcome": "complete", "manifest_sha256": "61af20165130b0968de42c34651c11882ba5601a2cfa4bc1f2f3093e12c01222", "failure": null}

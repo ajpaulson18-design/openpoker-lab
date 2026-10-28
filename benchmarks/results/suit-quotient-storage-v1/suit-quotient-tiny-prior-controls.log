@@ -1,0 +1,6 @@
+test_common_tiny_priors_preserve_the_exact_game_and_complete_policy (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_common_tiny_priors_preserve_the_exact_game_and_complete_policy) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.117s
+
+OK

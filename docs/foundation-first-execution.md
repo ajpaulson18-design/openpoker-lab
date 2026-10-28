@@ -35,6 +35,22 @@ protected independent replay and paired policy/certificate identity after the
 repair. All twelve runner controls pass. No formal study was run before repair.
 All 21 final protocol/whole-game controls pass optimized (9.981 s).
 
+The [frozen 23-call storage study](suit-quotient-storage-result.md) completes at
+`3f59676e32878db86a3f01be340c148a45ed3cd4`, terminal handle 77407, exit 0. Terra
+independently authenticates 1,900 source files before 22 physical numeric replays,
+22 unchanged exact certificates and eleven weighted-group/row-orbit/payoff checks.
+After her usage limit, root strengthens report/resource/history binding and
+repeats saved-only mathematics; both authored stages remain separate receipts.
+All eleven complete policy/eight-metric/certificate pairs match bitwise. There
+are eighteen T10 misses, four T100 passes and an unchanged T1000 early rejection.
+Symmetric R56/Q28 buffers halve from 3,648 to 1,824 bytes, but median complete-call
+time grows from 0.267430 to 0.521211 s and traced peak from 373,004 to 421,452
+bytes. Identity-only games do not compress. Separate source-authenticated fresh
+profiles retain matching policies and identify repeated history transforms/routes
+and exact-query preflights; profile times are not benchmark samples. All raw
+policies, available failures and both reviewer receipts are published. Final CI,
+native exact computation and broader asymmetric storage/quality remain gates.
+
 ## Equivariant numerical reference: implementation before quotienting
 
 The [explicit four-street reference](equivariant-selected-training.md) retains
@@ -70,6 +86,12 @@ nineteen reference/protocol controls pass optimized (36.399 s). The initial
 reviewer-only missing compact witness failure, repaired reviewer/receipts and
 superseded array instrumentation are retained. Final publication CI and actual
 Q storage remain gates; implementation continues in a separate checkout.
+
+PR #262 final Python 3.11/3.12/3.13, native/sanitizer, frontend and documentation
+checks passed. It merged at `728cdd7ca0679f3b05442e295e47647b2d27c5af`; fetched
+main's tree equals reviewed head `d49209644e9a0f1e3f1fb6f5b318ae5070748d7e`
+exactly and ancestry passes. The optional AI agent job was skipped. Overall
+foundation goal remains active.
 
 ## Shared preparation and exact storage frontier: bounded controls
 

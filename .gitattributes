@@ -204,3 +204,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve source-frozen structural census and all independent review repairs.
 /benchmarks/results/exact-storage-frontier-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/equivariant-selected-v1/** -text
+/benchmarks/results/suit-quotient-storage-v1/** -text

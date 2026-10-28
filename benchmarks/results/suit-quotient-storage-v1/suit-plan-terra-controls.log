@@ -1,0 +1,46 @@
+test_plan_binds_admitted_iterations (__main__.Review.test_plan_binds_admitted_iterations) ... FAIL
+test_public_graph_work_rejects_before_validation_when_budget_one (__main__.Review.test_public_graph_work_rejects_before_validation_when_budget_one) ... FAIL
+test_suit_maps_are_immutable (__main__.Review.test_suit_maps_are_immutable) ... FAIL
+
+======================================================================
+FAIL: test_plan_binds_admitted_iterations (__main__.Review.test_plan_binds_admitted_iterations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-plan-terra-controls.py", line 17, in test_plan_binds_admitted_iterations
+    with self.assertRaises(ValueError):SuitQuotientPlan(x,10)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_public_graph_work_rejects_before_validation_when_budget_one (__main__.Review.test_public_graph_work_rejects_before_validation_when_budget_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-plan-terra-controls.py", line 21, in test_public_graph_work_rejects_before_validation_when_budget_one
+    with self.assertRaises(ValueError):verify_public_suit_automorphisms(x.topology,('cdhs',),max_additional_work=1)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-repo\pokerlab\suit_public_automorphism.py", line 164, in verify_public_suit_automorphisms
+    for amount in vertex.contributions:_number(amount)
+                                       ^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py", line 1198, in _execute_mock_call
+    raise effect
+AssertionError: validation before work admission
+
+======================================================================
+FAIL: test_suit_maps_are_immutable (__main__.Review.test_suit_maps_are_immutable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-plan-terra-controls.py", line 14, in test_suit_maps_are_immutable
+    with self.assertRaises(TypeError):p._maps[0]['c']='d'
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: TypeError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.133s
+
+FAILED (failures=3)

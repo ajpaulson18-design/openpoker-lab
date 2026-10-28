@@ -1,0 +1,12 @@
+test_actual_exchanged_hands_match_complete_reference_and_physical_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_actual_exchanged_hands_match_complete_reference_and_physical_certificate) ... ok
+test_blocked_four_hand_ranges_preserve_hidden_support_and_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_blocked_four_hand_ranges_preserve_hidden_support_and_certificate) ... ok
+test_forced_all_in_with_no_rows_enters_no_trainer (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_forced_all_in_with_no_rows_enters_no_trainer) ... ok
+test_identity_group_keeps_every_row_and_same_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_identity_group_keeps_every_row_and_same_certificate) ... ok
+test_quotient_never_calls_expanded_layout (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_quotient_never_calls_expanded_layout) ... ok
+test_unequal_orbit_sizes_preserve_reference_and_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_unequal_orbit_sizes_preserve_reference_and_certificate) ... ok
+test_unsupported_storage_or_missing_explicit_arithmetic_rejects_before_kernel (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_unsupported_storage_or_missing_explicit_arithmetic_rejects_before_kernel) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 5.578s
+
+OK
