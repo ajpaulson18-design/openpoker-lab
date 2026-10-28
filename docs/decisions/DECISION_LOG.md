@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D069: Compute native exact vectors from physical inputs (October 28, 2026)
+
+Sol accepts the [bounded selected-kernel implementation direction](../native-exact-selected-vectors.md):
+one native owner decodes original role priors, computes exact global normalization
+and blocker-aware support, ranks physical hands on demand, and completes signed
+payoff vectors before strict conversion. No trusted Python Z/ranks/vectors or
+pair/world table is an input. Luna implements the header; Sol owns the bounded
+conformance protocol, physical tests and integration; Terra challenges arithmetic
+and admission independently. Add a separate aggregate logical integer-payload cap
+and preserve all older whole-solve limits. Query checks do not establish full
+native training, policies, quality, scalability or performance. Frozen provenance
+and final native/sanitizer CI govern acceptance before whole-game integration.
+
 ### D068: Admit native exact arithmetic before whole-game migration (October 28, 2026)
 
 Sol selects a separate [native exact-product boundary](../native-exact-four-street.md)

@@ -20,7 +20,9 @@ DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b48
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
 TARGETS = {"converter": ("native-exact-binary64-probe", (
-    "native/exact_binary64_probe.cpp", "native/exact_binary64.hpp"))}
+    "native/exact_binary64_probe.cpp", "native/exact_binary64.hpp")),
+    "kernel": ("native-exact-selected-vectors", (
+        "native/exact_selected_kernel_probe.cpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp"))}
 
 
 def _hash(raw):
@@ -156,7 +158,8 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(all(_bounded_read(ROOT / name, 2 * 1024 * 1024) == raw for name, raw in raw_sources.items()),
           "Native exact source changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": "Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend.",
+        "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
+                  if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,
