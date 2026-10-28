@@ -1,0 +1,14 @@
+test_additional_work_rejects_before_rows_rank_pair_and_training (tests.test_equivariant_selected_solver.EquivariantSelectedSolverTests.test_additional_work_rejects_before_rows_rank_pair_and_training) ... ok
+test_complete_reference_is_bitwise_equivariant_for_exchanged_private_hands (tests.test_equivariant_selected_solver.EquivariantSelectedSolverTests.test_complete_reference_is_bitwise_equivariant_for_exchanged_private_hands) ... ok
+test_fraction_and_integer_callbacks_preserve_same_equivariant_policy_bits (tests.test_equivariant_selected_solver.EquivariantSelectedSolverTests.test_fraction_and_integer_callbacks_preserve_same_equivariant_policy_bits) ... ok
+test_unsupported_reduction_rejects_before_input_preparation (tests.test_equivariant_selected_solver.EquivariantSelectedSolverTests.test_unsupported_reduction_rejects_before_input_preparation) ... ok
+test_common_tiny_weight_scale_matches_unit_scale_policy_bits (tests.test_equivariant_packed_cfr.EquivariantPackedCFRTests.test_common_tiny_weight_scale_matches_unit_scale_policy_bits) ... ok
+test_finite_canonical_zero_and_subnormal_contract (tests.test_equivariant_packed_cfr.EquivariantPackedCFRTests.test_finite_canonical_zero_and_subnormal_contract) ... ok
+test_layout_adds_separate_work_and_nested_scratch_caps (tests.test_equivariant_packed_cfr.EquivariantPackedCFRTests.test_layout_adds_separate_work_and_nested_scratch_caps) ... ok
+test_shared_exact_trainer_and_suit_mapped_game_have_identical_row_bits (tests.test_equivariant_packed_cfr.EquivariantPackedCFRTests.test_shared_exact_trainer_and_suit_mapped_game_have_identical_row_bits) ... ok
+test_sorted_chance_reduction_is_permutation_invariant_and_checks_before_sort (tests.test_equivariant_packed_cfr.EquivariantPackedCFRTests.test_sorted_chance_reduction_is_permutation_invariant_and_checks_before_sort) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 48.991s
+
+OK

@@ -49,7 +49,12 @@ history-scan work and nested scratch before information allocation. This
 or proof of full-game scalability. Actual sharing must verify whole-game suit
 closure and distinct-member bits/coverage before each phase commit, avoid an
 expanded row map, and retain independent policy/BR replay plus measured costs.
-Frozen reference evidence and actual quotient implementation remain gates.
+The [frozen reference study](../equivariant-selected-result.md) now independently
+replays fourteen complete policies/exact certificates after source authentication;
+preserve twelve T10 misses, two one-world passes and the T1000 rejection. Larger
+single-call runtime and traced allocation regress, and original 22-world policies
+differ by 0.5 in at least one row despite tiny aggregate metric differences.
+Actual quotient implementation and final publication CI remain gates.
 
 ### D064: Measure supported information/history growth before quotienting (October 28, 2026)
 
