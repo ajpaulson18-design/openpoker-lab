@@ -68,6 +68,29 @@ class SuitQuotientSelectedSolverTests(unittest.TestCase):
         self.assertEqual(result["strategy"], [])
         self.assertEqual(result["operator_census"]["training"]["calls"], 0)
 
+    def test_common_tiny_priors_preserve_the_exact_game_and_complete_policy(self):
+        case = symmetric_case()
+        tiny = symmetric_case()
+        tiny.update(sb_range="AcAh:1e-200,AdAh:1e-200", bb_range="KcKh:1e-200,KdKh:1e-200")
+        _, result = self.compare(tiny)
+        ordinary = solve(case, "suit-quotient")
+        for field in ("strategy", *METRICS):
+            self.assertEqual(ordinary[field], result[field], field)
+
+    def test_private_flush_hands_and_runouts_change_payoffs_without_breaking_quotient(self):
+        case = symmetric_case()
+        case.update(sb_range="AcQc,AdQd", bb_range="KcJc,KdJd",
+                    runouts=["2c3c7c9hTs", "2d3d7d9hTs"])
+        _, result = self.compare(case)
+        receipt = result["operator_census"]["suit_quotient_storage"]
+        self.assertEqual(receipt["group_size"], 2)
+        self.assertEqual(result["worlds"], 8)
+        # Establish a payoff-varying game independently: on a club runout,
+        # the club holding makes a flush and the diamond holding does not.
+        from scripts import four_street_validation as physical
+        model = physical.build_model(case)
+        self.assertEqual({world["sign"] for world in model.worlds}, {-1, 1})
+
     def test_quotient_never_calls_expanded_layout(self):
         with patch("pokerlab.shared_topology_view.layout_census_shared", side_effect=AssertionError("expanded layout")), \
              patch("pokerlab.exact_selected_solver.layout_census_shared", side_effect=AssertionError("expanded layout")), \

@@ -99,10 +99,12 @@ malformed-history errors. The first failed helper/log are preserved. After fixes
 the three original independent controls pass; malformed histories also reject
 as `ValueError`. Ten plan controls plus eighteen graph controls pass with
 assertions disabled, including partial-support setup cleanup with a retained
-traceback. Nine trainer controls and seven whole-solver controls compare complete
+traceback. Nine trainer controls and nine whole-solver controls compare complete
 policies, all eight metrics and exact-certificate fields for exchanged private
 hands, identity-only weights, mixed orbit sizes, four-hand blocker holes, and
-the no-decision blind-all-in boundary. The combined 71-test quotient/existing
+the no-decision blind-all-in boundary. Added controls preserve tiny positive
+priors and verify both winning and losing independent hidden-world payoffs in
+a private-flush game. The combined 71-test quotient/existing
 solver/storage suite passes with assertions disabled (45.534 s). A later receipt
 correction counts the actual Q semantic dictionary and separately reports zero
 expanded lookup entries; all nine trainer controls pass again (3.039 s).
@@ -111,4 +113,6 @@ Nine independent external adversarial controls verify responder and average
 phase failures before commit, menu corruption, actual Q array dimensions,
 release before expanded output and partial-allocation cleanup. Initial
 reviewer-only test errors remain preserved. A source-frozen paired study,
-independent saved-policy replay, measured costs and final CI remain gates.
+independent saved-policy replay, measured costs and final CI remain gates. The
+fixed study has 23 calls, including private-flush T10/T100 pairs. Twelve runner
+controls pass, including actual child execution and protected independent replay.

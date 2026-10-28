@@ -24,6 +24,17 @@ Q-size and GC-disabled traceback lifetime controls pass. Their reviewer-only
 fixture/message failures remain preserved. Frozen complete-call costs,
 saved-policy replay and final CI remain gates; no RAM/speed gain is inferred.
 
+Two additional whole-solver controls preserve common `1e-200` priors and a
+private-flush case whose independent physical worlds include both payoff signs.
+The fixed storage study now prescribes 23 calls, adding payoff-varied T10/T100
+pairs before measurement. A pre-freeze real-child smoke catches a runner-only
+card-list/string shape mismatch hidden by its fake records. The first diagnostic
+is preserved; its raw child and pre-fix runner were not saved. A reconstruction
+did not match the earlier source hash and was rejected. A real-child regression verifies validation,
+protected independent replay and paired policy/certificate identity after the
+repair. All twelve runner controls pass. No formal study was run before repair.
+All 21 final protocol/whole-game controls pass optimized (9.981 s).
+
 ## Equivariant numerical reference: implementation before quotienting
 
 The [explicit four-street reference](equivariant-selected-training.md) retains

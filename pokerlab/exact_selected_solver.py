@@ -2,9 +2,11 @@
 
 This is a new finite-game law.  The direct public DAG is the only topology;
 the packed shared-view trainer consumes exact-kernel callbacks rounded once
-under ``exact-product-vectors-binary64-v1``.  Pair masses are serialized in a
-separate, explicitly quadratic diagnostic stage before training.  Modeled
-work/entry units are admission counters, not CPU, allocator, or RSS claims.
+under ``exact-product-vectors-binary64-v1``. Default expanded diagnostics retain
+a separate quadratic pair stage; explicit compact diagnostics snapshot priors
+linearly. Optional suit-quotient storage shares only verified strategy-row
+orbits under the explicit equivariant arithmetic contract. Modeled work/entry
+units are admission counters, not CPU, allocator, or RSS claims.
 """
 from __future__ import annotations
 
@@ -583,6 +585,10 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     public-batched diagnostics. The exact prior law differs from legacy
     per-occurrence binary64 normalization; this API never silently replaces
     the legacy solver.
+
+    Suit-quotient storage additionally requires the explicit equivariant
+    reduction; it verifies whole-game suit closure and every member increment.
+    Complete policy output and independent diagnostics remain expanded.
     """
     prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
                                        kernel_limits=kernel_limits,
