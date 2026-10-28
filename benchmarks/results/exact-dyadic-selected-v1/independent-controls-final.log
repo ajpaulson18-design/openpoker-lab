@@ -1,0 +1,12 @@
+test_bad_dyadic_fraction_before_ranking (__main__.DyadicTerraControls.test_bad_dyadic_fraction_before_ranking) ... ok
+test_binary64_normal_boundary (__main__.DyadicTerraControls.test_binary64_normal_boundary) ... ok
+test_bit_growth_rejects_before_ranking (__main__.DyadicTerraControls.test_bit_growth_rejects_before_ranking) ... ok
+test_exact_tie_cancellation_and_zero_reach (__main__.DyadicTerraControls.test_exact_tie_cancellation_and_zero_reach) ... ok
+test_integer_payload_rejects_before_train_or_rank (__main__.DyadicTerraControls.test_integer_payload_rejects_before_train_or_rank) ... ok
+test_literal_randomized_physical_oracle (__main__.DyadicTerraControls.test_literal_randomized_physical_oracle) ... ok
+test_win_loss_exact_cancellation (__main__.DyadicTerraControls.test_win_loss_exact_cancellation) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 10.006s
+
+OK

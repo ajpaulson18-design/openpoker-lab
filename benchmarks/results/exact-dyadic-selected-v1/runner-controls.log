@@ -1,0 +1,18 @@
+original-T10-fraction-0 complete 1.250000
+original-T10-dyadic-0 complete 1.250000
+original-T10-dyadic-1 complete 1.250000
+original-T10-fraction-1 complete 1.250000
+original-T10-fraction-2 complete 1.250000
+original-T10-dyadic-2 complete 1.250000
+original-T10-fraction-traced complete 1.250000
+original-T10-dyadic-traced complete 1.250000
+original-T100-fraction-0 complete 1.250000
+original-T100-dyadic-0 complete 1.250000
+one-world-T1000-fraction-0 complete 1.250000
+one-world-T1000-dyadic-0 complete 1.250000
+original-T1000-dyadic-resource-control pretraining-rejected 1.250000
+full-range-forced-all-in-T10-dyadic-0 complete 1.250000
+----------------------------------------------------------------------
+Ran 8 tests in 1.372s
+
+OK

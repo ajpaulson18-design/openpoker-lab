@@ -1,8 +1,8 @@
 # Exact integer arithmetic in the unified selected-game solver
 
-Status: integrated opt-in implementation with independent bounded correctness
-controls; source-frozen measurements, saved-policy replay and final CI/publication
-remain acceptance gates. This extends the [exact-product four-street contract](exact-selected-kernel-contract.md)
+Status: integrated opt-in implementation with independently replayed
+[source-frozen results](exact-dyadic-result.md); final CI/publication remain
+acceptance gates. This extends the [exact-product four-street contract](exact-selected-kernel-contract.md)
 and [compact output](compact-exact-policy.md). It does not change legacy rounded
 chance, defaults, native protocols, legal game coverage or oracle limits.
 
@@ -97,7 +97,9 @@ signed win/loss cancellation, zero reaches, near-normal rounding midpoints,
 subnormal input weights, non-dyadic rejection, a 65,530-bit reach and aggregate
 payload rejection before rank/train work. Sol separately inspected formula,
 allocation and lifetime boundaries; receipt scope was narrowed after that review.
-This evidence does not establish performance or convergence. Full source-frozen
-paired calls, retained misses and saved-only numeric/exact replay remain required.
+The linked frozen result now records paired complete calls, retained misses and
+saved-only numeric/exact replay: T10 median improves, T100 single call does not,
+and traced allocation is higher. No general speed/RAM or broader convergence
+claim follows. Eighteen new controls also pass optimized Python. Final CI remains.
 Native integration, strategy/history compression and scalable certification stay
 separate foundation work.

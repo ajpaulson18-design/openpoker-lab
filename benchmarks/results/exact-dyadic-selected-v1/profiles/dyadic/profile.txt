@@ -1,0 +1,96 @@
+         11055328 function calls (10959198 primitive calls) in 13.499 seconds
+
+   Ordered by: cumulative time
+   List reduced from 515 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.022    0.022   13.632   13.632 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_solver.py:402(solve_four_street_exact_selected)
+        1    0.063    0.063   11.688   11.688 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:99(train_packed)
+    16215    0.190    0.000   10.151    0.001 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_float_adapter.py:124(values)
+ 29240/20    0.370    0.000    9.810    0.490 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:167(target_values)
+    16215    0.462    0.000    9.573    0.001 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:495(terminal_values_exact)
+    16215    0.812    0.000    4.790    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:283(terminal)
+    16215    0.403    0.000    1.665    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:245(_terminal_preflight)
+ 14620/10    0.155    0.000    1.503    0.150 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:200(average)
+        1    0.000    0.000    1.501    1.501 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:62(_evaluate_prepared)
+    16215    0.702    0.000    1.445    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:643(_preflight_terminal_bits)
+    48645    0.231    0.000    1.420    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:621(_snapshot_nonnegative)
+   393690    0.447    0.000    1.160    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:160(_add)
+    18575    0.465    0.000    1.138    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:331(_prefix_indexes)
+    12224    0.012    0.000    1.120    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_solver.py:65(__getitem__)
+     2347    0.025    0.000    1.108    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_float_adapter.py:115(joint_marginals)
+    48645    0.048    0.000    1.088    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:536(<genexpr>)
+   560859    0.664    0.000    1.035    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:155(_note_width)
+        2    0.000    0.000    0.999    0.499 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:142(best)
+   2924/2    0.027    0.000    0.999    0.499 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:144(visit)
+   711494    0.442    0.000    0.898    0.000 {built-in method builtins.isinstance}
+     1410    0.002    0.000    0.895    0.001 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:67(terminal_vector)
+     2347    0.020    0.000    0.895    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:399(joint_marginals_exact)
+495306/478996    0.481    0.000    0.847    0.000 {built-in method builtins.max}
+198893/192215    0.170    0.000    0.773    0.000 {built-in method builtins.sum}
+   182234    0.302    0.000    0.761    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:933(_richcmp)
+    66350    0.143    0.000    0.732    0.000 {built-in method builtins.any}
+     2347    0.091    0.000    0.704    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:217(marginals)
+   174506    0.141    0.000    0.645    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:166(_sub)
+   108403    0.104    0.000    0.574    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:955(__lt__)
+   1462/1    0.014    0.000    0.503    0.503 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:102(profile)
+    333/9    0.001    0.000    0.500    0.056 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\public_diagnostics.py:109(<genexpr>)
+    20992    0.127    0.000    0.491    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:189(_bucket)
+  1205870    0.464    0.000    0.464    0.000 {method 'bit_length' of 'int' objects}
+   295795    0.204    0.000    0.455    0.000 <frozen abc>:117(__instancecheck__)
+    29811    0.087    0.000    0.413    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:199(_compatible)
+    62205    0.084    0.000    0.382    0.000 <frozen _collections_abc>:1022(__iter__)
+    48645    0.059    0.000    0.378    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:257(<genexpr>)
+    73830    0.064    0.000    0.355    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:959(__gt__)
+    41818    0.133    0.000    0.320    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_float_adapter.py:99(_convert)
+   102309    0.126    0.000    0.316    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:169(_mul)
+
+
+         11055328 function calls (10959198 primitive calls) in 13.499 seconds
+
+   Ordered by: internal time
+   List reduced from 515 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    16215    0.812    0.000    4.790    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:283(terminal)
+    16215    0.702    0.000    1.445    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:643(_preflight_terminal_bits)
+   560859    0.664    0.000    1.035    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:155(_note_width)
+495306/478996    0.481    0.000    0.847    0.000 {built-in method builtins.max}
+    18575    0.465    0.000    1.138    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:331(_prefix_indexes)
+  1205870    0.464    0.000    0.464    0.000 {method 'bit_length' of 'int' objects}
+    16215    0.462    0.000    9.573    0.001 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:495(terminal_values_exact)
+   393690    0.447    0.000    1.160    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:160(_add)
+   711494    0.442    0.000    0.898    0.000 {built-in method builtins.isinstance}
+    16215    0.403    0.000    1.665    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:245(_terminal_preflight)
+ 29240/20    0.370    0.000    9.810    0.490 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:167(target_values)
+   182234    0.302    0.000    0.761    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:933(_richcmp)
+696370/672275    0.260    0.000    0.297    0.000 {built-in method builtins.len}
+   783259    0.246    0.000    0.246    0.000 {built-in method builtins.abs}
+    48645    0.231    0.000    1.420    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:621(_snapshot_nonnegative)
+   295795    0.204    0.000    0.455    0.000 <frozen abc>:117(__instancecheck__)
+   114570    0.202    0.000    0.248    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:109(__setattr__)
+   295795    0.192    0.000    0.252    0.000 {built-in method _abc._abc_instancecheck}
+    16215    0.190    0.000   10.151    0.001 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_float_adapter.py:124(values)
+    46098    0.174    0.000    0.239    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:186(__new__)
+198893/192215    0.170    0.000    0.773    0.000 {built-in method builtins.sum}
+ 14620/10    0.155    0.000    1.503    0.150 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:200(average)
+    62205    0.152    0.000    0.298    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\shared_topology_view.py:30(__getitem__)
+    66350    0.143    0.000    0.732    0.000 {built-in method builtins.any}
+   174506    0.141    0.000    0.645    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:166(_sub)
+       30    0.139    0.005    0.191    0.006 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\packed_operator_cfr.py:160(rematch)
+    41818    0.133    0.000    0.320    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_float_adapter.py:99(_convert)
+    64860    0.128    0.000    0.202    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:653(lcm_bounded)
+    20992    0.127    0.000    0.491    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:189(_bucket)
+   102309    0.126    0.000    0.316    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:169(_mul)
+    48654    0.119    0.000    0.168    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:128(_dyadic_exponent)
+   108403    0.104    0.000    0.574    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:955(__lt__)
+    53371    0.100    0.000    0.220    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:254(_reserve_work)
+    48215    0.100    0.000    0.147    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\shared_topology_view.py:131(_cursor)
+   334551    0.100    0.000    0.100    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:397(numerator)
+    30796    0.100    0.000    0.146    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\exact_selected_kernel.py:376(<genexpr>)
+   171762    0.099    0.000    0.099    0.000 {built-in method math.gcd}
+   334809    0.099    0.000    0.099    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:401(denominator)
+    32456    0.097    0.000    0.288    0.000 C:\Users\pauls\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\fractions.py:291(from_float)
+     2347    0.091    0.000    0.704    0.000 C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\exact-dyadic-kernel-repo\pokerlab\dyadic_selected_arithmetic.py:217(marginals)
+
+
