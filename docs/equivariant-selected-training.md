@@ -2,8 +2,9 @@
 
 Status: opt-in, unquotiented four-street implementation. It is a prerequisite
 for exact strategy-storage sharing; it does not merge information rows or reduce
-the four packed numeric buffers. Frozen complete-call measurement, saved-only
-independent replay and final CI are separate acceptance gates.
+the four packed numeric buffers. The [frozen fifteen-call result](equivariant-selected-result.md)
+now has fourteen independently replayed policies/certificates after source
+authentication. Final publication CI remains a separate acceptance gate.
 
 `solve_four_street_exact_selected(request, training_reduction="suit-equivariant")`
 selects `suit-equivariant-sorted-chance-binary64-v1`. The default continues using

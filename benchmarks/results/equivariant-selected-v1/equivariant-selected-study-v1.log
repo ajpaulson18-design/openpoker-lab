@@ -1,0 +1,16 @@
+symmetric-default-0 complete
+symmetric-suit-equivariant-0 complete
+symmetric-suit-equivariant-1 complete
+symmetric-default-1 complete
+symmetric-default-2 complete
+symmetric-suit-equivariant-2 complete
+symmetric-default-traced complete
+symmetric-suit-equivariant-traced complete
+asymmetric-default-0 complete
+asymmetric-suit-equivariant-0 complete
+original-22-default-0 complete
+original-22-suit-equivariant-0 complete
+one-world-default-0 complete
+one-world-suit-equivariant-0 complete
+original-22-reject-suit-equivariant-0 pretraining-rejected
+{"outcome": "complete", "manifest_sha256": "cbb792a7aa6d2a758acec9e9ab041ac582971466eccaeff67e505023ec4832ef", "failure": null}

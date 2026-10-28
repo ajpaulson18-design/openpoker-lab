@@ -46,6 +46,20 @@ and retained first/late failures. Frozen costs, saved-only replay and actual Q
 storage remain gates. Worker connection failures
 after the saved fixes are recorded; root continues available work locally.
 
+Clean published source `11532e0ee542af96e1abe412615752c4cb0fb308` completes the
+[fixed fifteen-call study](equivariant-selected-result.md), terminal handle 73256,
+exit 0. The accepted saved-only reviewer authenticates 1,860 files before
+fourteen physical numeric replays and fourteen unchanged exact certificates,
+then verifies four complete symmetric policy bit orbits and source/artifact
+stability. Twelve T10 misses and two one-world T1000 passes remain. Original
+22-world default/new row drift reaches 0.5 while maximum metric drift is
+1.6653345369377348e-16. Original T1000 rejects before rank/train. Larger single
+calls and traced allocation regress; no speed/memory gain is accepted. All
+nineteen reference/protocol controls pass optimized (36.399 s). The initial
+reviewer-only missing compact witness failure, repaired reviewer/receipts and
+superseded array instrumentation are retained. Final publication CI and actual
+Q storage remain gates; implementation continues in a separate checkout.
+
 ## Shared preparation and exact storage frontier: bounded controls
 
 The [storage frontier contract](exact-storage-frontier.md) shares actual admitted

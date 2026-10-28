@@ -1,0 +1,9 @@
+test_arrays_release_gc_disabled_success_and_failure (__main__.Terra.test_arrays_release_gc_disabled_success_and_failure) ... ok
+test_foreign_view_rejects (__main__.Terra.test_foreign_view_rejects) ... ok
+test_mutated_adapter_view_snapshot_rejects (__main__.Terra.test_mutated_adapter_view_snapshot_rejects) ... ok
+test_signed_zero_subnormal_sort_order (__main__.Terra.test_signed_zero_subnormal_sort_order) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 14.484s
+
+OK
