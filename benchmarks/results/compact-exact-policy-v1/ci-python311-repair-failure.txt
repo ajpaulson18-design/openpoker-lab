@@ -1,0 +1,29 @@
+Original repaired-head job122616730780 run40627773556 head eca6e56883035ae9d9679351aea65c863e03b0a6.
+FAIL: test_expanded_default_preserves_frozen_original_study_policy (test_compact_exact_policy_independent.CompactExactPolicyIndependentTests.test_expanded_default_preserves_frozen_original_study_policy)
+2026-10-28T04:01:23.2889451Z ----------------------------------------------------------------------
+2026-10-28T04:01:23.2889941Z Traceback (most recent call last):
+2026-10-28T04:01:23.2891430Z   File "/home/runner/work/openpoker-lab/openpoker-lab/tests/test_compact_exact_policy_independent.py", line 116, in test_expanded_default_preserves_frozen_original_study_policy
+2026-10-28T04:01:23.2892538Z     self.assertLessEqual(maximum_probability_drift,1e-12)
+2026-10-28T04:01:23.2893024Z AssertionError: 0.5 not less than or equal to 1e-12
+2026-10-28T04:01:23.2893316Z 
+2026-10-28T04:01:23.2893506Z ----------------------------------------------------------------------
+2026-10-28T04:01:23.2893936Z Ran 2624 tests in 1405.500s
+2026-10-28T04:01:23.2894132Z 
+2026-10-28T04:01:23.2894251Z FAILED (failures=1, skipped=56)
+2026-10-28T04:01:25.0355718Z ##[error]Process completed with exit code 1.
+2026-10-28T04:01:25.0508371Z Post job cleanup.
+2026-10-28T04:01:25.1418214Z [command]/usr/bin/git version
+2026-10-28T04:01:25.1466234Z git version 2.55.0
+2026-10-28T04:01:25.1540062Z Temporarily overriding HOME='/home/runner/work/_temp/c374b46f-b954-4ced-991d-b93f2f303f04' before making global git config changes
+2026-10-28T04:01:25.1541517Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T04:01:25.1546437Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-10-28T04:01:25.1592063Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T04:01:25.1631785Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T04:01:25.1900341Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T04:01:25.1941505Z http.https://github.com/.extraheader
+2026-10-28T04:01:25.1944561Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-28T04:01:25.1991514Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T04:01:25.2275248Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T04:01:25.2320178Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T04:01:25.2747234Z Cleaning up orphan processes
+2026-10-28T04:01:25.3192961Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -104,19 +104,32 @@ The runner's twelve controls also pass optimized Python. Legacy defaults,
 probability guards, native protocols and all independent oracle limits remain.
 The first full CI Python 3.11 job exposed a cross-version assumption in the
 frozen-policy regression: it demanded bitwise equality with Python 3.12 output.
-The [failure tail](../benchmarks/results/compact-exact-policy-v1/ci-python311-failure.txt)
-is preserved. Python documents a float summation algorithm change in
+The [first failure](../benchmarks/results/compact-exact-policy-v1/ci-python311-failure.txt)
+and [failed tight-tolerance repair](../benchmarks/results/compact-exact-policy-v1/ci-python311-repair-failure.txt)
+are preserved. An isolated official Python 3.11.9 runtime reproduces seven rows
+with probability differences above 1e-12, including a 0.5 maximum. Four rows have
+zero acting-hand own reach in the frozen policy versus about 5.7e-17 currently;
+three have tiny nonzero reach in both. Own reach alone does not prove irrelevance
+to deviations. Values and both legal BRs differ around 1e-16, and fresh physical
+replay agrees within 1.11e-16. The
+[raw reproduction](../benchmarks/results/compact-exact-policy-v1/python311-reproduction.zip)
+retains current policy, exact changed-row inventory, runtime and helper; its
+SHA256 is `132acb037ec47470c59df049757e3beba57142003203b99d3e82157571a1f487`.
+Python documents a float summation change in
 [version 3.12](https://docs.python.org/3/library/functions.html#sum), consistent
-with the observed final-digit trajectory differences; this is an explanation
-supported by the version boundary, not a reconstructed causal trace. The
-regression now requires exact row/history/menu/pair identity, at most 1e-12
-probability drift and 1e-10 metric drift across versions, plus a fresh independent
-physical policy replay within 1e-10 for its five profile/BR/NashConv fields.
-It also caps per-row L1 drift at 1e-11, checks finite bounded probabilities and
-prints observed maximum drift when nonzero. These tolerances do not establish
-cross-version bitwise trajectory or exact zero-support identity. Same-runtime paired compact/expanded tests
-and the frozen study still require bitwise complete policy/metric equality.
-Production code and every archived study byte remain unchanged. Final repaired
-head CI remains required before merge.
+with the version boundary; the precise causal chain is not proven here.
+
+The final regression requires complete exact equality between live default and
+explicit expanded output on the same runtime, exact frozen row/history/menu/pair
+identity, finite bounded probabilities, and all eight frozen diagnostics within
+1e-10. It independently replays both current and archived raw policies with
+production solve/training forbidden and freshly applies the unchanged exact v3
+certificate to each, preserving both 1/1000-BB misses. It records every row whose
+probabilities drift above 1e-12 but imposes no cross-runtime policy-identity or
+zero-support claim. Live same-runtime compact/expanded tests and the original
+frozen study retain bitwise complete policy/metric equality. Production code and
+every original study byte remain unchanged. The final focused regression passes
+on actual Python 3.11.9 (27.751 s) and Python 3.12.14 (23.994 s); logs are retained.
+Final repaired-head CI remains an acceptance gate.
 Strategy/history storage, exact computation cost, broader convergence and
 scalable certification remain active foundation work.
