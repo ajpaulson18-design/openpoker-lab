@@ -36,6 +36,26 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D065: Establish an equivariant arithmetic reference before strategy sharing (October 28, 2026)
+
+Sol selects an explicit unquotiented binary64 training contract using sorted
+finite chance components and fixed action/reach/average operations, preserving
+the default trainer and exact completed-query adapter. Luna implements the
+whole-game reference; Terra independently challenges lifetime, numerical and
+mapping behavior. Canonical positive zero and finite validation apply before
+sorting/comparison; local subnormal intermediates remain valid. Reserve added
+history-scan work and nested scratch before information allocation. This
+[implemented prerequisite](../equivariant-selected-training.md) is not Q storage
+or proof of full-game scalability. Actual sharing must verify whole-game suit
+closure and distinct-member bits/coverage before each phase commit, avoid an
+expanded row map, and retain independent policy/BR replay plus measured costs.
+The [frozen reference study](../equivariant-selected-result.md) now independently
+replays fourteen complete policies/exact certificates after source authentication;
+preserve twelve T10 misses, two one-world passes and the T1000 rejection. Larger
+single-call runtime and traced allocation regress, and original 22-world policies
+differ by 0.5 in at least one row despite tiny aggregate metric differences.
+Actual quotient implementation and final publication CI remain gates.
+
 ### D064: Measure supported information/history growth before quotienting (October 28, 2026)
 
 Sol accepts shared rank-free preparation for the actual exact-product solve and
@@ -52,7 +72,9 @@ The [frozen result](../exact-storage-frontier-result.md) now independently count
 sixteen conditional graph witnesses and retains one work rejection. It shows
 linear row/history growth despite a fixed DAG, and identity-only symmetry on
 the 16-hand range case. Both reviewer schema repairs remain preserved. Actual
-strategy/regret quotienting, reach/average proofs and final CI remain separate.
+strategy/regret quotienting and reach/average proofs remain separate. PR #261
+final checks passed and merged at `1a015ee6adda3f5eb15be8e0ae2865bf57a742a6`;
+the reviewed and fetched main trees match exactly.
 
 ### D063: Integer query arithmetic under the exact-product law (October 27, 2026)
 

@@ -1,0 +1,1 @@
+factory_calls 5 numeric_arrays_created 2 numeric_arrays_alive_with_traceback 2 error MemoryError('controlled array allocation failure')

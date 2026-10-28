@@ -1,0 +1,28 @@
+test_default_payload_and_trainer_remain_unchanged_with_explicit_default (tests.test_equivariant_selected_solver.EquivariantSelectedSolverTests.test_default_payload_and_trainer_remain_unchanged_with_explicit_default) ... ok
+test_child_decoder_rejects_duplicate_keys_and_nonfinite_tokens (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_child_decoder_rejects_duplicate_keys_and_nonfinite_tokens) ... ok
+test_child_payload_and_call_contract_validation (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_child_payload_and_call_contract_validation) ... ok
+test_equivariant_orbit_check_requires_bitwise_policy_match (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_equivariant_orbit_check_requires_bitwise_policy_match) ... ok
+test_first_child_failure_is_retained_without_retry (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_first_child_failure_is_retained_without_retry) ... ok
+symmetric-default-0 complete
+symmetric-suit-equivariant-0 complete
+symmetric-suit-equivariant-1 complete
+symmetric-default-1 complete
+symmetric-default-2 complete
+symmetric-suit-equivariant-2 complete
+symmetric-default-traced complete
+symmetric-suit-equivariant-traced complete
+asymmetric-default-0 complete
+asymmetric-suit-equivariant-0 complete
+original-22-default-0 complete
+original-22-suit-equivariant-0 complete
+one-world-default-0 complete
+one-world-suit-equivariant-0 complete
+original-22-reject-suit-equivariant-0 pretraining-rejected
+test_late_comparison_failure_is_retained_with_manifest (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_late_comparison_failure_is_retained_with_manifest) ... ok
+test_metric_tolerance_failure_retains_full_verification_before_stopping (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_metric_tolerance_failure_retains_full_verification_before_stopping) ... ok
+test_schedule_has_fifteen_calls_and_required_pairs (tests.test_benchmark_equivariant_selected_solver.EquivariantSelectedBenchmarkTests.test_schedule_has_fifteen_calls_and_required_pairs) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.567s
+
+OK

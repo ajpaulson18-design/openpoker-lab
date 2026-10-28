@@ -59,6 +59,7 @@ class _ExactSelectedPreparation:
     action_slots_upper: int
     pair_candidates: int
     output_pairs: int
+    iterations: int
 
 
 def _tokens(board):
@@ -100,7 +101,10 @@ class _OnePrefixMarginals(Mapping):
         raise TypeError("The exact marginal map is not materialized.")
 
 
-def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic):
+def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
+                      training_reduction="default"):
+    if type(training_reduction) is not str or training_reduction not in ("default", "suit-equivariant"):
+        raise ValueError("training_reduction must be default or suit-equivariant.")
     if type(exact_arithmetic) is not str or exact_arithmetic not in ("fraction", "dyadic"):
         raise ValueError("exact_arithmetic must be fraction or dyadic.")
     if pair_diagnostics not in ("expanded", "compact"):
@@ -425,7 +429,8 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
 
 
 def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
-                            pair_diagnostics="expanded", exact_arithmetic="fraction"):
+                            pair_diagnostics="expanded", exact_arithmetic="fraction",
+                            training_reduction="default"):
     """Build and admit the direct exact-selected solve without ranking or rows.
 
     This shared preparation stage preserves every existing input, topology,
@@ -433,7 +438,8 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
     not issue pair-probability queries, rank hands, allocate information rows,
     or enter training.
     """
-    _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic)
+    _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
+                      training_reduction)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
                                        request.runouts,
                                        rank_cache_boards=rank_cache_boards,
@@ -530,6 +536,30 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
             "an envelope for the counted integer query-core/completed Fraction-output subset model only. "
             "It excludes Fraction GCD/LCM input/bit preflights, setup normalization, adapter conversion and runtime; "
             "not a complete arithmetic/CPU bound or smaller replacement admission.")
+    if training_reduction == "suit-equivariant":
+        # Preflight uses no information dictionary and precedes every pair/
+        # information-row/training allocation. The later explicit layout and
+        # trainer each repeat the bounded extra census: reserve three scans.
+        from .equivariant_packed_cfr import equivariant_additional_census, NUMERICAL_REDUCTION
+        extra = equivariant_additional_census(view, kernel.hand_counts, request.iterations)
+        extra_work = extra["modeled_work_upper"] + 2 * extra["setup_work_upper"]
+        combined = admission["combined_modeled_work_upper"] + extra_work
+        if combined > MAX_WHOLE_REQUEST_WORK:
+            raise ValueError("Equivariant exact selected whole-request additional work admission exceeded before information/training allocation.")
+        retained = admission["retained_storage"]
+        phases = {name: value + extra["additional_retained_entries_upper"]
+                  for name, value in retained["phase_upper_bounds"].items()}
+        peak = max(phases.values())
+        if peak > MAX_WHOLE_REQUEST_ENTRIES:
+            raise ValueError("Equivariant exact selected whole-request phase storage admission exceeded before information/training allocation.")
+        admission["retained_storage"] = {**retained, "phase_upper_bounds": phases,
+            "whole_request_peak_upper": peak,
+            "equivariant_extra_entries_upper": extra["additional_retained_entries_upper"]}
+        admission["equivariant_additional_admission"] = {**extra,
+            "setup_census_passes_reserved": 3,
+            "whole_request_additional_work_upper": extra_work,
+            "numerical_reduction": NUMERICAL_REDUCTION}
+        admission["combined_modeled_work_upper"] = combined
     return _ExactSelectedPreparation(
         kernel=kernel, specs=specs, topology=topology, direct_receipt=direct_receipt, view=view,
         adapter=adapter, reachable=reachable, prefix_counts=prefix_counts,
@@ -537,11 +567,12 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
         action_hand_queries=action_hand_queries, terminal_counts=terminal_counts,
         layout_upper=layout_upper, admission=admission, bit_forecast=bit_forecast,
         action_slots_upper=action_slots_upper, pair_candidates=pair_candidates,
-        output_pairs=output_pairs)
+        output_pairs=output_pairs, iterations=request.iterations)
 
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
-                                    pair_diagnostics="expanded", exact_arithmetic="fraction"):
+                                    pair_diagnostics="expanded", exact_arithmetic="fraction",
+                                    training_reduction="default"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -552,7 +583,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
                                        kernel_limits=kernel_limits,
                                        pair_diagnostics=pair_diagnostics,
-                                       exact_arithmetic=exact_arithmetic)
+                                       exact_arithmetic=exact_arithmetic,
+                                       training_reduction=training_reduction)
     kernel, specs, topology, direct_receipt = (prepared.kernel, prepared.specs,
                                                prepared.topology, prepared.direct_receipt)
     view, adapter, reachable = prepared.view, prepared.adapter, prepared.reachable
@@ -596,12 +628,24 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     legal_by_prefix = None
     if sum(infos.values()) > action_slots_upper:
         raise RuntimeError("Exact information rows exceeded the admitted direct-topology upper bound.")
-    packed_layout = layout_census_shared(view, infos, kernel.hand_counts, request.iterations)
+    if training_reduction == "suit-equivariant":
+        from .equivariant_packed_cfr import equivariant_layout_census, train_equivariant_packed
+        packed_layout = equivariant_layout_census(view, infos, kernel.hand_counts, request.iterations)
+        admitted_extra = {name: value for name, value in
+            admission["equivariant_additional_admission"].items() if name not in
+            ("setup_census_passes_reserved", "whole_request_additional_work_upper", "numerical_reduction")}
+        actual_extra = packed_layout["equivariant_additional_admission"]
+        if admitted_extra != actual_extra:
+            raise RuntimeError("Equivariant layout changed after pre-row admission.")
+        trainer = train_equivariant_packed
+    else:
+        packed_layout = layout_census_shared(view, infos, kernel.hand_counts, request.iterations)
+        trainer = train_packed
     training_root = view.root
     marginals = _OnePrefixMarginals(adapter)
     try:
         if infos:
-            averages, training_receipt = train_packed(
+            averages, training_receipt = trainer(
                 training_root, infos, request.iterations, operator=adapter,
                 marginals=marginals, return_receipt=True, shared_view=view)
             if training_receipt != packed_layout:
@@ -628,7 +672,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     adapter_receipt = adapter.receipt()
     anchor = view.anchor
     # Callback/view snapshots and marginal vectors have no serialization role.
-    training_root = marginals = adapter = view = None
+    training_root = marginals = adapter = view = trainer = None
     serialization_keys = sorted(infos)
     info_count = len(infos)
     infos.clear()
@@ -709,6 +753,11 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                   "vectors; finite-iteration accuracy remains a separate certificate question. No full-deck, "
                   "unrestricted NLHE, or commercial-scale claim."),
     }
+    if training_reduction == "suit-equivariant":
+        result["training_reduction"] = "suit-equivariant-sorted-chance-binary64-v1"
+        result["scope"] += (" Training uses explicitly ordered action arithmetic and sorted finite chance components "
+                            "with canonical positive zero. This is a distinct binary64 trajectory; diagnostics and "
+                            "strict completed-query conversion retain their existing contracts.")
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")

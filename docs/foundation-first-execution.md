@@ -1,5 +1,41 @@
 # Foundation-first execution record
 
+## Equivariant numerical reference: implementation before quotienting
+
+The [explicit four-street reference](equivariant-selected-training.md) retains
+all information rows while making chance reduction independent of suit-branch
+ordering. Sol owns architecture/integration, Luna implements, and Terra reviews
+independently. The first nine integrated controls pass (48.991 s), including
+actual exchanged private holdings and complete Fraction/dyadic policy/metric
+agreement. Review identifies two real gaps: later allocation failure precedes
+the cleanup guard, and extra scan work omits full history copying. Luna moves
+setup under the guard and charges history tokens per scan; six focused controls
+pass. Terra's corrected independent five controls pass (12.114 s), tracking
+actual multiplied arrays rather than their temporary inputs. A separate retained
+traceback allocation failure now leaves zero of two earlier buffers alive;
+the initial two-buffer retention is preserved. Root additionally binds pre-row
+and post-row extra receipts exactly. Corrected eleven integrated controls pass
+(48.684 s), and 27 existing exact, dyadic and storage regressions pass (39.289 s).
+Seven fixed-study runner controls pass after review adds actual forbidden-path
+counters, alternating pairs, strict decoding, independent eight-metric comparison
+and retained first/late failures. Frozen costs, saved-only replay and actual Q
+storage remain gates. Worker connection failures
+after the saved fixes are recorded; root continues available work locally.
+
+Clean published source `11532e0ee542af96e1abe412615752c4cb0fb308` completes the
+[fixed fifteen-call study](equivariant-selected-result.md), terminal handle 73256,
+exit 0. The accepted saved-only reviewer authenticates 1,860 files before
+fourteen physical numeric replays and fourteen unchanged exact certificates,
+then verifies four complete symmetric policy bit orbits and source/artifact
+stability. Twelve T10 misses and two one-world T1000 passes remain. Original
+22-world default/new row drift reaches 0.5 while maximum metric drift is
+1.6653345369377348e-16. Original T1000 rejects before rank/train. Larger single
+calls and traced allocation regress; no speed/memory gain is accepted. All
+nineteen reference/protocol controls pass optimized (36.399 s). The initial
+reviewer-only missing compact witness failure, repaired reviewer/receipts and
+superseded array instrumentation are retained. Final publication CI and actual
+Q storage remain gates; implementation continues in a separate checkout.
+
 ## Shared preparation and exact storage frontier: bounded controls
 
 The [storage frontier contract](exact-storage-frontier.md) shares actual admitted
@@ -25,7 +61,9 @@ authenticates 1,828 source files before independent blocker/history/context/S4
 and full exported-graph signature closure, importing no repository code. All
 sixteen conditional structural counts match. Both reviewer-only canonical-order
 and conservative-screen schema failures are preserved; the producer was never
-rerun. Actual quotient/CFR+ reach proofs, quality and final PR #261 CI remain.
+rerun. Actual quotient/CFR+ reach proofs and quality remain. Final PR #261 CI
+passed and merge `1a015ee6adda3f5eb15be8e0ae2865bf57a742a6` has the exact reviewed
+tree; fetched ancestry is verified.
 
 PR #259 merged `038327b705c0fb245c478db473b26d702b5301db` and PR #260 merged
 `9ce11ab58337f2ffd6ae2dc6f96f11dda5499f6c` after all final-head checks passed.

@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\equivariant-independent-review.py", line 118, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\equivariant-independent-review.py", line 63, in main
+    name=raws[label]['case'];case=cases[name];actual=physical.replay_policy(payload,case);gaps=compare_result(payload,actual)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-repo\scripts\four_street_validation.py", line 612, in replay_policy
+    validate_policy(model, payload)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-repo\scripts\four_street_validation.py", line 531, in validate_policy
+    _need(type(payload.get("compatible_private_pairs")) is int and
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-repo\scripts\four_street_validation.py", line 55, in _need
+    raise ValueError(message)
+ValueError: payload compatible pair count differs from independent support
