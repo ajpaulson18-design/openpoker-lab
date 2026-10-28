@@ -3,6 +3,7 @@ from contextlib import ExitStack
 from copy import deepcopy
 import json
 import hashlib
+from math import isfinite
 from zipfile import ZipFile
 from pathlib import Path
 import unittest
@@ -94,8 +95,37 @@ class CompactExactPolicyIndependentTests(unittest.TestCase):
             prior=json.loads(zipped.read("original-t10-0.json"))["payload"]
         case=json.loads((ROOT/"benchmarks/four-street-integration-v1.json").read_text())["case"]
         actual=solve_four_street_exact_selected(request_from_case(case),rank_cache_boards=64)
-        for key in ("strategy","private_pair_probabilities","compatible_private_pairs","worlds","info_sets",*METRICS):
+        # The frozen study used Python 3.12. Float sum changed in 3.12, so
+        # cross-version CFR trajectories need numeric comparison; hand/history,
+        # legal menus and pair probabilities still require exact equality.
+        self.assertEqual(len(actual["strategy"]),len(prior["strategy"]))
+        maximum_probability_drift=maximum_row_l1_drift=0.0
+        for observed,expected in zip(actual["strategy"],prior["strategy"]):
+            self.assertEqual({k:v for k,v in observed.items() if k!="actions"},
+                             {k:v for k,v in expected.items() if k!="actions"})
+            self.assertEqual(len(observed["actions"]),len(expected["actions"]))
+            row_l1=0.0
+            for action,old_action in zip(observed["actions"],expected["actions"]):
+                self.assertEqual({k:v for k,v in action.items() if k!="probability"},
+                                 {k:v for k,v in old_action.items() if k!="probability"})
+                self.assertTrue(isfinite(action["probability"]) and 0<=action["probability"]<=1)
+                drift=abs(action["probability"]-old_action["probability"])
+                maximum_probability_drift=max(maximum_probability_drift,drift)
+                row_l1+=drift
+            maximum_row_l1_drift=max(maximum_row_l1_drift,row_l1)
+        self.assertLessEqual(maximum_probability_drift,1e-12)
+        self.assertLessEqual(maximum_row_l1_drift,1e-11)
+        if maximum_probability_drift:
+            print(json.dumps({"frozen_cross_runtime_max_probability_drift":maximum_probability_drift,
+                              "frozen_cross_runtime_max_row_l1_drift":maximum_row_l1_drift}))
+        for key in ("private_pair_probabilities","compatible_private_pairs","worlds","info_sets"):
             self.assertEqual(actual[key],prior[key],key)
+        for key in METRICS:
+            self.assertAlmostEqual(actual[key],prior[key],delta=1e-10,msg=key)
+        replay=physical.replay_policy(actual,case)
+        from scripts.preflop_validation import compare_result
+        gaps=compare_result(actual,replay)
+        self.assertTrue(all(abs(gap)<=1e-10 for gap in gaps.values()),gaps)
         self.assertNotIn("pair_diagnostics",actual)
         self.assertNotIn("chance_input_snapshot",actual)
 
