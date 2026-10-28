@@ -1,0 +1,11 @@
+{
+  "accepted": 5956,
+  "all_bits_and_errors_match": true,
+  "authenticated_files": 1988,
+  "candidate_invocations": 0,
+  "cases": 5966,
+  "production_imports": 0,
+  "rejected_as_required": 10,
+  "scope": "Root independently replays saved raw conversion inputs/results with Fraction after complete raw/Git source authentication; no candidate or archived production execution.",
+  "source_commit": "015d20f5f37173333a0a4cdbe7954ecbd2588b5b"
+}

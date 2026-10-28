@@ -1,0 +1,24 @@
+{
+  "cases": 5966,
+  "exe_sha256": "3594d700380eb4127a12a6ff56ba723b2b6ea1baa5aa83797b48cb18d27059e5",
+  "manifest_sha256": "493389b14dc53aa5485714241cf4762a4e871fc5970fb25f206b59aea2769102",
+  "saved_sha256": {
+    "build-manifest.json": "493389b14dc53aa5485714241cf4762a4e871fc5970fb25f206b59aea2769102",
+    "probe-input.txt": "5af146051458ed9a84954979d1e80b2adee79076a3167fa8a43f63decef445f1",
+    "probe-status.json": "067fd603355b38e4ba4a5c3014b04994865fcee137b41a3e06a841b40fe1f084",
+    "probe-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "probe-stdout.txt": "74d647a9b2df5582d01fe5ee5cbe821d747ad3e91db5e996840ff57f3afe428d"
+  },
+  "scope": "independent Python Fraction rounding oracle; native converter only",
+  "seed": 328142,
+  "source_and_binary_unchanged": true,
+  "source_sha256": {
+    "native/exact_binary64.hpp": "596cd7fa8707bcdf683f609fb6c172773f4a8fe6e0052a0b438b430c26b2b6cd",
+    "native/exact_binary64_probe.cpp": "4e830ab0212aff24931b6b07fd8ceb43702efec5d318c0908bbd270e221e0d6c",
+    "scripts/build_native_exact_four_street.py": "5705c178d1961cb5669814509d51bc1afcc12df8ebda7cc2855b903041eca4aa",
+    "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+    "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+    "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+  },
+  "status": "passed"
+}

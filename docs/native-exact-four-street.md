@@ -128,6 +128,9 @@ Terra's separate authenticated control compares 5,966 signed boundary and skewed
 large-integer cases against Python Fraction, finding no counterexample. These
 checks establish conversion behavior on the recorded MSVC build only. They do
 not establish mass/payoff, ranking, traversal, policy quality or performance.
+The [frozen conversion record](native-exact-conversion-result.md) retains the
+complete raw protocol streams and authenticates all 1,988 committed source files
+before a second saved-only Fraction replay, with no candidate execution.
 Preserved initial driver-error classification and stale-build rejection notes
 are summaries; the original first failure streams were not retained. That
 development evidence gap is not reconstructed as a raw log.
