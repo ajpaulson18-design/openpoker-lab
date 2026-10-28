@@ -104,7 +104,11 @@ class _OnePrefixMarginals(Mapping):
 
 
 def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
-                      training_reduction="default", strategy_storage="expanded"):
+                      training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row"):
+    if type(quotient_lookup) is not str or quotient_lookup not in ("per-row", "per-decision"):
+        raise ValueError("quotient_lookup must be per-row or per-decision.")
+    if quotient_lookup != "per-row" and strategy_storage != "suit-quotient":
+        raise ValueError("Per-decision quotient lookup requires suit-quotient strategy storage.")
     if type(strategy_storage) is not str or strategy_storage not in ("expanded", "suit-quotient"):
         raise ValueError("strategy_storage must be expanded or suit-quotient.")
     if strategy_storage == "suit-quotient" and training_reduction != "suit-equivariant":
@@ -436,7 +440,7 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
 
 def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                             pair_diagnostics="expanded", exact_arithmetic="fraction",
-                            training_reduction="default", strategy_storage="expanded"):
+                            training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row"):
     """Build and admit the direct exact-selected solve without ranking or rows.
 
     This shared preparation stage preserves every existing input, topology,
@@ -445,7 +449,7 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
     or enter training.
     """
     _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
-                      training_reduction, strategy_storage)
+                      training_reduction, strategy_storage, quotient_lookup)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
                                        request.runouts,
                                        rank_cache_boards=rank_cache_boards,
@@ -578,7 +582,7 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
-                                    training_reduction="default", strategy_storage="expanded"):
+                                    training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -594,7 +598,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                                        kernel_limits=kernel_limits,
                                        pair_diagnostics=pair_diagnostics,
                                        exact_arithmetic=exact_arithmetic,
-                                       training_reduction=training_reduction, strategy_storage=strategy_storage)
+                                       training_reduction=training_reduction, strategy_storage=strategy_storage,
+                                       quotient_lookup=quotient_lookup)
     quotient_plan = None
     quotient_receipt = None
     if strategy_storage == "suit-quotient":
@@ -658,7 +663,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         raise RuntimeError("Exact information rows exceeded the admitted direct-topology upper bound.")
     if quotient_plan is not None:
         from .suit_quotient_cfr import layout_census_suit_quotient, train_suit_quotient
-        packed_layout = layout_census_suit_quotient(view, quotient_plan, kernel.hand_counts, request.iterations)
+        packed_layout = layout_census_suit_quotient(view, quotient_plan, kernel.hand_counts, request.iterations,
+            row_lookup=quotient_lookup)
         admitted_extra = {name: value for name, value in
             admission["equivariant_additional_admission"].items() if name not in
             ("setup_census_passes_reserved", "whole_request_additional_work_upper", "numerical_reduction")}
@@ -684,7 +690,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         if infos or (quotient_plan is not None and quotient_plan.keys):
             averages, training_receipt = trainer(
                 training_root, infos if quotient_plan is None else quotient_plan, request.iterations, operator=adapter,
-                marginals=marginals, return_receipt=True, shared_view=view)
+                marginals=marginals, return_receipt=True, shared_view=view,
+                **({"row_lookup": quotient_lookup} if quotient_plan is not None else {}))
             if training_receipt != packed_layout:
                 raise RuntimeError("Packed training layout changed after whole-request admission.")
             training_summary = {"calls": 1, "reason": "information-sets-present",
@@ -813,6 +820,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         result["scope"] += (" Training retains four quotient-action buffers and validates distinct member increments "
                             "before each phase commit. Complete policies and diagnostics remain expanded; "
                             "no whole-solve peak-memory or universal compression/speed claim follows.")
+        if quotient_lookup == "per-decision":
+            result["quotient_lookup"] = "per-decision-suit-history-transform-v1"
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")

@@ -1,0 +1,92 @@
+{
+  "ast_checks": {
+    "all_previous_functions_except_parent_run_unchanged": true,
+    "child_timer_and_solver_call_unchanged": true,
+    "new_wrapper_same_subprocess_arguments": true,
+    "parent_run_only_launch_call_replaced": true
+  },
+  "cause": "A test replaced the shared subprocess.run object; Linux Python 3.12 processor metadata then cached bytes from the fake child. Later platform.platform joins raised TypeError.",
+  "contract": "batched-suit-lookup-parent-launch-ci-repair-v1",
+  "failed_head": "10fbc6e3cee65d341ca1f6e7264115d1929cd5e3",
+  "failed_pr_run": 40714113602,
+  "failed_push_run": 40714098935,
+  "frozen_study_source": "357d0a31d989f1590270658a2ee544c90022ca47",
+  "repair": "Use a dedicated parent _run_child seam. Mock only that seam. A fresh-process regression exercises Linux metadata formatting with an actual portable text subprocess probe while retaining the fake failed-child bytes once.",
+  "retained_files": {
+    "batched-suit-ci-pr-first-failure.log.gz": {
+      "bytes": 134577,
+      "raw_bytes": 1128709,
+      "raw_sha256": "e5a6ccd9ec354958736e43d74be10d38cbc41b3fcab71bbfbe4b8e128244a6d8",
+      "sha256": "31c05291d835ba42e2786beef5ba7549309e113e4ce228a51a9f301d9c9b4be8"
+    },
+    "batched-suit-ci-push-first-failure.log.gz": {
+      "bytes": 135354,
+      "raw_bytes": 1127433,
+      "raw_sha256": "264eca8690502a1a56a23c03dacf166633b5523630001c8f7a1853fd25dfbd4c",
+      "sha256": "1ebea65d7ce7b82aca50d3c068d862abe7f88249080bf457cc224fe5c42ce308"
+    },
+    "batched-suit-ci-repair-controls-optimized.log": {
+      "bytes": 1757,
+      "sha256": "028b76a28e6d7b34af613dffd3ffffce4fa9cdbd0fa8f75c0e9c56984663d5cc"
+    },
+    "batched-suit-ci-repair-controls-python311.log": {
+      "bytes": 1006,
+      "sha256": "e52bb135a8d4060d4b2df3a4a1bbceca825fe1f5d925f7b697e6e931945b9712"
+    },
+    "batched-suit-ci-repair-controls.log": {
+      "bytes": 1757,
+      "sha256": "7cfcd5241e04dcec8394f8b55db43ae12ef8848756db78cb5422850109b92537"
+    },
+    "batched-suit-platform-cache-repro-attempt1.py": {
+      "bytes": 1677,
+      "sha256": "bbfee8e5af00cd096a00168bea3ec1757c413fa5081049fc24661b2d1eb4a6de"
+    },
+    "batched-suit-platform-cache-repro-first.log": {
+      "bytes": 272,
+      "sha256": "49015bd8386af34538b44075f0e69bbe2826c11190d89b311346975cee92c2d0"
+    },
+    "batched-suit-platform-cache-repro-second.log": {
+      "bytes": 525,
+      "sha256": "3524acf957e9a620eb75e87ae3282f580da9ca1bc660d894bfdb3ad728101d5e"
+    },
+    "batched-suit-platform-cache-repro.py": {
+      "bytes": 1841,
+      "sha256": "bb8818005a136a852219f1eb3f6055fe0b01b0306d2d72a0a422ea9ce8942358"
+    }
+  },
+  "scope": "Parent-launch test isolation repair only. Frozen study/archive and measured child remain unchanged. Full final-head CI remains required; no new timing or quality claim.",
+  "unchanged_production_sources": {
+    "pokerlab/exact_selected_float_adapter.py": {
+      "frozen_git_sha256": "f204b5a57c3266230d44114217d8dd96a845bab1766bbf421b3e0e94e98ae8a0",
+      "lf_sha256": "f204b5a57c3266230d44114217d8dd96a845bab1766bbf421b3e0e94e98ae8a0",
+      "raw_sha256": "16920644ac1ba2301a2378eba909e505a657451adec3947f1bdc1b38393f6828"
+    },
+    "pokerlab/exact_selected_kernel.py": {
+      "frozen_git_sha256": "0d6a05c418ee3373f47ab95d7437004a1fd3674ed657f3b806483cf4d65eba50",
+      "lf_sha256": "0d6a05c418ee3373f47ab95d7437004a1fd3674ed657f3b806483cf4d65eba50",
+      "raw_sha256": "fd7542ed8017e7689a2ad2593ed50c2d8613ebd2ecc7cd784775f5a14e828511"
+    },
+    "pokerlab/exact_selected_solver.py": {
+      "frozen_git_sha256": "93580b4d4f98cfa783119db2196c441c16a40b24b25f7a05784c8f8bca865e1f",
+      "lf_sha256": "93580b4d4f98cfa783119db2196c441c16a40b24b25f7a05784c8f8bca865e1f",
+      "raw_sha256": "2a1ac44f61cf1559a4f77ba7f5869e723d3834e5af8a047f3c7d80b6d8b8e9d8"
+    },
+    "pokerlab/suit_quotient_cfr.py": {
+      "frozen_git_sha256": "57183a09461bab24243a5e8abe6bb0fb41bb930f81c759c436c8758d1a5297b6",
+      "lf_sha256": "57183a09461bab24243a5e8abe6bb0fb41bb930f81c759c436c8758d1a5297b6",
+      "raw_sha256": "9f1392dc8363035a363c8865ef2a2fe821d43153a076f21fb7c7e68fd7106371"
+    },
+    "pokerlab/suit_quotient_plan.py": {
+      "frozen_git_sha256": "24a48d5403bafe7df0fc1a4478d616fd1672450f2f50199aaa2305a5723758f7",
+      "lf_sha256": "24a48d5403bafe7df0fc1a4478d616fd1672450f2f50199aaa2305a5723758f7",
+      "raw_sha256": "f0102ebafe47043a14585a7cec102e9b14953e17ea991fbe77c494b8c4372b93"
+    }
+  },
+  "validation": {
+    "first_reproduction": "Incomplete control: Windows formatting ignores its bytes processor; observed cached bytes but no formatting error. Preserved failed assertion.",
+    "python311_embedded_attempt": "Not a product run: import failed because this isolated embedded runtime does not include the checkout on sys.path. Preserved; no success claimed.",
+    "python312_normal": "8 tests pass",
+    "python312_optimized": "8 tests pass",
+    "second_reproduction": "Fresh Windows process selected the actual stdlib Linux formatting branch through synthetic uname_result; initial and subsequent TypeErrors observed. No native Linux execution claimed."
+  }
+}

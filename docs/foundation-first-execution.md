@@ -1,5 +1,31 @@
 # Foundation-first execution record
 
+## Per-decision Q-row lookup: measured-hotspot candidate
+
+The [new lookup option](batched-suit-row-lookup.md) responds to the separately
+authenticated Q profile's repeated full-history route/transform work. Sol/root
+implements while workers are usage-limited. Four mapping/whole-policy/BR and
+malformed/member-corruption controls pass (3.134 s), and 62 combined new/old
+quotient and solver controls pass optimized (29.193 s). The implementation
+authenticates one route and transforms G histories per decision, keeping all
+member masks, phase checks and conservative per-row admission. No cache or R
+lookup table is retained. A fixed twelve-call study with fresh complete policies,
+independent replay and separate trace is prepared; executed costs and saved-only
+review remain acceptance gates.
+
+The [fixed twelve-call lookup study](batched-suit-row-lookup-result.md) completes
+at `357d0a31d989f1590270658a2ee544c90022ca47`, terminal handle 28640, exit 0.
+Root's saved-only orchestration authenticates 1,951 source files before twelve
+unchanged independent physical/exact replays and reconstructs route/transform
+counts from physical rows/decisions. Six complete policy/eight-metric/certificate
+pairs and admission receipts match. Ten misses and two private-flush T100 passes
+remain. Original T10 medians are 7.583229/6.538574 s per-row/per-decision; routes
+fall 38,400 to 21,240, while traced allocation rises slightly. Root authored this
+candidate and orchestration while workers were usage-limited; no second reviewer
+author was claimed at that replay stage. Luna subsequently independently reviews
+the unchanged frozen source and reruns four focused controls (1.759 s), finding
+no blocker. Both review scopes and raw receipt/log are published. Final CI remains.
+
 ## Actual suit-quotient training: integrated candidate
 
 Sol integrates a [procedural Q-row plan and four-buffer trainer](suit-quotient-storage.md)

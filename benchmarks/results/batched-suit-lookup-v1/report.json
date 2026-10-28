@@ -1,0 +1,471 @@
+{
+  "calls_completed": 12,
+  "calls_planned": 12,
+  "comparisons": {
+    "blocker-18-per-row-0__vs__blocker-18-per-decision-0": {
+      "complete_rows": 88,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-per-row-0__vs__original-22-t10-per-decision-0": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-per-row-1__vs__original-22-t10-per-decision-1": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-per-row-2__vs__original-22-t10-per-decision-2": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-per-row-traced__vs__original-22-t10-per-decision-traced": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "payoff-varied-t100-per-row-0__vs__payoff-varied-t100-per-decision-0": {
+      "complete_rows": 56,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": true
+    }
+  },
+  "failure": null,
+  "medians_seconds": {
+    "per-decision": 6.538573899990297,
+    "per-row": 7.583228500006953
+  },
+  "samples": [
+    {
+      "artifact": "original-22-t10-per-row-0.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 38400,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 38400,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-row",
+      "process_peak_bytes": 36765696,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 7.583228500006953,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-decision-0.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 21240,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 21240,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-decision",
+      "process_peak_bytes": 36671488,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 6.009752599988133,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-decision-1.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 21240,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 21240,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-decision",
+      "process_peak_bytes": 36298752,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "seconds": 6.538573899990297,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-row-1.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 38400,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 38400,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-row",
+      "process_peak_bytes": 36675584,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "seconds": 6.810901399992872,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-row-2.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 38400,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 38400,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-row",
+      "process_peak_bytes": 36831232,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "seconds": 8.029602300011902,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-decision-2.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 21240,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 21240,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-decision",
+      "process_peak_bytes": 36577280,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "seconds": 6.766142799999216,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-per-row-traced.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 38400,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 38400,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-row",
+      "process_peak_bytes": 37347328,
+      "python_allocation_peak_bytes": 2586706,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": "traced",
+      "seconds": 37.998460299990256,
+      "traced": true
+    },
+    {
+      "artifact": "original-22-t10-per-decision-traced.json",
+      "case": "original-22-t10",
+      "counts": {
+        "history_transform": 21240,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 23,
+        "row_route": 21240,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-decision",
+      "process_peak_bytes": 38023168,
+      "python_allocation_peak_bytes": 2587569,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": "traced",
+      "seconds": 34.18812920000346,
+      "traced": true
+    },
+    {
+      "artifact": "payoff-varied-t100-per-row-0.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "history_transform": 33824,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 8,
+        "row_route": 16912,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 100,
+      "lookup": "per-row",
+      "process_peak_bytes": 34619392,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 2.8309284999995725,
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t100-per-decision-0.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "history_transform": 17024,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 8,
+        "row_route": 8512,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 100,
+      "lookup": "per-decision",
+      "process_peak_bytes": 34476032,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 2.498063599996385,
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-per-row-0.json",
+      "case": "blocker-18",
+      "counts": {
+        "history_transform": 5632,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 12,
+        "row_route": 2816,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-row",
+      "process_peak_bytes": 34570240,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 0.4366699999955017,
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-per-decision-0.json",
+      "case": "blocker-18",
+      "counts": {
+        "history_transform": 2032,
+        "native": 0,
+        "pair": 0,
+        "plan": 1,
+        "popen": 0,
+        "rank": 12,
+        "row_route": 1016,
+        "trainer": 1,
+        "world": 0
+      },
+      "iterations": 10,
+      "lookup": "per-decision",
+      "process_peak_bytes": 34594816,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "seconds": 0.3675507000007201,
+      "traced": false
+    }
+  ],
+  "scope": "Finite fixed games. Same policies, metrics, certificates and conservative admission required. No universal runtime or RAM claim.",
+  "source_commit": "357d0a31d989f1590270658a2ee544c90022ca47"
+}
