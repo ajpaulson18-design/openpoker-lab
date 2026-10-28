@@ -1,7 +1,14 @@
 {
+  "compressed_independent_receipt": {
+    "compressed_bytes": 1173343,
+    "file": "batched-suit-lookup-independent-receipt.json.gz",
+    "scope": "Lossless encoding of complete accepted receipt; raw certificate and policy evidence also remains in the formal archive.",
+    "uncompressed_bytes": 23216012,
+    "uncompressed_sha256": "af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8"
+  },
   "contract": "batched-suit-lookup-publication-v1",
   "files_sha256": {
-    "batched-suit-lookup-independent-receipt.json": "af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8",
+    "batched-suit-lookup-independent-receipt.json.gz": "321742ebeb49383167c57ba4e88388f1992d132961d3909f13b9466f0d54dcd6",
     "batched-suit-lookup-independent-review-v1.log": "0d6e7381eba0fc89fb3e6a44368ceff98223cf7ac819460f7ba82010bab8f4b2",
     "batched-suit-lookup-independent-review.py": "6c100c685beec64c05100284c452ec255558762fa58c11f64687dd6db7d5a9f3",
     "batched-suit-lookup-protocol-controls.log": "0a96837f995955235529df944da192c599628ba16f3ef0365e72ddea0a52d807",

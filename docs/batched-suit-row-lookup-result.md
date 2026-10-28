@@ -10,8 +10,9 @@ retains every raw child stream, full policy, replay/certificate, source closure
 and actual route/transform counter. The 41-entry archive is 1,665,819 bytes,
 SHA256 `01f372b971891a7275a1e5b6c8cb7f514c5f47b9652c42c238bc3e6f0768731d`.
 Manifest SHA256 is `a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32`.
-The separate [saved-only receipt](../benchmarks/results/batched-suit-lookup-v1/batched-suit-lookup-independent-receipt.json)
-has SHA256 `af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8`.
+The separate [losslessly compressed saved-only receipt](../benchmarks/results/batched-suit-lookup-v1/batched-suit-lookup-independent-receipt.json.gz)
+has uncompressed SHA256 `af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8`.
+The publication inventory records both compressed and original byte identities.
 
 Saved-only review authenticates all 1,951 tracked raw source files and committed
 Git blobs before importing project mathematics. It replays all twelve physical
