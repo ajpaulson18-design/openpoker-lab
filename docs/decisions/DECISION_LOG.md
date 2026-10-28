@@ -36,6 +36,23 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D066: Procedural suit-orbit rows with staged member verification (October 28, 2026)
+
+Under the foundation goal, Sol selects a conservative exact suit group preserving
+role-specific exact priors, ordered selected outcomes and the complete public
+graph. A [procedural Q-row plan](../suit-quotient-storage.md) retains no expanded
+member map and handles stabilizers through distinct-image ordinals/masks. Each
+responder/average phase must verify all member bits before committing one
+unchanged increment per orbit under D065. Original expanded admission remains;
+Q savings cannot reopen a rejected request. Luna implements the trainer, Terra
+independently challenges numerical/physical and allocation contracts, and Sol
+owns integration and acceptance. Plan/graph controls pass after preserved
+adversarial failures. The integrated candidate now passes complete policy,
+eight-metric and exact-certificate comparisons plus nine independent phase,
+mapping and buffer-lifetime adversarial controls. The 71-test combined suite
+passes optimized. Frozen costs/saved replay and final CI remain acceptance gates;
+this is not a general memory/performance or commercial-quality claim.
+
 ### D065: Establish an equivariant arithmetic reference before strategy sharing (October 28, 2026)
 
 Sol selects an explicit unquotiented binary64 training contract using sorted

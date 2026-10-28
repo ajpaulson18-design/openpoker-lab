@@ -1,5 +1,29 @@
 # Foundation-first execution record
 
+## Actual suit-quotient training: integrated candidate
+
+Sol integrates a [procedural Q-row plan and four-buffer trainer](suit-quotient-storage.md)
+with the same exact-product whole-game preparation, sorted-chance numerical
+reference and unchanged public diagnostics. Luna implements the Q trainer and
+streamed layout; Sol implements the plan and reviews graph signatures; Terra
+independently challenges membership, budget and lifetime behavior. Role-weighted
+group/graph closure and original expanded work/storage caps pass before Q rows.
+No R information/menu or member lookup map is built before training. Complete
+R output is reconstructed after numeric buffers release.
+
+Independent review preserves and fixes mutable maps, iteration mismatch,
+validation before a low-budget guard and malformed-history errors. Initial
+trainer review removes a fifth Q-sized staged float list and separates actual
+Q layout from a nested expanded reference census. Nine focused trainer and
+seven whole-solver controls compare complete policy bits/eight metrics/exact
+certificates across actual exchanged hands, identity weights, fixed-hand
+stabilizers, eighteen-world blocker holes and no-decision all-in. All 71 combined
+quotient/existing solver/storage controls pass optimized (45.534 s); nine final
+layout controls pass (3.039 s). Nine independent external phase/membership/menu,
+Q-size and GC-disabled traceback lifetime controls pass. Their reviewer-only
+fixture/message failures remain preserved. Frozen complete-call costs,
+saved-policy replay and final CI remain gates; no RAM/speed gain is inferred.
+
 ## Equivariant numerical reference: implementation before quotienting
 
 The [explicit four-street reference](equivariant-selected-training.md) retains

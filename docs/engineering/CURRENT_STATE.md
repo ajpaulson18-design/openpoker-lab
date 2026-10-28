@@ -1,5 +1,15 @@
 # Current engineering state
 
+An integrated [suit-quotient storage candidate](../suit-quotient-storage.md)
+retains one semantic row per verified weighted-game orbit, uses four Q-action
+buffers, and validates every distinct member's canonical update before phase
+commit. It procedurally regenerates membership without an R-to-Q table and
+releases the numeric buffers before expanded policy output and diagnostics.
+Complete policy/eight-metric/exact-certificate comparisons and nine independent
+adversarial controls pass; 71 combined controls pass optimized. Identity-only
+groups give Q=R. Source-frozen costs, saved-policy replay and final CI remain
+gates; this is not a whole-solve RAM or general speed claim.
+
 An explicit [suit-equivariant numerical reference](../equivariant-selected-training.md)
 now trains the same complete exact-product four-street game with sorted finite
 chance reductions and explicitly ordered action/reach/average arithmetic.
