@@ -2,9 +2,11 @@
 
 This is a new finite-game law.  The direct public DAG is the only topology;
 the packed shared-view trainer consumes exact-kernel callbacks rounded once
-under ``exact-product-vectors-binary64-v1``.  Pair masses are serialized in a
-separate, explicitly quadratic diagnostic stage before training.  Modeled
-work/entry units are admission counters, not CPU, allocator, or RSS claims.
+under ``exact-product-vectors-binary64-v1``. Default expanded diagnostics retain
+a separate quadratic pair stage; explicit compact diagnostics snapshot priors
+linearly. Optional suit-quotient storage shares only verified strategy-row
+orbits under the explicit equivariant arithmetic contract. Modeled work/entry
+units are admission counters, not CPU, allocator, or RSS claims.
 """
 from __future__ import annotations
 
@@ -102,7 +104,11 @@ class _OnePrefixMarginals(Mapping):
 
 
 def _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
-                      training_reduction="default"):
+                      training_reduction="default", strategy_storage="expanded"):
+    if type(strategy_storage) is not str or strategy_storage not in ("expanded", "suit-quotient"):
+        raise ValueError("strategy_storage must be expanded or suit-quotient.")
+    if strategy_storage == "suit-quotient" and training_reduction != "suit-equivariant":
+        raise ValueError("Suit-quotient strategy storage requires explicit suit-equivariant training_reduction.")
     if type(training_reduction) is not str or training_reduction not in ("default", "suit-equivariant"):
         raise ValueError("training_reduction must be default or suit-equivariant.")
     if type(exact_arithmetic) is not str or exact_arithmetic not in ("fraction", "dyadic"):
@@ -430,7 +436,7 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
 
 def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                             pair_diagnostics="expanded", exact_arithmetic="fraction",
-                            training_reduction="default"):
+                            training_reduction="default", strategy_storage="expanded"):
     """Build and admit the direct exact-selected solve without ranking or rows.
 
     This shared preparation stage preserves every existing input, topology,
@@ -439,7 +445,7 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
     or enter training.
     """
     _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
-                      training_reduction)
+                      training_reduction, strategy_storage)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
                                        request.runouts,
                                        rank_cache_boards=rank_cache_boards,
@@ -572,19 +578,40 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
-                                    training_reduction="default"):
+                                    training_reduction="default", strategy_storage="expanded"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
     public-batched diagnostics. The exact prior law differs from legacy
     per-occurrence binary64 normalization; this API never silently replaces
     the legacy solver.
+
+    Suit-quotient storage additionally requires the explicit equivariant
+    reduction; it verifies whole-game suit closure and every member increment.
+    Complete policy output and independent diagnostics remain expanded.
     """
     prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
                                        kernel_limits=kernel_limits,
                                        pair_diagnostics=pair_diagnostics,
                                        exact_arithmetic=exact_arithmetic,
-                                       training_reduction=training_reduction)
+                                       training_reduction=training_reduction, strategy_storage=strategy_storage)
+    quotient_plan = None
+    quotient_receipt = None
+    if strategy_storage == "suit-quotient":
+        from .suit_quotient_plan import SuitQuotientPlan
+        quotient_plan = SuitQuotientPlan(prepared, request.iterations)
+        quotient_receipt = quotient_plan.receipt
+        # The plan independently rejects against remaining whole-request work
+        # and retained entries before support/row allocation. Credit no savings
+        # against the old expanded bounds; report its additional costs instead.
+        prepared.admission["combined_modeled_work_upper"] += quotient_receipt["whole_request_additional_work_upper"]
+        retained = prepared.admission["retained_storage"]
+        extra_entries = quotient_receipt["whole_request_additional_entries_upper"]
+        phases = {name: value + extra_entries for name, value in retained["phase_upper_bounds"].items()}
+        prepared.admission["retained_storage"] = {**retained,
+            "phase_upper_bounds": phases, "whole_request_peak_upper": max(phases.values()),
+            "suit_quotient_extra_entries_upper": extra_entries}
+        prepared.admission["suit_quotient_additional_admission"] = quotient_plan.admission
     kernel, specs, topology, direct_receipt = (prepared.kernel, prepared.specs,
                                                prepared.topology, prepared.direct_receipt)
     view, adapter, reachable = prepared.view, prepared.adapter, prepared.reachable
@@ -611,24 +638,34 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
 
     # Rank-free legal support is queried only after the whole-request kernel,
     # adapter, layout and output envelopes have passed.
-    legal_by_prefix = {}
-    for prefix in unique_prefixes:
-        legal_by_prefix[prefix] = kernel.legal_hands(prefix)
     infos, menus = {}, {}
-    for occurrence in topology.iter_occurrences():
-        vertex = topology.vertices[occurrence.vertex_id]
-        if not isinstance(vertex, DecisionVertex):
-            continue
-        prefix = _tokens(_revealed_board(occurrence.history))
-        for hand in sorted(legal_by_prefix[prefix][vertex.player]):
-            key = (vertex.player, hand, occurrence.history)
-            infos[key] = len(vertex.actions)
-            menus[key] = vertex.actions
-    legal_by_prefix.clear()
-    legal_by_prefix = None
+    if quotient_plan is None:
+        legal_by_prefix = {}
+        for prefix in unique_prefixes:
+            legal_by_prefix[prefix] = kernel.legal_hands(prefix)
+        for occurrence in topology.iter_occurrences():
+            vertex = topology.vertices[occurrence.vertex_id]
+            if not isinstance(vertex, DecisionVertex):
+                continue
+            prefix = _tokens(_revealed_board(occurrence.history))
+            for hand in sorted(legal_by_prefix[prefix][vertex.player]):
+                key = (vertex.player, hand, occurrence.history)
+                infos[key] = len(vertex.actions)
+                menus[key] = vertex.actions
+        legal_by_prefix.clear()
+        legal_by_prefix = None
     if sum(infos.values()) > action_slots_upper:
         raise RuntimeError("Exact information rows exceeded the admitted direct-topology upper bound.")
-    if training_reduction == "suit-equivariant":
+    if quotient_plan is not None:
+        from .suit_quotient_cfr import layout_census_suit_quotient, train_suit_quotient
+        packed_layout = layout_census_suit_quotient(view, quotient_plan, kernel.hand_counts, request.iterations)
+        admitted_extra = {name: value for name, value in
+            admission["equivariant_additional_admission"].items() if name not in
+            ("setup_census_passes_reserved", "whole_request_additional_work_upper", "numerical_reduction")}
+        if packed_layout["equivariant_additional_admission"] != admitted_extra:
+            raise RuntimeError("Quotient equivariant layout changed after pre-row admission.")
+        trainer = train_suit_quotient
+    elif training_reduction == "suit-equivariant":
         from .equivariant_packed_cfr import equivariant_layout_census, train_equivariant_packed
         packed_layout = equivariant_layout_census(view, infos, kernel.hand_counts, request.iterations)
         admitted_extra = {name: value for name, value in
@@ -644,9 +681,9 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     training_root = view.root
     marginals = _OnePrefixMarginals(adapter)
     try:
-        if infos:
+        if infos or (quotient_plan is not None and quotient_plan.keys):
             averages, training_receipt = trainer(
-                training_root, infos, request.iterations, operator=adapter,
+                training_root, infos if quotient_plan is None else quotient_plan, request.iterations, operator=adapter,
                 marginals=marginals, return_receipt=True, shared_view=view)
             if training_receipt != packed_layout:
                 raise RuntimeError("Packed training layout changed after whole-request admission.")
@@ -657,6 +694,16 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             averages, training_receipt = {}, packed_layout
             training_summary = {"calls": 0, "reason": "no-information-sets",
                                 "iterations": 0, "layout": training_receipt}
+        if quotient_plan is not None:
+            # Four Q numeric buffers and recursive helpers have been released
+            # by the trainer before expanded geometry is reconstructed for
+            # the unchanged diagnostics and complete policy serialization.
+            for key, menu in quotient_plan.iter_rows():
+                infos[key] = len(menu)
+                menus[key] = menu
+            if len(infos) != quotient_receipt["expanded_information_rows"]:
+                raise RuntimeError("Expanded quotient output geometry lost supported rows.")
+            quotient_plan = None
         policies, _ = _normalize_policies(averages)
         profile, br0, br1 = _evaluate_prepared(
             training_root, policies, pot=2 * view.anchor,
@@ -667,6 +714,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             raise ValueError("Exact selected public diagnostics returned a nonfinite value.")
     finally:
         kernel.clear_rank_cache()
+        quotient_plan = None
 
     policies = None
     adapter_receipt = adapter.receipt()
@@ -719,6 +767,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         "stored_complete_worlds": 0, "stored_prefix_pair_edges": 0,
         "scope": admission["scope"],
     }
+    if quotient_receipt is not None:
+        census["suit_quotient_storage"] = quotient_receipt
     result = {
         "method": "full-traversal CFR+", "solver_version": "preflop-strategy-v1",
         "strategy_schema": "preflop-strategy-v1", "algorithm": request.algorithm,
@@ -758,6 +808,11 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         result["scope"] += (" Training uses explicitly ordered action arithmetic and sorted finite chance components "
                             "with canonical positive zero. This is a distinct binary64 trajectory; diagnostics and "
                             "strict completed-query conversion retain their existing contracts.")
+    if strategy_storage == "suit-quotient":
+        result["strategy_storage"] = "suit-quotient-packed-v1"
+        result["scope"] += (" Training retains four quotient-action buffers and validates distinct member increments "
+                            "before each phase commit. Complete policies and diagnostics remain expanded; "
+                            "no whole-solve peak-memory or universal compression/speed claim follows.")
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")

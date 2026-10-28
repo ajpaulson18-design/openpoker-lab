@@ -1,0 +1,71 @@
+test_blocker_case_world_count_is_pinned_to_18 (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_blocker_case_world_count_is_pinned_to_18) ... ok
+test_child_validation_accepts_both_modes_and_rejects_wrong_q_receipts (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_child_validation_accepts_both_modes_and_rejects_wrong_q_receipts) ... ok
+symmetric-t10-expanded-0 complete
+symmetric-t10-suit-quotient-0 complete
+symmetric-t10-suit-quotient-1 complete
+symmetric-t10-expanded-1 complete
+symmetric-t10-expanded-2 complete
+symmetric-t10-suit-quotient-2 complete
+symmetric-t10-expanded-traced complete
+symmetric-t10-suit-quotient-traced complete
+blocker-18-expanded-0 complete
+blocker-18-suit-quotient-0 complete
+asymmetric-weighted-expanded-0 complete
+asymmetric-weighted-suit-quotient-0 complete
+mixed-stabilizer-expanded-0 complete
+mixed-stabilizer-suit-quotient-0 complete
+symmetric-t100-expanded-0 complete
+symmetric-t100-suit-quotient-0 complete
+payoff-varied-t10-expanded-0 complete
+payoff-varied-t10-suit-quotient-0 complete
+payoff-varied-t100-expanded-0 complete
+payoff-varied-t100-suit-quotient-0 complete
+original-22-t10-expanded-0 complete
+original-22-t10-suit-quotient-0 complete
+original-22-qreject-suit-quotient-0 pretraining-rejected
+test_complete_fake_study_reports_every_pair_repeat_and_timing_shape (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_complete_fake_study_reports_every_pair_repeat_and_timing_shape) ... ok
+test_first_child_failure_keeps_raw_bytes_and_does_not_retry (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_first_child_failure_keeps_raw_bytes_and_does_not_retry) ... ok
+test_fixed_23_call_schedule_has_all_required_pairs_and_alternation (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_fixed_23_call_schedule_has_all_required_pairs_and_alternation) ... ok
+symmetric-t10-expanded-0 complete
+symmetric-t10-suit-quotient-0 complete
+symmetric-t10-suit-quotient-1 complete
+symmetric-t10-expanded-1 complete
+symmetric-t10-expanded-2 complete
+symmetric-t10-suit-quotient-2 complete
+symmetric-t10-expanded-traced complete
+symmetric-t10-suit-quotient-traced complete
+blocker-18-expanded-0 complete
+blocker-18-suit-quotient-0 complete
+asymmetric-weighted-expanded-0 complete
+asymmetric-weighted-suit-quotient-0 complete
+mixed-stabilizer-expanded-0 complete
+mixed-stabilizer-suit-quotient-0 complete
+symmetric-t100-expanded-0 complete
+symmetric-t100-suit-quotient-0 complete
+payoff-varied-t10-expanded-0 complete
+payoff-varied-t10-suit-quotient-0 complete
+payoff-varied-t100-expanded-0 complete
+payoff-varied-t100-suit-quotient-0 complete
+original-22-t10-expanded-0 complete
+original-22-t10-suit-quotient-0 complete
+original-22-qreject-suit-quotient-0 pretraining-rejected
+test_late_comparison_failure_keeps_all_children_verifications_and_manifest (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_late_comparison_failure_keeps_all_children_verifications_and_manifest) ... ok
+test_metric_replay_gap_is_saved_before_first_failure_stops_schedule (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_metric_replay_gap_is_saved_before_first_failure_stops_schedule) ... ok
+test_pair_comparison_requires_snapshot_policy_metrics_and_certificate_identity (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_pair_comparison_requires_snapshot_policy_metrics_and_certificate_identity) ... ok
+test_same_storage_repeat_identity_does_not_require_q_receipt_on_both_sides (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_same_storage_repeat_identity_does_not_require_q_receipt_on_both_sides) ... ok
+test_strict_decoder_rejects_duplicate_keys_and_nonfinite_json (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_strict_decoder_rejects_duplicate_keys_and_nonfinite_json) ... ok
+test_t1000_resource_rejection_happens_before_plan_or_training (tests.test_benchmark_suit_quotient_solver.SuitQuotientBenchmarkTests.test_t1000_resource_rejection_happens_before_plan_or_training) ... ok
+test_actual_exchanged_hands_match_complete_reference_and_physical_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_actual_exchanged_hands_match_complete_reference_and_physical_certificate) ... ok
+test_blocked_four_hand_ranges_preserve_hidden_support_and_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_blocked_four_hand_ranges_preserve_hidden_support_and_certificate) ... ok
+test_common_tiny_priors_preserve_the_exact_game_and_complete_policy (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_common_tiny_priors_preserve_the_exact_game_and_complete_policy) ... ok
+test_forced_all_in_with_no_rows_enters_no_trainer (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_forced_all_in_with_no_rows_enters_no_trainer) ... ok
+test_identity_group_keeps_every_row_and_same_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_identity_group_keeps_every_row_and_same_certificate) ... ok
+test_private_flush_hands_and_runouts_change_payoffs_without_breaking_quotient (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_private_flush_hands_and_runouts_change_payoffs_without_breaking_quotient) ... ok
+test_quotient_never_calls_expanded_layout (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_quotient_never_calls_expanded_layout) ... ok
+test_unequal_orbit_sizes_preserve_reference_and_certificate (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_unequal_orbit_sizes_preserve_reference_and_certificate) ... ok
+test_unsupported_storage_or_missing_explicit_arithmetic_rejects_before_kernel (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_unsupported_storage_or_missing_explicit_arithmetic_rejects_before_kernel) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 9.976s
+
+OK

@@ -1,0 +1,9 @@
+test_duplicate_average_before_commit (__main__.Controls.test_duplicate_average_before_commit) ... ok
+test_duplicate_responder_before_commit (__main__.Controls.test_duplicate_responder_before_commit) ... ok
+test_member_regret_mismatch_before_commit (__main__.Controls.test_member_regret_mismatch_before_commit) ... ok
+test_no_reference_R_map_and_q_arrays_release_before_expansion (__main__.Controls.test_no_reference_R_map_and_q_arrays_release_before_expansion) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.048s
+
+OK

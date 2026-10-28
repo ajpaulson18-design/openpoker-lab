@@ -1,5 +1,56 @@
 # Foundation-first execution record
 
+## Actual suit-quotient training: integrated candidate
+
+Sol integrates a [procedural Q-row plan and four-buffer trainer](suit-quotient-storage.md)
+with the same exact-product whole-game preparation, sorted-chance numerical
+reference and unchanged public diagnostics. Luna implements the Q trainer and
+streamed layout; Sol implements the plan and reviews graph signatures; Terra
+independently challenges membership, budget and lifetime behavior. Role-weighted
+group/graph closure and original expanded work/storage caps pass before Q rows.
+No R information/menu or member lookup map is built before training. Complete
+R output is reconstructed after numeric buffers release.
+
+Independent review preserves and fixes mutable maps, iteration mismatch,
+validation before a low-budget guard and malformed-history errors. Initial
+trainer review removes a fifth Q-sized staged float list and separates actual
+Q layout from a nested expanded reference census. Nine focused trainer and
+seven whole-solver controls compare complete policy bits/eight metrics/exact
+certificates across actual exchanged hands, identity weights, fixed-hand
+stabilizers, eighteen-world blocker holes and no-decision all-in. All 71 combined
+quotient/existing solver/storage controls pass optimized (45.534 s); nine final
+layout controls pass (3.039 s). Nine independent external phase/membership/menu,
+Q-size and GC-disabled traceback lifetime controls pass. Their reviewer-only
+fixture/message failures remain preserved. Frozen complete-call costs,
+saved-policy replay and final CI remain gates; no RAM/speed gain is inferred.
+
+Two additional whole-solver controls preserve common `1e-200` priors and a
+private-flush case whose independent physical worlds include both payoff signs.
+The fixed storage study now prescribes 23 calls, adding payoff-varied T10/T100
+pairs before measurement. A pre-freeze real-child smoke catches a runner-only
+card-list/string shape mismatch hidden by its fake records. The first diagnostic
+is preserved; its raw child and pre-fix runner were not saved. A reconstruction
+did not match the earlier source hash and was rejected. A real-child regression verifies validation,
+protected independent replay and paired policy/certificate identity after the
+repair. All twelve runner controls pass. No formal study was run before repair.
+All 21 final protocol/whole-game controls pass optimized (9.981 s).
+
+The [frozen 23-call storage study](suit-quotient-storage-result.md) completes at
+`3f59676e32878db86a3f01be340c148a45ed3cd4`, terminal handle 77407, exit 0. Terra
+independently authenticates 1,900 source files before 22 physical numeric replays,
+22 unchanged exact certificates and eleven weighted-group/row-orbit/payoff checks.
+After her usage limit, root strengthens report/resource/history binding and
+repeats saved-only mathematics; both authored stages remain separate receipts.
+All eleven complete policy/eight-metric/certificate pairs match bitwise. There
+are eighteen T10 misses, four T100 passes and an unchanged T1000 early rejection.
+Symmetric R56/Q28 buffers halve from 3,648 to 1,824 bytes, but median complete-call
+time grows from 0.267430 to 0.521211 s and traced peak from 373,004 to 421,452
+bytes. Identity-only games do not compress. Separate source-authenticated fresh
+profiles retain matching policies and identify repeated history transforms/routes
+and exact-query preflights; profile times are not benchmark samples. All raw
+policies, available failures and both reviewer receipts are published. Final CI,
+native exact computation and broader asymmetric storage/quality remain gates.
+
 ## Equivariant numerical reference: implementation before quotienting
 
 The [explicit four-street reference](equivariant-selected-training.md) retains
@@ -35,6 +86,12 @@ nineteen reference/protocol controls pass optimized (36.399 s). The initial
 reviewer-only missing compact witness failure, repaired reviewer/receipts and
 superseded array instrumentation are retained. Final publication CI and actual
 Q storage remain gates; implementation continues in a separate checkout.
+
+PR #262 final Python 3.11/3.12/3.13, native/sanitizer, frontend and documentation
+checks passed. It merged at `728cdd7ca0679f3b05442e295e47647b2d27c5af`; fetched
+main's tree equals reviewed head `d49209644e9a0f1e3f1fb6f5b318ae5070748d7e`
+exactly and ancestry passes. The optional AI agent job was skipped. Overall
+foundation goal remains active.
 
 ## Shared preparation and exact storage frontier: bounded controls
 

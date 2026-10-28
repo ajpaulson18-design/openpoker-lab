@@ -1,0 +1,13 @@
+{
+  "scope": "Development instrumentation smoke before any formal quotient study; not a measured formal sample",
+  "stage": "first expanded payoff-varied-t10 child validation",
+  "shell_exit_code": 1,
+  "error_type": "ValueError",
+  "error": "payoff-varied fixture changed its two-hand/two-board/eight-world shape",
+  "cause_confirmed_by_source": "The runner compared serialized selected_runouts card lists with requested runout strings. The real solver and independent whole-game policy/certificate test passed; fake protocol records used the same wrong serialized shape.",
+  "production_change": false,
+  "formal_study_attempted": false,
+  "raw_child_retained": false,
+  "raw_child_scope": "This pre-freeze smoke stopped before its planned result file write; the first child process's policy was not retained. Do not relabel a later rerun as the original sample.",
+  "next_action": "Preserve the pre-fix runner, repair validation and add real-child protocol coverage before source freeze."
+}

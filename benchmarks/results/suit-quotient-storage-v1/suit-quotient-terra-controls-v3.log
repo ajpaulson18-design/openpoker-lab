@@ -1,0 +1,29 @@
+test_average_member_mismatch_before_commit (__main__.Controls.test_average_member_mismatch_before_commit) ... ok
+test_duplicate_average_before_commit (__main__.Controls.test_duplicate_average_before_commit) ... ok
+test_duplicate_responder_before_commit (__main__.Controls.test_duplicate_responder_before_commit) ... ok
+test_member_regret_mismatch_before_commit (__main__.Controls.test_member_regret_mismatch_before_commit) ... ok
+test_mismatched_menu_rejects (__main__.Controls.test_mismatched_menu_rejects) ... ok
+test_no_reference_R_map_and_q_arrays_release_before_expansion (__main__.Controls.test_no_reference_R_map_and_q_arrays_release_before_expansion) ... ok
+test_omitted_average_before_commit (__main__.Controls.test_omitted_average_before_commit) ... FAIL
+test_omitted_responder_before_commit (__main__.Controls.test_omitted_responder_before_commit) ... ok
+
+======================================================================
+FAIL: test_omitted_average_before_commit (__main__.Controls.test_omitted_average_before_commit)
+----------------------------------------------------------------------
+ValueError: Suit-orbit average contributions differ across members.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 91, in test_omitted_average_before_commit
+    def test_omitted_average_before_commit(self):self.omitted('average')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\suit-quotient-terra-controls.py", line 87, in omitted
+    with self.assertRaisesRegex(ValueError,'Incomplete Q member coverage'):solve()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Incomplete Q member coverage" does not match "Suit-orbit average contributions differ across members."
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.885s
+
+FAILED (failures=1)

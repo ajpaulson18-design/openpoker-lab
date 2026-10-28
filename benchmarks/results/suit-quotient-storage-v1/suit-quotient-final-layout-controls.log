@@ -1,0 +1,14 @@
+test_duplicate_mismatched_and_missing_orbit_members_abort (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_duplicate_mismatched_and_missing_orbit_members_abort) ... ok
+test_identity_weighted_and_mixed_stabilizers_match_reference (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_identity_weighted_and_mixed_stabilizers_match_reference) ... ok
+test_late_numeric_allocation_failure_releases_prior_q_buffers (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_late_numeric_allocation_failure_releases_prior_q_buffers) ... ok
+test_member_mismatch_releases_q_buffers_without_a_partial_result (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_member_mismatch_releases_q_buffers_without_a_partial_result) ... ok
+test_numeric_buffers_release_when_training_raises_with_gc_disabled (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_numeric_buffers_release_when_training_raises_with_gc_disabled) ... ok
+test_only_q_length_numeric_buffers_are_allocated (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_only_q_length_numeric_buffers_are_allocated) ... ok
+test_q_buffers_are_gone_before_expanded_output_stream_starts (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_q_buffers_are_gone_before_expanded_output_stream_starts) ... ok
+test_rank_free_layout_receipt_matches_literal_expanded_census (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_rank_free_layout_receipt_matches_literal_expanded_census) ... ok
+test_symmetric_hand_exchange_matches_unquotiented_policy_bits (tests.test_suit_quotient_cfr.SuitQuotientCfrTests.test_symmetric_hand_exchange_matches_unquotiented_policy_bits) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 3.039s
+
+OK

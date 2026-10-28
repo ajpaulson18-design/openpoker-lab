@@ -1,0 +1,14 @@
+test_average_member_mismatch_before_commit (__main__.Controls.test_average_member_mismatch_before_commit) ... ok
+test_duplicate_average_before_commit (__main__.Controls.test_duplicate_average_before_commit) ... ok
+test_duplicate_responder_before_commit (__main__.Controls.test_duplicate_responder_before_commit) ... ok
+test_late_allocation_failure_releases_actual_buffers_with_traceback (__main__.Controls.test_late_allocation_failure_releases_actual_buffers_with_traceback) ... ok
+test_member_regret_mismatch_before_commit (__main__.Controls.test_member_regret_mismatch_before_commit) ... ok
+test_mismatched_menu_rejects (__main__.Controls.test_mismatched_menu_rejects) ... ok
+test_no_reference_R_map_and_q_arrays_release_before_expansion (__main__.Controls.test_no_reference_R_map_and_q_arrays_release_before_expansion) ... ok
+test_omitted_average_before_commit (__main__.Controls.test_omitted_average_before_commit) ... ok
+test_omitted_responder_before_commit (__main__.Controls.test_omitted_responder_before_commit) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.049s
+
+OK

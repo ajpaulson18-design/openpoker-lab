@@ -1,0 +1,6 @@
+test_private_flush_hands_and_runouts_change_payoffs_without_breaking_quotient (tests.test_suit_quotient_selected_solver.SuitQuotientSelectedSolverTests.test_private_flush_hands_and_runouts_change_payoffs_without_breaking_quotient) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.788s
+
+OK

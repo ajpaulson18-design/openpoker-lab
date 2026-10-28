@@ -36,6 +36,27 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D066: Procedural suit-orbit rows with staged member verification (October 28, 2026)
+
+Under the foundation goal, Sol selects a conservative exact suit group preserving
+role-specific exact priors, ordered selected outcomes and the complete public
+graph. A [procedural Q-row plan](../suit-quotient-storage.md) retains no expanded
+member map and handles stabilizers through distinct-image ordinals/masks. Each
+responder/average phase must verify all member bits before committing one
+unchanged increment per orbit under D065. Original expanded admission remains;
+Q savings cannot reopen a rejected request. Luna implements the trainer, Terra
+independently challenges numerical/physical and allocation contracts, and Sol
+owns integration and acceptance. Plan/graph controls pass after preserved
+adversarial failures. The integrated candidate now passes complete policy,
+eight-metric and exact-certificate comparisons plus nine independent phase,
+mapping and buffer-lifetime adversarial controls. The 71-test combined suite
+passes optimized. The [frozen 23-call result](../suit-quotient-storage-result.md)
+preserves eleven identical complete storage-policy pairs and 22 independent
+certificates. Eighteen misses, four T100 passes and the T1000 rejection remain.
+Symmetric numeric payload falls, but identity groups do not compress and complete
+calls/traced allocation regress. Final publication CI remains; this is not a
+general memory/performance or commercial-quality claim.
+
 ### D065: Establish an equivariant arithmetic reference before strategy sharing (October 28, 2026)
 
 Sol selects an explicit unquotiented binary64 training contract using sorted
@@ -54,7 +75,9 @@ replays fourteen complete policies/exact certificates after source authenticatio
 preserve twelve T10 misses, two one-world passes and the T1000 rejection. Larger
 single-call runtime and traced allocation regress, and original 22-world policies
 differ by 0.5 in at least one row despite tiny aggregate metric differences.
-Actual quotient implementation and final publication CI remain gates.
+The reference merged in PR #262 at `728cdd7ca0679f3b05442e295e47647b2d27c5af`
+after final checks passed, with exact tree/ancestry verified. Actual quotient
+implementation and evidence are scoped separately under D066.
 
 ### D064: Measure supported information/history growth before quotienting (October 28, 2026)
 
