@@ -1,5 +1,18 @@
 # Foundation-first execution record
 
+## Per-decision Q-row lookup: measured-hotspot candidate
+
+The [new lookup option](batched-suit-row-lookup.md) responds to the separately
+authenticated Q profile's repeated full-history route/transform work. Sol/root
+implements while workers are usage-limited. Four mapping/whole-policy/BR and
+malformed/member-corruption controls pass (3.134 s), and 62 combined new/old
+quotient and solver controls pass optimized (29.193 s). The implementation
+authenticates one route and transforms G histories per decision, keeping all
+member masks, phase checks and conservative per-row admission. No cache or R
+lookup table is retained. A fixed twelve-call study with fresh complete policies,
+independent replay and separate trace is prepared; executed costs and saved-only
+review remain acceptance gates.
+
 ## Actual suit-quotient training: integrated candidate
 
 Sol integrates a [procedural Q-row plan and four-buffer trainer](suit-quotient-storage.md)

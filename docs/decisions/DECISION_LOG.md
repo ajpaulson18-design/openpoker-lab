@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D067: Share authenticated public-history work within one decision (October 28, 2026)
+
+Sol uses the frozen Q profile to implement an explicit
+[per-decision lookup](../batched-suit-row-lookup.md), retaining per-row lookup
+as reference. Authenticate the route/menu once and transform/parse histories
+once per group element, then regenerate distinct member identities per hand
+without a retained history/member cache. Preserve all numeric operations, phase
+checks and the original conservative per-row admission. Complete small-game
+policy/certificate parity and member/hole controls pass; frozen timing, saved-only
+replay and final review remain gates. This is not native exact computation or
+a general runtime/memory claim. Worker usage limits leave Sol/root implementing
+this candidate; independent physical oracle code remains unchanged.
+
 ### D066: Procedural suit-orbit rows with staged member verification (October 28, 2026)
 
 Under the foundation goal, Sol selects a conservative exact suit group preserving

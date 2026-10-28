@@ -24,9 +24,10 @@ from .packed_operator_cfr import (
 from .suit_quotient_plan import _prefix
 
 
-def layout_census_suit_quotient(view, plan, hand_counts, iterations):
+def layout_census_suit_quotient(view, plan, hand_counts, iterations, *, row_lookup="per-row"):
     """Return the unchanged expanded-R layout receipt without retaining R rows."""
     _validate_inputs(view, plan, hand_counts, iterations)
+    _validate_row_lookup(row_lookup)
     slots = rows = history_entries = history_bytes = 0
     for key, menu in plan.iter_rows():
         rows += 1
@@ -102,7 +103,7 @@ def layout_census_suit_quotient(view, plan, hand_counts, iterations):
         "scope": "Logical work and scalar payloads; original bridge construction, history keys, metadata, dictionaries, cursors and complete output remain separate memory costs.",
     }
     qslots = plan._receipt["quotient_action_slots"]
-    return {
+    receipt = {
         "version": "suit-quotient-packed-cfr-layout-v1",
         "information_sets": len(plan.keys),
         "action_slots": qslots,
@@ -139,6 +140,15 @@ def layout_census_suit_quotient(view, plan, hand_counts, iterations):
         "equivariant_additional_admission": extra,
         "suit_quotient_version": "suit-quotient-cfrplus-v1",
     }
+    if row_lookup == "per-decision":
+        receipt["row_lookup"] = "per-decision-suit-history-transform-v1"
+        receipt["row_lookup_admission"] = "Unchanged conservative per-row whole-request work and scratch; no savings credited."
+    return receipt
+
+
+def _validate_row_lookup(value):
+    if type(value) is not str or value not in ("per-row", "per-decision"):
+        raise ValueError("Quotient row_lookup must be per-row or per-decision.")
 
 
 def _validate_inputs(view, plan, hand_counts, iterations):
@@ -163,7 +173,7 @@ def _validate_inputs(view, plan, hand_counts, iterations):
 
 
 def train_suit_quotient(root, plan, iterations, *, operator, marginals,
-                        return_receipt=False, shared_view=None):
+                        return_receipt=False, shared_view=None, row_lookup="per-row"):
     """Train CFR+ in Q storage while checking complete physical orbit updates."""
     if type(operator) is not ExactSelectedFloatAdapter:
         raise TypeError("Suit quotient training requires ExactSelectedFloatAdapter.")
@@ -171,6 +181,10 @@ def train_suit_quotient(root, plan, iterations, *, operator, marginals,
         raise TypeError("Suit quotient training requires the admitted SharedPublicView.")
     if getattr(operator, "view", None) is not shared_view:
         raise ValueError("Suit quotient adapter does not belong to the supplied shared view.")
+    from .suit_quotient_plan import SuitQuotientPlan
+    if type(plan) is not SuitQuotientPlan:
+        raise TypeError("Suit quotient training requires an admitted SuitQuotientPlan.")
+    _validate_row_lookup(row_lookup)
     if plan.validate_owner() is not operator.kernel:
         raise ValueError("Suit quotient plan and exact adapter have different kernel owners.")
     hand_counts = operator.hand_counts
@@ -194,7 +208,7 @@ def train_suit_quotient(root, plan, iterations, *, operator, marginals,
     completed = False
     member_checks = 0
     try:
-        census = _layout_census_validated(shared_view, plan, hand_counts, iterations)
+        census = _layout_census_validated(shared_view, plan, hand_counts, iterations, row_lookup=row_lookup)
         qslots = plan._receipt["quotient_action_slots"]
         if array("d").itemsize != 8:
             raise RuntimeError("Suit quotient storage requires binary64 doubles.")
@@ -205,6 +219,8 @@ def train_suit_quotient(root, plan, iterations, *, operator, marginals,
         seen = [0] * len(plan.keys)
 
         def row_slots(node):
+            if row_lookup == "per-decision":
+                return plan.locate_decision_rows(node.player, node.history, node.actions)
             prefix = _prefix(node.history)
             supported = plan.supported_hand_indices(prefix, node.player)
             result_slots = [None] * hand_counts[node.player]
@@ -420,6 +436,6 @@ def train_suit_quotient(root, plan, iterations, *, operator, marginals,
     return (result, census) if return_receipt else result
 
 
-def _layout_census_validated(view, plan, hand_counts, iterations):
+def _layout_census_validated(view, plan, hand_counts, iterations, *, row_lookup="per-row"):
     # Keep the validation order identical to the public census API.
-    return layout_census_suit_quotient(view, plan, hand_counts, iterations)
+    return layout_census_suit_quotient(view, plan, hand_counts, iterations, row_lookup=row_lookup)

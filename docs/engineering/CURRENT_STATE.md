@@ -1,5 +1,12 @@
 # Current engineering state
 
+An explicit [per-decision suit-row lookup candidate](../batched-suit-row-lookup.md)
+shares one authenticated public-history route and G transformations across a
+decision's physical own hands. It retains the per-row reference and all existing
+admission and phase checks, with no expanded member cache. Complete small-game
+policies/certificates and 62 combined optimized controls pass. Source-frozen
+measurement and saved-only replay remain gates; no speed/RAM gain is inferred.
+
 An integrated [suit-quotient storage candidate](../suit-quotient-storage.md)
 retains one semantic row per verified weighted-game orbit, uses four Q-action
 buffers, and validates every distinct member's canonical update before phase

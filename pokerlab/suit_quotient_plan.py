@@ -344,6 +344,42 @@ class SuitQuotientPlan:
             raise ValueError("Suit row prefix is outside admitted decision support.")
         return self._support[prefix][player]
 
+    def locate_decision_rows(self, player, history, menu):
+        """Authenticate/transform one public history once for all own hands.
+
+        The result is a transient H-sized vector including explicit absent-row
+        holes. No member histories or cursor cache are retained. The existing
+        per-row lookup remains the separately checked reference.
+        """
+        self.validate_owner()
+        if (type(player) is not int or player not in (0, 1) or type(history) is not tuple or
+                any(type(token) is not str for token in history) or type(menu) is not tuple):
+            raise ValueError("Malformed suit decision lookup.")
+        vertex = self._decision_at_history(history)
+        if vertex.player != player or vertex.actions != menu:
+            raise ValueError("Suit decision lookup changed actor or ordered action menu.")
+        prefix = _prefix(history)
+        supported = self.supported_hand_indices(prefix, player)
+        transformed_histories = tuple(_history(history, mapping) for mapping in self._maps)
+        transformed_prefixes = tuple(_prefix(image) for image in transformed_histories)
+        if any(prefix not in self._support for prefix in transformed_prefixes):
+            raise ValueError("Suit decision image has unsupported public prefix.")
+        result = [None] * len(self._hands[player])
+        for hand in supported:
+            original = (player, hand, history)
+            images = sorted({(player, hand_map[player][hand], transformed)
+                for hand_map, transformed in zip(self._hand_maps, transformed_histories)})
+            for hand_map, image_prefix in zip(self._hand_maps, transformed_prefixes):
+                if hand_map[player][hand] not in self._support[image_prefix][player]:
+                    raise ValueError("Suit decision image lost positive physical support.")
+            if original not in images:
+                raise ValueError("Suit decision group lost original member.")
+            q = self.locations.get(images[0])
+            if q is None or self.sizes[q] != len(images) or self.menus[q] != menu:
+                raise ValueError("Suit decision row is outside admitted quotient support/menu.")
+            result[hand] = (q, self.offsets[q], 1 << images.index(original))
+        return result
+
     def iter_rows(self):
         """Stream physical supported row keys and immutable action menus."""
         self.validate_owner()
