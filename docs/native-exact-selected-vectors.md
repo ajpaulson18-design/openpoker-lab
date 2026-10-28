@@ -1,7 +1,8 @@
 # Bounded native exact selected vectors
 
-Status: implemented query-kernel candidate. Final frozen evidence and CI remain
-gates. This is the next [native exact four-street prerequisite](native-exact-four-street.md),
+Status: implemented query-kernel candidate with a
+[completed frozen vector record](native-exact-selected-vectors-result.md).
+Final publication-head CI remains a gate. This is the next [native exact four-street prerequisite](native-exact-four-street.md),
 following the [conversion boundary](native-exact-conversion-result.md). There is
 no native training loop or public solver backend in this change.
 

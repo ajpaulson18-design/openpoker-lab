@@ -1,0 +1,693 @@
+{
+  "candidate_invocations": 0,
+  "cases": [
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "weighted-3x3-all-eight-subsets-cache-1",
+      "counters": {
+        "conversion_calls": 144,
+        "modeled_work": 93312,
+        "peak_conversion_scratch_bits": 271,
+        "peak_integer_bits": 285,
+        "peak_integer_payload_bits": 488682,
+        "peak_scratch_entries": 1852,
+        "rank_cache_evictions": 20,
+        "rank_cache_hits": 3,
+        "rank_cache_misses": 21,
+        "rank_calls": 126,
+        "retained_entries": 412
+      },
+      "fresh_exact_vectors": 64
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "weighted-3x3-all-eight-subsets-cache-64",
+      "counters": {
+        "conversion_calls": 144,
+        "modeled_work": 93312,
+        "peak_conversion_scratch_bits": 271,
+        "peak_integer_bits": 285,
+        "peak_integer_payload_bits": 488682,
+        "peak_scratch_entries": 2230,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 21,
+        "rank_cache_misses": 3,
+        "rank_calls": 18,
+        "retained_entries": 790
+      },
+      "fresh_exact_vectors": 64
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "meaningful-club-diamond-private-flush",
+      "counters": {
+        "conversion_calls": 40,
+        "modeled_work": 26208,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 283,
+        "peak_integer_payload_bits": 403616,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 7,
+        "rank_cache_hits": 0,
+        "rank_cache_misses": 8,
+        "rank_calls": 32,
+        "retained_entries": 360
+      },
+      "fresh_exact_vectors": 28
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "board-royal-tie-and-same-holding-addback",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 265,
+        "peak_integer_bits": 281,
+        "peak_integer_payload_bits": 400734,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-00",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-01",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-02",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-03",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-04",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-05",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-06",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-07",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-08",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-09",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-10",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-11",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-12",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-13",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-14",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-15",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-16",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-17",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-18",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-19",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-20",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-21",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-22",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-23",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-24",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-25",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-26",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-27",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-28",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-29",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-30",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    },
+    {
+      "all_saved_inputs_exact_targets_bits_support_Z_scales_match": true,
+      "candidate_invocations": 0,
+      "case_id": "seed713259-distinct-2x2-31",
+      "counters": {
+        "conversion_calls": 12,
+        "modeled_work": 7464,
+        "peak_conversion_scratch_bits": 268,
+        "peak_integer_bits": 282,
+        "peak_integer_payload_bits": 402095,
+        "peak_scratch_entries": 1568,
+        "rank_cache_evictions": 0,
+        "rank_cache_hits": 1,
+        "rank_cache_misses": 1,
+        "rank_calls": 4,
+        "retained_entries": 352
+      },
+      "fresh_exact_vectors": 8
+    }
+  ],
+  "fresh_physical_fraction_best_five_replay": true,
+  "inputs_independently_parsed": true,
+  "outcome": "passed",
+  "production_kernel_rank_training_calls": 0
+}

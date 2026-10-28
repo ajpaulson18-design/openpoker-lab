@@ -4,8 +4,10 @@ A [native exact selected-vector candidate](../native-exact-selected-vectors.md)
 computes its own blocker-conditioned Z, rank-free support and exact signed
 fold/showdown vectors from original priors/cards. Native rank sweeps and a local
 LRU require no Python rank or pair/world table. Physical Fraction/best-five and
-pre-rank rejection controls pass; frozen evidence and Windows/Linux/sanitizer CI
-remain gates. This is a query kernel, with no native Q learning or solver API yet.
+pre-rank rejection controls pass. The [frozen 36-case result](../native-exact-selected-vectors-result.md)
+authenticates 2,006 files before 314 queries/420 complete vector records and
+separate saved-only exact physical replays. Final publication CI remains a gate.
+This is a query kernel, with no native Q learning or solver API yet.
 
 An implemented [native exact conversion prerequisite](../native-exact-four-street.md)
 provides bounded integer-only rational rounding and an offline, source-pinned
