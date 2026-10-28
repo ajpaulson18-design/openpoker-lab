@@ -22,7 +22,9 @@ pairs and admission receipts match. Ten misses and two private-flush T100 passes
 remain. Original T10 medians are 7.583229/6.538574 s per-row/per-decision; routes
 fall 38,400 to 21,240, while traced allocation rises slightly. Root authored this
 candidate and orchestration while workers were usage-limited; no second reviewer
-author is claimed. Final CI/external engineering review remain gates.
+author was claimed at that replay stage. Luna subsequently independently reviews
+the unchanged frozen source and reruns four focused controls (1.759 s), finding
+no blocker. Both review scopes and raw receipt/log are published. Final CI remains.
 
 ## Actual suit-quotient training: integrated candidate
 

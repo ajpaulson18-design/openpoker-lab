@@ -22,7 +22,11 @@ subprocess execution forbidden. Source/artifact bytes remain stable afterward.
 The largest numeric replay gap is `8.326672684688674e-17` under the unchanged
 `1e-10` comparison. Root authors both implementation and review orchestration
 while workers are usage-limited; the physical/rank/exact-BR oracle code is
-unchanged and independent of production, but no second reviewer author is claimed.
+unchanged and independent of production. Subsequently Luna separately reviews
+the unchanged frozen implementation and reruns all four focused controls
+(1.759 seconds), finding no correctness or admission blocker. The
+[engineering review receipt](../benchmarks/results/batched-suit-lookup-v1/batched-suit-lookup-luna-review.json)
+distinguishes her source review from root-authored tests and replay orchestration.
 
 ## Counts and complete-call observations
 
@@ -62,6 +66,6 @@ seven lookup/real-child/protocol controls pass optimized. Tests authenticate eve
 member and blocker hole against per-row lookup, verify one history route and G
 transforms per decision, retain malformed/menu checks and inject duplicate
 member corruption. Per-row remains the default/reference. Final publication
-CI and external engineering review remain gates. Native exact computation,
+CI remains a gate. Native exact computation,
 asymmetric strategy growth, expanded diagnostics/output and scalable independent
 certification remain unresolved; the overall foundation goal remains active.

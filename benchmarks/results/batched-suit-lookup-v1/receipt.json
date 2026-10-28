@@ -11,6 +11,8 @@
     "batched-suit-lookup-independent-receipt.json.gz": "321742ebeb49383167c57ba4e88388f1992d132961d3909f13b9466f0d54dcd6",
     "batched-suit-lookup-independent-review-v1.log": "0d6e7381eba0fc89fb3e6a44368ceff98223cf7ac819460f7ba82010bab8f4b2",
     "batched-suit-lookup-independent-review.py": "6c100c685beec64c05100284c452ec255558762fa58c11f64687dd6db7d5a9f3",
+    "batched-suit-lookup-luna-review.json": "f275f8188629935ac9dd385c57f5c947b5b217b6c38c75c28e8d552518cd6ffb",
+    "batched-suit-lookup-luna-review.log": "93b5fd1beffde79e50eff204cbdb2788b2e76d57f14d9132007eeacb77a174b9",
     "batched-suit-lookup-protocol-controls.log": "0a96837f995955235529df944da192c599628ba16f3ef0365e72ddea0a52d807",
     "batched-suit-lookup-study-v1.log": "a319887cb717545f94ed2d236127a4c41068ac47f5a8175f6c1dfb60c5e3227e",
     "batched-suit-lookup-study-v1.zip": "01f372b971891a7275a1e5b6c8cb7f514c5f47b9652c42c238bc3e6f0768731d",
@@ -20,6 +22,10 @@
     "manifest.json": "a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32",
     "protocol.json": "8533ab03d897fa0c8968d7c08b1ba1cb44b983cada6e198f00ddd2ea2aa02922",
     "report.json": "24ccdb77f0daa8715a713f9d1aac4ee9f9413cbc9dccf7858b01ad379d93da8c"
+  },
+  "later_independent_engineering_review": {
+    "receipt": "batched-suit-lookup-luna-review.json",
+    "scope": "Luna independently reviews the unchanged frozen production source and reruns four root-authored tests; no blocker found. Distinct from root-authored saved replay orchestration and independent mathematical oracle code."
   },
   "manifest_sha256": "a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32",
   "review_receipt_sha256": "af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8",

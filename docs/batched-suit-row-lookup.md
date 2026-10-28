@@ -1,8 +1,9 @@
 # Share suit-row history work across a decision's hands
 
 Status: opt-in implementation with a [frozen twelve-call result](batched-suit-row-lookup-result.md)
-and saved-only independent mathematical replay. Final CI and external engineering
-review remain acceptance gates. Observed fixed-game timing gains do not establish
+and saved-only independent mathematical replay. A later separate Luna source
+review and focused rerun find no blocker; final CI remains an acceptance gate.
+Observed fixed-game timing gains do not establish
 universal speed or memory improvements.
 
 The [quotient profiles](suit-quotient-storage-result.md) show repeated full-history

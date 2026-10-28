@@ -9,7 +9,8 @@ policies/certificates and 62 combined optimized controls pass. Its
 complete policy/eight-metric/certificate pairs after authenticating 1,951 files.
 Original T10 median is 7.583229/6.538574 s per-row/per-decision, with routes falling
 38,400 to 21,240; traced allocation is slightly higher. Ten misses and two T100
-passes remain. Final CI/external engineering review remain; no general speed/RAM
+passes remain. Luna's later independent source review and four-test rerun find no
+blocker. Final CI remains; no general speed/RAM
 claim follows.
 
 An integrated [suit-quotient storage candidate](../suit-quotient-storage.md)

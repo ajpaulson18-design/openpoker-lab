@@ -1,0 +1,32 @@
+{
+  "version": "batched-suit-lookup-independent-review-v1",
+  "reviewed_frozen_source_commit": "357d0a31d989f1590270658a2ee544c90022ca47",
+  "tested_checkout_head": "4dce54f5d2d643f38b5a24c501b7f38d9fc63892",
+  "source_matches_frozen_commit": true,
+  "review_type": "independent read-only engineering source review and focused test rerun; tests and implementation authored by root, not independently authored oracle",
+  "files_sha256": {
+    "pokerlab/exact_selected_solver.py": "2A1AC44F61CF1559A4F77BA7F5869E723D3834E5AF8A047F3C7D80B6D8B8E9D8",
+    "pokerlab/suit_quotient_plan.py": "F0102EBAFE47043A14585A7CEC102E9B14953E17EA991FBE77C494B8C4372B93",
+    "pokerlab/suit_quotient_cfr.py": "9F1392DC8363035A363C8865EF2A2FE821D43153A076F21FB7C7E68FD7106371",
+    "pokerlab/suit_public_automorphism.py": "B614F4BBBFE862C9578123EEAE45EE75363CA16E1E107AC5576A516E9EE3B6A9",
+    "tests/test_batched_suit_row_lookup.py": "9378753F693D5B721DB54F7ED828D2BCA7CBEB1E1A371FFA8F13CEA80B69D20E"
+  },
+  "review_findings": [
+    "No correctness or admission blocker found in the per-decision suit lookup path.",
+    "Full history is routed and actor/menu authenticated once per decision occurrence; admitted graph automorphisms guarantee transformed paths and menus.",
+    "Per-hand mappings deduplicate distinct transformed row keys and derive member bits from the same canonical sorted set as the existing canonicalize path; physical support is checked for all images and absent hands remain holes.",
+    "The lookup returns a transient hand-sized vector and retains no member-row map or cache. Existing phase masks still reject duplicate or incomplete visits before persistent phase updates.",
+    "Existing conservative work admission multiplies expanded row/history counts by group size and does not credit per-decision lookup savings; it appears to cover route transforms and per-supported-hand group key work. This is a modeled logical-work bound, not a CPU/RSS claim."
+  ],
+  "test": {
+    "command": "python -B -m unittest tests.test_batched_suit_row_lookup -v",
+    "result": "passed",
+    "tests_run": 4,
+    "elapsed_seconds": 1.759,
+    "log": "work/batched-suit-lookup-luna-review.log"
+  },
+  "limitations": [
+    "Focused tests and the source review are not independently authored oracle evidence.",
+    "Root's full suite, frozen study, and publication checks remain separate gates."
+  ]
+}
