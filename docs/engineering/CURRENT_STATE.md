@@ -4,8 +4,13 @@ An explicit [per-decision suit-row lookup candidate](../batched-suit-row-lookup.
 shares one authenticated public-history route and G transformations across a
 decision's physical own hands. It retains the per-row reference and all existing
 admission and phase checks, with no expanded member cache. Complete small-game
-policies/certificates and 62 combined optimized controls pass. Source-frozen
-measurement and saved-only replay remain gates; no speed/RAM gain is inferred.
+policies/certificates and 62 combined optimized controls pass. Its
+[twelve-call result](../batched-suit-row-lookup-result.md) retains six identical
+complete policy/eight-metric/certificate pairs after authenticating 1,951 files.
+Original T10 median is 7.583229/6.538574 s per-row/per-decision, with routes falling
+38,400 to 21,240; traced allocation is slightly higher. Ten misses and two T100
+passes remain. Final CI/external engineering review remain; no general speed/RAM
+claim follows.
 
 An integrated [suit-quotient storage candidate](../suit-quotient-storage.md)
 retains one semantic row per verified weighted-game orbit, uses four Q-action

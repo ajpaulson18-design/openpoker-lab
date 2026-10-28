@@ -13,6 +13,17 @@ lookup table is retained. A fixed twelve-call study with fresh complete policies
 independent replay and separate trace is prepared; executed costs and saved-only
 review remain acceptance gates.
 
+The [fixed twelve-call lookup study](batched-suit-row-lookup-result.md) completes
+at `357d0a31d989f1590270658a2ee544c90022ca47`, terminal handle 28640, exit 0.
+Root's saved-only orchestration authenticates 1,951 source files before twelve
+unchanged independent physical/exact replays and reconstructs route/transform
+counts from physical rows/decisions. Six complete policy/eight-metric/certificate
+pairs and admission receipts match. Ten misses and two private-flush T100 passes
+remain. Original T10 medians are 7.583229/6.538574 s per-row/per-decision; routes
+fall 38,400 to 21,240, while traced allocation rises slightly. Root authored this
+candidate and orchestration while workers were usage-limited; no second reviewer
+author is claimed. Final CI/external engineering review remain gates.
+
 ## Actual suit-quotient training: integrated candidate
 
 Sol integrates a [procedural Q-row plan and four-buffer trainer](suit-quotient-storage.md)

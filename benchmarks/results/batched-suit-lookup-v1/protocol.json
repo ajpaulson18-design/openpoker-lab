@@ -1,0 +1,231 @@
+{
+  "cases": {
+    "blocker-18": {
+      "bb_range": "KcKh,KdKh,3cKh,3dKh",
+      "config": {
+        "big_blind": 1,
+        "include_all_in": false,
+        "max_raises": 1,
+        "raise_sizes": [
+          0.5
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          2,
+          2
+        ]
+      },
+      "flop_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "id": "blocker-conditioned-18-worlds-v1",
+      "river_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "runouts": [
+        "2c3c4h5s6h",
+        "2d3d4h5s6h"
+      ],
+      "sb_range": "AcAh,AdAh,2cAh,2dAh",
+      "turn_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      }
+    },
+    "original-22-t10": {
+      "bb_range": "KsKd:0.75,JhJd:0.25",
+      "config": {
+        "big_blind": 1,
+        "include_all_in": false,
+        "max_raises": 1,
+        "raise_sizes": [
+          0.5
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          8,
+          8
+        ]
+      },
+      "flop_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "id": "original-22-exact-product-study",
+      "river_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "runouts": [
+        "2c3c4d7h8h",
+        "2c3c4d7hKc",
+        "2c3c4dKc8h",
+        "2c3c4dQd8h",
+        "5c6d7s8c9h",
+        "5c6d7s8cJc"
+      ],
+      "sb_range": "AsAd:0.5,QsQd:0.25",
+      "turn_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      }
+    },
+    "payoff-varied-t100": {
+      "bb_range": "KcJc,KdJd",
+      "config": {
+        "big_blind": 1,
+        "include_all_in": false,
+        "max_raises": 1,
+        "raise_sizes": [
+          0.5
+        ],
+        "small_blind": 0.5,
+        "starting_stack": [
+          2,
+          2
+        ]
+      },
+      "flop_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "id": "payoff-varied-private-flush-v1",
+      "river_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      },
+      "runouts": [
+        "2c3c7c9hTs",
+        "2d3d7d9hTs"
+      ],
+      "sb_range": "AcQc,AdQd",
+      "turn_config": {
+        "bet_sizes": [
+          0.5
+        ],
+        "include_all_in": false,
+        "max_raises": 0,
+        "raise_sizes": []
+      }
+    }
+  },
+  "retry_policy": "none; preserve first failure",
+  "runtime": {
+    "implementation": "CPython",
+    "machine": "AMD64",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "version": "3.12.14"
+  },
+  "schedule": [
+    [
+      "original-22-t10",
+      "per-row",
+      0,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-decision",
+      0,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-decision",
+      1,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-row",
+      1,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-row",
+      2,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-decision",
+      2,
+      false
+    ],
+    [
+      "original-22-t10",
+      "per-row",
+      "traced",
+      true
+    ],
+    [
+      "original-22-t10",
+      "per-decision",
+      "traced",
+      true
+    ],
+    [
+      "payoff-varied-t100",
+      "per-row",
+      0,
+      false
+    ],
+    [
+      "payoff-varied-t100",
+      "per-decision",
+      0,
+      false
+    ],
+    [
+      "blocker-18",
+      "per-row",
+      0,
+      false
+    ],
+    [
+      "blocker-18",
+      "per-decision",
+      0,
+      false
+    ]
+  ],
+  "scope": "Both modes use Q storage and identical conservative admission. Complete solver timing excludes independent replay and spy installation. Allocation trace and process peak are separate.",
+  "source_commit": "357d0a31d989f1590270658a2ee544c90022ca47",
+  "version": "batched-suit-lookup-fixed-study-v1"
+}

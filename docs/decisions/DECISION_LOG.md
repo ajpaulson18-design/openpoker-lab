@@ -44,8 +44,11 @@ as reference. Authenticate the route/menu once and transform/parse histories
 once per group element, then regenerate distinct member identities per hand
 without a retained history/member cache. Preserve all numeric operations, phase
 checks and the original conservative per-row admission. Complete small-game
-policy/certificate parity and member/hole controls pass; frozen timing, saved-only
-replay and final review remain gates. This is not native exact computation or
+policy/certificate parity and member/hole controls pass. The
+[frozen study](../batched-suit-row-lookup-result.md) preserves twelve saved policies
+and six identical pairs; physical reconstruction confirms reduced route counts.
+Original median time improves while traced allocation rises. Final review remains
+a gate. This is not native exact computation or
 a general runtime/memory claim. Worker usage limits leave Sol/root implementing
 this candidate; independent physical oracle code remains unchanged.
 

@@ -1,0 +1,23 @@
+{
+  "contract": "batched-suit-lookup-publication-v1",
+  "files_sha256": {
+    "batched-suit-lookup-independent-receipt.json": "af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8",
+    "batched-suit-lookup-independent-review-v1.log": "0d6e7381eba0fc89fb3e6a44368ceff98223cf7ac819460f7ba82010bab8f4b2",
+    "batched-suit-lookup-independent-review.py": "6c100c685beec64c05100284c452ec255558762fa58c11f64687dd6db7d5a9f3",
+    "batched-suit-lookup-protocol-controls.log": "0a96837f995955235529df944da192c599628ba16f3ef0365e72ddea0a52d807",
+    "batched-suit-lookup-study-v1.log": "a319887cb717545f94ed2d236127a4c41068ac47f5a8175f6c1dfb60c5e3227e",
+    "batched-suit-lookup-study-v1.zip": "01f372b971891a7275a1e5b6c8cb7f514c5f47b9652c42c238bc3e6f0768731d",
+    "batched-suit-row-lookup-controls.log": "4872e75d48bba0a5a8857ea0850d95788ddb75268e5a882baf588d969a7c5b35",
+    "batched-suit-row-lookup-regression.log": "5f81892c33a63d0458c58560e57cae44727a8bd7e1cd5107d2d11e71111917f6",
+    "exact-selected-independent-review.py": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5",
+    "manifest.json": "a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32",
+    "protocol.json": "8533ab03d897fa0c8968d7c08b1ba1cb44b983cada6e198f00ddd2ea2aa02922",
+    "report.json": "24ccdb77f0daa8715a713f9d1aac4ee9f9413cbc9dccf7858b01ad379d93da8c"
+  },
+  "manifest_sha256": "a13d3a2029feccd92c7edee7eb8b4f0a3d012f1066ba080ec2091c0520598f32",
+  "review_receipt_sha256": "af8144e45abfa3915ffd2bc97e02acc40e15a1f8029620ad57fc59c0509063d8",
+  "scope": "Twelve saved complete policies, six paired policy/metric/certificate identities, unchanged conservative admission, ten preserved target misses and two T100 passes. Per-decision route/transform counts reconstructed independently from physical rows/decisions. Root authors implementation and orchestration audit while workers are usage-limited; independent physical/exact oracle code unchanged, no second reviewer author claimed. Timing improvement is fixed-fixture evidence; traced allocation and process peak increase.",
+  "source_commit": "357d0a31d989f1590270658a2ee544c90022ca47",
+  "terminal_exit_code": 0,
+  "terminal_handle": "28640"
+}

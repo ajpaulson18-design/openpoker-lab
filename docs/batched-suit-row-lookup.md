@@ -1,8 +1,9 @@
 # Share suit-row history work across a decision's hands
 
-Status: opt-in implementation under test. Frozen complete-call measurement,
-saved-only replay and final CI remain acceptance gates. No speed or memory
-improvement is established by the implementation alone.
+Status: opt-in implementation with a [frozen twelve-call result](batched-suit-row-lookup-result.md)
+and saved-only independent mathematical replay. Final CI and external engineering
+review remain acceptance gates. Observed fixed-game timing gains do not establish
+universal speed or memory improvements.
 
 The [quotient profiles](suit-quotient-storage-result.md) show repeated full-history
 route validation, suit transformation and public-prefix parsing in the
