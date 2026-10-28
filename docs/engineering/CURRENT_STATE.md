@@ -1,5 +1,18 @@
 # Current engineering state
 
+The explicit [compact exact-product output](../compact-exact-policy.md) removes
+production pair queries/table storage and substitutes a linear input snapshot.
+Its [frozen ten-call result](../compact-exact-policy-result.md) preserves all
+complete paired strategies/eight metrics, eight independent numeric replays and
+two identical exact T10 target misses. Small-game compact median is higher
+(6.703421 vs 6.026043 s), and modeled retained peak increases by 24 entries;
+no general speed/RAM improvement follows. A full-range single-board forced
+blind-all-in completes with no decisions/training, while expanded output rejects
+before pair/rank/train work. Its independent certificate still rejects the
+unchanged hand cap before building worlds. Final CI/publication is PR #259;
+strategy/history growth, native exact computation and scalable certification
+remain open.
+
 An explicit [exact-product selected research solver](../exact-selected-kernel-contract.md)
 connects exact rational blocker/card/rank queries to one direct shared four-street
 root and existing packed CFR+ through strict completed-vector conversions. Its
@@ -14,7 +27,9 @@ no general performance/memory gain is established. Full-range one-selected-board
 mass census represents 1,070,190 deals without stored worlds, with zero ranking or
 training. Pair-probability output remains explicitly quadratic; strategy/history,
 exact computation, broader quality and full-deck solving remain open. Final
-publication is tracked in PR #257; legacy probability/native behavior is unchanged.
+publication merged in PR #257 at `038eb4ac5ea69d352d7827947a6ce09fdaff8125`
+after all final-head checks passed; the reviewed tree matches main exactly.
+Legacy probability/native behavior is unchanged.
 
 The explicit [native selected DAG backend](../native-selected-dag-protocol.md)
 connects direct shared construction to C++ packed CFR+ without an expanded
@@ -27,7 +42,7 @@ overall memory gain follows. Native receipts retain 99 vertices/259 contexts for
 96-world probe matches complete policies and physical replay, but its 2,224 rows
 still exceed exact certification's 2,048-row cap and T1000 scan admission still
 rejects before training. Source/build/full CI and independent saved replays pass;
-final evidence-head CI/publication remain tracked in PR #256. Contexts can approach
+final evidence-head CI/publication passed and merged in PR #256. Contexts can approach
 logical count; history/strategy/output, pair scans and full-deck solving remain open.
 
 The explicit Python packed [direct shared constructor](../direct-shared-topology.md)

@@ -36,6 +36,23 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D062: Compact exact-product chance diagnostics (October 27, 2026)
+
+Engineering decision under the foundation goal: make pair-table-free output an
+explicit option on the new exact-product four-street solver, preserving expanded
+default admission/behavior. Snapshot canonical parsed hand/weight inputs linearly;
+charge snapshot work and overlapping storage separately, and perform no production
+pair queries in compact mode. Preserve all complete policies/diagnostics when
+both modes admit; disclose cases compact admits because individual pair-float
+serialization is absent. Keep strict completed-vector conversions and all old
+oracle limits. Independent compact verification reconstructs its own bounded
+physical support and remains materialized/capped. The [frozen result](../compact-exact-policy-result.md)
+retains identical policies/metrics/exact misses, a slower small-game median and
+slightly higher modeled peak. The full-range forced-all-in control has no choices
+or exact certificate. Terra/Luna quota limits required a separate Sol reviewer;
+root performed independent saved replays. No general memory/speed, scalable
+strategy/history or full-deck claim follows. Final PR #259 CI remains a gate.
+
 ### D061: Explicit exact-product chance and ranked blocker sweeps (October 27, 2026)
 
 Engineering decision after the independently documented non-rank-one legacy

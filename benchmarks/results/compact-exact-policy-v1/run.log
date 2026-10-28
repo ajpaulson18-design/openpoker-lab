@@ -1,0 +1,11 @@
+original-expanded-0 complete 7.807418
+original-compact-0 complete 6.703421
+original-compact-1 complete 6.894181
+original-expanded-1 complete 5.652645
+original-expanded-2 complete 6.026043
+original-compact-2 complete 6.548080
+original-expanded-traced complete 36.070454
+original-compact-traced complete 34.669939
+full-range-blind-all-in-expanded-0 pretraining-rejected 0.392432
+full-range-blind-all-in-compact-0 complete 0.842639
+{"outcome": "complete", "manifest_sha256": "7e9696ce16aeefda459c6e06b0fa8241132d23b3b5f45b243fe47219bf051b2c", "failure": null}

@@ -1,7 +1,8 @@
 # Compact exact-product policy output and bounded verification
 
-Status: independently checked implementation; frozen cost/structural study and
-final CI/publication remain separate acceptance gates. The existing expanded
+Status: independently checked implementation and source-frozen saved replay;
+final CI/publication remain separate acceptance gates. See the
+[measured result and preserved misses](compact-exact-policy-result.md). The existing expanded
 output remains the default. This extends the explicit exact-product solver; it
 does not change the legacy rounded or native protocols.
 
@@ -74,6 +75,6 @@ Four focused controls and eight independent controls verify:
 
 That last control has no decisions and is not full-range four-street training,
 a larger exact certificate or a full-deck solve. Source-frozen complete calls,
-retained misses and independent saved replays are still required before measured
-performance or publication claims. Strategy/history growth and native exact
+retained misses and independent saved replays are now recorded in the linked
+result; final CI remains required before merge. Strategy/history growth and native exact
 computation remain separate foundational barriers.
