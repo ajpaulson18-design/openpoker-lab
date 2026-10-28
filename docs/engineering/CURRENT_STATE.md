@@ -1,5 +1,14 @@
 # Current engineering state
 
+An explicit [suit-equivariant numerical reference](../equivariant-selected-training.md)
+now trains the same complete exact-product four-street game with sorted finite
+chance reductions and explicitly ordered action/reach/average arithmetic.
+It preserves the default trainer and strict exact-query conversion. This is an
+unquotiented prerequisite: all R information rows and four R-action buffers
+remain. Additional work/history scans and nested scratch are admitted before
+row allocation. Frozen measurement, saved-only replay, actual Q storage and
+its membership/phase proof remain separate gates.
+
 The [exact storage census](../exact-storage-frontier.md) now shares the actual
 solver's admitted rank-free preparation and counts supported information/action
 rows, complete histories and conservative weighted-game suit orbits. Its
@@ -10,7 +19,9 @@ suit symmetry; the 24-board case has 7,504 rows/4,716 conditional orbits. The
 48-board work rejection is preserved. Independent physical/S4 checks pass on two
 small games, but larger witness replay is conditional on the graph, not a betting
 legality or quality proof. No policy rows are merged. Actual quotient/reach
-correctness and final PR #261 CI remain open; no RAM saving follows.
+correctness remain open; no RAM saving follows. Final PR #261 checks passed and
+merged at `1a015ee6adda3f5eb15be8e0ae2865bf57a742a6`, with the fetched main tree
+equal to the reviewed head and its ancestry verified.
 
 An opt-in [integer query core](../exact-dyadic-arithmetic.md) connects exact dyadic
 blocker/rank arithmetic to the same four-street trainer. Its [frozen result](../exact-dyadic-result.md)
