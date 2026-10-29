@@ -180,6 +180,7 @@ public:
             }
             const auto image_count = sort_unique_keys(image_keys, group_size);
             auto first = image_keys.begin();
+            const auto unique_end = first + static_cast<std::ptrdiff_t>(image_count);
             if (image_count == 0)
                 graph::detail::fail(graph::ErrorCode::group_not_closed,
                                     "numeric suit-image orbit is empty");
@@ -486,7 +487,6 @@ private:
             }
             const auto image_count = sort_unique_keys(images, group_size);
             auto first = images.begin();
-            const auto unique_end = first + static_cast<std::ptrdiff_t>(image_count);
             const NumericRowKey original{row.key.actor, row.key.hand_index, cursor.ordinal()};
             const auto expected_mask = image_count == 32 ? 0xffffffffU : ((1U << image_count) - 1U);
             if (image_count == 0 || !(*first == original) || row.orbit_size != image_count ||
