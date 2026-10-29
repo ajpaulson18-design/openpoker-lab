@@ -1,0 +1,231 @@
+{
+  "corrected_indices": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "rows": [
+    {
+      "case": "original-weighted-2x2",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "index": 0,
+      "iterations": 10,
+      "phase": "rank_free_admission_complete",
+      "provenance": "recovery-v1",
+      "rejection": null
+    },
+    {
+      "case": "original-weighted-2x2",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "index": 1,
+      "iterations": 100,
+      "phase": "native_rank_free_admission",
+      "provenance": "recovery-v1",
+      "rejection": {
+        "message": "Suit row plan additional work/storage admission exceeded before row allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "original-weighted-2x2",
+      "hand_counts": [
+        2,
+        2
+      ],
+      "index": 2,
+      "iterations": 1000,
+      "phase": "python_preflight",
+      "provenance": "first-attempt",
+      "rejection": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-4x4-unit",
+      "hand_counts": [
+        4,
+        4
+      ],
+      "index": 3,
+      "iterations": 10,
+      "phase": "rank_free_admission_complete",
+      "provenance": "recovery-v1",
+      "rejection": null
+    },
+    {
+      "case": "balanced-4x4-unit",
+      "hand_counts": [
+        4,
+        4
+      ],
+      "index": 4,
+      "iterations": 100,
+      "phase": "python_preflight",
+      "provenance": "first-attempt",
+      "rejection": {
+        "message": "Equivariant exact selected whole-request additional work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-4x4-unit",
+      "hand_counts": [
+        4,
+        4
+      ],
+      "index": 5,
+      "iterations": 1000,
+      "phase": "python_preflight",
+      "provenance": "first-attempt",
+      "rejection": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-8x8-unit",
+      "hand_counts": [
+        8,
+        8
+      ],
+      "index": 6,
+      "iterations": 10,
+      "phase": "rank_free_admission_complete",
+      "provenance": "recovery-v1",
+      "rejection": null
+    },
+    {
+      "case": "balanced-8x8-unit",
+      "hand_counts": [
+        8,
+        8
+      ],
+      "index": 7,
+      "iterations": 100,
+      "phase": "python_preflight",
+      "provenance": "first-attempt",
+      "rejection": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-8x8-unit",
+      "hand_counts": [
+        8,
+        8
+      ],
+      "index": 8,
+      "iterations": 1000,
+      "phase": "python_preflight",
+      "provenance": "first-attempt",
+      "rejection": {
+        "message": "Exact selected packed topology exceeds the existing requested layout/history envelope.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-16x16-unit",
+      "hand_counts": [
+        16,
+        16
+      ],
+      "index": 9,
+      "iterations": 10,
+      "phase": "native_rank_free_admission",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Suit row plan additional work/storage admission exceeded before row allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-16x16-unit",
+      "hand_counts": [
+        16,
+        16
+      ],
+      "index": 10,
+      "iterations": 100,
+      "phase": "python_preflight",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "balanced-16x16-unit",
+      "hand_counts": [
+        16,
+        16
+      ],
+      "index": 11,
+      "iterations": 1000,
+      "phase": "python_preflight",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Exact selected packed topology exceeds the existing requested layout/history envelope.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "asymmetric-2x16-unit",
+      "hand_counts": [
+        2,
+        16
+      ],
+      "index": 12,
+      "iterations": 10,
+      "phase": "native_rank_free_admission",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Native old quotient whole-request admission exceeded",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "asymmetric-2x16-unit",
+      "hand_counts": [
+        2,
+        16
+      ],
+      "index": 13,
+      "iterations": 100,
+      "phase": "python_preflight",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      }
+    },
+    {
+      "case": "asymmetric-2x16-unit",
+      "hand_counts": [
+        2,
+        16
+      ],
+      "index": 14,
+      "iterations": 1000,
+      "phase": "python_preflight",
+      "provenance": "canonical-v1",
+      "rejection": {
+        "message": "Exact selected packed topology exceeds the existing requested layout/history envelope.",
+        "type": "ValueError"
+      }
+    }
+  ],
+  "scope": "Rank-free admission census only; external diagnostic enumerates small pair-board cells, no production pair probability/world enumeration or native/training/rank calls. Original complete label invalid: helper errors and duplicate physical holdings superseded. No solve/quality/performance claim.",
+  "source_commit": "1eba0e147e8430e139379d5fb037a5efaad928f2",
+  "status": "complete"
+}

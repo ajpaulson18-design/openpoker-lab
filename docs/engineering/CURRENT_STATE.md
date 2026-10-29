@@ -1,5 +1,13 @@
 # Current engineering state
 
+The explicit [executed indexed-path admission candidate](../native-indexed-admission.md)
+reserves host diagnostics and native construction/learning separately within the
+same whole-request allowance. Defaults retain legacy admission. Development checks
+preserve five full policies/eight metrics and independently replay them; original
+T20 also matches the Python reference beyond the old native admission. Real T1000
+callback limits still reject. Committed-source capacity/replay evidence and final
+CI are pending; this is not a full-deck, quality-target or memory-gain claim.
+
 An explicit [indexed native learning candidate](../native-indexed-routing.md)
 now connects numeric Q keys, incremental visible-path cursors and borrowed typed
 prefix support to the existing exact trainer. Default/shadow/indexed bounded

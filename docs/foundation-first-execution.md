@@ -1,5 +1,28 @@
 # Foundation-first execution record
 
+## Executed native indexed-path admission (October 29)
+
+The preserved post-indexed profile and corrected canonical-range census motivate
+the [separate admission candidate](native-indexed-admission.md): old Python
+training/Q forecasts reject several requests before actual indexed native work.
+Sol implements named native construction/learning accounting, root integrates
+host preparation and diagnostic forecasts while Luna is usage-limited, and Terra
+scrutinizes the boundaries independently. No ceiling or arithmetic changes.
+Six root host/API controls pass (22.873 seconds), including five full policy/eight
+metric pairs with protected replay, a reference-matching T20 beyond old native
+admission, and real T1000 callback rejection. The first forged-field test failed
+and is preserved; an explicit component equation fixes the receipt binding.
+Strict native controls/build pass. Frozen capacity study, saved-only verification,
+independent scrutiny and final CI remain distinct acceptance gates.
+
+Final combined regression passes 49 controls normally (133.991 seconds), with
+the complete source snapshot unchanged; the new API, independent and runner
+controls pass 29 tests with assertions disabled (28.051 seconds). Documentation
+checks 240 Markdown files/1,404 links. Terra's final read-only runner/ledger review
+finds no concrete blocker at pinned source, while preserving modeled-work and
+mutable-private-reservation limitations. These are development acceptance checks,
+not the pending committed-source capacity experiment.
+
 ## Numeric routing in actual native learning (October 29)
 
 The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses

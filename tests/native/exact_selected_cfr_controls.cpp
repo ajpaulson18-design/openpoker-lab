@@ -32,17 +32,19 @@ g::Graph fixture(bool symmetry) {
         g::Vertex::terminal(g::TerminalKind::showdown,2,{bits(1.),bits(1.)})};
     return graph;
 }
-std::unique_ptr<g::Plan> make_plan(bool symmetry, g::Limits limits = {}, bool excessive_money = false) {
+std::unique_ptr<g::Plan> make_plan(bool symmetry, g::Limits limits = {}, bool excessive_money = false,
+                                   g::AdmissionProfile profile = g::AdmissionProfile::legacy, unsigned iterations = 10) {
     auto graph = fixture(symmetry);
     if (excessive_money) graph.vertices[9].contribution_bits = {bits(1e13),bits(1e13)};
     std::vector<g::WeightedHand> a = symmetry ? std::vector<g::WeightedHand>{{{48,40},bits(1.)},{{49,41},bits(1.)}} : std::vector<g::WeightedHand>{{{51,50},bits(1.)}};
     std::vector<g::WeightedHand> b = symmetry ? std::vector<g::WeightedHand>{{{44,36},bits(1.)},{{45,37},bits(1.)}} : std::vector<g::WeightedHand>{{{47,46},bits(1.)}};
     std::vector<g::SelectedBoard> boards = symmetry ? std::vector<g::SelectedBoard>{{{0,4,20,30,35}},{{1,5,21,30,35}}} : std::vector<g::SelectedBoard>{{{0,5,10,23,24}}};
-    return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),10,1,limits);
+    return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),iterations,1,limits,profile);
 }
 
-std::unique_ptr<g::Plan> shadow_fixture(unsigned kind) {
-    if (kind < 2) return make_plan(kind == 1);
+std::unique_ptr<g::Plan> shadow_fixture(unsigned kind, g::AdmissionProfile profile = g::AdmissionProfile::legacy,
+                                      unsigned iterations = 10) {
+    if (kind < 2) return make_plan(kind == 1,{},false,profile,iterations);
     const bool symmetry = kind != 4;
     auto graph = fixture(symmetry);
     std::vector<g::WeightedHand> a{{{48,40},bits(1.)},{{49,41},bits(1.)}};
@@ -57,7 +59,7 @@ std::unique_ptr<g::Plan> shadow_fixture(unsigned kind) {
         a = {{{51,50},bits(1.)}}; b = {{{47,46},bits(1.)}};
         boards = {{{0,5,10,23,24}}};
     }
-    return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),10,1);
+    return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),iterations,1,g::Limits{},profile);
 }
 
 // Separate expanded-row implementation: plain R map, no procedural Q lookup,
@@ -304,10 +306,81 @@ void indexed_shadow_controls() {
      try{rejection("indexed FTZ/DAZ",[&]{trainer.run_indexed();});}catch(...){_mm_setcsr(original);throw;}_mm_setcsr(original);}
 #endif
 }
+void indexed_admission_controls() {
+    for(unsigned kind=0;kind<5;++kind) {
+        auto old=shadow_fixture(kind);auto plan=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);
+        const auto& census=plan->graph_census();const auto gsize=plan->group().size();
+        const auto lookup=gsize*(128ULL*census.history_token_work+256ULL*census.decision_hand_slots_upper);
+        const auto lookup_removed=30ULL*lookup;
+        const auto actions_removed=60ULL*32ULL*census.action_slots_upper;
+        need(old->receipt().modeled_work_upper-plan->receipt().modeled_work_upper==lookup_removed+actions_removed,
+             "indexed Plan removed more than named unexecuted training terms");
+        need(plan->receipt().legacy_training_lookup_work_removed==lookup_removed &&
+             plan->receipt().legacy_training_action_work_removed==actions_removed &&
+             plan->receipt().admission_contract=="indexed-v1","indexed Plan admission receipt differs");
+        need(plan->receipt().retained_entries_upper==old->receipt().retained_entries_upper &&
+             plan->rows().size()==old->rows().size(),"indexed admission dropped real Q storage");
+        for(std::size_t q=0;q<plan->rows().size();++q) {
+            const auto& a=plan->rows()[q];const auto& b=old->rows()[q];
+            need(a.key==b.key && a.menu==b.menu && a.offset==b.offset && a.count==b.count &&
+                 a.expected_mask==b.expected_mask,"indexed admission changed actual Q construction");
+        }
+        c::Trainer reference(*old);const auto prior=reference.run_indexed();
+        c::Trainer trainer(*plan);const auto result=trainer.run_indexed();
+        for(std::size_t i=0;i<prior.quotient_policy.size();++i)
+            need(bits(prior.quotient_policy[i])==bits(result.quotient_policy.at(i)),"admission profile changed indexed policy bits");
+        need(prior.quotient_policy.size()==result.quotient_policy.size(),"admission profile changed policy shape");
+        need(result.receipt.admission_contract=="indexed-v1" && prior.receipt.admission_contract=="legacy",
+             "admission profile lost its identity");
+        need(result.receipt.full_history_lookup_work_upper*34==prior.receipt.full_history_lookup_work_upper*4 &&
+             result.receipt.legacy_training_history_work_removed==prior.receipt.full_history_lookup_work_upper-result.receipt.full_history_lookup_work_upper,
+             "indexed Trainer did not retain exactly four setup/output history passes");
+        need(result.receipt.marginal_calls_actual<=result.receipt.marginal_calls_upper &&
+             result.receipt.marginal_calls_actual==plan->kernel().receipt().marginal_queries &&
+             plan->kernel().receipt().terminal_queries==old->kernel().receipt().terminal_queries,
+             "native marginal reuse/callback counts differ");
+        const auto& route=result.receipt.indexed_shadow->routing;
+        const auto& proof=*result.receipt.indexed_shadow;
+        need(route.combined_modeled_work_upper==plan->receipt().modeled_work_upper+
+             proof.index_setup_work_upper+route.router_setup_work_upper+route.router_query_work_upper+
+             route.index_query_work_upper+proof.caller_work_upper,
+             "whole work ledger does not bind setup/query/caller components exactly");
+        need(route.combined_modeled_work_upper<prior.receipt.indexed_shadow->routing.combined_modeled_work_upper &&
+             route.combined_logical_entries_upper==prior.receipt.indexed_shadow->routing.combined_logical_entries_upper,
+             "indexed admission changed actual storage or failed to remove absent work");
+        for(bool shadow:{false,true}) {
+            auto foreign=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);c::Trainer invalid(*foreign);
+            const auto before=foreign->kernel().receipt();
+            rejection("indexed admission foreign training route",[&]{if(shadow)invalid.run_indexed_shadow();else invalid.run();});
+            need(foreign->kernel().receipt().modeled_work==before.modeled_work &&
+                 foreign->kernel().receipt().rank_calls==before.rank_calls,"foreign route mutated kernel before rejection");
+        }
+        auto work=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);c::Limits limits;limits.max_modeled_work=route.combined_modeled_work_upper-1;
+        c::Trainer low(*work,limits);const auto work_before=work->kernel().receipt().modeled_work;
+        rejection("indexed admission whole work boundary",[&]{low.run_indexed();});
+        need(work->kernel().receipt().modeled_work==work_before,"indexed admission work boundary mutated kernel");
+        auto entries=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);limits={};limits.max_entries=route.combined_logical_entries_upper-1;
+        c::Trainer entry_low(*entries,limits);const auto entry_before=entries->kernel().receipt().modeled_work;
+        rejection("indexed admission whole entry boundary",[&]{entry_low.run_indexed();});
+        need(entries->kernel().receipt().modeled_work==entry_before,"indexed admission entry boundary mutated kernel");
+        // Pure rank-free construction: new Plan preparation is T-independent,
+        // while real future callbacks still belong to Trainer admission.
+        auto t100=shadow_fixture(kind,g::AdmissionProfile::indexed_v1,100);
+        auto t1000=shadow_fixture(kind,g::AdmissionProfile::indexed_v1,1000);
+        need(t100->receipt().modeled_work_upper==plan->receipt().modeled_work_upper &&
+             t1000->receipt().modeled_work_upper==plan->receipt().modeled_work_upper &&
+             !t100->kernel().receipt().rank_calls && !t1000->kernel().receipt().rank_calls,
+             "new Plan retained iteration work or performed ranking");
+        std::cout<<"indexed-admission kind="<<kind<<" policybits="<<result.quotient_policy.size()
+                 <<" planremoved="<<lookup_removed+actions_removed<<" trainerremoved="<<result.receipt.legacy_training_history_work_removed
+                 <<" marginals="<<result.receipt.marginal_calls_actual<<" wholework="<<route.combined_modeled_work_upper<<"\n";
+    }
+}
 int main() {
     try {
         rank_anchors();
         indexed_shadow_controls();
+        indexed_admission_controls();
         for(bool symmetry:{false,true}) {
             auto p=make_plan(symmetry);need(p->group().size()==(symmetry?2U:1U),"fixture group size");
             c::Trainer trainer(*p);auto result=trainer.run();

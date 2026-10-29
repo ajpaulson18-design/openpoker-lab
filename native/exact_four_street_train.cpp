@@ -63,9 +63,12 @@ int run() {
     }
     Parser parser(std::move(input));
     const auto protocol = parser.token();
-    const bool routed = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2";
+    const bool indexed_admission = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3";
+    const bool routed_v2 = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2";
+    const bool routed = routed_v2 || indexed_admission;
     need(routed || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1", "unsupported exact engine protocol");
-    const auto route = routed ? parser.text() : std::string("full-history");
+    const auto route = indexed_admission ? std::string("indexed") :
+        routed_v2 ? parser.text() : std::string("full-history");
     need((!routed && route == "full-history") || (routed && (route == "shadow" || route == "indexed")),
          "unsupported exact engine routing mode");
     const auto iterations = static_cast<unsigned>(parser.size(10'000));
@@ -149,7 +152,8 @@ int run() {
         } else throw std::invalid_argument("unknown native graph vertex tag");
     }
     parser.finish(); need(parsed_edges == edge_count, "native edge declaration mismatch");
-    graph::Plan plan(std::move(public_graph), std::move(hands[0]), std::move(hands[1]), std::move(boards), iterations, cache, limits);
+    graph::Plan plan(std::move(public_graph), std::move(hands[0]), std::move(hands[1]), std::move(boards), iterations, cache, limits,
+        indexed_admission ? graph::AdmissionProfile::indexed_v1 : graph::AdmissionProfile::legacy);
     const auto& census = plan.graph_census();
     const auto output_upper = graph::detail::checked_add(census.row_history_bytes_upper,
         graph::detail::checked_add(graph::detail::checked_mul(64, census.decision_hand_slots_upper),
@@ -160,7 +164,8 @@ int run() {
                   route == "indexed" ? trainer.run_indexed() : trainer.run();
     need(result.receipt.final_numeric_workspace_slots == 0, "native numeric buffers remain before R output");
     Writer writer;
-    writer.token(routed ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2" :
+    writer.token(indexed_admission ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3" :
+                 routed ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2" :
                          "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1", true);
     std::size_t rows = 0, slots = 0;
     plan.for_each_supported_row([&](const graph::RowKey& key, const std::vector<graph::Action>& menu) {
@@ -230,6 +235,28 @@ int run() {
         field("old_kernel_overlap", proof.plan_kernel_forecast_retained_overlap);
         field("old_history_forecast", proof.legacy_full_history_work_forecast_retained);
         field("final_router_entries", proof.final_router_entries, true);
+    }
+    if (indexed_admission) {
+        need(result.receipt.admission_contract == "indexed-v1" &&
+             plan.receipt().admission_contract == "indexed-v1" && result.receipt.indexed_shadow &&
+             result.receipt.indexed_shadow->mode == "indexed", "indexed-v1 admission identity mismatch");
+        const auto& r = result.receipt.indexed_shadow->routing;
+        writer.token("ADMISSION"); writer.token("indexed-v1");
+        const auto field = [&](std::string_view name, std::uint64_t value, bool last = false) {
+            writer.token(std::string(name) + "=" + std::to_string(value), last);
+        };
+        field("plan_legacy_lookup_removed", plan.receipt().legacy_training_lookup_work_removed);
+        field("plan_legacy_action_removed", plan.receipt().legacy_training_action_work_removed);
+        field("trainer_legacy_history_removed", result.receipt.legacy_training_history_work_removed);
+        field("plan_setup_work", plan.receipt().modeled_work_upper);
+        field("index_setup_work", result.receipt.indexed_shadow->index_setup_work_upper);
+        field("router_setup_work", r.router_setup_work_upper);
+        field("trainer_history_retained", result.receipt.full_history_lookup_work_upper);
+        field("marginal_calls_upper", result.receipt.marginal_calls_upper);
+        field("marginal_calls_actual", result.receipt.marginal_calls_actual);
+        field("marginal_reuse", 1);
+        field("combined_work", r.combined_modeled_work_upper);
+        field("combined_entries", r.combined_logical_entries_upper, true);
     }
     return 0;
 }

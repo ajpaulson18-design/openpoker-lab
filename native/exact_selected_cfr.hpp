@@ -36,6 +36,7 @@ struct IndexedShadowReceipt {
     std::string version = "native-exact-cfr-indexed-shadow-v1";
     std::string mode = "shadow";
     routing::Receipt routing;
+    std::uint64_t index_setup_work_upper = 0;
     std::uint64_t caller_work_upper = 0;
     std::uint64_t comparison_and_cursor_work_upper = 0;
     std::uint64_t plan_kernel_forecast_retained_overlap = 0;
@@ -51,6 +52,10 @@ struct IndexedShadowReceipt {
     std::size_t final_router_entries = 0;
 };
 struct Receipt {
+    std::string admission_contract = "legacy";
+    std::uint64_t legacy_training_history_work_removed = 0;
+    std::size_t marginal_calls_upper = 0;
+    std::size_t marginal_calls_actual = 0;
     std::string version = "native-exact-sorted-q-cfrplus-v1";
     std::uint64_t modeled_work_upper = 0;
     std::uint64_t kernel_work_upper = 0;
@@ -102,6 +107,8 @@ private:
     enum class RunMode { legacy, shadow, indexed };
     Result run_impl(RunMode mode) {
         if (started_) throw std::runtime_error("native CFR trainer is single use");
+        if (plan_.admission_profile() == graph::AdmissionProfile::indexed_v1 && mode != RunMode::indexed)
+            throw std::runtime_error("indexed-v1 Plan admission requires indexed-only learning");
         started_ = true;
         mode_ = mode;
         // The caller must exclusively own the plan/kernel for this complete
@@ -114,6 +121,9 @@ private:
             preflight();
             if (mode != RunMode::legacy) prepare_indexed_shadow();
             populate_marginal_keys();
+            receipt_.marginal_calls_actual = marginals_.size();
+            if (receipt_.marginal_calls_actual > receipt_.marginal_calls_upper)
+                throw std::runtime_error("native CFR marginal cache exceeds its once-only admission");
             for (auto& [indexes, value] : marginals_) value = plan_.kernel().marginals(indexes);
             regrets_.assign(receipt_.action_slots, 0.0);
             sums_.assign(receipt_.action_slots, 0.0);
@@ -219,6 +229,7 @@ private:
         shadow.plan_kernel_forecast_retained_overlap = receipt_.plan_kernel_forecast_removed;
         shadow.caller_entries_upper = static_cast<std::size_t>(caller_entries);
         shadow.cursor_frame_entries_upper = static_cast<std::size_t>(cursor_entries);
+        shadow.index_setup_work_upper = router->index_receipt().index_modeled_work_upper;
         shadow.legacy_full_history_work_forecast_retained = receipt_.full_history_lookup_work_upper;
         receipt_.indexed_shadow = std::move(shadow);
         shadow_router_ = std::move(router);
@@ -231,6 +242,13 @@ private:
         shadow.legacy_training_history_extensions = receipt_.legacy_training_history_extensions;
         shadow.legacy_training_row_lookups = receipt_.legacy_training_row_lookups;
         shadow.legacy_training_prefix_lookups = receipt_.legacy_training_prefix_lookups;
+        const auto combined_work = checked_add(plan_.receipt().modeled_work_upper,
+            checked_add(shadow.index_setup_work_upper,
+                checked_add(r.router_setup_work_upper, checked_add(r.router_query_work_upper,
+                    checked_add(r.index_query_work_upper, shadow.caller_work_upper)))));
+        if (combined_work != r.combined_modeled_work_upper ||
+            shadow.caller_work_upper != r.caller_reservation_work_upper)
+            throw std::runtime_error("indexed complete-call setup/query/caller ledger differs from admission");
         if (r.history_route_calls_actual != r.history_route_calls ||
             r.history_route_tokens_actual != r.history_route_tokens_upper ||
             r.root_cursor_calls_actual != r.root_cursor_calls ||
@@ -303,8 +321,16 @@ private:
             checked_add(checked_mul(4, census.row_history_bytes_upper),
                 checked_add(checked_mul(8 * (census.maximum_depth + 1), census.decision_hand_slots_upper),
                             checked_mul(16 * (census.maximum_depth + 1), census.logical_visits))));
-        receipt_.full_history_lookup_work_upper = checked_mul(3ULL * plan_.iterations() + 4ULL,
-            checked_mul(plan_.group().size(), history_keys));
+        const auto one_history_pass = checked_mul(plan_.group().size(), history_keys);
+        const bool indexed_admission = plan_.admission_profile() == graph::AdmissionProfile::indexed_v1;
+        if (indexed_admission) {
+            receipt_.admission_contract = "indexed-v1";
+            receipt_.legacy_training_history_work_removed = checked_mul(3ULL * plan_.iterations(), one_history_pass);
+        }
+        // Keep all four old setup/output history envelopes and numeric work.
+        // Only indexed-only learning can omit the 3T full-history envelope.
+        receipt_.full_history_lookup_work_upper = checked_mul(
+            indexed_admission ? 4ULL : 3ULL * plan_.iterations() + 4ULL, one_history_pass);
         receipt_.training_work_upper = checked_add(lookup, receipt_.full_history_lookup_work_upper);
         receipt_.expanded_output_values = census.action_slots_upper;
         if (receipt_.expanded_output_values > limits_.max_output_values)
@@ -328,6 +354,7 @@ private:
         const auto board_count = plan_.selected_board_count();
         receipt_.marginal_entries_upper = static_cast<std::size_t>(checked_mul(
             plan_.receipt().support_prefixes, checked_add(h + 64, board_count)));
+        receipt_.marginal_calls_upper = plan_.receipt().support_prefixes;
         if (receipt_.marginal_entries_upper > limits_.max_entries - receipt_.retained_entries_upper)
             throw std::runtime_error("native CFR retained marginal admission exceeded");
         receipt_.retained_entries_upper += receipt_.marginal_entries_upper;

@@ -6,6 +6,14 @@ Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifi
 
 ## Project
 
+The opt-in [indexed admission profile](docs/native-indexed-admission.md) reserves
+executed host preparation/diagnostics and native construction/learning against
+one remaining work allowance. Preserve legacy defaults, all geometry/storage/
+integer/I/O ceilings, real Q history construction and final actual counters.
+Only the fixed-indexed V3 path may use the reduced profile; foreign learning modes
+reject before arrays. Named removed terms and the full component equation must
+be validated independently of policy/quality replay. Admission is not solved quality.
+
 The October 26 owner priority is the [foundation-first assessment and critical
 path](docs/foundation-first-audit.md). Preserve its distinction between scoped
 finite-game evidence and full-deck/product readiness. Materialized preflop,
