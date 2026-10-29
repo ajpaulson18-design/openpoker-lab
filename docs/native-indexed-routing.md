@@ -1,7 +1,8 @@
 # Explicit native indexed-history training
 
-Status: implemented candidate with bounded development controls; committed-source
-study, saved-only independent acceptance and final CI remain gates. This joins the
+Status: implemented opt-in backend with [two committed-source studies and
+saved-only independent acceptance](native-indexed-routing-result.md). Corrected
+Windows/Linux/sanitizer controls pass; final publication CI is separate. This joins the
 [public-history index](native-public-history-index-result.md) to numeric Q routing
 and the exact native four-street trainer. The default full-history path remains.
 
@@ -101,7 +102,7 @@ timed; build/replay is excluded. Raw policies and native streams precede validat
 with no retry; independent saved-policy replays and exact target misses remain.
 Traced memory includes retained Python observer bytes and excludes native heap.
 
-Until the committed-source study and saved-only review complete, no measured speed
-or memory result is claimed. Larger original T1000 requests and full-deck solving
+The frozen [result record](native-indexed-routing-result.md) retains all policies,
+misses, source versions and scoped measurements. Larger original T1000 requests and full-deck solving
 remain unsupported; exact terminal callbacks and conservative admission are separate
 limits. The overall foundation goal remains active.

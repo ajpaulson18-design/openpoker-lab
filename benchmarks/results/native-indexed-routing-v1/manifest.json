@@ -1,0 +1,14 @@
+{
+  "contract": "native-indexed-routing-publication-v1",
+  "scope": "Two separate frozen studies; no cross-source timing comparison or total-memory/full-deck claim. Archive retains full policies, source/build provenance, independent replays, first failures and explicit gaps.",
+  "sha256": {
+    "native-indexed-cross-source-receipt.json": "f48115465db489d753a33373692aecbcc7953a4dc9728ad7bfa5dec15a460085",
+    "native-indexed-routing-evidence-v1-receipt.json": "4a8cd21765ce254924e5084f0b1233ab0d640eb0a7a79e3c9a7e01c7eb277707",
+    "native-indexed-routing-evidence-v1.zip": "647231128009dbd55cefe20d964404f88c9f0fc7ab44fc76aab2170b6415285f",
+    "native-process-memory-receipt.json": "11697eb035243c4f4bbbda369358e506bebd87f597cd731be75a7900cba9c936",
+    "v1-report.json": "955ce6aad9e448902c03660fcefb5e749e92248267f2c09fff6f08e5c9dd7dca",
+    "v1-review-receipt.json": "f517719dd03de8781a706e89147fd3cfc572b5814e5224b5d3b7b286c43b23a9",
+    "v2-report.json": "0a9af227c3643487fe8891ec17f43e9e83f73a1dfd2d7787a77b2ecd019ffdf1",
+    "v2-review-receipt.json": "22e89779d838581371094c4087f94982063b77314d8994303ad0e41f1429e105"
+  }
+}

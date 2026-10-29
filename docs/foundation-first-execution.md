@@ -15,7 +15,17 @@ counts are zero for five old history methods in indexed learning, positive in
 default/shadow, with complete Q-policy equality on its bounded fixture. Earlier
 toolchain/include-path, ambiguous comparator and source-drift failures are retained
 separately. No source-frozen timing or larger-capacity result is claimed yet;
-the new twenty-child study and independent saved-only acceptance remain gates.
+both source-frozen twenty-child studies and independent saved-only reviews now
+complete as [separate retained evidence](native-indexed-routing-result.md). Each
+passes 18 policies and ten full policy/eight-metric/exact-certificate pairs,
+retaining 16 quality misses, two private-flush T100 passes and both pretraining
+T1000 rejections. Corrected-source original T10 full-call medians are
+1.781979/1.216958 seconds full-history/indexed; traced Python allocation rises
+slightly. A separate four-call native OS-memory probe preserves raw queries and
+matching stdout but proves no full-solve/native-heap memory gain. Original GCC
+unused-variable failure, the wrong-iterator intermediate correction and final
+corrected source remain distinct. Corrected Windows/Linux/sanitizer controls pass;
+final publication-head CI and merge provenance remain separate checks.
 
 ## Exact public-history indexing prerequisite (October 29)
 

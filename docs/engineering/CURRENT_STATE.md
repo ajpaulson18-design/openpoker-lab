@@ -5,8 +5,12 @@ now connects numeric Q keys, incremental visible-path cursors and borrowed typed
 prefix support to the existing exact trainer. Default/shadow/indexed bounded
 policies match; independent actual-call instrumentation finds zero five legacy
 history operations during indexed learning on its fixture. Old preflight/Q histories,
-admission forecasts and expanded diagnostics remain. A new fixed complete-call
-study, saved-only acceptance and final cross-platform CI remain gates.
+admission forecasts and expanded diagnostics remain. [Two fixed complete-call
+studies](../native-indexed-routing-result.md) and fresh saved-only reviews each pass
+18 policies/10 pairs, retaining 16 misses and two T1000 rejections. Corrected-source
+median is 1.781979/1.216958 seconds full-history/indexed on original T10 only;
+Python allocation is slightly higher and the native OS probe shows no established
+memory reduction. Windows/Linux/sanitizer controls pass; final publication CI is separate.
 
 The separate [exact public-history index](../native-public-history-index.md)
 now has graph-only ordinal/suit conformance and independent wide/tall logical

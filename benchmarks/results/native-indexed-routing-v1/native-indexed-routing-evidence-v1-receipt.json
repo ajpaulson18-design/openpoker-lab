@@ -1,0 +1,12 @@
+{
+  "archive": "native-indexed-routing-evidence-v1.zip",
+  "archive_bytes": 15146262,
+  "archive_sha256": "647231128009dbd55cefe20d964404f88c9f0fc7ab44fc76aab2170b6415285f",
+  "archive_entries": 1028,
+  "evidence_manifest_sha256": "4e13047705e44210be4c87d9affb5cb1e64fd85e23c79800e0f70a62d5f32fb1",
+  "source_commits": [
+    "c7ece29033ba91a9d363f2dcc250a6b2a451e190",
+    "322cb53158969a89a1dfaee477c8118033aa7a47"
+  ],
+  "scope": "Two distinct committed-source 20-child studies and 18-policy saved replays each. No source-version timing comparison. Includes preserved development/build/reviewer failures and explicit capture gaps. Separate native-process OS probe is not native heap, full API memory or a memory-reduction proof. Historical archived source is evidence only, never executed by saved-only review."
+}

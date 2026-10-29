@@ -1,0 +1,52 @@
+{
+  "native_calls": 4,
+  "observations": [
+    {
+      "failed_query_count": 0,
+      "frozen_stdout_identical": true,
+      "max_os_reported_peak_pagefile_bytes": 2850816,
+      "max_os_reported_peak_working_set_bytes": 5414912,
+      "max_sampled_private_commit_bytes": 2629632,
+      "query_count": 53,
+      "returncode": 0,
+      "sample": "original-22-t10-full-history-0",
+      "stdout_sha256": "ddb7087cc7433cd47c2792cf0d049da11168f279e38f188ab11e8aea21bfb3d0"
+    },
+    {
+      "failed_query_count": 0,
+      "frozen_stdout_identical": true,
+      "max_os_reported_peak_pagefile_bytes": 2854912,
+      "max_os_reported_peak_working_set_bytes": 5414912,
+      "max_sampled_private_commit_bytes": 2682880,
+      "query_count": 17,
+      "returncode": 0,
+      "sample": "original-22-t10-indexed-0",
+      "stdout_sha256": "a3a7b9daac675bd907b76de803c428e658f4b251d8c4b4d2fc1d0e27480c96d8"
+    },
+    {
+      "failed_query_count": 0,
+      "frozen_stdout_identical": true,
+      "max_os_reported_peak_pagefile_bytes": 782336,
+      "max_os_reported_peak_working_set_bytes": 3686400,
+      "max_sampled_private_commit_bytes": 782336,
+      "query_count": 3,
+      "returncode": 0,
+      "sample": "mixed-stabilizer-full-history-0",
+      "stdout_sha256": "528c838bb0f8be93361687afec0d61aa7f992a61665261882f5d688f716ed879"
+    },
+    {
+      "failed_query_count": 0,
+      "frozen_stdout_identical": true,
+      "max_os_reported_peak_pagefile_bytes": 446464,
+      "max_os_reported_peak_working_set_bytes": 2424832,
+      "max_sampled_private_commit_bytes": 430080,
+      "query_count": 2,
+      "returncode": 0,
+      "sample": "mixed-stabilizer-indexed-0",
+      "stdout_sha256": "bffa3ae5781008a69a3cee91f52d27f052eb723cf53e2deaafd372eb159375ee"
+    }
+  ],
+  "scope": "Separate Windows native-child OS counters only; no total-solve/heap or memory-reduction claim. All stdout matches frozen corrected-source study.",
+  "source_commit": "322cb53158969a89a1dfaee477c8118033aa7a47",
+  "status": "passed"
+}

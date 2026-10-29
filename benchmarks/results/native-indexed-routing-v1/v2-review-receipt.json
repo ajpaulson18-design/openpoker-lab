@@ -1,0 +1,200 @@
+{
+  "complete_policies": 18,
+  "executable_sha256": "89a52e596f39d328b1f39e46ddcd29236ee321ff9da25cae1c292beedc3efec8",
+  "manifest_sha256": "9c695cf6b07e0b895bf04c58cc804ae0e2a0ced8bf86ad3ab27f9222481d1275",
+  "max_metric_gap": 8.326672684688674e-17,
+  "orbits": [
+    {
+      "group": 1,
+      "label": "original-22-t10-full-history-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-indexed-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-indexed-1",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-full-history-1",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-full-history-2",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-indexed-2",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-full-history-traced",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-indexed-traced",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 2,
+      "label": "payoff-varied-t100-full-history-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 28,
+      "q_slots": 57,
+      "rows": 56
+    },
+    {
+      "group": 2,
+      "label": "payoff-varied-t100-indexed-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 28,
+      "q_slots": 57,
+      "rows": 56
+    },
+    {
+      "group": 2,
+      "label": "blocker-18-full-history-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 44,
+      "q_slots": 90,
+      "rows": 88
+    },
+    {
+      "group": 2,
+      "label": "blocker-18-indexed-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 44,
+      "q_slots": 90,
+      "rows": 88
+    },
+    {
+      "group": 1,
+      "label": "asymmetric-weighted-full-history-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 56,
+      "q_slots": 114,
+      "rows": 56
+    },
+    {
+      "group": 1,
+      "label": "asymmetric-weighted-indexed-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 56,
+      "q_slots": 114,
+      "rows": 56
+    },
+    {
+      "group": 2,
+      "label": "mixed-stabilizer-full-history-0",
+      "orbit_sizes": [
+        1,
+        2
+      ],
+      "q_rows": 16,
+      "q_slots": 33,
+      "rows": 28
+    },
+    {
+      "group": 2,
+      "label": "mixed-stabilizer-indexed-0",
+      "orbit_sizes": [
+        1,
+        2
+      ],
+      "q_rows": 16,
+      "q_slots": 33,
+      "rows": 28
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-shadow-shadow",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 2,
+      "label": "mixed-stabilizer-shadow-shadow",
+      "orbit_sizes": [
+        1,
+        2
+      ],
+      "q_rows": 16,
+      "q_slots": 33,
+      "rows": 28
+    }
+  ],
+  "paired_comparisons": 10,
+  "pretraining_rejections": 2,
+  "quality_misses": 16,
+  "quality_passes": 2,
+  "report_sha256": "0a9af227c3643487fe8891ec17f43e9e83f73a1dfd2d7787a77b2ecd019ffdf1",
+  "scope": "Saved policies and native ROW bits; no production trainer or candidate executable invoked; no independent full input graph equivalence claim.",
+  "source_commit": "322cb53158969a89a1dfaee477c8118033aa7a47",
+  "source_files": 2070,
+  "status": "passed"
+}
