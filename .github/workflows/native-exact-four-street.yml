@@ -1,0 +1,59 @@
+name: Native exact whole four-street conformance
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-whole-game:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build exact whole-game engine
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target engine --output-dir "$RUNNER_TEMP/native-exact-engine"
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_EXACT_FOUR_STREET_EXE=$RUNNER_TEMP/native-exact-engine/native-exact-four-street-train$suffix" >> "$GITHUB_ENV"
+      - name: Complete policies, physical/exact proof and adversarial controls
+        run: python -O -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street -v
+      - name: Preserve first compiler and failure records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-exact-whole-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/native-exact-engine/*.log
+            ${{ runner.temp }}/native-exact-engine/*.json
+  sanitized-whole-game:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build ASan and UBSan exact engine
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target engine --output-dir "$RUNNER_TEMP/native-exact-engine-sanitized" --sanitize
+          echo "OPENPOKER_NATIVE_EXACT_FOUR_STREET_EXE=$RUNNER_TEMP/native-exact-engine-sanitized/native-exact-four-street-train" >> "$GITHUB_ENV"
+      - name: Sanitized complete policies and phase controls
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: python -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street -v
+      - name: Preserve first compiler and failure records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-exact-whole-sanitized
+          path: |
+            ${{ runner.temp }}/native-exact-engine-sanitized/*.log
+            ${{ runner.temp }}/native-exact-engine-sanitized/*.json

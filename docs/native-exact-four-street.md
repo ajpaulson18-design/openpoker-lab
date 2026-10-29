@@ -6,6 +6,11 @@ and offline pinned build are implemented; no native exact poker solver or speed
 result is accepted yet. Conversion evidence and full-game implementation are
 separate acceptance stages.
 
+The [integrated whole-game candidate](native-exact-whole-game.md) now connects
+the native kernel, verified public/Q plan and full learning loop in one explicit
+process. Development complete-policy/eight-metric parity passes; frozen evidence
+and publication CI remain separate acceptance gates.
+
 The [quotient profiles](suit-quotient-storage-result.md) identify repeated exact
 query preflights/arithmetic and learning-loop operations. The
 [per-decision lookup](batched-suit-row-lookup-result.md) removes one measured

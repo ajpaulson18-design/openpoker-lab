@@ -1,5 +1,14 @@
 # Current engineering state
 
+An opt-in [native exact whole-game candidate](../native-exact-whole-game.md)
+now joins native global normalization/support/ranking/payoff computation with
+procedural Q planning and the complete alternating four-street CFR+ loop in one
+process. Five real finite fixtures match every physical policy row and eight
+diagnostics bitwise, with independent numeric/exact replay checks. Old admission,
+default Python behavior and original T1000 rejection remain. Frozen whole-call
+measurement, saved-only acceptance and final native/sanitizer CI remain gates;
+broader solver scalability and quality remain unresolved.
+
 A [native exact selected-vector candidate](../native-exact-selected-vectors.md)
 computes its own blocker-conditioned Z, rank-free support and exact signed
 fold/showdown vectors from original priors/cards. Native rank sweeps and a local

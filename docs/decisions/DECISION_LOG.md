@@ -36,6 +36,22 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D070: Join native exact vectors and Q learning in one whole-game process (October 28, 2026)
+
+Sol selects an explicit [native exact four-street backend](../native-exact-whole-game.md)
+from the converter/kernel prerequisites. Python legal preparation/API and
+independent diagnostics remain measured costs; native independently computes
+Z/support/ranks/vectors and the full Q learning trajectory. No Python pair/world,
+rank/vector, normalizer or Q witness enters the new protocol. Preserve old guards
+and numerical order, member checks, saved misses and separate quality gates.
+Reject incomplete positive chance branches and contradictory graph metadata;
+charge complete native callbacks, full histories and transport additionally.
+Use four Q arrays and release training state before streaming expanded output.
+Luna implements the public/Q plan, Terra challenges the draft, Sol corrects the
+trainer and root integrates actual API/wire and independent complete-policy tests.
+Development bit parity is achieved; frozen evidence and final CI still govern
+acceptance. This is not unrestricted/full-deck scalability or general speed/RAM.
+
 ### D069: Compute native exact vectors from physical inputs (October 28, 2026)
 
 Sol accepts the [bounded selected-kernel implementation direction](../native-exact-selected-vectors.md):

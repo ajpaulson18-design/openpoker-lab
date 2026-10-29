@@ -1,5 +1,21 @@
 # Foundation-first execution record
 
+## Integrated native exact whole-game candidate (October 28)
+
+The [whole-game implementation](native-exact-whole-game.md) now prepares legal
+Python public structure and runs native exact normalization/support/ranking,
+payoff vectors, procedural Q planning and the complete four-street alternating
+loop in one process. Five real T10 games match complete policy/eight-metric bits;
+independent physical/exact replay checks pass. Eight optimized integration controls
+pass (44.025 seconds), later focused rank/graph/protocol controls pass (42.526),
+and forty old exact/quotient/equivariant controls pass (79.425). The unchanged
+Python evaluator census passes all 2,598,960 five-card category counts. A real
+native private-flush T100 child passes the unchanged exact quality gate.
+All are development checks; the fixed eighteen-child source-frozen study,
+saved-only acceptance, Windows/Linux/sanitizer CI and publication remain gates.
+Draft graph/trainer failures, quota-limited final Terra review and early raw-stream
+capture gaps remain explicit. The overall foundation goal remains active.
+
 ## Native exact arithmetic prerequisite (October 28)
 
 The [native exact boundary](native-exact-four-street.md) now implements integer-only
