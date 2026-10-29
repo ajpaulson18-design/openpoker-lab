@@ -1,0 +1,88 @@
+{
+  "metric_fields": [
+    "value_sb",
+    "value_bb",
+    "sb_best_response_value",
+    "bb_best_response_value",
+    "sb_gain",
+    "bb_gain",
+    "nash_conv",
+    "exploitability"
+  ],
+  "samples": [
+    {
+      "label": "original-22-t10-full-history-0",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-indexed-0",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-indexed-1",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-full-history-1",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-full-history-2",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-indexed-2",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-full-history-traced",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-indexed-traced",
+      "rows": 1200
+    },
+    {
+      "label": "payoff-varied-t100-full-history-0",
+      "rows": 56
+    },
+    {
+      "label": "payoff-varied-t100-indexed-0",
+      "rows": 56
+    },
+    {
+      "label": "blocker-18-full-history-0",
+      "rows": 88
+    },
+    {
+      "label": "blocker-18-indexed-0",
+      "rows": 88
+    },
+    {
+      "label": "asymmetric-weighted-full-history-0",
+      "rows": 56
+    },
+    {
+      "label": "asymmetric-weighted-indexed-0",
+      "rows": 56
+    },
+    {
+      "label": "mixed-stabilizer-full-history-0",
+      "rows": 28
+    },
+    {
+      "label": "mixed-stabilizer-indexed-0",
+      "rows": 28
+    },
+    {
+      "label": "original-22-t10-shadow-shadow",
+      "rows": 1200
+    },
+    {
+      "label": "mixed-stabilizer-shadow-shadow",
+      "rows": 28
+    }
+  ],
+  "scope": "Cross-source saved complete policy/menu/metric bits and exact certificate identity only; no timing comparison or production execution.",
+  "status": "passed"
+}

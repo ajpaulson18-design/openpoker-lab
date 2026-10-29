@@ -19,6 +19,15 @@ OPTIONS = dict(rank_cache_boards=64, pair_diagnostics="compact", exact_arithmeti
     training_reduction="suit-equivariant", strategy_storage="suit-quotient", quotient_lookup="per-decision")
 
 class NativeExactEarlyGateTests(unittest.TestCase):
+    def test_invalid_and_unbuilt_routing_modes_reject_before_preparation(self):
+        request = request_for(case_for("payoff-varied-t10"), 10)
+        with patch.object(solver, "_prepare_exact_selected", side_effect=AssertionError("preparation")):
+            for mode in ("unsupported", 1, None, True):
+                with self.subTest(mode=mode), self.assertRaisesRegex(ValueError, "routing mode"):
+                    solver.solve_four_street_exact_selected(request, native_routing=mode, **OPTIONS)
+            for mode in ("shadow", "indexed"):
+                with self.subTest(mode=mode), self.assertRaisesRegex(ValueError, "explicit source-built"):
+                    solver.solve_four_street_exact_selected(request, native_routing=mode, **OPTIONS)
     def test_unsupported_native_combinations_reject_before_preparation(self):
         request = request_for(case_for("payoff-varied-t10"), 10)
         for name, value in (("pair_diagnostics", "expanded"), ("exact_arithmetic", "fraction"),
@@ -84,6 +93,42 @@ class NativeExactFourStreetCompiledTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 solver.solve_four_street_exact_selected(request_for(case_for("original-22-qreject"), 1000),
                     native_executable=self.executable, **OPTIONS)
+
+    def test_shadow_and_indexed_complete_policies_and_independent_certificates(self):
+        for name in ("payoff-varied-t10", "blocker-18", "asymmetric-weighted", "mixed-stabilizer", "original-22-t10"):
+            request = request_for(case_for(name), 10)
+            expected = solver.solve_four_street_exact_selected(request, native_executable=self.executable, **OPTIONS)
+            for mode in ("shadow", "indexed"):
+                with self.subTest(case=name, mode=mode):
+                    result = solver.solve_four_street_exact_selected(request,
+                        native_executable=self.executable, native_routing=mode, **OPTIONS)
+                    self.assertEqual(result["strategy"], expected["strategy"])
+                    self.assertEqual([result[key].hex() for key in METRICS], [expected[key].hex() for key in METRICS])
+                    self.assertTrue(_protected_verification(case_for(name), result)["payload_metrics_within_tolerance"])
+                    proof = result["operator_census"]["native_exact"]["indexed_routing"]
+                    self.assertEqual(proof["mode"], mode)
+                    self.assertEqual(proof["final_router_entries"], 0)
+                    if mode == "indexed":
+                        self.assertEqual([proof[key] for key in ("legacy_extensions", "legacy_rows", "legacy_prefixes")], [0, 0, 0])
+
+    def test_routed_proof_tampering_and_protocol_mismatch_reject(self):
+        prepared = solver._prepare_exact_selected(request_for(case_for("mixed-stabilizer"), 10), **OPTIONS)
+        request = native.wire(prepared, 10, routing="indexed")
+        raw = native._invoke(self.executable, request)
+        native.parse_policy(raw, prepared, routing="indexed")
+        lines = raw.splitlines()
+        proofs = [b"\n".join(lines[:-1]) + b"\n", raw.replace(b"legacy_rows=0", b"legacy_rows=1"),
+            raw.replace(b"r_lookup_entries=0", b"r_lookup_entries=1"),
+            raw.replace(b"roots=30", b"roots=29"), raw.replace(b"ROUTE\tindexed", b"ROUTE\tshadow")]
+        for forged in proofs:
+            with self.subTest(forgery=proofs.index(forged)), self.assertRaises(ValueError):
+                native.parse_policy(forged, prepared, routing="indexed")
+        with self.assertRaises(ValueError):
+            native.parse_policy(raw, prepared)
+        with self.assertRaises(ValueError):
+            native.parse_policy(raw, prepared, routing="shadow")
+        with self.assertRaises(native.NativeFailure):
+            native._invoke(self.executable, request.replace(b"\nindexed\n", b"\nforeign\n", 1))
 
     def test_raw_result_tampering_rejects_complete_support_and_counters(self):
         request = request_for(case_for("payoff-varied-t10"), 10)

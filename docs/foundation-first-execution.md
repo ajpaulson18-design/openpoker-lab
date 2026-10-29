@@ -1,5 +1,32 @@
 # Foundation-first execution record
 
+## Numeric routing in actual native learning (October 29)
+
+The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses
+history construction, root lookup and reveal parsing in native learning while
+retaining old preflight/Q/marginal setup and conservative whole-request forecasts.
+Sol implements differential shadow and indexed training; Luna owns numeric Q
+routing and the fixed runner; Terra independently checks support holes, complete
+Q bits, budgets and actual learning-only method calls. Root integrates typed
+access/scheduled admission, V2 native proof/API and physical-policy replay.
+Thirteen combined optimized native API/control tests pass in 66.848 seconds;
+six runner protocol/error-retention controls pass. Independent external actual-call
+counts are zero for five old history methods in indexed learning, positive in
+default/shadow, with complete Q-policy equality on its bounded fixture. Earlier
+toolchain/include-path, ambiguous comparator and source-drift failures are retained
+separately. No source-frozen timing or larger-capacity result is claimed yet;
+both source-frozen twenty-child studies and independent saved-only reviews now
+complete as [separate retained evidence](native-indexed-routing-result.md). Each
+passes 18 policies and ten full policy/eight-metric/exact-certificate pairs,
+retaining 16 quality misses, two private-flush T100 passes and both pretraining
+T1000 rejections. Corrected-source original T10 full-call medians are
+1.781979/1.216958 seconds full-history/indexed; traced Python allocation rises
+slightly. A separate four-call native OS-memory probe preserves raw queries and
+matching stdout but proves no full-solve/native-heap memory gain. Original GCC
+unused-variable failure, the wrong-iterator intermediate correction and final
+corrected source remain distinct. Corrected Windows/Linux/sanitizer controls pass;
+final publication-head CI and merge provenance remain separate checks.
+
 ## Exact public-history indexing prerequisite (October 29)
 
 Sol defines exact lexicographic unfolded-path ordinals over canonical DAG

@@ -23,7 +23,7 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_EXACT_FOUR_STREET_EXE=$RUNNER_TEMP/native-exact-engine/native-exact-four-street-train$suffix" >> "$GITHUB_ENV"
       - name: Complete policies, physical/exact proof and adversarial controls
-        run: python -O -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street -v
+        run: python -O -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing -v
       - name: Preserve first compiler and failure records
         if: always()
         uses: actions/upload-artifact@v4
@@ -48,7 +48,7 @@ jobs:
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: python -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street -v
+        run: python -m unittest tests.test_native_exact_four_street tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing -v
       - name: Preserve first compiler and failure records
         if: always()
         uses: actions/upload-artifact@v4

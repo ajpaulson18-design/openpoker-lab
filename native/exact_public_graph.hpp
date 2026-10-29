@@ -193,13 +193,38 @@ struct RowLocation {
     friend bool operator==(const RowLocation&, const RowLocation&) = default;
 };
 
+// Borrowed immutable support. The owning Plan must outlive every view.
+struct PrefixSupportView {
+    std::span<const std::size_t> board_indexes;
+    std::array<std::span<const std::size_t>, 2> hands;
+    // Stable key for existing vector-keyed marginal caches; no query copy.
+    const std::vector<std::size_t>* board_index_key = nullptr;
+};
+
 namespace detail {
 
 // Prefixes contain at most five cards. Compare that exact bounded domain
 // directly, avoiding vector<uint8_t>'s implicit three-way/memcmp path, which
 // GCC 13 diagnoses with an impossible overread bound at -O3 -Werror.
 struct PrefixLess {
+    using is_transparent = void;
     bool operator()(const std::vector<Card>& left, const std::vector<Card>& right) const {
+        return compare(left, right);
+    }
+    bool operator()(const std::vector<Card>& left, std::span<const Card> right) const {
+        return compare(left, right);
+    }
+    bool operator()(std::span<const Card> left, const std::vector<Card>& right) const {
+        return compare(left, right);
+    }
+    bool operator()(const std::vector<Card>& left, std::initializer_list<Card> right) const {
+        return compare(left, std::span<const Card>(right.begin(), right.size()));
+    }
+    bool operator()(std::initializer_list<Card> left, const std::vector<Card>& right) const {
+        return compare(std::span<const Card>(left.begin(), left.size()), right);
+    }
+private:
+    static bool compare(std::span<const Card> left, std::span<const Card> right) {
         if (left.size() > 5 || right.size() > 5)
             throw PlanError(ErrorCode::invalid_query, "oversized card-prefix comparison");
         for (std::size_t i = 0; i < 5; ++i) {
@@ -510,6 +535,33 @@ public:
     [[nodiscard]] std::size_t selected_board_count() const noexcept { return boards_.size(); }
     [[nodiscard]] const GraphCensus& graph_census() const noexcept { return graph_census_; }
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
+
+    [[nodiscard]] std::size_t mapped_hand_index(std::uint8_t actor, std::size_t map_index,
+                                               std::size_t hand_index) const {
+        if (actor > 1 || map_index >= group_.size() || hand_index >= hand_counts_[actor])
+            detail::fail(ErrorCode::invalid_query, "hand-map actor, suit map or original hand index is invalid");
+        return hand_maps_[actor][map_index][hand_index];
+    }
+
+    [[nodiscard]] PrefixSupportView prefix_support(std::span<const Card> prefix) const {
+        if (prefix.size() != 0 && prefix.size() != 3 && prefix.size() != 4 && prefix.size() != 5)
+            detail::fail(ErrorCode::invalid_query, "typed prefix must contain zero, three, four or five cards");
+        for (std::size_t i = 0; i < prefix.size(); ++i) {
+            if (prefix[i] >= 52)
+                detail::fail(ErrorCode::invalid_query, "typed prefix contains an invalid card");
+            for (std::size_t j = 0; j < i; ++j)
+                if (prefix[i] == prefix[j])
+                    detail::fail(ErrorCode::invalid_query, "typed prefix contains a duplicate card");
+        }
+        if (prefix.size() >= 3 && !(prefix[0] < prefix[1] && prefix[1] < prefix[2]))
+            detail::fail(ErrorCode::invalid_query, "typed flop prefix must use canonical DECK order");
+        const auto found = support_.find(prefix);
+        if (found == support_.end())
+            detail::fail(ErrorCode::invalid_query, "typed prefix was not admitted by this public graph");
+        return {std::span<const std::size_t>(found->second.board_indexes),
+            {std::span<const std::size_t>(found->second.hands[0]),
+             std::span<const std::size_t>(found->second.hands[1])}, &found->second.board_indexes};
+    }
 
     [[nodiscard]] const std::vector<std::size_t>& prefix_board_indexes(
         std::span<const std::string> history) const {

@@ -62,7 +62,12 @@ int run() {
         input.push_back(static_cast<char>(ch));
     }
     Parser parser(std::move(input));
-    need(parser.token() == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1", "unsupported exact engine protocol");
+    const auto protocol = parser.token();
+    const bool routed = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2";
+    need(routed || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1", "unsupported exact engine protocol");
+    const auto route = routed ? parser.text() : std::string("full-history");
+    need((!routed && route == "full-history") || (routed && (route == "shadow" || route == "indexed")),
+         "unsupported exact engine routing mode");
     const auto iterations = static_cast<unsigned>(parser.size(10'000));
     const auto cache = parser.size(64);
     const std::array<std::size_t, 2> hands_count{parser.size(1326), parser.size(1326)};
@@ -151,10 +156,12 @@ int run() {
                                   graph::detail::checked_mul(32, census.action_slots_upper)));
     need(output_upper <= output_cap - 8192, "native complete output byte admission exceeded");
     cfr::Trainer trainer(plan, training_limits);
-    auto result = trainer.run();
+    auto result = route == "shadow" ? trainer.run_indexed_shadow() :
+                  route == "indexed" ? trainer.run_indexed() : trainer.run();
     need(result.receipt.final_numeric_workspace_slots == 0, "native numeric buffers remain before R output");
     Writer writer;
-    writer.token("OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1", true);
+    writer.token(routed ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2" :
+                         "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1", true);
     std::size_t rows = 0, slots = 0;
     plan.for_each_supported_row([&](const graph::RowKey& key, const std::vector<graph::Action>& menu) {
         const auto location = plan.locate(key);
@@ -167,9 +174,63 @@ int run() {
     writer.token("DONE"); writer.number(rows); writer.number(slots); writer.number(plan.group().size());
     writer.number(plan.rows().size()); writer.number(result.receipt.action_slots);
     writer.number(result.receipt.member_checks); writer.number(result.receipt.expected_member_checks);
-    writer.number(result.receipt.modeled_work_upper); writer.number(result.receipt.kernel_work_upper);
-    writer.number(result.receipt.retained_entries_upper); writer.number(result.receipt.maximum_numeric_workspace_slots);
+    const auto modeled_work = result.receipt.indexed_shadow ?
+        result.receipt.indexed_shadow->routing.combined_modeled_work_upper : result.receipt.modeled_work_upper;
+    const auto retained_entries = result.receipt.indexed_shadow ?
+        result.receipt.indexed_shadow->routing.combined_logical_entries_upper : result.receipt.retained_entries_upper;
+    writer.number(modeled_work); writer.number(result.receipt.kernel_work_upper);
+    writer.number(retained_entries); writer.number(result.receipt.maximum_numeric_workspace_slots);
     writer.number(result.receipt.final_numeric_workspace_slots); writer.number(plan.kernel().receipt().rank_calls, true);
+    if (routed) {
+        need(result.receipt.indexed_shadow.has_value(), "routed protocol requires an explicit indexed proof");
+        const auto& proof = *result.receipt.indexed_shadow;
+        const auto& r = proof.routing;
+        writer.token("ROUTE"); writer.token(proof.mode);
+        const auto field = [&](std::string_view name, std::uint64_t value, bool last = false) {
+            writer.token(std::string(name) + "=" + std::to_string(value), last);
+        };
+        field("q_rows", r.original_q_rows);
+        field("map_entries", r.numeric_map_entries_actual);
+        field("map_upper", r.numeric_map_entries_upper);
+        field("r_lookup_entries", r.r_lookup_entries);
+        field("old_q_histories_retained", r.original_q_histories_retained ? 1 : 0);
+        field("q_routes", r.history_route_calls_actual);
+        field("q_routes_upper", r.history_route_calls);
+        field("q_tokens", r.history_route_tokens_actual);
+        field("q_tokens_upper", r.history_route_tokens_upper);
+        field("roots", r.root_cursor_calls_actual);
+        field("roots_upper", r.root_cursor_calls);
+        field("edges", r.edge_advance_calls_actual);
+        field("edges_upper", r.edge_advance_calls);
+        field("decisions", r.decision_lookup_calls_actual);
+        field("decisions_upper", r.decision_lookup_calls_upper);
+        field("prefixes", r.prefix_lookup_calls_actual);
+        field("prefixes_upper", r.prefix_lookup_calls_upper);
+        field("decision_comparisons", proof.decision_comparisons);
+        field("prefix_comparisons", proof.prefix_comparisons);
+        field("legacy_extensions", proof.legacy_training_history_extensions);
+        field("legacy_rows", proof.legacy_training_row_lookups);
+        field("legacy_prefixes", proof.legacy_training_prefix_lookups);
+        field("router_work", r.router_query_work_actual);
+        field("router_work_upper", r.router_query_work_upper);
+        field("index_work", r.index_query_work_actual);
+        field("index_work_upper", r.index_query_work_upper);
+        field("index_entries", r.index_query_entries_actual);
+        field("index_entries_upper", r.index_query_entries_upper);
+        field("router_retained", r.router_retained_entries_actual);
+        field("router_retained_upper", r.router_retained_entries_upper);
+        field("setup_scratch_upper", r.router_setup_scratch_entries_upper);
+        field("query_scratch_upper", r.router_query_scratch_entries_upper);
+        field("cursor_fields", r.cursor_logical_entries_upper);
+        field("cursor_frames_upper", proof.cursor_frame_entries_upper);
+        field("combined_work", r.combined_modeled_work_upper);
+        field("combined_entries", r.combined_logical_entries_upper);
+        field("caller_work", proof.caller_work_upper);
+        field("caller_entries", proof.caller_entries_upper);
+        field("old_kernel_overlap", proof.plan_kernel_forecast_retained_overlap);
+        field("old_history_forecast", proof.legacy_full_history_work_forecast_retained);
+        field("final_router_entries", proof.final_router_entries, true);
+    }
     return 0;
 }
 } // namespace

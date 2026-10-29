@@ -583,7 +583,7 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
                                     training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
-                                    native_executable=None):
+                                    native_executable=None, native_routing="full-history"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -595,6 +595,10 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     reduction; it verifies whole-game suit closure and every member increment.
     Complete policy output and independent diagnostics remain expanded.
     """
+    if type(native_routing) is not str or native_routing not in ("full-history", "shadow", "indexed"):
+        raise ValueError("Unsupported exact native routing mode.")
+    if native_routing != "full-history" and native_executable is None:
+        raise ValueError("Indexed native routing requires an explicit source-built executable.")
     if native_executable is not None:
         if (pair_diagnostics != "compact" or exact_arithmetic != "dyadic" or
                 training_reduction != "suit-equivariant" or strategy_storage != "suit-quotient" or
@@ -707,7 +711,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             from .native_exact_four_street import train as train_native_exact
             averages, native_receipt = train_native_exact(native_prepared, executable=native_executable,
                 rank_cache_boards=rank_cache_boards, native_work=native_reservation["native_work_limit"],
-                native_entries=native_reservation["native_entries_limit"], reservation=native_reservation)
+                native_entries=native_reservation["native_entries_limit"], reservation=native_reservation,
+                routing=native_routing)
             admission["combined_modeled_work_upper"] += native_receipt["modeled_work_upper"]
             retained = admission["retained_storage"]
             retained["phase_upper_bounds"] = {name: value + native_receipt["retained_entries_upper"]
@@ -871,6 +876,9 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             result["quotient_lookup"] = "per-decision-suit-history-transform-v1"
     if native_receipt is not None:
         result["training_backend"] = "native-exact-four-street-v1"
+        if native_routing != "full-history":
+            result["training_backend"] = "native-exact-four-street-routed-v2"
+            result["native_routing"] = native_routing
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")
