@@ -1,0 +1,17 @@
+{
+  "archive": "native-exact-whole-evidence-v1.zip",
+  "archive_bytes": 9757262,
+  "archive_entries": 1041,
+  "archive_sha256": "a79accd124248fdf0a02328b00a81923690143952d608caad6c7bdc06640f507",
+  "evidence_manifest_sha256": "a53497d017ef83eb503ece72c26cfc57c872f4b79be4a6632756c9424f2b0d64",
+  "medians_seconds": {
+    "native": 1.4913157000000865,
+    "python": 6.961623700000018
+  },
+  "quality_receipt_sha256": "d074bf21ba8f0ead6df63c81a0a66581d94ac7bf2f85c91e2637271416011200",
+  "scope": "Complete frozen study plus independent saved policies/physical input-tail proof and retained errors. Raw source archive is evidence only, never executed by the reviewers. Strict graph isomorphism is false; only explicitly checked chance-only terminal tails are exact physical-game equivalent. No cross-graph floating callback/trajectory equivalence or native-heap measurement.",
+  "source_commit": "52aa21f343aa769c4aeabf6fb7eb7c6be6816f96",
+  "study_manifest_sha256": "255933b35d81f0a344bec0e2d2340c8ba84fa3a22151c1093717a8fc46684e18",
+  "version": "v1",
+  "wire_receipt_sha256": "347edaedd92114c444577eb992a2e1d5d955aff12c3cb30c9d988b865908f762"
+}

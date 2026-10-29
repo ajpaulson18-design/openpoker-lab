@@ -22,7 +22,10 @@ LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad5
 TARGETS = {"converter": ("native-exact-binary64-probe", (
     "native/exact_binary64_probe.cpp", "native/exact_binary64.hpp")),
     "kernel": ("native-exact-selected-vectors", (
-        "native/exact_selected_kernel_probe.cpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp"))}
+        "native/exact_selected_kernel_probe.cpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "engine": ("native-exact-four-street-train", (
+        "native/exact_four_street_train.cpp", "native/exact_public_graph.hpp", "native/exact_selected_cfr.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp"))}
 
 
 def _hash(raw):
@@ -159,7 +162,8 @@ def build(output_directory, *, target="converter", sanitize=False):
           "Native exact source changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
         "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
-                  if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."),
+                  if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
+                  if target == "kernel" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,

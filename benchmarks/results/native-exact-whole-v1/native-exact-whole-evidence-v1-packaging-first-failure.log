@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\package-native-exact-whole.py", line 127, in <module>
+    main()
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\package-native-exact-whole.py", line 60, in main
+    need(wire_receipt.get('outcome') == 'passed', 'Independent wire proof incomplete')
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\package-native-exact-whole.py", line 15, in need
+    raise ValueError(message)
+ValueError: Independent wire proof incomplete

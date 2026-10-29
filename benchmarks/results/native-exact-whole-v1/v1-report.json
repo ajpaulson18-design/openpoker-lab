@@ -1,0 +1,723 @@
+{
+  "calls_completed": 18,
+  "calls_planned": 18,
+  "failure": null,
+  "medians_seconds": {
+    "native": 1.4913157000000865,
+    "python": 6.961623700000018
+  },
+  "paired_identities": {
+    "asymmetric-weighted-python-0__vs__asymmetric-weighted-native-0": {
+      "complete_rows": 56,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "blocker-18-python-0__vs__blocker-18-native-0": {
+      "complete_rows": 88,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "mixed-stabilizer-python-0__vs__mixed-stabilizer-native-0": {
+      "complete_rows": 28,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-python-0__vs__original-22-t10-native-0": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-python-1__vs__original-22-t10-native-1": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-python-2__vs__original-22-t10-native-2": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "original-22-t10-python-traced__vs__original-22-t10-native-traced": {
+      "complete_rows": 1200,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": false
+    },
+    "payoff-varied-t100-python-0__vs__payoff-varied-t100-native-0": {
+      "complete_rows": 56,
+      "exact_certificate_metrics_identical": true,
+      "exact_threshold_flags_identical": true,
+      "metric_absolute_differences": {
+        "bb_best_response_value": 0.0,
+        "bb_gain": 0.0,
+        "exploitability": 0.0,
+        "nash_conv": 0.0,
+        "sb_best_response_value": 0.0,
+        "sb_gain": 0.0,
+        "value_bb": 0.0,
+        "value_sb": 0.0
+      },
+      "metric_values_identical": true,
+      "policy_bitwise_identical": true,
+      "threshold_met": true
+    }
+  },
+  "samples": [
+    {
+      "artifact": "original-22-t10-python-0.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 490440,
+      "payload_sha256": "4bc0221ad2e862dc07fcab06eb369f50f8271501ee61a050ab091f21a9efefd6",
+      "process_peak_bytes": 37273600,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 6.961623700000018,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-native-0.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 491409,
+      "payload_sha256": "70f04a9e3fe8a51214528ecf632c424b271aa38ee1be7d741824938fde3b110b",
+      "process_peak_bytes": 38801408,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 1.4913157000000865,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-native-1.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 491409,
+      "payload_sha256": "70f04a9e3fe8a51214528ecf632c424b271aa38ee1be7d741824938fde3b110b",
+      "process_peak_bytes": 38031360,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 1.3657617999997456,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-python-1.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 490440,
+      "payload_sha256": "4bc0221ad2e862dc07fcab06eb369f50f8271501ee61a050ab091f21a9efefd6",
+      "process_peak_bytes": 36573184,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 7.047939199999746,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-python-2.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 490440,
+      "payload_sha256": "4bc0221ad2e862dc07fcab06eb369f50f8271501ee61a050ab091f21a9efefd6",
+      "process_peak_bytes": 36450304,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 6.626045099999828,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-native-2.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 491409,
+      "payload_sha256": "70f04a9e3fe8a51214528ecf632c424b271aa38ee1be7d741824938fde3b110b",
+      "process_peak_bytes": 38072320,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 1.6424228999999286,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-python-traced.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 490440,
+      "payload_sha256": "4bc0221ad2e862dc07fcab06eb369f50f8271501ee61a050ab091f21a9efefd6",
+      "process_peak_bytes": 38191104,
+      "python_allocation_peak_bytes": 3271804,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": "traced",
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 41.92979809999997,
+      "traced": true
+    },
+    {
+      "artifact": "original-22-t10-native-traced.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 491409,
+      "payload_sha256": "70f04a9e3fe8a51214528ecf632c424b271aa38ee1be7d741824938fde3b110b",
+      "process_peak_bytes": 40718336,
+      "python_allocation_peak_bytes": 4903906,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": "traced",
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 4.794180900000356,
+      "traced": true
+    },
+    {
+      "artifact": "payoff-varied-t100-python-0.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 100,
+      "mode": "python",
+      "payload_bytes": 43030,
+      "payload_sha256": "5497bea0f74bb9f0e2f1bc344dd41347559c2b625bedc165108acef302a859c1",
+      "process_peak_bytes": 33480704,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 2.6568757999998525,
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t100-native-0.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 100,
+      "mode": "native",
+      "payload_bytes": 44075,
+      "payload_sha256": "2eddc52e5d0fd67ba74055254e6a96c27ddfa7a22a798c7d19202956afe9d0ef",
+      "process_peak_bytes": 34222080,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.51239970000006,
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-python-0.json",
+      "case": "blocker-18",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 12,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 52901,
+      "payload_sha256": "2c6e494e36c2c919debcb69913a745f64ad1bb3adf1ad77efb5ce247c8f3d385",
+      "process_peak_bytes": 33660928,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.37980530000004364,
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-native-0.json",
+      "case": "blocker-18",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 12,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 53975,
+      "payload_sha256": "26d0847acd2147f0ec2720b4f88c8ce1191b5a884ab7f7a6b7d97ee7d0bf2ea7",
+      "process_peak_bytes": 34156544,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.4319796999998289,
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-weighted-python-0.json",
+      "case": "asymmetric-weighted",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 41948,
+      "payload_sha256": "5bc3b02dbb97547fa0f606f86ebf19caef5e921daaa144b7e629fe7108fc1fb2",
+      "process_peak_bytes": 33665024,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.3221152000000984,
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-weighted-native-0.json",
+      "case": "asymmetric-weighted",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 43018,
+      "payload_sha256": "cb46f8d178bb606f85342a74232c23f9742a788530f88004d5664e0ddcd28dbc",
+      "process_peak_bytes": 34263040,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.3873932000001332,
+      "traced": false
+    },
+    {
+      "artifact": "mixed-stabilizer-python-0.json",
+      "case": "mixed-stabilizer",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 4,
+        "python_trainer": 1,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "python",
+      "payload_bytes": 32306,
+      "payload_sha256": "ac99d3cbbdc05e1725a97457121d1dea0f37a696103369712657ead1320a9473",
+      "process_peak_bytes": 33509376,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.3140848000002734,
+      "traced": false
+    },
+    {
+      "artifact": "mixed-stabilizer-native-0.json",
+      "case": "mixed-stabilizer",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 4,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "mode": "native",
+      "payload_bytes": 33391,
+      "payload_sha256": "6046f8142684975627700d6705be943560c061d74c1ab7c70b744a0de5ab62d7",
+      "process_peak_bytes": 34000896,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.3073708000001716,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-qreject-python-0.json",
+      "case": "original-22-qreject",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      },
+      "iterations": 1000,
+      "mode": "python",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 33001472,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.08026220000010653,
+      "traced": false
+    },
+    {
+      "artifact": "original-22-qreject-native-0.json",
+      "case": "original-22-qreject",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 0,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": null,
+        "world": 0
+      },
+      "failure": {
+        "message": "Exact selected whole-request kernel work admission exceeded before information/training allocation.",
+        "type": "ValueError"
+      },
+      "iterations": 1000,
+      "mode": "native",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 33763328,
+      "python_allocation_peak_bytes": null,
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete solve plus canonical result serialization/hash. Instrumentation installed outside timing; raw native request/result bytes are retained by the observer through diagnostics. Traced Python peak includes that retention and excludes the native heap; process peak is Python child lifetime. No whole-machine/RSS or universal performance claim.",
+      "seconds": 0.2062431999997898,
+      "traced": false
+    }
+  ],
+  "scope": "Finite fixed games, conditional selected-runout model. Retain every target miss and original T1000 no-training rejection. Quality and complete-call time/memory remain distinct.",
+  "source_commit": "52aa21f343aa769c4aeabf6fb7eb7c6be6816f96"
+}

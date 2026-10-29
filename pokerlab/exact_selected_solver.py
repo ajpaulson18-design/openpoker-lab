@@ -582,7 +582,8 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
-                                    training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row"):
+                                    training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
+                                    native_executable=None):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -594,6 +595,13 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     reduction; it verifies whole-game suit closure and every member increment.
     Complete policy output and independent diagnostics remain expanded.
     """
+    if native_executable is not None:
+        if (pair_diagnostics != "compact" or exact_arithmetic != "dyadic" or
+                training_reduction != "suit-equivariant" or strategy_storage != "suit-quotient" or
+                quotient_lookup != "per-decision"):
+            raise ValueError("Native exact training requires compact dyadic suit-equivariant Q storage with per-decision lookup.")
+        from .native_exact_four_street import executable_identity
+        executable_identity(native_executable)
     prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
                                        kernel_limits=kernel_limits,
                                        pair_diagnostics=pair_diagnostics,
@@ -602,7 +610,12 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                                        quotient_lookup=quotient_lookup)
     quotient_plan = None
     quotient_receipt = None
-    if strategy_storage == "suit-quotient":
+    native_prepared = prepared if native_executable is not None else None
+    native_reservation = native_receipt = None
+    if native_executable is not None:
+        from .native_exact_four_street import admit
+        native_reservation = admit(prepared)
+    elif strategy_storage == "suit-quotient":
         from .suit_quotient_plan import SuitQuotientPlan
         quotient_plan = SuitQuotientPlan(prepared, request.iterations)
         quotient_receipt = quotient_plan.receipt
@@ -644,7 +657,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     # Rank-free legal support is queried only after the whole-request kernel,
     # adapter, layout and output envelopes have passed.
     infos, menus = {}, {}
-    if quotient_plan is None:
+    if quotient_plan is None and native_prepared is None:
         legal_by_prefix = {}
         for prefix in unique_prefixes:
             legal_by_prefix[prefix] = kernel.legal_hands(prefix)
@@ -661,7 +674,10 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         legal_by_prefix = None
     if sum(infos.values()) > action_slots_upper:
         raise RuntimeError("Exact information rows exceeded the admitted direct-topology upper bound.")
-    if quotient_plan is not None:
+    if native_prepared is not None:
+        packed_layout = {"version": "native-exact-four-street-layout-v1", "admission": native_reservation}
+        trainer = None
+    elif quotient_plan is not None:
         from .suit_quotient_cfr import layout_census_suit_quotient, train_suit_quotient
         packed_layout = layout_census_suit_quotient(view, quotient_plan, kernel.hand_counts, request.iterations,
             row_lookup=quotient_lookup)
@@ -687,7 +703,36 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     training_root = view.root
     marginals = _OnePrefixMarginals(adapter)
     try:
-        if infos or (quotient_plan is not None and quotient_plan.keys):
+        if native_prepared is not None:
+            from .native_exact_four_street import train as train_native_exact
+            averages, native_receipt = train_native_exact(native_prepared, executable=native_executable,
+                rank_cache_boards=rank_cache_boards, native_work=native_reservation["native_work_limit"],
+                native_entries=native_reservation["native_entries_limit"], reservation=native_reservation)
+            admission["combined_modeled_work_upper"] += native_receipt["modeled_work_upper"]
+            retained = admission["retained_storage"]
+            retained["phase_upper_bounds"] = {name: value + native_receipt["retained_entries_upper"]
+                for name, value in retained["phase_upper_bounds"].items()}
+            retained["whole_request_peak_upper"] += native_receipt["retained_entries_upper"]
+            if (admission["combined_modeled_work_upper"] > admission["whole_request_limit"] or
+                    retained["whole_request_peak_upper"] > retained["entry_limit"]):
+                raise RuntimeError("Native exact result exceeded its whole-request reservation.")
+            packed_layout = {"version": "native-exact-four-street-layout-v1", "native": native_receipt}
+            training_summary = {"calls": 1, "reason": "explicit-native-exact-process",
+                "iterations": request.iterations, "layout": packed_layout}
+            # The native workspace is released before complete physical rows
+            # are materialized for the unchanged Python diagnostics/output.
+            for occurrence in topology.iter_occurrences():
+                vertex = topology.vertices[occurrence.vertex_id]
+                if isinstance(vertex, DecisionVertex):
+                    for hand in range(kernel.hand_counts[vertex.player]):
+                        key = (vertex.player, hand, occurrence.history)
+                        if key in averages:
+                            infos[key] = len(vertex.actions)
+                            menus[key] = vertex.actions
+            if set(infos) != set(averages):
+                raise RuntimeError("Native exact physical geometry differs from admitted public rules.")
+            native_prepared = None
+        elif infos or (quotient_plan is not None and quotient_plan.keys):
             averages, training_receipt = trainer(
                 training_root, infos if quotient_plan is None else quotient_plan, request.iterations, operator=adapter,
                 marginals=marginals, return_receipt=True, shared_view=view,
@@ -776,6 +821,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     }
     if quotient_receipt is not None:
         census["suit_quotient_storage"] = quotient_receipt
+    if native_receipt is not None:
+        census["native_exact"] = native_receipt
     result = {
         "method": "full-traversal CFR+", "solver_version": "preflop-strategy-v1",
         "strategy_schema": "preflop-strategy-v1", "algorithm": request.algorithm,
@@ -822,6 +869,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                             "no whole-solve peak-memory or universal compression/speed claim follows.")
         if quotient_lookup == "per-decision":
             result["quotient_lookup"] = "per-decision-suit-history-transform-v1"
+    if native_receipt is not None:
+        result["training_backend"] = "native-exact-four-street-v1"
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")

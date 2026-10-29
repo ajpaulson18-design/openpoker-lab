@@ -1,0 +1,22 @@
+{
+  "schema": "native-exact-whole-publication-v1",
+  "scope": "Two separate frozen 18-child studies. Full raw policies, independent certificates, source captures, build identities and retained failures are losslessly archived. Archives contain historical source as evidence and must not be executed.",
+  "sha256": {
+    "native-exact-cross-source-c650-receipt.json": "4e82d815cac06fce2654245ffdbcb455cea64cc769b37aeeadbae11c7a99cfc0",
+    "native-exact-whole-evidence-v1-packaging-first-failure.log": "fd14e9e3f87448094f00f858991ffebc409b180ebf08c9ed2cae457482b09c32",
+    "native-exact-whole-evidence-v1.zip": "a79accd124248fdf0a02328b00a81923690143952d608caad6c7bdc06640f507",
+    "native-exact-whole-evidence-v2.zip": "d9ec90169f9406d54daa42b4a6a39241f364cddfc6701a77dcc9a51ac0f14d1b",
+    "package-native-exact-whole-attempt1.py": "0d38b8c49af010a23710d101f1ffcb6d8710aeeb163364acb1e76cf77a5138ed",
+    "package-native-exact-whole.py": "c34637eb4cf4410c2b621f2e5766333b1647452184001367e2c49c222a3c661e",
+    "v1-archive-receipt.json": "5c3fa26e49a576cdd0c7bd04ef0069f8f39a6d22c9a7cd62cb1aa30a43817aa7",
+    "v1-quality-receipt.json": "d074bf21ba8f0ead6df63c81a0a66581d94ac7bf2f85c91e2637271416011200",
+    "v1-report.json": "e4aa2fa8f85b3c3567b90349784c44bcf451ed327bf40e35fc86c39a27c70fbc",
+    "v1-study-manifest.json": "255933b35d81f0a344bec0e2d2340c8ba84fa3a22151c1093717a8fc46684e18",
+    "v1-wire-receipt.json": "347edaedd92114c444577eb992a2e1d5d955aff12c3cb30c9d988b865908f762",
+    "v2-archive-receipt.json": "cfc1f7a772dc3701b85a7f7de89d3530a29d9478257b8ece23fe9501b6b3aac1",
+    "v2-quality-receipt.json": "766f8f161a4e9ff6872e302672a7af152a52ca339be9b23e57359d0b8e246e32",
+    "v2-report.json": "aeea8234946e4f8357fe94a8aa3987f5cfe402cf1e18f450d14e767cef9a306c",
+    "v2-study-manifest.json": "c92a8a00093a354b9f85da7931f61dec663b3bd7b74119603a9053ff3a52dd88",
+    "v2-wire-receipt.json": "e68ca06a12fc6bdeadb3f89fb92fe6931a2d0b594b0eef94fc57b6c10387e840"
+  }
+}
