@@ -35,6 +35,17 @@ and explicitly reserves the prefix set. The blind-all-in reference/replay contro
 passes, as do 32 corrected optimized API/independent/runner controls (26.925 s).
 Frozen observations stay pinned to their original source; no producer retry.
 
+Fresh independent saved-only review now passes all 15 numeric policies, with
+maximum metric gap 2.22e-16, and independently reconstructs the 12 completed exact
+target misses. Three larger exact audits remain resource-unverified; 13 native
+budget failures remain. The [retained result](native-indexed-admission-result.md)
+authenticates five completed pairs, two parent stops versus three raw
+reclassifications, and the continuation summary's omitted index17. Separate
+corrected-source parsing and saved request-limit binding pass without candidate
+execution. The 15,715,433-byte/1,267-entry archive passes independent closure review.
+All prior helper, parent, source and reviewer failures stay preserved. Final CI
+and merge remain publication gates; broader quality and solver scaling remain open.
+
 ## Numeric routing in actual native learning (October 29)
 
 The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses

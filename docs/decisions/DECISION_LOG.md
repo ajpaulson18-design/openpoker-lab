@@ -48,6 +48,14 @@ reject foreign modes before training arrays and require independent policy repla
 Development parity is not a frozen capacity or quality result; final study and CI
 remain separate gates. No cap increase, numerical trajectory or poker-law change.
 
+The [retained 28-attempt result](../native-indexed-admission-result.md) now has
+independent saved-only replay and archive acceptance: 15 numeric policies pass,
+12 exact certificates miss the target and three exact outcomes remain capacity
+unknowns. Five completed mode pairs match. Separate corrected-host prefix proof,
+saved-output compatibility and request-limit binding preserve the original frozen
+producer record; all parent/reviewer failures and the summary omission remain.
+Final publication-head CI still governs merge. The overall goal remains active.
+
 ### D072: Integrate numeric routing without changing the numerical trajectory (October 29, 2026)
 
 The [indexed training candidate](../native-indexed-routing.md) uses typed visible

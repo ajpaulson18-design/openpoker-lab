@@ -1,0 +1,207 @@
+{
+  "candidate_calls": 0,
+  "continuation_protocol_summary_omits_index": 17,
+  "continuation_terminal_handle": 87586,
+  "counts": {
+    "complete": 15,
+    "host-admission-rejected": 0,
+    "native-resource-rejected": 13
+  },
+  "manifest_sha256": "fc59d72086d557d5f4646e2195ea58817a30be85aa56bb4eda4b48a015d3ca3d",
+  "max_numeric_gap": 2.220446049250313e-16,
+  "pairs": {
+    "asymmetric-weighted-t10-legacy__asymmetric-weighted-t10-indexed-v1": "matched",
+    "blocker-18-t10-legacy__blocker-18-t10-indexed-v1": "matched",
+    "mixed-stabilizer-t10-legacy__mixed-stabilizer-t10-indexed-v1": "matched",
+    "original-22-t10-t10-legacy__original-22-t10-t10-indexed-v1": "matched",
+    "original-22-t10-t20-legacy__original-22-t10-t20-indexed-v1": "not-both-complete",
+    "original-22-t10-t40-legacy__original-22-t10-t40-indexed-v1": "not-both-complete",
+    "payoff-varied-t10-t10-legacy__payoff-varied-t10-t10-indexed-v1": "matched"
+  },
+  "parent_stops": [
+    14,
+    22
+  ],
+  "raw_reclassifications": [
+    14,
+    17,
+    22
+  ],
+  "report_sha256": "3490153ff2bafe94e462b44dc32b64ae6f3ac69d7011fbcdc10cec1e8d8a7dec",
+  "results": [
+    {
+      "exact": "complete",
+      "label": "original-22-t10-t10-legacy",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "original-22-t10-t10-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "payoff-varied-t10-t10-legacy",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "payoff-varied-t10-t10-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "blocker-18-t10-legacy",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "blocker-18-t10-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "asymmetric-weighted-t10-legacy",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "asymmetric-weighted-t10-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "mixed-stabilizer-t10-legacy",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "exact": "complete",
+      "label": "mixed-stabilizer-t10-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "label": "original-22-t10-t20-legacy",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "exact": "complete",
+      "label": "original-22-t10-t20-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "label": "original-22-t10-t40-legacy",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "exact": "complete",
+      "label": "original-22-t10-t40-indexed-v1",
+      "numeric": "complete",
+      "quality": false,
+      "status": "complete"
+    },
+    {
+      "label": "original-weighted-2x2-t100-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "original-weighted-2x2-t1000-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "exact": "resource-unverified",
+      "exact_error": "Compact payload exceeds unchanged exact policy-shape cap",
+      "label": "balanced-4x4-unit-t10-indexed-v1",
+      "numeric": "complete",
+      "status": "complete"
+    },
+    {
+      "label": "balanced-4x4-unit-t100-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "balanced-4x4-unit-t1000-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "exact": "resource-unverified",
+      "exact_error": "Compact payload exceeds unchanged exact policy-shape cap",
+      "label": "balanced-8x8-unit-t10-indexed-v1",
+      "numeric": "complete",
+      "status": "complete"
+    },
+    {
+      "label": "balanced-8x8-unit-t100-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "balanced-8x8-unit-t1000-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "balanced-16x16-unit-t10-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "balanced-16x16-unit-t100-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "balanced-16x16-unit-t1000-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "exact": "resource-unverified",
+      "exact_error": "Compact payload exceeds unchanged exact policy-shape cap",
+      "label": "asymmetric-2x16-unit-t10-indexed-v1",
+      "numeric": "complete",
+      "status": "complete"
+    },
+    {
+      "label": "asymmetric-2x16-unit-t100-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    },
+    {
+      "label": "asymmetric-2x16-unit-t1000-indexed-v1",
+      "quality": null,
+      "status": "native-resource-rejected"
+    }
+  ],
+  "scope": "Saved policy and raw wire census; no new full input-graph equivalence, CPU, or universal quality claim. Resource-unverified verifier results are not passes.",
+  "source_commit": "52295e8f7b4ebb8003b738dc7a8828b4636c8cb5",
+  "source_files": 2091,
+  "status": "passed"
+}

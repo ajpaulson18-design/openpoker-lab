@@ -1,0 +1,21 @@
+{
+  "archive_sha256": "f9fe07512cb57827fe89358c85c3609e9355ab008c4d3ba11c6dd4349ff7bb51",
+  "entries": 1267,
+  "manifest_sha256": "9d8505e9a74ed0e8f8a495068e68271f59059a1a4ad459ed40c287cee5cb8094",
+  "parent_stops": [
+    14,
+    22
+  ],
+  "raw_reclassifications": [
+    14,
+    17,
+    22
+  ],
+  "scope": "Saved archive byte/inventory/source-entry closure and study/review receipt consistency; no solver calls. Full source maps authenticate 2091 tracked files; archive carries core and introduced source, not necessarily every tracked file.",
+  "status": "passed",
+  "study_directories": [
+    "native-indexed-admission-study-v1",
+    "native-indexed-admission-study-continuation-v1",
+    "native-indexed-admission-study-continuation-v2"
+  ]
+}

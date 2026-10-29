@@ -1,19 +1,25 @@
 # Current engineering state
 
-The explicit [executed indexed-path admission candidate](../native-indexed-admission.md)
+The explicit [executed indexed-path admission](../native-indexed-admission.md)
 reserves host diagnostics and native construction/learning separately within the
 same whole-request allowance. Defaults retain legacy admission. Development checks
 preserve five full policies/eight metrics and independently replay them; original
 T20 also matches the Python reference beyond the old native admission. Real T1000
-callback limits still reject. Committed-source capacity/replay evidence and final
-CI are pending; this is not a full-deck, quality-target or memory-gain claim.
+callback limits still reject. This is not a full-deck, quality-target or memory-gain claim.
 
 The frozen capacity study has 15 completed solves/13 native resource rejections
 across 28 distinct attempts. Original T20/T40 and 4x4, 8x8 and 2x16 T10 cases
 complete. All numeric replays pass; 12 exact audits miss the target and three
-larger-range exact audits remain capacity-unverified. Fresh saved-only review is
-pending. A post-freeze terminal-only prefix proof correction now accepts a
+larger-range exact audits remain capacity-unverified. A post-freeze terminal-only prefix proof correction now accepts a
 reference-matching blind-all-in result; all old raw evidence remains preserved.
+
+The [retained capacity result](../native-indexed-admission-result.md) now has
+fresh independent saved-only acceptance: all 15 numeric policies replay within
+2.22e-16, all 12 completed exact certificates retain misses, and three larger-range
+exact outcomes remain unverified. Five completed mode pairs match. Corrected-host
+parsing and saved request-limit binding pass separately; the 1,267-entry archive
+is independently verified. Two parent stops and three raw reclassifications,
+including the incomplete summary, remain explicit. Final publication CI is pending.
 
 An explicit [indexed native learning candidate](../native-indexed-routing.md)
 now connects numeric Q keys, incremental visible-path cursors and borrowed typed

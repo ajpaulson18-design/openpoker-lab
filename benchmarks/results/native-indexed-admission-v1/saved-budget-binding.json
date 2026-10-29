@@ -1,0 +1,100 @@
+{
+  "candidate_calls": 0,
+  "compatibility_receipt_sha256": "0eafe99f8a2a882898e6fbdd243a238c5dda99dfb7f9ec5d082dbc4d7d33684d",
+  "corrected_source_commit": "33334e631ed0cd05202a42aaeca9104b8981ccd4",
+  "records": [
+    {
+      "label": "original-22-t10-t10-legacy",
+      "request_sha256": "e4afde76d95ed4a2bd390ebca11b2fcbf8efe098d5400b04a77fd6a8feb1d64a",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 362148263
+    },
+    {
+      "label": "original-22-t10-t10-indexed-v1",
+      "request_sha256": "471b868cae5ec6c70eb71a23528c4a2822a573437b458d95be64b4979298052d",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 478396362
+    },
+    {
+      "label": "payoff-varied-t10-t10-legacy",
+      "request_sha256": "3d0592760851b71cbccf81eb97f517801773e42186192d5c6de93fc13264f4e1",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 488708903
+    },
+    {
+      "label": "payoff-varied-t10-t10-indexed-v1",
+      "request_sha256": "f1f08becbb028a4d9a4195b88f07c7a74eff1971fd86e9d7874aa54dab085473",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 495168556
+    },
+    {
+      "label": "blocker-18-t10-legacy",
+      "request_sha256": "bf5a944476673aebbce28ddeb475039178d4d471230d466a09006722c765b6fd",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 482224867
+    },
+    {
+      "label": "blocker-18-t10-indexed-v1",
+      "request_sha256": "42e21b2564ab83a73a1cc776c7eecd33c5fa46e5023a312502ca9b4b4a8a643d",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 494605640
+    },
+    {
+      "label": "asymmetric-weighted-t10-legacy",
+      "request_sha256": "0d9fc8d080eb98e6cd16f5abf3cadd5c1de5cb2ec07b943dfaebcb0201cf5035",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 491256775
+    },
+    {
+      "label": "asymmetric-weighted-t10-indexed-v1",
+      "request_sha256": "bc9e8b0b56ad05b089009a80583ae30e1453f9530942e99bb3f73fd175a99370",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 495498444
+    },
+    {
+      "label": "mixed-stabilizer-t10-legacy",
+      "request_sha256": "b9585a7699796f2c7cdc18bd29fead9fcfca5898bca70936700514c601337cdf",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 491922511
+    },
+    {
+      "label": "mixed-stabilizer-t10-indexed-v1",
+      "request_sha256": "dd7255ba08a423e4d444012345efe58e3ddc46b14802a1b8f0de5048acc52319",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 495423044
+    },
+    {
+      "label": "original-22-t10-t20-indexed-v1",
+      "request_sha256": "1f6a8722f13bd91405db2ff404f6db29418a8a1e4c66bb0469337f930fc9049c",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 478396362
+    },
+    {
+      "label": "original-22-t10-t40-indexed-v1",
+      "request_sha256": "b1af1836d37164adfec388b7b99bda95608454b45f2b91ad17e59e59c1fb095a",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 478396362
+    },
+    {
+      "label": "balanced-4x4-unit-t10-indexed-v1",
+      "request_sha256": "a0ff32e432c72efc1957741ca321b13122292714158d1b9ccf42e6d75c5618bc",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 465295016
+    },
+    {
+      "label": "balanced-8x8-unit-t10-indexed-v1",
+      "request_sha256": "1c7d293269f9c7f5cff6fbd4d3e386f6ccec3317ef94bdfe5b1c83ead23dbecb",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 433865720
+    },
+    {
+      "label": "asymmetric-2x16-unit-t10-indexed-v1",
+      "request_sha256": "eedff0ff24f2c904b25f08ac1071dbd639a402a8dd5579c7f12c6227aee063c1",
+      "shared_native_entries": 2000000,
+      "shared_native_work": 424823036
+    }
+  ],
+  "scope": "Independent saved request-limit decoding and binding to prior corrected-source remainder checks. No project mathematical imports, native invocation, training or policy replay.",
+  "status": "passed",
+  "study_manifest_sha256": "fc59d72086d557d5f4646e2195ea58817a30be85aa56bb4eda4b48a015d3ca3d"
+}

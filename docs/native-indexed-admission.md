@@ -1,8 +1,8 @@
 # Executed-path admission for native indexed training
 
-Status: implemented candidate; development controls pass. Committed-source
-capacity measurements, independent saved-policy acceptance and final CI are
-separate gates. The [indexed routing integration](native-indexed-routing.md)
+Status: implemented with [committed-source capacity evidence and independent
+saved-policy acceptance](native-indexed-admission-result.md). Final publication
+CI and merge remain separate gates. The [indexed routing integration](native-indexed-routing.md)
 already removed history processing during learning, but conservatively retained
 Python training and old native history forecasts. This profile accounts for the
 executed path without increasing any resource ceiling.
@@ -11,7 +11,7 @@ The frozen `52295e8f7b4ebb8003b738dc7a8828b4636c8cb5` study now accounts for
 28 distinct producer attempts: 15 completed solves and 13 native resource
 rejections. Numeric replay completes for all 15; 12 exact certificates complete
 with missed targets and three larger-range exact audits remain resource-unverified.
-Fresh saved-only review is pending. Two parent classifier failures are preserved;
+Fresh saved-only review passes, with maximum numeric gap about 2.22e-16. Two parent classifier failures are preserved;
 external continuations reused every existing raw result and ran only unattempted
 requests, without changing the mathematical source or rerunning producers.
 
@@ -134,6 +134,11 @@ corrected explicit component equation rejects every single-field mutation;
 the failure remains preserved. Compiler discovery's missing environment is
 separate from the successful configured strict build.
 
+The [retained result](native-indexed-admission-result.md) includes all three
+attempt directories, all first reviewer failures, the three raw reclassifications
+and the omitted index in the continuation summary. Separate corrected-host
+saved-output compatibility and request-limit binding pass without training.
+
 Independent scrutiny after that freeze found a terminal-only prefix bug in the
 Python admission proof: native Plan counts support prefixes at decision, chance
 and terminal occurrences, while Python had compared against decision prefixes
@@ -148,7 +153,7 @@ suite passes 32 controls with assertions disabled (26.925 seconds).
 
 Sol owns architecture/native implementation; root implements host integration
 while Luna is usage-limited, and Terra independently challenges accounting and
-boundaries. A fixed committed-source study must preserve every capacity rejection,
+boundaries. The fixed committed-source study preserves every capacity rejection,
 complete policy, replay result and missed target. Broader convergence, full-deck
 four-street solving, scalable certification, strategy/history/output storage and
 repeated exact callback computation remain unresolved. The overall goal stays active.

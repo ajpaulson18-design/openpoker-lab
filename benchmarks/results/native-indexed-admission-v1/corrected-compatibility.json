@@ -1,0 +1,145 @@
+{
+  "authenticated_source_files": 2091,
+  "candidate_training_calls": 0,
+  "completed_policy_parses": [
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 362148263,
+      "label": "original-22-t10-t10-legacy",
+      "native_entries": 543399,
+      "native_result_sha256": "a3a7b9daac675bd907b76de803c428e658f4b251d8c4b4d2fc1d0e27480c96d8",
+      "native_work": 230076664,
+      "policy_rows": 1200
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 478396362,
+      "label": "original-22-t10-t10-indexed-v1",
+      "native_entries": 543399,
+      "native_result_sha256": "d0e8597945402535937099b1bc69614d7b7c36e3e9feed9e47682df021da3e28",
+      "native_work": 126209224,
+      "policy_rows": 1200
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 488708903,
+      "label": "payoff-varied-t10-t10-legacy",
+      "native_entries": 93417,
+      "native_result_sha256": "17a8e948a51f334c77bc0611088db93510d7c370e80e5f707542968f6e157cc5",
+      "native_work": 14283145,
+      "policy_rows": 56
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 495168556,
+      "label": "payoff-varied-t10-t10-indexed-v1",
+      "native_entries": 93417,
+      "native_result_sha256": "c3ea89578d4eeb5baf230b69b994d5b8ba5535538f384d965497955cc6f5add4",
+      "native_work": 6583945,
+      "policy_rows": 56
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 482224867,
+      "label": "blocker-18-t10-legacy",
+      "native_entries": 104705,
+      "native_result_sha256": "52f9f325f1d2568bf775903a670b4c5f2fb91728733e174b9145bdb4c546ab78",
+      "native_work": 17314861,
+      "policy_rows": 88
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 494605640,
+      "label": "blocker-18-t10-indexed-v1",
+      "native_entries": 104705,
+      "native_result_sha256": "dde0c81f0372f8a0a18c5b13b05bb945a8f52360440b6df7de29e5d0a694ff6d",
+      "native_work": 8406061,
+      "policy_rows": 88
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 491256775,
+      "label": "asymmetric-weighted-t10-legacy",
+      "native_entries": 84755,
+      "native_result_sha256": "20f4e281808849536c6f60dfb7c8d214caf8034ea5a349a77aa09dbe2404df59",
+      "native_work": 9521109,
+      "policy_rows": 56
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 495498444,
+      "label": "asymmetric-weighted-t10-indexed-v1",
+      "native_entries": 84755,
+      "native_result_sha256": "c578868c91eddc5a663cc9beee00fdee60ecde30cd27d0890b1646f15aed5a6d",
+      "native_work": 5616789,
+      "policy_rows": 56
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 491922511,
+      "label": "mixed-stabilizer-t10-legacy",
+      "native_entries": 87211,
+      "native_result_sha256": "bffa3ae5781008a69a3cee91f52d27f052eb723cf53e2deaafd372eb159375ee",
+      "native_work": 12771341,
+      "policy_rows": 28
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 495423044,
+      "label": "mixed-stabilizer-t10-indexed-v1",
+      "native_entries": 87211,
+      "native_result_sha256": "1ed87878afbf34cd9be7863997ef34bd31c717dd6938ba8794a6e394083a0dd0",
+      "native_work": 5676941,
+      "policy_rows": 28
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 478396362,
+      "label": "original-22-t10-t20-indexed-v1",
+      "native_entries": 545319,
+      "native_result_sha256": "384735613f53afb5377d1f0d48dd36915316cf33ed0d33fd1d4bf9dc1437b27a",
+      "native_work": 218925464,
+      "policy_rows": 1200
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 478396362,
+      "label": "original-22-t10-t40-indexed-v1",
+      "native_entries": 549159,
+      "native_result_sha256": "f52e79427dbf0d673ef7354f52d71237f1836a169451c2d9044d28afc1f0a17a",
+      "native_work": 404357944,
+      "policy_rows": 1200
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 465295016,
+      "label": "balanced-4x4-unit-t10-indexed-v1",
+      "native_entries": 704635,
+      "native_result_sha256": "5983549ffbc744326544f0c39c14b5581554b31dd5bb5bf3f72e1a7dda70c48d",
+      "native_work": 166886848,
+      "policy_rows": 2400
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 433865720,
+      "label": "balanced-8x8-unit-t10-indexed-v1",
+      "native_entries": 1035731,
+      "native_result_sha256": "9bd2f7e928928395a51bbb5070798e1ce622a9cba0abac293863557893d79994",
+      "native_work": 249926368,
+      "policy_rows": 4912
+    },
+    {
+      "corrected_native_entries_limit": 2000000,
+      "corrected_native_work_limit": 424823036,
+      "label": "asymmetric-2x16-unit-t10-indexed-v1",
+      "native_entries": 1122789,
+      "native_result_sha256": "8d21185f483031317bc703cd08624b9ed68841854769451a8c4301ccd0ddf7b6",
+      "native_work": 339831020,
+      "policy_rows": 5596
+    }
+  ],
+  "corrected_source_commit": "33334e631ed0cd05202a42aaeca9104b8981ccd4",
+  "frozen_producer_commit": "52295e8f7b4ebb8003b738dc7a8828b4636c8cb5",
+  "scope": "Corrected host proof/remaining-budget compatibility for existing frozen native policy bytes. Rank-free preparation executes; no native/train/rank/pair/world calls. This is separate from independent physical quality replay.",
+  "status": "passed"
+}
