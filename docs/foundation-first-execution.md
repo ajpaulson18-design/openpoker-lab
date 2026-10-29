@@ -1,5 +1,20 @@
 # Foundation-first execution record
 
+## Exact public-history indexing prerequisite (October 29)
+
+Sol defines exact lexicographic unfolded-path ordinals over canonical DAG
+continuations; Luna implements the [graph-only index](native-public-history-index.md)
+and explicit controls; Terra independently challenges ordering, suit routing,
+query admission and retained storage. Root catches the missing vertex/raw-vertex
+ledger entries and integrates authenticated builds and Windows/Linux/sanitizer CI.
+Strict MSVC controls pass on final development source, including noncommuting S3
+reveals, duplicate/reordered continuations and a tall 49-vertex chain. Independent
+wide/tall ledger recomputation and under-limit rejection pass. Earlier defects,
+passing-ordering-only pins and raw-capture gaps stay distinct. Trainer/API/wire
+and all inherited rejection behavior remain unchanged. Committed-source evidence,
+final CI and actual scoped phase profiling remain gates; no performance or larger
+capacity follows from this prerequisite. The foundation goal stays active.
+
 ## Integrated native exact whole-game backend (October 28-29)
 
 The [whole-game implementation](native-exact-whole-game.md) now prepares legal

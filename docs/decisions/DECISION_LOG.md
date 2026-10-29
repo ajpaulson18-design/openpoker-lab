@@ -36,6 +36,19 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D071: Prove exact public-path indexing before changing Q lookup (October 29, 2026)
+
+Sol chooses staged [public-history indexing](../native-public-history-index.md):
+first immutable canonical continuation counts/lexical offsets and incremental
+suit transitions; later Q and training integration only after complete key,
+member-mask, phase/policy and independent replay checks. A shared vertex is never
+a full-history identity. Keep exact token ordering separate from numerical
+traversal order, owner-bound cursors and the Plan lifetime precondition. Charge
+all index arrays, token characters, comparison/query work and simultaneous Plan
+storage. Stage A changes no trainer/API/wire/admission result. Measure actual
+phases before choosing later optimization; modeled work shares are not CPU shares,
+and eliminating an inherited marginal forecast alone cannot admit T1000.
+
 ### D070: Join native exact vectors and Q learning in one whole-game process (October 28, 2026)
 
 Sol selects an explicit [native exact four-street backend](../native-exact-whole-game.md)

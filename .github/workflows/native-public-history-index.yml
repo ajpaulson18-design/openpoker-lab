@@ -1,0 +1,59 @@
+name: Native public history index conformance
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-history-index:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build graph-only conformance helper
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target history-index --output-dir "$RUNNER_TEMP/native-history-index"
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_HISTORY_INDEX_EXE=$RUNNER_TEMP/native-history-index/native-exact-history-index-controls$suffix" >> "$GITHUB_ENV"
+      - name: Literal history, transformed routes and capacity controls
+        run: python -O -m unittest tests.test_native_public_history_index -v
+      - name: Preserve first build and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-history-index-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/native-history-index/*.log
+            ${{ runner.temp }}/native-history-index/*.json
+  sanitized-history-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build ASan and UBSan index controls
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target history-index --output-dir "$RUNNER_TEMP/native-history-index-sanitized" --sanitize
+          echo "OPENPOKER_NATIVE_HISTORY_INDEX_EXE=$RUNNER_TEMP/native-history-index-sanitized/native-exact-history-index-controls" >> "$GITHUB_ENV"
+      - name: Sanitized conformance
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: python -m unittest tests.test_native_public_history_index -v
+      - name: Preserve first build and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-history-index-sanitized
+          path: |
+            ${{ runner.temp }}/native-history-index-sanitized/*.log
+            ${{ runner.temp }}/native-history-index-sanitized/*.json
