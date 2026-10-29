@@ -7,6 +7,14 @@ already removed history processing during learning, but conservatively retained
 Python training and old native history forecasts. This profile accounts for the
 executed path without increasing any resource ceiling.
 
+The frozen `52295e8f7b4ebb8003b738dc7a8828b4636c8cb5` study now accounts for
+28 distinct producer attempts: 15 completed solves and 13 native resource
+rejections. Numeric replay completes for all 15; 12 exact certificates complete
+with missed targets and three larger-range exact audits remain resource-unverified.
+Fresh saved-only review is pending. Two parent classifier failures are preserved;
+external continuations reused every existing raw result and ran only unattempted
+requests, without changing the mathematical source or rerunning producers.
+
 The [preserved baseline package](../benchmarks/results/native-indexed-capacity-baseline-v1/manifest.json)
 contains six instrumented native observations, saved-only scrutiny and the fixed
 15-request rank-free census. It retains the initial helper failures and the
@@ -125,6 +133,18 @@ The first forged-receipt control exposed an unbound Plan setup field. The
 corrected explicit component equation rejects every single-field mutation;
 the failure remains preserved. Compiler discovery's missing environment is
 separate from the successful configured strict build.
+
+Independent scrutiny after that freeze found a terminal-only prefix bug in the
+Python admission proof: native Plan counts support prefixes at decision, chance
+and terminal occurrences, while Python had compared against decision prefixes
+only. A blind-all-in native result with no decision rows was falsely rejected
+after completion. The corrected parser derives all reached visible prefixes and
+keeps actual marginal-cache keys restricted to decisions, with an explicit bounded
+prefix-set reservation. A compiled regression matches the Python reference and
+protected replay. The runner also recognizes the two exact positive budget-floor
+messages that stopped its parent classifier. These are post-freeze corrections;
+they do not rewrite the original study. The corrected API/independent/runner
+suite passes 32 controls with assertions disabled (26.925 seconds).
 
 Sol owns architecture/native implementation; root implements host integration
 while Luna is usage-limited, and Terra independently challenges accounting and

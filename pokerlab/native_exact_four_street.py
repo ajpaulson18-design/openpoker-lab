@@ -187,7 +187,8 @@ def _admit_indexed(prepared):
         16 * prepared.layout_upper["upper_history_token_entries"] +
         8 * prepared.layout_upper["upper_history_token_bytes"] +
         16 * boards * sum(prepared.decisions.values()) + 2048)
-    proof_entries = 4096 + 64 * h + 4 * boards * len(prepared.unique_prefixes)
+    proof_entries = (4096 + 64 * h + 4 * boards * len(prepared.unique_prefixes) +
+                     16 * (1 + 3 * boards))
     input_upper = 4096 + 128 * h + 128 * boards + 512 * (len(vertices) + edges) + 65 * len(prepared.topology.initial_history)
     output_upper = (8192 + prepared.layout_upper["upper_history_token_bytes"] +
         64 * prepared.layout_upper["upper_dense_decision_hand_slots"] + 32 * prepared.action_slots_upper)
@@ -457,11 +458,14 @@ def parse_policy(raw, prepared, *, routing="full-history"):
         history_tokens = len(prepared.topology.initial_history)
         decision_hands = action_count = history_entries = row_bytes = depth = visits = 0
         marginal_keys = set()
+        support_prefixes = set()
         for occurrence in prepared.topology.iter_occurrences():
             history = occurrence.history
             visits += 1
             history_tokens += len(history)
-            depth = max(depth, len(history))
+            depth = max(depth, len(history) - len(prepared.topology.initial_history))
+            board = _revealed_board(history)
+            support_prefixes.add(tuple(board))
             vertex = prepared.topology.vertices[occurrence.vertex_id]
             if not isinstance(vertex, DecisionVertex):
                 continue
@@ -470,7 +474,6 @@ def parse_policy(raw, prepared, *, routing="full-history"):
             action_count += actions
             history_entries += len(history) + actions
             row_bytes += sum(len(token.encode("utf-8")) for token in history) + 64 * actions
-            board = _revealed_board(history)
             marginal_keys.add(tuple(k for k, (flop, turn, river) in enumerate(prepared.kernel.selected)
                 if (flop + (turn, river))[:len(board)] == board))
         group = receipt["group_size"]
@@ -484,7 +487,7 @@ def parse_policy(raw, prepared, *, routing="full-history"):
               a["trainer_history_retained"] == 4 * one_history_pass and
               a["trainer_history_retained"] == route_receipt["old_history_forecast"] and
               a["marginal_calls_actual"] == len(marginal_keys) and
-              a["marginal_calls_upper"] == len(prepared.unique_prefixes) and
+              a["marginal_calls_upper"] == len(support_prefixes) and
               a["marginal_calls_actual"] <= a["marginal_calls_upper"] and a["marginal_reuse"] == 1 and
               a["combined_work"] == (a["plan_setup_work"] + a["index_setup_work"] + a["router_setup_work"] +
                   route_receipt["router_work_upper"] + route_receipt["index_work_upper"] + route_receipt["caller_work"]) and

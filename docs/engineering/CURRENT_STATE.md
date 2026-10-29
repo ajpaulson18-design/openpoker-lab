@@ -8,6 +8,13 @@ T20 also matches the Python reference beyond the old native admission. Real T100
 callback limits still reject. Committed-source capacity/replay evidence and final
 CI are pending; this is not a full-deck, quality-target or memory-gain claim.
 
+The frozen capacity study has 15 completed solves/13 native resource rejections
+across 28 distinct attempts. Original T20/T40 and 4x4, 8x8 and 2x16 T10 cases
+complete. All numeric replays pass; 12 exact audits miss the target and three
+larger-range exact audits remain capacity-unverified. Fresh saved-only review is
+pending. A post-freeze terminal-only prefix proof correction now accepts a
+reference-matching blind-all-in result; all old raw evidence remains preserved.
+
 An explicit [indexed native learning candidate](../native-indexed-routing.md)
 now connects numeric Q keys, incremental visible-path cursors and borrowed typed
 prefix support to the existing exact trainer. Default/shadow/indexed bounded

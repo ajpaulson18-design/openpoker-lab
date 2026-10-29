@@ -115,6 +115,18 @@ class IndexedAdmissionCompiledTests(unittest.TestCase):
             with self.assertRaisesRegex(native.NativeFailure, "callback-work|modeled-work|modeled work"):
                 self.solve(case_for("original-22-qreject"), 1000)
 
+    def test_blind_all_in_counts_terminal_support_without_decision_marginals(self):
+        case = dict(case_for("payoff-varied-t10"), config={"starting_stack": [0.5, 1.0]})
+        expected = solver.solve_four_street_exact_selected(request_for(case, 10), **OPTIONS)
+        result = self.solve(case)
+        self.assertEqual(result["strategy"], [])
+        self.assertEqual(result["info_sets"], 0)
+        self.assertEqual([expected[k].hex() for k in METRICS], [result[k].hex() for k in METRICS])
+        proof = result["operator_census"]["native_exact"]["indexed_admission"]
+        self.assertEqual(proof["marginal_calls_upper"], 1)
+        self.assertEqual(proof["marginal_calls_actual"], 0)
+        self.assertTrue(_protected_verification(case, result)["payload_metrics_within_tolerance"])
+
     def test_twenty_sweeps_preserve_reference_policy_beyond_legacy_native_admission(self):
         case = case_for("original-22-t10")
         with self.assertRaises(ValueError):

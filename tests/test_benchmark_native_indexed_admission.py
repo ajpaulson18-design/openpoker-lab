@@ -143,6 +143,25 @@ class CapacityRunnerControls(unittest.TestCase):
                     study.validate(raw,entry,deps,cases)
         self.assertEqual(deps.old.validate.call_count,0)
 
+    def test_known_indexed_schedule_scan_floor_is_a_budget_rejection(self):
+        entry=study.SCHEDULE[-1]
+        raw=self.rejected(entry,True)
+        message='indexed router whole-work limit is below its bounded schedule scan floor'
+        raw['failure']['message']='Native exact computation rejected: native exact four-street rejected: '+message
+        raw['native_streams'][0]['stderr']=b64(('native exact four-street rejected: '+message+'\n').encode())
+        self.assertEqual(study._resource_outcome(raw),'native-resource-rejected')
+        study.validate(raw,entry,self.deps(),{entry[0]:{'fixture':entry[0]}})
+        self.assertFalse(study._bounded_resource('invalid indexed router whole-work limit is below its bounded schedule scan floor'))
+
+    def test_known_index_input_scan_remaining_work_is_a_budget_rejection(self):
+        entry=study.SCHEDULE[-1]
+        raw=self.rejected(entry,True)
+        message='history-index bounded input scan exceeds remaining combined work before token scan'
+        raw['failure']['message']='Native exact computation rejected: native exact four-street rejected: '+message
+        raw['native_streams'][0]['stderr']=b64(('native exact four-street rejected: '+message+'\n').encode())
+        self.assertEqual(study._resource_outcome(raw),'native-resource-rejected')
+        study.validate(raw,entry,self.deps(),{entry[0]:{'fixture':entry[0]}})
+
     def test_rejection_classifier_does_not_hide_unrelated_errors_or_post_native_failure(self):
         entry=study.SCHEDULE[-1]
         for message in ('argument parsing failed','escape failed','strategy key missing',

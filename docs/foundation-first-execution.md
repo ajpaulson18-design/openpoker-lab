@@ -23,6 +23,18 @@ finds no concrete blocker at pinned source, while preserving modeled-work and
 mutable-private-reservation limitations. These are development acceptance checks,
 not the pending committed-source capacity experiment.
 
+The source-frozen 52295e8 experiment now preserves 28 distinct attempts through
+two external continuations, reusing all prior raw observations after two parent
+budget-classifier failures. Fifteen solves complete and 13 native budget failures
+remain. All 15 numeric replays complete; 12 exact certificates miss the target,
+and three larger-range exact audits remain resource-unverified. Fresh saved-only
+acceptance is pending. Separately, Terra confirms a zero-decision native result
+falsely rejected by Python's decision-only prefix upper. Root corrects the proof
+to count all reached support prefixes, keeps decision-only actual marginal keys,
+and explicitly reserves the prefix set. The blind-all-in reference/replay control
+passes, as do 32 corrected optimized API/independent/runner controls (26.925 s).
+Frozen observations stay pinned to their original source; no producer retry.
+
 ## Numeric routing in actual native learning (October 29)
 
 The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses

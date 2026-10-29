@@ -32,7 +32,9 @@ RESOURCE = re.compile(
     r'\b(?:admission|capacity|limit|cap|forecast|budget|ceiling|preflight|envelope)\b[^\n]*\bexceeded\b'
     r'|\bexceeds?\b[^\n]*\b(?:envelope|ceiling|limit|cap|capped|slots|states|depth|decisions|rows)\b'
     r'|\b(?:is |are )?capped at\b|\bleaves no native allowance\b'
-    r'|\bno retained-entry allowance remains\b', re.I)
+    r'|\bno retained-entry allowance remains\b'
+    r'|\bindexed router whole-work limit is below its bounded schedule scan floor\b'
+    r'|\bhistory-index bounded input scan exceeds remaining combined work before token scan\b', re.I)
 _AUTH = None
 
 def need(value, message):
