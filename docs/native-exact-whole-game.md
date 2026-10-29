@@ -1,7 +1,8 @@
 # Native exact-product four-street training
 
-Status: implemented opt-in whole-game candidate. Development controls pass;
-frozen complete-call evidence, saved-only acceptance and final CI remain gates.
+Status: implemented opt-in whole-game backend with [two frozen studies and
+independent saved-only acceptance](native-exact-whole-game-result.md). Corrected
+source passes Windows/Linux/sanitizer controls; final publication CI is separate.
 This connects the [native exact kernel](native-exact-selected-vectors-result.md)
 to one public graph/Q plan and alternating training loop. It is distinct from
 the [older rounded-chance native DAG](native-selected-dag-protocol.md) protocol.
@@ -139,8 +140,10 @@ independent replay are excluded. The observer retains native wire bytes through
 diagnostics. Traced Python peak includes those observer bytes and excludes native
 heap; Python child lifetime peak is a separate scope. Neither is whole-solve RSS.
 
-Source/build authentication and a separate saved-only physical/exact replay must
-precede publication acceptance. The [dedicated CI](../.github/workflows/native-exact-four-street.yml)
+Both source-frozen batches and saved-only physical/exact replays are now retained
+in the [result record](native-exact-whole-game-result.md), including all misses,
+the original strict graph mismatch and the narrower exact terminal-tail proof.
+The [dedicated CI](../.github/workflows/native-exact-four-street.yml)
 requires actual Windows/Linux builds, Linux ASan/UBSan, complete policy comparisons
 and malformed/phase controls. Full-deck solving, unrestricted NLHE, wider convergence,
 asymmetric strategy growth, expanded Python output and scalable independent

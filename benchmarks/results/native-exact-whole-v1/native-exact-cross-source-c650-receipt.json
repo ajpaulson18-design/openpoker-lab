@@ -1,0 +1,48 @@
+{
+  "metric_fields": [
+    "value_sb",
+    "value_bb",
+    "sb_best_response_value",
+    "bb_best_response_value",
+    "sb_gain",
+    "bb_gain",
+    "nash_conv",
+    "exploitability"
+  ],
+  "samples": [
+    {
+      "label": "original-22-t10-native-0",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-native-1",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-native-2",
+      "rows": 1200
+    },
+    {
+      "label": "original-22-t10-native-traced",
+      "rows": 1200
+    },
+    {
+      "label": "payoff-varied-t100-native-0",
+      "rows": 56
+    },
+    {
+      "label": "blocker-18-native-0",
+      "rows": 88
+    },
+    {
+      "label": "asymmetric-weighted-native-0",
+      "rows": 56
+    },
+    {
+      "label": "mixed-stabilizer-native-0",
+      "rows": 28
+    }
+  ],
+  "scope": "Cross-source saved policy/menu/metric bit identity only; timing not compared, no production execution.",
+  "status": "passed"
+}

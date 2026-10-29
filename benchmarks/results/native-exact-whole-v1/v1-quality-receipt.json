@@ -1,0 +1,98 @@
+{
+  "complete_policies": 16,
+  "executable_sha256": "3a1231627e5b1355df4b87b6639398b13d243b40b5378628ad940e0765f95cca",
+  "manifest_sha256": "255933b35d81f0a344bec0e2d2340c8ba84fa3a22151c1093717a8fc46684e18",
+  "max_metric_gap": 8.326672684688674e-17,
+  "orbits": [
+    {
+      "group": 1,
+      "label": "original-22-t10-native-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-native-1",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-native-2",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 1,
+      "label": "original-22-t10-native-traced",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 1200,
+      "q_slots": 2402,
+      "rows": 1200
+    },
+    {
+      "group": 2,
+      "label": "payoff-varied-t100-native-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 28,
+      "q_slots": 57,
+      "rows": 56
+    },
+    {
+      "group": 2,
+      "label": "blocker-18-native-0",
+      "orbit_sizes": [
+        2
+      ],
+      "q_rows": 44,
+      "q_slots": 90,
+      "rows": 88
+    },
+    {
+      "group": 1,
+      "label": "asymmetric-weighted-native-0",
+      "orbit_sizes": [
+        1
+      ],
+      "q_rows": 56,
+      "q_slots": 114,
+      "rows": 56
+    },
+    {
+      "group": 2,
+      "label": "mixed-stabilizer-native-0",
+      "orbit_sizes": [
+        1,
+        2
+      ],
+      "q_rows": 16,
+      "q_slots": 33,
+      "rows": 28
+    }
+  ],
+  "paired_comparisons": 8,
+  "pretraining_rejections": 2,
+  "quality_misses": 14,
+  "quality_passes": 2,
+  "report_sha256": "e4aa2fa8f85b3c3567b90349784c44bcf451ed327bf40e35fc86c39a27c70fbc",
+  "scope": "Saved policies and native ROW bits; no production trainer or candidate executable invoked; no independent full input graph equivalence claim.",
+  "source_commit": "52aa21f343aa769c4aeabf6fb7eb7c6be6816f96",
+  "source_files": 2031,
+  "status": "passed"
+}

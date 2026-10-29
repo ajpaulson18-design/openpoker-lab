@@ -1,0 +1,5031 @@
+{
+  "authentication_helper_sha256": "8171ead3ba108f8200f15e85696f40d109ed894209fa7d77598780b83c1401c5",
+  "build": {
+    "actual_executable_executed": false,
+    "dependency_archive_sha256": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+    "dependency_headers_verified": 198,
+    "executable_sha256": "829db4fbc29e13d5815803cafe0e59a1478f7390308a9130dd53c59e60196873",
+    "manifest_sha256": "178462cac2aa83fac228bb7fed0307f8d4b0c288cc9c5864600573dc154e7e25",
+    "source_sha256": {
+      "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+      "native/exact_four_street_train.cpp": "7ff5112f0e9b9262501949e47d7c7c8ae3c02c199e8cc33b9ea8c604bc62dd90",
+      "native/exact_public_graph.hpp": "a3205c85edca995ff24387002e632c8856bd73693677d9f39e10b89947ef5fac",
+      "native/exact_selected_cfr.hpp": "2e6275648208487d90b1d9bcb6c7a084a724eebc52067fd19598847dac841123",
+      "native/exact_selected_kernel.hpp": "31dff904e9eaefc93ab67440ed8e5c75c7d82e62d5cecdca449bf801428729cc",
+      "scripts/build_native_exact_four_street.py": "92e2c42793f3ce1e3b98083ddc3170f1c0978fe70fa7e588dd3191a3804273f9",
+      "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+      "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+      "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+    }
+  },
+  "case_proofs": [
+    {
+      "artifact": "original-22-t10-native-0.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 628,
+        "depth": 14,
+        "infos": 1200,
+        "pair_probabilities": [
+          {
+            "bb_hand": "JdJh",
+            "fraction": "3/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "9/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "JdJh",
+            "fraction": "5/68",
+            "sb_hand": "QdQs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "15/68",
+            "sb_hand": "QdQs"
+          }
+        ],
+        "public_states": 1414,
+        "selected_outcomes": 6,
+        "slots": 2402,
+        "worlds": 22
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 97,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 628,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 1257,
+        "logical_occurrences": 1414,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 689
+      },
+      "payload_sha256": "3f26d4fcdce99804126eb22ebf4ab9d54180dfd5cf062dcde0eaa646ef91d323",
+      "raw_artifact_sha256": "d94668403de3463ad4c6bc0f4e0a566a624289dc50b4b8e063fe29470bb744c2",
+      "request_sha256": "56701258c17cea073664ce292df8656c8694cb3628876a663cd29758183f1087",
+      "stdout_sha256": "ddb7087cc7433cd47c2792cf0d049da11168f279e38f188ab11e8aea21bfb3d0"
+    },
+    {
+      "artifact": "original-22-t10-native-1.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 628,
+        "depth": 14,
+        "infos": 1200,
+        "pair_probabilities": [
+          {
+            "bb_hand": "JdJh",
+            "fraction": "3/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "9/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "JdJh",
+            "fraction": "5/68",
+            "sb_hand": "QdQs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "15/68",
+            "sb_hand": "QdQs"
+          }
+        ],
+        "public_states": 1414,
+        "selected_outcomes": 6,
+        "slots": 2402,
+        "worlds": 22
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 97,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 628,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 1257,
+        "logical_occurrences": 1414,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 689
+      },
+      "payload_sha256": "3f26d4fcdce99804126eb22ebf4ab9d54180dfd5cf062dcde0eaa646ef91d323",
+      "raw_artifact_sha256": "3ee8753b12cde3e6c30f6758870399e80893dd1ed3092afb5c0ff1922c97e1b5",
+      "request_sha256": "56701258c17cea073664ce292df8656c8694cb3628876a663cd29758183f1087",
+      "stdout_sha256": "ddb7087cc7433cd47c2792cf0d049da11168f279e38f188ab11e8aea21bfb3d0"
+    },
+    {
+      "artifact": "original-22-t10-native-2.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 628,
+        "depth": 14,
+        "infos": 1200,
+        "pair_probabilities": [
+          {
+            "bb_hand": "JdJh",
+            "fraction": "3/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "9/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "JdJh",
+            "fraction": "5/68",
+            "sb_hand": "QdQs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "15/68",
+            "sb_hand": "QdQs"
+          }
+        ],
+        "public_states": 1414,
+        "selected_outcomes": 6,
+        "slots": 2402,
+        "worlds": 22
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 97,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 628,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 1257,
+        "logical_occurrences": 1414,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 689
+      },
+      "payload_sha256": "3f26d4fcdce99804126eb22ebf4ab9d54180dfd5cf062dcde0eaa646ef91d323",
+      "raw_artifact_sha256": "55f44436ee02198649bc8fc5ef13adb13eed92e3fb315810db59ee9b431179bc",
+      "request_sha256": "56701258c17cea073664ce292df8656c8694cb3628876a663cd29758183f1087",
+      "stdout_sha256": "ddb7087cc7433cd47c2792cf0d049da11168f279e38f188ab11e8aea21bfb3d0"
+    },
+    {
+      "artifact": "original-22-t10-native-traced.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 628,
+        "depth": 14,
+        "infos": 1200,
+        "pair_probabilities": [
+          {
+            "bb_hand": "JdJh",
+            "fraction": "3/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "9/17",
+            "sb_hand": "AdAs"
+          },
+          {
+            "bb_hand": "JdJh",
+            "fraction": "5/68",
+            "sb_hand": "QdQs"
+          },
+          {
+            "bb_hand": "KdKs",
+            "fraction": "15/68",
+            "sb_hand": "QdQs"
+          }
+        ],
+        "public_states": 1414,
+        "selected_outcomes": 6,
+        "slots": 2402,
+        "worlds": 22
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 97,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "call",
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "check",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@7h",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "7h"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Kc",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Kc"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@2c3c4d",
+              "bet@4",
+              "call",
+              "turn@Qd",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 2,
+            "private_pairs": 2,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4d",
+              "Qd"
+            ],
+            "winner": null,
+            "worlds": 2
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "check",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "check",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          },
+          {
+            "contribution_bits": [
+              "4020000000000000",
+              "4020000000000000"
+            ],
+            "history": [
+              "raise@2",
+              "call",
+              "flop@5c6d7s",
+              "bet@4",
+              "call",
+              "turn@8c",
+              "all_in@8",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 8,
+            "private_pairs": 4,
+            "visible_board": [
+              "5c",
+              "6d",
+              "7s",
+              "8c"
+            ],
+            "winner": null,
+            "worlds": 8
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 628,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 1257,
+        "logical_occurrences": 1414,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 689
+      },
+      "payload_sha256": "3f26d4fcdce99804126eb22ebf4ab9d54180dfd5cf062dcde0eaa646ef91d323",
+      "raw_artifact_sha256": "e396ad9ae9d0eaae44e39d9854af1e81393c82e95a226cd965a72a05c05a7f87",
+      "request_sha256": "56701258c17cea073664ce292df8656c8694cb3628876a663cd29758183f1087",
+      "stdout_sha256": "ddb7087cc7433cd47c2792cf0d049da11168f279e38f188ab11e8aea21bfb3d0"
+    },
+    {
+      "artifact": "payoff-varied-t100-native-0.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 28,
+        "depth": 12,
+        "infos": 56,
+        "pair_probabilities": [
+          {
+            "bb_hand": "JcKc",
+            "fraction": "1/4",
+            "sb_hand": "AcQc"
+          },
+          {
+            "bb_hand": "JdKd",
+            "fraction": "1/4",
+            "sb_hand": "AcQc"
+          },
+          {
+            "bb_hand": "JcKc",
+            "fraction": "1/4",
+            "sb_hand": "AdQd"
+          },
+          {
+            "bb_hand": "JdKd",
+            "fraction": "1/4",
+            "sb_hand": "AdQd"
+          }
+        ],
+        "public_states": 64,
+        "selected_outcomes": 2,
+        "slots": 114,
+        "worlds": 8
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 5,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c7c",
+              "check",
+              "check",
+              "turn@9h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "7c",
+              "9h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c7c",
+              "check",
+              "check",
+              "turn@9h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "7c",
+              "9h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c7c",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "7c"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c7c",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "7c"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d7d",
+              "check",
+              "check",
+              "turn@9h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "7d",
+              "9h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d7d",
+              "check",
+              "check",
+              "turn@9h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "7d",
+              "9h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d7d",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "7d"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d7d",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "7d"
+            ],
+            "winner": null,
+            "worlds": 4
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 28,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 57,
+        "logical_occurrences": 64,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 31
+      },
+      "payload_sha256": "8a677243f711c5b361356bacb48637a599daa81cc52e8be7b01d9b72c855b9cd",
+      "raw_artifact_sha256": "7799f3dd33b05aa950237b3107b5d90366177b0fea0e8268ae73eafcbc1bb623",
+      "request_sha256": "25e870d8394b7abd4a48c2a4f21958dec205a2c93a99d45f52c65dd1b9273fbe",
+      "stdout_sha256": "09fd4fb3e00f53a54c2eddd29d957a3d5ea426e068e16cc54a79cbf4167c3bf2"
+    },
+    {
+      "artifact": "blocker-18-native-0.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 14,
+        "decisions": 28,
+        "depth": 12,
+        "infos": 88,
+        "pair_probabilities": [
+          {
+            "bb_hand": "3cKh",
+            "fraction": "1/18",
+            "sb_hand": "2cAh"
+          },
+          {
+            "bb_hand": "KcKh",
+            "fraction": "1/18",
+            "sb_hand": "2cAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "1/18",
+            "sb_hand": "2cAh"
+          },
+          {
+            "bb_hand": "3dKh",
+            "fraction": "1/18",
+            "sb_hand": "2dAh"
+          },
+          {
+            "bb_hand": "KcKh",
+            "fraction": "1/18",
+            "sb_hand": "2dAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "1/18",
+            "sb_hand": "2dAh"
+          },
+          {
+            "bb_hand": "3cKh",
+            "fraction": "1/18",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "3dKh",
+            "fraction": "1/18",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "KcKh",
+            "fraction": "1/9",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "1/9",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "3cKh",
+            "fraction": "1/18",
+            "sb_hand": "AdAh"
+          },
+          {
+            "bb_hand": "3dKh",
+            "fraction": "1/18",
+            "sb_hand": "AdAh"
+          },
+          {
+            "bb_hand": "KcKh",
+            "fraction": "1/9",
+            "sb_hand": "AdAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "1/9",
+            "sb_hand": "AdAh"
+          }
+        ],
+        "public_states": 64,
+        "selected_outcomes": 2,
+        "slots": 180,
+        "worlds": 18
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 5,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 9
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 9,
+            "private_pairs": 9,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 9
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 28,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 57,
+        "logical_occurrences": 64,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 31
+      },
+      "payload_sha256": "33b8885c1f8639e7a197acf7fa5b779711ff82cfa1985abc8ebba201d77ab671",
+      "raw_artifact_sha256": "a774e1362c9c79e291a55ca9fe9f4f0a1933a8cd93f6c479753ecd42681895d9",
+      "request_sha256": "532c007087524de5b4716b7d083813c9cd7e66ba8fd5112ecced599bfd8c2291",
+      "stdout_sha256": "0f9dff243128c07a65dfdb6eed2bfc63c9ed892c8c23fb95c1e36f2845e05d4f"
+    },
+    {
+      "artifact": "asymmetric-weighted-native-0.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 4,
+        "decisions": 28,
+        "depth": 12,
+        "infos": 56,
+        "pair_probabilities": [
+          {
+            "bb_hand": "KcKh",
+            "fraction": "11358149378044935347338468172759/40564819207303338596094688886784",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "17037224067067401444747832679465/40564819207303338596094688886784",
+            "sb_hand": "AcAh"
+          },
+          {
+            "bb_hand": "KcKh",
+            "fraction": "19471113219505603967277331424215/162259276829213354384378755547136",
+            "sb_hand": "AdAh"
+          },
+          {
+            "bb_hand": "KdKh",
+            "fraction": "29206669829258403248756220714025/162259276829213354384378755547136",
+            "sb_hand": "AdAh"
+          }
+        ],
+        "public_states": 64,
+        "selected_outcomes": 2,
+        "slots": 114,
+        "worlds": 8
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 5,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 4
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 4,
+            "private_pairs": 4,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 4
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 28,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 57,
+        "logical_occurrences": 64,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 31
+      },
+      "payload_sha256": "57dddc5e4518c8fd8217ebe0922d903f35c85ce89b5f2f623d3a0ce02322782f",
+      "raw_artifact_sha256": "ce00d63920e323b5cabdec0391f8d334df9fe140ffc5b3046cb49172bb7c91c8",
+      "request_sha256": "76a94c3897db145418e8a5b5f9085e04c09ae56c15c9baa12d412818dd884a98",
+      "stdout_sha256": "93e0338228e45efadf9008bd7eb22d90c619fe32ca2acf081c86baead5e5b424"
+    },
+    {
+      "artifact": "mixed-stabilizer-native-0.json",
+      "independent_physical_counts": {
+        "compatible_pairs": 1,
+        "decisions": 28,
+        "depth": 12,
+        "infos": 28,
+        "pair_probabilities": [
+          {
+            "bb_hand": "KcKd",
+            "fraction": "1/1",
+            "sb_hand": "AcAd"
+          }
+        ],
+        "public_states": 64,
+        "selected_outcomes": 2,
+        "slots": 57,
+        "worlds": 2
+      },
+      "legal_graph_proof": {
+        "chance_occurrences": 5,
+        "chance_only_terminal_tail_proofs": [
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2c3c4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2c",
+              "3c",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "check",
+              "turn@5s",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h",
+              "5s"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "check",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 1
+          },
+          {
+            "contribution_bits": [
+              "4000000000000000",
+              "4000000000000000"
+            ],
+            "history": [
+              "call",
+              "check",
+              "flop@2d3d4h",
+              "all_in@2",
+              "call"
+            ],
+            "kind": "showdown",
+            "leaf_worlds": 1,
+            "private_pairs": 1,
+            "visible_board": [
+              "2d",
+              "3d",
+              "4h"
+            ],
+            "winner": null,
+            "worlds": 1
+          }
+        ],
+        "decision_actor_menu_money_history_and_standard_chance_terminal_fields_match": true,
+        "decisions": 28,
+        "full_raise_boolean_flags_authenticated_not_independently_rederived": 57,
+        "logical_occurrences": 64,
+        "scope": "Full_raise has no independent Action property and is checked only as a wire Boolean; all actual legal child transitions and original money are independently matched. It is native signature metadata, not independent betting-rule evidence.",
+        "strict_graph_isomorphism": false,
+        "tail_scope": "Exact physical per-pair mass/payoff equality; no branchwise rounded callback or training trajectory equivalence claim.",
+        "terminals": 31
+      },
+      "payload_sha256": "dd0ce47adb61ba3083394472bb7f555461b54a4f5688a270adb5992b07552fe0",
+      "raw_artifact_sha256": "896dffe8a37ea907eb22c4331a5a112fcb7d40fe87bbd61e1f88e0a60ba10147",
+      "request_sha256": "8974091f5e3a3c4e9b76e7426104b452de667ffa280114170b27759c46b99a92",
+      "stdout_sha256": "528c838bb0f8be93361687afec0d61aa7f992a61665261882f5d688f716ed879"
+    }
+  ],
+  "forbidden_modules": [
+    "pokerlab.native_exact_four_street",
+    "pokerlab.exact_selected_kernel",
+    "pokerlab.dyadic_selected_arithmetic",
+    "pokerlab.exact_selected_solver",
+    "pokerlab.suit_quotient_plan",
+    "pokerlab.suit_quotient_cfr",
+    "pokerlab.equivariant_packed_cfr",
+    "pokerlab.preflop_solver",
+    "pokerlab.preflop_tree",
+    "pokerlab.river_tree",
+    "pokerlab.postflop_solver",
+    "pokerlab.cfr"
+  ],
+  "limitation": "Independent model has no full_raise flag. Raw flags are bounded Booleans authenticated by frozen source/wire; actual actor/action money/token/child transitions and all terminal money are independently verified. No independent full_raise classification claim.",
+  "manifest_sha256": "c92a8a00093a354b9f85da7931f61dec663b3bd7b74119603a9053ff3a52dd88",
+  "math_source_sha256": {
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/four_street_validation.py": "67ee973f23d82c3f3addd1a39c893c2fe3e5f1b792eceeae35dc5b0aeb05ed75",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "scripts/turn_river_validation.py": "818a2a5a7b0f8ad8ce9891ec0d6df2e8cf62d7faf8df8b5e136472596e0a2ea1"
+  },
+  "native_samples_independently_checked": 8,
+  "outcome": "accepted",
+  "producer_terminal_exit_code": 0,
+  "producer_terminal_handle": "11220",
+  "report_sha256": "aeea8234946e4f8357fe94a8aa3987f5cfe402cf1e18f450d14e767cef9a306c",
+  "review_candidate_calls": 0,
+  "review_helper_sha256": "70bc89e5ad1f9cd450c8257bd5daabea77afc8f328c551074ad1d34ed8ff8f39",
+  "review_production_kernel_rank_training_calls": 0,
+  "scope": "Sol original strict wire proof, completed by Terra with exact chance-only terminal-tail equivalence. Strict isomorphism is false where tails occur. No branchwise rounded callback or training trajectory equivalence claim; no candidate execution.",
+  "source_artifacts_and_build_unchanged_after": true,
+  "source_commit": "c6508947ad12a51db87bf2b41616c966ee5d339a",
+  "source_files_authenticated": 2031,
+  "study_artifact_sha256": {
+    "asymmetric-weighted-native-0-verification.json": "7a53b17da31b1fe1c9cb8ace0a8115b33e7a4ba89a7bdf489421e1b2981c9e0b",
+    "asymmetric-weighted-native-0.json": "ce00d63920e323b5cabdec0391f8d334df9fe140ffc5b3046cb49172bb7c91c8",
+    "asymmetric-weighted-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "asymmetric-weighted-python-0-verification.json": "428d3da54ffa7aa7b4c13d47ebafe97b1cb5fd160b1dfb06120ff83174ebff47",
+    "asymmetric-weighted-python-0.json": "4f71e18a3de2e9538ff1deadd0d2d677b5f3e61e95b4bbb3ef31ea0f15313e4e",
+    "asymmetric-weighted-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "blocker-18-native-0-verification.json": "aedac330775778af0cfdfea475904f61baa914092eac0461b1358c7ccafe7031",
+    "blocker-18-native-0.json": "a774e1362c9c79e291a55ca9fe9f4f0a1933a8cd93f6c479753ecd42681895d9",
+    "blocker-18-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "blocker-18-python-0-verification.json": "eddbdee20376d85a60a82c979b49dcf4b84ffdfcfd70ecf426cb9a9ed1822971",
+    "blocker-18-python-0.json": "859dfbf57b5db491b2660cad898f4cbc46ee162c849fe8f4143a8d4411bff4cf",
+    "blocker-18-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "manifest.json": "c92a8a00093a354b9f85da7931f61dec663b3bd7b74119603a9053ff3a52dd88",
+    "mixed-stabilizer-native-0-verification.json": "f40ef01da828b9d116d3b898a4cf03e44467521b1ef5b19136ce80b830189537",
+    "mixed-stabilizer-native-0.json": "896dffe8a37ea907eb22c4331a5a112fcb7d40fe87bbd61e1f88e0a60ba10147",
+    "mixed-stabilizer-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mixed-stabilizer-python-0-verification.json": "3d07c8ccb485b5dd71f6bb03557abee657d206c7dca1be0dfe9d34d863680314",
+    "mixed-stabilizer-python-0.json": "8f7d2208f3c69ad45bb98c45df976b9b62668dc1a39fbefd168e692edf9aed67",
+    "mixed-stabilizer-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-qreject-native-0.json": "5736610203481ce166de6c66be8f80300f051714a4b539806453cba228f71d64",
+    "original-22-qreject-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-qreject-python-0.json": "16b8bba03f68c865b3edea4a9e71a7006f15a0ec9ba1572ad0b9cb1cc8bf0013",
+    "original-22-qreject-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-native-0-verification.json": "704a264ee7105dce2a4ae1b82fa486b8d49d31334c7c88270a0fb0f03b18574f",
+    "original-22-t10-native-0.json": "d94668403de3463ad4c6bc0f4e0a566a624289dc50b4b8e063fe29470bb744c2",
+    "original-22-t10-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-native-1-verification.json": "704a264ee7105dce2a4ae1b82fa486b8d49d31334c7c88270a0fb0f03b18574f",
+    "original-22-t10-native-1.json": "3ee8753b12cde3e6c30f6758870399e80893dd1ed3092afb5c0ff1922c97e1b5",
+    "original-22-t10-native-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-native-2-verification.json": "704a264ee7105dce2a4ae1b82fa486b8d49d31334c7c88270a0fb0f03b18574f",
+    "original-22-t10-native-2.json": "55f44436ee02198649bc8fc5ef13adb13eed92e3fb315810db59ee9b431179bc",
+    "original-22-t10-native-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-native-traced-verification.json": "704a264ee7105dce2a4ae1b82fa486b8d49d31334c7c88270a0fb0f03b18574f",
+    "original-22-t10-native-traced.json": "e396ad9ae9d0eaae44e39d9854af1e81393c82e95a226cd965a72a05c05a7f87",
+    "original-22-t10-native-traced.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-python-0-verification.json": "28eb04d3ac317968a23d420d635a95ca7a87e15f1e62ff1797df509d4c9f00ee",
+    "original-22-t10-python-0.json": "6307db6de3c80c98c42ad2a40238160b2d0e161cf2519547ed5c504bbc04dd50",
+    "original-22-t10-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-python-1-verification.json": "28eb04d3ac317968a23d420d635a95ca7a87e15f1e62ff1797df509d4c9f00ee",
+    "original-22-t10-python-1.json": "5a73ae26a829a6aa77d61a9902e6d7674535cbc794548e64a55bb8b5874c653a",
+    "original-22-t10-python-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-python-2-verification.json": "28eb04d3ac317968a23d420d635a95ca7a87e15f1e62ff1797df509d4c9f00ee",
+    "original-22-t10-python-2.json": "e299bf172a0a1136a2fa4460f4e7faebc769e9f1bd876be18ce31d18ae454eac",
+    "original-22-t10-python-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-22-t10-python-traced-verification.json": "28eb04d3ac317968a23d420d635a95ca7a87e15f1e62ff1797df509d4c9f00ee",
+    "original-22-t10-python-traced.json": "b31e798fd7b2ba6ae5139c8ae240c5f53a592e6cad71721198c3f6ae8ece6ec9",
+    "original-22-t10-python-traced.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "payoff-varied-t100-native-0-verification.json": "b2768a0f2c29254aaf06ebea65df7ba0aaca6f7f25e7cda4860e823a3e750b88",
+    "payoff-varied-t100-native-0.json": "7799f3dd33b05aa950237b3107b5d90366177b0fea0e8268ae73eafcbc1bb623",
+    "payoff-varied-t100-native-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "payoff-varied-t100-python-0-verification.json": "c88f9b7dab1157d226a88bed7221aa889edb90d1713446d81325d95f50c44994",
+    "payoff-varied-t100-python-0.json": "739b4fa103590065e5127b1d1898415b14415f66c4ea8833830a6019ce824bfd",
+    "payoff-varied-t100-python-0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "protocol.json": "56634a9297199edc298808093a8d09e6bf86c715569e0fa6f04efd119b559356",
+    "report.json": "aeea8234946e4f8357fe94a8aa3987f5cfe402cf1e18f450d14e767cef9a306c",
+    "source-after.json": "8bb0f9204337d5fedd5d3b4707128671407c655afe0176739d79a285caae5957",
+    "source-before.json": "8bb0f9204337d5fedd5d3b4707128671407c655afe0176739d79a285caae5957"
+  }
+}
