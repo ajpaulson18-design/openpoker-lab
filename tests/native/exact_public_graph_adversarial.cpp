@@ -21,6 +21,14 @@ void run(const char* name, Graph g, bool reject) {
 }
 int main() {
   int errors=0;
+  {
+    const detail::PrefixLess compare;
+    const std::vector<std::vector<Card>> ordered{{},{0},{0,4,8},{0,4,8,12},{0,4,8,12,16},{0,4,8,12,17},{0,4,9},{1}};
+    for(std::size_t i=0;i<ordered.size();++i) for(std::size_t j=0;j<ordered.size();++j)
+      if(compare(ordered[i],ordered[j])!=(i<j)) {++errors;std::cout<<"FAIL prefix lexical order\n";}
+    try {(void)compare(std::vector<Card>(6,0),{});++errors;std::cout<<"FAIL oversized prefix comparator\n";}
+    catch(const PlanError&) {std::cout<<"bounded prefix comparator: passed\n";}
+  }
   auto check=[&](const char* n, Graph g, bool bad) {try {run(n,std::move(g),bad);} catch(const std::exception& e){++errors; std::cout<<"FAIL "<<n<<": "<<e.what()<<"\n";}};
   check("clean",simple(),false);
   // Root regression for Terra's later combined retained+support-scratch finding.

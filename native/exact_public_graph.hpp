@@ -195,6 +195,21 @@ struct RowLocation {
 
 namespace detail {
 
+// Prefixes contain at most five cards. Compare that exact bounded domain
+// directly, avoiding vector<uint8_t>'s implicit three-way/memcmp path, which
+// GCC 13 diagnoses with an impossible overread bound at -O3 -Werror.
+struct PrefixLess {
+    bool operator()(const std::vector<Card>& left, const std::vector<Card>& right) const {
+        if (left.size() > 5 || right.size() > 5)
+            throw PlanError(ErrorCode::invalid_query, "oversized card-prefix comparison");
+        for (std::size_t i = 0; i < 5; ++i) {
+            if (i == left.size() || i == right.size()) return left.size() < right.size();
+            if (left[i] != right[i]) return left[i] < right[i];
+        }
+        return false;
+    }
+};
+
 [[noreturn]] inline void fail(ErrorCode code, const char* message) { throw PlanError(code, message); }
 
 inline std::uint64_t checked_add(std::uint64_t a, std::uint64_t b) {
@@ -750,7 +765,7 @@ private:
     std::array<std::vector<std::vector<std::size_t>>, 2> hand_maps_;
     std::vector<std::vector<Card>> prefixes_;
     std::vector<bool> positive_selected_boards_;
-    std::map<std::vector<Card>, PrefixSupport> support_;
+    std::map<std::vector<Card>, PrefixSupport, detail::PrefixLess> support_;
     std::unique_ptr<exact_selected_kernel::ExactSelectedKernel> kernel_;
     std::map<RowKey, std::size_t> locations_;
     std::vector<QRow> rows_;
@@ -995,7 +1010,7 @@ inline History Plan::transform_history(std::span<const std::string> history, con
 }
 
 inline void Plan::collect_prefixes_and_q_bounds() {
-    std::set<std::vector<Card>> prefixes;
+    std::set<std::vector<Card>, detail::PrefixLess> prefixes;
     std::uint64_t occurrence_steps = 0;
     for_each_occurrence([&](std::size_t id, const History& history) {
         occurrence_steps = detail::checked_add(occurrence_steps, 1);
