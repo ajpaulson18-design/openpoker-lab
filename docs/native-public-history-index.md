@@ -1,8 +1,8 @@
 # Exact public-history index: graph-only prerequisite
 
-Status: graph-only implementation passes scoped development conformance and
-independent retained-ledger review; committed-source evidence and final CI remain
-publication gates. This module is not yet
+Status: graph-only implementation passes [committed-source conformance and
+independent retained-ledger review](native-public-history-index-result.md).
+Windows/Linux/sanitizer controls pass; final publication CI is separate. This module is not yet
 selected by the native trainer, solver API or wire protocol. It changes no
 learning trajectory or admission result. The accepted [native four-street
 integration](native-exact-whole-game-result.md) remains the reference.
@@ -115,9 +115,10 @@ Python admission conservatively reserves repeated marginal queries. A future
 versioned model must describe work that actually runs; simply deleting an old
 guard or increasing its ceiling is not an accepted improvement.
 
-Before integrating the index into Q lookup or training, obtain scoped phase
-profiles that distinguish history processing, exact callbacks, preparation and
-diagnostics. Forecast shares are not timing shares. Then compare complete keys,
+The separate [native-only baseline profile](native-public-history-index-result.md)
+authenticates three saved-wire pairs and identifies repeated lookup/parsing work;
+it measures no Python preparation/diagnostic or new-index performance. Forecast
+shares are not timing shares. Before integrating, compare complete keys,
 orbit masks and phase/policy bits against the reference and independently replay
 saved policies/visible-information best responses. The overall foundation goal
 remains active; this prerequisite alone does not admit T1000 or full-deck solving.

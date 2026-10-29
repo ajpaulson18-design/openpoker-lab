@@ -1,0 +1,810 @@
+{
+  "accepted_production_commit": "a54483e94e3967e1eaa2fc33fe0733e33fa14a58",
+  "instrumented_executable_sha256": "50522594b65c799ae02e3698e1b549cffd9f4df0536dc98107bb14cd46c72b91",
+  "native_process_invocations": 6,
+  "outcome": "complete",
+  "results": [
+    {
+      "frozen_raw_sha256": "d94668403de3463ad4c6bc0f4e0a566a624289dc50b4b8e063fe29470bb744c2",
+      "instrumented_over_uninstrumented_observed_wall_ratio": 1.0654299601323303,
+      "modes": {
+        "instrumented": {
+          "action_slots": 2402,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 2402,
+            "expanded_rows": 1200,
+            "expected_member_checks": 24000,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 1,
+            "kernel_work_upper": 18354248,
+            "maximum_numeric_workspace_slots": 9608,
+            "member_checks": 24000,
+            "modeled_work_upper": 148600700,
+            "quotient_action_slots": 2402,
+            "quotient_rows": 1200,
+            "rank_calls": 23,
+            "retained_entries_upper": 352495
+          },
+          "process_wall_seconds": 0.6277735999974539,
+          "profile": {
+            "contract": "external-native-phase-profile-v1",
+            "finite_checks": 1767442,
+            "records": [
+              {
+                "calls": 1,
+                "context": "process",
+                "exclusive_ns": 3133100,
+                "inclusive_ns": 498558000,
+                "phase": "process_run"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 12712700,
+                "inclusive_ns": 16578700,
+                "phase": "plan_setup"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 48400,
+                "inclusive_ns": 48400,
+                "phase": "kernel_setup"
+              },
+              {
+                "calls": 1201,
+                "context": "setup",
+                "exclusive_ns": 1140000,
+                "inclusive_ns": 1140000,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 3549,
+                "context": "setup",
+                "exclusive_ns": 2677600,
+                "inclusive_ns": 2677600,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 2,
+                "context": "preflight",
+                "exclusive_ns": 3322900,
+                "inclusive_ns": 10474400,
+                "phase": "trainer_preflight"
+              },
+              {
+                "calls": 5848,
+                "context": "preflight",
+                "exclusive_ns": 6108900,
+                "inclusive_ns": 6108900,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 2924,
+                "context": "preflight",
+                "exclusive_ns": 1042600,
+                "inclusive_ns": 4151700,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 407600,
+                "inclusive_ns": 457949800,
+                "phase": "trainer_run"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 1563600,
+                "inclusive_ns": 3252500,
+                "phase": "marginal_key_setup"
+              },
+              {
+                "calls": 10,
+                "context": "learning",
+                "exclusive_ns": 265200,
+                "inclusive_ns": 590000,
+                "phase": "marginal_callback"
+              },
+              {
+                "calls": 14100,
+                "context": "learning",
+                "exclusive_ns": 89773800,
+                "inclusive_ns": 130048800,
+                "phase": "terminal_callback"
+              },
+              {
+                "calls": 4263,
+                "context": "learning",
+                "exclusive_ns": 1259600,
+                "inclusive_ns": 1259600,
+                "phase": "rank_cache"
+              },
+              {
+                "calls": 28240,
+                "context": "learning",
+                "exclusive_ns": 39340200,
+                "inclusive_ns": 39340200,
+                "phase": "rational_conversion"
+              },
+              {
+                "calls": 18840,
+                "context": "learning",
+                "exclusive_ns": 122209300,
+                "inclusive_ns": 204680600,
+                "phase": "history_lookup"
+              },
+              {
+                "calls": 18840,
+                "context": "learning",
+                "exclusive_ns": 8622500,
+                "inclusive_ns": 8622500,
+                "phase": "history_route"
+              },
+              {
+                "calls": 18840,
+                "context": "learning",
+                "exclusive_ns": 19114300,
+                "inclusive_ns": 19114300,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 98536,
+                "context": "learning",
+                "exclusive_ns": 86617900,
+                "inclusive_ns": 86617900,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 39848,
+                "context": "learning",
+                "exclusive_ns": 11918300,
+                "inclusive_ns": 47864900,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 30,
+                "context": "learning",
+                "exclusive_ns": 3328000,
+                "inclusive_ns": 3328000,
+                "phase": "rematch"
+              },
+              {
+                "calls": 20,
+                "context": "learning",
+                "exclusive_ns": 1184000,
+                "inclusive_ns": 348227100,
+                "phase": "responder"
+              },
+              {
+                "calls": 29240,
+                "context": "learning",
+                "exclusive_ns": 44056800,
+                "inclusive_ns": 4031494000,
+                "phase": "target_traversal"
+              },
+              {
+                "calls": 10,
+                "context": "learning",
+                "exclusive_ns": 890300,
+                "inclusive_ns": 96683700,
+                "phase": "average_pass"
+              },
+              {
+                "calls": 14620,
+                "context": "learning",
+                "exclusive_ns": 20314900,
+                "inclusive_ns": 1044490500,
+                "phase": "average_traversal"
+              },
+              {
+                "calls": 24000,
+                "context": "learning",
+                "exclusive_ns": 1622600,
+                "inclusive_ns": 1622600,
+                "phase": "member_stage"
+              },
+              {
+                "calls": 2400,
+                "context": "output",
+                "exclusive_ns": 792700,
+                "inclusive_ns": 792700,
+                "phase": "history_route"
+              },
+              {
+                "calls": 1200,
+                "context": "output",
+                "exclusive_ns": 1017400,
+                "inclusive_ns": 1017400,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 3028,
+                "context": "output",
+                "exclusive_ns": 2237400,
+                "inclusive_ns": 2237400,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 1200,
+                "context": "output",
+                "exclusive_ns": 300300,
+                "inclusive_ns": 1250100,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "output",
+                "exclusive_ns": 11535100,
+                "inclusive_ns": 15882900,
+                "phase": "output"
+              }
+            ]
+          },
+          "rows": 1200
+        },
+        "uninstrumented": {
+          "action_slots": 2402,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 2402,
+            "expanded_rows": 1200,
+            "expected_member_checks": 24000,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 1,
+            "kernel_work_upper": 18354248,
+            "maximum_numeric_workspace_slots": 9608,
+            "member_checks": 24000,
+            "modeled_work_upper": 148600700,
+            "quotient_action_slots": 2402,
+            "quotient_rows": 1200,
+            "rank_calls": 23,
+            "retained_entries_upper": 352495
+          },
+          "process_wall_seconds": 0.5892209000012372,
+          "profile": null,
+          "rows": 1200
+        }
+      },
+      "sample": "original-22-t10-native-0"
+    },
+    {
+      "frozen_raw_sha256": "ce00d63920e323b5cabdec0391f8d334df9fe140ffc5b3046cb49172bb7c91c8",
+      "instrumented_over_uninstrumented_observed_wall_ratio": 1.1287571038356055,
+      "modes": {
+        "instrumented": {
+          "action_slots": 114,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 114,
+            "expanded_rows": 56,
+            "expected_member_checks": 1120,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 1,
+            "kernel_work_upper": 859480,
+            "maximum_numeric_workspace_slots": 456,
+            "member_checks": 1120,
+            "modeled_work_upper": 5792344,
+            "quotient_action_slots": 114,
+            "quotient_rows": 56,
+            "rank_calls": 8,
+            "retained_entries_upper": 41787
+          },
+          "process_wall_seconds": 0.022284599999693455,
+          "profile": {
+            "contract": "external-native-phase-profile-v1",
+            "finite_checks": 83492,
+            "records": [
+              {
+                "calls": 1,
+                "context": "process",
+                "exclusive_ns": 432100,
+                "inclusive_ns": 13140500,
+                "phase": "process_run"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 530900,
+                "inclusive_ns": 676000,
+                "phase": "plan_setup"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 20100,
+                "inclusive_ns": 20100,
+                "phase": "kernel_setup"
+              },
+              {
+                "calls": 57,
+                "context": "setup",
+                "exclusive_ns": 33300,
+                "inclusive_ns": 33300,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 195,
+                "context": "setup",
+                "exclusive_ns": 91700,
+                "inclusive_ns": 91700,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 2,
+                "context": "preflight",
+                "exclusive_ns": 95500,
+                "inclusive_ns": 266800,
+                "phase": "trainer_preflight"
+              },
+              {
+                "calls": 304,
+                "context": "preflight",
+                "exclusive_ns": 144000,
+                "inclusive_ns": 144000,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 152,
+                "context": "preflight",
+                "exclusive_ns": 27300,
+                "inclusive_ns": 100700,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 10100,
+                "inclusive_ns": 11437400,
+                "phase": "trainer_run"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 41400,
+                "inclusive_ns": 72000,
+                "phase": "marginal_key_setup"
+              },
+              {
+                "calls": 3,
+                "context": "learning",
+                "exclusive_ns": 17600,
+                "inclusive_ns": 46600,
+                "phase": "marginal_callback"
+              },
+              {
+                "calls": 620,
+                "context": "learning",
+                "exclusive_ns": 2000600,
+                "inclusive_ns": 2421600,
+                "phase": "terminal_callback"
+              },
+              {
+                "calls": 142,
+                "context": "learning",
+                "exclusive_ns": 26200,
+                "inclusive_ns": 26200,
+                "phase": "rank_cache"
+              },
+              {
+                "calls": 1252,
+                "context": "learning",
+                "exclusive_ns": 423800,
+                "inclusive_ns": 423800,
+                "phase": "rational_conversion"
+              },
+              {
+                "calls": 840,
+                "context": "learning",
+                "exclusive_ns": 3197300,
+                "inclusive_ns": 5148700,
+                "phase": "history_lookup"
+              },
+              {
+                "calls": 840,
+                "context": "learning",
+                "exclusive_ns": 180300,
+                "inclusive_ns": 180300,
+                "phase": "history_route"
+              },
+              {
+                "calls": 840,
+                "context": "learning",
+                "exclusive_ns": 441100,
+                "inclusive_ns": 441100,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 4376,
+                "context": "learning",
+                "exclusive_ns": 2101400,
+                "inclusive_ns": 2101400,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 1768,
+                "context": "learning",
+                "exclusive_ns": 325500,
+                "inclusive_ns": 1199900,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 30,
+                "context": "learning",
+                "exclusive_ns": 111400,
+                "inclusive_ns": 111400,
+                "phase": "rematch"
+              },
+              {
+                "calls": 20,
+                "context": "learning",
+                "exclusive_ns": 47300,
+                "inclusive_ns": 8149500,
+                "phase": "responder"
+              },
+              {
+                "calls": 1520,
+                "context": "learning",
+                "exclusive_ns": 1495900,
+                "inclusive_ns": 64320100,
+                "phase": "target_traversal"
+              },
+              {
+                "calls": 10,
+                "context": "learning",
+                "exclusive_ns": 37400,
+                "inclusive_ns": 2917900,
+                "phase": "average_pass"
+              },
+              {
+                "calls": 760,
+                "context": "learning",
+                "exclusive_ns": 766300,
+                "inclusive_ns": 22952400,
+                "phase": "average_traversal"
+              },
+              {
+                "calls": 1120,
+                "context": "learning",
+                "exclusive_ns": 83900,
+                "inclusive_ns": 83900,
+                "phase": "member_stage"
+              },
+              {
+                "calls": 112,
+                "context": "output",
+                "exclusive_ns": 16400,
+                "inclusive_ns": 16400,
+                "phase": "history_route"
+              },
+              {
+                "calls": 56,
+                "context": "output",
+                "exclusive_ns": 23800,
+                "inclusive_ns": 23800,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 140,
+                "context": "output",
+                "exclusive_ns": 53500,
+                "inclusive_ns": 53500,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 56,
+                "context": "output",
+                "exclusive_ns": 8400,
+                "inclusive_ns": 29900,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "output",
+                "exclusive_ns": 356000,
+                "inclusive_ns": 458100,
+                "phase": "output"
+              }
+            ]
+          },
+          "rows": 56
+        },
+        "uninstrumented": {
+          "action_slots": 114,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 114,
+            "expanded_rows": 56,
+            "expected_member_checks": 1120,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 1,
+            "kernel_work_upper": 859480,
+            "maximum_numeric_workspace_slots": 456,
+            "member_checks": 1120,
+            "modeled_work_upper": 5792344,
+            "quotient_action_slots": 114,
+            "quotient_rows": 56,
+            "rank_calls": 8,
+            "retained_entries_upper": 41787
+          },
+          "process_wall_seconds": 0.01974260000133654,
+          "profile": null,
+          "rows": 56
+        }
+      },
+      "sample": "asymmetric-weighted-native-0"
+    },
+    {
+      "frozen_raw_sha256": "896dffe8a37ea907eb22c4331a5a112fcb7d40fe87bbd61e1f88e0a60ba10147",
+      "instrumented_over_uninstrumented_observed_wall_ratio": 1.1546710718552435,
+      "modes": {
+        "instrumented": {
+          "action_slots": 57,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 57,
+            "expanded_rows": 28,
+            "expected_member_checks": 560,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 2,
+            "kernel_work_upper": 631004,
+            "maximum_numeric_workspace_slots": 132,
+            "member_checks": 560,
+            "modeled_work_upper": 9378712,
+            "quotient_action_slots": 33,
+            "quotient_rows": 16,
+            "rank_calls": 4,
+            "retained_entries_upper": 43667
+          },
+          "process_wall_seconds": 0.021459100000356557,
+          "profile": {
+            "contract": "external-native-phase-profile-v1",
+            "finite_checks": 33234,
+            "records": [
+              {
+                "calls": 1,
+                "context": "process",
+                "exclusive_ns": 366500,
+                "inclusive_ns": 12232300,
+                "phase": "process_run"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 424800,
+                "inclusive_ns": 567100,
+                "phase": "plan_setup"
+              },
+              {
+                "calls": 1,
+                "context": "setup",
+                "exclusive_ns": 16500,
+                "inclusive_ns": 16500,
+                "phase": "kernel_setup"
+              },
+              {
+                "calls": 58,
+                "context": "setup",
+                "exclusive_ns": 33300,
+                "inclusive_ns": 33300,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 191,
+                "context": "setup",
+                "exclusive_ns": 92500,
+                "inclusive_ns": 92500,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 2,
+                "context": "preflight",
+                "exclusive_ns": 115900,
+                "inclusive_ns": 288500,
+                "phase": "trainer_preflight"
+              },
+              {
+                "calls": 304,
+                "context": "preflight",
+                "exclusive_ns": 145600,
+                "inclusive_ns": 145600,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 152,
+                "context": "preflight",
+                "exclusive_ns": 27000,
+                "inclusive_ns": 101800,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 7800,
+                "inclusive_ns": 10798100,
+                "phase": "trainer_run"
+              },
+              {
+                "calls": 1,
+                "context": "learning",
+                "exclusive_ns": 52200,
+                "inclusive_ns": 83700,
+                "phase": "marginal_key_setup"
+              },
+              {
+                "calls": 3,
+                "context": "learning",
+                "exclusive_ns": 12100,
+                "inclusive_ns": 28400,
+                "phase": "marginal_callback"
+              },
+              {
+                "calls": 620,
+                "context": "learning",
+                "exclusive_ns": 1469400,
+                "inclusive_ns": 1681400,
+                "phase": "terminal_callback"
+              },
+              {
+                "calls": 142,
+                "context": "learning",
+                "exclusive_ns": 25900,
+                "inclusive_ns": 25900,
+                "phase": "rank_cache"
+              },
+              {
+                "calls": 626,
+                "context": "learning",
+                "exclusive_ns": 202400,
+                "inclusive_ns": 202400,
+                "phase": "rational_conversion"
+              },
+              {
+                "calls": 840,
+                "context": "learning",
+                "exclusive_ns": 2850700,
+                "inclusive_ns": 5605400,
+                "phase": "history_lookup"
+              },
+              {
+                "calls": 840,
+                "context": "learning",
+                "exclusive_ns": 174700,
+                "inclusive_ns": 174700,
+                "phase": "history_route"
+              },
+              {
+                "calls": 1680,
+                "context": "learning",
+                "exclusive_ns": 888600,
+                "inclusive_ns": 888600,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 5216,
+                "context": "learning",
+                "exclusive_ns": 2451800,
+                "inclusive_ns": 2451800,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 1768,
+                "context": "learning",
+                "exclusive_ns": 323600,
+                "inclusive_ns": 1181300,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 30,
+                "context": "learning",
+                "exclusive_ns": 34800,
+                "inclusive_ns": 34800,
+                "phase": "rematch"
+              },
+              {
+                "calls": 20,
+                "context": "learning",
+                "exclusive_ns": 20200,
+                "inclusive_ns": 7612000,
+                "phase": "responder"
+              },
+              {
+                "calls": 1520,
+                "context": "learning",
+                "exclusive_ns": 1394900,
+                "inclusive_ns": 62028500,
+                "phase": "target_traversal"
+              },
+              {
+                "calls": 10,
+                "context": "learning",
+                "exclusive_ns": 15700,
+                "inclusive_ns": 2888900,
+                "phase": "average_pass"
+              },
+              {
+                "calls": 760,
+                "context": "learning",
+                "exclusive_ns": 697500,
+                "inclusive_ns": 23096800,
+                "phase": "average_traversal"
+              },
+              {
+                "calls": 560,
+                "context": "learning",
+                "exclusive_ns": 33300,
+                "inclusive_ns": 33300,
+                "phase": "member_stage"
+              },
+              {
+                "calls": 56,
+                "context": "output",
+                "exclusive_ns": 10400,
+                "inclusive_ns": 10400,
+                "phase": "history_route"
+              },
+              {
+                "calls": 56,
+                "context": "output",
+                "exclusive_ns": 29900,
+                "inclusive_ns": 29900,
+                "phase": "history_transform"
+              },
+              {
+                "calls": 84,
+                "context": "output",
+                "exclusive_ns": 38200,
+                "inclusive_ns": 38200,
+                "phase": "history_parse"
+              },
+              {
+                "calls": 28,
+                "context": "output",
+                "exclusive_ns": 4800,
+                "inclusive_ns": 17700,
+                "phase": "history_validation"
+              },
+              {
+                "calls": 1,
+                "context": "output",
+                "exclusive_ns": 271300,
+                "inclusive_ns": 354600,
+                "phase": "output"
+              }
+            ]
+          },
+          "rows": 28
+        },
+        "uninstrumented": {
+          "action_slots": 57,
+          "all_full_policy_and_counter_bits_match": true,
+          "counters": {
+            "expanded_action_slots": 57,
+            "expanded_rows": 28,
+            "expected_member_checks": 560,
+            "final_numeric_workspace_slots": 0,
+            "group_size": 2,
+            "kernel_work_upper": 631004,
+            "maximum_numeric_workspace_slots": 132,
+            "member_checks": 560,
+            "modeled_work_upper": 9378712,
+            "quotient_action_slots": 33,
+            "quotient_rows": 16,
+            "rank_calls": 4,
+            "retained_entries_upper": 43667
+          },
+          "process_wall_seconds": 0.018584599998575868,
+          "profile": null,
+          "rows": 28
+        }
+      },
+      "sample": "mixed-stabilizer-native-0"
+    }
+  ],
+  "scope": "Three saved-wire fresh native-only paired instrumented/uninstrumented calls. No Python legal preparation, diagnostics, serialization or independent replay timing. Instrumentation adds per-scope steady_clock bookkeeping and finite-check increments; it changes inlining and costs. Inclusive times overlap; only exclusive records partition the instrumented process run. Observed wall ratios are instrumentation overhead observations, not benchmarks, general speedups or causal production CPU shares. No Stage B/C capacity claim.",
+  "source_and_study_and_build_unchanged": true,
+  "source_commit": "a05fe2ade71214c13b6d5100e76b7f2102939ea7",
+  "source_files": 2049
+}

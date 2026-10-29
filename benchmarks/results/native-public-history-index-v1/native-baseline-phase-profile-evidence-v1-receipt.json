@@ -1,0 +1,12 @@
+{
+  "accepted_production_commit": "a54483e94e3967e1eaa2fc33fe0733e33fa14a58",
+  "archive": "native-baseline-phase-profile-evidence-v1.zip",
+  "archive_bytes": 1369551,
+  "archive_entries": 104,
+  "archive_sha256": "dc49ed0573a0857cf615c952365051b88ce8f2c0524316a0b2dde72453f0f4f2",
+  "authenticated_source_files": 2049,
+  "evidence_manifest_sha256": "2804e47a3de7f1a9211af6e2d0025ede4869f9f858c38207874787809350109e",
+  "integration_scope": "Three native-only paired observations at prior production source; not new-index timing or Python/API/RSS measurement. Inclusive times overlap; exclusive records partition the instrumented run interval.",
+  "saved_only_review_sha256": "a3cb4155a8a5228790df0a47a3f70db72b7335b749dc84de92d9bee93f17c3d4",
+  "source_commit": "a05fe2ade71214c13b6d5100e76b7f2102939ea7"
+}

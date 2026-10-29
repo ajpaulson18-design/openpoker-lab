@@ -3,9 +3,10 @@
 The separate [exact public-history index](../native-public-history-index.md)
 now has graph-only ordinal/suit conformance and independent wide/tall logical
 ledger controls. It keeps reconvergent visible paths distinct without an expanded
-history table. It is not selected by the trainer or API; committed-source evidence
-and cross-platform CI remain gates. Actual scoped profiling, complete Q/policy
-parity and independent saved-policy replay precede any training integration.
+history table. Its [committed-source result and separate baseline profile](../native-public-history-index-result.md)
+authenticate 2,054/2,049 files respectively. Windows/Linux/sanitizer controls pass;
+final publication CI is separate. It is not selected by the trainer/API. Complete
+Q/policy parity and independent saved-policy replay precede training integration.
 
 An opt-in [native exact whole-game backend](../native-exact-whole-game.md)
 now joins native global normalization/support/ranking/payoff computation with

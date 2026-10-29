@@ -212,3 +212,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/native-exact-conversion-v1/** -text
 /benchmarks/results/native-exact-kernel-v1/** -text
 /benchmarks/results/native-exact-whole-v1/** -text
+/benchmarks/results/native-public-history-index-v1/** -text
