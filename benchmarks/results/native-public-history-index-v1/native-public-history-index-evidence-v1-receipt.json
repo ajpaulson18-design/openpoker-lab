@@ -1,0 +1,11 @@
+{
+  "archive": "native-public-history-index-evidence-v1.zip",
+  "archive_bytes": 1737314,
+  "archive_entries": 105,
+  "archive_sha256": "5f7425daea0a2335781e8ccacb166543e2fe2157e5d913538ac7cf84b791f294",
+  "authenticated_source_files": 2054,
+  "conformance_receipt_sha256": "3265548f3cc90da6bf4cffc77457291a026b6e2a3fcf34d4bf9447000e651996",
+  "evidence_manifest_sha256": "430ea2e024e2c1cf576d0fe991e082d1c37350b26843846298d17da6e8f2966c",
+  "integration_scope": "Graph-only prerequisite; no trainer/API/wire or admission change. Logical fields/characters exclude allocator bytes/capacity/RSS.",
+  "source_commit": "f80f63ff6769f171b93de32fa22036dfa83650c9"
+}

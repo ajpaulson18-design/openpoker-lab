@@ -1,0 +1,15 @@
+{
+  "authenticated_source_files": 2054,
+  "build_manifest_sha256": "2b125780784c0513633726710d72f9e5a43b124dba090823d230eded5f4ec225",
+  "controls_sha256": "812f9e6d644ec49194ff72adf1c344c16ebabb13f4dd28d9ec1c36ebfe14f12f",
+  "dependency_headers": 198,
+  "executable_sha256": "bd7ff29aa3da1f7e7d53796a074f2db5d2477eb8b98ccf15b3c013af3c433c34",
+  "header_sha256": "6ec930089c4339e64b772d984e2830c4a8711df06eccff7ba692e5d7d30646bc",
+  "independent_controls_sha256": "26e7783783a87828c8a0f40e9f9907243b4a6a9f9157a568cc45d29b07e99384",
+  "independent_wide_tall_ledger_and_order_controls": true,
+  "normal_and_optimized_controls": true,
+  "scope": "Graph-only controls and explicit Plan/index logical ledger; no solver or CFR trainer call. Plan performs rank-free prior/support setup. No poker quality, larger admission, performance, allocator-byte or RSS claim.",
+  "source_and_build_unchanged": true,
+  "source_commit": "f80f63ff6769f171b93de32fa22036dfa83650c9",
+  "status": "passed"
+}

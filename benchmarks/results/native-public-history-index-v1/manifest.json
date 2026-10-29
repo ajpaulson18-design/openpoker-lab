@@ -1,0 +1,13 @@
+{
+  "contract": "native-public-history-index-publication-v1",
+  "scope": "Graph-only index conformance at f80f63f; separate prior-native-source profile at a05fe2a. No new-index/trainer timing, larger admission or memory improvement follows.",
+  "sha256": {
+    "baseline-profile-report.json": "7a7b2e1d3effa290d108cb6445ca9654ff7623e89f42872d6cb9a40ae2c52933",
+    "baseline-profile-saved-review.json": "a3cb4155a8a5228790df0a47a3f70db72b7335b749dc84de92d9bee93f17c3d4",
+    "index-conformance-receipt.json": "3265548f3cc90da6bf4cffc77457291a026b6e2a3fcf34d4bf9447000e651996",
+    "native-baseline-phase-profile-evidence-v1-receipt.json": "37ab30070c4a61e334c421585cc2ac4f15dda3e536d8ea7fe7f9a91cd0e5d2dc",
+    "native-baseline-phase-profile-evidence-v1.zip": "dc49ed0573a0857cf615c952365051b88ce8f2c0524316a0b2dde72453f0f4f2",
+    "native-public-history-index-evidence-v1-receipt.json": "a4b40df606cda807fc0e981b6e52446fecbd81017de7250002d0877a2ab33a60",
+    "native-public-history-index-evidence-v1.zip": "5f7425daea0a2335781e8ccacb166543e2fe2157e5d913538ac7cf84b791f294"
+  }
+}
