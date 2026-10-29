@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <limits>
 #include <map>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
@@ -35,11 +36,32 @@ inline constexpr std::size_t kMappedTransitionScalarEntries = 6;
 inline constexpr std::size_t kClassEdgeUpperSlackEntries = 1;
 inline constexpr std::size_t kMappedTransitionUpperSlackEntries = 2;
 
+struct QuerySchedule {
+    std::uint64_t history_route_calls = 0;
+    std::uint64_t history_route_tokens_upper = 0;
+    std::uint64_t root_cursor_calls = 0; // excludes route-internal roots
+    std::uint64_t edge_advance_calls = 0;
+};
+
+struct ExternalReservation {
+    std::uint64_t work_upper = 0;
+    std::size_t entries_upper = 0;
+};
+
+struct QueryCounts {
+    std::uint64_t history_routes = 0;
+    std::uint64_t history_route_tokens = 0;
+    std::uint64_t root_cursors = 0;
+    std::uint64_t edge_advances = 0;
+};
+
 struct Limits {
     // These are whole-owner ceilings. The constructor adds the existing Plan
     // receipt to the new index's retained/scratch and work reservations.
     std::uint64_t max_combined_modeled_work = kMaximumModeledWork;
     std::size_t max_combined_entries = kMaximumRetainedEntries;
+    std::optional<QuerySchedule> query_schedule = std::nullopt;
+    ExternalReservation external{};
 };
 
 struct Receipt {
@@ -83,6 +105,13 @@ struct Receipt {
     std::uint64_t plan_modeled_work_upper = 0;
     std::uint64_t index_modeled_work_upper = 0;
     std::uint64_t combined_modeled_work_upper = 0;
+    std::uint64_t combined_base_modeled_work_upper = 0;
+    std::uint64_t external_work_upper = 0;
+    std::size_t external_entries_upper = 0;
+    bool query_schedule_declared = false;
+    std::uint64_t query_work_upper = 0;
+    std::size_t query_cumulative_entries_upper = 0;
+    std::size_t combined_base_peak_entries_upper = 0;
     std::uint64_t modeled_work_limit = 0;
     std::size_t plan_retained_entries_upper = 0;
     std::size_t index_retained_entries_upper = 0;
@@ -156,6 +185,10 @@ public:
 
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
     [[nodiscard]] const Graph& graph() const noexcept { return *graph_; }
+    [[nodiscard]] const Vertex& vertex_at(const Cursor& cursor) const {
+        validate_cursor(cursor);
+        return graph_->vertices[cursor.raw_vertex_];
+    }
     [[nodiscard]] std::size_t suit_map_count() const noexcept { return plan_->group().size(); }
     [[nodiscard]] std::uint64_t query_work_reserved() const noexcept {
         return query_work_used_.load(std::memory_order_relaxed);
@@ -163,28 +196,17 @@ public:
     [[nodiscard]] std::size_t inverse_query_entries_reserved() const noexcept {
         return query_entries_used_.load(std::memory_order_relaxed);
     }
+    [[nodiscard]] std::optional<QuerySchedule> declared_query_schedule() const noexcept {
+        return limits_.query_schedule;
+    }
+    [[nodiscard]] QueryCounts query_counts() const noexcept {
+        return {route_calls_used_.load(std::memory_order_relaxed), route_tokens_used_.load(std::memory_order_relaxed),
+            root_calls_used_.load(std::memory_order_relaxed), edge_calls_used_.load(std::memory_order_relaxed)};
+    }
 
     [[nodiscard]] Cursor root_cursor() const {
-        const auto map_count = plan_->group().size();
-        const auto initial_tokens = graph_->initial_history.size();
-        reserve_query_work(static_cast<std::uint64_t>(map_count) *
-            (initial_tokens * kMaximumTokenBytes + 8ULL));
-        reserve_query_entries(map_count * kMaximumTokenBytes);
-        Cursor result;
-        result.owner_ = this;
-        result.generation_ = generation_;
-        result.raw_vertex_ = graph_->root_id;
-        result.image_count_ = map_count;
-        const auto root_class = vertex_class_[graph_->root_id];
-        for (std::size_t g = 0; g < result.image_count_; ++g) {
-            const auto image_class = class_map_[g * classes_.size() + root_class];
-            if (image_class != root_class)
-                detail::fail(ErrorCode::graph_not_invariant, "history index suit image moved the public root");
-            result.images_[g].continuation_class = image_class;
-            result.images_[g].ordinal = 0;
-            result.images_[g].visible_prefix = initial_prefix(plan_->group()[g]);
-        }
-        return result;
+        reserve_scheduled(root_calls_used_, 1, limits_.query_schedule ? limits_.query_schedule->root_cursor_calls : 0);
+        return make_root_cursor();
     }
 
     // Advance by the physical vertex's original child index. This preserves
@@ -198,7 +220,8 @@ public:
         if (child_index >= raw_count)
             detail::fail(ErrorCode::invalid_query, "history index edge position is outside the active menu");
         const auto raw_edge_id = raw_vertex_edges_[cursor.raw_vertex_].edge_begin + child_index;
-        reserve_query_work(8ULL + 8ULL * cursor.image_count_);
+        reserve_scheduled(edge_calls_used_, 1, limits_.query_schedule ? limits_.query_schedule->edge_advance_calls : 0);
+        reserve_query_work(edge_work_per_call());
         return advance_canonical_edge(cursor, raw_edges_[raw_edge_id].canonical_edge,
                                       raw_edges_[raw_edge_id].child_vertex);
     }
@@ -224,9 +247,10 @@ public:
         const auto maximum_tokens = graph_->initial_history.size() + plan_->graph_census().maximum_depth;
         if (depth < graph_->initial_history.size() || depth > maximum_tokens)
             detail::fail(ErrorCode::invalid_query, "history exceeds admitted token depth");
-        const auto route_work = static_cast<std::uint64_t>(depth) *
-            (kMaximumTokenBytes * (ceil_log2(std::max<std::size_t>(2, maximum_degree_)) + 2ULL) +
-             8ULL * plan_->group().size() + 8ULL);
+        reserve_scheduled(route_calls_used_, 1, limits_.query_schedule ? limits_.query_schedule->history_route_calls : 0);
+        reserve_scheduled(route_tokens_used_, depth,
+            limits_.query_schedule ? limits_.query_schedule->history_route_tokens_upper : 0);
+        const auto route_work = detail::checked_mul(depth, route_work_per_token());
         reserve_query_work(route_work);
         std::size_t bytes = 0;
         for (const auto& token : history) {
@@ -238,13 +262,15 @@ public:
         for (std::size_t i = 0; i < graph_->initial_history.size(); ++i)
             if (history[i] != graph_->initial_history[i])
                 detail::fail(ErrorCode::invalid_query, "history does not begin with the fixed admitted initial prefix");
-        auto cursor = root_cursor();
+        auto cursor = make_root_cursor();
         for (std::size_t i = graph_->initial_history.size(); i < history.size(); ++i)
             cursor = advance_token_unreserved(cursor, history[i]);
         return cursor;
     }
 
     [[nodiscard]] Cursor advance_token(const Cursor& cursor, std::string_view token) const {
+        if (limits_.query_schedule)
+            detail::fail(ErrorCode::invalid_query, "token advances are absent from the declared index schedule");
         validate_cursor(cursor);
         if (token.empty() || token.size() > kMaximumTokenBytes)
             detail::fail(ErrorCode::invalid_query, "history edge token is empty or oversized");
@@ -255,6 +281,8 @@ public:
     }
 
     [[nodiscard]] History history_at_ordinal(std::uint64_t ordinal) const {
+        if (limits_.query_schedule)
+            detail::fail(ErrorCode::invalid_query, "inverse queries are absent from the declared index schedule");
         const auto root_class = vertex_class_[graph_->root_id];
         if (ordinal >= classes_[root_class].subtree_count)
             detail::fail(ErrorCode::invalid_query, "history ordinal is outside the admitted logical path range");
@@ -299,6 +327,50 @@ public:
     }
 
 private:
+    [[nodiscard]] std::uint64_t root_work_per_call() const {
+        return detail::checked_mul(plan_->group().size(),
+            detail::checked_add(detail::checked_mul(graph_->initial_history.size(), kMaximumTokenBytes), 8));
+    }
+    [[nodiscard]] std::size_t root_entries_per_call() const {
+        return static_cast<std::size_t>(detail::checked_mul(plan_->group().size(), kMaximumTokenBytes));
+    }
+    [[nodiscard]] std::uint64_t edge_work_per_call() const {
+        return 8ULL + 8ULL * plan_->group().size();
+    }
+    [[nodiscard]] std::uint64_t route_work_per_token() const {
+        return kMaximumTokenBytes * (ceil_log2(std::max<std::size_t>(2, maximum_degree_)) + 2ULL) +
+            8ULL * plan_->group().size() + 8ULL;
+    }
+    void reserve_scheduled(std::atomic<std::uint64_t>& counter, std::uint64_t amount,
+                           std::uint64_t upper) const {
+        if (!limits_.query_schedule) return;
+        auto previous = counter.load(std::memory_order_relaxed);
+        while (true) {
+            const auto next = detail::checked_add(previous, amount);
+            if (next > upper)
+                detail::fail(ErrorCode::work_limit, "index operation exceeds its declared complete-call schedule");
+            if (counter.compare_exchange_weak(previous, next,
+                    std::memory_order_relaxed, std::memory_order_relaxed)) return;
+        }
+    }
+    [[nodiscard]] Cursor make_root_cursor() const {
+        reserve_query_work(root_work_per_call());
+        reserve_query_entries(root_entries_per_call());
+        Cursor result;
+        result.owner_ = this;
+        result.generation_ = generation_;
+        result.raw_vertex_ = graph_->root_id;
+        result.image_count_ = plan_->group().size();
+        const auto root_class = vertex_class_[graph_->root_id];
+        for (std::size_t g = 0; g < result.image_count_; ++g) {
+            const auto image_class = class_map_[g * classes_.size() + root_class];
+            if (image_class != root_class)
+                detail::fail(ErrorCode::graph_not_invariant, "history index suit image moved the public root");
+            result.images_[g].continuation_class = image_class;
+            result.images_[g].visible_prefix = initial_prefix(plan_->group()[g]);
+        }
+        return result;
+    }
     struct ClassRecord {
         std::size_t representative_vertex = 0;
         std::size_t edge_begin = 0;
@@ -352,6 +424,9 @@ private:
             limits_.max_combined_entries == 0 ||
             limits_.max_combined_entries > kMaximumRetainedEntries)
             detail::fail(ErrorCode::invalid_limits, "history-index combined limits must be positive and reduce-only");
+        if (limits_.external.work_upper > limits_.max_combined_modeled_work ||
+            limits_.external.entries_upper > limits_.max_combined_entries)
+            detail::fail(ErrorCode::invalid_limits, "external reservation exceeds the shared ceiling");
         if (plan_->group().empty() || plan_->group().size() > kMaximumSuitMaps)
             detail::fail(ErrorCode::group_invalid, "history-index suit-group size is outside the S4 ceiling");
         if (plan_->group().front().image != std::array<std::uint8_t, 4>{0, 1, 2, 3})
@@ -366,7 +441,8 @@ private:
         const auto pre_scan_work = detail::checked_add(8ULL * v + 8ULL * e,
             detail::checked_add(detail::checked_mul(2ULL * kMaximumTokenBytes, e),
                 detail::checked_mul(kMaximumTokenBytes, graph_->initial_history.size())));
-        if (detail::checked_add(plan_->receipt().modeled_work_upper, pre_scan_work) >
+        if (detail::checked_add(detail::checked_add(plan_->receipt().modeled_work_upper,
+                limits_.external.work_upper), pre_scan_work) >
             limits_.max_combined_modeled_work)
             detail::fail(ErrorCode::work_limit, "history-index bounded input scan exceeds remaining combined work before token scan");
         std::size_t text_bytes = 0;
@@ -402,6 +478,21 @@ private:
         if (text_bytes > kMaximumHistoryBytes)
             detail::fail(ErrorCode::history_limit, "history-index copied token text exceeds the existing history cap");
         maximum_degree_ = max_degree;
+        if (limits_.query_schedule) {
+            const auto& schedule = *limits_.query_schedule;
+            if ((!schedule.history_route_calls && schedule.history_route_tokens_upper) ||
+                schedule.history_route_tokens_upper < detail::checked_mul(
+                    schedule.history_route_calls, graph_->initial_history.size()))
+                detail::fail(ErrorCode::invalid_limits, "history route token schedule cannot cover its fixed prefixes");
+            const auto roots = detail::checked_add(schedule.history_route_calls, schedule.root_cursor_calls);
+            query_work_upper_ = detail::checked_add(detail::checked_mul(roots, root_work_per_call()),
+                detail::checked_add(detail::checked_mul(schedule.history_route_tokens_upper, route_work_per_token()),
+                    detail::checked_mul(schedule.edge_advance_calls, edge_work_per_call())));
+            const auto entries = detail::checked_mul(roots, root_entries_per_call());
+            if (entries > limits_.max_combined_entries)
+                detail::fail(ErrorCode::storage_limit, "index cumulative query entries exceed the shared ceiling");
+            query_entries_upper_ = static_cast<std::size_t>(entries);
+        }
         const auto log_v = ceil_log2(std::max<std::size_t>(2, v));
         const auto log_d = ceil_log2(std::max<std::size_t>(2, max_degree));
         const auto sort_comparisons = detail::checked_mul(2ULL * e, log_d + 1U);
@@ -456,15 +547,18 @@ private:
         index_scratch_upper_ = detail::checked_add(256ULL,
             detail::checked_add(graph_scratch,
                 detail::checked_add(suit_scratch, detail::checked_mul(2ULL, signature_bytes))));
-        const auto combined_work = detail::checked_add(plan_->receipt().modeled_work_upper, index_work_upper_);
-        const auto combined_entries = detail::checked_add(plan_->receipt().retained_entries_upper,
-            detail::checked_add(index_retained_upper_, index_scratch_upper_));
+        const auto combined_base_work = detail::checked_add(plan_->receipt().modeled_work_upper,
+            detail::checked_add(index_work_upper_, limits_.external.work_upper));
+        const auto base_entries = detail::checked_add(plan_->receipt().retained_entries_upper,
+            detail::checked_add(index_retained_upper_, detail::checked_add(index_scratch_upper_, limits_.external.entries_upper)));
+        const auto combined_work = detail::checked_add(combined_base_work, query_work_upper_);
+        const auto combined_entries = detail::checked_entries(base_entries, query_entries_upper_);
         if (combined_work > limits_.max_combined_modeled_work)
             detail::fail(ErrorCode::work_limit, "combined Plan/history-index work reservation exceeds supplied ceiling");
         if (combined_entries > limits_.max_combined_entries)
             detail::fail(ErrorCode::storage_limit, "combined Plan/history-index retained-plus-scratch reservation exceeds supplied ceiling");
-        reserved_combined_work_ = combined_work;
-        reserved_combined_entries_ = combined_entries;
+        reserved_combined_work_ = combined_base_work;
+        reserved_combined_entries_ = base_entries;
         retained_token_bytes_upper_ = retained_tokens;
         signature_scratch_bytes_upper_ = signature_bytes;
     }
@@ -803,6 +897,8 @@ private:
         auto previous = query_work_used_.load(std::memory_order_relaxed);
         while (true) {
             const auto next = detail::checked_add(previous, amount);
+            if (limits_.query_schedule && next > query_work_upper_)
+                detail::fail(ErrorCode::work_limit, "index query work exceeds its preflight schedule forecast");
             if (detail::checked_add(reserved_combined_work_, next) > limits_.max_combined_modeled_work)
                 detail::fail(ErrorCode::work_limit, "history-index query work exceeds combined admitted ceiling");
             if (query_work_used_.compare_exchange_weak(previous, next,
@@ -813,6 +909,8 @@ private:
         auto previous = query_entries_used_.load(std::memory_order_relaxed);
         while (true) {
             const auto next = detail::checked_entries(previous, amount);
+            if (limits_.query_schedule && next > query_entries_upper_)
+                detail::fail(ErrorCode::storage_limit, "index query entries exceed their preflight schedule forecast");
             if (detail::checked_entries(reserved_combined_entries_, next) > limits_.max_combined_entries)
                 detail::fail(ErrorCode::storage_limit, "history-index inverse-query scratch exceeds combined admitted ceiling");
             if (query_entries_used_.compare_exchange_weak(previous, next,
@@ -874,14 +972,23 @@ private:
         receipt_.signature_scratch_bytes_upper = signature_scratch_bytes_upper_;
         receipt_.plan_modeled_work_upper = plan_->receipt().modeled_work_upper;
         receipt_.index_modeled_work_upper = index_work_upper_;
-        receipt_.combined_modeled_work_upper = reserved_combined_work_;
+        receipt_.combined_base_modeled_work_upper = reserved_combined_work_;
+        receipt_.combined_modeled_work_upper = detail::checked_add(reserved_combined_work_, query_work_upper_);
+        receipt_.external_work_upper = limits_.external.work_upper;
+        receipt_.external_entries_upper = limits_.external.entries_upper;
+        receipt_.query_schedule_declared = limits_.query_schedule.has_value();
+        receipt_.query_work_upper = query_work_upper_;
+        receipt_.query_cumulative_entries_upper = query_entries_upper_;
         receipt_.modeled_work_limit = limits_.max_combined_modeled_work;
         receipt_.plan_retained_entries_upper = plan_->receipt().retained_entries_upper;
         receipt_.index_retained_entries_upper = index_retained_upper_;
         receipt_.index_scratch_entries_upper = index_scratch_upper_;
-        receipt_.combined_peak_entries_upper = reserved_combined_entries_;
+        receipt_.combined_base_peak_entries_upper = reserved_combined_entries_;
+        receipt_.combined_peak_entries_upper = detail::checked_entries(reserved_combined_entries_, query_entries_upper_);
         receipt_.retained_entry_limit = limits_.max_combined_entries;
         receipt_.max_query_depth = plan_->graph_census().maximum_depth;
+        if (limits_.query_schedule || limits_.external.work_upper || limits_.external.entries_upper)
+            receipt_.version = "native-exact-public-history-index-scheduled-v2";
     }
 
     const Plan* plan_ = nullptr; // Plan is required to outlive this index.
@@ -912,8 +1019,14 @@ private:
     std::size_t index_scratch_upper_ = 0;
     std::uint64_t reserved_combined_work_ = 0;
     std::size_t reserved_combined_entries_ = 0;
+    std::uint64_t query_work_upper_ = 0;
+    std::size_t query_entries_upper_ = 0;
     mutable std::atomic<std::uint64_t> query_work_used_{0};
     mutable std::atomic<std::size_t> query_entries_used_{0};
+    mutable std::atomic<std::uint64_t> root_calls_used_{0};
+    mutable std::atomic<std::uint64_t> edge_calls_used_{0};
+    mutable std::atomic<std::uint64_t> route_calls_used_{0};
+    mutable std::atomic<std::uint64_t> route_tokens_used_{0};
     Receipt receipt_{};
     inline static std::atomic<std::uint64_t> generation_counter_{1};
 };

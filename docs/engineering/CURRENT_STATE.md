@@ -1,5 +1,13 @@
 # Current engineering state
 
+An explicit [indexed native learning candidate](../native-indexed-routing.md)
+now connects numeric Q keys, incremental visible-path cursors and borrowed typed
+prefix support to the existing exact trainer. Default/shadow/indexed bounded
+policies match; independent actual-call instrumentation finds zero five legacy
+history operations during indexed learning on its fixture. Old preflight/Q histories,
+admission forecasts and expanded diagnostics remain. A new fixed complete-call
+study, saved-only acceptance and final cross-platform CI remain gates.
+
 The separate [exact public-history index](../native-public-history-index.md)
 now has graph-only ordinal/suit conformance and independent wide/tall logical
 ledger controls. It keeps reconvergent visible paths distinct without an expanded

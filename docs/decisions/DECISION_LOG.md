@@ -36,6 +36,18 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D072: Integrate numeric routing without changing the numerical trajectory (October 29, 2026)
+
+The [indexed training candidate](../native-indexed-routing.md) uses typed visible
+prefixes and ordinal Q keys in actual learning, with full-history and shadow
+references retained. Preserve old q/order/menu/offset/member bits and physical
+support holes, original arithmetic edge order and strict callbacks. Declare all
+index/router/caller work and cumulative query entries before allocation; charge
+fixed 24-slot arrays regardless of G and retain conservative old history/kernel
+overlap forecasts. Use an explicit V2 request/proof and reject instead of fallback.
+Independent physical replay and source-frozen measurements precede performance or
+broader admission claims. This is additional integration, not full-deck capability.
+
 ### D071: Prove exact public-path indexing before changing Q lookup (October 29, 2026)
 
 Sol chooses staged [public-history indexing](../native-public-history-index.md):

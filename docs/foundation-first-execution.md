@@ -1,5 +1,22 @@
 # Foundation-first execution record
 
+## Numeric routing in actual native learning (October 29)
+
+The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses
+history construction, root lookup and reveal parsing in native learning while
+retaining old preflight/Q/marginal setup and conservative whole-request forecasts.
+Sol implements differential shadow and indexed training; Luna owns numeric Q
+routing and the fixed runner; Terra independently checks support holes, complete
+Q bits, budgets and actual learning-only method calls. Root integrates typed
+access/scheduled admission, V2 native proof/API and physical-policy replay.
+Thirteen combined optimized native API/control tests pass in 66.848 seconds;
+six runner protocol/error-retention controls pass. Independent external actual-call
+counts are zero for five old history methods in indexed learning, positive in
+default/shadow, with complete Q-policy equality on its bounded fixture. Earlier
+toolchain/include-path, ambiguous comparator and source-drift failures are retained
+separately. No source-frozen timing or larger-capacity result is claimed yet;
+the new twenty-child study and independent saved-only acceptance remain gates.
+
 ## Exact public-history indexing prerequisite (October 29)
 
 Sol defines exact lexicographic unfolded-path ordinals over canonical DAG

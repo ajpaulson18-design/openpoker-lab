@@ -41,6 +41,25 @@ std::unique_ptr<g::Plan> make_plan(bool symmetry, g::Limits limits = {}, bool ex
     return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),10,1,limits);
 }
 
+std::unique_ptr<g::Plan> shadow_fixture(unsigned kind) {
+    if (kind < 2) return make_plan(kind == 1);
+    const bool symmetry = kind != 4;
+    auto graph = fixture(symmetry);
+    std::vector<g::WeightedHand> a{{{48,40},bits(1.)},{{49,41},bits(1.)}};
+    std::vector<g::WeightedHand> b{{{44,36},bits(1.)},{{45,37},bits(1.)}};
+    std::vector<g::SelectedBoard> boards{{{0,4,20,30,35}},{{1,5,21,30,35}}};
+    if (kind == 2) a.push_back({{50,42},bits(1.)}); // c/d-fixed member plus a swapped pair
+    if (kind == 3) a = {{{48,40},bits(1.)},{{0,48},bits(1.)},{{1,49},bits(1.)},{{49,41},bits(1.)}};
+    if (kind == 4) {
+        // River prefix is terminal-only: no decision at its five-card prefix.
+        graph.vertices[8] = g::Vertex::terminal(g::TerminalKind::showdown,2,{bits(1.),bits(1.)});
+        graph.vertices.pop_back();
+        a = {{{51,50},bits(1.)}}; b = {{{47,46},bits(1.)}};
+        boards = {{{0,5,10,23,24}}};
+    }
+    return std::make_unique<g::Plan>(std::move(graph),std::move(a),std::move(b),std::move(boards),10,1);
+}
+
 // Separate expanded-row implementation: plain R map, no procedural Q lookup,
 // masks or staging functions from the candidate are reused.
 using Key = std::tuple<unsigned,std::size_t,g::History>;
@@ -161,9 +180,134 @@ void rank_anchors() {
     check("2c3c4c5c6c7c8c",{8,8,0,0,0,0});
     std::cout<<"14 hardcoded seven-card best-five rank anchors passed\n";
 }
+void indexed_shadow_controls() {
+    for (unsigned kind = 0; kind < 5; ++kind) {
+        auto reference_plan = shadow_fixture(kind);
+        c::Trainer reference(*reference_plan); const auto old = reference.run();
+        need(!old.receipt.indexed_shadow,"default path gained a shadow receipt");
+        auto plan = shadow_fixture(kind);
+        if (kind == 2) {
+            need(plan->group().size()==2,"mixed stabilizer lost G2");
+            bool one=false,two=false;for(const auto& row:plan->rows()){one|=row.orbit_size==1;two|=row.orbit_size==2;}
+            need(one&&two,"mixed fixture lacks distinct orbit sizes");
+        }
+        if (kind == 3) {
+            const auto history = g::History{"call","flop@2c3c7c"};
+            const auto rows = plan->locate_decision_rows(1,history,plan->graph().vertices[3].actions);
+            (void)rows;
+            const auto support=plan->prefix_support(std::array<g::Card,3>{0,4,20});
+            need(!std::binary_search(support.hands[0].begin(),support.hands[0].end(),1U) &&
+                 std::binary_search(support.hands[0].begin(),support.hands[0].end(),2U),"hole fixture lacks internal support hole");
+        }
+        c::Trainer candidate(*plan);const auto result = candidate.run_indexed_shadow();
+        need(result.quotient_policy.size()==old.quotient_policy.size(),"shadow changed full Q policy width");
+        for(std::size_t i=0;i<old.quotient_policy.size();++i)
+            need(bits(result.quotient_policy[i])==bits(old.quotient_policy[i]),"shadow changed Q probability bits");
+        need(result.receipt.member_checks==old.receipt.member_checks &&
+             result.receipt.expected_member_checks==old.receipt.expected_member_checks,"shadow changed phase/member coverage");
+        need(result.receipt.indexed_shadow.has_value(),"explicit shadow missing receipt");
+        const auto& s=*result.receipt.indexed_shadow;const auto& r=s.routing;
+        need(s.mode=="shadow" && s.version=="native-exact-cfr-indexed-shadow-v1","shadow mode identity changed");
+        need(s.legacy_training_history_extensions==r.edge_advance_calls_actual &&
+             s.legacy_training_row_lookups==r.decision_lookup_calls_actual &&
+             s.legacy_training_prefix_lookups==r.prefix_lookup_calls_actual,"shadow legacy-call coverage differs");
+        need(old.receipt.legacy_training_history_extensions==r.edge_advance_calls_actual &&
+             old.receipt.legacy_training_row_lookups==r.decision_lookup_calls_actual &&
+             old.receipt.legacy_training_prefix_lookups==r.prefix_lookup_calls_actual,"default legacy-call coverage differs");
+        need(s.final_router_entries==0 && r.r_lookup_entries==0 && r.original_q_histories_retained,"shadow retained forbidden/final state");
+        need(r.combined_modeled_work_upper<=500'000'000 && r.combined_logical_entries_upper<=2'000'000,"shadow lacks shared limits");
+        need(r.root_cursor_calls_actual==30 && r.edge_advance_calls_actual==30*(plan->graph_census().logical_visits-1),"shadow root/edge counts differ");
+        need(s.decision_comparisons==30*plan->graph_census().decision_occurrences &&
+             s.prefix_comparisons==20*plan->graph_census().terminal_occurrences+10*plan->graph_census().decision_occurrences,"shadow did not compare every scheduled query");
+        need(s.cursor_frame_entries_upper==4*(plan->graph_census().maximum_depth+4)*openpoker::exact_indexed_routing::kMaximumCursorLogicalEntries,"shadow did not reserve full24-image cursor copies");
+        need(s.plan_kernel_forecast_retained_overlap==plan->kernel_setup_support_work_upper(),"shadow omitted named conservative kernel overlap");
+        std::cout<<"indexed-shadow kind="<<kind<<" policybits="<<result.quotient_policy.size()
+                 <<" decisions="<<s.decision_comparisons<<" prefixes="<<s.prefix_comparisons
+                 <<" wholework="<<r.combined_modeled_work_upper<<" entries="<<r.combined_logical_entries_upper<<"\n";
+        rejection("shadow single-use",[&]{candidate.run_indexed_shadow();});
+        rejection("shadow then default single-use",[&]{candidate.run();});
+        rejection("shadow then indexed single-use",[&]{candidate.run_indexed();});
+        rejection("default then indexed single-use",[&]{reference.run_indexed();});
+        auto indexed_plan=shadow_fixture(kind);c::Trainer indexed_trainer(*indexed_plan);
+        const auto indexed=indexed_trainer.run_indexed();
+        need(indexed.quotient_policy.size()==old.quotient_policy.size(),"indexed changed full Q policy width");
+        for(std::size_t i=0;i<old.quotient_policy.size();++i) {
+            need(bits(indexed.quotient_policy[i])==bits(old.quotient_policy[i]),"indexed/default policy bits differ");
+            need(bits(indexed.quotient_policy[i])==bits(result.quotient_policy[i]),"indexed/shadow policy bits differ");
+        }
+        need(indexed.receipt.indexed_shadow.has_value(),"indexed-only missing namespaced receipt");
+        const auto& ns=*indexed.receipt.indexed_shadow;const auto& nr=ns.routing;
+        need(ns.mode=="indexed" && ns.version=="native-exact-cfr-indexed-v1","indexed mode is not explicit");
+        need(!ns.legacy_training_history_extensions && !ns.legacy_training_row_lookups &&
+             !ns.legacy_training_prefix_lookups && !indexed.receipt.legacy_training_history_extensions &&
+             !indexed.receipt.legacy_training_row_lookups && !indexed.receipt.legacy_training_prefix_lookups,
+             "indexed learning retained a legacy history operation");
+        need(!ns.decision_comparisons && !ns.prefix_comparisons,"indexed-only still runs shadow comparisons");
+        need(nr.root_cursor_calls_actual==r.root_cursor_calls_actual && nr.edge_advance_calls_actual==r.edge_advance_calls_actual &&
+             nr.decision_lookup_calls_actual==r.decision_lookup_calls_actual && nr.prefix_lookup_calls_actual==r.prefix_lookup_calls_actual,
+             "indexed-only changed complete routing coverage");
+        need(nr.combined_modeled_work_upper==r.combined_modeled_work_upper &&
+             nr.combined_logical_entries_upper==r.combined_logical_entries_upper &&
+             indexed.receipt.full_history_lookup_work_upper==old.receipt.full_history_lookup_work_upper &&
+             ns.legacy_full_history_work_forecast_retained==old.receipt.full_history_lookup_work_upper,
+             "indexed-only took capacity credit from old forecast");
+        need(!ns.final_router_entries && !indexed.receipt.final_numeric_workspace_slots &&
+             indexed.receipt.maximum_numeric_workspace_slots==4*indexed.receipt.action_slots &&
+             indexed.receipt.member_checks==old.receipt.member_checks,"indexed-only changed workspace or phase/member coverage");
+        std::cout<<"indexed-only kind="<<kind<<" policybits="<<indexed.quotient_policy.size()
+                 <<" indexeddecisions="<<nr.decision_lookup_calls_actual<<" indexedprefixes="<<nr.prefix_lookup_calls_actual
+                 <<" legacytraining=0/0/0\n";
+        rejection("indexed single-use",[&]{indexed_trainer.run_indexed();});
+        rejection("indexed then shadow single-use",[&]{indexed_trainer.run_indexed_shadow();});
+        rejection("indexed then default single-use",[&]{indexed_trainer.run();});
+        // Budget exactly below the complete shadow envelope: reject before
+        // marginal/terminal callbacks, while the ordinary run still fits.
+        auto constrained = shadow_fixture(kind); c::Limits limits;
+        limits.max_modeled_work=r.combined_modeled_work_upper-1;
+        c::Trainer low(*constrained,limits);const auto kernel_before=constrained->kernel().receipt();
+        rejection("shadow shared work prelearning",[&]{low.run_indexed_shadow();});
+        need(constrained->kernel().receipt().modeled_work==kernel_before.modeled_work &&
+             constrained->kernel().receipt().rank_calls==kernel_before.rank_calls,"shadow admission mutated kernel before rejection");
+        auto entry_plan=shadow_fixture(kind);limits={};limits.max_entries=r.combined_logical_entries_upper-1;
+        c::Trainer entry_low(*entry_plan,limits);const auto work_before=entry_plan->kernel().receipt().modeled_work;
+        rejection("shadow shared entries prelearning",[&]{entry_low.run_indexed_shadow();});
+        need(entry_plan->kernel().receipt().modeled_work==work_before,"shadow entry rejection mutated kernel");
+        auto indexed_work_plan=shadow_fixture(kind);limits={};limits.max_modeled_work=nr.combined_modeled_work_upper-1;
+        c::Trainer indexed_low(*indexed_work_plan,limits);const auto indexed_before=indexed_work_plan->kernel().receipt();
+        rejection("indexed shared work prelearning",[&]{indexed_low.run_indexed();});
+        need(indexed_work_plan->kernel().receipt().modeled_work==indexed_before.modeled_work &&
+             indexed_work_plan->kernel().receipt().rank_calls==indexed_before.rank_calls,"indexed work rejection queried kernel");
+        auto indexed_entry_plan=shadow_fixture(kind);limits={};limits.max_entries=nr.combined_logical_entries_upper-1;
+        c::Trainer indexed_entry_low(*indexed_entry_plan,limits);const auto indexed_entry_before=indexed_entry_plan->kernel().receipt();
+        rejection("indexed shared entries prelearning",[&]{indexed_entry_low.run_indexed();});
+        need(indexed_entry_plan->kernel().receipt().modeled_work==indexed_entry_before.modeled_work &&
+             indexed_entry_plan->kernel().receipt().rank_calls==indexed_entry_before.rank_calls,"indexed entry rejection queried kernel");
+    }
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);
+     (void)plan->kernel().support(plan->prefix_board_indexes(plan->graph().initial_history));
+     const auto before=plan->kernel().receipt();rejection("shadow externally consumed kernel",[&]{trainer.run_indexed_shadow();});
+     need(plan->kernel().receipt().modeled_work==before.modeled_work,"shadow freshness guard queried kernel");}
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);std::fesetround(FE_DOWNWARD);
+     try{rejection("shadow nearest rounding",[&]{trainer.run_indexed_shadow();});}catch(...){std::fesetround(FE_TONEAREST);throw;}
+     std::fesetround(FE_TONEAREST);}
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);
+     (void)plan->kernel().support(plan->prefix_board_indexes(plan->graph().initial_history));
+     const auto before=plan->kernel().receipt();rejection("indexed externally consumed kernel",[&]{trainer.run_indexed();});
+     need(plan->kernel().receipt().modeled_work==before.modeled_work,"indexed freshness guard queried kernel");}
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);std::fesetround(FE_DOWNWARD);
+     try{rejection("indexed nearest rounding",[&]{trainer.run_indexed();});}catch(...){std::fesetround(FE_TONEAREST);throw;}
+     std::fesetround(FE_TONEAREST);}
+#if defined(__SSE__) || defined(_M_X64) || defined(_M_IX86)
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);const auto original=_mm_getcsr();_mm_setcsr(original|0x8040U);
+     try{rejection("shadow FTZ/DAZ",[&]{trainer.run_indexed_shadow();});}catch(...){_mm_setcsr(original);throw;}_mm_setcsr(original);}
+    {auto plan=make_plan(false);c::Trainer trainer(*plan);const auto original=_mm_getcsr();_mm_setcsr(original|0x8040U);
+     try{rejection("indexed FTZ/DAZ",[&]{trainer.run_indexed();});}catch(...){_mm_setcsr(original);throw;}_mm_setcsr(original);}
+#endif
+}
 int main() {
     try {
         rank_anchors();
+        indexed_shadow_controls();
         for(bool symmetry:{false,true}) {
             auto p=make_plan(symmetry);need(p->group().size()==(symmetry?2U:1U),"fixture group size");
             c::Trainer trainer(*p);auto result=trainer.run();

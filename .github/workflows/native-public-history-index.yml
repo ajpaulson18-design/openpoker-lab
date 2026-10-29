@@ -20,10 +20,12 @@ jobs:
         shell: bash
         run: |
           python -m scripts.build_native_exact_four_street --target history-index --output-dir "$RUNNER_TEMP/native-history-index"
+          python -m scripts.build_native_exact_four_street --target indexed-routing --output-dir "$RUNNER_TEMP/native-indexed-routing"
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_HISTORY_INDEX_EXE=$RUNNER_TEMP/native-history-index/native-exact-history-index-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_INDEXED_ROUTING_EXE=$RUNNER_TEMP/native-indexed-routing/native-exact-indexed-routing-controls$suffix" >> "$GITHUB_ENV"
       - name: Literal history, transformed routes and capacity controls
-        run: python -O -m unittest tests.test_native_public_history_index -v
+        run: python -O -m unittest tests.test_native_public_history_index tests.test_native_indexed_routing -v
       - name: Preserve first build and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -32,6 +34,8 @@ jobs:
           path: |
             ${{ runner.temp }}/native-history-index/*.log
             ${{ runner.temp }}/native-history-index/*.json
+            ${{ runner.temp }}/native-indexed-routing/*.log
+            ${{ runner.temp }}/native-indexed-routing/*.json
   sanitized-history-index:
     runs-on: ubuntu-latest
     steps:
@@ -43,12 +47,14 @@ jobs:
         shell: bash
         run: |
           python -m scripts.build_native_exact_four_street --target history-index --output-dir "$RUNNER_TEMP/native-history-index-sanitized" --sanitize
+          python -m scripts.build_native_exact_four_street --target indexed-routing --output-dir "$RUNNER_TEMP/native-indexed-routing-sanitized" --sanitize
           echo "OPENPOKER_NATIVE_HISTORY_INDEX_EXE=$RUNNER_TEMP/native-history-index-sanitized/native-exact-history-index-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_INDEXED_ROUTING_EXE=$RUNNER_TEMP/native-indexed-routing-sanitized/native-exact-indexed-routing-controls" >> "$GITHUB_ENV"
       - name: Sanitized conformance
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: python -m unittest tests.test_native_public_history_index -v
+        run: python -m unittest tests.test_native_public_history_index tests.test_native_indexed_routing -v
       - name: Preserve first build and failure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,3 +63,5 @@ jobs:
           path: |
             ${{ runner.temp }}/native-history-index-sanitized/*.log
             ${{ runner.temp }}/native-history-index-sanitized/*.json
+            ${{ runner.temp }}/native-indexed-routing-sanitized/*.log
+            ${{ runner.temp }}/native-indexed-routing-sanitized/*.json

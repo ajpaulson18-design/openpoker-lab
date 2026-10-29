@@ -18,6 +18,16 @@ from .shared_public_topology import ChanceVertex, DecisionVertex, TerminalVertex
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1"
 RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1"
+ROUTED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2"
+ROUTED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2"
+ROUTES = ("full-history", "shadow", "indexed")
+ROUTE_FIELDS = frozenset("q_rows map_entries map_upper r_lookup_entries old_q_histories_retained "
+    "q_routes q_routes_upper q_tokens q_tokens_upper roots roots_upper edges edges_upper "
+    "decisions decisions_upper prefixes prefixes_upper decision_comparisons prefix_comparisons "
+    "legacy_extensions legacy_rows legacy_prefixes router_work router_work_upper index_work index_work_upper "
+    "index_entries index_entries_upper router_retained router_retained_upper setup_scratch_upper query_scratch_upper "
+    "cursor_fields cursor_frames_upper combined_work combined_entries caller_work caller_entries "
+    "old_kernel_overlap old_history_forecast final_router_entries".split())
 MAX_INPUT = 64 * 1024 * 1024
 MAX_OUTPUT = 32 * 1024 * 1024
 MAX_STDERR = 8192
@@ -141,7 +151,9 @@ def admit(prepared):
     old["native_additional_admission"] = reservation
     return reservation
 
-def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000):
+def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
+         routing="full-history"):
+    _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
     _need(type(iterations) is int and iterations == prepared.iterations, "Native iterations differ from admission")
     _need(type(rank_cache_boards) is int and 1 <= rank_cache_boards <= 64, "Invalid native rank-cache ceiling")
     _need(type(native_work) is int and 0 < native_work <= 500_000_000 and
@@ -154,7 +166,8 @@ def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, 
     maximum_bytes = (4096 + 128 * sum(kernel.hand_counts) + 128 * len(kernel.selected) +
         512 * len(vertices) + 512 * edge_count + 65 * len(topology.initial_history))
     _need(maximum_bytes <= MAX_INPUT, "Exact native request byte admission exceeded")
-    rows = [PROTOCOL, " ".join(map(str, (iterations, rank_cache_boards, *kernel.hand_counts,
+    rows = [PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing,
+        " ".join(map(str, (iterations, rank_cache_boards, *kernel.hand_counts,
         len(kernel.selected), len(vertices), edge_count, topology.root_id, len(topology.initial_history)))),
         " ".join(map(str, (kernel.limits.max_integer_bits, min(kernel.limits.max_modeled_work, native_work),
             min(kernel.limits.max_storage_entries, native_entries), 1 << 30,
@@ -239,10 +252,25 @@ def _invoke(executable, raw):
             status, outputs["stdout"], outputs["stderr"])
     return outputs["stdout"]
 
-def parse_policy(raw, prepared):
+def parse_policy(raw, prepared, *, routing="full-history"):
     _need(type(raw) is bytes and len(raw) <= MAX_OUTPUT, "Native exact output byte ceiling exceeded")
+    _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
     lines = raw.decode("ascii").splitlines()
-    _need(lines and lines[0] == RESULT and len(lines) >= 2, "Wrong native exact result protocol")
+    expected_result = RESULT if routing == "full-history" else ROUTED_RESULT
+    _need(lines and lines[0] == expected_result and len(lines) >= 2, "Wrong native exact result protocol")
+    route_receipt = None
+    if routing != "full-history":
+        fields = lines.pop().split("\t")
+        _need(len(fields) == len(ROUTE_FIELDS) + 2 and fields[:2] == ["ROUTE", routing],
+              "Missing or wrong indexed routing proof")
+        route_receipt = {}
+        for field in fields[2:]:
+            key, separator, value = field.partition("=")
+            _need(separator and key in ROUTE_FIELDS and key not in route_receipt and
+                  value.isascii() and value.isdecimal() and len(value) <= 20,
+                  "Malformed or duplicate indexed routing proof field")
+            route_receipt[key] = int(value)
+        _need(set(route_receipt) == ROUTE_FIELDS, "Incomplete indexed routing proof")
     averages, action_slots = {}, 0
     for line in lines[1:-1]:
         fields = line.split("\t")
@@ -296,21 +324,52 @@ def parse_policy(raw, prepared):
             _need(key in averages and len(averages[key]) == len(vertex.actions), "Native lost or changed a physical policy row")
             seen += 1
     _need(seen == len(averages), "Native returned an extra physical row")
+    if route_receipt is not None:
+        r = route_receipt
+        decisions = terminals = visits = 0
+        for occurrence in prepared.topology.iter_occurrences():
+            visits += 1
+            vertex = prepared.topology.vertices[occurrence.vertex_id]
+            decisions += isinstance(vertex, DecisionVertex)
+            terminals += isinstance(vertex, TerminalVertex)
+        iterations = prepared.iterations
+        expected = {"roots": 3 * iterations, "edges": 3 * iterations * (visits - 1),
+            "decisions": 3 * iterations * decisions,
+            "prefixes": iterations * (2 * terminals + decisions), "q_routes": receipt["quotient_rows"]}
+        for name, count in expected.items():
+            _need(r[name] == r[name + "_upper"] == count, "Indexed complete-call schedule mismatch: " + name)
+        _need(r["q_rows"] == receipt["quotient_rows"] and r["map_entries"] == r["map_upper"] == r["q_rows"] and
+              r["q_tokens"] == r["q_tokens_upper"] and r["r_lookup_entries"] == 0 and
+              r["old_q_histories_retained"] == 1 and r["final_router_entries"] == 0 and
+              r["combined_work"] == receipt["modeled_work_upper"] and
+              r["combined_entries"] == receipt["retained_entries_upper"] and
+              r["cursor_fields"] == 4 + 24 * 8,
+              "Indexed layout or whole-owner proof mismatch")
+        for name in ("router_work", "index_work", "index_entries", "router_retained"):
+            _need(r[name] <= r[name + "_upper"], "Indexed reservation exceeded: " + name)
+        shadow = routing == "shadow"
+        _need(r["decision_comparisons"] == (r["decisions"] if shadow else 0) and
+              r["prefix_comparisons"] == (r["prefixes"] if shadow else 0) and
+              r["legacy_extensions"] == (r["edges"] if shadow else 0) and
+              r["legacy_rows"] == (r["decisions"] if shadow else 0) and
+              r["legacy_prefixes"] == (r["prefixes"] if shadow else 0),
+              "Indexed mode executed legacy hot-path operations or lost shadow comparisons")
+        receipt["indexed_routing"] = {"mode": routing, **r}
     return averages, receipt
 
 def train(prepared, *, executable, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
-          reservation=None):
+          reservation=None, routing="full-history"):
     identity = executable_identity(executable)
     request = wire(prepared, prepared.iterations, rank_cache_boards=rank_cache_boards,
-        native_work=native_work, native_entries=native_entries)
+        native_work=native_work, native_entries=native_entries, routing=routing)
     output = _invoke(identity["executable"], request)
     _need(executable_identity(executable) == identity, "Native exact executable/source changed during solve")
-    averages, receipt = parse_policy(output, prepared)
+    averages, receipt = parse_policy(output, prepared, routing=routing)
     _need(receipt["modeled_work_upper"] <= native_work and receipt["retained_entries_upper"] <= native_entries,
           "Native exceeded caller's reserved remaining work/storage")
     if reservation is not None:
         _need(receipt["group_size"] == reservation["group_size"] and len(request) <= reservation["input_bytes_upper"] and
               len(output) <= reservation["output_bytes_upper"], "Native proof differs from Python game/I/O admission")
-    return averages, {**receipt, "protocol": PROTOCOL, "request_sha256": _hash(request),
+    return averages, {**receipt, "protocol": PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL, "request_sha256": _hash(request),
         "result_sha256": _hash(output), "request_bytes": len(request), "result_bytes": len(output),
         "build": identity, "calls": 1}

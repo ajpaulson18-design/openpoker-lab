@@ -58,6 +58,21 @@ class NativePublicHistoryIndexCompiledTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, (result.stdout + result.stderr).decode("utf-8", "replace"))
         self.assertIn(b"ALL HISTORY INDEX CONTROLS PASSED", result.stdout)
 
+    def test_explicit_schedule_and_borrowed_typed_support(self):
+        directory = Path(self.temporary.name)
+        source = builder.ROOT / 'tests/native/exact_history_index_schedule_controls.cpp'
+        executable = directory / ('history-schedule-controls' + ('.exe' if os.name == 'nt' else ''))
+        if os.name == 'nt':
+            command = [self.manifest['compiler'], *self.manifest['flags'], str(source),
+                '/Fo' + str(directory / 'history-schedule-controls.obj'), '/Fe' + str(executable)]
+        else:
+            command = [self.manifest['compiler'], *self.manifest['flags'], str(source), '-o', str(executable)]
+        compiled = subprocess.run(command, cwd=directory, capture_output=True, timeout=180)
+        self.assertEqual(compiled.returncode, 0, (compiled.stdout + compiled.stderr).decode('utf-8', 'replace'))
+        result = subprocess.run([str(executable)], capture_output=True, timeout=60)
+        self.assertEqual(result.returncode, 0, (result.stdout + result.stderr).decode('utf-8', 'replace'))
+        self.assertIn(b'ALL INDEX SCHEDULE AND TYPED SUPPORT CONTROLS PASSED', result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
