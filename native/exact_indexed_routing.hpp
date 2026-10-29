@@ -180,7 +180,6 @@ public:
             }
             const auto image_count = sort_unique_keys(image_keys, group_size);
             auto first = image_keys.begin();
-            const auto unique_end = first + static_cast<std::ptrdiff_t>(image_count);
             if (image_count == 0)
                 graph::detail::fail(graph::ErrorCode::group_not_closed,
                                     "numeric suit-image orbit is empty");
