@@ -1,0 +1,73 @@
+{
+  "build": {
+    "actual_headers_verified": 198,
+    "dependency_archive_sha256": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+    "dependency_manifest_sha256": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555",
+    "executable_sha256": "13f559659fd9328884e2cec1098179e2b8b1df76449577bf30125fd7a1faa2cd",
+    "manifest_sha256": "f5fe6c85aed9fb747842a50252cee8eac60c9fa786253659f755788c93505737"
+  },
+  "candidate_processes_per_case": 1,
+  "case_count": 36,
+  "cases": [
+    "weighted-3x3-all-eight-subsets-cache-1",
+    "weighted-3x3-all-eight-subsets-cache-64",
+    "meaningful-club-diamond-private-flush",
+    "board-royal-tie-and-same-holding-addback",
+    "seed713259-distinct-2x2-00",
+    "seed713259-distinct-2x2-01",
+    "seed713259-distinct-2x2-02",
+    "seed713259-distinct-2x2-03",
+    "seed713259-distinct-2x2-04",
+    "seed713259-distinct-2x2-05",
+    "seed713259-distinct-2x2-06",
+    "seed713259-distinct-2x2-07",
+    "seed713259-distinct-2x2-08",
+    "seed713259-distinct-2x2-09",
+    "seed713259-distinct-2x2-10",
+    "seed713259-distinct-2x2-11",
+    "seed713259-distinct-2x2-12",
+    "seed713259-distinct-2x2-13",
+    "seed713259-distinct-2x2-14",
+    "seed713259-distinct-2x2-15",
+    "seed713259-distinct-2x2-16",
+    "seed713259-distinct-2x2-17",
+    "seed713259-distinct-2x2-18",
+    "seed713259-distinct-2x2-19",
+    "seed713259-distinct-2x2-20",
+    "seed713259-distinct-2x2-21",
+    "seed713259-distinct-2x2-22",
+    "seed713259-distinct-2x2-23",
+    "seed713259-distinct-2x2-24",
+    "seed713259-distinct-2x2-25",
+    "seed713259-distinct-2x2-26",
+    "seed713259-distinct-2x2-27",
+    "seed713259-distinct-2x2-28",
+    "seed713259-distinct-2x2-29",
+    "seed713259-distinct-2x2-30",
+    "seed713259-distinct-2x2-31"
+  ],
+  "contract": "native-exact-kernel-fixed-vector-study-v1",
+  "integer_payload_bit_limit": 1073741824,
+  "limits": [
+    1326,
+    64,
+    65536,
+    500000000,
+    2000000
+  ],
+  "math_source_sha256": {
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/test_native_exact_selected_vectors.py": "656cfdfa6c56cdca3a51e08939b18c3d0d5f5517bc8e020e55f1816f10aea1d3"
+  },
+  "retry_policy": "none; retain first output/status and stop first failure",
+  "runtime": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "scope": "Native exact vectors only. No full-game training, public graph, Q storage, policy quality or performance evidence.",
+  "seed": 713259,
+  "seeded_distinct_games": 32,
+  "source_commit": "204a1c3b1fa4ae22ecb93a04795324e5ede2d3bc",
+  "weighted_board_subsets": "all eight subsets, including empty and every visible-prefix subset"
+}

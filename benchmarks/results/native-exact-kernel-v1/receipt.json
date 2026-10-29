@@ -1,0 +1,54 @@
+{
+  "archive_bytes": 912358,
+  "archive_entries": 201,
+  "archive_sha256": "2a8ce2f33e718490e36342af961deea31fd61f64da40e9fd68fcfe764952ae7b",
+  "authenticated_files": 2006,
+  "contract": "native-exact-kernel-publication-v1",
+  "development_controls": {
+    "preserved_root_failure": "First integrated direct API compile lacked the Visual Studio include environment and failed to find bit. The unchanged source passes in the installed compiler environment.",
+    "root": "Five optimized tests pass, including five direct API pre-rank failures.",
+    "scope_gap": "Superseded development manifests/logs are retained; not every evolving Luna header/harness source and original compiler/normalizer-formatting failure stream was captured. Those are development summaries, not reconstructed formal evidence.",
+    "terra": "Seven tests using the same independent physical/Fraction/best-five oracle, with 64 additional seeded games and adversarial inputs."
+  },
+  "exact_semantic_counter_observations": {
+    "both_weighted_conversion_calls": 144,
+    "weighted_cache1_misses_evictions": [
+      21,
+      20
+    ],
+    "weighted_cache1_rank_calls": 126,
+    "weighted_cache64_misses_evictions": [
+      3,
+      0
+    ],
+    "weighted_cache64_rank_calls": 18
+  },
+  "files_sha256": {
+    "case-specifications.json": "e12ad33e98e9d33191a31195e272b11b82e07281a795acef8ca3e009fb6cbc17",
+    "development-controls.zip": "b666deb4bc972a917865054fba335b25ac756de97b5ffdca81f3ee6874c8c8f2",
+    "manifest.json": "e55f61cad93ee17cd91561ff873839f19ccb5d761d73ca064d9e6881c42c1d1f",
+    "native-exact-kernel-root-saved-receipt.json": "01198796549dc209f41ee823eab352bbbe841b23a488e97b01c2bc9330eb4611",
+    "native-exact-kernel-root-saved-replay.log": "68aaf6bcab1804f47249b101bdb989ebb572bf3a3f7dc25b91a34b99c6f92b28",
+    "native-exact-kernel-study-v1-run.log": "bcaa63d004c9066d109c77afbdaa5a6aabfd96a0b57f4b897ea9f2f68caa7876",
+    "native-exact-kernel-study-v1.zip": "2a8ce2f33e718490e36342af961deea31fd61f64da40e9fd68fcfe764952ae7b",
+    "protocol.json": "3b6c7bca8520a7f83ad3421db494d206d96f8641404888f7f6103f2d3c267ab3",
+    "saved-only-verification.json": "3824ef3e6892606a6d417506233552f3440a3786d562d288b01977b03d2cc063",
+    "study-helper.py": "2d885c0ce48eaa953e2d127caaeb31e35651d3fc11e1c20b86bd6301726a02b8",
+    "study-receipt.json": "eccfbda6b17321364732833da4cd69508f96a21161f8ab154238dd964d32861c",
+    "verify-native-kernel-saved-root.py": "fb6dc21b0824b13c16523255f8c64af8831cb481b3674241ec8614abe35fd023"
+  },
+  "formal_candidate_invocations": 36,
+  "formal_case_count": 36,
+  "formal_query_count": 314,
+  "formal_vector_records": 420,
+  "manifest_sha256": "e55f61cad93ee17cd91561ff873839f19ccb5d761d73ca064d9e6881c42c1d1f",
+  "root_second_saved_only_replay": {
+    "candidate_calls": 0,
+    "cases": 36,
+    "vector_records": 420
+  },
+  "saved_only_candidate_invocations": 0,
+  "saved_only_cases": 36,
+  "scope": "Native vector conformance only. Full raw/Git source/build/header authentication precedes project oracle mathematics. Z, scales, support and every result bit match; rank/LRU/conversion counts are independently reconstructed. Other counters only checked against modeled caps, not allocator or CPU bounds. No whole-game training, strategy quality or performance claim. Final publication-head CI required.",
+  "source_commit": "204a1c3b1fa4ae22ecb93a04795324e5ede2d3bc"
+}
