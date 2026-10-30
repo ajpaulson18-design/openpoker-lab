@@ -201,7 +201,7 @@ def _resource_outcome(raw):
             counts.get("python_rank") == 0 and counts.get("python_trainer") == 0 and streams == []):
         return "host-admission-rejected"
     if (failure.get("type") == "NativeFailure" and counts.get("native_invoke") == 1 and
-            counts.get("rank_before_native") == 0 and counts.get("python_trainer") == 0 and
+            counts.get("rank_before_native") == 0 and counts.get("python_rank") == 0 and counts.get("python_trainer") == 0 and
             type(streams) is list and len(streams) == 1):
         stream = streams[0]
         try:
@@ -326,19 +326,6 @@ def _validate_frame(frame, *, iterations, direct, kernel_hands, route, admission
     _need(route["combined_work"] == admission["combined_work"] == done["modeled_work_upper"] and
         route["combined_entries"] == admission["combined_entries"] == done["retained_entries_upper"],
         "FRAME whole-owner combined budget mismatch")
-
-
-def _indexed_admission_amounts(*, group, iterations, history_tokens, decision_hands,
-                               action_count, history_entries, row_bytes, depth, visits):
-    lookup = group * (128 * history_tokens + 256 * decision_hands)
-    one_history_pass = group * (16 * history_entries + 4 * row_bytes +
-        8 * (depth + 1) * decision_hands + 16 * (depth + 1) * visits)
-    return {
-        "plan_legacy_lookup_removed": 3 * iterations * lookup,
-        "plan_legacy_action_removed": 6 * iterations * 32 * action_count,
-        "trainer_legacy_history_removed": 3 * iterations * one_history_pass,
-        "trainer_history_retained": 4 * one_history_pass,
-    }
 
 
 def _indexed_admission_amounts(*, group, iterations, history_tokens, decision_hands,
@@ -690,6 +677,8 @@ def validate(raw, entry, deps, cases):
         census.get("stored_prefix_pair_edges") == 0 and type(census.get("native_exact")) is dict and
         type(census.get("direct_topology")) is dict, "native/topology census missing or world/pair state stored")
     exact = census["native_exact"]
+    _need(raw.get("native_observations", {}).get("rank_calls") == exact.get("rank_calls"),
+          "native rank observation differs from completed receipt")
     _need(exact.get("calls") == 1 and exact.get("member_checks") == exact.get("expected_member_checks") ==
         2 * iterations * payload.get("info_sets", -1) and exact.get("rank_calls", 0) > 0 and
         exact.get("maximum_numeric_workspace_slots") == 4 * exact.get("quotient_action_slots", -1) and
@@ -733,7 +722,7 @@ def validate(raw, entry, deps, cases):
     for expression in (cases[case_name]["sb_range"], cases[case_name]["bb_range"]):
         expanded = expand_range(expression)
         rows = [{"hand": "".join(hand), "weight_hex": float(weight).hex()}
-                for hand, weight in sorted(expanded.items())]
+                for hand, weight in expanded.items()]
         expected_ranges.append(rows)
         expected_maps.append({(a, b): float(weight).hex()
             for hand, weight in expanded.items()
@@ -838,6 +827,11 @@ def _run_child(command):
     return subprocess.run(command, cwd=ROOT, capture_output=True, check=False)
 
 
+def _check_captured(output, captured):
+    _need(all((output / name).is_file() and _sha((output / name).read_bytes()) == digest
+              for name, digest in captured.items()), "captured raw evidence changed")
+
+
 def run(output, executable):
     output = Path(output).resolve()
     _need(output != ROOT and ROOT not in output.parents and not output.exists(),
@@ -848,6 +842,13 @@ def run(output, executable):
     attempts = 0
     output.mkdir(parents=True)
     pair_results = {}
+    captured = {}
+    def capture(name, raw):
+        _need(name not in captured and not (output / name).exists(), "duplicate captured artifact")
+        (output / name).write_bytes(raw)
+        captured[name] = _sha(raw)
+    def capture_json(name, value):
+        capture(name, json.dumps(value, indent=2, sort_keys=True, allow_nan=False).encode() + b"\n")
     try:
         source = _authenticate_source()
         _write(output / "source-before.json", source)
@@ -870,24 +871,27 @@ def run(output, executable):
             identifier = label(entry)
             case_name, iterations, traversal, sample = entry
             try:
+                _need(_identity() == source and deps.native.executable_identity(executable) == build,
+                      "source/build changed before scheduled child")
+                _check_captured(output, captured)
                 attempts += 1
                 command = [sys.executable, "-B", "-m", "scripts.benchmark_native_active_frames",
                     "--child", case_name, "--iterations", str(iterations), "--traversal", traversal,
                     "--sample", str(sample), "--native-executable", str(executable)]
                 process = _run_child(command)
-                (output / (identifier + ".stdout.bin")).write_bytes(process.stdout)
-                (output / (identifier + ".stderr.bin")).write_bytes(process.stderr)
-                _write(output / (identifier + "-process-status.json"), {"returncode": process.returncode,
+                capture(identifier + ".stdout.bin", process.stdout)
+                capture(identifier + ".stderr.bin", process.stderr)
+                capture_json(identifier + "-process-status.json", {"returncode": process.returncode,
                     "stdout_sha256": _sha(process.stdout), "stderr_sha256": _sha(process.stderr)})
                 _need(process.returncode == 0, "active-frame child process failed: " + str(process.returncode))
                 raw = _decode(process.stdout)
                 # Save complete child JSON and every decoded native stream before validation.
-                (output / (identifier + ".raw.json")).write_bytes(process.stdout)
+                capture(identifier + ".raw.json", process.stdout)
                 for index, stream in enumerate(raw.get("native_streams", ())):
                     for key in ("request", "stdout", "stderr"):
                         value = base64.b64decode(stream[key], validate=True)
-                        (output / f"{identifier}-native-{index}-{key}.bin").write_bytes(value)
-                    _write(output / f"{identifier}-native-{index}-status.json",
+                        capture(f"{identifier}-native-{index}-{key}.bin", value)
+                    capture_json(f"{identifier}-native-{index}-status.json",
                         {"returncode": stream.get("returncode"), "request_sha256": _sha(base64.b64decode(stream["request"], validate=True)),
                          "stdout_sha256": _sha(base64.b64decode(stream["stdout"], validate=True)),
                          "stderr_sha256": _sha(base64.b64decode(stream["stderr"], validate=True))})
@@ -899,7 +903,16 @@ def run(output, executable):
                     payloads[identifier] = raw
                     _need(_identity() == source and deps.native.executable_identity(executable) == build,
                           "source/build changed before saved-only independent replay")
-                    verification = _verify(cases[case_name], raw["payload"], deps)
+                    payload_before = _sha(_canonical(raw["payload"]))
+                    _check_captured(output, captured)
+                    try:
+                        verification = _verify(cases[case_name], raw["payload"], deps)
+                    finally:
+                        _need(_sha(_canonical(raw["payload"])) == payload_before,
+                              "saved policy payload changed during independent replay")
+                        _check_captured(output, captured)
+                        _need(_identity() == source and deps.native.executable_identity(executable) == build,
+                              "source/build changed during independent replay")
                     verifications[identifier] = verification
                     _write(output / (identifier + "-verification.json"), verification)
                     numeric = verification.get("numeric")
@@ -946,6 +959,14 @@ def run(output, executable):
             first_failure = {"stage": "study", "type": type(exc).__name__, "message": str(exc)}
             _write(output / "first-failure.json", first_failure)
     finally:
+        try:
+            _check_captured(output, captured)
+        except Exception as exc:
+            drift = {"stage": "capture-after", "type": type(exc).__name__, "message": str(exc)}
+            _write(output / "capture-drift.json", drift)
+            if first_failure is None:
+                first_failure = drift
+        _write(output / "capture-time-sha256.json", captured)
         try:
             after = _identity()
             _write(output / "source-after.json", after)

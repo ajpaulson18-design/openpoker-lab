@@ -51,6 +51,19 @@ shared-child multiplicity controls also pass. Sixteen corrected runner controls
 pass normally and optimized, including a complete parent-pair flow using the
 actual top-level numeric-gap schema. No formal active-frame producer has run.
 
+Sol's final read-only review accepts the raw-wire math/schema/schedule and then
+closes the remaining evidence-integrity gaps: parent source/build identity is
+checked before every child, producer raw bytes/status carry capture-time pins
+rechecked around replay/finalization, saved payload hashes are immutable during
+replay, and native rank observations are bound to the receipt. Mutation controls
+deliberately alter a policy and a captured file and fail while preserving raw
+evidence. A separate saved-only compatibility check passes the entire current
+validator for all ten prior indexed completions, adding only its new study-level
+traversal label. It first exposed an unnecessary global range-row sort; the
+validator now preserves the declared range order. This is compatibility evidence,
+not a new policy/quality result. The initial draft is PR #274; formal evidence
+and final CI remain acceptance gates.
+
 ## Executed native indexed-path admission (October 29)
 
 The preserved post-indexed profile and corrected canonical-range census motivate

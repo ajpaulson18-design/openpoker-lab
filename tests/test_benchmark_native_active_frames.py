@@ -200,6 +200,14 @@ class ActiveFrameBenchmarkControls(unittest.TestCase):
         raw.pop("payload")
         raw["failure"]["message"] = "FRAME proof mismatch: work limit exceeded"
         self.assertIsNone(study._resource_outcome(raw))
+        rejected = {"failure": {"type": "NativeFailure", "message": "native work limit exceeded"},
+            "payload": None, "counts": {"native_invoke": 1, "rank_before_native": 0,
+                "python_rank": 0, "python_trainer": 0}, "native_streams": [{"stdout": "",
+                "stderr": base64.b64encode(b"native exact four-street rejected: work limit exceeded").decode(),
+                "returncode": 2}]}
+        self.assertEqual(study._resource_outcome(rejected), "native-resource-rejected")
+        rejected["counts"]["python_rank"] = 1
+        self.assertIsNone(study._resource_outcome(rejected))
 
     def test_indexed_admission_fields_are_recomputed_quantities(self):
         amounts = study._indexed_admission_amounts(group=2, iterations=10,
@@ -377,7 +385,7 @@ class ActiveFrameBenchmarkControls(unittest.TestCase):
         schedule_patch = patch.object(study, "SCHEDULE", (entry,))
         required_patch = patch.object(study, "REQUIRED_COMPLETE", frozenset())
         with TemporaryDirectory() as directory, patch.object(study, "_authenticate_source", return_value=source), \
-             patch.object(study, "_identity", side_effect=(source, drift)), patch.object(study, "_dependencies", return_value=deps), \
+             patch.object(study, "_identity", side_effect=(source, source, source, drift)), patch.object(study, "_dependencies", return_value=deps), \
              patch.object(study, "validate_cases", return_value={entry[0]: raw["request_case"]}), \
              patch.object(study, "_decode", return_value=raw), patch.object(study, "validate", return_value={"status": "complete", "payload": payload}), \
              patch.object(study, "_verify", return_value={"quality_gate": None,
@@ -413,7 +421,7 @@ class ActiveFrameBenchmarkControls(unittest.TestCase):
              patch.object(study, "_run_child", return_value=subprocess.CompletedProcess([], 0, b"raw", b"")), \
              patch.object(study, "_decode", side_effect=observations), \
              patch.object(study, "validate", return_value={"status": "complete", "payload": payload}), \
-             patch.object(study, "_verify", return_value=verification), \
+             patch.object(study, "_verify", return_value=verification) as verifier, \
              patch.object(study, "SCHEDULE", entries), \
              patch.object(study, "REQUIRED_COMPLETE", frozenset(((entries[0][0], entries[0][1]),))):
             result = study.run(Path(directory) / "study", Path("native.exe"))
@@ -422,6 +430,21 @@ class ActiveFrameBenchmarkControls(unittest.TestCase):
             self.assertEqual(report["calls_attempted"], 2)
             self.assertEqual(len(report["paired_comparisons"]), 1)
             self.assertEqual(len(report["quality_misses_or_unverified_retained"]), 2)
+            for tamper in ("payload", "captured-file"):
+                output = Path(directory) / tamper
+                def mutate(_case, returned, _deps):
+                    if tamper == "payload":
+                        returned["strategy"] = []
+                    else:
+                        (output / (study.label(entries[0]) + ".stdout.bin")).write_bytes(b"tampered")
+                    return verification
+                verifier.side_effect = mutate
+                with patch.object(study, "_decode", side_effect=deepcopy(observations)):
+                    failed = study.run(output, Path("native.exe"))
+                self.assertEqual(failed["outcome"], "failed")
+                self.assertEqual(failed["calls_captured"], 1)
+                self.assertTrue((output / (study.label(entries[0]) + ".raw.json")).exists())
+                self.assertIn("changed", failed["failure"]["message"])
 
 
 if __name__ == "__main__":
