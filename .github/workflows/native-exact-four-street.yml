@@ -23,7 +23,9 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_EXACT_FOUR_STREET_EXE=$RUNNER_TEMP/native-exact-engine/native-exact-four-street-train$suffix" >> "$GITHUB_ENV"
       - name: Complete policies, physical/exact proof and adversarial controls
-        run: python -O -m unittest tests.test_native_exact_four_street tests.test_native_indexed_admission tests.test_native_indexed_admission_independent tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing tests.test_benchmark_native_indexed_admission -v
+        env:
+          OPENPOKER_NATIVE_ACTIVE_CONTROL_DIR: ${{ runner.temp }}/native-active-independent
+        run: python -O -m unittest tests.test_native_exact_four_street tests.test_native_indexed_admission tests.test_native_indexed_admission_independent tests.test_native_active_frames tests.test_native_active_frame_contracts tests.test_native_active_frames_independent tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing tests.test_benchmark_native_indexed_admission tests.test_benchmark_native_active_frames -v
       - name: Preserve first compiler and failure records
         if: always()
         uses: actions/upload-artifact@v4
@@ -32,6 +34,8 @@ jobs:
           path: |
             ${{ runner.temp }}/native-exact-engine/*.log
             ${{ runner.temp }}/native-exact-engine/*.json
+            ${{ runner.temp }}/native-active-independent/*.log
+            ${{ runner.temp }}/native-active-independent/*.json
   sanitized-whole-game:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +52,9 @@ jobs:
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: python -m unittest tests.test_native_exact_four_street tests.test_native_indexed_admission tests.test_native_indexed_admission_independent tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing tests.test_benchmark_native_indexed_admission -v
+          OPENPOKER_NATIVE_ACTIVE_CONTROL_DIR: ${{ runner.temp }}/native-active-independent-sanitized
+          OPENPOKER_NATIVE_ACTIVE_REQUIRE_SANITIZER: '1'
+        run: python -m unittest tests.test_native_exact_four_street tests.test_native_indexed_admission tests.test_native_indexed_admission_independent tests.test_native_active_frames tests.test_native_active_frame_contracts tests.test_native_active_frames_independent tests.test_benchmark_native_exact_four_street tests.test_benchmark_native_indexed_routing tests.test_benchmark_native_indexed_admission tests.test_benchmark_native_active_frames -v
       - name: Preserve first compiler and failure records
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,3 +63,5 @@ jobs:
           path: |
             ${{ runner.temp }}/native-exact-engine-sanitized/*.log
             ${{ runner.temp }}/native-exact-engine-sanitized/*.json
+            ${{ runner.temp }}/native-active-independent-sanitized/*.log
+            ${{ runner.temp }}/native-active-independent-sanitized/*.json

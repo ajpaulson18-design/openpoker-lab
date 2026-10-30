@@ -36,6 +36,20 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D074: Borrow active suit-image traversal frames (October 30, 2026)
+
+Under the owner's scalable unified-foundation direction, Sol accepts a bounded
+[active traversal-frame candidate](../native-active-frames.md) and fixes a
+37-child measurement schedule. Root integrates Router ownership, native learning
+and the V4 proof; Terra independently develops adversarial Index/Router/trainer
+controls and scrutinizes lifetime/resource boundaries; Luna integrates host
+contracts, physical conformance and the reproducible runner. Default value
+cursors remain. Keep numerical recurrence, group composition, ordered support,
+full-history identities, callbacks and every existing ceiling. Reduce only
+actual fixed-image traversal copying; charge workspace flow and view validation
+to their respective owners. Development parity is not frozen capacity, speed,
+process-memory or quality acceptance. Formal evidence and final CI are pending.
+
 ### D073: Charge the executed indexed path within unchanged ceilings (October 29, 2026)
 
 Sol accepts the explicit [native indexed admission profile](../native-indexed-admission.md)

@@ -22,6 +22,8 @@ ROUTED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2"
 ROUTED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2"
 INDEXED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3"
 INDEXED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3"
+ACTIVE_FRAMES_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_V4"
+ACTIVE_FRAMES_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_RESULT_V4"
 ADMISSION_FIELDS = frozenset("plan_legacy_lookup_removed plan_legacy_action_removed "
     "trainer_legacy_history_removed plan_setup_work index_setup_work router_setup_work trainer_history_retained marginal_calls_upper "
     "marginal_calls_actual marginal_reuse combined_work combined_entries".split())
@@ -33,6 +35,15 @@ ROUTE_FIELDS = frozenset("q_rows map_entries map_upper r_lookup_entries old_q_hi
     "index_entries index_entries_upper router_retained router_retained_upper setup_scratch_upper query_scratch_upper "
     "cursor_fields cursor_frames_upper combined_work combined_entries caller_work caller_entries "
     "old_kernel_overlap old_history_forecast final_router_entries".split())
+FRAME_FIELDS = (
+    "group_size", "frames", "image_slots", "header_entries", "workspace_entries",
+    "workspace_setup_work", "view_fields", "lease_fields", "borrowed_entries_upper",
+    "flow_per_visit", "flow_work_upper", "validation_work_upper", "activations",
+    "activations_upper", "released_frames", "release_calls", "final_active_frames",
+    "final_workspace_entries", "value_cursor_learning_calls", "router_owned_workspace",
+    "combined_work", "combined_entries",
+)
+TRAVERSALS = ("value-cursor", "active-frames")
 MAX_INPUT = 64 * 1024 * 1024
 MAX_OUTPUT = 32 * 1024 * 1024
 MAX_STDERR = 8192
@@ -108,10 +119,89 @@ def _text(value):
           all(32 < ord(char) < 127 for char in value), "Invalid exact native text token")
     return value
 
-def admit(prepared):
+
+def _parse_frame_record(line):
+    fields = line.split("\t")
+    _need(len(fields) == len(FRAME_FIELDS) + 2 and fields[:2] == ["FRAME", "active-v1"],
+          "Missing or wrong active-frame proof")
+    receipt = {}
+    for expected, field in zip(FRAME_FIELDS, fields[2:]):
+        key, separator, value = field.partition("=")
+        _need(separator and key == expected and value.isascii() and value.isdecimal() and len(value) <= 20,
+              "Malformed, unordered or duplicate active-frame proof field")
+        receipt[key] = int(value)
+    _need(tuple(receipt) == FRAME_FIELDS, "Incomplete active-frame proof")
+    return receipt
+
+
+def _validate_active_frame_receipt(frame, *, iterations, visits, depth, max_hands,
+                                   done, route, admission):
+    """Bind V4 workspace/flow proof to independently counted host occurrences."""
+    _need(type(frame) is dict and tuple(frame) == FRAME_FIELDS and
+          all(type(value) is int and value >= 0 for value in frame.values()),
+          "Malformed active-frame receipt")
+    _need(type(iterations) is int and iterations >= 0 and type(visits) is int and visits >= 1 and
+          type(depth) is int and depth >= 0 and type(max_hands) is int and max_hands >= 1,
+          "Invalid active-frame host census")
+    group = done["group_size"]
+    frames = depth + 1
+    image_slots = frames * group
+    workspace_entries = 64 + 3 * frames + 8 * image_slots
+    borrowed = 4 * (depth + 4) * (3 + 3)
+    flow_per_visit = 64 + 4 * (3 + 3) + 8 * group
+    activations = route["roots"] + route["edges"]
+    flow_work = workspace_entries + activations * flow_per_visit
+    validation_work = (route["decisions"] * 32 * (1 + group + max_hands * (1 + group)) +
+                       route["prefixes"] * 64)
+    _need(route["roots"] == 3 * iterations and
+          route["edges"] == 3 * iterations * (visits - 1) and
+          activations == 3 * iterations * visits,
+          "Active-frame activation count differs from the independent full-call route census")
+    expected = {
+        "group_size": group,
+        "frames": frames,
+        "image_slots": image_slots,
+        "header_entries": 3 * frames,
+        "workspace_entries": workspace_entries,
+        "workspace_setup_work": workspace_entries,
+        "view_fields": 3,
+        "lease_fields": 3,
+        "borrowed_entries_upper": borrowed,
+        "flow_per_visit": flow_per_visit,
+        "flow_work_upper": flow_work,
+        "validation_work_upper": validation_work,
+        "activations": activations,
+        "activations_upper": activations,
+        "released_frames": activations,
+        "release_calls": activations,
+        "final_active_frames": 0,
+        "final_workspace_entries": 0,
+        "value_cursor_learning_calls": 0,
+        "router_owned_workspace": 1,
+        "combined_work": route["combined_work"],
+        "combined_entries": route["combined_entries"],
+    }
+    _need(frame == expected, "Active-frame receipt differs from independent occurrence/workspace census")
+    _need(route["cursor_fields"] == 3 and
+          route["cursor_frames_upper"] == workspace_entries + borrowed,
+          "Active routing cursor/frame reservation mismatch")
+    _need(route["caller_entries"] >= workspace_entries + borrowed,
+          "Active caller reservation omits workspace entries")
+    _need(route["caller_work"] >= flow_work,
+          "Active caller reservation omits workspace flow")
+    _need(route["router_work_upper"] >= validation_work,
+          "Active router reservation omits frame validation")
+    _need(route["combined_work"] == admission["combined_work"] == done["modeled_work_upper"] and
+          route["combined_entries"] == admission["combined_entries"] == done["retained_entries_upper"],
+          "Active-frame whole-owner receipt mismatch")
+    return frame
+
+def admit(prepared, *, traversal="value-cursor"):
     """Retain every old R/Q guard and reserve new native work additionally."""
+    _need(type(traversal) is str and traversal in TRAVERSALS, "Unsupported exact native traversal mode")
     if prepared.execution_profile == "native-indexed-v1":
-        return _admit_indexed(prepared)
+        return _admit_indexed(prepared, traversal=traversal)
+    _need(traversal == "value-cursor", "Active frames require indexed native admission")
     from .suit_quotient_plan import _group, plan_admission
     from .suit_public_automorphism import verify_public_suit_automorphisms
     old = prepared.admission
@@ -158,7 +248,7 @@ def admit(prepared):
     old["native_additional_admission"] = reservation
     return reservation
 
-def _admit_indexed(prepared):
+def _admit_indexed(prepared, *, traversal="value-cursor"):
     """Reserve executed host work and leave one remaining native allowance.
 
     Native V3 independently pre-admits real Q construction, indexed queries,
@@ -168,6 +258,9 @@ def _admit_indexed(prepared):
     from .suit_quotient_plan import _group
     from .suit_public_automorphism import verify_public_suit_automorphisms
     old = prepared.admission
+    _need(type(traversal) is str and traversal in TRAVERSALS,
+          "Unsupported indexed native traversal mode")
+    active_frames = traversal == "active-frames"
     _need(old.get("execution_profile") == "native-indexed-v1" and
           old.get("native_training_admission_required") is True and
           "native_additional_admission" not in old, "Indexed admission profile is stale or already reserved")
@@ -189,6 +282,16 @@ def _admit_indexed(prepared):
         16 * boards * sum(prepared.decisions.values()) + 2048)
     proof_entries = (4096 + 64 * h + 4 * boards * len(prepared.unique_prefixes) +
                      16 * (1 + 3 * boards))
+    # V4's FRAME record reuses the V3 occurrence census and the fixed output
+    # byte reserve. Charge its strict 22-field parse/validation explicitly;
+    # no additional graph walk or native capacity ceiling is introduced.
+    frame_parser_work = 32 * len(FRAME_FIELDS) + 128 if active_frames else 0
+    frame_parser_entries = 2 * len(FRAME_FIELDS) + 16 if active_frames else 0
+    frame_record_bytes = (len("FRAME\tactive-v1") + 1 +
+        sum(1 + len(name) + 1 + 20 for name in FRAME_FIELDS)) if active_frames else 0
+    _need(frame_record_bytes <= 8192, "Active-frame proof exceeds existing output fixed reserve")
+    proof_work += frame_parser_work
+    proof_entries += frame_parser_entries
     input_upper = 4096 + 128 * h + 128 * boards + 512 * (len(vertices) + edges) + 65 * len(prepared.topology.initial_history)
     output_upper = (8192 + prepared.layout_upper["upper_history_token_bytes"] +
         64 * prepared.layout_upper["upper_dense_decision_hand_slots"] + 32 * prepared.action_slots_upper)
@@ -217,6 +320,11 @@ def _admit_indexed(prepared):
         "host_additional_work_upper": added_work, "host_additional_entries_upper": added_entries,
         "native_work_limit": min(work_left, 500_000_000), "native_entries_limit": min(entries_left, 2_000_000),
         "scope": "Executed host group/proof/I/O plus separately admitted native V3 construction/training; one shared work allowance, unchanged ceilings. Logical units, not CPU/RSS."}
+    if active_frames:
+        reservation.update(traversal=traversal,
+            active_frame_parser_work_upper=frame_parser_work,
+            active_frame_parser_entries_upper=frame_parser_entries,
+            active_frame_record_bytes_upper=frame_record_bytes)
     old["combined_modeled_work_upper"] += added_work
     retained["phase_upper_bounds"] = {name: value + added_entries for name, value in retained["phase_upper_bounds"].items()}
     retained["whole_request_peak_upper"] += added_entries
@@ -225,8 +333,14 @@ def _admit_indexed(prepared):
 
 
 def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
-         routing="full-history"):
+         routing="full-history", traversal="value-cursor"):
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
+    _need(type(traversal) is str and traversal in TRAVERSALS,
+          "Unsupported exact native traversal mode")
+    indexed_admission = prepared.execution_profile == "native-indexed-v1"
+    active_frames = traversal == "active-frames"
+    _need(not active_frames or indexed_admission,
+          "Active frames require indexed native admission")
     _need(type(iterations) is int and iterations == prepared.iterations, "Native iterations differ from admission")
     _need(type(rank_cache_boards) is int and 1 <= rank_cache_boards <= 64, "Invalid native rank-cache ceiling")
     _need(type(native_work) is int and 0 < native_work <= 500_000_000 and
@@ -239,14 +353,15 @@ def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, 
     maximum_bytes = (4096 + 128 * sum(kernel.hand_counts) + 128 * len(kernel.selected) +
         512 * len(vertices) + 512 * edge_count + 65 * len(topology.initial_history))
     _need(maximum_bytes <= MAX_INPUT, "Exact native request byte admission exceeded")
-    indexed_admission = prepared.execution_profile == "native-indexed-v1"
     _need(not indexed_admission or routing == "indexed", "Indexed admission cannot use legacy or shadow routing")
     if indexed_admission:
         reserved = prepared.admission.get("native_additional_admission")
         _need(type(reserved) is dict and reserved.get("execution_profile") == "native-indexed-v1" and
+              reserved.get("traversal", "value-cursor") == traversal and
               native_work <= reserved["native_work_limit"] and native_entries <= reserved["native_entries_limit"],
               "Indexed wire exceeds or lacks the reserved host remainder")
-    header = INDEXED_PROTOCOL if indexed_admission else (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing)
+    header = (ACTIVE_FRAMES_PROTOCOL if active_frames else INDEXED_PROTOCOL if indexed_admission else
+              (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing))
     rows = [header,
         " ".join(map(str, (iterations, rank_cache_boards, *kernel.hand_counts,
         len(kernel.selected), len(vertices), edge_count, topology.root_id, len(topology.initial_history)))),
@@ -333,14 +448,21 @@ def _invoke(executable, raw):
             status, outputs["stdout"], outputs["stderr"])
     return outputs["stdout"]
 
-def parse_policy(raw, prepared, *, routing="full-history"):
+def parse_policy(raw, prepared, *, routing="full-history", traversal="value-cursor"):
     _need(type(raw) is bytes and len(raw) <= MAX_OUTPUT, "Native exact output byte ceiling exceeded")
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
+    _need(type(traversal) is str and traversal in TRAVERSALS,
+          "Unsupported exact native traversal mode")
     lines = raw.decode("ascii").splitlines()
     indexed_admission = prepared.execution_profile == "native-indexed-v1"
+    active_frames = traversal == "active-frames"
     _need(not indexed_admission or routing == "indexed", "Indexed admission cannot parse another routing mode")
-    expected_result = INDEXED_RESULT if indexed_admission else (RESULT if routing == "full-history" else ROUTED_RESULT)
+    _need(not active_frames or indexed_admission,
+          "Active frames require indexed native admission")
+    expected_result = (ACTIVE_FRAMES_RESULT if active_frames else INDEXED_RESULT if indexed_admission else
+                       (RESULT if routing == "full-history" else ROUTED_RESULT))
     _need(lines and lines[0] == expected_result and len(lines) >= 2, "Wrong native exact result protocol")
+    frame_receipt = _parse_frame_record(lines.pop()) if active_frames else None
     admission_receipt = None
     if indexed_admission:
         fields = lines.pop().split("\t")
@@ -423,8 +545,12 @@ def parse_policy(raw, prepared, *, routing="full-history"):
     if route_receipt is not None:
         r = route_receipt
         decisions = terminals = visits = 0
+        occurrence_depth = 0
+        initial_history_length = len(prepared.topology.initial_history)
         for occurrence in prepared.topology.iter_occurrences():
             visits += 1
+            occurrence_depth = max(occurrence_depth,
+                len(occurrence.history) - initial_history_length)
             vertex = prepared.topology.vertices[occurrence.vertex_id]
             decisions += isinstance(vertex, DecisionVertex)
             terminals += isinstance(vertex, TerminalVertex)
@@ -439,7 +565,7 @@ def parse_policy(raw, prepared, *, routing="full-history"):
               r["old_q_histories_retained"] == 1 and r["final_router_entries"] == 0 and
               r["combined_work"] == receipt["modeled_work_upper"] and
               r["combined_entries"] == receipt["retained_entries_upper"] and
-              r["cursor_fields"] == 4 + 24 * 8,
+              r["cursor_fields"] == (3 if active_frames else 4 + 24 * 8),
               "Indexed layout or whole-owner proof mismatch")
         for name in ("router_work", "index_work", "index_entries", "router_retained"):
             _need(r[name] <= r[name + "_upper"], "Indexed reservation exceeded: " + name)
@@ -495,25 +621,37 @@ def parse_policy(raw, prepared, *, routing="full-history"):
               a["combined_entries"] == receipt["retained_entries_upper"] <= 2_000_000,
               "Indexed admission removed-work, marginal reuse or whole-owner proof mismatch")
         receipt["indexed_admission"] = {"mode": "indexed-v1", **a}
+    if active_frames:
+        _need(frame_receipt is not None and route_receipt is not None and admission_receipt is not None,
+              "Active-frame response lacks complete owner proofs")
+        _validate_active_frame_receipt(frame_receipt, iterations=prepared.iterations,
+            visits=visits, depth=occurrence_depth, max_hands=max(prepared.kernel.hand_counts),
+            done=receipt, route=route_receipt, admission=admission_receipt)
+        receipt["active_frames"] = {"mode": "active-v1", **frame_receipt}
     return averages, receipt
 
 def train(prepared, *, executable, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
-          reservation=None, routing="full-history"):
+          reservation=None, routing="full-history", traversal="value-cursor"):
     if prepared.execution_profile == "native-indexed-v1":
         _need(reservation is not None and reservation is prepared.admission.get("native_additional_admission"),
               "Indexed training requires its reserved host remainder")
+        _need(type(traversal) is str and traversal in TRAVERSALS and
+              reservation.get("traversal", "value-cursor") == traversal,
+              "Indexed training traversal differs from its reserved host remainder")
     identity = executable_identity(executable)
     request = wire(prepared, prepared.iterations, rank_cache_boards=rank_cache_boards,
-        native_work=native_work, native_entries=native_entries, routing=routing)
+        native_work=native_work, native_entries=native_entries, routing=routing, traversal=traversal)
     output = _invoke(identity["executable"], request)
     _need(executable_identity(executable) == identity, "Native exact executable/source changed during solve")
-    averages, receipt = parse_policy(output, prepared, routing=routing)
+    averages, receipt = parse_policy(output, prepared, routing=routing, traversal=traversal)
     _need(receipt["modeled_work_upper"] <= native_work and receipt["retained_entries_upper"] <= native_entries,
           "Native exceeded caller's reserved remaining work/storage")
     if reservation is not None:
         _need(receipt["group_size"] == reservation["group_size"] and len(request) <= reservation["input_bytes_upper"] and
               len(output) <= reservation["output_bytes_upper"], "Native proof differs from Python game/I/O admission")
-    protocol = INDEXED_PROTOCOL if prepared.execution_profile == "native-indexed-v1" else (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL)
+    protocol = (ACTIVE_FRAMES_PROTOCOL if traversal == "active-frames" else
+                INDEXED_PROTOCOL if prepared.execution_profile == "native-indexed-v1" else
+                (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL))
     return averages, {**receipt, "protocol": protocol, "request_sha256": _hash(request),
         "result_sha256": _hash(output), "request_bytes": len(request), "result_bytes": len(output),
         "build": identity, "calls": 1}

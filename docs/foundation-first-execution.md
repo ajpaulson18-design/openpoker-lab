@@ -1,5 +1,56 @@
 # Foundation-first execution record
 
+## Active traversal-frame candidate (October 30)
+
+The [new explicit V4 path](native-active-frames.md) borrows Router-owned
+depth-by-group frames through small views and move-only leases, retaining the
+value-cursor reference and Q setup. Native Index, Router and trainer controls
+pass normal/optimized builds, including noncommuting G6 reveals, reconvergence,
+existing public history, terminal-only inputs, resource cap-minus-one, foreign
+and stale views, rounding rejection and a real terminal conversion failure.
+Five established physical games plus a nine-compatible-deal G6 game preserve
+full policy/eight-metric bits and protected replay. The G6 board-flush ties do
+not establish differing private-rank coverage; the separate private-flush case
+does. These are development controls, not formal capacity or quality evidence.
+
+An independent compile wrapper now authenticates engine source, pinned 198-header
+contents, strict compiler flags and extra control source before/after execution.
+The first extra wrapper test passes. Review also corrects a host receipt
+lower-bound that assigned Router validation to the caller; native charges were
+already correct. The new contract separately rejects under-reserving either
+owner. Previous logs and source versions remain preserved. A prior external
+control compile failed solely because its include argument was omitted after
+the engine built successfully; the corrected separate control passes, without
+rebuilding or rerunning a formal producer. Exactly 37 formal calls are planned;
+committed-source execution, saved-only scrutiny and publication remain pending.
+
+The integrated normal run now passes 65 controls in 126.033 seconds with the
+installed strict compiler, including both active helper targets, the independent
+trainer wrapper, existing V1/V2/V3 controls and all prior benchmark controls.
+Separate host contract checks pass after binding caller storage and keeping
+V3 metadata unchanged. The new fixed-runner tests and final optimized/source
+freeze remain separate gates.
+
+The integrated assertions-disabled run passes 76 controls in 126.423 seconds,
+including the then-current 11 runner controls. Subsequent independent runner
+review catches receipt work amounts treated as booleans, a replay-gap field read
+at the wrong result level, and contradictory failure-plus-policy classification.
+These are corrected before any formal producer; the earlier successful mock
+tests remain development evidence, not proof of a valid study runner. Fresh
+schema-grounded runner tests and review are required before the source freeze.
+
+Root continues integration after Luna/Terra hit a usage limit. The runner now
+derives the four quantities from saved raw V3/V4 graph bytes with a bounded
+topological multiplicity/history census and weighted-role/ordered-board suit
+stabilizer, without solver preparation, ranking or training. Saved-only checks
+against all ten indexed completions from the previous capacity study match
+group size and all four amounts. The first saved check exposed an overly strict
+card-order assumption; physical holdings are now normalized independently of
+their wire order, with a reversed-order regression control. Initial-history and
+shared-child multiplicity controls also pass. Sixteen corrected runner controls
+pass normally and optimized, including a complete parent-pair flow using the
+actual top-level numeric-gap schema. No formal active-frame producer has run.
+
 ## Executed native indexed-path admission (October 29)
 
 The preserved post-indexed profile and corrected canonical-range census motivate

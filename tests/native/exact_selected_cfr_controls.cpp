@@ -376,11 +376,68 @@ void indexed_admission_controls() {
                  <<" marginals="<<result.receipt.marginal_calls_actual<<" wholework="<<route.combined_modeled_work_upper<<"\n";
     }
 }
+void active_frame_training_controls() {
+    for(unsigned kind=0;kind<5;++kind) {
+        auto reference=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);
+        auto candidate=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);
+        c::Trainer old(*reference),active(*candidate);
+        const auto expected=old.run_indexed();
+        const auto result=active.run_active_frames();
+        need(result.quotient_policy.size()==expected.quotient_policy.size(),"frame Q policy width changed");
+        for(std::size_t i=0;i<expected.quotient_policy.size();++i)
+            need(bits(result.quotient_policy[i])==bits(expected.quotient_policy[i]),"frame/value policy bits differ");
+        need(result.receipt.active_frames.has_value() && result.receipt.indexed_shadow.has_value(),"frame proof missing");
+        const auto& f=*result.receipt.active_frames;
+        const auto& route=result.receipt.indexed_shadow->routing;
+        const auto& oldroute=expected.receipt.indexed_shadow->routing;
+        const auto& census=candidate->graph_census();
+        const auto G=candidate->group().size();
+        const auto frames=census.maximum_depth+1;
+        const auto entries=64+3*frames+8*frames*G;
+        const auto borrowed=24*(census.maximum_depth+4);
+        const auto visits=3ULL*candidate->iterations()*census.logical_visits;
+        need(f.workspace.frame_count==frames && f.workspace.image_slots==frames*G &&
+             f.workspace.header_entries==3*frames && f.workspace.retained_entries_upper==entries &&
+             f.workspace.setup_work_upper==entries && f.borrowed_entries_upper==borrowed,"frame retained ledger changed");
+        need(f.flow_per_visit==88+8*G && f.flow_work_upper==entries+visits*(88+8*G),"frame copy/flow work changed");
+        const auto H=std::max(candidate->hand_counts()[0],candidate->hand_counts()[1]);
+        const auto validation=route.decision_lookup_calls_upper*32*(1+G+H*(1+G))+route.prefix_lookup_calls_upper*64;
+        need(f.validation_work_upper==validation,"frame validation forecast changed");
+        need(route.combined_modeled_work_upper==oldroute.combined_modeled_work_upper-
+             visits*(64+4*196)+f.flow_work_upper+validation,"frame whole work removed more than named copies");
+        need(route.combined_logical_entries_upper==oldroute.combined_logical_entries_upper-
+             4*(census.maximum_depth+4)*196+entries+borrowed,"frame whole entries removed unowned state");
+        need(f.actual.activations==visits && f.actual.release_calls==visits && f.actual.released_frames==visits &&
+             f.activations_upper==visits && !f.final_active_frames && !f.final_workspace_entries &&
+             !f.value_cursor_learning_calls && !result.receipt.value_cursor_learning_calls,"frame lifecycle/value fallback differs");
+        need(expected.receipt.value_cursor_learning_calls==visits,"value reference cursor counter not actual learning");
+        need(route.active_frames && route.cursor_logical_entries_upper==3 &&
+             result.receipt.member_checks==expected.receipt.member_checks &&
+             result.receipt.kernel_work_upper==expected.receipt.kernel_work_upper,"frame changed kernel/numeric/member contract");
+        rejection("frame single-use",[&]{active.run_active_frames();});
+        auto low=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);c::Limits limits;
+        limits.max_modeled_work=route.combined_modeled_work_upper-1;
+        c::Trainer work(*low,limits);const auto before=low->kernel().receipt();
+        rejection("frame whole work minus one",[&]{work.run_active_frames();});
+        need(low->kernel().receipt().modeled_work==before.modeled_work,"frame work rejection queried kernel");
+        auto storage=shadow_fixture(kind,g::AdmissionProfile::indexed_v1);limits={};
+        limits.max_entries=route.combined_logical_entries_upper-1;
+        c::Trainer entry(*storage,limits);const auto prior=storage->kernel().receipt();
+        rejection("frame whole entries minus one",[&]{entry.run_active_frames();});
+        need(storage->kernel().receipt().modeled_work==prior.modeled_work,"frame entry rejection queried kernel");
+        std::cout<<"active frames kind="<<kind<<" policybits="<<result.quotient_policy.size()
+                 <<" activations="<<visits<<" metadata="<<entries+borrowed<<"\n";
+    }
+    auto unsupported=shadow_fixture(0);c::Trainer foreign(*unsupported);const auto before=unsupported->kernel().receipt();
+    rejection("frame requires indexed admission",[&]{foreign.run_active_frames();});
+    need(unsupported->kernel().receipt().modeled_work==before.modeled_work,"foreign frame mode queried kernel");
+}
 int main() {
     try {
         rank_anchors();
         indexed_shadow_controls();
         indexed_admission_controls();
+        active_frame_training_controls();
         for(bool symmetry:{false,true}) {
             auto p=make_plan(symmetry);need(p->group().size()==(symmetry?2U:1U),"fixture group size");
             c::Trainer trainer(*p);auto result=trainer.run();
