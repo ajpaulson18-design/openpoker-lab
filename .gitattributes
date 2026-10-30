@@ -214,3 +214,5 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/native-exact-whole-v1/** -text
 /benchmarks/results/native-public-history-index-v1/** -text
 /benchmarks/results/native-indexed-routing-v1/** -text
+/benchmarks/results/native-indexed-capacity-baseline-v1/** -text
+/benchmarks/results/native-indexed-admission-v1/** -text

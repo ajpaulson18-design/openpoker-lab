@@ -62,6 +62,7 @@ class _ExactSelectedPreparation:
     pair_candidates: int
     output_pairs: int
     iterations: int
+    execution_profile: str = "legacy"
 
 
 def _tokens(board):
@@ -250,7 +251,7 @@ def _dyadic_reach_bit_forecast(kernel, payoff_fractions, board_count):
             "scope": "Integer payload only, excluding Python headers/allocator and retained Fraction reference inputs. Conservative old logical work admission remains in force; no CPU/RSS guarantee."}
 
 
-def _layout_upper(topology, kernel, request, layout_counts):
+def _layout_upper(topology, kernel, request, layout_counts, *, execution_profile="legacy"):
     """Pre-info upper bound matching layout_census_shared's documented units."""
     from .packed_operator_cfr import (
         MAX_ACTION_SLOTS, MAX_DENSE_DECISION_HAND_SLOTS, MAX_LAYOUT_LOOP_ENTRIES,
@@ -270,9 +271,10 @@ def _layout_upper(topology, kernel, request, layout_counts):
     if topology.census.maximum_depth > MAX_DEPTH:
         raise ValueError("Exact selected direct topology exceeds existing packed history depth.")
     vector = 12 * hsum * (width + states)
-    loops = (request.iterations * (32 * slots + vector) +
+    python_iterations = 0 if execution_profile == "native-indexed-v1" else request.iterations
+    loops = (python_iterations * (32 * slots + vector) +
              8 * slots + 4 * dense + 4 * states)
-    history_work = ((3 * request.iterations + 3 * maximum_actions + 16) * lookup +
+    history_work = ((3 * python_iterations + 3 * maximum_actions + 16) * lookup +
                     8 * history_entries + history_bytes)
     if loops > MAX_LAYOUT_LOOP_ENTRIES or history_work > 500_000_000:
         raise ValueError("Exact selected packed topology exceeds the existing requested layout/history envelope.")
@@ -294,7 +296,7 @@ def _layout_upper(topology, kernel, request, layout_counts):
 def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
                     action_hand_queries, terminal_counts, pair_candidates,
                     layout_upper, unique_prefixes, topology_states,
-                    topology_entries, compact_prior_entries=0):
+                    topology_entries, compact_prior_entries=0, *, execution_profile="legacy"):
     costs = _query_costs(kernel, prefix_counts)
     # Setup support queries and complete legacy-compatible pair output.
     future_kernel = sum(costs["lookup"] + n * costs["legal_per_board"]
@@ -307,7 +309,8 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
     # each action/own-hand fallback lookup, regardless of wrapper cache hits.
     marginal_work = 0
     marginal_calls = 0
-    effective_iterations = request.iterations if sum(decision_counts.values()) else 0
+    effective_iterations = (request.iterations if sum(decision_counts.values()) and
+                            execution_profile != "native-indexed-v1" else 0)
     for prefix, count in decision_counts.items():
         calls = effective_iterations * count + 3 * action_hand_queries[prefix]
         marginal_calls += calls
@@ -440,7 +443,8 @@ def _preflight_work(kernel, adapter, request, prefix_counts, decision_counts,
 
 def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                             pair_diagnostics="expanded", exact_arithmetic="fraction",
-                            training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row"):
+                            training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
+                            execution_profile="legacy"):
     """Build and admit the direct exact-selected solve without ranking or rows.
 
     This shared preparation stage preserves every existing input, topology,
@@ -448,6 +452,12 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
     not issue pair-probability queries, rank hands, allocate information rows,
     or enter training.
     """
+    if type(execution_profile) is not str or execution_profile not in ("legacy", "native-indexed-v1"):
+        raise ValueError("Unsupported exact selected execution profile.")
+    if execution_profile == "native-indexed-v1" and (pair_diagnostics != "compact" or
+            exact_arithmetic != "dyadic" or training_reduction != "suit-equivariant" or
+            strategy_storage != "suit-quotient" or quotient_lookup != "per-decision"):
+        raise ValueError("Indexed admission requires compact dyadic equivariant per-decision Q training.")
     _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
                       training_reduction, strategy_storage, quotient_lookup)
     kernel = ExactSelectedRunoutKernel(request.sb_range, request.bb_range,
@@ -502,7 +512,12 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
             terminal_counts[prefix] += 1
         if prefix not in prefix_counts:
             raise RuntimeError("Direct topology produced a history outside selected-board prefixes.")
-    layout_upper = _layout_upper(topology, kernel, request, layout_counts)
+    layout_upper = _layout_upper(topology, kernel, request, layout_counts,
+                                 execution_profile=execution_profile)
+    if execution_profile == "native-indexed-v1":
+        layout_upper["version"] = "native-indexed-host-layout-v1"
+        layout_upper["python_training_iterations"] = 0
+        layout_upper["native_training_iterations_reserved_separately"] = request.iterations
     if action_slots_upper > layout_upper["upper_action_slots"] or infos_upper > 2_000_000:
         raise ValueError("Exact selected information-row/output capacity exceeded before allocation.")
 
@@ -535,7 +550,18 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                 topology.census.expanded_logical_visits,
                                 32 * len(topology.vertices) + 16 * topology.census.unique_edges + 8192,
                                 compact_prior_entries=(6 * sum(kernel.hand_counts) + 32
-                                    if pair_diagnostics == "compact" else 0))
+                                    if pair_diagnostics == "compact" else 0),
+                                execution_profile=execution_profile)
+    if execution_profile == "native-indexed-v1":
+        admission["version"] = "native-indexed-host-preparation-diagnostics-v1"
+        admission["execution_profile"] = execution_profile
+        admission["python_training_calls_upper"] = 0
+        admission["native_training_admission_required"] = True
+        admission["scope"] = (
+            "Host preparation, expanded policy reconstruction, independent Python diagnostics and output; "
+            "Python training iterations and Python quotient/equivariant trainer setup are not executed. "
+            "The separate indexed native construction/training ledger must fit the remaining shared work. "
+            "Original R geometry, output and conservative host storage reservations remain; logical units, not CPU/RSS.")
     if exact_arithmetic == "dyadic":
         integer_forecast = bit_forecast["dyadic_integer"]
         integer_forecast["whole_request_limb_work_upper"] = (
@@ -546,7 +572,7 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
             "an envelope for the counted integer query-core/completed Fraction-output subset model only. "
             "It excludes Fraction GCD/LCM input/bit preflights, setup normalization, adapter conversion and runtime; "
             "not a complete arithmetic/CPU bound or smaller replacement admission.")
-    if training_reduction == "suit-equivariant":
+    if training_reduction == "suit-equivariant" and execution_profile == "legacy":
         # Preflight uses no information dictionary and precedes every pair/
         # information-row/training allocation. The later explicit layout and
         # trainer each repeat the bounded extra census: reserve three scans.
@@ -577,13 +603,13 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
         action_hand_queries=action_hand_queries, terminal_counts=terminal_counts,
         layout_upper=layout_upper, admission=admission, bit_forecast=bit_forecast,
         action_slots_upper=action_slots_upper, pair_candidates=pair_candidates,
-        output_pairs=output_pairs, iterations=request.iterations)
+        output_pairs=output_pairs, iterations=request.iterations, execution_profile=execution_profile)
 
 
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
                                     training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
-                                    native_executable=None, native_routing="full-history"):
+                                    native_executable=None, native_routing="full-history", native_admission="legacy"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -595,6 +621,10 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     reduction; it verifies whole-game suit closure and every member increment.
     Complete policy output and independent diagnostics remain expanded.
     """
+    if type(native_admission) is not str or native_admission not in ("legacy", "indexed-v1"):
+        raise ValueError("Unsupported exact native admission model.")
+    if native_admission == "indexed-v1" and (native_executable is None or native_routing != "indexed"):
+        raise ValueError("Indexed admission requires explicit native indexed execution.")
     if type(native_routing) is not str or native_routing not in ("full-history", "shadow", "indexed"):
         raise ValueError("Unsupported exact native routing mode.")
     if native_routing != "full-history" and native_executable is None:
@@ -604,6 +634,9 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                 training_reduction != "suit-equivariant" or strategy_storage != "suit-quotient" or
                 quotient_lookup != "per-decision"):
             raise ValueError("Native exact training requires compact dyadic suit-equivariant Q storage with per-decision lookup.")
+        if native_admission == "indexed-v1":
+            _validate_request(request, rank_cache_boards, kernel_limits, pair_diagnostics, exact_arithmetic,
+                              training_reduction, strategy_storage, quotient_lookup)
         from .native_exact_four_street import executable_identity
         executable_identity(native_executable)
     prepared = _prepare_exact_selected(request, rank_cache_boards=rank_cache_boards,
@@ -611,7 +644,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                                        pair_diagnostics=pair_diagnostics,
                                        exact_arithmetic=exact_arithmetic,
                                        training_reduction=training_reduction, strategy_storage=strategy_storage,
-                                       quotient_lookup=quotient_lookup)
+                                       quotient_lookup=quotient_lookup,
+                                       execution_profile=("native-indexed-v1" if native_admission == "indexed-v1" else "legacy"))
     quotient_plan = None
     quotient_receipt = None
     native_prepared = prepared if native_executable is not None else None
@@ -879,6 +913,9 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         if native_routing != "full-history":
             result["training_backend"] = "native-exact-four-street-routed-v2"
             result["native_routing"] = native_routing
+        if native_admission == "indexed-v1":
+            result["training_backend"] = "native-exact-four-street-indexed-admission-v3"
+            result["native_admission"] = native_admission
     if pair_diagnostics == "compact":
         result.pop("private_pair_probabilities")
         result.pop("compatible_private_pairs")

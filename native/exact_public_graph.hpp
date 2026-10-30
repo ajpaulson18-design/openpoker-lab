@@ -142,6 +142,9 @@ struct GraphCensus {
 };
 
 struct Receipt {
+    std::string admission_contract = "legacy";
+    std::uint64_t legacy_training_lookup_work_removed = 0;
+    std::uint64_t legacy_training_action_work_removed = 0;
     std::string version = "native-exact-public-graph-q-plan-v1";
     std::size_t graph_vertices = 0;
     std::size_t graph_edges = 0;
@@ -450,14 +453,19 @@ inline std::size_t sat_size_add(std::size_t a, std::size_t b) {
 
 } // namespace detail
 
+enum class AdmissionProfile { legacy, indexed_v1 };
+
 class Plan final {
 public:
     Plan(Graph graph, std::vector<WeightedHand> sb, std::vector<WeightedHand> bb,
          std::vector<SelectedBoard> boards, unsigned iterations,
-         std::size_t rank_cache_boards = 1, Limits limits = {})
+         std::size_t rank_cache_boards = 1, Limits limits = {},
+         AdmissionProfile admission_profile = AdmissionProfile::legacy)
         : graph_(std::move(graph)), ranges_{std::move(sb), std::move(bb)},
           boards_(std::move(boards)), iterations_(iterations),
-          rank_cache_boards_(rank_cache_boards), limits_(std::move(limits)) {
+          rank_cache_boards_(rank_cache_boards), limits_(std::move(limits)), admission_profile_(admission_profile) {
+        if (admission_profile_ != AdmissionProfile::legacy && admission_profile_ != AdmissionProfile::indexed_v1)
+            detail::fail(ErrorCode::invalid_limits, "unsupported native Plan admission profile");
         validate_limits();
         if (graph_.vertices.empty() || graph_.vertices.size() > limits_.max_vertices ||
             graph_.root_id >= graph_.vertices.size())
@@ -529,6 +537,7 @@ public:
     [[nodiscard]] const std::vector<QRow>& rows() const noexcept { return rows_; }
     [[nodiscard]] const std::array<std::size_t, 2>& hand_counts() const noexcept { return hand_counts_; }
     [[nodiscard]] unsigned iterations() const noexcept { return iterations_; }
+    [[nodiscard]] AdmissionProfile admission_profile() const noexcept { return admission_profile_; }
     [[nodiscard]] std::uint64_t kernel_setup_support_work_upper() const noexcept {
         return kernel_setup_support_work_upper_;
     }
@@ -809,6 +818,7 @@ private:
     unsigned iterations_ = 0;
     std::size_t rank_cache_boards_ = 1;
     Limits limits_{};
+    AdmissionProfile admission_profile_ = AdmissionProfile::legacy;
     std::size_t edge_count_ = 0;
     std::uint64_t graph_input_text_bytes_ = 0;
     detail::GraphMetrics graph_metrics_{};
@@ -825,6 +835,8 @@ private:
     std::uint64_t admission_work_ = 0;
     std::size_t admission_entries_ = 0;
     std::uint64_t q_work_upper_ = 0;
+    std::uint64_t legacy_training_lookup_work_removed_ = 0;
+    std::uint64_t legacy_training_action_work_removed_ = 0;
     std::uint64_t kernel_setup_support_work_upper_ = 0;
     std::size_t q_entries_upper_ = 0;
 };
@@ -1097,9 +1109,20 @@ inline void Plan::preflight_q_plan() {
     const auto prefix_upper = static_cast<std::uint64_t>(graph_census_.logical_visits);
     const auto lookup = static_cast<std::uint64_t>(group_.size()) *
         (128ULL * graph_census_.history_token_work + 256ULL * graph_census_.decision_hand_slots_upper);
-    q_work_upper_ = detail::checked_mul(3ULL * iterations_ + 8ULL, lookup);
+    const bool indexed = admission_profile_ == AdmissionProfile::indexed_v1;
+    // The fixed eight envelopes remain intact for real input/group/support,
+    // Q-history/menu construction and output preparation. Only the named
+    // per-iteration legacy Plan lookups/menu checks are absent in indexed
+    // learning; Index/Router separately pre-admit their complete schedule.
+    const auto lookup_passes = indexed ? 8ULL : 3ULL * iterations_ + 8ULL;
+    const auto action_passes = indexed ? 8ULL : 6ULL * iterations_ + 8ULL;
+    if (indexed) {
+        legacy_training_lookup_work_removed_ = detail::checked_mul(3ULL * iterations_, lookup);
+        legacy_training_action_work_removed_ = detail::checked_mul(6ULL * iterations_, 32ULL * graph_census_.action_slots_upper);
+    }
+    q_work_upper_ = detail::checked_mul(lookup_passes, lookup);
     q_work_upper_ = detail::checked_add(q_work_upper_,
-        detail::checked_mul(6ULL * iterations_ + 8ULL, 32ULL * graph_census_.action_slots_upper));
+        detail::checked_mul(action_passes, 32ULL * graph_census_.action_slots_upper));
     q_work_upper_ = detail::checked_add(q_work_upper_,
         24ULL * (16ULL * total_hands() + 32ULL * boards_.size()));
     q_work_upper_ = detail::checked_add(q_work_upper_, graph_census_.logical_visits *
@@ -1262,6 +1285,9 @@ inline void Plan::build_q_rows() {
 }
 
 inline void Plan::finalize_receipt() {
+    if (admission_profile_ == AdmissionProfile::indexed_v1) receipt_.admission_contract = "indexed-v1";
+    receipt_.legacy_training_lookup_work_removed = legacy_training_lookup_work_removed_;
+    receipt_.legacy_training_action_work_removed = legacy_training_action_work_removed_;
     receipt_.graph_vertices = graph_census_.vertices; receipt_.graph_edges = graph_census_.edges;
     receipt_.logical_visits = graph_census_.logical_visits;
     receipt_.decision_occurrences = graph_census_.decision_occurrences;

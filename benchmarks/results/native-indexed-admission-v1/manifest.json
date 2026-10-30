@@ -1,0 +1,15 @@
+{
+  "contract": "native-indexed-admission-publication-v1",
+  "corrected_host_commit": "33334e631ed0cd05202a42aaeca9104b8981ccd4",
+  "producer_commit": "52295e8f7b4ebb8003b738dc7a8828b4636c8cb5",
+  "scope": "28 unique attempts, 15 completed policies, 13 native budget failures; 15 numeric replays, 12 exact target misses and three exact capacity unknowns. All raw failures, two parent stops and three raw reclassifications remain preserved. Corrected host compatibility and request limits verified separately, with no producer rerun. Logical bounds only; no general speed, memory or full-deck claim.",
+  "sha256": {
+    "archive-receipt.json": "b98dab40707c8c38ad1e6bec7aa181b5b796745f9aa0849fc766fba542a7364b",
+    "archive-review.json": "baf50bda2c5d66be1bcd0418511df94a86aa76a841114875315e5e2072895ac0",
+    "corrected-compatibility.json": "0eafe99f8a2a882898e6fbdd243a238c5dda99dfb7f9ec5d082dbc4d7d33684d",
+    "independent-review.json": "5012eb7b1dd3e7eeb1932cb2a8a30868bda38284d07d13cf109a97009b92ed3e",
+    "native-indexed-admission-evidence-v1.zip": "f9fe07512cb57827fe89358c85c3609e9355ab008c4d3ba11c6dd4349ff7bb51",
+    "report.json": "3490153ff2bafe94e462b44dc32b64ae6f3ac69d7011fbcdc10cec1e8d8a7dec",
+    "saved-budget-binding.json": "114eae0d18e9ae128ace36311c790061d7e3a87d1e9e13747ea7cd38806c1aae"
+  }
+}

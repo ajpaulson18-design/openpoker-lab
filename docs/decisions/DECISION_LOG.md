@@ -36,6 +36,26 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D073: Charge the executed indexed path within unchanged ceilings (October 29, 2026)
+
+Sol accepts the explicit [native indexed admission profile](../native-indexed-admission.md)
+after the preserved census identifies legacy Python/Q training forecasts as the
+first gate for several larger requests. Keep defaults and prior evidence intact.
+Charge real host preparation/diagnostics, native Q construction, numeric learning,
+callbacks and Index/Router schedules in one shared work allowance. Remove only
+named unexecuted training terms, retain setup/output/history/storage envelopes,
+reject foreign modes before training arrays and require independent policy replay.
+Development parity is not a frozen capacity or quality result; final study and CI
+remain separate gates. No cap increase, numerical trajectory or poker-law change.
+
+The [retained 28-attempt result](../native-indexed-admission-result.md) now has
+independent saved-only replay and archive acceptance: 15 numeric policies pass,
+12 exact certificates miss the target and three exact outcomes remain capacity
+unknowns. Five completed mode pairs match. Separate corrected-host prefix proof,
+saved-output compatibility and request-limit binding preserve the original frozen
+producer record; all parent/reviewer failures and the summary omission remain.
+Final publication-head CI still governs merge. The overall goal remains active.
+
 ### D072: Integrate numeric routing without changing the numerical trajectory (October 29, 2026)
 
 The [indexed training candidate](../native-indexed-routing.md) uses typed visible

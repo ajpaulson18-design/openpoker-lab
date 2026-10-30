@@ -1,5 +1,51 @@
 # Foundation-first execution record
 
+## Executed native indexed-path admission (October 29)
+
+The preserved post-indexed profile and corrected canonical-range census motivate
+the [separate admission candidate](native-indexed-admission.md): old Python
+training/Q forecasts reject several requests before actual indexed native work.
+Sol implements named native construction/learning accounting, root integrates
+host preparation and diagnostic forecasts while Luna is usage-limited, and Terra
+scrutinizes the boundaries independently. No ceiling or arithmetic changes.
+Six root host/API controls pass (22.873 seconds), including five full policy/eight
+metric pairs with protected replay, a reference-matching T20 beyond old native
+admission, and real T1000 callback rejection. The first forged-field test failed
+and is preserved; an explicit component equation fixes the receipt binding.
+Strict native controls/build pass. Frozen capacity study, saved-only verification,
+independent scrutiny and final CI remain distinct acceptance gates.
+
+Final combined regression passes 49 controls normally (133.991 seconds), with
+the complete source snapshot unchanged; the new API, independent and runner
+controls pass 29 tests with assertions disabled (28.051 seconds). Documentation
+checks 240 Markdown files/1,404 links. Terra's final read-only runner/ledger review
+finds no concrete blocker at pinned source, while preserving modeled-work and
+mutable-private-reservation limitations. These are development acceptance checks,
+not the pending committed-source capacity experiment.
+
+The source-frozen 52295e8 experiment now preserves 28 distinct attempts through
+two external continuations, reusing all prior raw observations after two parent
+budget-classifier failures. Fifteen solves complete and 13 native budget failures
+remain. All 15 numeric replays complete; 12 exact certificates miss the target,
+and three larger-range exact audits remain resource-unverified. Fresh saved-only
+acceptance is pending. Separately, Terra confirms a zero-decision native result
+falsely rejected by Python's decision-only prefix upper. Root corrects the proof
+to count all reached support prefixes, keeps decision-only actual marginal keys,
+and explicitly reserves the prefix set. The blind-all-in reference/replay control
+passes, as do 32 corrected optimized API/independent/runner controls (26.925 s).
+Frozen observations stay pinned to their original source; no producer retry.
+
+Fresh independent saved-only review now passes all 15 numeric policies, with
+maximum metric gap 2.22e-16, and independently reconstructs the 12 completed exact
+target misses. Three larger exact audits remain resource-unverified; 13 native
+budget failures remain. The [retained result](native-indexed-admission-result.md)
+authenticates five completed pairs, two parent stops versus three raw
+reclassifications, and the continuation summary's omitted index17. Separate
+corrected-source parsing and saved request-limit binding pass without candidate
+execution. The 15,715,433-byte/1,267-entry archive passes independent closure review.
+All prior helper, parent, source and reviewer failures stay preserved. Final CI
+and merge remain publication gates; broader quality and solver scaling remain open.
+
 ## Numeric routing in actual native learning (October 29)
 
 The explicit [indexed routing candidate](native-indexed-routing.md) now bypasses

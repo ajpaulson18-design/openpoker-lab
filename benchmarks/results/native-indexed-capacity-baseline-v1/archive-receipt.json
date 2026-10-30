@@ -1,0 +1,10 @@
+{
+  "archive": "native-indexed-capacity-baseline-evidence-v1.zip",
+  "archive_bytes": 942120,
+  "archive_sha256": "890a2551d7946e6a185830527cda994c7c81822fa16cbe7c8266b9cf2f35028b",
+  "candidate_calls_during_packaging": 0,
+  "contract": "native-indexed-capacity-baseline-archive-v1",
+  "files": 105,
+  "internal_manifest_sha256": "591cf82b5ce81583f40210e3da39a4111fa802c722564d73858a7d5d4688c724",
+  "scope": "Six instrumented native-only observations, no uninstrumented pairs or overhead ratios; terminal timing combines fold/showdown. Profile is not production CPU/RSS or quality. Census helper failures and wrong physical holding counts retained and superseded. Archived source is evidence only."
+}

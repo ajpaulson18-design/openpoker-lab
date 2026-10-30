@@ -20,6 +20,11 @@ PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1"
 RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1"
 ROUTED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2"
 ROUTED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2"
+INDEXED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3"
+INDEXED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3"
+ADMISSION_FIELDS = frozenset("plan_legacy_lookup_removed plan_legacy_action_removed "
+    "trainer_legacy_history_removed plan_setup_work index_setup_work router_setup_work trainer_history_retained marginal_calls_upper "
+    "marginal_calls_actual marginal_reuse combined_work combined_entries".split())
 ROUTES = ("full-history", "shadow", "indexed")
 ROUTE_FIELDS = frozenset("q_rows map_entries map_upper r_lookup_entries old_q_histories_retained "
     "q_routes q_routes_upper q_tokens q_tokens_upper roots roots_upper edges edges_upper "
@@ -105,6 +110,8 @@ def _text(value):
 
 def admit(prepared):
     """Retain every old R/Q guard and reserve new native work additionally."""
+    if prepared.execution_profile == "native-indexed-v1":
+        return _admit_indexed(prepared)
     from .suit_quotient_plan import _group, plan_admission
     from .suit_public_automorphism import verify_public_suit_automorphisms
     old = prepared.admission
@@ -151,6 +158,72 @@ def admit(prepared):
     old["native_additional_admission"] = reservation
     return reservation
 
+def _admit_indexed(prepared):
+    """Reserve executed host work and leave one remaining native allowance.
+
+    Native V3 independently pre-admits real Q construction, indexed queries,
+    numeric traversal and callbacks. No Python quotient plan/trainer is built.
+    Host phase reservations still include conservative unused numeric slots.
+    """
+    from .suit_quotient_plan import _group
+    from .suit_public_automorphism import verify_public_suit_automorphisms
+    old = prepared.admission
+    _need(old.get("execution_profile") == "native-indexed-v1" and
+          old.get("native_training_admission_required") is True and
+          "native_additional_admission" not in old, "Indexed admission profile is stale or already reserved")
+    retained = old["retained_storage"]
+    h = sum(prepared.kernel.hand_counts)
+    boards = len(prepared.kernel.selected)
+    vertices = prepared.topology.vertices
+    edges = sum(len(v.child_ids) if isinstance(v, DecisionVertex) else
+        len(v.branches) if isinstance(v, ChanceVertex) else 0 for v in vertices)
+    group_work = 24 * (16 * h + 32 * boards)
+    group_entries = 32 * h + 16 * boards + 2048
+    # V3 adds a legal-occurrence proof scan, history-byte accounting and a
+    # selected-board membership scan per decision. Its unique key set has at
+    # most one B-index tuple per visible decision prefix. Fixed scratch covers
+    # both named proof dictionaries/counters, iterator and current tuple overlap.
+    proof_work = (64 * prepared.topology.census.expanded_logical_visits +
+        16 * prepared.layout_upper["upper_history_token_entries"] +
+        8 * prepared.layout_upper["upper_history_token_bytes"] +
+        16 * boards * sum(prepared.decisions.values()) + 2048)
+    proof_entries = (4096 + 64 * h + 4 * boards * len(prepared.unique_prefixes) +
+                     16 * (1 + 3 * boards))
+    input_upper = 4096 + 128 * h + 128 * boards + 512 * (len(vertices) + edges) + 65 * len(prepared.topology.initial_history)
+    output_upper = (8192 + prepared.layout_upper["upper_history_token_bytes"] +
+        64 * prepared.layout_upper["upper_dense_decision_hand_slots"] + 32 * prepared.action_slots_upper)
+    _need(input_upper <= MAX_INPUT and output_upper <= MAX_OUTPUT, "Indexed native complete I/O admission exceeded")
+    io_entries = 4 * input_upper + 8 * output_upper
+    io_work = 8 * (input_upper + output_upper)
+    remaining_work = old["whole_request_limit"] - old["combined_modeled_work_upper"] - group_work - io_work - proof_work
+    remaining_entries = retained["entry_limit"] - retained["whole_request_peak_upper"] - group_entries - io_entries - proof_entries
+    _need(remaining_work > 0 and remaining_entries > 0, "Indexed native host group/I/O admission exceeded")
+    group = _group(prepared.kernel)
+    graph = verify_public_suit_automorphisms(prepared.topology, group,
+        max_additional_work=min(remaining_work, 500_000_000),
+        max_additional_entries=min(remaining_entries, 2_000_000))
+    added_work = group_work + io_work + proof_work + graph["modeled_work_upper"]
+    added_entries = group_entries + io_entries + proof_entries + graph["additional_retained_entries_upper"]
+    work_left = old["whole_request_limit"] - old["combined_modeled_work_upper"] - added_work
+    entries_left = retained["entry_limit"] - retained["whole_request_peak_upper"] - added_entries
+    _need(work_left > 0 and entries_left > 0, "Indexed native host proof leaves no native allowance")
+    reservation = {
+        "version": "native-indexed-executed-whole-request-v1", "execution_profile": "native-indexed-v1",
+        "group": ["".join(image) for image in group], "group_size": len(group), "public_graph": graph,
+        "group_search_work_upper": group_work, "group_search_entries_upper": group_entries,
+        "proof_work_upper": proof_work, "proof_entries_upper": proof_entries,
+        "input_bytes_upper": input_upper, "output_bytes_upper": output_upper,
+        "io_entries_upper": io_entries, "io_work_upper": io_work,
+        "host_additional_work_upper": added_work, "host_additional_entries_upper": added_entries,
+        "native_work_limit": min(work_left, 500_000_000), "native_entries_limit": min(entries_left, 2_000_000),
+        "scope": "Executed host group/proof/I/O plus separately admitted native V3 construction/training; one shared work allowance, unchanged ceilings. Logical units, not CPU/RSS."}
+    old["combined_modeled_work_upper"] += added_work
+    retained["phase_upper_bounds"] = {name: value + added_entries for name, value in retained["phase_upper_bounds"].items()}
+    retained["whole_request_peak_upper"] += added_entries
+    old["native_additional_admission"] = reservation
+    return reservation
+
+
 def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
          routing="full-history"):
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
@@ -166,7 +239,15 @@ def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, 
     maximum_bytes = (4096 + 128 * sum(kernel.hand_counts) + 128 * len(kernel.selected) +
         512 * len(vertices) + 512 * edge_count + 65 * len(topology.initial_history))
     _need(maximum_bytes <= MAX_INPUT, "Exact native request byte admission exceeded")
-    rows = [PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing,
+    indexed_admission = prepared.execution_profile == "native-indexed-v1"
+    _need(not indexed_admission or routing == "indexed", "Indexed admission cannot use legacy or shadow routing")
+    if indexed_admission:
+        reserved = prepared.admission.get("native_additional_admission")
+        _need(type(reserved) is dict and reserved.get("execution_profile") == "native-indexed-v1" and
+              native_work <= reserved["native_work_limit"] and native_entries <= reserved["native_entries_limit"],
+              "Indexed wire exceeds or lacks the reserved host remainder")
+    header = INDEXED_PROTOCOL if indexed_admission else (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing)
+    rows = [header,
         " ".join(map(str, (iterations, rank_cache_boards, *kernel.hand_counts,
         len(kernel.selected), len(vertices), edge_count, topology.root_id, len(topology.initial_history)))),
         " ".join(map(str, (kernel.limits.max_integer_bits, min(kernel.limits.max_modeled_work, native_work),
@@ -256,8 +337,23 @@ def parse_policy(raw, prepared, *, routing="full-history"):
     _need(type(raw) is bytes and len(raw) <= MAX_OUTPUT, "Native exact output byte ceiling exceeded")
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
     lines = raw.decode("ascii").splitlines()
-    expected_result = RESULT if routing == "full-history" else ROUTED_RESULT
+    indexed_admission = prepared.execution_profile == "native-indexed-v1"
+    _need(not indexed_admission or routing == "indexed", "Indexed admission cannot parse another routing mode")
+    expected_result = INDEXED_RESULT if indexed_admission else (RESULT if routing == "full-history" else ROUTED_RESULT)
     _need(lines and lines[0] == expected_result and len(lines) >= 2, "Wrong native exact result protocol")
+    admission_receipt = None
+    if indexed_admission:
+        fields = lines.pop().split("\t")
+        _need(len(fields) == len(ADMISSION_FIELDS) + 2 and fields[:2] == ["ADMISSION", "indexed-v1"],
+              "Missing or wrong indexed admission proof")
+        admission_receipt = {}
+        for field in fields[2:]:
+            key, separator, value = field.partition("=")
+            _need(separator and key in ADMISSION_FIELDS and key not in admission_receipt and
+                  value.isascii() and value.isdecimal() and len(value) <= 20,
+                  "Malformed or duplicate indexed admission proof field")
+            admission_receipt[key] = int(value)
+        _need(set(admission_receipt) == ADMISSION_FIELDS, "Incomplete indexed admission proof")
     route_receipt = None
     if routing != "full-history":
         fields = lines.pop().split("\t")
@@ -355,10 +451,57 @@ def parse_policy(raw, prepared, *, routing="full-history"):
               r["legacy_prefixes"] == (r["prefixes"] if shadow else 0),
               "Indexed mode executed legacy hot-path operations or lost shadow comparisons")
         receipt["indexed_routing"] = {"mode": routing, **r}
+    if admission_receipt is not None:
+        a = admission_receipt
+        # Recompute the native graph-census conventions from legal occurrence
+        # histories rather than accepting candidate's removed-work claims.
+        history_tokens = len(prepared.topology.initial_history)
+        decision_hands = action_count = history_entries = row_bytes = depth = visits = 0
+        marginal_keys = set()
+        support_prefixes = set()
+        for occurrence in prepared.topology.iter_occurrences():
+            history = occurrence.history
+            visits += 1
+            history_tokens += len(history)
+            depth = max(depth, len(history) - len(prepared.topology.initial_history))
+            board = _revealed_board(history)
+            support_prefixes.add(tuple(board))
+            vertex = prepared.topology.vertices[occurrence.vertex_id]
+            if not isinstance(vertex, DecisionVertex):
+                continue
+            actions = len(vertex.actions)
+            decision_hands += prepared.kernel.hand_counts[vertex.player]
+            action_count += actions
+            history_entries += len(history) + actions
+            row_bytes += sum(len(token.encode("utf-8")) for token in history) + 64 * actions
+            marginal_keys.add(tuple(k for k, (flop, turn, river) in enumerate(prepared.kernel.selected)
+                if (flop + (turn, river))[:len(board)] == board))
+        group = receipt["group_size"]
+        t = prepared.iterations
+        lookup = group * (128 * history_tokens + 256 * decision_hands)
+        one_history_pass = group * (16 * history_entries + 4 * row_bytes +
+            8 * (depth + 1) * decision_hands + 16 * (depth + 1) * visits)
+        _need(a["plan_legacy_lookup_removed"] == 3 * t * lookup and
+              a["plan_legacy_action_removed"] == 6 * t * 32 * action_count and
+              a["trainer_legacy_history_removed"] == 3 * t * one_history_pass and
+              a["trainer_history_retained"] == 4 * one_history_pass and
+              a["trainer_history_retained"] == route_receipt["old_history_forecast"] and
+              a["marginal_calls_actual"] == len(marginal_keys) and
+              a["marginal_calls_upper"] == len(support_prefixes) and
+              a["marginal_calls_actual"] <= a["marginal_calls_upper"] and a["marginal_reuse"] == 1 and
+              a["combined_work"] == (a["plan_setup_work"] + a["index_setup_work"] + a["router_setup_work"] +
+                  route_receipt["router_work_upper"] + route_receipt["index_work_upper"] + route_receipt["caller_work"]) and
+              0 < a["plan_setup_work"] <= a["combined_work"] == receipt["modeled_work_upper"] and
+              a["combined_entries"] == receipt["retained_entries_upper"] <= 2_000_000,
+              "Indexed admission removed-work, marginal reuse or whole-owner proof mismatch")
+        receipt["indexed_admission"] = {"mode": "indexed-v1", **a}
     return averages, receipt
 
 def train(prepared, *, executable, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
           reservation=None, routing="full-history"):
+    if prepared.execution_profile == "native-indexed-v1":
+        _need(reservation is not None and reservation is prepared.admission.get("native_additional_admission"),
+              "Indexed training requires its reserved host remainder")
     identity = executable_identity(executable)
     request = wire(prepared, prepared.iterations, rank_cache_boards=rank_cache_boards,
         native_work=native_work, native_entries=native_entries, routing=routing)
@@ -370,6 +513,7 @@ def train(prepared, *, executable, rank_cache_boards=1, native_work=500_000_000,
     if reservation is not None:
         _need(receipt["group_size"] == reservation["group_size"] and len(request) <= reservation["input_bytes_upper"] and
               len(output) <= reservation["output_bytes_upper"], "Native proof differs from Python game/I/O admission")
-    return averages, {**receipt, "protocol": PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL, "request_sha256": _hash(request),
+    protocol = INDEXED_PROTOCOL if prepared.execution_profile == "native-indexed-v1" else (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL)
+    return averages, {**receipt, "protocol": protocol, "request_sha256": _hash(request),
         "result_sha256": _hash(output), "request_bytes": len(request), "result_bytes": len(output),
         "build": identity, "calls": 1}
