@@ -1,13 +1,14 @@
 # Current engineering state
 
-An integrated [independent matrix-free certificate candidate](../matrix-free-certificate.md)
-rebuilds public rules and computes exact policy values/own-hand responses without
-private-pair/world tables. Forty-three development controls pass normally and
-optimized, including unchanged literal exact metrics and policy hashes on
-weighted/blocker/fractional/dead-board/all-in controls. Resource and serialization
-reservations are explicit; saved larger-policy acceptance is still pending.
-This targets the six exact-unknown retained larger-range policies without
-changing the old oracle's caps or retraining. Full-deck capability remains absent.
+The [matrix-free saved-policy certificate result](../matrix-free-certificate-result.md)
+completes all 28 retained policies: 22 old exact matches and six separate scalar
+matches, with two accuracy passes and 26 misses. Candidate exact evaluation
+retains no private-pair/world tables; public histories and complete policies
+remain explicit. All source/build/artifacts stayed stable and protected solver,
+native and training calls were zero. Both study/reviewer processes exited 0.
+Fifty-six normal/optimized controls pass; the audited archive preserves the first
+audit failure and its correction. No old oracle cap or policy changed. Final
+publication is tracked in PR #279. Full-deck capability remains absent.
 
 An explicit V5 [exact fold-class candidate](../native-fold-classes.md) factors
 repeated fold callbacks using per-hand selected-board masks and exact card

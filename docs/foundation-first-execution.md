@@ -1,23 +1,27 @@
 # Foundation-first execution record
 
-## Integrated independent certificate development (October 31)
+## Frozen independent saved-policy certificate (October 31)
 
 The [new saved-only verifier](matrix-free-certificate.md) joins independent public
 numeric rules, selected-product blocker/rank payoffs and own-hand exact profile/BR
-walks without pair/world tables. Forty-three controls pass normally and optimized
-with stable source pins (11.382 / 11.868 seconds). The untouched literal v3 oracle
+walks without pair/world tables. Fifty-six controls pass normally and optimized
+with stable source pins (37.598 / 35.926 seconds). The untouched literal v3 oracle
 agrees on exact metrics and normalized policy identity for weighted hidden
 outcomes, fractional rules, mixed ranks, dead boards and blind all-in. Hidden-river
 and zero-own-probability controls prevent clairvoyant or restricted deviations.
 Scrutiny closes JSON/decimal formatting and pre-helper reservation gaps; exact
 negative gains reject instead of clamp.
 
-Root substitutes for unavailable Sol architecture, Luna integrates public rules
-and the fixed saved runner, and Terra supplies payoff/budget and separate scalar
-review. The forthcoming frozen 28-policy pass must preserve all old inputs and
-22 completed/six unknown exact outcomes, with current/producer source admission
-before math. Six producer rejections remain a separate no-policy set. No larger
-saved-policy acceptance or full-deck capability has yet been established.
+Root substitutes for unavailable Sol architecture and completes the saved runner;
+Luna supplies public-rule integration and initial runner work, and Terra supplies
+payoff/budget and separate scalar review. The [frozen 28-policy pass](matrix-free-certificate-result.md)
+at `83b5e93` completes with 22 old exact matches and six independent scalar matches.
+Both processes exit 0, both source/build/artifact closures remain stable, and no
+producer/training calls occur. The six prior exact unknowns become verified
+accuracy misses: two total passes and 26 misses. Six producer rejections remain
+a separate no-policy set. The first auditor failure and corrected raw/normalized
+source proof are retained without repeating mathematics or replacing the archive.
+Full-deck capability and commercial accuracy remain unestablished.
 
 ## Frozen exact fold-class study (October 31)
 

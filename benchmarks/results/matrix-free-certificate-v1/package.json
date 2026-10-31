@@ -1,0 +1,8 @@
+{
+  "archive": "matrix-free-certificate-evidence-v1.zip",
+  "sha256": "404c1e2f73fb30c96684f707c66638dcf18184b1118add3a37fddf677bd4979a",
+  "bytes": 23204718,
+  "entries": 975,
+  "manifest_sha256": "5417c3a202b045845ea47610cbe7db6343a5e9e7031835de770e97f597164d30",
+  "source_commit": "83b5e93cb09729522e090d234339a1188cc160a7"
+}

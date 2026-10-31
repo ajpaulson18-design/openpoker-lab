@@ -48,14 +48,16 @@ validate off-path physical rows before any zero-reach shortcut.
 
 Root provides architecture while Sol is unavailable; Terra supplies exact
 payoffs/budget and independent criticism; Luna supplies public rules and saved
-integration. Forty-three normal/optimized development controls match old exact
+integration. Fifty-six normal/optimized development controls match old exact
 metrics/policy hashes and exercise hidden-information and pre-operation resource
 guards. Named-family/full-walk forecasts and dynamic fraction/serialization caps
-are scoped logical models, not CPU/RSS bounds. No saved larger-game certificate
-is claimed yet. Require committed current/producer source admission, all 28
-unchanged saved inputs, comparisons against 22 earlier certificates and separate
-literal-streaming acceptance for six earlier unknowns. No retraining, old-oracle
-cap lift, full-deck or commercial claim follows.
+are scoped logical models, not CPU/RSS bounds. The [frozen result](../matrix-free-certificate-result.md)
+completes all 28 unchanged saved inputs, with 22 earlier exact matches and six
+separate scalar matches after committed source/build/artifact admission.
+Both processes exit 0; all six previous unknowns are accuracy misses (two total
+passes, 26 misses). Preserve the old receipts, initial auditor failure and final
+raw-or-normalized Git proof. No retraining, old-oracle cap lift, full-deck or
+commercial claim follows.
 
 ### D075: Factor exact fold callbacks by selected-board masks (October 31, 2026)
 

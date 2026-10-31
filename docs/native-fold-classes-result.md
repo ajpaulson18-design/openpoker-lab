@@ -1,5 +1,10 @@
 # Frozen native fold-class result
 
+This page preserves the original study's exact-status inventory. The subsequent
+[matrix-free certificate study](matrix-free-certificate-result.md) independently
+verifies all six former exact unknowns as accuracy misses, without retraining or
+changing this frozen evidence. The follow-up total is two passes and 26 misses.
+
 The explicit V5 fold-mask operator preserves every completed V4 policy and all
 eight binary64 metrics in this fixed study. It does not expand the admitted
 frontier, and the prespecified original T10 median is **31.76984% slower**.

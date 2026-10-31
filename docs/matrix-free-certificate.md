@@ -1,14 +1,16 @@
 # Independent matrix-free saved-policy certificate
 
-Status: integrated research candidate, not yet accepted on the retained larger
-policies. Fifty-six integrated development controls pass normally and with assertions
+Status: [accepted on all 28 retained policies](matrix-free-certificate-result.md),
+with 22 historical exact matches and six independent scalar matches. Two policies
+meet the accuracy target and 26 miss it. Fifty-six integrated controls pass normally and with assertions
 disabled (37.598 / 35.926 seconds), with stable source pins. The old literal
 certificate and all its limits remain unchanged. No training or product route
 selects this verifier automatically.
 
 The [fold-class result](native-fold-classes-result.md) contains 28 completed
-solver policies: 22 have old exact certificates, while six larger-range policies
-remain exact-quality unknown. These six are both V4/V5 arms of unit 4×4, 8×8 and
+solver policies: 22 had old exact certificates, while six larger-range policies
+were exact-quality unknown at that freeze. The new study resolves those six as
+target misses. These six are both V4/V5 arms of unit 4×4, 8×8 and
 2×16 T10. They are distinct from six native-rejected requests, which have no
 policy to verify. Existing 4×4/8×8/2×16 payloads describe 88/368/176 physical
 worlds and 2,400/4,912/5,596 rows. The old exact oracle's hand/world/row caps are
@@ -82,9 +84,9 @@ The true physical world/pair counts are diagnostics, not stored records.
 Limits are positive and reduce-only, specific to this new representation. They
 do not alter the older literal oracle's limits. Cumulative entry/bit forecasts
 are conservative logical construction/arithmetic ledgers, not observed live
-heap, all CPython integer allocations, RSS or CPU instructions. Their practical
-sufficiency on larger saved policies is not yet established; capacity failure
-remains unknown quality.
+heap, all CPython integer allocations, RSS or CPU instructions. The frozen
+28-policy study fits these limits; other games may not. Capacity failure remains
+unknown quality.
 
 Input JSON copying, character/key scans, sorted-key encoding, decimal Fraction
 formatting, numeric conversion, public census and action/reveal helpers reserve
@@ -137,13 +139,13 @@ The numeric reference materializes its bounded worlds; that separate reference
 is not part of the matrix-free candidate's storage claim. Exact integer metrics
 such as `0` and signed integers use the same format as the historical oracle.
 
-Next gates are a clean committed-source freeze, an immutable saved-only pass
-over all 28 completed fold-study policies, comparison with all 22 earlier exact
-certificates, and independent literal streaming response checks for the six
-formerly unverified policies. The runner must authenticate both current and
-producer source closures and every input artifact before mathematics, preserve
-new errors/unknowns and all earlier receipts, and make zero solver/native calls.
-It must not retrain a policy because verification changed.
+The clean committed-source freeze, immutable 28-policy saved-only pass, 22 earlier
+exact comparisons and six independent scalar response checks are complete.
+Both source closures and all input/build artifacts were authenticated before
+mathematics and stayed stable; solver/native/training calls were zero. The
+[frozen result](matrix-free-certificate-result.md) records process exits, preserved
+audit failures, logical resources, dependencies and publication gates. No policy
+was retrained because verification changed.
 
 Full-deck chance/reach/training, larger public-game/strategy storage, convergence
 and commercial accuracy remain separate unresolved foundation requirements.

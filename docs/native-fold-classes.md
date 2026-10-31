@@ -1,5 +1,9 @@
 # Exact fold payoff classes
 
+The [later saved-only certificate](matrix-free-certificate-result.md) resolves
+the six original exact unknowns as accuracy misses; the historical result and
+operator timing below remain unchanged.
+
 Status: opt-in V5 candidate connected to the same native indexed
 four-street trainer through explicit Python/native selection and a checked
 fold-operator receipt. The [frozen result](native-fold-classes-result.md) now has

@@ -1,0 +1,8 @@
+{
+  "schema": "matrix-free-study-process-observation-v1",
+  "confirmed_terminal_handle": "64915",
+  "terminal_exit_code": 0,
+  "source": "root write_stdin confirmed terminal completion",
+  "stdout_sha256": "ec769cc2e228b5b8a40222d2da3bd21c28cd10ddd77b4b37210e3a2284f4a87e",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
