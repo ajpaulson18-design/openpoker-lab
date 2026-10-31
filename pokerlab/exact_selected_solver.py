@@ -919,6 +919,8 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         if native_traversal == "active-frames":
             result["training_backend"] = "native-exact-four-street-active-frames-v4"
             result["native_traversal"] = native_traversal
+            result["native_routing"] = native_routing
+            result["native_admission"] = native_admission
         elif native_routing != "full-history":
             result["training_backend"] = "native-exact-four-street-routed-v2"
             result["native_routing"] = native_routing

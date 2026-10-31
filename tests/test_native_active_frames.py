@@ -157,6 +157,8 @@ class NativeActiveFrameEngineTests(unittest.TestCase):
                 self.assertEqual(active["training_backend"],
                     "native-exact-four-street-active-frames-v4")
                 self.assertEqual(active["native_traversal"], "active-frames")
+                self.assertEqual(active["native_routing"], "indexed")
+                self.assertEqual(active["native_admission"], "indexed-v1")
                 self.assertEqual(active["strategy"], value_cursor["strategy"])
                 self.assertEqual([active[key].hex() for key in METRICS],
                     [value_cursor[key].hex() for key in METRICS])
