@@ -8,7 +8,8 @@ and the independent ranker are explicitly shared authenticated dependencies.
 Quality: two passes, 26 misses at the unchanged 1/1000 threshold.
 
 `evidence.zip` binds raw policies/results, both full raw/Git source maps, 804
-current executable-math/test/dependency source files, study/reviewer process
+selected source and supporting files (including executable mathematics/tests
+and pinned dependencies), study/reviewer process
 streams and actual exit statuses, six scalar results, helpers and the accepted
 original fold-study archive. Archived sources are evidence only, never executed.
 The separate numeric reference uses bounded materialized worlds.

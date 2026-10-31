@@ -67,10 +67,8 @@ auditor recomputes committed tree/normalization and authenticates every raw sour
 file. Thirteen older files use the valid raw-byte committed identity route.
 The original archive and both mathematical studies were not replaced or rerun.
 
-Root supplied architecture while Sol was unavailable and completed the runner;
-Luna supplied public-rule integration and initial runner work; Terra supplied
-payoff/budget and independent scrutiny/scalar review. No fresh Sol review is
-implied. [Representation and limits](matrix-free-certificate.md) remain explicit.
+[Representation, limits and the requested team-substitution record](matrix-free-certificate.md)
+remain explicit.
 Final publication CI and merge ancestry are tracked in
 [PR #279](https://github.com/ajpaulson18-design/openpoker-lab/pull/279).
 

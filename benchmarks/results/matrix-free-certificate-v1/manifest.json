@@ -1,7 +1,7 @@
 {
   "contract": "matrix-free-certificate-publication-v1",
   "files": {
-    "README.md": "cd2c0e962342a24deac32341fd56a488d5dba46483bb7b3f61957fd962d0db47",
+    "README.md": "667b1f2f5b7458e7bbff52715b8c9b3b38e6685ede14cae489e111453f02be0a",
     "archive-audit-first-failure.json": "674cbe0aa6e0a642cba65a332e3390091300edeb889e35d78f24fdf9cb792b5b",
     "archive-audit-v1.json": "a22d0a7ce91650b5b877561e369f82683393746dab84c277fa246f4b6eac5b09",
     "archive-audit-v2.json": "f2465603863bbaf09b4575d64458dd62470c20841090df0cb590a70e91c1fec9",
