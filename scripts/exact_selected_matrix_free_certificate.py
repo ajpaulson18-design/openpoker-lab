@@ -13,6 +13,7 @@ from scripts.matrix_free_four_street_rules import (
 )
 from scripts.matrix_free_selected_payoffs import PayoffModel, RANK_CACHE_ENTRIES, RANK_TEMP_ENTRIES
 from scripts.matrix_free_certificate_serialization import clone_json, canonical_hash, FractionText
+from scripts.preflop_validation import _q as _legacy_money_fraction
 
 MAX_ROWS = 20_000
 MAX_ACTION_SLOTS = 100_000
@@ -39,6 +40,32 @@ def _row_key(row):
           all(type(token) is str and 0 < len(token) <= 64 for token in history),
           "strategy history must be bounded visible tokens")
     return (0 if row["player"] == "sb" else 1, row["hand"], tuple(history))
+
+
+def _legacy_model_case_hash(model, budget, formatter):
+    """Keep raw-input identity distinct from the old normalized model identity.
+
+    The old oracle stores nine-decimal money as tagged exact Fractions and
+    canonical spaced runouts. PublicModel.case has that normalized shape with
+    float money snapshots. Re-quantizing this bounded grid is idempotent.
+    """
+    budget.charge("legacy_case_identity_setup", 4096)
+    budget.entries(128, "legacy normalized case identity")
+    config = dict(model.case["config"])
+    def money(value):
+        # At most 1e6 chips on a 1e-9 grid: bounded conversion/formatting, with
+        # no user numeric hooks and no private deal construction.
+        _need(type(value) is float and 0 <= value <= 1_000_000,
+              "normalized model money snapshot is invalid")
+        return {"$fraction": formatter.format(budget.input(
+            _legacy_money_fraction(value), "legacy normalized money"))}
+    stacks = config["starting_stack"]
+    config["starting_stack"] = ([money(value) for value in stacks]
+        if type(stacks) in (list, tuple) else money(stacks))
+    config["small_blind"] = money(config["small_blind"])
+    config["big_blind"] = money(config["big_blind"])
+    normalized = {**model.case, "config": config}
+    return canonical_hash(normalized, budget)
 
 
 def _validate(model, kernel, payload, budget, formatter):
@@ -336,6 +363,7 @@ def evaluate_exact(case, payload, *, limits=None, public_limits=None):
     model = build_public_model(safe_case, budget, public_limits)
     kernel = PayoffModel(model.ranges, model.outcomes, budget)
     formatter = FractionText(budget)
+    legacy_case_hash, legacy_case_hash_receipt = _legacy_model_case_hash(model, budget, formatter)
     policies, normalized, shape = _validate(model, kernel, safe_policy, budget, formatter)
     normalized_hash, normalized_hash_receipt = canonical_hash(normalized, budget)
     forecast = _walk_forecast(model, kernel, budget, (case_hash_receipt, policy_hash_receipt), formatter)
@@ -368,10 +396,12 @@ def evaluate_exact(case, payload, *, limits=None, public_limits=None):
           "actual work/entries exceed whole-call forecast")
     return {"contract": "matrix-free-selected-certificate-v1", "source_identity": SOURCE_IDENTITY,
             "input_case_canonical_sha256": case_hash, "input_policy_canonical_sha256": policy_hash,
+            "legacy_model_case_canonical_sha256": legacy_case_hash,
             "normalized_policy_sha256": normalized_hash, "normalized_policy_rows": normalized,
             "metrics": metric_text, "threshold": "1/1000", "threshold_met": met,
             "case_snapshot": case_receipt, "policy_snapshot": input_receipt,
             "case_hash": case_hash_receipt, "policy_hash": policy_hash_receipt,
+            "legacy_model_case_hash": legacy_case_hash_receipt,
             "normalized_hash": normalized_hash_receipt, "fraction_text": formatter.receipt(),
             "policy_shape": shape, "public_model": model.counts,
             "operator": kernel.receipt(), "forecast": forecast, "budget": budget.receipt(),

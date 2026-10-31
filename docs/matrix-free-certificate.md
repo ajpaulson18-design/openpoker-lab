@@ -1,8 +1,8 @@
 # Independent matrix-free saved-policy certificate
 
 Status: integrated research candidate, not yet accepted on the retained larger
-policies. Forty-three development controls pass normally and with assertions
-disabled (11.382 / 11.868 seconds), with stable source pins. The old literal
+policies. Fifty-six integrated development controls pass normally and with assertions
+disabled (37.598 / 35.926 seconds), with stable source pins. The old literal
 certificate and all its limits remain unchanged. No training or product route
 selects this verifier automatically.
 
@@ -52,6 +52,12 @@ identity. Flops canonicalize together in DECK order, turn/river remain ordered,
 and holding names preserve the existing lexical tuple convention and range
 insertion order.
 
+Input fingerprints distinguish the raw JSON case and compact policy from the
+legacy oracle's normalized model case and expanded policy. A separately named
+legacy-model-case hash binds normalized runouts and exact tagged money without
+equating either oracle's policy-input representation. Normalized strategy rows,
+their hash, exact metrics and the threshold must agree across representations.
+
 ## Storage and resource boundaries
 
 There are no retained private-pair coefficient or complete-world arrays. The
@@ -98,6 +104,11 @@ Width and cumulative Fraction-bit limits are still dynamic rejection gates.
 
 ## Executed development evidence and acceptance gates
 
+The original 43-control receipts remain under
+`benchmarks/results/matrix-free-certificate-development-v1`. The 56-control
+integration receipts, including the saved-runner parent flow and capture guards,
+are preserved separately under `benchmarks/results/matrix-free-certificate-development-v2`.
+
 The controls compare exact values, both best responses, all metric fractions,
 normalized policy rows/hashes and unchanged thresholds against the untouched
 literal v3 oracle. Cases include weighted hidden outcomes, blockers, fractional
@@ -107,7 +118,8 @@ metadata, inert-input rejection, work/entry cap-minus-one before ranking/walks,
 and pre-encoding/pre-decimal budget rejection. Terra independently challenged
 the recurrence and the family forecast; source inspection is distinguished from
 executed numerical evidence. Root substitutes for unavailable Sol architecture;
-Luna owns public-rule integration and the saved runner, Terra the payoff/budget
+Luna supplied public-rule integration and the initial saved runner; root took
+over the runner during a worker usage pause. Terra supplies the payoff/budget
 and independent scalar review.
 
 Development review corrected serialization and pre-helper reservation gaps,
@@ -115,6 +127,15 @@ and preserved the legacy holding/money conventions. A worker reported an initial
 Fraction-versus-float money-type parity failure; it was corrected and final tests
 pass, but that first tool output was not retained as a separate raw log. No
 formal saved-policy result is claimed from this development history.
+
+The saved-only runner authenticates both tracked source closures, every retained
+study file and the original executable/build/header identity before importing
+project mathematics. It pins output bytes at capture time, checks source/input
+stability around each row, saves candidate errors before comparison, and performs
+a fresh independent numeric replay even after a genuine exact-capacity rejection.
+The numeric reference materializes its bounded worlds; that separate reference
+is not part of the matrix-free candidate's storage claim. Exact integer metrics
+such as `0` and signed integers use the same format as the historical oracle.
 
 Next gates are a clean committed-source freeze, an immutable saved-only pass
 over all 28 completed fold-study policies, comparison with all 22 earlier exact

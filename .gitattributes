@@ -220,3 +220,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/native-fold-class-development-v1/** -text
 /benchmarks/results/native-fold-classes-v1/** -text
 /benchmarks/results/matrix-free-certificate-development-v1/** -text
+/benchmarks/results/matrix-free-certificate-development-v2/** -text
