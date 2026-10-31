@@ -8,6 +8,7 @@
 namespace {
 namespace graph = openpoker::exact_public_graph;
 namespace cfr = openpoker::exact_selected_cfr;
+namespace kernel = openpoker::exact_selected_kernel;
 constexpr std::size_t input_cap = 64U << 20;
 constexpr std::size_t output_cap = 32U << 20;
 void need(bool condition, const char* text) { if (!condition) throw std::invalid_argument(text); }
@@ -63,7 +64,8 @@ int run() {
     }
     Parser parser(std::move(input));
     const auto protocol = parser.token();
-    const bool active_frames = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_V4";
+    const bool fold_classes = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_FOLD_CLASSES_V5";
+    const bool active_frames = fold_classes || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_V4";
     const bool indexed_admission = active_frames || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3";
     const bool routed_v2 = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2";
     const bool routed = routed_v2 || indexed_admission;
@@ -154,7 +156,8 @@ int run() {
     }
     parser.finish(); need(parsed_edges == edge_count, "native edge declaration mismatch");
     graph::Plan plan(std::move(public_graph), std::move(hands[0]), std::move(hands[1]), std::move(boards), iterations, cache, limits,
-        indexed_admission ? graph::AdmissionProfile::indexed_v1 : graph::AdmissionProfile::legacy);
+        indexed_admission ? graph::AdmissionProfile::indexed_v1 : graph::AdmissionProfile::legacy,
+        fold_classes ? kernel::FoldTraversal::mask_classes_v1 : kernel::FoldTraversal::literal_boards);
     const auto& census = plan.graph_census();
     const auto output_upper = graph::detail::checked_add(census.row_history_bytes_upper,
         graph::detail::checked_add(graph::detail::checked_mul(64, census.decision_hand_slots_upper),
@@ -165,7 +168,8 @@ int run() {
                   route == "indexed" ? trainer.run_indexed() : trainer.run();
     need(result.receipt.final_numeric_workspace_slots == 0, "native numeric buffers remain before R output");
     Writer writer;
-    writer.token(active_frames ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_RESULT_V4" :
+    writer.token(fold_classes ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_FOLD_CLASSES_RESULT_V5" :
+                 active_frames ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_RESULT_V4" :
                  indexed_admission ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3" :
                  routed ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2" :
                          "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1", true);
@@ -291,6 +295,39 @@ int run() {
         field("final_workspace_entries", f.final_workspace_entries);
         field("value_cursor_learning_calls", f.value_cursor_learning_calls);
         field("router_owned_workspace", 1);
+        field("combined_work", r.combined_modeled_work_upper);
+        field("combined_entries", r.combined_logical_entries_upper, true);
+    }
+    if (fold_classes) {
+        const auto& f = plan.kernel().receipt();
+        const auto& r = result.receipt.indexed_shadow->routing;
+        need(f.fold_class_setup_entries > 0 && f.fold_class_setup_work > 0 &&
+             f.fold_mask_entries == hands_count[0] + hands_count[1] &&
+             f.fold_membership_entries == f.fold_mask_entries &&
+             f.fold_class_calls_by_player[0] + f.fold_class_calls_by_player[1] == f.fold_class_queries &&
+             f.fold_literal_calls_by_player[0] + f.fold_literal_calls_by_player[1] == f.fold_reference_queries &&
+             f.fold_buckets_by_player[0] + f.fold_buckets_by_player[1] == f.fold_class_buckets &&
+             f.fold_class_own_checks == f.fold_buckets_by_player[0] * hands_count[0] +
+                 f.fold_buckets_by_player[1] * hands_count[1], "fold class lifecycle/counter proof mismatch");
+        writer.token("FOLD"); writer.token("mask-classes-v1");
+        const auto field = [&](std::string_view name, std::uint64_t value, bool last = false) {
+            writer.token(std::string(name) + "=" + std::to_string(value), last);
+        };
+        field("setup_work_upper", f.fold_class_setup_work);
+        field("setup_entries_upper", f.fold_class_setup_entries);
+        field("mask_entries", f.fold_mask_entries);
+        field("membership_entries", f.fold_membership_entries);
+        field("classes_sb", f.fold_classes_per_side[0]);
+        field("classes_bb", f.fold_classes_per_side[1]);
+        field("class_calls_sb", f.fold_class_calls_by_player[0]);
+        field("class_calls_bb", f.fold_class_calls_by_player[1]);
+        field("literal_calls_sb", f.fold_literal_calls_by_player[0]);
+        field("literal_calls_bb", f.fold_literal_calls_by_player[1]);
+        field("buckets_sb", f.fold_buckets_by_player[0]);
+        field("buckets_bb", f.fold_buckets_by_player[1]);
+        field("own_checks", f.fold_class_own_checks);
+        field("retained_pair_entries", 0);
+        field("query_allowance_retained", 1);
         field("combined_work", r.combined_modeled_work_upper);
         field("combined_entries", r.combined_logical_entries_upper, true);
     }

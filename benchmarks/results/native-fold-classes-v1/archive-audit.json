@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "archive_sha256": "f0a840055b9a9ebabb0909a8dd92a1c855531ab568b64e7fe57b725329c70f88",
+  "entries": 1288,
+  "internal_manifest_sha256": "f1dc7eb6d182722e930fa91ec4825e1a5a42f85140d56e50c17f08c399d87c85",
+  "review_receipt_sha256": "88e5a8cc68dae468338ba854158bc4f1c0467e0e364e059b5917acab76664e33",
+  "helper_sha256": "88a3611c454e675519330f6b0b4f7f88786c8193df0f8eb1d0b9f1ca752f818f",
+  "scope": "Exact archive inventory, raw evidence/source/provenance bytes only; no archived source executed. Mathematical acceptance is the separately pinned review receipt."
+}

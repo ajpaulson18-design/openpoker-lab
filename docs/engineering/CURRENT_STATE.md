@@ -1,5 +1,22 @@
 # Current engineering state
 
+An explicit V5 [exact fold-class candidate](../native-fold-classes.md) factors
+repeated fold callbacks using per-hand selected-board masks and exact card
+buckets, with no retained private-pair coefficients. Strict callback/coupled
+G1/G6 controls pass, preserving tested policy bits and the old query allowance
+while adding setup charges. Public native/Python selection now has 91 integrated
+controls passing with assertions disabled, including physical V4/V5 policy and
+metric parity. Deterministic grouping replaces the first prototype's new maps;
+host proof scans and native setup/scratch retain separate reservations. Fresh
+Terra review closes the host reservation issues. The [fixed 34-call result](../native-fold-classes-result.md)
+retains 28 completions, six rejections and 14 matching pairs. Fresh saved-only
+acceptance and archive verification pass; exact quality retains 20 misses, two
+private-flush passes and six unknowns. Original T10 median regresses 31.76984%;
+no admitted-frontier gain is observed. Source-freeze CI passes; publication-head
+checks and merge ancestry remain separate gates. Existing defaults remain
+literal. The next major candidate is independent certification without
+complete-world expansion.
+
 The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
 24-image cursor copying during explicitly selected indexed native learning with
 a Router-owned depth-by-active-group workspace. Development controls preserve
@@ -8,7 +25,8 @@ tested policies/metrics, lifecycle and unchanged budget boundaries. The
 13 native rejections, 19 exact target misses, two passes and three unverified
 exact outcomes. Fresh saved-only acceptance and archive verification pass;
 original T60 now fits, while original T10 median is 5.05% slower. Final publication
-CI remains pending. Logical traversal-field savings do not establish CPU or process-memory
+CI passes and PR #274 is merged with the tested tree unchanged. Logical
+traversal-field savings do not establish CPU or process-memory
 improvement; value-cursor defaults and other storage/quality limits remain.
 
 The explicit [executed indexed-path admission](../native-indexed-admission.md)

@@ -1,0 +1,17 @@
+{
+  "contract": "native-fold-mask-classes-published-evidence-v1",
+  "files": {
+    "README.md": "b2f7f6e9212e30ad1d9c4fc24ee2e25cfa8a5cacdfcee3b89c120f115d09e62b",
+    "archive-audit.json": "a45007cd583c683d361866d2444426a562791d89ba82bb65fe176b3e051ffae2",
+    "archive-package.json": "52baecbdaa822983d1a6291ce31e5a9f827c5dd779201be2b752f7abdc1104e6",
+    "audit-archive.py": "88a3611c454e675519330f6b0b4f7f88786c8193df0f8eb1d0b9f1ca752f818f",
+    "evidence.zip": "f0a840055b9a9ebabb0909a8dd92a1c855531ab568b64e7fe57b725329c70f88",
+    "independent-review-receipt.json": "88e5a8cc68dae468338ba854158bc4f1c0467e0e364e059b5917acab76664e33",
+    "independent-review.py": "0bf743caae0d347b2cfd1f1cbac6c12d55abff6d359a355d71fc5b0f7c74e4dc",
+    "package-evidence.py": "b266b4ea970f3d496cfcccaed0ad539202709e67791f9ccce7ecdd2ad15fbef3",
+    "producer-process-completion.json": "f057e93e0454caba8579f466eeb3cc0b4b433e9cfa44a3db48ce92e5b6fc3331",
+    "report.json": "41096b7db81e62111bec209905c35c04f99542473313b0d29d5458986fa3b1ef",
+    "review-process-observation.json": "798a0f906f180a284a1b25932e575d7c1656bbfd2069bc3be4b11bffdb5dd078"
+  },
+  "producer_commit": "946671d8da38102aff4c7d901d02d58158888a68"
+}

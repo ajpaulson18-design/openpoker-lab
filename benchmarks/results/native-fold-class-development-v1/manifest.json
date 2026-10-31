@@ -1,0 +1,15 @@
+{
+  "contract": "native-fold-class-development-v1",
+  "files": {
+    "README.md": "d0f93afbcd3d6d44e56fd1008287aab51c92e5a3989875ef271a39bdca3deefc",
+    "default-regressions-status.json": "7608f07b658ddcf39e9402f306fdc40f8e0faffb94ae77c7c221d0c3cdfc74a6",
+    "default-regressions.log": "bbfee0f2e8b92e1d919cdd34d3422784e1a0c72f07495edd84b88689e04c47c9",
+    "exact-algebra-proof.py": "e25c6acf18a7f2ba0a6916ca214d049cd4fcea68a6b5cdb2b85f59d0a551a778",
+    "exact-algebra-receipt.json": "7b09a00d9a541558eedd55b4fed847ed8ee3e090b8d99148bb68a3ec39b8bf87",
+    "native-controls-build.json": "6d45f84600760099cdc107591a77ad115207cce1d2901dacbd73bd1409de7fbb",
+    "native-controls-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-controls.log": "d5b0b3285e756b78e2062e10b9b44176489086f381fd30c46e8ed0e2f3721e02",
+    "source-closure.zip": "4e94b82b75bac6d17aed60f2beb77b00a628e5e298f55d24e0fcfa9300b7b8c2"
+  },
+  "scope": "Development controls only; public API, timing and quality acceptance pending."
+}

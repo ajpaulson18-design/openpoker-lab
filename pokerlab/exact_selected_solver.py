@@ -610,7 +610,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
                                     training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
                                     native_executable=None, native_routing="full-history", native_admission="legacy",
-                                    native_traversal="value-cursor"):
+                                    native_traversal="value-cursor", native_payoffs="board-sweep"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -626,6 +626,15 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
         raise ValueError("Unsupported exact native admission model.")
     if type(native_traversal) is not str or native_traversal not in ("value-cursor", "active-frames"):
         raise ValueError("Unsupported exact native traversal mode.")
+    if type(native_payoffs) is not str or native_payoffs not in ("board-sweep", "fold-mask-classes-v1"):
+        raise ValueError("Unsupported exact native payoff mode.")
+    if native_payoffs == "fold-mask-classes-v1" and (
+            native_executable is None or native_admission != "indexed-v1" or
+            native_routing != "indexed" or native_traversal != "active-frames" or
+            pair_diagnostics != "compact" or exact_arithmetic != "dyadic" or
+            training_reduction != "suit-equivariant" or strategy_storage != "suit-quotient" or
+            quotient_lookup != "per-decision"):
+        raise ValueError("Fold mask classes require the complete explicit native active-frame indexed configuration.")
     if native_traversal == "active-frames" and (
             native_executable is None or native_admission != "indexed-v1" or native_routing != "indexed"):
         raise ValueError("Active-frame traversal requires explicit indexed-v1 native execution.")
@@ -658,7 +667,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     native_reservation = native_receipt = None
     if native_executable is not None:
         from .native_exact_four_street import admit
-        native_reservation = admit(prepared, traversal=native_traversal)
+        native_reservation = admit(prepared, traversal=native_traversal, native_payoffs=native_payoffs)
     elif strategy_storage == "suit-quotient":
         from .suit_quotient_plan import SuitQuotientPlan
         quotient_plan = SuitQuotientPlan(prepared, request.iterations)
@@ -752,7 +761,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             averages, native_receipt = train_native_exact(native_prepared, executable=native_executable,
                 rank_cache_boards=rank_cache_boards, native_work=native_reservation["native_work_limit"],
                 native_entries=native_reservation["native_entries_limit"], reservation=native_reservation,
-                routing=native_routing, traversal=native_traversal)
+                routing=native_routing, traversal=native_traversal, native_payoffs=native_payoffs)
             admission["combined_modeled_work_upper"] += native_receipt["modeled_work_upper"]
             retained = admission["retained_storage"]
             retained["phase_upper_bounds"] = {name: value + native_receipt["retained_entries_upper"]
@@ -916,8 +925,12 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             result["quotient_lookup"] = "per-decision-suit-history-transform-v1"
     if native_receipt is not None:
         result["training_backend"] = "native-exact-four-street-v1"
+        if native_payoffs == "fold-mask-classes-v1":
+            result["training_backend"] = "native-exact-four-street-fold-classes-v5"
+            result["native_payoffs"] = native_payoffs
         if native_traversal == "active-frames":
-            result["training_backend"] = "native-exact-four-street-active-frames-v4"
+            if native_payoffs != "fold-mask-classes-v1":
+                result["training_backend"] = "native-exact-four-street-active-frames-v4"
             result["native_traversal"] = native_traversal
             result["native_routing"] = native_routing
             result["native_admission"] = native_admission

@@ -1,0 +1,7064 @@
+{
+  "status": "passed",
+  "checks": 282,
+  "fixtures": 48,
+  "seed": 301031,
+  "helper_sha256": "e25c6acf18a7f2ba0a6916ca214d049cd4fcea68a6b5cdb2b85f59d0a551a778",
+  "observations": [
+    {
+      "fixture": 0,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "45a03bb7fafc9b75277276275dab667792d4a1bea2418ecbd3f9359da1d352f1"
+    },
+    {
+      "fixture": 0,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "83a707d09629c35d82dc01cbec0a4c0c8d16cbed5d8949cdcbef941336fb9cb7"
+    },
+    {
+      "fixture": 0,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 0,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 0,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 0,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 1,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a9754197d87907d45205ea22402cd349803d5b00f69f94297e57f02b25112e87"
+    },
+    {
+      "fixture": 1,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "72128271d8f35a34c7a07a76924107f0113653a958a465b4077a1e69fb8dd034"
+    },
+    {
+      "fixture": 1,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 1
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b41d5a2c532f2712c34e0f081ff3e93f967f4d19153ceea830087800d1fe0ad9"
+    },
+    {
+      "fixture": 1,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 1
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b41d5a2c532f2712c34e0f081ff3e93f967f4d19153ceea830087800d1fe0ad9"
+    },
+    {
+      "fixture": 1,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a9d5e98d0bf90c3e990e8b8bf69186ef03416a93c924c7a51e54f8ef82832a23"
+    },
+    {
+      "fixture": 1,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eda172a86f8d9397d71daf18df543db283e9b75fb2c7883d236f6cf48eabf2b5"
+    },
+    {
+      "fixture": 2,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eceffd5955c232093286773d55ff6caf893e0902c8cafe731a8a3a037de34d37"
+    },
+    {
+      "fixture": 2,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2a9973e8602a202ae07677cbb748dca7cb41f174dfa5f401a11105b0366bc6ba"
+    },
+    {
+      "fixture": 2,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3f97328dd615e49162e527f1a926cdd98226b10cd84f65ba5b741f147c391001"
+    },
+    {
+      "fixture": 2,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "748d9050cecc4049654fc11540f6d8be8a63f60f807d41585249b597c5253a4c"
+    },
+    {
+      "fixture": 2,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 2,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 3,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "221da0a697b97cf0865205a6f287024bd7ec6d6cc26029ca870cf22bc38c6f67"
+    },
+    {
+      "fixture": 3,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e5fab065c2aac60c94cf0c836955d97a1aec1d5976276192d41529a8db5f7ab5"
+    },
+    {
+      "fixture": 3,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 3,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 3,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "bee577e56ff58ca1962c85e288d83a6ed2cd616a3f9e1b63e790972bbcf59177"
+    },
+    {
+      "fixture": 3,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "70f4ca58dd529986806b4b6df5e5fe55a7cb98885591fa77cc36dd1c1d07156a"
+    },
+    {
+      "fixture": 4,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 3
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 4,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 4,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 4,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 4,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 4,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 5,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "463f8fb3add1bad131cd376d60f02e22245f93a95862259420a4b7593a3e8b34"
+    },
+    {
+      "fixture": 5,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "cdd2ec012d50e1bf6ddbb55de4253a079528227faed9042d8962c5e9b3f541f4"
+    },
+    {
+      "fixture": 5,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 9
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d63c8c1de71d9cea6a8c747c083ea32a37bfa6782ab9de03875ac8b7537abc00"
+    },
+    {
+      "fixture": 5,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 9
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a2caa02a260200a92e2143e9cd289a5ed2dde714e32c46d8dc917520b1d92788"
+    },
+    {
+      "fixture": 5,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 14
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "6e795172455d03925827bdb14d4952923a263ef221f01e79f82619208849a8f8"
+    },
+    {
+      "fixture": 5,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 14
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "dc29c36154aed14b8c6b8f59d57e7d0a84c44063ded21d390af852802b635bf9"
+    },
+    {
+      "fixture": 6,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "8d966f82a9cf5e81c2998e055671fa4002d7c916ba01aaf5f3065d91faf53490"
+    },
+    {
+      "fixture": 6,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "589a0d1111ff4156c774c7ca2521fc825e7621a4a7a3d670260da9e5cd7ac70a"
+    },
+    {
+      "fixture": 6,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "5d53c893373df073dcdd5d3c9623e27c8569eeef22222b9cd6d75b33ecfb31da"
+    },
+    {
+      "fixture": 6,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "509b8dfea9bfd2748a3a1d75fe4ca2cc6de6e6fe441ff6f6c83a0230100561dd"
+    },
+    {
+      "fixture": 6,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "8a9ac07b960879f513c544eb9c67dbd8b0936772bdea2c501c43c5c3ba183205"
+    },
+    {
+      "fixture": 6,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "be706dfd02e566a838af436c197782a3cf8a39f5f21f934cd2e41da632817a3f"
+    },
+    {
+      "fixture": 7,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7813b292a391cb4629ba9b84fab1e75a24901069c4e8e41645ec6981940e328b"
+    },
+    {
+      "fixture": 7,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "19066cfdefedc12ffa6d37a1c4fb5bbf09a2083ee97a2f8e1568381ea8c4234d"
+    },
+    {
+      "fixture": 7,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "51b353dc6f1ceeb60126bda9d0561485729e851ac6c255d93ecc4281baae15eb"
+    },
+    {
+      "fixture": 7,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "5a17c0b8a9ae21b1b377104fff167c66e91b56a943286172cd96d17a7d3f90ac"
+    },
+    {
+      "fixture": 7,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 7,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 8,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1e6b58212f17964cbb0a23a4ca32dceacff2ab8382e84552134415aacc5d9501"
+    },
+    {
+      "fixture": 8,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 16,
+        "integer_board_counts": 14
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3a595c72308d407046eb8e34dfa4aba1f190bb36639e57027bdb407c34fb7696"
+    },
+    {
+      "fixture": 8,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 8,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 8,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 8,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 9,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 5,
+        "own_class_checks": 40,
+        "integer_board_counts": 40
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 9,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 7,
+        "own_class_checks": 56,
+        "integer_board_counts": 56
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 9,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2b0a1ba78f804d90800b64b1925664a9ae48440e7563d83c0b21f9c7e935c135"
+    },
+    {
+      "fixture": 9,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "50e2312b3c509fcf1e627e96921e0953a1ddcba1b7f6e71c6b088dcd72ea1ca7"
+    },
+    {
+      "fixture": 9,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 5,
+        "own_class_checks": 40,
+        "integer_board_counts": 29
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3b4b2bc27564d7c2e6af6509ac353d4fba4a8086ca379481847c181d5bb29312"
+    },
+    {
+      "fixture": 9,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        7,
+        5
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 42
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7b16643d809f302992134e8b84dc95c57255f97ef45ebacc7ac13b3b2391de6a"
+    },
+    {
+      "fixture": 10,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7d26ad0c7ccc0848e5d5807cb07f6224bdffd48c4ad12a52521abd09c188f4a1"
+    },
+    {
+      "fixture": 10,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4cf5a8f8ec66e05cba9380c210bc4d5f68435bcdc9368d51a53893c9d6e8b89b"
+    },
+    {
+      "fixture": 10,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "c17ff900ad4cb887be4f2a8aa9d47e81987c83bd09e7ae155e324a2be8e125d4"
+    },
+    {
+      "fixture": 10,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "526d6b5ce6e55f2cc9196d834552397fd4bffa0417bbc362bf69cc1d42ecf9b8"
+    },
+    {
+      "fixture": 10,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "fc5d2d0e01d407e75e918fac04902051550be84d51a7a4b7b7a0537e0eecab5d"
+    },
+    {
+      "fixture": 10,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "dc9202e47a82c2960d5c114751647051c89a0de642f37bfcf9c75e4ba9c8cd3d"
+    },
+    {
+      "fixture": 11,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "0903c38e326ce5b286be8024e39265a0a71a6d767cfc2d908382c9a4fc334aba"
+    },
+    {
+      "fixture": 11,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "90461f0bd3ab51051e0b50f26fde8d8f0b999783fd73497e3e3d9051df6487c1"
+    },
+    {
+      "fixture": 11,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3a8a35271a1f67153f69cd6eaa55d52b92c43600df4e269fbbb9ceb4c7730c32"
+    },
+    {
+      "fixture": 11,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "05e9d5a3d15baab1b9ea9f6e8eb42e3ff6ab9aa3b455e788877b96351d00a40c"
+    },
+    {
+      "fixture": 11,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "71e864efdb74e87505680575a75c58fc1f4b094a1a3ac0ae5c5362f6669afc9b"
+    },
+    {
+      "fixture": 11,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "6aae797e9c8004d82e5432fa033079839480d070d9226eb67086b2fa31e07e90"
+    },
+    {
+      "fixture": 12,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "bd98daff7e2dc87d45a0e9b8ce99861fe2c1901eda2a140f6567bfac9fe54cc2"
+    },
+    {
+      "fixture": 12,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "bd98daff7e2dc87d45a0e9b8ce99861fe2c1901eda2a140f6567bfac9fe54cc2"
+    },
+    {
+      "fixture": 12,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 12,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 12,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 12,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 13,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "ecc14277313521c2aaa9db3bae9610b98451567d4e0660eb328f1244795ed05a"
+    },
+    {
+      "fixture": 13,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "74bda3d771ce6edca660cbcc3e3aa3f59ecdfeabe6dd709306ea1b103b737408"
+    },
+    {
+      "fixture": 13,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 13,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 13,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "8a6d044109223a593f1635b817ee70c9c5dc93fb056bb6c17a3f0eba6e3564d4"
+    },
+    {
+      "fixture": 13,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "8a6d044109223a593f1635b817ee70c9c5dc93fb056bb6c17a3f0eba6e3564d4"
+    },
+    {
+      "fixture": 14,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 14,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 14,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7c766fb6b8c6bc595fd37f8437823945b9c02fe718d0385f3dc1aaa7b40e3c7a"
+    },
+    {
+      "fixture": 14,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f695acda447ffb93b3d94d8032a0639e077b5344bf38f6f951a518845c30656c"
+    },
+    {
+      "fixture": 14,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "73435d8eee33fb1c4f9aa0a07d5255e9c07a9804120c314474bea36985963ba1"
+    },
+    {
+      "fixture": 14,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d21307baefd97e8d2a90f6c7ed16825d0a830dbff99761db4ea711840a3d0df5"
+    },
+    {
+      "fixture": 15,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "cf3740237246e641da45f848deaecac32ae226165e7151ee2027b6f13f613d6e"
+    },
+    {
+      "fixture": 15,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9dfe803abafb27b47456239c80ab4ca368cb4285fcc5e6c5842b52b969e1eede"
+    },
+    {
+      "fixture": 15,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "715279170b396defaed130d11c8de4feef5f31a585482955782423344556340b"
+    },
+    {
+      "fixture": 15,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "17b768481228dd93f1a322cab1fe12be89c2a9f6eb660ba2d896f6c908624ae6"
+    },
+    {
+      "fixture": 15,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "263b36f6acde235188ce383b3447e2c665384ec7d2447607d577700e676e9907"
+    },
+    {
+      "fixture": 15,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e78256f142f56819567211cec3f54d20c4302c67a30de0d23d5a4980b2781816"
+    },
+    {
+      "fixture": 16,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3acc227bc857f7cecee410c90d071ef80ed46d76d67aa2e893dec5a1487e3515"
+    },
+    {
+      "fixture": 16,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "07e6fafea3fb5bcbfc2019f3cbda29ea7599e6bc149fd93a6af81cad00c42478"
+    },
+    {
+      "fixture": 16,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 16,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 16,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 16,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 17,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 8,
+        "integer_board_counts": 8
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9e3c6cc0111cbfd1fd1626652c85d2312b3bdb71ca8ae517f3877e6451589051"
+    },
+    {
+      "fixture": 17,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eb90f4ab2c4c97ee63052daffa668922a3847b7dabfe5d725658136a224f5448"
+    },
+    {
+      "fixture": 17,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 8,
+        "integer_board_counts": 6
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "6e1b18e223e186304a20354ee92f8d1ae23b0a996cecd1134bdde6c5d50ca2fe"
+    },
+    {
+      "fixture": 17,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a0ada68da84070ca984f80f8f87f4d1febd2ac27d9e09b6cf74b4097634e9874"
+    },
+    {
+      "fixture": 17,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 8,
+        "integer_board_counts": 6
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 17,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        2
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 18,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "ba973eccb8f525eaea5018ce0e0335bbb1918f5d6e6be6a5d1dc30a2ca8454c9"
+    },
+    {
+      "fixture": 18,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9c3d203fb25dbb1fdd591ad7d44286bbf1adac8293bf531504eddb24b734b790"
+    },
+    {
+      "fixture": 18,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 18,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 18,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "988086f29a4b4da5cd68f6cb84b3b5dbcdf5005a7592ef0dd0af6596dd696b3f"
+    },
+    {
+      "fixture": 18,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "59f8702b877bc82fd2c70d0b729ba288b0b6ecf9e512ea4f1c2b646c0d711d45"
+    },
+    {
+      "fixture": 19,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 19,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 19,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d78f129a383e0a617eb4d10a9b09af6ee8829ed74bc2613b1ae7ddd754f5ece2"
+    },
+    {
+      "fixture": 19,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "ef5169b9b47a2b7e90b248d85f0e522cd9b0986b482d9fd2d91f6324bc966d20"
+    },
+    {
+      "fixture": 19,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9aebaae645e993892bc0a7abe549f14be729618207692852f89b90fb8fa2d906"
+    },
+    {
+      "fixture": 19,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "17fbafc848e0e0c085dc6bcb7bda4f8fe8c46a4811e90fef9c60816cccdb9657"
+    },
+    {
+      "fixture": 20,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "117686aab85d80b4a452ac552c87f03e138bd87a36e6eaeb89a38d79b0d40db1"
+    },
+    {
+      "fixture": 20,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 16,
+        "integer_board_counts": 14
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d532c397a047420038335506af4706d79e78f23f5d6115f0dcd25cb8b7cac687"
+    },
+    {
+      "fixture": 20,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 20,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 20,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 20,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 21,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "08216a48929a8e4c944ef04e793686093493266002be102b785ebaeac64f0cc3"
+    },
+    {
+      "fixture": 21,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 5,
+        "own_class_checks": 40,
+        "integer_board_counts": 40
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d378d2fd5b32803bd50cb686fb0e30dabb5a108b7cfefd3c446ca8d9d2d35746"
+    },
+    {
+      "fixture": 21,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 24,
+        "integer_board_counts": 21
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b21450b182fc8da32a996a367b0aeeb5b8dbc0a9d5b498705b0823171a8ea60b"
+    },
+    {
+      "fixture": 21,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "14de77c073b2b1cc0eff2694df553193755e453b466bb3714f044aa07f7a6848"
+    },
+    {
+      "fixture": 21,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 30
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "09928d2a4fd6dfbcb3c9ac07a2a96b23d7f2988754473ca94cabeaad27de8ec3"
+    },
+    {
+      "fixture": 21,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        5,
+        4
+      ],
+      "stats": {
+        "buckets": 5,
+        "own_class_checks": 40,
+        "integer_board_counts": 38
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f1ccc6137ef830ac3815e22fd5a95f463bed1842be03c9cd41084e7f75bf87da"
+    },
+    {
+      "fixture": 22,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4a45ae267f1e28afd1c422a5fa1bd8a5221ce53d83bcea8aeb6b84c40152badf"
+    },
+    {
+      "fixture": 22,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "013f0fcd1ee339ca872a0732b1b4fb5967dc1c4463b6fc82b90a7854ea380e94"
+    },
+    {
+      "fixture": 22,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b7e62de4e31b75b23a998cc1884c828b463d29fa1e41409c05b1b106924a002a"
+    },
+    {
+      "fixture": 22,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3dabaa2860e7489e05d6dbbb56d789c321ab4198399c4e99eb80cca256ed3073"
+    },
+    {
+      "fixture": 22,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 22,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 23,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "18df4e8d5e031780aa66893e2bfdaa874e8fe686fab15357e9f80b691d0ce9c6"
+    },
+    {
+      "fixture": 23,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f03b25c10c29e4517d2e4335f6a5da9406310c2b37c204b7a7cb0ca21abe5e4e"
+    },
+    {
+      "fixture": 23,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 23,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 23,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "c4983604052fcc0d378b826387a3e0d5b0c20db863dde0ffeade4cefaa8ab1fe"
+    },
+    {
+      "fixture": 23,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "df87eadefcb2a08502538fff9ccbbad5e71f12401214f6b7d5204055ebc72838"
+    },
+    {
+      "fixture": 24,
+      "status": "zero-support-rejected"
+    },
+    {
+      "fixture": 25,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "0410d5c28a5297830d3a18b3a3f7563a487bfaed83d401477a999e2653f023f5"
+    },
+    {
+      "fixture": 25,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "0410d5c28a5297830d3a18b3a3f7563a487bfaed83d401477a999e2653f023f5"
+    },
+    {
+      "fixture": 25,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e42127a6649e00ba0441f894161beb60ca781b64f4456b2c7e8ff4a8f898053b"
+    },
+    {
+      "fixture": 25,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e42127a6649e00ba0441f894161beb60ca781b64f4456b2c7e8ff4a8f898053b"
+    },
+    {
+      "fixture": 25,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d702ce933213bc272e4ff8d429d45c12cf578bb1ed34ca0b780cb32495a7bab0"
+    },
+    {
+      "fixture": 25,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d702ce933213bc272e4ff8d429d45c12cf578bb1ed34ca0b780cb32495a7bab0"
+    },
+    {
+      "fixture": 26,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a613570cb6520779b746929ebc831fc644b10cae4c037b3f79e68bcb90f1f79b"
+    },
+    {
+      "fixture": 26,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "09706b5bc58b49ae1a3588ccb0f7c5c43825f33d976282fdb86f6ce2d1b9fb0c"
+    },
+    {
+      "fixture": 26,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d5e199e33d443538387a163161494a4329aeeb331a1b34bdd10afa2911c4f96a"
+    },
+    {
+      "fixture": 26,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d5e199e33d443538387a163161494a4329aeeb331a1b34bdd10afa2911c4f96a"
+    },
+    {
+      "fixture": 26,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "abdc71d996fc7c2df1f9d14bbad671942bdaec8e6b8a1750556a88a69a9d5384"
+    },
+    {
+      "fixture": 26,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "bcfedbf04e6471fe74efb5f06bd4fed49e78ae8954e8c1107bb5c74a5504431e"
+    },
+    {
+      "fixture": 27,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f05811f6ebda8bc47e46d3db29fd6c20c3afa926a12bfab6437247207199952d"
+    },
+    {
+      "fixture": 27,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "8a347d4ade84c20a3878036a9ca6f1157eb8800331a4c94f13bf2a012b39c790"
+    },
+    {
+      "fixture": 27,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9ce5f6de7dc34e92f90c9579e8ac69e7b00e411b0be97110941184a31fc8b51c"
+    },
+    {
+      "fixture": 27,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a9e8e7e3659c37d5d92b0d30769936254e528186d0e8db00d73da2ca03cce9f0"
+    },
+    {
+      "fixture": 27,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 27,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 28,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 3
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3bd8b512c223d8efdfe21f2dc36fc2dba059ba586226dbf3fab4f2bf997c90f5"
+    },
+    {
+      "fixture": 28,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 3
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3bd8b512c223d8efdfe21f2dc36fc2dba059ba586226dbf3fab4f2bf997c90f5"
+    },
+    {
+      "fixture": 28,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 28,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 28,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 28,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 29,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 29,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 29,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "733f30ba0caab12204ad7ec8aee8f14f4d144644490ff486d99d5c9247eb554e"
+    },
+    {
+      "fixture": 29,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 9
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d5a070f1242855359d2906981afc246f3d33a0dbead793bd0384ce70bab8b81c"
+    },
+    {
+      "fixture": 29,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2eaef11a31b7f4d9dd490844f073e237a8d28dd121bbf31c171a0c20557fc7da"
+    },
+    {
+      "fixture": 29,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        3,
+        4
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 11
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7356f9c9cb7a8e0ebebf95fc4baec8abf494582ab2f1ea5d4b3839047b9d5868"
+    },
+    {
+      "fixture": 30,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 14,
+        "own_class_checks": 28,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "80eb53b25455973c341385c83c31803e8b357d2efcc81383ee51be45fecae24c"
+    },
+    {
+      "fixture": 30,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "21860254a91cb4c1ea0833fd74a23013cf64c9a01cb7b53c8dafc89cbce84582"
+    },
+    {
+      "fixture": 30,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 14,
+        "own_class_checks": 28,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f9cf6d3c57a93d1d75fca4f7e6bff581441a824e9c0a619536a7df11bcca8032"
+    },
+    {
+      "fixture": 30,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3a3f36144b5964bd5184296238f7c130b4c112963371940e480986d7633fed94"
+    },
+    {
+      "fixture": 30,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 14,
+        "own_class_checks": 28,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2f2f2549853091a323c5aedbb976e32765e5991c50998e49c40a6ad8cae5ee8a"
+    },
+    {
+      "fixture": 30,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        14
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "070db2113e086a3dd40fce1f31725d44a211457579863426ad556d7a05668f7f"
+    },
+    {
+      "fixture": 31,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d44a8261a908a1561683fc0e12b70b413cc75605a13d312cf4653a6f8391b57b"
+    },
+    {
+      "fixture": 31,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "abfe7d89d641e4982966671cdd09e149fa934dd62574d611d31b94d57b146559"
+    },
+    {
+      "fixture": 31,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "fa8d465c912e2b7b90b9343f56ef1f2c3da26046efc01cc7db0a3b003329ca07"
+    },
+    {
+      "fixture": 31,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "132d074680b39027d70d917f4c420d004af67be83d97bd60185ac2a223819970"
+    },
+    {
+      "fixture": 31,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7bfaca74c6b385f1125f4103100252d83c05e472b2f30214b84059af02f101c5"
+    },
+    {
+      "fixture": 31,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9f510b592679d06a3ee8627ec4db52f4f43ae5b8f0f6f4a39e66f1fdef7adb7e"
+    },
+    {
+      "fixture": 32,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2cada926385a961b5f08cb8bb01c9fbb6c3f95ed6adabb85607a102169104aea"
+    },
+    {
+      "fixture": 32,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 16,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e638e78a414c438a1d9e3ea5cb7328be09466563093b2197deac7e231c51aa05"
+    },
+    {
+      "fixture": 32,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 32,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 32,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 32,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 33,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 7,
+        "own_class_checks": 56,
+        "integer_board_counts": 56
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "85e379cce703d42cb9dd2c01d302e39d95fbf91a50b80e8e9080136952b3614a"
+    },
+    {
+      "fixture": 33,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 48
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "965cd5dd86d79213fa598f92c8bd5df51d38c69b3819e26b1116e53895ac1a59"
+    },
+    {
+      "fixture": 33,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 36
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 33,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 33,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 40
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "234b23735d18d656c6ec66aa5eec2aec050398a4938cfd5f36adbba19ac0364e"
+    },
+    {
+      "fixture": 33,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        6,
+        7
+      ],
+      "stats": {
+        "buckets": 5,
+        "own_class_checks": 40,
+        "integer_board_counts": 31
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e2eaebe02a63cc2122e8982f6119b01bd5275c91f8acda3df06a4c7717e3f96f"
+    },
+    {
+      "fixture": 34,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 34,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 34,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "3c03ce8373730f5b85de1ac07f5f56cb181ba9842ed1da0d4ab491063ff33aa8"
+    },
+    {
+      "fixture": 34,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7da9f3dab5dfc3237948343ff55a83618e877ca3a70a2a7a5771245dc5f625fd"
+    },
+    {
+      "fixture": 34,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4ce23827e60e14caf9686756c59d29041d605ddff8fe863d92185fabe3c0b2d5"
+    },
+    {
+      "fixture": 34,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2021ffeea27370ffcfb8fba9eeb641ee7fae1a43dd8e10375422b632f175bee6"
+    },
+    {
+      "fixture": 35,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "10ee26daaf8ff093b21cd15608521f2e4dc9b6bd61d704598885733420adb3d5"
+    },
+    {
+      "fixture": 35,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "dc35cf830ff8c05d4af8a6a2d81711aaf784482a644fcd7ecd88994b1e3c5ab2"
+    },
+    {
+      "fixture": 35,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2ab6f9ae2bb3a840fdd76790224a6c587f88115a207e5de92255bac3590dfd1e"
+    },
+    {
+      "fixture": 35,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "177e442900409710bf4643da7e84618c6313f30f21a233ed57d7266f273a7a19"
+    },
+    {
+      "fixture": 35,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1d3882f6f4b37ddce900e5790e7d76fc8c0f41f13a06c3a978ae7f8770504f64"
+    },
+    {
+      "fixture": 35,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b3a1b35a91b6f01d03482e21229e7d0c2f0f48f7127ac9db7cdc23a508eb8809"
+    },
+    {
+      "fixture": 36,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "68b260d457ef1d1fc8cf252e44b76f7e51d53974391ee506380f25210bf49550"
+    },
+    {
+      "fixture": 36,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "039e7287cdbbc151387e3994757e21aaac4848f8479c67480077f8fbeb00749e"
+    },
+    {
+      "fixture": 36,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 36,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 36,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 36,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        1,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 37,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e23ccb79486d9db5eda27d6af7996b25dfb03911f27cf06f3a9c90275b4970dd"
+    },
+    {
+      "fixture": 37,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1772f49f43e7131374243f850b42356e5d15f36a7ca923ab693b1b03d876e0e0"
+    },
+    {
+      "fixture": 37,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 1
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e3ca5f4a978a9e70364dc561f6a190fc8dcd2b5de99e67caed7181a4b3c74b3e"
+    },
+    {
+      "fixture": 37,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "918a60536e499ab05e272fbd4f9f6adc7061a52a91a4beb23dbef1c0e38bd641"
+    },
+    {
+      "fixture": 37,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 37,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 38,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e094f006cdfede8c4ce690cbbcd8a46cb1582ee0a5568d1366c71963deca02ea"
+    },
+    {
+      "fixture": 38,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e094f006cdfede8c4ce690cbbcd8a46cb1582ee0a5568d1366c71963deca02ea"
+    },
+    {
+      "fixture": 38,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 38,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 38,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f058e07aa9bed08d28915a9ce7ffe30f41f3e005d7efb64e47a7d0d5ecaaa3b5"
+    },
+    {
+      "fixture": 38,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        2
+      ],
+      "classes": [
+        2,
+        2
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1f337a2d5162ccad549eedd37f34f46fa3a4923aed354b571c2be1a20ed592b7"
+    },
+    {
+      "fixture": 39,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 39,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 39,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "6b01ae5be1dea90aa20b0af51916a4eabe1c49c9ad94f74edba9322f52a16aa6"
+    },
+    {
+      "fixture": 39,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4ae4cdf6ef094052342fe1243d09b9b001a54ded18ff8866a0b41e956e5dec12"
+    },
+    {
+      "fixture": 39,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "d6d4133ebcb736e0947507dd550717dc977674609c0ab7b94fdc1b755db2d6cb"
+    },
+    {
+      "fixture": 39,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        4
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "9ffa65903cc72ab033371daf457da16ed5e9bc52a635b121321a6a2e802782ad"
+    },
+    {
+      "fixture": 40,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 3
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b7f2ecb7ed67d1519a5fd51629f30384b8b084b97bf48f3a74502b796c6389f3"
+    },
+    {
+      "fixture": 40,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 4,
+        "integer_board_counts": 4
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1805dd4fb3c3258fbf6681b891f490e30df6b14f50493994b14cf376f037b23b"
+    },
+    {
+      "fixture": 40,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 40,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 40,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 40,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        2,
+        1
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "7e4c0c210ad687e0ffa74b329f702265508ff81b5563a031ad2ae1b9797480fa"
+    },
+    {
+      "fixture": 41,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "e7cd446b4d0e39f746b8096409dd897ff76691780db400a2c5e4bc132399fb4c"
+    },
+    {
+      "fixture": 41,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 16
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f62779c78285267c82546f892697f38d0a2939fd5e294996cf17c9bba67520ed"
+    },
+    {
+      "fixture": 41,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 9
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "52807e5c25f092c51d11eb301b73a40fe24ce195caf4aa322391bc9562830fda"
+    },
+    {
+      "fixture": 41,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 12
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "cc9021b1e9d6ea1a061cc44cbb5f65f19666c6c3f0e02460ad6dc42dd78e40f4"
+    },
+    {
+      "fixture": 41,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 12,
+        "integer_board_counts": 11
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "718b750136a7be8f96bc2f7cc89fe955cb1643ed57387eddc79851b15a1bb602"
+    },
+    {
+      "fixture": 41,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        4,
+        4
+      ],
+      "classes": [
+        4,
+        3
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 16,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "bc7859afba235f3252658f44c92c64f0f4220c44768606f0e8ca363efc430421"
+    },
+    {
+      "fixture": 42,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "c1acded839c5a92966a4790792e492c370ba1887867f76d984cac44b24c713f2"
+    },
+    {
+      "fixture": 42,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "1942e97f50e8436da18edd88f81207d139ee1c9c3e7a1b9c0c76a1ef2ee488a3"
+    },
+    {
+      "fixture": 42,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 31
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4349866b7c8c5afe6b9b2c1709e00de3293b390bcee0663151f56ce168de45a9"
+    },
+    {
+      "fixture": 42,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 31
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "26afb7bc8a19d9b605b820d21144ff1df4bb59411f411e1a073e5e7bc0ae4549"
+    },
+    {
+      "fixture": 42,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 42,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 43,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "a30999833ab5f971d61bc043953acfdbfeefca31f8e9f23602ce839fd5583189"
+    },
+    {
+      "fixture": 43,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f57aff1871b0c0e930e5c432bfa17ad4a58975e089ec23de1289121eb94d6bdf"
+    },
+    {
+      "fixture": 43,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 43,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 43,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 16,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4a9028e1bc1c5010e94732c6f1c88863c9f63b58864d02d58a81dad37abc4990"
+    },
+    {
+      "fixture": 43,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        2,
+        16
+      ],
+      "stats": {
+        "buckets": 2,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f36b8df245469ec0a8e695dad9821addeb9219cfb0e64eac6867614e766e6e96"
+    },
+    {
+      "fixture": 44,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 2,
+        "integer_board_counts": 2
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 44,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 1,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 1,
+        "own_class_checks": 16,
+        "integer_board_counts": 14
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 44,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 44,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 44,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "eec854f714c606728d8adc3f2a3ca131132aba5e23641fde05a7aed612deb7f2"
+    },
+    {
+      "fixture": 44,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 1,
+      "selected": 0,
+      "hands": [
+        2,
+        16
+      ],
+      "classes": [
+        1,
+        2
+      ],
+      "stats": {
+        "buckets": 0,
+        "own_class_checks": 0,
+        "integer_board_counts": 0
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "2765f8b70d99200a84d864e5df11b132499572fa19a0ad021278c6aa72099d4e"
+    },
+    {
+      "fixture": 45,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 48
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "02df45a921a701eb906d70b055cb0fb8ee9a5b20a48abbc206fbd5a050498f7d"
+    },
+    {
+      "fixture": 45,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 5,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 32
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f160d70d1f8f7abc21bd290d3f8b588557b650753d56962f74a57197c5e73449"
+    },
+    {
+      "fixture": 45,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 28
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "b069ae628055ff6a6ffdccca25eaf07e590b060f36d12f99ce0b48fd83693ad0"
+    },
+    {
+      "fixture": 45,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 1,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 3,
+        "own_class_checks": 24,
+        "integer_board_counts": 15
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "07c949f675b0bac3866630358d2d1e59cb7228a8608bbabcefeaf5e0e27b435c"
+    },
+    {
+      "fixture": 45,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 6,
+        "own_class_checks": 48,
+        "integer_board_counts": 41
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "aa39759ea930ea5c885575d1018b7b4239a718895aacbbbb3aa8c8ce9608e69f"
+    },
+    {
+      "fixture": 45,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 5,
+      "selected": 2,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        4,
+        6
+      ],
+      "stats": {
+        "buckets": 4,
+        "own_class_checks": 32,
+        "integer_board_counts": 29
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "ee875edad4dd6325595e1d4b18cef3aac6e4faaea3328309d3efecd0034eb0a4"
+    },
+    {
+      "fixture": 46,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "876591773f38defdbd38df1b3a32575b73f3e7c022aebf82437829dfa47ad6d1"
+    },
+    {
+      "fixture": 46,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 22,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "f470177f4179e135658b500e91f9efca026890f51d95988486e9b3945e3f1ffe"
+    },
+    {
+      "fixture": 46,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "92904506839365556c785aa7a23e4a50717d75f69d5e6160648839c744969135"
+    },
+    {
+      "fixture": 46,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "5f5e721cbd00004a89f6994d9f5f1ea669fb7b453ed99d7da2fce039365be161"
+    },
+    {
+      "fixture": 46,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "312a9a7fcfa45c3aa158a8331b211d284eed3a80d0ff3924c270eb2a48e364ba"
+    },
+    {
+      "fixture": 46,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 22,
+      "selected": 7,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "862848e7c8e2105e22f4a6811f97d26ab11f92f22d50d190ff21f6f49a364757"
+    },
+    {
+      "fixture": 47,
+      "player": 0,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "142729c2df3ea3425ce14aa9bf8ed4a1313208c7bd2d36a1f4bde4d2dfa6e14a"
+    },
+    {
+      "fixture": 47,
+      "player": 1,
+      "query": 0,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 64,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "92f3b2b88a95ca1976794194faf7b4868fddb62376e9da120313d31ab95ebdee"
+    },
+    {
+      "fixture": 47,
+      "player": 0,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "60bb167f503bdebee94327d4e6c001f3871bbacf215f08fbd34779fdab85e69b"
+    },
+    {
+      "fixture": 47,
+      "player": 1,
+      "query": 1,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "85ca14e45fac1e4ae5cd41da535af34d477ea7391823a2098f6c22a9c94a3973"
+    },
+    {
+      "fixture": 47,
+      "player": 0,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    },
+    {
+      "fixture": 47,
+      "player": 1,
+      "query": 2,
+      "status": "exact-match",
+      "boards": 64,
+      "selected": 21,
+      "hands": [
+        8,
+        8
+      ],
+      "classes": [
+        8,
+        8
+      ],
+      "stats": {
+        "buckets": 8,
+        "own_class_checks": 64,
+        "integer_board_counts": 64
+      },
+      "policy_storage": 0,
+      "private_pair_storage": 0,
+      "world_storage": 0,
+      "oracle_vector_sha256": "4270309447669a1e0112b7528a0e13d2f5abc05f81f27153ba3a53dc881f4683"
+    }
+  ],
+  "scope": "Exact Fraction algebra against a bounded independent pair/board oracle. Proposed class operator stores only per-hand masks and class membership, never pair coefficients. This is no native implementation, performance measurement, admission change or quality result."
+}

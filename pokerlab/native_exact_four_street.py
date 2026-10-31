@@ -24,6 +24,8 @@ INDEXED_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3"
 INDEXED_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3"
 ACTIVE_FRAMES_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_V4"
 ACTIVE_FRAMES_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_RESULT_V4"
+FOLD_CLASSES_PROTOCOL = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_FOLD_CLASSES_V5"
+FOLD_CLASSES_RESULT = "OPENPOKER_NATIVE_EXACT_FOUR_STREET_FOLD_CLASSES_RESULT_V5"
 ADMISSION_FIELDS = frozenset("plan_legacy_lookup_removed plan_legacy_action_removed "
     "trainer_legacy_history_removed plan_setup_work index_setup_work router_setup_work trainer_history_retained marginal_calls_upper "
     "marginal_calls_actual marginal_reuse combined_work combined_entries".split())
@@ -43,6 +45,14 @@ FRAME_FIELDS = (
     "final_workspace_entries", "value_cursor_learning_calls", "router_owned_workspace",
     "combined_work", "combined_entries",
 )
+FOLD_FIELDS = (
+    "setup_work_upper", "setup_entries_upper", "mask_entries", "membership_entries",
+    "classes_sb", "classes_bb", "class_calls_sb", "class_calls_bb",
+    "literal_calls_sb", "literal_calls_bb", "buckets_sb", "buckets_bb",
+    "own_checks", "retained_pair_entries", "query_allowance_retained",
+    "combined_work", "combined_entries",
+)
+PAYOFF_MODES = ("board-sweep", "fold-mask-classes-v1")
 TRAVERSALS = ("value-cursor", "active-frames")
 MAX_INPUT = 64 * 1024 * 1024
 MAX_OUTPUT = 32 * 1024 * 1024
@@ -134,6 +144,125 @@ def _parse_frame_record(line):
     return receipt
 
 
+def _parse_fold_record(line):
+    fields = line.split("\t")
+    _need(len(fields) == len(FOLD_FIELDS) + 2 and fields[:2] == ["FOLD", "mask-classes-v1"],
+          "Missing or wrong fold-class proof")
+    receipt = {}
+    for expected, field in zip(FOLD_FIELDS, fields[2:]):
+        key, separator, value = field.partition("=")
+        _need(separator and key == expected and value.isascii() and value.isdecimal() and len(value) <= 20,
+              "Malformed, unordered or duplicate fold-class proof field")
+        parsed = int(value)
+        _need(parsed <= (1 << 64) - 1, "Fold-class proof integer exceeds uint64")
+        receipt[key] = parsed
+    _need(tuple(receipt) == FOLD_FIELDS, "Incomplete fold-class proof")
+    return receipt
+
+
+def _fold_class_expectation(prepared, iterations):
+    """Independently count board-mask classes and the declared fold crossover."""
+    hands = prepared.kernel.hands
+    boards = prepared.kernel.selected
+    h0, h1 = prepared.kernel.hand_counts
+    total_hands = h0 + h1
+    board_count = len(boards)
+    masks = []
+    for side in (0, 1):
+        side_masks = []
+        for hand in hands[side]:
+            holding = set(hand)
+            mask = 0
+            for board_index, (flop, turn, river) in enumerate(boards):
+                if not holding.intersection((*flop, turn, river)):
+                    mask |= 1 << board_index
+            side_masks.append(mask)
+        masks.append(side_masks)
+    class_counts = (len(set(masks[0])), len(set(masks[1])))
+    class_occurrences = [0, 0]
+    literal_occurrences = [0, 0]
+    fold_occurrences = 0
+    from .preflop_solver import _revealed_board
+    for occurrence in prepared.topology.iter_occurrences():
+        vertex = prepared.topology.vertices[occurrence.vertex_id]
+        if not isinstance(vertex, TerminalVertex) or vertex.kind != "fold":
+            continue
+        fold_occurrences += 1
+        visible = _revealed_board(occurrence.history)
+        prefix_boards = sum(1 for flop, turn, river in boards
+            if (flop + (turn, river))[:len(visible)] == visible)
+        for player in (0, 1):
+            own_count, opponent_count = prepared.kernel.hand_counts[player], prepared.kernel.hand_counts[1 - player]
+            class_work = (class_counts[1 - player] * (64 * own_count + 256) +
+                          64 * opponent_count + 8 * prefix_boards + 128)
+            literal_work = prefix_boards * (48 * total_hands + 512)
+            if class_work <= literal_work:
+                class_occurrences[player] += 1
+            else:
+                literal_occurrences[player] += 1
+    return {
+        "setup_work_upper": 2048 * total_hands + 8 * board_count * total_hands + 65536,
+        "setup_entries_upper": 10 * total_hands + 128,
+        "mask_entries": total_hands,
+        "membership_entries": total_hands,
+        "classes_sb": class_counts[0],
+        "classes_bb": class_counts[1],
+        "class_calls_sb": iterations * class_occurrences[0],
+        "class_calls_bb": iterations * class_occurrences[1],
+        "literal_calls_sb": iterations * literal_occurrences[0],
+        "literal_calls_bb": iterations * literal_occurrences[1],
+        "fold_occurrences": fold_occurrences,
+        "class_occurrences_by_player": tuple(class_occurrences),
+        "literal_occurrences_by_player": tuple(literal_occurrences),
+    }
+
+
+def _validate_fold_receipt(fold, *, prepared, iterations, done, route, admission):
+    _need(type(fold) is dict and tuple(fold) == FOLD_FIELDS and
+          all(type(value) is int and value >= 0 for value in fold.values()),
+          "Malformed fold-class receipt")
+    expected = _fold_class_expectation(prepared, iterations)
+    for name in ("setup_work_upper", "setup_entries_upper", "mask_entries", "membership_entries",
+                 "classes_sb", "classes_bb", "class_calls_sb", "class_calls_bb",
+                 "literal_calls_sb", "literal_calls_bb"):
+        _need(fold[name] == expected[name], "Fold-class receipt differs from independent mask/crossover census: " + name)
+    _need(fold["buckets_sb"] <= fold["class_calls_sb"] * fold["classes_bb"] and
+          fold["buckets_bb"] <= fold["class_calls_bb"] * fold["classes_sb"] and
+          fold["own_checks"] == fold["buckets_sb"] * prepared.kernel.hand_counts[0] +
+              fold["buckets_bb"] * prepared.kernel.hand_counts[1] and
+          fold["retained_pair_entries"] == 0 and fold["query_allowance_retained"] == 1 and
+          admission["plan_setup_work"] >= fold["setup_work_upper"] and
+          admission["combined_entries"] >= fold["setup_entries_upper"] and
+          fold["combined_work"] == done["modeled_work_upper"] == route["combined_work"] == admission["combined_work"] and
+          fold["combined_entries"] == done["retained_entries_upper"] == route["combined_entries"] == admission["combined_entries"] <= 2_000_000,
+          "Fold-class bucket/query allowance or combined whole-request receipt mismatch")
+    _need(fold["setup_entries_upper"] == expected["setup_entries_upper"] and
+          fold["setup_work_upper"] == expected["setup_work_upper"],
+          "Fold-class setup reservation differs from the declared bounded formula")
+    return {name: fold[name] for name in FOLD_FIELDS}
+
+
+def _fold_host_proof_reservation(prepared):
+    """Bound mask construction, fold-prefix scans and token decoding before proof allocation."""
+    h = sum(prepared.kernel.hand_counts)
+    boards = len(prepared.kernel.selected)
+    visits = prepared.topology.census.expanded_logical_visits
+    fold_occurrences = prepared.topology.census.terminal_occurrences
+    history_tokens = prepared.topology.census.logical_history_token_work
+    history_bytes = prepared.topology.census.logical_history_token_bytes
+    mask_work = 64 * h * boards + 32 * h
+    prefix_work = visits * (64 * boards + 32)
+    decode_work = 16 * history_tokens + 8 * history_bytes
+    work = mask_work + prefix_work + decode_work + 128
+    # Hand masks and class-set members are O(H); the traversal retains only
+    # scalar counts. The fixed reserve covers iterator/result bookkeeping.
+    entries = 4 * h + 2 * fold_occurrences + 128
+    return {"work_upper": work, "entries_upper": entries,
+        "hand_board_mask_work_upper": mask_work,
+        "occurrence_prefix_work_upper": prefix_work,
+        "history_decode_work_upper": decode_work}
+
+
 def _validate_active_frame_receipt(frame, *, iterations, visits, depth, max_hands,
                                    done, route, admission):
     """Bind V4 workspace/flow proof to independently counted host occurrences."""
@@ -196,11 +325,17 @@ def _validate_active_frame_receipt(frame, *, iterations, visits, depth, max_hand
           "Active-frame whole-owner receipt mismatch")
     return frame
 
-def admit(prepared, *, traversal="value-cursor"):
+def admit(prepared, *, traversal="value-cursor", native_payoffs="board-sweep"):
     """Retain every old R/Q guard and reserve new native work additionally."""
     _need(type(traversal) is str and traversal in TRAVERSALS, "Unsupported exact native traversal mode")
+    _need(type(native_payoffs) is str and native_payoffs in PAYOFF_MODES,
+          "Unsupported exact native payoff mode")
+    _need(native_payoffs == "board-sweep" or
+          (prepared.execution_profile == "native-indexed-v1" and traversal == "active-frames"),
+          "Fold mask classes require active-frame indexed native admission")
     if prepared.execution_profile == "native-indexed-v1":
-        return _admit_indexed(prepared, traversal=traversal)
+        return _admit_indexed(prepared, traversal=traversal, native_payoffs=native_payoffs)
+    _need(native_payoffs == "board-sweep", "Fold mask classes require indexed native admission")
     _need(traversal == "value-cursor", "Active frames require indexed native admission")
     from .suit_quotient_plan import _group, plan_admission
     from .suit_public_automorphism import verify_public_suit_automorphisms
@@ -248,7 +383,7 @@ def admit(prepared, *, traversal="value-cursor"):
     old["native_additional_admission"] = reservation
     return reservation
 
-def _admit_indexed(prepared, *, traversal="value-cursor"):
+def _admit_indexed(prepared, *, traversal="value-cursor", native_payoffs="board-sweep"):
     """Reserve executed host work and leave one remaining native allowance.
 
     Native V3 independently pre-admits real Q construction, indexed queries,
@@ -261,6 +396,9 @@ def _admit_indexed(prepared, *, traversal="value-cursor"):
     _need(type(traversal) is str and traversal in TRAVERSALS,
           "Unsupported indexed native traversal mode")
     active_frames = traversal == "active-frames"
+    fold_classes = native_payoffs == "fold-mask-classes-v1"
+    _need(native_payoffs in PAYOFF_MODES and (not fold_classes or active_frames),
+          "Fold mask classes require active-frame indexed native admission")
     _need(old.get("execution_profile") == "native-indexed-v1" and
           old.get("native_training_admission_required") is True and
           "native_additional_admission" not in old, "Indexed admission profile is stale or already reserved")
@@ -282,6 +420,20 @@ def _admit_indexed(prepared, *, traversal="value-cursor"):
         16 * boards * sum(prepared.decisions.values()) + 2048)
     proof_entries = (4096 + 64 * h + 4 * boards * len(prepared.unique_prefixes) +
                      16 * (1 + 3 * boards))
+    fold_proof_work = 0
+    fold_proof_entries = 0
+    fold_parser_work = 0
+    fold_parser_entries = 0
+    fold_host_proof = None
+    if fold_classes:
+        # Reserve the independent mask/prefix/token proof before building it.
+        fold_host_proof = _fold_host_proof_reservation(prepared)
+        fold_proof_work = fold_host_proof["work_upper"]
+        fold_proof_entries = fold_host_proof["entries_upper"]
+        fold_parser_work = 32 * len(FOLD_FIELDS) + 128
+        fold_parser_entries = 2 * len(FOLD_FIELDS) + 16
+        proof_work += fold_proof_work + fold_parser_work
+        proof_entries += fold_proof_entries + fold_parser_entries
     # V4's FRAME record reuses the V3 occurrence census and the fixed output
     # byte reserve. Charge its strict 22-field parse/validation explicitly;
     # no additional graph walk or native capacity ceiling is introduced.
@@ -289,7 +441,10 @@ def _admit_indexed(prepared, *, traversal="value-cursor"):
     frame_parser_entries = 2 * len(FRAME_FIELDS) + 16 if active_frames else 0
     frame_record_bytes = (len("FRAME\tactive-v1") + 1 +
         sum(1 + len(name) + 1 + 20 for name in FRAME_FIELDS)) if active_frames else 0
-    _need(frame_record_bytes <= 8192, "Active-frame proof exceeds existing output fixed reserve")
+    fold_record_bytes = (len("FOLD\tmask-classes-v1") + 1 +
+        sum(1 + len(name) + 1 + 20 for name in FOLD_FIELDS)) if fold_classes else 0
+    _need(frame_record_bytes + fold_record_bytes <= 8192,
+          "Native frame/fold proofs exceed existing output fixed reserve")
     proof_work += frame_parser_work
     proof_entries += frame_parser_entries
     input_upper = 4096 + 128 * h + 128 * boards + 512 * (len(vertices) + edges) + 65 * len(prepared.topology.initial_history)
@@ -325,6 +480,14 @@ def _admit_indexed(prepared, *, traversal="value-cursor"):
             active_frame_parser_work_upper=frame_parser_work,
             active_frame_parser_entries_upper=frame_parser_entries,
             active_frame_record_bytes_upper=frame_record_bytes)
+    if fold_classes:
+        reservation.update(native_payoffs=native_payoffs,
+            fold_host_proof_work_upper=fold_proof_work,
+            fold_host_proof_entries_upper=fold_proof_entries,
+            fold_host_proof=fold_host_proof,
+            fold_host_parser_work_upper=fold_parser_work,
+            fold_host_parser_entries_upper=fold_parser_entries,
+            fold_record_bytes_upper=fold_record_bytes)
     old["combined_modeled_work_upper"] += added_work
     retained["phase_upper_bounds"] = {name: value + added_entries for name, value in retained["phase_upper_bounds"].items()}
     retained["whole_request_peak_upper"] += added_entries
@@ -333,14 +496,19 @@ def _admit_indexed(prepared, *, traversal="value-cursor"):
 
 
 def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
-         routing="full-history", traversal="value-cursor"):
+         routing="full-history", traversal="value-cursor", native_payoffs="board-sweep"):
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
     _need(type(traversal) is str and traversal in TRAVERSALS,
           "Unsupported exact native traversal mode")
+    _need(type(native_payoffs) is str and native_payoffs in PAYOFF_MODES,
+          "Unsupported exact native payoff mode")
     indexed_admission = prepared.execution_profile == "native-indexed-v1"
     active_frames = traversal == "active-frames"
     _need(not active_frames or indexed_admission,
           "Active frames require indexed native admission")
+    fold_classes = native_payoffs == "fold-mask-classes-v1"
+    _need(not fold_classes or (active_frames and routing == "indexed" and indexed_admission),
+          "Fold mask classes require active-frame indexed native execution")
     _need(type(iterations) is int and iterations == prepared.iterations, "Native iterations differ from admission")
     _need(type(rank_cache_boards) is int and 1 <= rank_cache_boards <= 64, "Invalid native rank-cache ceiling")
     _need(type(native_work) is int and 0 < native_work <= 500_000_000 and
@@ -358,9 +526,10 @@ def wire(prepared, iterations, *, rank_cache_boards=1, native_work=500_000_000, 
         reserved = prepared.admission.get("native_additional_admission")
         _need(type(reserved) is dict and reserved.get("execution_profile") == "native-indexed-v1" and
               reserved.get("traversal", "value-cursor") == traversal and
+              reserved.get("native_payoffs", "board-sweep") == native_payoffs and
               native_work <= reserved["native_work_limit"] and native_entries <= reserved["native_entries_limit"],
               "Indexed wire exceeds or lacks the reserved host remainder")
-    header = (ACTIVE_FRAMES_PROTOCOL if active_frames else INDEXED_PROTOCOL if indexed_admission else
+    header = (FOLD_CLASSES_PROTOCOL if fold_classes else ACTIVE_FRAMES_PROTOCOL if active_frames else INDEXED_PROTOCOL if indexed_admission else
               (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL + "\n" + routing))
     rows = [header,
         " ".join(map(str, (iterations, rank_cache_boards, *kernel.hand_counts,
@@ -448,20 +617,27 @@ def _invoke(executable, raw):
             status, outputs["stdout"], outputs["stderr"])
     return outputs["stdout"]
 
-def parse_policy(raw, prepared, *, routing="full-history", traversal="value-cursor"):
+def parse_policy(raw, prepared, *, routing="full-history", traversal="value-cursor",
+                 native_payoffs="board-sweep"):
     _need(type(raw) is bytes and len(raw) <= MAX_OUTPUT, "Native exact output byte ceiling exceeded")
     _need(type(routing) is str and routing in ROUTES, "Unsupported exact native routing mode")
     _need(type(traversal) is str and traversal in TRAVERSALS,
           "Unsupported exact native traversal mode")
+    _need(type(native_payoffs) is str and native_payoffs in PAYOFF_MODES,
+          "Unsupported exact native payoff mode")
     lines = raw.decode("ascii").splitlines()
     indexed_admission = prepared.execution_profile == "native-indexed-v1"
     active_frames = traversal == "active-frames"
+    fold_classes = native_payoffs == "fold-mask-classes-v1"
     _need(not indexed_admission or routing == "indexed", "Indexed admission cannot parse another routing mode")
     _need(not active_frames or indexed_admission,
           "Active frames require indexed native admission")
-    expected_result = (ACTIVE_FRAMES_RESULT if active_frames else INDEXED_RESULT if indexed_admission else
+    _need(not fold_classes or (active_frames and routing == "indexed" and indexed_admission),
+          "Fold mask classes require active-frame indexed native execution")
+    expected_result = (FOLD_CLASSES_RESULT if fold_classes else ACTIVE_FRAMES_RESULT if active_frames else INDEXED_RESULT if indexed_admission else
                        (RESULT if routing == "full-history" else ROUTED_RESULT))
     _need(lines and lines[0] == expected_result and len(lines) >= 2, "Wrong native exact result protocol")
+    fold_receipt = _parse_fold_record(lines.pop()) if fold_classes else None
     frame_receipt = _parse_frame_record(lines.pop()) if active_frames else None
     admission_receipt = None
     if indexed_admission:
@@ -628,28 +804,45 @@ def parse_policy(raw, prepared, *, routing="full-history", traversal="value-curs
             visits=visits, depth=occurrence_depth, max_hands=max(prepared.kernel.hand_counts),
             done=receipt, route=route_receipt, admission=admission_receipt)
         receipt["active_frames"] = {"mode": "active-v1", **frame_receipt}
+    if fold_classes:
+        _need(fold_receipt is not None and frame_receipt is not None and
+              route_receipt is not None and admission_receipt is not None,
+              "Fold-class response lacks complete native owner proofs")
+        receipt["fold_classes"] = {"mode": "mask-classes-v1", **_validate_fold_receipt(
+            fold_receipt, prepared=prepared, iterations=prepared.iterations,
+            done=receipt, route=route_receipt, admission=admission_receipt)}
     return averages, receipt
 
 def train(prepared, *, executable, rank_cache_boards=1, native_work=500_000_000, native_entries=2_000_000,
-          reservation=None, routing="full-history", traversal="value-cursor"):
+          reservation=None, routing="full-history", traversal="value-cursor", native_payoffs="board-sweep"):
+    _need(type(native_payoffs) is str and native_payoffs in PAYOFF_MODES,
+          "Unsupported exact native payoff mode")
+    fold_classes = native_payoffs == "fold-mask-classes-v1"
     if prepared.execution_profile == "native-indexed-v1":
         _need(reservation is not None and reservation is prepared.admission.get("native_additional_admission"),
               "Indexed training requires its reserved host remainder")
         _need(type(traversal) is str and traversal in TRAVERSALS and
               reservation.get("traversal", "value-cursor") == traversal,
               "Indexed training traversal differs from its reserved host remainder")
+        _need(reservation.get("native_payoffs", "board-sweep") == native_payoffs,
+              "Native payoff mode differs from its whole-request reservation")
+    _need(not fold_classes or (prepared.execution_profile == "native-indexed-v1" and
+          routing == "indexed" and traversal == "active-frames"),
+          "Fold mask classes require active-frame indexed native execution")
     identity = executable_identity(executable)
     request = wire(prepared, prepared.iterations, rank_cache_boards=rank_cache_boards,
-        native_work=native_work, native_entries=native_entries, routing=routing, traversal=traversal)
+        native_work=native_work, native_entries=native_entries, routing=routing,
+        traversal=traversal, native_payoffs=native_payoffs)
     output = _invoke(identity["executable"], request)
     _need(executable_identity(executable) == identity, "Native exact executable/source changed during solve")
-    averages, receipt = parse_policy(output, prepared, routing=routing, traversal=traversal)
+    averages, receipt = parse_policy(output, prepared, routing=routing, traversal=traversal,
+        native_payoffs=native_payoffs)
     _need(receipt["modeled_work_upper"] <= native_work and receipt["retained_entries_upper"] <= native_entries,
           "Native exceeded caller's reserved remaining work/storage")
     if reservation is not None:
         _need(receipt["group_size"] == reservation["group_size"] and len(request) <= reservation["input_bytes_upper"] and
               len(output) <= reservation["output_bytes_upper"], "Native proof differs from Python game/I/O admission")
-    protocol = (ACTIVE_FRAMES_PROTOCOL if traversal == "active-frames" else
+    protocol = (FOLD_CLASSES_PROTOCOL if fold_classes else ACTIVE_FRAMES_PROTOCOL if traversal == "active-frames" else
                 INDEXED_PROTOCOL if prepared.execution_profile == "native-indexed-v1" else
                 (PROTOCOL if routing == "full-history" else ROUTED_PROTOCOL))
     return averages, {**receipt, "protocol": protocol, "request_sha256": _hash(request),

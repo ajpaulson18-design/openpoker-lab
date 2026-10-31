@@ -36,6 +36,30 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D075: Factor exact fold callbacks by selected-board masks (October 31, 2026)
+
+Root records an engineering candidate under the owner's scalable-foundation
+direction: group opponent holdings by the selected boards they can reach and
+apply exact blocker buckets with integer intersection counts. The bounded
+[native fold-class design](../native-fold-classes.md) connects to the existing
+coupled trainer through explicit V5 native/Python selection, retaining literal defaults,
+all old query allowances and explicit extra setup reservations. Exact algebra
+and conditional C++ policy-bit controls pass. The revised deterministic radix
+grouping and direct identical-hand correction avoid new map-comparison accounting
+gaps; old literal-map accounting is unchanged. Ninety-one integrated optimized
+controls include physical policy/eight-metric parity and malformed-proof rejection.
+Luna integrates the host path and runner; Terra's fresh read-only review closes
+the host scan-reservation and setup-attribution issues. The original prototype
+and worker quota failures remain preserved development history. Sol remains
+unavailable; no fresh Sol review is implied. The [frozen result](../native-fold-classes-result.md)
+now has 28 completions/six rejections, 14 matching policies/eight-metric pairs,
+20 exact misses, two passes and six unknowns, fresh saved-only acceptance and
+archive verification. Original T10 median regresses 31.76984%; no frontier gain
+is observed. Retain the opt-in/default boundary. Producer terminal exit is 0;
+review terminal exit is unavailable despite its saved passed receipt. Source
+CI passes; final publication-head/merge checks remain gates. Scalable independent
+certification is the next architectural candidate, not a completed capability.
+
 ### D074: Borrow active suit-image traversal frames (October 30, 2026)
 
 Under the owner's scalable unified-foundation direction, Sol accepts a bounded

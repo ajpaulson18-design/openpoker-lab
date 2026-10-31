@@ -1,5 +1,56 @@
 # Foundation-first execution record
 
+## Frozen exact fold-class study (October 31)
+
+The [fixed 34-child V4/V5 result](native-fold-classes-result.md) at `946671d`
+completes once with 28 solves/six native rejections and 14 full policy/eight-metric
+matching pairs. All 28 physical numeric replays pass within 2.22e-16; exact
+certificates retain 20 target misses, two private-flush passes and six unknowns.
+Original T10 three-pair median regresses 31.76984%, with no admitted-frontier
+gain. Existing defaults remain board sweep. Native-only and host-plus-native
+ledgers remain distinct; all old ceilings/query charges remain.
+
+Fresh Terra saved-only review authenticates 2,136 source blobs, eleven build
+inputs/198 headers and every raw policy bit before protected independent math.
+Its acceptance receipt and source/build/artifact stability pass. The producer
+handle confirms exit 0; the review's old handle is unavailable after worker quota
+interruption, so its terminal exit remains unknown despite a saved passed receipt.
+An exact-path archive audit passes without executing archived source. The archive
+retains raw captures, original development failures, all certificates and the
+review observation. Source-freeze CI passes; final publication-head/merge gates
+remain separate. Independent saved-policy certification without world expansion
+is now the more consequential next candidate; no new verifier is implemented yet.
+
+## Exact fold-class development (October 31)
+
+Root begins the [next native computation candidate](native-fold-classes.md) while
+the active-frame publication checks finish. A separate exact-Fraction research
+probe records 282 exact operator matches across 48 seeded fixtures, preserving
+one zero-support rejection. The implementation groups per-hand selected-board
+masks and applies exact blocker buckets through the existing Kernel/Plan/CFR
+path. It reserves extra setup entries/work and retains all old per-query charges,
+with a declared literal crossover when the class loop forecast does not fit.
+Strict native controls pass 192 fold-vector pairs, conversion and budget guards,
+and identical G1/G6 coupled policy bits. An expanded fixture also covers partial
+own/opponent board blockers, preserving G1 Q=213 and G6 Q=48 policies. Eighty-two
+integrated controls pass with assertions disabled (203.976 seconds); the expanded
+compiled helper and authenticated wrapper pass separately. These are development
+checks, not capacity, speed or quality acceptance. The prototype's new maps were
+subsequently replaced with deterministic radix grouping and constant-time
+identical-hand lookup, with explicit construction scratch and setup charges.
+The public V5 path now passes 91 integrated optimized controls (178.006 seconds),
+including physical V4/V5 policy/eight-metric parity, G6, blind all-in and malformed
+proof rejection. Luna resumed for host/runner integration; Terra's fresh
+read-only review closes host proof scan reservations and minimum setup
+attribution. The earlier quota-limited work is preserved; Sol remains unavailable.
+
+PR #274 is now merged as `df7e3968c776498600ae96b596b2bc23e0f285b6` after all
+final workflows pass, including full Python 3.11/3.12/3.13 and native sanitizer
+jobs. Its tree `8241d947eb8ee1ca1cfd4ca32217b30e8d9c48ea` equals tested head
+`b4abfea`; ancestry is verified on fetched main. The broader foundation goal
+remains active; the fixed 34-call fold-class measurement and independent
+source/saved-result acceptance gates are next.
+
 ## Active traversal-frame candidate (October 30)
 
 The [new explicit V4 path](native-active-frames.md) borrows Router-owned

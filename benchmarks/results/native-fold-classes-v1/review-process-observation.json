@@ -1,0 +1,9 @@
+{
+  "producer_handle": "10108",
+  "producer_terminal_exit_code": 0,
+  "review_handle": "28431",
+  "review_terminal_exit_code": null,
+  "review_observation": "Original review handle is unavailable after worker quota interruption. Saved stdout ends with passed receipt summary; stderr is empty. No terminal exit code is inferred. No producer or review rerun.",
+  "receipt_sha256": "88e5a8cc68dae468338ba854158bc4f1c0467e0e364e059b5917acab76664e33",
+  "helper_sha256": "0bf743caae0d347b2cfd1f1cbac6c12d55abff6d359a355d71fc5b0f7c74e4dc"
+}
