@@ -1,0 +1,16 @@
+{
+  "contract": "native-active-frames-published-evidence-v1",
+  "files": {
+    "README.md": "9a5f3444057164914bb9b7f8ae4ee116606878f657854b03d447f505c0e9eb1a",
+    "archive-audit.json": "959c0902df7d54c3174b8639ca23cd6f676d484047595ab3b139c0bf1f3875ab",
+    "archive-audit.py": "9d7285f3407fa82681173ed1e35eaf2e3c6d1cd8fb72cdff4e0625a6d3b23c8d",
+    "evidence.zip": "c1c7ef5685c1ad9f6729350b80e5a3619fcbcfae91c3c7f08d46c8f0b510e59e",
+    "independent-review.json": "942587ce1c30707de190a3f78d46b79084c5e5817b93bd368bcdf0d06384e42c",
+    "metadata-correction-check.json": "88f4e5436225091e11b08e4e64867a345a15f661e3cd54177ed414b242958019",
+    "metadata-correction-check.log": "623629e03edf206187ee8959fcfb55a127469b0f794684d6c95a177d1c1fe7fc",
+    "package-receipt.json": "bdb7524b055f028d40c44cc5d673a55ec0d2c11dc5550df902f8dec95c5cb678",
+    "report.json": "a4dafe04abb721e9cd0112b21980b5037e4654314919acdbaebc8614cb7bdbe9"
+  },
+  "metadata_correction_commit": "1e568fb740b4ac12a7182b2ff709100123db07d8",
+  "producer_commit": "0be1a858fb5983df21698d97b2a1f8e5e7295505"
+}

@@ -63,7 +63,8 @@ int run() {
     }
     Parser parser(std::move(input));
     const auto protocol = parser.token();
-    const bool indexed_admission = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3";
+    const bool active_frames = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_V4";
+    const bool indexed_admission = active_frames || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_V3";
     const bool routed_v2 = protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_V2";
     const bool routed = routed_v2 || indexed_admission;
     need(routed || protocol == "OPENPOKER_NATIVE_EXACT_FOUR_STREET_V1", "unsupported exact engine protocol");
@@ -160,11 +161,12 @@ int run() {
                                   graph::detail::checked_mul(32, census.action_slots_upper)));
     need(output_upper <= output_cap - 8192, "native complete output byte admission exceeded");
     cfr::Trainer trainer(plan, training_limits);
-    auto result = route == "shadow" ? trainer.run_indexed_shadow() :
+    auto result = active_frames ? trainer.run_active_frames() : route == "shadow" ? trainer.run_indexed_shadow() :
                   route == "indexed" ? trainer.run_indexed() : trainer.run();
     need(result.receipt.final_numeric_workspace_slots == 0, "native numeric buffers remain before R output");
     Writer writer;
-    writer.token(indexed_admission ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3" :
+    writer.token(active_frames ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ACTIVE_FRAMES_RESULT_V4" :
+                 indexed_admission ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_INDEXED_ADMISSION_RESULT_V3" :
                  routed ? "OPENPOKER_NATIVE_EXACT_FOUR_STREET_ROUTED_RESULT_V2" :
                          "OPENPOKER_NATIVE_EXACT_FOUR_STREET_RESULT_V1", true);
     std::size_t rows = 0, slots = 0;
@@ -255,6 +257,40 @@ int run() {
         field("marginal_calls_upper", result.receipt.marginal_calls_upper);
         field("marginal_calls_actual", result.receipt.marginal_calls_actual);
         field("marginal_reuse", 1);
+        field("combined_work", r.combined_modeled_work_upper);
+        field("combined_entries", r.combined_logical_entries_upper, true);
+    }
+    if (active_frames) {
+        need(result.receipt.active_frames.has_value() && result.receipt.indexed_shadow.has_value(),
+             "missing active frame owner proof");
+        const auto& f = *result.receipt.active_frames;
+        const auto& r = result.receipt.indexed_shadow->routing;
+        need(r.active_frames && f.final_active_frames == 0 && f.final_workspace_entries == 0 &&
+             f.value_cursor_learning_calls == 0, "active frame ownership/cleanup proof mismatch");
+        writer.token("FRAME"); writer.token("active-v1");
+        const auto field = [&](std::string_view name, std::uint64_t value, bool last = false) {
+            writer.token(std::string(name) + "=" + std::to_string(value), last);
+        };
+        field("group_size", plan.group().size());
+        field("frames", f.workspace.frame_count);
+        field("image_slots", f.workspace.image_slots);
+        field("header_entries", f.workspace.header_entries);
+        field("workspace_entries", f.workspace.retained_entries_upper);
+        field("workspace_setup_work", f.workspace.setup_work_upper);
+        field("view_fields", openpoker::exact_public_history_index::kFrameViewLogicalEntries);
+        field("lease_fields", openpoker::exact_public_history_index::kFrameLeaseLogicalEntries);
+        field("borrowed_entries_upper", f.borrowed_entries_upper);
+        field("flow_per_visit", f.flow_per_visit);
+        field("flow_work_upper", f.flow_work_upper);
+        field("validation_work_upper", f.validation_work_upper);
+        field("activations", f.actual.activations);
+        field("activations_upper", f.activations_upper);
+        field("released_frames", f.actual.released_frames);
+        field("release_calls", f.actual.release_calls);
+        field("final_active_frames", f.final_active_frames);
+        field("final_workspace_entries", f.final_workspace_entries);
+        field("value_cursor_learning_calls", f.value_cursor_learning_calls);
+        field("router_owned_workspace", 1);
         field("combined_work", r.combined_modeled_work_upper);
         field("combined_entries", r.combined_logical_entries_upper, true);
     }

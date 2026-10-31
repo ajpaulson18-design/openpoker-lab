@@ -51,6 +51,18 @@ struct IndexedShadowReceipt {
     std::uint64_t legacy_full_history_work_forecast_retained = 0;
     std::size_t final_router_entries = 0;
 };
+struct ActiveFrameReceipt {
+    exact_public_history_index::WorkspaceReservation workspace;
+    exact_public_history_index::WorkspaceCounts actual;
+    std::uint64_t borrowed_entries_upper = 0;
+    std::uint64_t flow_per_visit = 0;
+    std::uint64_t flow_work_upper = 0;
+    std::uint64_t validation_work_upper = 0;
+    std::uint64_t activations_upper = 0;
+    std::size_t final_active_frames = 0;
+    std::size_t final_workspace_entries = 0;
+    std::uint64_t value_cursor_learning_calls = 0;
+};
 struct Receipt {
     std::string admission_contract = "legacy";
     std::uint64_t legacy_training_history_work_removed = 0;
@@ -79,7 +91,9 @@ struct Receipt {
     std::uint64_t legacy_training_history_extensions = 0;
     std::uint64_t legacy_training_row_lookups = 0;
     std::uint64_t legacy_training_prefix_lookups = 0;
+    std::uint64_t value_cursor_learning_calls = 0;
     std::optional<IndexedShadowReceipt> indexed_shadow;
+    std::optional<ActiveFrameReceipt> active_frames;
 };
 struct Result { Vector quotient_policy; Receipt receipt; };
 
@@ -102,12 +116,16 @@ public:
     Result run_indexed_shadow() { return run_impl(RunMode::shadow); }
 
     Result run_indexed() { return run_impl(RunMode::indexed); }
+    Result run_active_frames() { return run_impl(RunMode::active_frames); }
 
 private:
-    enum class RunMode { legacy, shadow, indexed };
+    enum class RunMode { legacy, shadow, indexed, active_frames };
     Result run_impl(RunMode mode) {
         if (started_) throw std::runtime_error("native CFR trainer is single use");
-        if (plan_.admission_profile() == graph::AdmissionProfile::indexed_v1 && mode != RunMode::indexed)
+        if (mode == RunMode::active_frames && plan_.admission_profile() != graph::AdmissionProfile::indexed_v1)
+            throw std::runtime_error("active frames require indexed-v1 Plan admission");
+        if (plan_.admission_profile() == graph::AdmissionProfile::indexed_v1 &&
+            mode != RunMode::indexed && mode != RunMode::active_frames)
             throw std::runtime_error("indexed-v1 Plan admission requires indexed-only learning");
         started_ = true;
         mode_ = mode;
@@ -139,6 +157,16 @@ private:
                 plan_.kernel().receipt().modeled_work > receipt_.kernel_work_upper)
                 throw std::runtime_error("native CFR completed receipt differs from admission");
             if (shadow_router_) finish_indexed_shadow();
+            if (frame_workspace_) {
+                auto& frames = *receipt_.active_frames;
+                frames.actual = frame_workspace_->counts();
+                frames.final_active_frames = frame_workspace_->active_frames();
+                frames.value_cursor_learning_calls = receipt_.value_cursor_learning_calls;
+                if (frames.final_active_frames || frames.actual.activations != frames.activations_upper ||
+                    frames.actual.released_frames != frames.activations_upper ||
+                    frames.actual.release_calls != frames.activations_upper || frames.value_cursor_learning_calls)
+                    throw std::runtime_error("active frame lifetime/call receipt differs from complete training schedule");
+            }
             // Normalize the existing average array in place, then transfer its
             // ownership after dropping the other three arrays and member masks.
             // No fifth Q-sized double buffer overlaps training workspaces.
@@ -154,15 +182,19 @@ private:
             Result result;
             result.quotient_policy.swap(sums_);
             marginals_.clear();
+            frame_workspace_ = nullptr;
             shadow_router_.reset();
+            if (receipt_.active_frames) receipt_.active_frames->final_workspace_entries = 0;
             receipt_.final_numeric_workspace_slots = 0;
             result.receipt = receipt_;
             return result;
-        } catch (...) { release_workspace(); marginals_.clear(); shadow_router_.reset(); throw; }
+        } catch (...) { release_workspace(); marginals_.clear(); frame_workspace_ = nullptr; shadow_router_.reset(); throw; }
     }
 
     using Locations = std::vector<std::optional<graph::RowLocation>>;
     using Cursor = routing::IndexedRouting::Cursor;
+    using FrameView = routing::IndexedRouting::FrameView;
+    using TraversalWorkspace = routing::IndexedRouting::TraversalWorkspace;
     using Marginals = kernel::ExactSelectedKernel::MarginalVectors;
     static std::uint64_t checked_add(std::uint64_t a, std::uint64_t b) {
         return graph::detail::checked_add(a, b);
@@ -195,10 +227,25 @@ private:
         const auto max_h = std::max(plan_.hand_counts()[0], plan_.hand_counts()[1]);
         // Cursor has a fixed 24-image array even for G1. Reserve four complete
         // cursor copies per live depth, including edge-return/root temporaries.
-        const auto cursor_entries = checked_mul(checked_mul(4, census.maximum_depth + 4),
+        auto cursor_entries = checked_mul(checked_mul(4, census.maximum_depth + 4),
                                                  routing::kMaximumCursorLogicalEntries);
-        const auto cursor_work = checked_mul(visits,
+        auto cursor_work = checked_mul(visits,
             checked_add(64, checked_mul(4, routing::kMaximumCursorLogicalEntries)));
+        const bool active = mode_ == RunMode::active_frames;
+        if (active) {
+            ActiveFrameReceipt frame;
+            frame.workspace = TraversalWorkspace::reservation(census.maximum_depth, plan_.group().size());
+            frame.borrowed_entries_upper = checked_mul(checked_mul(4, census.maximum_depth + 4),
+                exact_public_history_index::kFrameViewLogicalEntries + exact_public_history_index::kFrameLeaseLogicalEntries);
+            frame.flow_per_visit = checked_add(64, checked_add(checked_mul(4,
+                exact_public_history_index::kFrameViewLogicalEntries + exact_public_history_index::kFrameLeaseLogicalEntries),
+                checked_mul(8, plan_.group().size())));
+            frame.flow_work_upper = checked_add(frame.workspace.setup_work_upper, checked_mul(visits, frame.flow_per_visit));
+            frame.activations_upper = visits;
+            cursor_entries = checked_add(frame.workspace.retained_entries_upper, frame.borrowed_entries_upper);
+            cursor_work = frame.flow_work_upper;
+            receipt_.active_frames = frame;
+        }
         const auto comparison_work = checked_add(
             checked_mul(decisions, checked_add(32, checked_mul(8, max_h))),
             checked_mul(prefixes, checked_add(16, checked_mul(2, plan_.selected_board_count()))));
@@ -218,9 +265,13 @@ private:
         routing::WholeLimits whole{limits_.max_modeled_work,
             std::min(limits_.max_entries, graph::kMaximumRetainedEntries)};
         auto router = std::make_unique<routing::IndexedRouting>(plan_, routing::RoutingSchedule{}, whole,
-            exact_public_history_index::ExternalReservation{caller_work, static_cast<std::size_t>(caller_entries)});
+            exact_public_history_index::ExternalReservation{caller_work, static_cast<std::size_t>(caller_entries)}, active);
+        if (active) {
+            frame_workspace_ = &router->make_workspace();
+            receipt_.active_frames->validation_work_upper = router->receipt().frame_validation_work_upper;
+        }
         IndexedShadowReceipt shadow;
-        if (mode_ == RunMode::indexed) {
+        if (mode_ == RunMode::indexed || active) {
             shadow.mode = "indexed";
             shadow.version = "native-exact-cfr-indexed-v1";
         }
@@ -238,7 +289,7 @@ private:
         auto& shadow = *receipt_.indexed_shadow;
         shadow.routing = shadow_router_->receipt_snapshot();
         const auto& r = shadow.routing;
-        const bool indexed_only = mode_ == RunMode::indexed;
+        const bool indexed_only = mode_ == RunMode::indexed || mode_ == RunMode::active_frames;
         shadow.legacy_training_history_extensions = receipt_.legacy_training_history_extensions;
         shadow.legacy_training_row_lookups = receipt_.legacy_training_row_lookups;
         shadow.legacy_training_prefix_lookups = receipt_.legacy_training_prefix_lookups;
@@ -264,9 +315,10 @@ private:
             throw std::runtime_error("indexed shadow complete-call routing coverage differs from admission");
         shadow.final_router_entries = 0; // ownership is dropped before returning Result
     }
+    template<class CursorType>
     Locations decision_locations(std::uint8_t actor, const graph::History& history,
-                                 std::span<const graph::Action> menu, const Cursor* cursor) {
-        if (mode_ == RunMode::indexed) {
+                                 std::span<const graph::Action> menu, const CursorType* cursor) {
+        if (mode_ == RunMode::indexed || mode_ == RunMode::active_frames) {
             if (!shadow_router_ || !cursor) throw std::runtime_error("indexed decision lacks its exclusive cursor/router");
             return shadow_router_->locate_decision_rows(*cursor, actor, menu);
         }
@@ -280,8 +332,9 @@ private:
         }
         return old;
     }
-    const std::vector<std::size_t>& callback_indexes(const graph::History& history, const Cursor* cursor) {
-        if (mode_ == RunMode::indexed) {
+    template<class CursorType>
+    const std::vector<std::size_t>& callback_indexes(const graph::History& history, const CursorType* cursor) {
+        if (mode_ == RunMode::indexed || mode_ == RunMode::active_frames) {
             if (!shadow_router_ || !cursor) throw std::runtime_error("indexed callback lacks its exclusive cursor/router");
             return shadow_router_->prefix_board_indexes(*cursor);
         }
@@ -296,7 +349,8 @@ private:
         return old;
     }
     const graph::History& training_root_history() const noexcept {
-        return mode_ == RunMode::indexed ? empty_training_history_ : plan_.graph().initial_history;
+        return (mode_ == RunMode::indexed || mode_ == RunMode::active_frames)
+            ? empty_training_history_ : plan_.graph().initial_history;
     }
     void preflight() {
         receipt_ = Receipt{};
@@ -480,14 +534,24 @@ private:
         }
         seen_[location.q] |= location.member_bit;
     }
+    template<class CursorType>
     Vector target_child(const graph::Vertex& vertex, const graph::History& history, const Vector& reach,
-                        std::size_t player, const Cursor* parent, std::size_t edge) {
+                        std::size_t player, const CursorType* parent, std::size_t edge) {
         const bool reveal = vertex.kind == graph::VertexKind::chance;
         const auto id = reveal ? vertex.branches[edge].child : vertex.children[edge];
+        if constexpr (std::is_same_v<CursorType, FrameView>) {
+            if (mode_ != RunMode::active_frames || !parent || !frame_workspace_)
+                throw std::runtime_error("active target lacks its admitted workspace/frame");
+            const auto lease = reveal ? shadow_router_->advance_reveal(*frame_workspace_, *parent, edge)
+                                      : shadow_router_->advance_action(*frame_workspace_, *parent, edge);
+            const auto view = lease.view();
+            return target<FrameView>(id, empty_training_history_, reach, player, &view);
+        } else {
         // Branch before any full-history extension: indexed learning carries
         // only the cursor; setup/preflight retain the unchanged old histories.
         if (mode_ == RunMode::indexed) {
             if (!parent) throw std::runtime_error("indexed target child lacks its cursor");
+            ++receipt_.value_cursor_learning_calls;
             const auto next = reveal ? shadow_router_->advance_reveal(*parent, edge)
                                      : shadow_router_->advance_action(*parent, edge);
             return target(id, empty_training_history_, reach, player, &next);
@@ -497,12 +561,15 @@ private:
             ? graph::Plan::extend_history(history, vertex.street, vertex.branches[edge].label)
             : graph::Plan::extend_history(history, vertex.actions[edge]);
         if (!parent) return target(id, extended, reach, player);
+        ++receipt_.value_cursor_learning_calls;
         const auto next = reveal ? shadow_router_->advance_reveal(*parent, edge)
                                  : shadow_router_->advance_action(*parent, edge);
         return target(id, extended, reach, player, &next);
+        }
     }
+    template<class CursorType = Cursor>
     Vector target(std::size_t id, const graph::History& history, const Vector& reach,
-                  std::size_t player, const Cursor* cursor = nullptr) {
+                  std::size_t player, const CursorType* cursor = nullptr) {
         const auto& vertex = plan_.graph().vertices[id];
         if (vertex.kind == graph::VertexKind::terminal) {
             const auto amount = std::min(std::bit_cast<double>(vertex.contribution_bits[0]),
@@ -557,7 +624,13 @@ private:
     }
     void responder(std::size_t player) {
         for (std::size_t q = 0; q < plan_.rows().size(); ++q) if (plan_.rows()[q].key.actor == player) seen_[q] = 0;
-        if (shadow_router_) {
+        if (frame_workspace_) {
+            const auto lease = shadow_router_->root_frame(*frame_workspace_);
+            const auto view = lease.view();
+            target<FrameView>(plan_.graph().root_id, empty_training_history_,
+                Vector(plan_.hand_counts()[1 - player], 1.0), player, &view);
+        } else if (shadow_router_) {
+            ++receipt_.value_cursor_learning_calls;
             const auto cursor = shadow_router_->root_cursor();
             target(plan_.graph().root_id, training_root_history(), Vector(plan_.hand_counts()[1 - player], 1.0), player, &cursor);
         } else target(plan_.graph().root_id, plan_.graph().initial_history, Vector(plan_.hand_counts()[1 - player], 1.0), player);
@@ -571,12 +644,22 @@ private:
             for (std::size_t a = 0; a < row.count; ++a)
                 regrets_[row.offset + a] = std::max(add(regrets_[row.offset + a], deltas_[row.offset + a]), 0.0);
     }
+    template<class CursorType>
     void average_child(const graph::Vertex& vertex, const graph::History& history,
-                       const std::array<Vector, 2>& reaches, double factor, const Cursor* parent, std::size_t edge) {
+                       const std::array<Vector, 2>& reaches, double factor, const CursorType* parent, std::size_t edge) {
         const bool reveal = vertex.kind == graph::VertexKind::chance;
         const auto id = reveal ? vertex.branches[edge].child : vertex.children[edge];
+        if constexpr (std::is_same_v<CursorType, FrameView>) {
+            if (mode_ != RunMode::active_frames || !parent || !frame_workspace_)
+                throw std::runtime_error("active average lacks its admitted workspace/frame");
+            const auto lease = reveal ? shadow_router_->advance_reveal(*frame_workspace_, *parent, edge)
+                                      : shadow_router_->advance_action(*frame_workspace_, *parent, edge);
+            const auto view = lease.view();
+            average<FrameView>(id, empty_training_history_, reaches, factor, &view);
+        } else {
         if (mode_ == RunMode::indexed) {
             if (!parent) throw std::runtime_error("indexed average child lacks its cursor");
+            ++receipt_.value_cursor_learning_calls;
             const auto next = reveal ? shadow_router_->advance_reveal(*parent, edge)
                                      : shadow_router_->advance_action(*parent, edge);
             average(id, empty_training_history_, reaches, factor, &next);
@@ -587,12 +670,15 @@ private:
             ? graph::Plan::extend_history(history, vertex.street, vertex.branches[edge].label)
             : graph::Plan::extend_history(history, vertex.actions[edge]);
         if (!parent) { average(id, extended, reaches, factor); return; }
+        ++receipt_.value_cursor_learning_calls;
         const auto next = reveal ? shadow_router_->advance_reveal(*parent, edge)
                                  : shadow_router_->advance_action(*parent, edge);
         average(id, extended, reaches, factor, &next);
+        }
     }
+    template<class CursorType = Cursor>
     void average(std::size_t id, const graph::History& history, const std::array<Vector, 2>& reaches,
-                 double factor, const Cursor* cursor = nullptr) {
+                 double factor, const CursorType* cursor = nullptr) {
         const auto& vertex = plan_.graph().vertices[id];
         if (vertex.kind == graph::VertexKind::terminal) return;
         if (vertex.kind == graph::VertexKind::chance) {
@@ -620,7 +706,13 @@ private:
     }
     void average_pass(double factor) {
         std::fill(seen_.begin(), seen_.end(), 0);
-        if (shadow_router_) {
+        if (frame_workspace_) {
+            const auto lease = shadow_router_->root_frame(*frame_workspace_);
+            const auto view = lease.view();
+            average<FrameView>(plan_.graph().root_id, empty_training_history_,
+                {Vector(plan_.hand_counts()[0], 1.0), Vector(plan_.hand_counts()[1], 1.0)}, factor, &view);
+        } else if (shadow_router_) {
+            ++receipt_.value_cursor_learning_calls;
             const auto cursor = shadow_router_->root_cursor();
             average(plan_.graph().root_id, training_root_history(),
                 {Vector(plan_.hand_counts()[0], 1.0), Vector(plan_.hand_counts()[1], 1.0)}, factor, &cursor);
@@ -644,6 +736,7 @@ private:
     const graph::History empty_training_history_{};
     std::uint64_t construction_kernel_work_ = 0;
     std::unique_ptr<routing::IndexedRouting> shadow_router_;
+    TraversalWorkspace* frame_workspace_ = nullptr; // Router owns it until reset.
     std::map<std::vector<std::size_t>, Marginals> marginals_;
     Vector regrets_, sums_, current_, deltas_;
     std::vector<std::uint32_t> seen_;

@@ -31,6 +31,16 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "tests/native/exact_indexed_routing_controls.cpp", "native/exact_indexed_routing.hpp",
         "native/exact_public_history_index.hpp", "native/exact_public_graph.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "active-frame": ("native-exact-active-frame-controls", (
+        "tests/native/exact_active_frame_controls.cpp",
+        "tests/native/exact_public_history_index_controls.cpp",
+        "native/exact_public_history_index.hpp", "native/exact_public_graph.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "active-routing": ("native-exact-active-routing-controls", (
+        "tests/native/exact_active_routing_controls.cpp",
+        "tests/native/exact_indexed_routing_controls.cpp",
+        "native/exact_indexed_routing.hpp", "native/exact_public_history_index.hpp",
+        "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "history-index": ("native-exact-history-index-controls", (
         "tests/native/exact_public_history_index_controls.cpp", "native/exact_public_history_index.hpp",
         "tests/native/exact_history_index_schedule_controls.cpp",
@@ -174,7 +184,9 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
                   if target == "kernel" else "Graph-only public-history index conformance helper; no trainer integration or capacity admission."
                   if target == "history-index" else "Numeric Q/prefix routing conformance helper; no trainer or larger-capacity acceptance."
-                  if target == "indexed-routing" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
+                  if target == "indexed-routing" else "Active traversal-frame conformance helper only; no native trainer or whole-game acceptance."
+                  if target == "active-frame" else "Active-frame numeric routing conformance helper only; no trainer or whole-game acceptance."
+                  if target == "active-routing" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,

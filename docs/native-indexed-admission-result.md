@@ -3,7 +3,10 @@
 The [explicit executed-path profile](native-indexed-admission.md) now has a
 [preserved 28-attempt record](../benchmarks/results/native-indexed-admission-v1/manifest.json),
 fresh independent saved-policy replay, corrected-host compatibility and independent
-archive verification. Final publication-head CI and merge remain separate gates.
+archive verification. Final publication-head tests and Windows/Linux/sanitizer
+workflows passed; [PR #273](https://github.com/ajpaulson18-design/openpoker-lab/pull/273)
+merged as `1b9da98c04ec821127186d7a0e90f2b169240b27`, preserving the tested
+`5e5e16c` tree `e402ca76519aba8e8e7d2847ccab709123d7503e`.
 This establishes the recorded bounded capacity points, not equilibrium accuracy,
 full-deck solving, a memory reduction or a general speedup.
 

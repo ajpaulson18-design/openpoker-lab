@@ -1,5 +1,97 @@
 # Foundation-first execution record
 
+## Active traversal-frame candidate (October 30)
+
+The [new explicit V4 path](native-active-frames.md) borrows Router-owned
+depth-by-group frames through small views and move-only leases, retaining the
+value-cursor reference and Q setup. Native Index, Router and trainer controls
+pass normal/optimized builds, including noncommuting G6 reveals, reconvergence,
+existing public history, terminal-only inputs, resource cap-minus-one, foreign
+and stale views, rounding rejection and a real terminal conversion failure.
+Five established physical games plus a nine-compatible-deal G6 game preserve
+full policy/eight-metric bits and protected replay. The G6 board-flush ties do
+not establish differing private-rank coverage; the separate private-flush case
+does. These are development controls, not formal capacity or quality evidence.
+
+An independent compile wrapper now authenticates engine source, pinned 198-header
+contents, strict compiler flags and extra control source before/after execution.
+The first extra wrapper test passes. Review also corrects a host receipt
+lower-bound that assigned Router validation to the caller; native charges were
+already correct. The new contract separately rejects under-reserving either
+owner. Previous logs and source versions remain preserved. A prior external
+control compile failed solely because its include argument was omitted after
+the engine built successfully; the corrected separate control passes, without
+rebuilding or rerunning a formal producer. Exactly 37 formal calls are planned;
+committed-source execution, saved-only scrutiny and publication remain pending.
+
+The integrated normal run now passes 65 controls in 126.033 seconds with the
+installed strict compiler, including both active helper targets, the independent
+trainer wrapper, existing V1/V2/V3 controls and all prior benchmark controls.
+Separate host contract checks pass after binding caller storage and keeping
+V3 metadata unchanged. The new fixed-runner tests and final optimized/source
+freeze remain separate gates.
+
+The integrated assertions-disabled run passes 76 controls in 126.423 seconds,
+including the then-current 11 runner controls. Subsequent independent runner
+review catches receipt work amounts treated as booleans, a replay-gap field read
+at the wrong result level, and contradictory failure-plus-policy classification.
+These are corrected before any formal producer; the earlier successful mock
+tests remain development evidence, not proof of a valid study runner. Fresh
+schema-grounded runner tests and review are required before the source freeze.
+
+Root continues integration after Luna/Terra hit a usage limit. The runner now
+derives the four quantities from saved raw V3/V4 graph bytes with a bounded
+topological multiplicity/history census and weighted-role/ordered-board suit
+stabilizer, without solver preparation, ranking or training. Saved-only checks
+against all ten indexed completions from the previous capacity study match
+group size and all four amounts. The first saved check exposed an overly strict
+card-order assumption; physical holdings are now normalized independently of
+their wire order, with a reversed-order regression control. Initial-history and
+shared-child multiplicity controls also pass. Sixteen corrected runner controls
+pass normally and optimized, including a complete parent-pair flow using the
+actual top-level numeric-gap schema. No formal active-frame producer has run.
+
+Sol's final read-only review accepts the raw-wire math/schema/schedule and then
+closes the remaining evidence-integrity gaps: parent source/build identity is
+checked before every child, producer raw bytes/status carry capture-time pins
+rechecked around replay/finalization, saved payload hashes are immutable during
+replay, and native rank observations are bound to the receipt. Mutation controls
+deliberately alter a policy and a captured file and fail while preserving raw
+evidence. A separate saved-only compatibility check passes the entire current
+validator for all ten prior indexed completions, adding only its new study-level
+traversal label. It first exposed an unnecessary global range-row sort; the
+validator now preserves the declared range order. This is compatibility evidence,
+not a new policy/quality result. The initial draft is PR #274; formal evidence
+and final CI remain acceptance gates.
+
+The clean `0be1a85` producer starts the fixed study and preserves two complete
+solves before a parent-only marker expectation stops it. The actual V4 host
+branch writes backend/traversal markers but omits top-level routing/admission;
+native proof records remain explicit. Sol independently confirms that schema.
+An external continuation accepts absent optional markers while retaining all
+raw header/ledger/FRAME checks, reuses the original two process captures and
+launches only the remaining requests. Its helper also accepts present-null
+optional values; the fresh independent reviewer must reject such conflicting
+values and bind the observed actual absence. No policy or wire is projected or
+rewritten. Root makes both markers explicit separately for future V4 payloads;
+the frozen source and original parent failure remain unchanged. Formal result
+and fresh independent replay are still pending.
+
+The fixed study now finishes with exactly 37 distinct observations: 24 complete,
+13 native budget rejections. The continuation reuses two and launches 35 new
+producers, with no retries. All 24 numeric policies pass and all ten completed
+pairs match. Fresh independent saved-only review authenticates the full source,
+build/198-header and raw/continuation closure, reconstructs the structural/orbit/
+FRAME proof and all native ROW bits, then replays every completed policy without
+production calls. It retains 19 exact target misses, two passes and three exact
+cap unknowns, maximum numeric gap 2.22e-16, and stable source/artifacts. The worker
+usage limit arrives after the review process has completed; its final passed
+receipt and log survive and the handle is missing. Root does not restart it.
+An exact-path archive audit passes separately. The [result and scope](native-active-frames-result.md)
+retain the original T10 median regression (1.190580 to 1.250661 seconds), T60
+capacity gain, all misses and the first parent failure. Ten optimized controls
+pass for the separate host marker correction. Final publication CI is pending.
+
 ## Executed native indexed-path admission (October 29)
 
 The preserved post-indexed profile and corrected canonical-range census motivate

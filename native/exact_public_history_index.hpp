@@ -137,7 +137,12 @@ struct CursorImage {
     VisiblePrefixId visible_prefix{};
 };
 
+class TraversalWorkspace;
+class FrameView;
+
 class HistoryIndex final {
+    friend class TraversalWorkspace;
+    friend class FrameView;
 public:
     class Cursor final {
     public:
@@ -189,6 +194,7 @@ public:
         validate_cursor(cursor);
         return graph_->vertices[cursor.raw_vertex_];
     }
+    [[nodiscard]] const Vertex& vertex_at(const FrameView& view) const;
     [[nodiscard]] std::size_t suit_map_count() const noexcept { return plan_->group().size(); }
     [[nodiscard]] std::uint64_t query_work_reserved() const noexcept {
         return query_work_used_.load(std::memory_order_relaxed);
@@ -867,21 +873,33 @@ private:
             detail::fail(ErrorCode::invalid_query, "history edge does not belong to current continuation class");
         Cursor result = cursor;
         result.raw_vertex_ = raw_child;
+        write_next_images(std::span<const CursorImage>(cursor.images_.data(), cursor.image_count_),
+                          std::span<CursorImage>(result.images_.data(), cursor.image_count_), canonical_edge);
+        return result;
+    }
+
+    void write_next_images(std::span<const CursorImage> previous, std::span<CursorImage> next,
+                           std::size_t canonical_edge) const {
+        if (previous.size() != plan_->group().size() || next.size() != previous.size() || previous.empty())
+            detail::fail(ErrorCode::invalid_query, "history image span mismatch");
+        const auto source_class = previous[0].continuation_class;
+        const auto& record = classes_[source_class];
+        if (canonical_edge < record.edge_begin || canonical_edge >= record.edge_begin + record.edge_count)
+            detail::fail(ErrorCode::invalid_query, "history edge does not belong to continuation");
         const auto& actual = class_edges_[canonical_edge];
-        result.images_[0].continuation_class = actual.child_class;
-        result.images_[0].ordinal = checked_uadd(cursor.images_[0].ordinal, actual.offset);
-        append_prefix(result.images_[0].visible_prefix, prefix_delta(actual.token));
-        for (std::size_t g = 1; g < cursor.image_count_; ++g) {
-            const auto& previous = cursor.images_[g];
-            if (previous.continuation_class != class_map_[g * classes_.size() + source_class])
+        next[0] = previous[0];
+        next[0].continuation_class = actual.child_class;
+        next[0].ordinal = checked_uadd(previous[0].ordinal, actual.offset);
+        append_prefix(next[0].visible_prefix, prefix_delta(actual.token));
+        for (std::size_t g = 1; g < previous.size(); ++g) {
+            if (previous[g].continuation_class != class_map_[g * classes_.size() + source_class])
                 detail::fail(ErrorCode::invalid_query, "cursor transformed continuation is inconsistent with its owner");
             const auto& transition = mapped_transitions_[g * class_edges_.size() + canonical_edge];
-            auto& next = result.images_[g];
-            next.continuation_class = transition.child_class;
-            next.ordinal = checked_uadd(previous.ordinal, transition.offset);
-            append_prefix(next.visible_prefix, transition.prefix);
+            next[g] = previous[g];
+            next[g].continuation_class = transition.child_class;
+            next[g].ordinal = checked_uadd(previous[g].ordinal, transition.offset);
+            append_prefix(next[g].visible_prefix, transition.prefix);
         }
-        return result;
     }
 
     void validate_cursor(const Cursor& cursor) const {
@@ -1030,5 +1048,178 @@ private:
     Receipt receipt_{};
     inline static std::atomic<std::uint64_t> generation_counter_{1};
 };
+
+
+// A workspace and its Index/Plan must outlive every Lease and FrameView. This
+// internal interface is single-traversal and intentionally nonmovable.
+inline constexpr std::size_t kFrameViewLogicalEntries = 3;
+inline constexpr std::size_t kFrameLeaseLogicalEntries = 3;
+inline constexpr std::size_t kFrameHeaderLogicalEntries = 3;
+inline constexpr std::size_t kWorkspaceFixedLogicalEntries = 64;
+struct WorkspaceCounts { std::uint64_t activations = 0, released_frames = 0, release_calls = 0; };
+struct WorkspaceReservation {
+    std::size_t frame_count = 0, image_slots = 0, header_entries = 0, retained_entries_upper = 0;
+    std::uint64_t setup_work_upper = 0;
+};
+
+class FrameView final {
+public:
+    [[nodiscard]] bool belongs_to(const TraversalWorkspace& workspace) const noexcept { return owner_ == &workspace; }
+    [[nodiscard]] std::uint64_t ordinal() const;
+    [[nodiscard]] std::size_t image_count() const;
+    [[nodiscard]] std::uint64_t image_ordinal(std::size_t map_index) const;
+    [[nodiscard]] VisiblePrefixId visible_prefix(std::size_t map_index = 0) const;
+private:
+    friend class TraversalWorkspace;
+    friend class HistoryIndex;
+    FrameView(const TraversalWorkspace* owner, std::size_t slot, std::uint64_t epoch)
+        : owner_(owner), slot_(slot), epoch_(epoch) {}
+    const TraversalWorkspace* owner_;
+    std::size_t slot_;
+    std::uint64_t epoch_;
+};
+
+class TraversalWorkspace final {
+    friend class FrameView;
+    friend class HistoryIndex;
+    struct Header { std::size_t raw_vertex = 0; std::uint64_t epoch = 0; bool active = false; };
+public:
+    class Lease final {
+        friend class TraversalWorkspace;
+    public:
+        Lease(const Lease&) = delete;
+        Lease& operator=(const Lease&) = delete;
+        Lease(Lease&& other) noexcept : owner_(other.owner_), slot_(other.slot_), epoch_(other.epoch_) { other.owner_ = nullptr; }
+        Lease& operator=(Lease&&) = delete;
+        ~Lease() noexcept { if (owner_) owner_->release(slot_, epoch_); }
+        [[nodiscard]] FrameView view() const {
+            if (!owner_) detail::fail(ErrorCode::invalid_query, "moved-from frame lease");
+            FrameView v(owner_, slot_, epoch_); owner_->validate(v); return v;
+        }
+    private:
+        Lease(TraversalWorkspace* owner, std::size_t slot, std::uint64_t epoch)
+            : owner_(owner), slot_(slot), epoch_(epoch) {}
+        TraversalWorkspace* owner_;
+        std::size_t slot_;
+        std::uint64_t epoch_;
+    };
+
+    [[nodiscard]] static WorkspaceReservation reservation(std::size_t max_depth, std::size_t group_size) {
+        if (group_size == 0 || group_size > kMaximumSuitMaps)
+            detail::fail(ErrorCode::invalid_limits, "workspace suit-map count invalid");
+        // The fixed global entry ceiling also keeps all products representable
+        // on 32-bit size_t before any vector allocation.
+        if (max_depth >= kMaximumRetainedEntries)
+            detail::fail(ErrorCode::storage_limit, "workspace depth exceeds entry ceiling");
+        WorkspaceReservation r;
+        r.frame_count = detail::checked_entries(max_depth, 1);
+        r.image_slots = detail::checked_mul(r.frame_count, group_size);
+        r.header_entries = detail::checked_mul(r.frame_count, kFrameHeaderLogicalEntries);
+        r.retained_entries_upper = detail::checked_entries(kWorkspaceFixedLogicalEntries, detail::checked_entries(r.header_entries, detail::checked_mul(r.image_slots, 8)));
+        r.setup_work_upper = detail::checked_add(kWorkspaceFixedLogicalEntries, detail::checked_add(r.header_entries, detail::checked_mul(r.image_slots, 8)));
+        return r;
+    }
+    explicit TraversalWorkspace(const HistoryIndex& index, std::size_t max_depth,
+                                std::uint64_t max_work = kMaximumModeledWork,
+                                std::size_t max_entries = kMaximumRetainedEntries)
+        : index_(&index), group_size_(index.suit_map_count()), reservation_(reservation(max_depth, group_size_)) {
+        if (max_work == 0 || max_work > kMaximumModeledWork || max_entries == 0 || max_entries > kMaximumRetainedEntries)
+            detail::fail(ErrorCode::invalid_limits, "workspace limits invalid");
+        if (max_depth < index.plan_->graph_census().maximum_depth)
+            detail::fail(ErrorCode::invalid_limits, "workspace depth below admitted graph depth");
+        if (reservation_.setup_work_upper > max_work) detail::fail(ErrorCode::work_limit, "workspace setup work exceeds limit");
+        if (reservation_.retained_entries_upper > max_entries) detail::fail(ErrorCode::storage_limit, "workspace entries exceed limit");
+        headers_.resize(reservation_.frame_count);
+        images_.resize(reservation_.image_slots);
+    }
+    TraversalWorkspace(const TraversalWorkspace&) = delete;
+    TraversalWorkspace& operator=(const TraversalWorkspace&) = delete;
+    TraversalWorkspace(TraversalWorkspace&&) = delete;
+    TraversalWorkspace& operator=(TraversalWorkspace&&) = delete;
+    [[nodiscard]] const WorkspaceReservation& receipt() const noexcept { return reservation_; }
+    [[nodiscard]] const HistoryIndex& index() const noexcept { return *index_; }
+    [[nodiscard]] WorkspaceCounts counts() const noexcept { return counts_; }
+    [[nodiscard]] std::size_t active_frames() const noexcept { return active_count_; }
+    [[nodiscard]] Lease root() {
+        if (headers_[0].active) detail::fail(ErrorCode::invalid_query, "workspace root already active");
+        ensure_epoch(0);
+        index_->reserve_scheduled(index_->root_calls_used_, 1, index_->limits_.query_schedule ? index_->limits_.query_schedule->root_cursor_calls : 0);
+        index_->reserve_query_work(index_->root_work_per_call());
+        index_->reserve_query_entries(index_->root_entries_per_call());
+        const auto root_class = index_->vertex_class_[index_->graph_->root_id];
+        auto target = image_span(0);
+        for (std::size_t g = 0; g < group_size_; ++g) {
+            const auto cls = index_->class_map_[g * index_->classes_.size() + root_class];
+            if (cls != root_class) detail::fail(ErrorCode::graph_not_invariant, "workspace suit image moved root");
+            target[g] = CursorImage{}; target[g].continuation_class = cls;
+            target[g].visible_prefix = index_->initial_prefix(index_->plan_->group()[g]);
+        }
+        return activate(0, index_->graph_->root_id);
+    }
+    [[nodiscard]] Lease advance_action(const FrameView& parent, std::size_t edge) { return advance(parent, edge, VertexKind::decision); }
+    [[nodiscard]] Lease advance_reveal(const FrameView& parent, std::size_t edge) { return advance(parent, edge, VertexKind::chance); }
+private:
+    [[nodiscard]] std::span<CursorImage> image_span(std::size_t slot) { return {images_.data() + slot * group_size_, group_size_}; }
+    [[nodiscard]] std::span<const CursorImage> image_span(std::size_t slot) const { return {images_.data() + slot * group_size_, group_size_}; }
+    void validate(const FrameView& v) const {
+        if (v.owner_ != this || v.slot_ >= headers_.size() || !headers_[v.slot_].active ||
+            headers_[v.slot_].epoch != v.epoch_ || headers_[v.slot_].raw_vertex >= index_->graph_->vertices.size() ||
+            image_span(v.slot_)[0].continuation_class != index_->vertex_class_[headers_[v.slot_].raw_vertex])
+            detail::fail(ErrorCode::invalid_query, "workspace frame is stale or foreign");
+    }
+    void ensure_epoch(std::size_t slot) const {
+        if (headers_[slot].epoch == std::numeric_limits<std::uint64_t>::max())
+            detail::fail(ErrorCode::invalid_query, "workspace epoch exhausted");
+    }
+    [[nodiscard]] Lease activate(std::size_t slot, std::size_t raw_vertex) {
+        auto& h = headers_[slot]; ++h.epoch; h.raw_vertex = raw_vertex; h.active = true;
+        active_count_ = slot + 1; ++counts_.activations;
+        return Lease(this, slot, h.epoch);
+    }
+    void release(std::size_t slot, std::uint64_t epoch) noexcept {
+        ++counts_.release_calls;
+        if (slot >= headers_.size() || !headers_[slot].active || headers_[slot].epoch != epoch) return;
+        while (active_count_ > slot) { headers_[--active_count_].active = false; ++counts_.released_frames; }
+    }
+    [[nodiscard]] Lease advance(const FrameView& parent, std::size_t edge, VertexKind expected) {
+        validate(parent);
+        const auto slot = parent.slot_ + 1;
+        if (slot >= headers_.size() || headers_[slot].active) detail::fail(ErrorCode::invalid_query, "workspace child slot unavailable");
+        const auto raw = headers_[parent.slot_].raw_vertex;
+        const auto& vertex = index_->graph_->vertices[raw];
+        if (vertex.kind != expected) detail::fail(ErrorCode::invalid_query, "workspace edge vertex kind invalid");
+        const auto count = expected == VertexKind::decision ? vertex.actions.size() : vertex.branches.size();
+        if (edge >= count) detail::fail(ErrorCode::invalid_query, "workspace edge outside menu");
+        ensure_epoch(slot);
+        const auto raw_edge = index_->raw_vertex_edges_[raw].edge_begin + edge;
+        index_->reserve_scheduled(index_->edge_calls_used_, 1, index_->limits_.query_schedule ? index_->limits_.query_schedule->edge_advance_calls : 0);
+        index_->reserve_query_work(index_->edge_work_per_call());
+        const auto& item = index_->raw_edges_[raw_edge];
+        index_->write_next_images(image_span(parent.slot_), image_span(slot), item.canonical_edge);
+        return activate(slot, item.child_vertex);
+    }
+    const HistoryIndex* index_;
+    std::size_t group_size_;
+    WorkspaceReservation reservation_;
+    std::size_t active_count_ = 0;
+    WorkspaceCounts counts_{};
+    std::vector<Header> headers_;
+    std::vector<CursorImage> images_;
+};
+
+inline std::size_t FrameView::image_count() const { owner_->validate(*this); return owner_->group_size_; }
+inline std::uint64_t FrameView::ordinal() const { return image_ordinal(0); }
+inline std::uint64_t FrameView::image_ordinal(std::size_t g) const {
+    owner_->validate(*this); if (g >= owner_->group_size_) detail::fail(ErrorCode::invalid_query, "frame suit-map index invalid");
+    return owner_->image_span(slot_)[g].ordinal;
+}
+inline VisiblePrefixId FrameView::visible_prefix(std::size_t g) const {
+    owner_->validate(*this); if (g >= owner_->group_size_) detail::fail(ErrorCode::invalid_query, "frame prefix index invalid");
+    return owner_->image_span(slot_)[g].visible_prefix;
+}
+inline const Vertex& HistoryIndex::vertex_at(const FrameView& view) const {
+    if (!view.owner_ || view.owner_->index_ != this) detail::fail(ErrorCode::invalid_query, "foreign frame index");
+    view.owner_->validate(view); return graph_->vertices[view.owner_->headers_[view.slot_].raw_vertex];
+}
 
 } // namespace openpoker::exact_public_history_index

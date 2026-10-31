@@ -609,7 +609,8 @@ def _prepare_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
 def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_limits=None,
                                     pair_diagnostics="expanded", exact_arithmetic="fraction",
                                     training_reduction="default", strategy_storage="expanded", quotient_lookup="per-row",
-                                    native_executable=None, native_routing="full-history", native_admission="legacy"):
+                                    native_executable=None, native_routing="full-history", native_admission="legacy",
+                                    native_traversal="value-cursor"):
     """Solve one bounded four-street game under exact-product selected chance.
 
     Requires CFR+, direct shared topology, packed public-vector training, and
@@ -623,6 +624,11 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     """
     if type(native_admission) is not str or native_admission not in ("legacy", "indexed-v1"):
         raise ValueError("Unsupported exact native admission model.")
+    if type(native_traversal) is not str or native_traversal not in ("value-cursor", "active-frames"):
+        raise ValueError("Unsupported exact native traversal mode.")
+    if native_traversal == "active-frames" and (
+            native_executable is None or native_admission != "indexed-v1" or native_routing != "indexed"):
+        raise ValueError("Active-frame traversal requires explicit indexed-v1 native execution.")
     if native_admission == "indexed-v1" and (native_executable is None or native_routing != "indexed"):
         raise ValueError("Indexed admission requires explicit native indexed execution.")
     if type(native_routing) is not str or native_routing not in ("full-history", "shadow", "indexed"):
@@ -652,7 +658,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
     native_reservation = native_receipt = None
     if native_executable is not None:
         from .native_exact_four_street import admit
-        native_reservation = admit(prepared)
+        native_reservation = admit(prepared, traversal=native_traversal)
     elif strategy_storage == "suit-quotient":
         from .suit_quotient_plan import SuitQuotientPlan
         quotient_plan = SuitQuotientPlan(prepared, request.iterations)
@@ -746,7 +752,7 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             averages, native_receipt = train_native_exact(native_prepared, executable=native_executable,
                 rank_cache_boards=rank_cache_boards, native_work=native_reservation["native_work_limit"],
                 native_entries=native_reservation["native_entries_limit"], reservation=native_reservation,
-                routing=native_routing)
+                routing=native_routing, traversal=native_traversal)
             admission["combined_modeled_work_upper"] += native_receipt["modeled_work_upper"]
             retained = admission["retained_storage"]
             retained["phase_upper_bounds"] = {name: value + native_receipt["retained_entries_upper"]
@@ -910,10 +916,15 @@ def solve_four_street_exact_selected(request, *, rank_cache_boards=1, kernel_lim
             result["quotient_lookup"] = "per-decision-suit-history-transform-v1"
     if native_receipt is not None:
         result["training_backend"] = "native-exact-four-street-v1"
-        if native_routing != "full-history":
+        if native_traversal == "active-frames":
+            result["training_backend"] = "native-exact-four-street-active-frames-v4"
+            result["native_traversal"] = native_traversal
+            result["native_routing"] = native_routing
+            result["native_admission"] = native_admission
+        elif native_routing != "full-history":
             result["training_backend"] = "native-exact-four-street-routed-v2"
             result["native_routing"] = native_routing
-        if native_admission == "indexed-v1":
+        if native_admission == "indexed-v1" and native_traversal != "active-frames":
             result["training_backend"] = "native-exact-four-street-indexed-admission-v3"
             result["native_admission"] = native_admission
     if pair_diagnostics == "compact":

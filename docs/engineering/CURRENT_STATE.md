@@ -1,5 +1,16 @@
 # Current engineering state
 
+The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
+24-image cursor copying during explicitly selected indexed native learning with
+a Router-owned depth-by-active-group workspace. Development controls preserve
+tested policies/metrics, lifecycle and unchanged budget boundaries. The
+[frozen 37-call result](../native-active-frames-result.md) retains 24 completions,
+13 native rejections, 19 exact target misses, two passes and three unverified
+exact outcomes. Fresh saved-only acceptance and archive verification pass;
+original T60 now fits, while original T10 median is 5.05% slower. Final publication
+CI remains pending. Logical traversal-field savings do not establish CPU or process-memory
+improvement; value-cursor defaults and other storage/quality limits remain.
+
 The explicit [executed indexed-path admission](../native-indexed-admission.md)
 reserves host diagnostics and native construction/learning separately within the
 same whole-request allowance. Defaults retain legacy admission. Development checks
@@ -19,7 +30,8 @@ fresh independent saved-only acceptance: all 15 numeric policies replay within
 exact outcomes remain unverified. Five completed mode pairs match. Corrected-host
 parsing and saved request-limit binding pass separately; the 1,267-entry archive
 is independently verified. Two parent stops and three raw reclassifications,
-including the incomplete summary, remain explicit. Final publication CI is pending.
+including the incomplete summary, remain explicit. Final publication-head tests,
+Windows/Linux native and sanitizer workflows passed; PR #273 merged as `1b9da98`.
 
 An explicit [indexed native learning candidate](../native-indexed-routing.md)
 now connects numeric Q keys, incremental visible-path cursors and borrowed typed

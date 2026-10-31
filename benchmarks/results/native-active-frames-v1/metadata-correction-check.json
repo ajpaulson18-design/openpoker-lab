@@ -1,0 +1,21 @@
+{
+  "committed_host_correction": "1e568fb740b4ac12a7182b2ff709100123db07d8",
+  "scope": "Two active-result marker assignments and two matching regression assertions; native engine and arithmetic unchanged. Ten optimized physical/API/contract tests pass.",
+  "tests": {
+    "command": [
+      "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-B",
+      "-O",
+      "-m",
+      "unittest",
+      "tests.test_native_active_frames.NativeActiveFrameEngineTests",
+      "tests.test_native_active_frame_contracts",
+      "-v"
+    ],
+    "returncode": 0
+  },
+  "source_sha256": {
+    "pokerlab/exact_selected_solver.py": "d9a8c67e4e9792b3e0f0b56c94fcacf45a0270f2ecd1c4f104444d23812f20e7",
+    "tests/test_native_active_frames.py": "6b49b2bc14d917f02814bea02f656ff4aae9b07a999e0c8bee604a70956d8592"
+  }
+}

@@ -1,8 +1,10 @@
 # Executed-path admission for native indexed training
 
 Status: implemented with [committed-source capacity evidence and independent
-saved-policy acceptance](native-indexed-admission-result.md). Final publication
-CI and merge remain separate gates. The [indexed routing integration](native-indexed-routing.md)
+saved-policy acceptance](native-indexed-admission-result.md). Publication-head
+tests and Windows/Linux/sanitizer workflows passed; [PR #273](https://github.com/ajpaulson18-design/openpoker-lab/pull/273)
+merged as `1b9da98c04ec821127186d7a0e90f2b169240b27`, with the tested
+`5e5e16c` tree unchanged. The [indexed routing integration](native-indexed-routing.md)
 already removed history processing during learning, but conservatively retained
 Python training and old native history forecasts. This profile accounts for the
 executed path without increasing any resource ceiling.

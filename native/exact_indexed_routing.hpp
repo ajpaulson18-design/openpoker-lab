@@ -12,10 +12,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -63,6 +65,8 @@ struct NumericQEntry {
 };
 
 struct Receipt {
+    bool active_frames = false;
+    std::uint64_t frame_validation_work_upper = 0;
     std::string version = "native-exact-indexed-routing-v1";
     std::size_t original_q_rows = 0;
     std::size_t numeric_map_entries_upper = 0;
@@ -112,10 +116,14 @@ struct Receipt {
 class IndexedRouting final {
 public:
     using Cursor = history_index::HistoryIndex::Cursor;
+    using FrameView = history_index::FrameView;
+    using TraversalWorkspace = history_index::TraversalWorkspace;
+    using FrameLease = TraversalWorkspace::Lease;
 
     explicit IndexedRouting(const graph::Plan& plan, RoutingSchedule schedule = {},
-                            WholeLimits whole = {}, history_index::ExternalReservation caller = {})
-        : IndexedRouting(plan, prepare(plan, schedule, whole, caller)) {}
+                            WholeLimits whole = {}, history_index::ExternalReservation caller = {},
+                            bool active_frames = false)
+        : IndexedRouting(plan, prepare(plan, schedule, whole, caller, active_frames)) {}
 
     IndexedRouting(const IndexedRouting&) = delete;
     IndexedRouting& operator=(const IndexedRouting&) = delete;
@@ -123,30 +131,79 @@ public:
     IndexedRouting& operator=(IndexedRouting&&) = delete;
 
     [[nodiscard]] Cursor root_cursor() const {
+        require_value_cursor();
         reserve_call(root_calls_used_, 1, receipt_.root_cursor_calls,
                      "indexed root cursor exceeds the declared whole-call schedule");
         return index_.root_cursor();
     }
 
     [[nodiscard]] Cursor advance_action(const Cursor& cursor, std::size_t original_menu_index) const {
+        require_value_cursor();
         reserve_call(edge_calls_used_, 1, receipt_.edge_advance_calls,
                      "indexed action edge exceeds the declared whole-call schedule");
         return index_.advance_action(cursor, original_menu_index);
     }
 
     [[nodiscard]] Cursor advance_reveal(const Cursor& cursor, std::size_t original_branch_index) const {
+        require_value_cursor();
         reserve_call(edge_calls_used_, 1, receipt_.edge_advance_calls,
                      "indexed reveal edge exceeds the declared whole-call schedule");
         return index_.advance_reveal(cursor, original_branch_index);
     }
 
+    // Router owns this workspace until its destruction. The caller borrows it
+    // and must keep every lease/view inside the Router/Index/Plan lifetime.
+    [[nodiscard]] TraversalWorkspace& make_workspace() {
+        if (!receipt_.active_frames || workspace_created_)
+            graph::detail::fail(graph::ErrorCode::invalid_query, "active frame workspace requires its unused exclusive router");
+        const auto reservation = TraversalWorkspace::reservation(plan_->graph_census().maximum_depth, plan_->group().size());
+        if (reservation.setup_work_upper > receipt_.caller_reservation_work_upper ||
+            reservation.retained_entries_upper > receipt_.caller_reservation_entries_upper)
+            graph::detail::fail(graph::ErrorCode::invalid_limits, "active frame workspace exceeds the declared caller reservation");
+        workspace_created_ = true;
+        owned_workspace_ = std::make_unique<TraversalWorkspace>(index_, plan_->graph_census().maximum_depth,
+            reservation.setup_work_upper, reservation.retained_entries_upper);
+        return *owned_workspace_;
+    }
+
+    [[nodiscard]] FrameLease root_frame(TraversalWorkspace& workspace) const {
+        require_workspace(workspace);
+        reserve_call(root_calls_used_, 1, receipt_.root_cursor_calls,
+                     "active root frame exceeds the declared whole-call schedule");
+        return workspace.root();
+    }
+    [[nodiscard]] FrameLease advance_action(TraversalWorkspace& workspace, const FrameView& parent,
+                                            std::size_t edge) const {
+        require_workspace(workspace);
+        require_cursor_owner(parent);
+        (void)index_.vertex_at(parent);
+        reserve_call(edge_calls_used_, 1, receipt_.edge_advance_calls,
+                     "active action frame exceeds the declared whole-call schedule");
+        return workspace.advance_action(parent, edge);
+    }
+    [[nodiscard]] FrameLease advance_reveal(TraversalWorkspace& workspace, const FrameView& parent,
+                                            std::size_t edge) const {
+        require_workspace(workspace);
+        require_cursor_owner(parent);
+        (void)index_.vertex_at(parent);
+        reserve_call(edge_calls_used_, 1, receipt_.edge_advance_calls,
+                     "active reveal frame exceeds the declared whole-call schedule");
+        return workspace.advance_reveal(parent, edge);
+    }
+
+    template<class CursorType>
+        requires (std::is_same_v<CursorType, Cursor> || std::is_same_v<CursorType, FrameView>)
     [[nodiscard]] std::vector<std::optional<graph::RowLocation>> locate_decision_rows(
-        const Cursor& cursor, std::uint8_t actor, std::span<const graph::Action> complete_menu) const {
+        const CursorType& cursor, std::uint8_t actor, std::span<const graph::Action> complete_menu) const {
+        require_cursor_type<CursorType>();
+        require_cursor_owner(cursor);
+        const graph::Vertex* checked_vertex = nullptr;
+        if constexpr (std::is_same_v<CursorType, FrameView>) checked_vertex = &index_.vertex_at(cursor);
         reserve_call(decision_calls_used_, 1, receipt_.decision_lookup_calls_upper,
                      "indexed decision lookup exceeds the declared whole-call schedule");
         charge_query_work(decision_query_work_upper_);
 
-        const auto& vertex = index_.vertex_at(cursor);
+        const auto& vertex = checked_vertex ? *checked_vertex : index_.vertex_at(cursor);
         if (vertex.kind != graph::VertexKind::decision || actor > 1 || vertex.actor != actor ||
             vertex.actions.size() != complete_menu.size() ||
             !std::equal(vertex.actions.begin(), vertex.actions.end(), complete_menu.begin(), complete_menu.end()))
@@ -210,11 +267,16 @@ public:
         return result;
     }
 
-    [[nodiscard]] const std::vector<std::size_t>& prefix_board_indexes(const Cursor& cursor) const {
+    template<class CursorType>
+        requires (std::is_same_v<CursorType, Cursor> || std::is_same_v<CursorType, FrameView>)
+    [[nodiscard]] const std::vector<std::size_t>& prefix_board_indexes(const CursorType& cursor) const {
+        require_cursor_type<CursorType>();
+        require_cursor_owner(cursor);
+        if constexpr (std::is_same_v<CursorType, FrameView>) (void)index_.vertex_at(cursor);
         reserve_call(prefix_calls_used_, 1, receipt_.prefix_lookup_calls_upper,
                      "indexed prefix lookup exceeds the declared whole-call schedule");
         charge_query_work(prefix_query_work_upper_);
-        (void)index_.vertex_at(cursor);
+        if constexpr (std::is_same_v<CursorType, Cursor>) (void)index_.vertex_at(cursor);
         const auto prefix = cursor.visible_prefix();
         const auto view = plan_->prefix_support(std::span<const graph::Card>(prefix.cards.data(), prefix.size));
         if (!view.board_index_key)
@@ -257,6 +319,23 @@ public:
     }
 
 private:
+    void require_cursor_owner(const Cursor&) const noexcept {}
+    void require_cursor_owner(const FrameView& view) const {
+        if (!owned_workspace_ || !view.belongs_to(*owned_workspace_))
+            graph::detail::fail(graph::ErrorCode::invalid_query, "router frame belongs to another workspace");
+    }
+    void require_value_cursor() const {
+        if (receipt_.active_frames)
+            graph::detail::fail(graph::ErrorCode::invalid_query, "active frame admission forbids value-cursor learning");
+    }
+    template<class CursorType> void require_cursor_type() const {
+        if (receipt_.active_frames != std::is_same_v<CursorType, FrameView>)
+            graph::detail::fail(graph::ErrorCode::invalid_query, "router cursor representation differs from its admission");
+    }
+    void require_workspace(const TraversalWorkspace& workspace) const {
+        if (!receipt_.active_frames || !workspace_created_ || owned_workspace_.get() != &workspace || &workspace.index() != &index_)
+            graph::detail::fail(graph::ErrorCode::invalid_query, "active frame workspace is foreign to its admitted router");
+    }
     struct Prepared {
         graph::Plan const* plan = nullptr;
         RoutingSchedule schedule{};
@@ -307,7 +386,7 @@ private:
     }
 
     static Prepared prepare(const graph::Plan& plan, RoutingSchedule schedule,
-                            WholeLimits whole, history_index::ExternalReservation caller) {
+                            WholeLimits whole, history_index::ExternalReservation caller, bool active_frames) {
         if (!whole.modeled_work || whole.modeled_work > graph::kMaximumModeledWork ||
             !whole.logical_entries || whole.logical_entries > graph::kMaximumRetainedEntries)
             graph::detail::fail(graph::ErrorCode::invalid_limits, "indexed router whole limits must be positive and reduce-only");
@@ -392,13 +471,19 @@ private:
         const auto setup_work = checked_sum(graph_scan_work, q_history_scan,
             checked_mul(q_count, checked_add(per_row_work, checked_add(q_search_work, 32))));
 
-        const auto per_decision_work = checked_add(64 + menu_work,
+        const auto legacy_decision_work = checked_add(64 + menu_work,
             checked_add(checked_mul(group_size, prefix_lookup_work),
                 checked_mul(hands, checked_sum(checked_add(image_key_work,
                     checked_add(support_work, member_search_work)),
                     checked_add(q_search_work, menu_work), 32))));
+        // Frame access validates its live owner/slot/epoch/vertex/class. Charge
+        // each additional constant-sized check instead of treating it as free.
+        const auto frame_decision_checks = checked_add(1 + group_size, checked_mul(hands, 1 + group_size));
+        const auto frame_decision_work = active_frames ? checked_mul(32, frame_decision_checks) : 0;
+        const auto per_decision_work = checked_add(legacy_decision_work, frame_decision_work);
+        const auto per_prefix_work = checked_add(checked_add(16, prefix_lookup_work), active_frames ? 64 : 0);
         const auto decision_work = checked_mul(decision_calls, per_decision_work);
-        const auto prefix_work = checked_mul(prefix_calls, checked_add(16, prefix_lookup_work));
+        const auto prefix_work = checked_mul(prefix_calls, per_prefix_work);
         const auto router_query_work = checked_add(decision_work, prefix_work);
         const auto router_work = checked_add(setup_work, router_query_work);
 
@@ -428,6 +513,10 @@ private:
         index_limits.external = {external_work, external_entries};
 
         auto& receipt = prepared.receipt;
+        receipt.active_frames = active_frames;
+        if (active_frames) receipt.cursor_logical_entries_upper = history_index::kFrameViewLogicalEntries;
+        receipt.frame_validation_work_upper = active_frames ? checked_add(
+            checked_mul(decision_calls, frame_decision_work), checked_mul(prefix_calls, 64)) : 0;
         receipt.original_q_rows = q_count;
         receipt.numeric_map_entries_upper = q_count;
         receipt.router_retained_entries_upper = router_retained;
@@ -450,7 +539,7 @@ private:
         receipt.index_query_work_upper = 0; // filled from the constructed index receipt
         receipt.index_query_entries_upper = 0;
         prepared.decision_work_upper = per_decision_work;
-        prepared.prefix_work_upper = checked_add(16, prefix_lookup_work);
+        prepared.prefix_work_upper = per_prefix_work;
         return prepared;
     }
 
@@ -542,9 +631,11 @@ private:
     }
 
     const graph::Plan* plan_ = nullptr;
+    bool workspace_created_ = false;
     std::uint64_t decision_query_work_upper_ = 0;
     std::uint64_t prefix_query_work_upper_ = 0;
     history_index::HistoryIndex index_;
+    std::unique_ptr<TraversalWorkspace> owned_workspace_;
     std::vector<NumericQEntry> numeric_q_;
     mutable std::atomic<std::uint64_t> decision_calls_used_{0};
     mutable std::atomic<std::uint64_t> prefix_calls_used_{0};
