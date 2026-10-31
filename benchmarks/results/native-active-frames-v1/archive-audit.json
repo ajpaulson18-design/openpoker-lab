@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "archive_sha256": "c1c7ef5685c1ad9f6729350b80e5a3619fcbcfae91c3c7f08d46c8f0b510e59e",
+  "entries": 1348,
+  "internal_manifest_sha256": "6030d4761c592cb4a9c0a60c96ef2b7953165272acc5219007e1c81f05748efa",
+  "review_receipt_sha256": "942587ce1c30707de190a3f78d46b79084c5e5817b93bd368bcdf0d06384e42c",
+  "scope": "Exact archive/member/source/raw-directory/provenance equality only; independent mathematical acceptance is the separately pinned receipt. No archived source executed.",
+  "helper_sha256": "9d7285f3407fa82681173ed1e35eaf2e3c6d1cd8fb72cdff4e0625a6d3b23c8d"
+}

@@ -3,9 +3,12 @@
 The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
 24-image cursor copying during explicitly selected indexed native learning with
 a Router-owned depth-by-active-group workspace. Development controls preserve
-tested policies/metrics, lifecycle and unchanged budget boundaries. Frozen
-37-call measurement, independent saved-only acceptance and final CI remain
-pending. Logical traversal-field savings do not establish CPU or process-memory
+tested policies/metrics, lifecycle and unchanged budget boundaries. The
+[frozen 37-call result](../native-active-frames-result.md) retains 24 completions,
+13 native rejections, 19 exact target misses, two passes and three unverified
+exact outcomes. Fresh saved-only acceptance and archive verification pass;
+original T60 now fits, while original T10 median is 5.05% slower. Final publication
+CI remains pending. Logical traversal-field savings do not establish CPU or process-memory
 improvement; value-cursor defaults and other storage/quality limits remain.
 
 The explicit [executed indexed-path admission](../native-indexed-admission.md)

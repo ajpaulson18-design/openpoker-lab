@@ -1,0 +1,15 @@
+test_v4_complete_policies_metrics_and_independent_replay (tests.test_native_active_frames.NativeActiveFrameEngineTests.test_v4_complete_policies_metrics_and_independent_replay) ... ok
+test_v4_physical_s3_game_deduplicates_q_members_and_replays (tests.test_native_active_frames.NativeActiveFrameEngineTests.test_v4_physical_s3_game_deduplicates_q_members_and_replays) ... ok
+test_v4_wire_rejects_missing_forged_and_wrong_host_frame_proofs (tests.test_native_active_frames.NativeActiveFrameEngineTests.test_v4_wire_rejects_missing_forged_and_wrong_host_frame_proofs) ... ok
+test_v4_zero_decision_game_still_reports_complete_cleanup (tests.test_native_active_frames.NativeActiveFrameEngineTests.test_v4_zero_decision_game_still_reports_complete_cleanup) ... ok
+test_active_selector_rejects_unsupported_paths_before_prepare_or_build (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_active_selector_rejects_unsupported_paths_before_prepare_or_build) ... ok
+test_active_wire_rejects_legacy_preparation_without_fallback (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_active_wire_rejects_legacy_preparation_without_fallback) ... ok
+test_flow_and_validation_are_bound_to_their_separate_owners (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_flow_and_validation_are_bound_to_their_separate_owners) ... ok
+test_frame_receipt_binds_group_sizes_zero_decisions_and_combined_owner (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_frame_receipt_binds_group_sizes_zero_decisions_and_combined_owner) ... ok
+test_frame_record_is_exact_ordered_decimal_schema (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_frame_record_is_exact_ordered_decimal_schema) ... ok
+test_frame_record_rejects_missing_forged_unordered_or_oversized_fields (tests.test_native_active_frame_contracts.ActiveFrameWireContractTests.test_frame_record_rejects_missing_forged_unordered_or_oversized_fields) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 10.059s
+
+OK

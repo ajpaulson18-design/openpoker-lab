@@ -64,6 +64,34 @@ validator now preserves the declared range order. This is compatibility evidence
 not a new policy/quality result. The initial draft is PR #274; formal evidence
 and final CI remain acceptance gates.
 
+The clean `0be1a85` producer starts the fixed study and preserves two complete
+solves before a parent-only marker expectation stops it. The actual V4 host
+branch writes backend/traversal markers but omits top-level routing/admission;
+native proof records remain explicit. Sol independently confirms that schema.
+An external continuation accepts absent optional markers while retaining all
+raw header/ledger/FRAME checks, reuses the original two process captures and
+launches only the remaining requests. Its helper also accepts present-null
+optional values; the fresh independent reviewer must reject such conflicting
+values and bind the observed actual absence. No policy or wire is projected or
+rewritten. Root makes both markers explicit separately for future V4 payloads;
+the frozen source and original parent failure remain unchanged. Formal result
+and fresh independent replay are still pending.
+
+The fixed study now finishes with exactly 37 distinct observations: 24 complete,
+13 native budget rejections. The continuation reuses two and launches 35 new
+producers, with no retries. All 24 numeric policies pass and all ten completed
+pairs match. Fresh independent saved-only review authenticates the full source,
+build/198-header and raw/continuation closure, reconstructs the structural/orbit/
+FRAME proof and all native ROW bits, then replays every completed policy without
+production calls. It retains 19 exact target misses, two passes and three exact
+cap unknowns, maximum numeric gap 2.22e-16, and stable source/artifacts. The worker
+usage limit arrives after the review process has completed; its final passed
+receipt and log survive and the handle is missing. Root does not restart it.
+An exact-path archive audit passes separately. The [result and scope](native-active-frames-result.md)
+retain the original T10 median regression (1.190580 to 1.250661 seconds), T60
+capacity gain, all misses and the first parent failure. Ten optimized controls
+pass for the separate host marker correction. Final publication CI is pending.
+
 ## Executed native indexed-path admission (October 29)
 
 The preserved post-indexed profile and corrected canonical-range census motivate

@@ -1,7 +1,7 @@
 # Active traversal frames for native indexed learning
 
-Status: implemented candidate with development conformance. Committed-source
-measurement, independent saved-policy acceptance and final publication CI remain
+Status: implemented with [committed-source measurement and independent saved-policy
+acceptance](native-active-frames-result.md). Final publication CI and merge remain
 separate gates. The [indexed admission result](native-indexed-admission-result.md)
 is prior evidence; it does not measure this change.
 
@@ -45,6 +45,16 @@ V4 uses fixed-indexed headers
 ROW/DONE/ROUTE/ADMISSION records and adds one ordered 22-field
 `FRAME\tactive-v1` record. All values are bounded unsigned decimal integers.
 The host reserves the extra proof scan and output bytes before transport.
+
+Frozen producer `0be1a858fb5983df21698d97b2a1f8e5e7295505` emits V4's
+`training_backend` and `native_traversal` markers but omits top-level
+`native_routing`/`native_admission`. Native ROUTE/ADMISSION proofs remain explicit.
+The initial parent expected those optional top-level fields and stopped after
+two preserved solves. An external continuation validates the actual frozen
+schema and reuses both observations, launching only unattempted schedule entries.
+A separate host correction makes both markers explicit in future V4 payloads;
+it changes no native wire, policy or numerical computation. Keep the initial
+failure and the original schema in the evidence record.
 
 For maximum edge depth D, actual group size G, full logical visit count L and
 iterations T, independent host occurrence counts bind these formulas:

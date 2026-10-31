@@ -1,0 +1,3386 @@
+{
+  "calls_attempted": 37,
+  "calls_captured": 37,
+  "calls_planned": 37,
+  "failure": null,
+  "original_t10_three_pair_medians_seconds": {
+    "active-frames": 1.250660899997456,
+    "scope": "Three paired original-22 T10 replicates only; descriptive timing, not a universal performance claim.",
+    "value-cursor": 1.1905799999949522
+  },
+  "paired_comparisons": {
+    "asymmetric-weighted-t10-value-cursor-p0__vs__asymmetric-weighted-t10-active-frames-p0": {
+      "active_frames_seconds": 0.21380599998519756,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 56,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.3199748999904841
+    },
+    "blocker-18-t10-value-cursor-p0__vs__blocker-18-t10-active-frames-p0": {
+      "active_frames_seconds": 0.4807972999988124,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 88,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.2967132000194397
+    },
+    "mixed-stabilizer-t10-value-cursor-p0__vs__mixed-stabilizer-t10-active-frames-p0": {
+      "active_frames_seconds": 0.3232750999741256,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 28,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.3834522000106517
+    },
+    "original-22-t10-t10-value-cursor-p0__vs__original-22-t10-t10-active-frames-p0": {
+      "active_frames_seconds": 3.2727610000001732,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 1200,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 1.9912503999948967
+    },
+    "original-22-t10-t10-value-cursor-p1__vs__original-22-t10-t10-active-frames-p1": {
+      "active_frames_seconds": 1.1134096999885514,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 1200,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.9854746999917552
+    },
+    "original-22-t10-t10-value-cursor-p2__vs__original-22-t10-t10-active-frames-p2": {
+      "active_frames_seconds": 1.250660899997456,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 1200,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 1.1905799999949522
+    },
+    "original-22-t10-t40-value-cursor-p0__vs__original-22-t10-t40-active-frames-p0": {
+      "active_frames_seconds": 1.6347602999885567,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 1200,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 1.8187642999982927
+    },
+    "payoff-varied-t10-t10-value-cursor-p0__vs__payoff-varied-t10-t10-active-frames-p0": {
+      "active_frames_seconds": 0.35576839998248033,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 56,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.4980926999996882
+    },
+    "payoff-varied-t100-t100-value-cursor-p0__vs__payoff-varied-t100-t100-active-frames-p0": {
+      "active_frames_seconds": 0.3928015000128653,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 56,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": true,
+      "value_cursor_seconds": 0.32814920000964776
+    },
+    "physical-g6-t10-value-cursor-p0__vs__physical-g6-t10-active-frames-p0": {
+      "active_frames_seconds": 0.5631300999957602,
+      "all_eight_metric_binary64_identical": true,
+      "complete_rows": 384,
+      "exact_certificate_metrics_and_flags_identical": true,
+      "policy_and_action_rows_bitwise_identical": true,
+      "scope": "One fixed fixture/pair only; complete API call plus serialization/hash, no universal speed claim.",
+      "threshold_met": false,
+      "value_cursor_seconds": 0.5190144999942277
+    }
+  },
+  "quality_misses_or_unverified_retained": [
+    "original-22-t10-t10-value-cursor-p0",
+    "original-22-t10-t10-active-frames-p0",
+    "payoff-varied-t10-t10-value-cursor-p0",
+    "payoff-varied-t10-t10-active-frames-p0",
+    "blocker-18-t10-value-cursor-p0",
+    "blocker-18-t10-active-frames-p0",
+    "asymmetric-weighted-t10-value-cursor-p0",
+    "asymmetric-weighted-t10-active-frames-p0",
+    "mixed-stabilizer-t10-value-cursor-p0",
+    "mixed-stabilizer-t10-active-frames-p0",
+    "physical-g6-t10-value-cursor-p0",
+    "physical-g6-t10-active-frames-p0",
+    "original-22-t10-t10-active-frames-p1",
+    "original-22-t10-t10-value-cursor-p1",
+    "original-22-t10-t10-value-cursor-p2",
+    "original-22-t10-t10-active-frames-p2",
+    "original-22-t10-t40-value-cursor-p0",
+    "original-22-t10-t40-active-frames-p0",
+    "original-22-t10-t60-active-frames-p0",
+    "balanced-4x4-unit-t10-active-frames-p0",
+    "balanced-8x8-unit-t10-active-frames-p0",
+    "asymmetric-2x16-unit-t10-active-frames-p0"
+  ],
+  "samples": [
+    {
+      "artifact": "original-22-t10-t10-value-cursor-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 495329,
+      "payload_sha256": "a8e675a1e777be2a77baa652c2a8a2d96778a100f4396fd3603bfc1376aa164a",
+      "process_peak_bytes": 59920384,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.9912503999948967,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t10-active-frames-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 497048,
+      "payload_sha256": "dc8d688fd5c02050500dc0c1c967d61eed97fcf06c0a8452da9a14123f645567",
+      "process_peak_bytes": 60940288,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 3.2727610000001732,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t10-t10-value-cursor-p0.raw.json",
+      "case": "payoff-varied-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 47812,
+      "payload_sha256": "bc0a50f0159c04fcdb58f3cafa8a5bf83978d79648ad6a0f4a8d631d10fe2caf",
+      "process_peak_bytes": 61767680,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcJc,KdJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "payoff-varied-private-flush-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c7c9hTs",
+          "2d3d7d9hTs"
+        ],
+        "sb_range": "AcQc,AdQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.4980926999996882,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t10-t10-active-frames-p0.raw.json",
+      "case": "payoff-varied-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 49519,
+      "payload_sha256": "4e781a8453ea9eb815372789fc0e18ec5e0501407e3e7096d4964713772fd298",
+      "process_peak_bytes": 60923904,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcJc,KdJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "payoff-varied-private-flush-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c7c9hTs",
+          "2d3d7d9hTs"
+        ],
+        "sb_range": "AcQc,AdQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.35576839998248033,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-t10-value-cursor-p0.raw.json",
+      "case": "blocker-18",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 12,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 12
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 57788,
+      "payload_sha256": "f351eb5ff10a64fea2554247effbc95855a1dc8e512570b0ae4ece71304ec952",
+      "process_peak_bytes": 61829120,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKh,KdKh,3cKh,3dKh",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "blocker-conditioned-18-worlds-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAh,AdAh,2cAh,2dAh",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.2967132000194397,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "blocker-18-t10-active-frames-p0.raw.json",
+      "case": "blocker-18",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 12,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 12
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 59486,
+      "payload_sha256": "2adf3931b1a7e938d90cb0cf1e07698c8a834915042a95984a03924fb23e41da",
+      "process_peak_bytes": 61652992,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKh,KdKh,3cKh,3dKh",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "blocker-conditioned-18-worlds-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAh,AdAh,2cAh,2dAh",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.4807972999988124,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-weighted-t10-value-cursor-p0.raw.json",
+      "case": "asymmetric-weighted",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 46824,
+      "payload_sha256": "f927094f0fed695bca8e2b3a3cff6eba8361f43e567e356143e9c534789eceff",
+      "process_peak_bytes": 60780544,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKh:0.4,KdKh:0.6",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "weighted-asymmetric-suit-exchange-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAh:0.7,AdAh:0.3",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3199748999904841,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-weighted-t10-active-frames-p0.raw.json",
+      "case": "asymmetric-weighted",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 48527,
+      "payload_sha256": "2e1eb384b3a008fc1fa2997267c0491de4d88daccbf2b60b0377fd5cde7adf71",
+      "process_peak_bytes": 60637184,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKh:0.4,KdKh:0.6",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "weighted-asymmetric-suit-exchange-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAh:0.7,AdAh:0.3",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.21380599998519756,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "mixed-stabilizer-t10-value-cursor-p0.raw.json",
+      "case": "mixed-stabilizer",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 4,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 4
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 37186,
+      "payload_sha256": "0b7f4457a5f45fc9d22c43522e233a343f6aebe389e036b952e4c8f1f3ec7e44",
+      "process_peak_bytes": 61632512,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "mixed-suit-stabilizer-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3834522000106517,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "mixed-stabilizer-t10-active-frames-p0.raw.json",
+      "case": "mixed-stabilizer",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 4,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 4
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 38892,
+      "payload_sha256": "d26e6103aa3b3ee4b68bf3e71b9f77f116da7c4693ab67502f954bafad898cfc",
+      "process_peak_bytes": 60747776,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcKd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "mixed-suit-stabilizer-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4h5s6h",
+          "2d3d4h5s6h"
+        ],
+        "sb_range": "AcAd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3232750999741256,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "physical-g6-t10-value-cursor-p0.raw.json",
+      "case": "physical-g6",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 6,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 6
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 168216,
+      "payload_sha256": "5485b466729ee22e70d7ddc4f8c5554dd76e135ca40aa8dac8f284b64a661ac8",
+      "process_peak_bytes": 60751872,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKh,KdKs,KhKs",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "active-frame-physical-s3-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4c7c8c"
+        ],
+        "sb_range": "AdAh,AdAs,AhAs",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.5190144999942277,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "physical-g6-t10-active-frames-p0.raw.json",
+      "case": "physical-g6",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 6,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 6
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 169938,
+      "payload_sha256": "9ed27490312ecae1c4949af5b25f9de1e657d88a8ff91ee294c0a5a417fd9599",
+      "process_peak_bytes": 61616128,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKh,KdKs,KhKs",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "active-frame-physical-s3-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4c7c8c"
+        ],
+        "sb_range": "AdAh,AdAs,AhAs",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.5631300999957602,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t10-active-frames-p1.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 497048,
+      "payload_sha256": "dc8d688fd5c02050500dc0c1c967d61eed97fcf06c0a8452da9a14123f645567",
+      "process_peak_bytes": 60481536,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.1134096999885514,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t10-value-cursor-p1.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 495329,
+      "payload_sha256": "a8e675a1e777be2a77baa652c2a8a2d96778a100f4396fd3603bfc1376aa164a",
+      "process_peak_bytes": 60678144,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 1,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.9854746999917552,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t10-value-cursor-p2.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 495329,
+      "payload_sha256": "a8e675a1e777be2a77baa652c2a8a2d96778a100f4396fd3603bfc1376aa164a",
+      "process_peak_bytes": 60456960,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.1905799999949522,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t10-active-frames-p2.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 497048,
+      "payload_sha256": "dc8d688fd5c02050500dc0c1c967d61eed97fcf06c0a8452da9a14123f645567",
+      "process_peak_bytes": 61554688,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 2,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.250660899997456,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t40-value-cursor-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 40,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 496947,
+      "payload_sha256": "2a6c577a25eb9f3ea431c2f31945f5ef09767afbb6e9e820cfce827b2e22c3d3",
+      "process_peak_bytes": 61632512,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.8187642999982927,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t40-active-frames-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 40,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 498696,
+      "payload_sha256": "8837f95391aaed78dd6e484e1b935fd7364ec7e50fe04512e1720d7bbc9c7853",
+      "process_peak_bytes": 61796352,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.6347602999885567,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t60-value-cursor-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: external reservation exceeds the shared ceiling\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 60,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 61911040,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.30840519999037497,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t60-active-frames-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 23,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 60,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 23
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 498799,
+      "payload_sha256": "c69ea798791f74d28a9a388a2b371a9cbd3d7a3ba125fc9e7cf1265921504f29",
+      "process_peak_bytes": 61562880,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.5455042000103276,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t100-value-cursor-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: indexed router whole-work limit is below its bounded schedule scan floor\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 60891136,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.4477402000047732,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "original-22-t10-t100-active-frames-p0.raw.json",
+      "case": "original-22-t10",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: external reservation exceeds the shared ceiling\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 62009344,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.20120179999503307,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t100-t100-value-cursor-p0.raw.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "value-cursor",
+      "payload_bytes": 47926,
+      "payload_sha256": "f1556a4206cfbf6172670eaf0410e98b95811fc2455ddd25f84a7eb3ea9cbe69",
+      "process_peak_bytes": 60534784,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcJc,KdJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "payoff-varied-private-flush-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c7c9hTs",
+          "2d3d7d9hTs"
+        ],
+        "sb_range": "AcQc,AdQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.32814920000964776,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "payoff-varied-t100-t100-active-frames-p0.raw.json",
+      "case": "payoff-varied-t100",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 8,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 8
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 49657,
+      "payload_sha256": "b779ebe6991add5deb5def78a9d4084f8b7d1827b178eeba119b1921f11cc635",
+      "process_peak_bytes": 60813312,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KcJc,KdJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            2,
+            2
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "payoff-varied-private-flush-v1",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c7c9hTs",
+          "2d3d7d9hTs"
+        ],
+        "sb_range": "AcQc,AdQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3928015000128653,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "original-weighted-2x2-t1000-active-frames-p0.raw.json",
+      "case": "original-weighted-2x2",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 1000,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 60489728,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KsKd:0.75,JhJd:0.25",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "original-22-exact-product-study",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AsAd:0.5,QsQd:0.25",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.22776460001477972,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-4x4-unit-t10-active-frames-p0.raw.json",
+      "case": "balanced-4x4-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 46,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 46
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 966030,
+      "payload_sha256": "799f5b1c854c1d1124b441e5b8554dc7a6224296f2df139226c59cfd5978d563",
+      "process_peak_bytes": 61698048,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-4x4-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 1.635009399993578,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-4x4-unit-t100-active-frames-p0.raw.json",
+      "case": "balanced-4x4-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: external reservation exceeds the shared ceiling\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 61333504,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-4x4-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.29172889998881146,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-4x4-unit-t1000-active-frames-p0.raw.json",
+      "case": "balanced-4x4-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 1000,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 60477440,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-4x4-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.1820540000044275,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-8x8-unit-t10-active-frames-p0.raw.json",
+      "case": "balanced-8x8-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 94,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 94
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 1941126,
+      "payload_sha256": "ecace8afac84ea1dbe1d99f7c40048825d8acccf79332bf28f82f7da20341dd5",
+      "process_peak_bytes": 60850176,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-8x8-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 3.7830361999804154,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-8x8-unit-t100-active-frames-p0.raw.json",
+      "case": "balanced-8x8-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 62111744,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-8x8-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.2600766999821644,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-8x8-unit-t1000-active-frames-p0.raw.json",
+      "case": "balanced-8x8-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 1000,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 60592128,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-8x8-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.33051259999047033,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-16x16-unit-t10-active-frames-p0.raw.json",
+      "case": "balanced-16x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: history-index bounded input scan exceeds remaining combined work before token scan\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 62173184,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-16x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh,9cAs,9dQd,9dQs,9dAc,9dAd,9dAh,9dAs,QdAc",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3196919000183698,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-16x16-unit-t100-active-frames-p0.raw.json",
+      "case": "balanced-16x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 61640704,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-16x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh,9cAs,9dQd,9dQs,9dAc,9dAd,9dAh,9dAs,QdAc",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.25722379999933764,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "balanced-16x16-unit-t1000-active-frames-p0.raw.json",
+      "case": "balanced-16x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 1000,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 61734912,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-balanced-16x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs,9c9d,9cQd,9cQs,9cAc,9cAd,9cAh,9cAs,9dQd,9dQs,9dAc,9dAd,9dAh,9dAs,QdAc",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.38944299999275245,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-2x16-unit-t10-active-frames-p0.raw.json",
+      "case": "asymmetric-2x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 107,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": null,
+      "iterations": 10,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": true,
+        "rank_calls": 107
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 2202959,
+      "payload_sha256": "d28993d4b0841700a27e06f9b677b66964b6c468e6e1c0b4b4bd7a7a57b149a6",
+      "process_peak_bytes": 60571648,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-asymmetric-2x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 2.4721165999944787,
+      "status": "complete",
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-2x16-unit-t100-active-frames-p0.raw.json",
+      "case": "asymmetric-2x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 100,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 62099456,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-asymmetric-2x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.288898099999642,
+      "status": "native-resource-rejected",
+      "traced": false
+    },
+    {
+      "artifact": "asymmetric-2x16-unit-t1000-active-frames-p0.raw.json",
+      "case": "asymmetric-2x16-unit",
+      "counts": {
+        "legacy": 0,
+        "native_invoke": 1,
+        "pair": 0,
+        "python_rank": 0,
+        "python_trainer": 0,
+        "rank_before_native": 0,
+        "world": 0
+      },
+      "failure": {
+        "message": "Native exact computation rejected: native exact four-street rejected: native CFR complete callback-work admission exceeded\r\n",
+        "type": "NativeFailure"
+      },
+      "iterations": 1000,
+      "native_admission": "indexed-v1",
+      "native_observations": {
+        "learning_completed": null,
+        "rank_calls": null
+      },
+      "native_traversal": "active-frames",
+      "payload_bytes": 4,
+      "payload_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "process_peak_bytes": 60383232,
+      "python_allocation_peak_bytes": null,
+      "request_case": {
+        "bb_range": "KdKs,JdJh,8d8s,8dJd,8dJh,8dQc,8dQh,8dKd,8dKs,8sJd,8sJh,8sQc,8sQh,8sKd,8sKs,JdQc",
+        "config": {
+          "big_blind": 1,
+          "include_all_in": false,
+          "max_raises": 1,
+          "raise_sizes": [
+            0.5
+          ],
+          "small_blind": 0.5,
+          "starting_stack": [
+            8,
+            8
+          ]
+        },
+        "flop_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "id": "canonical-distinct-unit-asymmetric-2x16-unit",
+        "river_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        },
+        "runouts": [
+          "2c3c4d7h8h",
+          "2c3c4d7hKc",
+          "2c3c4dKc8h",
+          "2c3c4dQd8h",
+          "5c6d7s8c9h",
+          "5c6d7s8cJc"
+        ],
+        "sb_range": "AdAs,QdQs",
+        "turn_config": {
+          "bet_sizes": [
+            0.5
+          ],
+          "include_all_in": false,
+          "max_raises": 0,
+          "raise_sizes": []
+        }
+      },
+      "routing": "indexed",
+      "runtime": {
+        "implementation": "CPython",
+        "machine": "AMD64",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "sys_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "version": "3.12.14"
+      },
+      "sample": 0,
+      "scope": "Complete native solve plus canonical payload serialization/hash. Instrumentation is installed before timing. Traced memory is Python-only and includes retained native wire bytes; native heap is not included. This is a fixed finite-game comparison, not a universal speed or memory claim.",
+      "seconds": 0.3036216000036802,
+      "status": "native-resource-rejected",
+      "traced": false
+    }
+  ],
+  "scope": "Fixed native V3/V4 finite-game comparison. Every outcome, resource miss, and verifier-limited result is retained; this does not establish unrestricted speed, memory, or convergence claims.",
+  "source_commit": "0be1a858fb5983df21698d97b2a1f8e5e7295505"
+}
