@@ -1,5 +1,26 @@
 # Foundation-first execution record
 
+## Frozen exact fold-class study (October 31)
+
+The [fixed 34-child V4/V5 result](native-fold-classes-result.md) at `946671d`
+completes once with 28 solves/six native rejections and 14 full policy/eight-metric
+matching pairs. All 28 physical numeric replays pass within 2.22e-16; exact
+certificates retain 20 target misses, two private-flush passes and six unknowns.
+Original T10 three-pair median regresses 31.76984%, with no admitted-frontier
+gain. Existing defaults remain board sweep. Native-only and host-plus-native
+ledgers remain distinct; all old ceilings/query charges remain.
+
+Fresh Terra saved-only review authenticates 2,136 source blobs, eleven build
+inputs/198 headers and every raw policy bit before protected independent math.
+Its acceptance receipt and source/build/artifact stability pass. The producer
+handle confirms exit 0; the review's old handle is unavailable after worker quota
+interruption, so its terminal exit remains unknown despite a saved passed receipt.
+An exact-path archive audit passes without executing archived source. The archive
+retains raw captures, original development failures, all certificates and the
+review observation. Source-freeze CI passes; final publication-head/merge gates
+remain separate. Independent saved-policy certification without world expansion
+is now the more consequential next candidate; no new verifier is implemented yet.
+
 ## Exact fold-class development (October 31)
 
 Root begins the [next native computation candidate](native-fold-classes.md) while

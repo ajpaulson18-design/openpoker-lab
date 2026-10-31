@@ -1,15 +1,19 @@
 # Exact fold payoff classes
 
-Status: development V5 candidate connected to the same native indexed
+Status: opt-in V5 candidate connected to the same native indexed
 four-street trainer through explicit Python/native selection and a checked
-fold-operator receipt. Frozen measurement and saved-only acceptance are pending. This is the next
+fold-operator receipt. The [frozen result](native-fold-classes-result.md) now has
+saved-only acceptance and archive verification: 28 completions, six rejections,
+14 matching pairs, 20 exact target misses, two passes and six unknowns. Original
+T10 three-pair median is 31.76984% slower; defaults remain board sweep. This is the next
 computation boundary after the [active-frame result](native-active-frames-result.md),
 whose logical capacity gain comes with a scoped T10 timing regression.
 
 The [development evidence manifest](../benchmarks/results/native-fold-class-development-v1/manifest.json)
 retains the research helper/receipt, expanded native controls, exact compiled
 source closure and the 82-control default-path regression. Public acceptance
-and committed-source performance measurement are separate future gates. That
+and committed-source performance measurement are recorded separately in the
+frozen result. That
 immutable archive describes the original map-based internal prototype, not the
 revised V5 source closure or its later 91-control integration.
 
@@ -120,7 +124,11 @@ corrected a derived-count/schema mismatch and the inherited schedule gate before
 any formal producer attempt. Terra's final source review finds no further
 concrete runner blocker; that is not saved-data acceptance.
 
-Next gates: freeze and execute that schedule,
-retain misses/rejections and independently review the source and saved results.
+The schedule and saved review are complete. Producer terminal exit is confirmed
+0; the review's passed receipt and empty stderr are retained, while its original
+process handle is unavailable and review terminal exit remains unknown. Final
+publication-head checks and merge ancestry remain separate gates. The next
+architectural candidate is independent saved-policy value/BR verification
+without complete-world expansion, preserving all earlier unknown receipts.
 Full-deck law, strategy storage,
 unrestricted convergence and larger-game certification remain unresolved.

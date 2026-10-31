@@ -8,9 +8,14 @@ while adding setup charges. Public native/Python selection now has 91 integrated
 controls passing with assertions disabled, including physical V4/V5 policy and
 metric parity. Deterministic grouping replaces the first prototype's new maps;
 host proof scans and native setup/scratch retain separate reservations. Fresh
-Terra review closes the host reservation issues. The fixed 34-call study and
-independent source/saved-result acceptance remain pending. Existing solver
-defaults remain literal; development parity establishes no timing or quality gain.
+Terra review closes the host reservation issues. The [fixed 34-call result](../native-fold-classes-result.md)
+retains 28 completions, six rejections and 14 matching pairs. Fresh saved-only
+acceptance and archive verification pass; exact quality retains 20 misses, two
+private-flush passes and six unknowns. Original T10 median regresses 31.76984%;
+no admitted-frontier gain is observed. Source-freeze CI passes; publication-head
+checks and merge ancestry remain separate gates. Existing defaults remain
+literal. The next major candidate is independent certification without
+complete-world expansion.
 
 The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
 24-image cursor copying during explicitly selected indexed native learning with

@@ -51,8 +51,14 @@ controls include physical policy/eight-metric parity and malformed-proof rejecti
 Luna integrates the host path and runner; Terra's fresh read-only review closes
 the host scan-reservation and setup-attribution issues. The original prototype
 and worker quota failures remain preserved development history. Sol remains
-unavailable; no fresh Sol review is implied. Frozen measurement and independent
-source/saved-result review remain gates. No speed, larger-capacity or full-deck claim.
+unavailable; no fresh Sol review is implied. The [frozen result](../native-fold-classes-result.md)
+now has 28 completions/six rejections, 14 matching policies/eight-metric pairs,
+20 exact misses, two passes and six unknowns, fresh saved-only acceptance and
+archive verification. Original T10 median regresses 31.76984%; no frontier gain
+is observed. Retain the opt-in/default boundary. Producer terminal exit is 0;
+review terminal exit is unavailable despite its saved passed receipt. Source
+CI passes; final publication-head/merge checks remain gates. Scalable independent
+certification is the next architectural candidate, not a completed capability.
 
 ### D074: Borrow active suit-image traversal frames (October 30, 2026)
 

@@ -1,0 +1,21 @@
+{
+  "source_commit": "946671d8da38102aff4c7d901d02d58158888a68",
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-m",
+    "scripts.benchmark_native_fold_classes",
+    "--output",
+    "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\native-fold-classes-study-v1",
+    "--native-executable",
+    "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\native-fold-v5-engine-build-v2\\native-exact-four-street-train.exe"
+  ],
+  "wrapper_sha256": "3abc9fc0842f0ee10ce9ca1e175dda1dd1c4b8971a2e988e412fba00588dce79",
+  "engine_sha256": "065217920a79e9d4b6378e09a3ad4371332eb863b363e911f20dd18ac64475d9",
+  "build_manifest_sha256": "40c75343ae7c6d3b9f5d0010f0da977ecea096e6aadeb9afb13535492abf6412",
+  "producer_attempts_authorized": 1,
+  "retry": false,
+  "returncode": 0,
+  "stdout_sha256": "1c97de6d83e458c75da9c197c1a429c7b9fdc2aa79e1a47f250245f97887a8ff",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
