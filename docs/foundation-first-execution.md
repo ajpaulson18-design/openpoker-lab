@@ -1,5 +1,24 @@
 # Foundation-first execution record
 
+## Integrated independent certificate development (October 31)
+
+The [new saved-only verifier](matrix-free-certificate.md) joins independent public
+numeric rules, selected-product blocker/rank payoffs and own-hand exact profile/BR
+walks without pair/world tables. Forty-three controls pass normally and optimized
+with stable source pins (11.382 / 11.868 seconds). The untouched literal v3 oracle
+agrees on exact metrics and normalized policy identity for weighted hidden
+outcomes, fractional rules, mixed ranks, dead boards and blind all-in. Hidden-river
+and zero-own-probability controls prevent clairvoyant or restricted deviations.
+Scrutiny closes JSON/decimal formatting and pre-helper reservation gaps; exact
+negative gains reject instead of clamp.
+
+Root substitutes for unavailable Sol architecture, Luna integrates public rules
+and the fixed saved runner, and Terra supplies payoff/budget and separate scalar
+review. The forthcoming frozen 28-policy pass must preserve all old inputs and
+22 completed/six unknown exact outcomes, with current/producer source admission
+before math. Six producer rejections remain a separate no-policy set. No larger
+saved-policy acceptance or full-deck capability has yet been established.
+
 ## Frozen exact fold-class study (October 31)
 
 The [fixed 34-child V4/V5 result](native-fold-classes-result.md) at `946671d`
@@ -17,9 +36,10 @@ handle confirms exit 0; the review's old handle is unavailable after worker quot
 interruption, so its terminal exit remains unknown despite a saved passed receipt.
 An exact-path archive audit passes without executing archived source. The archive
 retains raw captures, original development failures, all certificates and the
-review observation. Source-freeze CI passes; final publication-head/merge gates
-remain separate. Independent saved-policy certification without world expansion
-is now the more consequential next candidate; no new verifier is implemented yet.
+review observation. Source-freeze and final publication CI pass; PR #277 merged
+as `df76cb9`, with tested tree `f0cc3c8` and ancestry verified on fetched main.
+Independent saved-policy certification without world expansion is the next
+architectural step; its development and uncompleted acceptance gates are above.
 
 ## Exact fold-class development (October 31)
 

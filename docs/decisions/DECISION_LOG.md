@@ -36,6 +36,27 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D076: Certify saved selected-game policies without world tables (October 31, 2026)
+
+The [next integrated verifier](../matrix-free-certificate.md) addresses a measured
+barrier: retained 4×4/8×8/2×16 policies complete training/numeric replay but remain
+beyond the old exact oracle's representation/caps. Preserve that oracle unchanged.
+Join independent public rules, blocker/rank terminal vectors and per-own-hand
+profile/BR traversal with one selected-product normalizer, full visible histories
+and no pair/world records. Sum hidden outcomes before choosing own actions;
+validate off-path physical rows before any zero-reach shortcut.
+
+Root provides architecture while Sol is unavailable; Terra supplies exact
+payoffs/budget and independent criticism; Luna supplies public rules and saved
+integration. Forty-three normal/optimized development controls match old exact
+metrics/policy hashes and exercise hidden-information and pre-operation resource
+guards. Named-family/full-walk forecasts and dynamic fraction/serialization caps
+are scoped logical models, not CPU/RSS bounds. No saved larger-game certificate
+is claimed yet. Require committed current/producer source admission, all 28
+unchanged saved inputs, comparisons against 22 earlier certificates and separate
+literal-streaming acceptance for six earlier unknowns. No retraining, old-oracle
+cap lift, full-deck or commercial claim follows.
+
 ### D075: Factor exact fold callbacks by selected-board masks (October 31, 2026)
 
 Root records an engineering candidate under the owner's scalable-foundation
@@ -57,8 +78,10 @@ now has 28 completions/six rejections, 14 matching policies/eight-metric pairs,
 archive verification. Original T10 median regresses 31.76984%; no frontier gain
 is observed. Retain the opt-in/default boundary. Producer terminal exit is 0;
 review terminal exit is unavailable despite its saved passed receipt. Source
-CI passes; final publication-head/merge checks remain gates. Scalable independent
-certification is the next architectural candidate, not a completed capability.
+CI and all final publication workflows pass. PR #277 merged as `df76cb9`, with
+exact tested-tree equality and tested-head ancestry verified on fetched main.
+Scalable independent certification is the next architectural candidate, not a
+completed capability.
 
 ### D074: Borrow active suit-image traversal frames (October 30, 2026)
 

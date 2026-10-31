@@ -126,5 +126,7 @@ explicitly captured original fold-development archive.
 Development checks retain 91 integrated optimized controls, 12 runner controls
 in normal and optimized modes, native callback/budget tests and independent
 source review. All source-freeze GitHub workflows pass, including Python
-3.11/3.12/3.13, Windows/Linux native and sanitizer jobs. Publication-head checks
-and merge ancestry are separate final gates recorded in PR #277.
+3.11/3.12/3.13, Windows/Linux native and sanitizer jobs. All publication-head
+checks also pass. PR #277 merged as `df76cb9754503ac19eeab925b5026ace1347deba`;
+fetched main matches tested tree `f0cc3c8d7d7c99624c7cb000c44b2ed8fb74e1b7`,
+and tested-head ancestry is verified.
