@@ -93,9 +93,23 @@ struct Receipt {
     std::size_t integer_multiplications = 0;
     std::size_t integer_shifts = 0;
     std::size_t conversion_calls = 0;
+    std::uint64_t fold_class_setup_work = 0;
+    std::size_t fold_class_setup_entries = 0;
+    std::size_t fold_class_queries = 0;
+    std::size_t fold_reference_queries = 0;
+    std::size_t fold_class_buckets = 0;
+    std::size_t fold_class_own_checks = 0;
 };
 
 enum class TerminalKind { fold, showdown };
+enum class FoldTraversal { literal_boards, mask_classes_v1 };
+
+inline std::uint64_t fold_class_setup_work(std::size_t hands, std::size_t boards) {
+    std::size_t logarithm = 0;
+    for (auto n = std::max<std::size_t>(2, hands) - 1; n; n >>= 1) ++logarithm;
+    return 32ULL * hands + 8ULL * boards * hands + 16ULL * hands * logarithm + 128ULL;
+}
+inline std::size_t fold_class_setup_entries(std::size_t hands) { return 8 * hands + 128; }
 
 namespace detail {
 
@@ -258,9 +272,11 @@ public:
                         std::vector<WeightedHand> bb,
                         std::vector<SelectedBoard> boards,
                         std::size_t rank_cache_boards = 1,
-                        Limits limits = {})
+                        Limits limits = {}, FoldTraversal fold_traversal = FoldTraversal::literal_boards)
         : limits_(limits), rank_cache_boards_(rank_cache_boards),
-          source_hands_{std::move(sb), std::move(bb)}, boards_(std::move(boards)) {
+          source_hands_{std::move(sb), std::move(bb)}, boards_(std::move(boards)), fold_traversal_(fold_traversal) {
+        if (fold_traversal_ != FoldTraversal::literal_boards && fold_traversal_ != FoldTraversal::mask_classes_v1)
+            fail(ErrorCode::invalid_input, "unsupported fold traversal profile");
         validate_limits();
         if (source_hands_[0].empty() || source_hands_[1].empty() ||
             source_hands_[0].size() > limits_.max_hands_per_side ||
@@ -269,13 +285,17 @@ public:
             rank_cache_boards_ == 0 || rank_cache_boards_ > kMaximumBoards)
             fail(ErrorCode::invalid_input, "input dimensions exceed admitted bounds");
         const auto h0 = source_hands_[0].size(), h1 = source_hands_[1].size();
+        const bool fold_classes = fold_traversal_ == FoldTraversal::mask_classes_v1;
+        receipt_.fold_class_setup_entries = fold_classes ? fold_class_setup_entries(h0 + h1) : 0;
+        receipt_.fold_class_setup_work = fold_classes ? fold_class_setup_work(h0 + h1, boards_.size()) : 0;
         const auto retained_setup = 20 * (h0 + h1) + 8 * boards_.size() + 256 +
-            (rank_cache_boards_ + 1) * (h0 + h1);
+            (rank_cache_boards_ + 1) * (h0 + h1) + receipt_.fold_class_setup_entries;
         preflight_storage(retained_setup, 12 * (h0 + h1) + 512,
                           "constructor setup");
-        reserve_work(32 * (h0 + h1) + 16 * boards_.size() + 512);
+        reserve_work(32 * (h0 + h1) + 16 * boards_.size() + 512 + receipt_.fold_class_setup_work);
         validate_inputs();
         prepare_weights();
+        if (fold_classes) prepare_fold_classes();
         reserve_work(detail::checked_mul_count(boards_.size(),
             detail::checked_add_count(detail::checked_mul_count(40, h0 + h1), 512)));
         compute_normalizer();
@@ -415,6 +435,40 @@ public:
             aligned_reach[j] = shift_left(reaches[j].significand, shift);
         }
         const Integer payoff_sig = pay.significand;
+        const auto class_work = static_cast<std::uint64_t>(fold_classes_[opp].size()) *
+            (16 * hands_[own].size() + 512) + 16 * hands_[opp].size() + 64;
+        const bool use_fold_classes = kind == TerminalKind::fold &&
+            fold_traversal_ == FoldTraversal::mask_classes_v1 &&
+            class_work <= static_cast<std::uint64_t>(indexes.size()) * per_board_work;
+        if (use_fold_classes) {
+            ++receipt_.fold_class_queries;
+            std::uint64_t query_mask = 0;
+            for (auto k : indexes) query_mask |= std::uint64_t{1} << k;
+            std::vector<Integer> weighted(reaches.size());
+            for (std::size_t j = 0; j < reaches.size(); ++j)
+                if (aligned_reach[j] != 0) weighted[j] = multiply(weights_[opp][j], aligned_reach[j]);
+            for (const auto& group : fold_classes_[opp]) {
+                if ((group.board_mask & query_mask) == 0) continue;
+                std::vector<std::size_t> rows;
+                rows.reserve(group.members.size());
+                for (auto j : group.members) if (aligned_reach[j] != 0) rows.push_back(j);
+                if (rows.empty() || payoff_sig == 0) continue;
+                const auto bucket = make_bucket(opp, rows, &weighted);
+                ++receipt_.fold_class_buckets;
+                for (std::size_t i = 0; i < hands_[own].size(); ++i) {
+                    ++receipt_.fold_class_own_checks;
+                    const auto count = static_cast<unsigned>(std::popcount(
+                        query_mask & fold_board_masks_[own][i] & group.board_mask));
+                    if (!count) continue;
+                    Integer value = multiply(weights_[own][i], compatible_mass(hands_[own][i], bucket));
+                    value = multiply(value, Integer{count});
+                    value = multiply(value, payoff_sig);
+                    if (player == 1) value = -value;
+                    answer[i] = add(answer[i], std::move(value));
+                }
+            }
+        } else {
+        if (kind == TerminalKind::fold) ++receipt_.fold_reference_queries;
         for (auto k : indexes) {
             ++receipt_.boards_processed;
             const auto opp_rows = visible(opp, k);
@@ -487,6 +541,7 @@ public:
                 }
             }
         }
+        }
         if (common_denominator_power > 0) {
             for (auto& value : answer) if (value != 0)
                 value = shift_left(value, static_cast<std::size_t>(common_denominator_power));
@@ -535,6 +590,24 @@ public:
 private:
     struct Bucket { Integer total{}; std::array<Integer, 52> cards{}; std::map<std::uint16_t, Integer> exact{}; };
     struct CachedRanks { std::array<std::vector<detail::Rank>, 2> sides; };
+    struct FoldClass { std::uint64_t board_mask = 0; std::vector<std::size_t> members; };
+
+    void prepare_fold_classes() {
+        for (std::size_t p = 0; p < 2; ++p) {
+            fold_board_masks_[p].resize(hands_[p].size());
+            fold_classes_[p].reserve(hands_[p].size());
+            std::map<std::uint64_t, std::size_t> ids;
+            for (std::size_t i = 0; i < hands_[p].size(); ++i) {
+                std::uint64_t mask = 0;
+                for (std::size_t k = 0; k < boards_.size(); ++k)
+                    if ((hand_masks_[p][i] & board_masks_[k]) == 0) mask |= std::uint64_t{1} << k;
+                fold_board_masks_[p][i] = mask;
+                const auto [it, inserted] = ids.emplace(mask, fold_classes_[p].size());
+                if (inserted) fold_classes_[p].push_back(FoldClass{mask, {}});
+                fold_classes_[p][it->second].members.push_back(i);
+            }
+        }
+    }
 
     [[noreturn]] static void fail(ErrorCode code, const char* message) { throw KernelError(code, message); }
     void validate_limits() const {
@@ -849,6 +922,9 @@ private:
     std::vector<std::vector<Hand>> hands_;
     std::array<std::vector<std::uint64_t>, 2> hand_masks_{};
     std::vector<std::uint64_t> board_masks_;
+    FoldTraversal fold_traversal_ = FoldTraversal::literal_boards;
+    std::array<std::vector<std::uint64_t>, 2> fold_board_masks_{};
+    std::array<std::vector<FoldClass>, 2> fold_classes_{};
     std::array<std::vector<Integer>, 2> weights_{};
     std::array<int, 2> weight_exponents_{};
     std::array<std::size_t, 2> max_weight_bits_{};

@@ -1,0 +1,4 @@
+callback pairs=192 classes=96 fallback=96
+coupled G=1 Q=213 fold class queries=200
+coupled G=6 Q=48 fold class queries=1480
+ALL FOLD CLASS CONTROLS PASSED

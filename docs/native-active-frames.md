@@ -1,8 +1,10 @@
 # Active traversal frames for native indexed learning
 
 Status: implemented with [committed-source measurement and independent saved-policy
-acceptance](native-active-frames-result.md). Final publication CI and merge remain
-separate gates. The [indexed admission result](native-indexed-admission-result.md)
+acceptance](native-active-frames-result.md). Final publication-head checks pass;
+[PR #274](https://github.com/ajpaulson18-design/openpoker-lab/pull/274) merged as
+`df7e3968c776498600ae96b596b2bc23e0f285b6` with the tested tree unchanged.
+The [indexed admission result](native-indexed-admission-result.md)
 is prior evidence; it does not measure this change.
 
 Select `native_traversal="active-frames"` with an explicit source-built

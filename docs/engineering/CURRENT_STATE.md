@@ -1,5 +1,12 @@
 # Current engineering state
 
+An internal [exact fold-class candidate](../native-fold-classes.md) factors
+repeated fold callbacks using per-hand selected-board masks and exact card
+buckets, with no retained private-pair coefficients. Strict callback/coupled
+G1/G6 controls pass, preserving tested policy bits and the old query allowance
+while adding setup charges. Public native/Python selection and physical frozen
+acceptance are pending. Existing solver defaults remain literal.
+
 The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
 24-image cursor copying during explicitly selected indexed native learning with
 a Router-owned depth-by-active-group workspace. Development controls preserve
@@ -8,7 +15,8 @@ tested policies/metrics, lifecycle and unchanged budget boundaries. The
 13 native rejections, 19 exact target misses, two passes and three unverified
 exact outcomes. Fresh saved-only acceptance and archive verification pass;
 original T60 now fits, while original T10 median is 5.05% slower. Final publication
-CI remains pending. Logical traversal-field savings do not establish CPU or process-memory
+CI passes and PR #274 is merged with the tested tree unchanged. Logical
+traversal-field savings do not establish CPU or process-memory
 improvement; value-cursor defaults and other storage/quality limits remain.
 
 The explicit [executed indexed-path admission](../native-indexed-admission.md)

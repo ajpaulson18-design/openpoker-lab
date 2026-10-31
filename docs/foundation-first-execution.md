@@ -1,5 +1,29 @@
 # Foundation-first execution record
 
+## Exact fold-class development (October 31)
+
+Root begins the [next native computation candidate](native-fold-classes.md) while
+the active-frame publication checks finish. A separate exact-Fraction research
+probe records 282 exact operator matches across 48 seeded fixtures, preserving
+one zero-support rejection. The implementation groups per-hand selected-board
+masks and applies exact blocker buckets through the existing Kernel/Plan/CFR
+path. It reserves extra setup entries/work and retains all old per-query charges,
+with a declared literal crossover when the class loop forecast does not fit.
+Strict native controls pass 192 fold-vector pairs, conversion and budget guards,
+and identical G1/G6 coupled policy bits. An expanded fixture also covers partial
+own/opponent board blockers, preserving G1 Q=213 and G6 Q=48 policies. Eighty-two
+integrated controls pass with assertions disabled (203.976 seconds); the expanded
+compiled helper and authenticated wrapper pass separately. These are development
+checks, not public selection, capacity, speed or quality acceptance. Team workers
+are usage-limited; root does not imply fresh model-specific scrutiny.
+
+PR #274 is now merged as `df7e3968c776498600ae96b596b2bc23e0f285b6` after all
+final workflows pass, including full Python 3.11/3.12/3.13 and native sanitizer
+jobs. Its tree `8241d947eb8ee1ca1cfd4ca32217b30e8d9c48ea` equals tested head
+`b4abfea`; ancestry is verified on fetched main. The broader foundation goal
+remains active; fold-class public integration and its separate acceptance gates
+are next.
+
 ## Active traversal-frame candidate (October 30)
 
 The [new explicit V4 path](native-active-frames.md) borrows Router-owned

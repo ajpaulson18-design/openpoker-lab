@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-O",
+    "-m",
+    "unittest",
+    "tests.test_native_exact_four_street",
+    "tests.test_native_indexed_admission",
+    "tests.test_native_indexed_admission_independent",
+    "tests.test_native_active_frames",
+    "tests.test_native_active_frame_contracts",
+    "tests.test_native_active_frames_independent",
+    "tests.test_native_fold_classes",
+    "tests.test_benchmark_native_exact_four_street",
+    "tests.test_benchmark_native_indexed_routing",
+    "tests.test_benchmark_native_indexed_admission",
+    "tests.test_benchmark_native_active_frames",
+    "-v"
+  ],
+  "returncode": 0
+}

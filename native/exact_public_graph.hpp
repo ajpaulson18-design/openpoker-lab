@@ -460,12 +460,17 @@ public:
     Plan(Graph graph, std::vector<WeightedHand> sb, std::vector<WeightedHand> bb,
          std::vector<SelectedBoard> boards, unsigned iterations,
          std::size_t rank_cache_boards = 1, Limits limits = {},
-         AdmissionProfile admission_profile = AdmissionProfile::legacy)
+         AdmissionProfile admission_profile = AdmissionProfile::legacy,
+         exact_selected_kernel::FoldTraversal fold_traversal = exact_selected_kernel::FoldTraversal::literal_boards)
         : graph_(std::move(graph)), ranges_{std::move(sb), std::move(bb)},
           boards_(std::move(boards)), iterations_(iterations),
-          rank_cache_boards_(rank_cache_boards), limits_(std::move(limits)), admission_profile_(admission_profile) {
+          rank_cache_boards_(rank_cache_boards), limits_(std::move(limits)), admission_profile_(admission_profile),
+          fold_traversal_(fold_traversal) {
         if (admission_profile_ != AdmissionProfile::legacy && admission_profile_ != AdmissionProfile::indexed_v1)
             detail::fail(ErrorCode::invalid_limits, "unsupported native Plan admission profile");
+        if (fold_traversal_ != exact_selected_kernel::FoldTraversal::literal_boards &&
+            fold_traversal_ != exact_selected_kernel::FoldTraversal::mask_classes_v1)
+            detail::fail(ErrorCode::invalid_limits, "unsupported native fold traversal");
         validate_limits();
         if (graph_.vertices.empty() || graph_.vertices.size() > limits_.max_vertices ||
             graph_.root_id >= graph_.vertices.size())
@@ -819,6 +824,7 @@ private:
     std::size_t rank_cache_boards_ = 1;
     Limits limits_{};
     AdmissionProfile admission_profile_ = AdmissionProfile::legacy;
+    exact_selected_kernel::FoldTraversal fold_traversal_ = exact_selected_kernel::FoldTraversal::literal_boards;
     std::size_t edge_count_ = 0;
     std::uint64_t graph_input_text_bytes_ = 0;
     detail::GraphMetrics graph_metrics_{};
@@ -1132,7 +1138,12 @@ inline void Plan::preflight_q_plan() {
         static_cast<std::uint64_t>(graph_census_.chance_occurrences) * boards_.size());
     const auto h = static_cast<std::uint64_t>(total_hands());
     const auto b = static_cast<std::uint64_t>(boards_.size());
-    const auto kernel_setup = 32ULL * h + 16ULL * b + 512ULL + b * (40ULL * h + 512ULL);
+    const bool fold_classes = fold_traversal_ == exact_selected_kernel::FoldTraversal::mask_classes_v1;
+    const auto fold_setup_work = fold_classes ? exact_selected_kernel::fold_class_setup_work(
+        static_cast<std::size_t>(h), static_cast<std::size_t>(b)) : 0ULL;
+    const auto fold_setup_entries = fold_classes ? exact_selected_kernel::fold_class_setup_entries(
+        static_cast<std::size_t>(h)) : 0ULL;
+    const auto kernel_setup = 32ULL * h + 16ULL * b + 512ULL + b * (40ULL * h + 512ULL) + fold_setup_work;
     const auto one_board_support = 36ULL * h + 512ULL + 2ULL * h + 32ULL;
     const auto kernel_support = prefix_upper * (b * (36ULL * h + 512ULL) + 2ULL * h + 32ULL) +
         b * one_board_support;
@@ -1164,7 +1175,7 @@ inline void Plan::preflight_q_plan() {
     if (limits_.kernel.max_storage_entries > kernel_allowance_entries)
         limits_.kernel.max_storage_entries = kernel_allowance_entries;
     const auto kernel_retained_setup = 20ULL * h + 8ULL * b + 256ULL +
-        (rank_cache_boards_ + 1ULL) * h;
+        (rank_cache_boards_ + 1ULL) * h + fold_setup_entries;
     const auto constructor_scratch = 12ULL * h + 512ULL;
     const auto support_scratch = 10ULL * h + 600ULL;
     const auto kernel_storage_required = kernel_retained_setup +
@@ -1175,7 +1186,7 @@ inline void Plan::preflight_q_plan() {
 
 inline void Plan::instantiate_owned_kernel() {
     kernel_ = std::make_unique<exact_selected_kernel::ExactSelectedKernel>(
-        ranges_[0], ranges_[1], boards_, rank_cache_boards_, limits_.kernel);
+        ranges_[0], ranges_[1], boards_, rank_cache_boards_, limits_.kernel, fold_traversal_);
     for (const auto& mapping : group_) {
         std::array<std::vector<std::size_t>, 2> hand_map;
         for (std::size_t side = 0; side < 2; ++side) {

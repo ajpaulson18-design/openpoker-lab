@@ -36,6 +36,20 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D075: Factor exact fold callbacks by selected-board masks (October 31, 2026)
+
+Root records an engineering candidate under the owner's scalable-foundation
+direction: group opponent holdings by the selected boards they can reach and
+apply exact blocker buckets with integer intersection counts. The bounded
+[native fold-class design](../native-fold-classes.md) connects to the existing
+coupled trainer through explicit internal parameters, retaining literal defaults,
+all old query allowances and explicit extra setup reservations. Exact algebra
+and conditional C++ policy-bit controls pass; public selection, whole-game
+physical acceptance, frozen measurement and independent source/saved-result
+review remain required gates. No speed, larger-capacity or full-deck claim.
+Sol/Terra/Luna workers are usage-limited; this work is root implementation and
+does not imply fresh model-specific scrutiny.
+
 ### D074: Borrow active suit-image traversal frames (October 30, 2026)
 
 Under the owner's scalable unified-foundation direction, Sol accepts a bounded

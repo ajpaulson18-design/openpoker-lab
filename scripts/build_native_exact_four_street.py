@@ -41,6 +41,10 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "tests/native/exact_indexed_routing_controls.cpp",
         "native/exact_indexed_routing.hpp", "native/exact_public_history_index.hpp",
         "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "fold-classes": ("native-exact-fold-class-controls", (
+        "tests/native/exact_fold_class_controls.cpp", "native/exact_selected_cfr.hpp",
+        "native/exact_public_graph.hpp", "native/exact_indexed_routing.hpp",
+        "native/exact_public_history_index.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "history-index": ("native-exact-history-index-controls", (
         "tests/native/exact_public_history_index_controls.cpp", "native/exact_public_history_index.hpp",
         "tests/native/exact_history_index_schedule_controls.cpp",
@@ -186,7 +190,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "history-index" else "Numeric Q/prefix routing conformance helper; no trainer or larger-capacity acceptance."
                   if target == "indexed-routing" else "Active traversal-frame conformance helper only; no native trainer or whole-game acceptance."
                   if target == "active-frame" else "Active-frame numeric routing conformance helper only; no trainer or whole-game acceptance."
-                  if target == "active-routing" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
+                  if target == "active-routing" else "Exact fold-class callback/coupled trainer conformance helper; no public protocol or capacity acceptance."
+                  if target == "fold-classes" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,

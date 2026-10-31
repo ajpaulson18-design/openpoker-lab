@@ -1,7 +1,11 @@
 # Active traversal frames: retained finite-game study
 
 Status: the fixed producer study, fresh independent saved-only acceptance and
-exact-path archive verification pass. Final publication CI and merge remain gates.
+exact-path archive verification pass. All final publication-head workflows pass;
+[PR #274](https://github.com/ajpaulson18-design/openpoker-lab/pull/274) merged as
+`df7e3968c776498600ae96b596b2bc23e0f285b6`. Its tree
+`8241d947eb8ee1ca1cfd4ca32217b30e8d9c48ea` matches tested publication head
+`b4abfeaa3d529377401f6a60edeebc5aace22f9e`, verified as an ancestor of main.
 The [architecture and ledger](native-active-frames.md) define the explicit
 candidate and unchanged default. Producer source is
 `0be1a858fb5983df21698d97b2a1f8e5e7295505`, with 2,109 tracked raw/Git source
@@ -103,7 +107,7 @@ including malicious payload/file changes. Saved-only compatibility validates all
 ten prior indexed V3 completions. The host marker correction passes ten optimized
 physical/API/contract controls using the unchanged authenticated engine; all 11
 engine input files match the frozen raw bytes. Windows/Linux/sanitizer and full
-Python 3.11/3.12/3.13 CI pass at the study source. Final publication-head CI remains
-a distinct gate. Repeated terminal callbacks, Q/history construction, larger-range
+Python 3.11/3.12/3.13 CI pass at the study and final publication sources.
+Repeated terminal callbacks, Q/history construction, larger-range
 verification, full-deck representation and scalable quality certification remain
 open. The overall foundation goal stays active.
