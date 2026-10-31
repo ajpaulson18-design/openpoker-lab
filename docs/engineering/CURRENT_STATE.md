@@ -1,11 +1,16 @@
 # Current engineering state
 
-An internal [exact fold-class candidate](../native-fold-classes.md) factors
+An explicit V5 [exact fold-class candidate](../native-fold-classes.md) factors
 repeated fold callbacks using per-hand selected-board masks and exact card
 buckets, with no retained private-pair coefficients. Strict callback/coupled
 G1/G6 controls pass, preserving tested policy bits and the old query allowance
-while adding setup charges. Public native/Python selection and physical frozen
-acceptance are pending. Existing solver defaults remain literal.
+while adding setup charges. Public native/Python selection now has 91 integrated
+controls passing with assertions disabled, including physical V4/V5 policy and
+metric parity. Deterministic grouping replaces the first prototype's new maps;
+host proof scans and native setup/scratch retain separate reservations. Fresh
+Terra review closes the host reservation issues. The fixed 34-call study and
+independent source/saved-result acceptance remain pending. Existing solver
+defaults remain literal; development parity establishes no timing or quality gain.
 
 The [active traversal-frame candidate](../native-active-frames.md) replaces fixed
 24-image cursor copying during explicitly selected indexed native learning with

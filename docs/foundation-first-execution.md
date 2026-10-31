@@ -14,15 +14,21 @@ and identical G1/G6 coupled policy bits. An expanded fixture also covers partial
 own/opponent board blockers, preserving G1 Q=213 and G6 Q=48 policies. Eighty-two
 integrated controls pass with assertions disabled (203.976 seconds); the expanded
 compiled helper and authenticated wrapper pass separately. These are development
-checks, not public selection, capacity, speed or quality acceptance. Team workers
-are usage-limited; root does not imply fresh model-specific scrutiny.
+checks, not capacity, speed or quality acceptance. The prototype's new maps were
+subsequently replaced with deterministic radix grouping and constant-time
+identical-hand lookup, with explicit construction scratch and setup charges.
+The public V5 path now passes 91 integrated optimized controls (178.006 seconds),
+including physical V4/V5 policy/eight-metric parity, G6, blind all-in and malformed
+proof rejection. Luna resumed for host/runner integration; Terra's fresh
+read-only review closes host proof scan reservations and minimum setup
+attribution. The earlier quota-limited work is preserved; Sol remains unavailable.
 
 PR #274 is now merged as `df7e3968c776498600ae96b596b2bc23e0f285b6` after all
 final workflows pass, including full Python 3.11/3.12/3.13 and native sanitizer
 jobs. Its tree `8241d947eb8ee1ca1cfd4ca32217b30e8d9c48ea` equals tested head
 `b4abfea`; ancestry is verified on fetched main. The broader foundation goal
-remains active; fold-class public integration and its separate acceptance gates
-are next.
+remains active; the fixed 34-call fold-class measurement and independent
+source/saved-result acceptance gates are next.
 
 ## Active traversal-frame candidate (October 30)
 

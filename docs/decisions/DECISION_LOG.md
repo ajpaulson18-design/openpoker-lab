@@ -42,13 +42,17 @@ Root records an engineering candidate under the owner's scalable-foundation
 direction: group opponent holdings by the selected boards they can reach and
 apply exact blocker buckets with integer intersection counts. The bounded
 [native fold-class design](../native-fold-classes.md) connects to the existing
-coupled trainer through explicit internal parameters, retaining literal defaults,
+coupled trainer through explicit V5 native/Python selection, retaining literal defaults,
 all old query allowances and explicit extra setup reservations. Exact algebra
-and conditional C++ policy-bit controls pass; public selection, whole-game
-physical acceptance, frozen measurement and independent source/saved-result
-review remain required gates. No speed, larger-capacity or full-deck claim.
-Sol/Terra/Luna workers are usage-limited; this work is root implementation and
-does not imply fresh model-specific scrutiny.
+and conditional C++ policy-bit controls pass. The revised deterministic radix
+grouping and direct identical-hand correction avoid new map-comparison accounting
+gaps; old literal-map accounting is unchanged. Ninety-one integrated optimized
+controls include physical policy/eight-metric parity and malformed-proof rejection.
+Luna integrates the host path and runner; Terra's fresh read-only review closes
+the host scan-reservation and setup-attribution issues. The original prototype
+and worker quota failures remain preserved development history. Sol remains
+unavailable; no fresh Sol review is implied. Frozen measurement and independent
+source/saved-result review remain gates. No speed, larger-capacity or full-deck claim.
 
 ### D074: Borrow active suit-image traversal frames (October 30, 2026)
 

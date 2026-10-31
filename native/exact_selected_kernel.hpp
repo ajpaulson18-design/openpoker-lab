@@ -99,17 +99,28 @@ struct Receipt {
     std::size_t fold_reference_queries = 0;
     std::size_t fold_class_buckets = 0;
     std::size_t fold_class_own_checks = 0;
+    std::size_t fold_mask_entries = 0;
+    std::size_t fold_membership_entries = 0;
+    std::array<std::size_t, 2> fold_classes_per_side{};
+    std::array<std::size_t, 2> fold_class_calls_by_player{};
+    std::array<std::size_t, 2> fold_literal_calls_by_player{};
+    std::array<std::size_t, 2> fold_buckets_by_player{};
 };
 
 enum class TerminalKind { fold, showdown };
 enum class FoldTraversal { literal_boards, mask_classes_v1 };
 
 inline std::uint64_t fold_class_setup_work(std::size_t hands, std::size_t boards) {
-    std::size_t logarithm = 0;
-    for (auto n = std::max<std::size_t>(2, hands) - 1; n; n >>= 1) ++logarithm;
-    return 32ULL * hands + 8ULL * boards * hands + 16ULL * hands * logarithm + 128ULL;
+    return 2048ULL * hands + 8ULL * boards * hands + 65536ULL;
 }
-inline std::size_t fold_class_setup_entries(std::size_t hands) { return 8 * hands + 128; }
+inline std::size_t fold_class_setup_entries(std::size_t hands) { return 10 * hands + 128; }
+inline std::size_t fold_class_constructor_scratch(std::size_t hands) {
+    return std::max<std::size_t>(12 * hands + 512, 4224);
+}
+inline std::uint64_t fold_class_query_work(std::size_t classes, std::size_t own,
+                                         std::size_t opponent, std::size_t boards) {
+    return classes * (64ULL * own + 256ULL) + 64ULL * opponent + 8ULL * boards + 128ULL;
+}
 
 namespace detail {
 
@@ -290,7 +301,7 @@ public:
         receipt_.fold_class_setup_work = fold_classes ? fold_class_setup_work(h0 + h1, boards_.size()) : 0;
         const auto retained_setup = 20 * (h0 + h1) + 8 * boards_.size() + 256 +
             (rank_cache_boards_ + 1) * (h0 + h1) + receipt_.fold_class_setup_entries;
-        preflight_storage(retained_setup, 12 * (h0 + h1) + 512,
+        preflight_storage(retained_setup, fold_classes ? fold_class_constructor_scratch(h0 + h1) : 12 * (h0 + h1) + 512,
                           "constructor setup");
         reserve_work(32 * (h0 + h1) + 16 * boards_.size() + 512 + receipt_.fold_class_setup_work);
         validate_inputs();
@@ -435,32 +446,32 @@ public:
             aligned_reach[j] = shift_left(reaches[j].significand, shift);
         }
         const Integer payoff_sig = pay.significand;
-        const auto class_work = static_cast<std::uint64_t>(fold_classes_[opp].size()) *
-            (16 * hands_[own].size() + 512) + 16 * hands_[opp].size() + 64;
+        const auto class_work = fold_class_query_work(fold_classes_[opp].size(),
+            hands_[own].size(), hands_[opp].size(), indexes.size());
         const bool use_fold_classes = kind == TerminalKind::fold &&
             fold_traversal_ == FoldTraversal::mask_classes_v1 &&
             class_work <= static_cast<std::uint64_t>(indexes.size()) * per_board_work;
         if (use_fold_classes) {
             ++receipt_.fold_class_queries;
+            ++receipt_.fold_class_calls_by_player[player];
             std::uint64_t query_mask = 0;
             for (auto k : indexes) query_mask |= std::uint64_t{1} << k;
             std::vector<Integer> weighted(reaches.size());
             for (std::size_t j = 0; j < reaches.size(); ++j)
                 if (aligned_reach[j] != 0) weighted[j] = multiply(weights_[opp][j], aligned_reach[j]);
             for (const auto& group : fold_classes_[opp]) {
-                if ((group.board_mask & query_mask) == 0) continue;
-                std::vector<std::size_t> rows;
-                rows.reserve(group.members.size());
-                for (auto j : group.members) if (aligned_reach[j] != 0) rows.push_back(j);
-                if (rows.empty() || payoff_sig == 0) continue;
-                const auto bucket = make_bucket(opp, rows, &weighted);
+                if ((group.board_mask & query_mask) == 0 || payoff_sig == 0) continue;
+                bool any = false;
+                const auto bucket = make_fold_bucket(opp, group, weighted, any);
+                if (!any) continue;
                 ++receipt_.fold_class_buckets;
+                ++receipt_.fold_buckets_by_player[player];
                 for (std::size_t i = 0; i < hands_[own].size(); ++i) {
                     ++receipt_.fold_class_own_checks;
                     const auto count = static_cast<unsigned>(std::popcount(
                         query_mask & fold_board_masks_[own][i] & group.board_mask));
                     if (!count) continue;
-                    Integer value = multiply(weights_[own][i], compatible_mass(hands_[own][i], bucket));
+                    Integer value = multiply(weights_[own][i], fold_compatible_mass(own, i, group.board_mask, bucket, weighted));
                     value = multiply(value, Integer{count});
                     value = multiply(value, payoff_sig);
                     if (player == 1) value = -value;
@@ -468,7 +479,10 @@ public:
                 }
             }
         } else {
-        if (kind == TerminalKind::fold) ++receipt_.fold_reference_queries;
+        if (kind == TerminalKind::fold) {
+            ++receipt_.fold_reference_queries;
+            ++receipt_.fold_literal_calls_by_player[player];
+        }
         for (auto k : indexes) {
             ++receipt_.boards_processed;
             const auto opp_rows = visible(opp, k);
@@ -591,22 +605,85 @@ private:
     struct Bucket { Integer total{}; std::array<Integer, 52> cards{}; std::map<std::uint16_t, Integer> exact{}; };
     struct CachedRanks { std::array<std::vector<detail::Rank>, 2> sides; };
     struct FoldClass { std::uint64_t board_mask = 0; std::vector<std::size_t> members; };
+    struct FoldBucket { Integer total{}; std::array<Integer, 52> cards{}; };
+    static constexpr auto no_identical_hand = std::numeric_limits<std::size_t>::max();
 
     void prepare_fold_classes() {
+        // These radix buffers die before the separate 4096-slot lookup below.
         for (std::size_t p = 0; p < 2; ++p) {
             fold_board_masks_[p].resize(hands_[p].size());
             fold_classes_[p].reserve(hands_[p].size());
-            std::map<std::uint64_t, std::size_t> ids;
+            std::vector<std::size_t> order(hands_[p].size()), scratch(hands_[p].size());
             for (std::size_t i = 0; i < hands_[p].size(); ++i) {
                 std::uint64_t mask = 0;
                 for (std::size_t k = 0; k < boards_.size(); ++k)
                     if ((hand_masks_[p][i] & board_masks_[k]) == 0) mask |= std::uint64_t{1} << k;
                 fold_board_masks_[p][i] = mask;
-                const auto [it, inserted] = ids.emplace(mask, fold_classes_[p].size());
-                if (inserted) fold_classes_[p].push_back(FoldClass{mask, {}});
-                fold_classes_[p][it->second].members.push_back(i);
+                order[i] = i;
             }
+            for (unsigned bit = 0; bit < 64; ++bit) {
+                std::size_t zeros = 0;
+                for (auto i : order) if (((fold_board_masks_[p][i] >> bit) & 1U) == 0) ++zeros;
+                std::size_t low = 0, high = zeros;
+                for (auto i : order)
+                    scratch[((fold_board_masks_[p][i] >> bit) & 1U) ? high++ : low++] = i;
+                order.swap(scratch);
+            }
+            for (std::size_t first = 0; first < order.size();) {
+                const auto mask = fold_board_masks_[p][order[first]];
+                auto last = first + 1;
+                while (last < order.size() && fold_board_masks_[p][order[last]] == mask) ++last;
+                FoldClass group{mask, {}};
+                group.members.reserve(last - first);
+                for (auto position = first; position < last; ++position) {
+                    group.members.push_back(order[position]);
+                    ++receipt_.fold_membership_entries;
+                }
+                fold_classes_[p].push_back(std::move(group));
+                first = last;
+            }
+            receipt_.fold_mask_entries += fold_board_masks_[p].size();
+            receipt_.fold_classes_per_side[p] = fold_classes_[p].size();
         }
+        std::array<std::size_t, 4096> lookup;
+        for (std::size_t own = 0; own < 2; ++own) {
+            lookup.fill(no_identical_hand);
+            const auto opp = 1 - own;
+            for (std::size_t j = 0; j < hands_[opp].size(); ++j)
+                lookup[detail::hand_key(hands_[opp][j])] = j;
+            fold_identical_opponent_[own].resize(hands_[own].size());
+            for (std::size_t i = 0; i < hands_[own].size(); ++i)
+                fold_identical_opponent_[own][i] = lookup[detail::hand_key(hands_[own][i])];
+        }
+        const auto logical_entries = 3 * total_hands() +
+            4 * (fold_classes_[0].size() + fold_classes_[1].size()) + 64;
+        if (logical_entries > receipt_.fold_class_setup_entries ||
+            receipt_.fold_mask_entries != total_hands() || receipt_.fold_membership_entries != total_hands())
+            fail(ErrorCode::storage_limit, "fold class logical layout exceeds constructor reservation");
+    }
+    FoldBucket make_fold_bucket(std::size_t opp, const FoldClass& group,
+                                const std::vector<Integer>& weighted, bool& any) {
+        FoldBucket bucket;
+        for (auto j : group.members) {
+            if (weighted[j] == 0) continue;
+            any = true;
+            const auto hand = hands_[opp][j];
+            bucket.total = add(bucket.total, weighted[j]);
+            bucket.cards[hand.first] = add(bucket.cards[hand.first], weighted[j]);
+            bucket.cards[hand.second] = add(bucket.cards[hand.second], weighted[j]);
+        }
+        return bucket;
+    }
+    Integer fold_compatible_mass(std::size_t own, std::size_t i, std::uint64_t mask,
+                                 const FoldBucket& bucket, const std::vector<Integer>& weighted) {
+        const auto hand = hands_[own][i];
+        Integer result = add(bucket.total, -bucket.cards[hand.first]);
+        result = add(result, -bucket.cards[hand.second]);
+        const auto j = fold_identical_opponent_[own][i];
+        if (j != no_identical_hand && fold_board_masks_[1 - own][j] == mask)
+            result = add(result, weighted[j]);
+        if (result < 0) fail(ErrorCode::invalid_input, "negative fold-class blocker mass");
+        return result;
     }
 
     [[noreturn]] static void fail(ErrorCode code, const char* message) { throw KernelError(code, message); }
@@ -925,6 +1002,7 @@ private:
     FoldTraversal fold_traversal_ = FoldTraversal::literal_boards;
     std::array<std::vector<std::uint64_t>, 2> fold_board_masks_{};
     std::array<std::vector<FoldClass>, 2> fold_classes_{};
+    std::array<std::vector<std::size_t>, 2> fold_identical_opponent_{};
     std::array<std::vector<Integer>, 2> weights_{};
     std::array<int, 2> weight_exponents_{};
     std::array<std::size_t, 2> max_weight_bits_{};

@@ -48,6 +48,11 @@ void vectors() {
          "class/literal crossover not exercised");
     need(candidate.receipt().fold_class_buckets>0 && candidate.receipt().fold_class_own_checks>0,
          "class execution counters absent");
+    need(candidate.receipt().fold_mask_entries==8 && candidate.receipt().fold_membership_entries==8 &&
+         candidate.receipt().fold_class_calls_by_player[0]+candidate.receipt().fold_class_calls_by_player[1]==candidate.receipt().fold_class_queries &&
+         candidate.receipt().fold_literal_calls_by_player[0]+candidate.receipt().fold_literal_calls_by_player[1]==candidate.receipt().fold_reference_queries &&
+         candidate.receipt().fold_class_own_checks==4*(candidate.receipt().fold_buckets_by_player[0]+candidate.receipt().fold_buckets_by_player[1]),
+         "class entered-call/membership ownership counters differ");
     for(std::size_t player=0;player<2;++player)
         same(old.terminal(player,subsets[0],k::TerminalKind::showdown,.5,V{1.,.1,0.,.5}),
              candidate.terminal(player,subsets[0],k::TerminalKind::showdown,.5,V{1.,.1,0.,.5}));
@@ -61,19 +66,30 @@ void guards() {
     try {k::ExactSelectedKernel kernel(hands(0),hands(1),boards(),64,{},static_cast<k::FoldTraversal>(99));}
     catch(const k::KernelError& error){invalid=error.code()==k::ErrorCode::invalid_input;}
     need(invalid,"unknown fold mode accepted");
-    k::Limits storage; storage.max_storage_entries=2247;
+    k::Limits storage; storage.max_storage_entries=5879;
     bool refused=false;
     try {k::ExactSelectedKernel kernel(hands(0),hands(1),boards(),64,storage,k::FoldTraversal::mask_classes_v1);}
     catch(const k::KernelError& error){refused=error.code()==k::ErrorCode::storage_limit;}
     need(refused,"constructor omitted mask/class retained entries");
-    storage.max_storage_entries=2248;
+    storage.max_storage_entries=5880;
     k::ExactSelectedKernel narrow(hands(0),hands(1),boards(),64,storage,k::FoldTraversal::mask_classes_v1);
     std::vector<std::size_t> indexes;for(std::size_t i=0;i<64;++i)indexes.push_back(i);
-    const auto before=narrow.receipt();refused=false;
-    try {(void)narrow.terminal(0,indexes,k::TerminalKind::fold,.5,V{1.,1.,1.,1.});}
+    // The new constructor scratch exceeds this fixture's query scratch. A
+    // larger callback fixture independently exercises query-only rejection.
+    (void)narrow.terminal(0,indexes,k::TerminalKind::fold,.5,V{1.,1.,1.,1.});
+    need(narrow.receipt().terminal_queries==1,"constructor boundary rejects an admitted query");
+    std::vector<k::WeightedHand> many_a,many_b;
+    for(std::uint8_t a=32;a<52 && many_b.size()<16;++a)
+        for(std::uint8_t b=static_cast<std::uint8_t>(a+1);b<52 && many_b.size()<16;++b)
+            if(many_a.size()<16) many_a.push_back({{a,b},bits(1.)});
+            else many_b.push_back({{a,b},bits(1.)});
+    storage.max_storage_entries=8160;
+    k::ExactSelectedKernel query_limited(many_a,many_b,boards(),64,storage,k::FoldTraversal::mask_classes_v1);
+    const auto query_start=query_limited.receipt();refused=false;
+    try {(void)query_limited.terminal(0,indexes,k::TerminalKind::fold,.5,V(16,1.));}
     catch(const k::KernelError& error){refused=error.code()==k::ErrorCode::storage_limit;}
-    need(refused && narrow.receipt().modeled_work==before.modeled_work && narrow.receipt().terminal_queries==0,
-         "query storage failure changed kernel before admission");
+    need(refused && query_limited.receipt().modeled_work==query_start.modeled_work && query_limited.receipt().terminal_queries==0,
+         "query-only storage failure changed kernel before admission");
     k::ExactSelectedKernel base(hands(0),hands(1),boards(),64,{},k::FoldTraversal::mask_classes_v1);
     k::Limits budget;budget.max_modeled_work=base.receipt().modeled_work+64*(48*8+512)+112-1;
     k::ExactSelectedKernel limited(hands(0),hands(1),boards(),64,budget,k::FoldTraversal::mask_classes_v1);

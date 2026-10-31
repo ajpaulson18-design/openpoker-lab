@@ -1176,7 +1176,8 @@ inline void Plan::preflight_q_plan() {
         limits_.kernel.max_storage_entries = kernel_allowance_entries;
     const auto kernel_retained_setup = 20ULL * h + 8ULL * b + 256ULL +
         (rank_cache_boards_ + 1ULL) * h + fold_setup_entries;
-    const auto constructor_scratch = 12ULL * h + 512ULL;
+    const auto constructor_scratch = fold_classes ? exact_selected_kernel::fold_class_constructor_scratch(
+        static_cast<std::size_t>(h)) : 12ULL * h + 512ULL;
     const auto support_scratch = 10ULL * h + 600ULL;
     const auto kernel_storage_required = kernel_retained_setup +
         std::max(constructor_scratch, support_scratch);
