@@ -1,0 +1,14 @@
+{
+  "contract": "matrix-free-certificate-development-v1",
+  "files": {
+    "README.md": "cfedbc172173289893a2eceb452ca165b10c51287585977013810df5c9800952",
+    "normal-status.json": "a38ff25f4f3f06fbb3f8a5b12116b117988729b5c6aca5ea6613ebcbb78b7ade",
+    "normal.stderr.log": "abe5709b77a07fe11d704e17dc2aaad840d1f14b6529eff379614789aebb78db",
+    "normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "optimized-status.json": "b0a06a73c2cf7a11a666d21b497d6f040df0f16b069319a77d8f84f10ad2ac57",
+    "optimized.stderr.log": "0717fbf8f97498b17f248fd0afd94b48e2163cfb5f4b6a1ef063e04fe65ef85a",
+    "optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipt.json": "e05df6242daa43f4461c41c73679bb1868b2c371ca01c1e7449575004461dc0c"
+  },
+  "scope": "Development controls only; saved-policy acceptance pending"
+}
