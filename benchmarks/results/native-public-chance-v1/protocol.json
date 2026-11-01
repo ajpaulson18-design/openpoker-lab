@@ -1,0 +1,12 @@
+{
+  "expected_skips_each": 0,
+  "expected_tests_each": 18,
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "scope": "Component law/arithmetic/admission controls only. No sampler/training/full-game quality, speed or RSS result.",
+  "source_and_actual_build_authentication_before_project_mathematics": true,
+  "source_commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+  "training_calls": 0
+}

@@ -1,0 +1,30 @@
+{
+  "archive_manifest_sha256": "ce7e6a69b42a79d182af404420576c9e162120d3ec6c4ea1add2a4bfc49034c0",
+  "contract": "native-public-chance-development-v1",
+  "files": {
+    "README.md": "35f0425d9de28d3c1e9a0f7be4229e9a823f0f341f877fd6cbc4035fccaf63e9",
+    "development-observations.json": "dcf43a7ff70bd31bfb37fcc211613d94cc33397dd7cb6565624977b1606d6e76",
+    "evidence.zip": "d4d0a1c18feb29295e0e2f0ad5ec1961c5ff5a66f93f03bcf6f6c861fba33fae",
+    "v1-normal-status.json": "71173ed0b1b7eed469a7e9f108769798494d6a15497914f623198dc5d69018c6",
+    "v1-normal.stderr.log": "1d62a9deef25b5c685545bb5809bb51a0e566032affa5c41046888b3f8d22c9e",
+    "v1-normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v1-optimized-status.json": "1a8c40ae4b0eeb9ac30843c51ff951cc567de8e9e0f5835605fdb2157df30b3f",
+    "v1-optimized.stderr.log": "e3d9a86d2ec16953a5938456b750befd2c480232752565dc5cb59314ec7a7ff7",
+    "v1-optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v1-receipt.json": "0cadfe97ad2053fef9c867c4013beae7a1aa06882492c990482779d5238531dc",
+    "v2-normal-status.json": "71173ed0b1b7eed469a7e9f108769798494d6a15497914f623198dc5d69018c6",
+    "v2-normal.stderr.log": "3f4d7ae56d3076eda59994b7f93d41ce90d65d0964fd1d8bca88ee0bc81773c5",
+    "v2-normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v2-optimized-status.json": "1a8c40ae4b0eeb9ac30843c51ff951cc567de8e9e0f5835605fdb2157df30b3f",
+    "v2-optimized.stderr.log": "2e45afcd0dd7fae38588bdbcd0be38efc48ba620e413e22d97794b5af9bc3d63",
+    "v2-optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v2-receipt.json": "c26d3789ddc3b0090df9744178faaad5b3e750b7bbd620ccace1b44b8098b687",
+    "v3-normal-status.json": "71173ed0b1b7eed469a7e9f108769798494d6a15497914f623198dc5d69018c6",
+    "v3-normal.stderr.log": "05a6f9034eff9453d0d9fff1fa9805482c95345f9d6b9249334f4adb3237db80",
+    "v3-normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v3-optimized-status.json": "1a8c40ae4b0eeb9ac30843c51ff951cc567de8e9e0f5835605fdb2157df30b3f",
+    "v3-optimized.stderr.log": "bb768f755765933a865e2c218584ec0adcad76894282d96973415d187656eba2",
+    "v3-optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v3-receipt.json": "85f92e2f86dec3980dbd749d0331795d1825388424c0843e7ff889b26dc9d164"
+  }
+}

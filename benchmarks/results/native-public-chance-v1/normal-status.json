@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "tests.test_build_native_full_deck_public_chance",
+    "tests.test_native_full_deck_public_chance",
+    "-v"
+  ],
+  "mode": "normal",
+  "returncode": 0,
+  "seconds": 27.189,
+  "skipped": 0,
+  "tests": 18
+}

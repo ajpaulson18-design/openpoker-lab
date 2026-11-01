@@ -48,7 +48,16 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
     "history-index": ("native-exact-history-index-controls", (
         "tests/native/exact_public_history_index_controls.cpp", "native/exact_public_history_index.hpp",
         "tests/native/exact_history_index_schedule_controls.cpp",
-        "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp"))}
+        "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "full-deck-chance": ("native-full-deck-public-chance-probe", (
+        "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp",
+        "scripts/build_native_full_deck_public_chance.py")),
+    "full-deck-chance-preflight": ("native-full-deck-public-chance-preflight-controls", (
+        "tests/native/full_deck_public_chance_preflight_controls.cpp",
+        "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp",
+        "scripts/build_native_full_deck_public_chance.py"))}
 
 
 def _hash(raw):
@@ -191,7 +200,9 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "indexed-routing" else "Active traversal-frame conformance helper only; no native trainer or whole-game acceptance."
                   if target == "active-frame" else "Active-frame numeric routing conformance helper only; no trainer or whole-game acceptance."
                   if target == "active-routing" else "Exact fold-class callback/coupled trainer conformance helper; no public protocol or capacity acceptance."
-                  if target == "fold-classes" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
+                  if target == "fold-classes" else "Full-deck public-chance exact probability probe only; no sampler, trainer, or whole-game acceptance."
+                  if target == "full-deck-chance" else "Full-deck public-chance preflight controls only; no numerical-kernel or solver acceptance."
+                  if target == "full-deck-chance-preflight" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,

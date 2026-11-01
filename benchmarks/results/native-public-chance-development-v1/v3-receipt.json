@@ -1,0 +1,64 @@
+{
+  "executable": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\full-deck-public-chance-luna-v4\\probe\\native-full-deck-public-chance-probe.exe",
+  "executable_sha256": "3ca382a6c2b709115513aab01288e614733d77c658f1da5416dc13962a9b69ef",
+  "manifest_sha256": "ddb5c70fe5594c4dd596110a982d12007fd93e58dd0a78e949d7348b6ae5bdf1",
+  "results": [
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "tests.test_build_native_full_deck_public_chance",
+        "tests.test_native_full_deck_public_chance",
+        "-v"
+      ],
+      "mode": "normal",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-O",
+        "-m",
+        "unittest",
+        "tests.test_build_native_full_deck_public_chance",
+        "tests.test_native_full_deck_public_chance",
+        "-v"
+      ],
+      "mode": "optimized",
+      "returncode": 0
+    }
+  ],
+  "scope": "Development controls; scoped source pins, not full committed-source acceptance.",
+  "source_after": {
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/full_deck_public_chance.hpp": "0147e83f07ab2640c2b20dc759bf061c4053d60017ade837de737addc3e226fc",
+    "native/full_deck_public_chance_probe.cpp": "2d628e147c85938c1a8ae7bf0a697302c0a3e732ee653a92e653cbade8aefff6",
+    "pokerlab/full_deck_prefix_mass.py": "5a97b42073692b61db0132bbce0add610b07d27569cf8ce1a4981b9ac3595dee",
+    "scripts/build_native_exact_four_street.py": "24d47b23bde712dff63f4c0980adbfb48f5df22e3182c2170661555b332cf20d",
+    "scripts/build_native_full_deck_public_chance.py": "ca24c69c71715c746aeb86a0cc94ae39f0e4fc99bd0ed7c963064791559af911",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/full_deck_public_chance_reference.py": "dba4ef9a7d0a956d4b1e9a87467741b80bc88e92219a9a5944bf7c3e8e52122b",
+    "tests/native/full_deck_public_chance_preflight_controls.cpp": "95962b5e6b9858505651359c5b82f85c74bd70ec194e14d4d85a17e46bfb5188",
+    "tests/test_build_native_full_deck_public_chance.py": "5a7bef461fecc87698d643345c9dd8bf342c6fd221410f4d8bc4ebfbd2191cb0",
+    "tests/test_native_full_deck_public_chance.py": "29fa454fe3bce66dc0e8e37d6c140cded6b1edd80b6c9bb5ef1ffe7f9178fdd5"
+  },
+  "source_before": {
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/full_deck_public_chance.hpp": "0147e83f07ab2640c2b20dc759bf061c4053d60017ade837de737addc3e226fc",
+    "native/full_deck_public_chance_probe.cpp": "2d628e147c85938c1a8ae7bf0a697302c0a3e732ee653a92e653cbade8aefff6",
+    "pokerlab/full_deck_prefix_mass.py": "5a97b42073692b61db0132bbce0add610b07d27569cf8ce1a4981b9ac3595dee",
+    "scripts/build_native_exact_four_street.py": "24d47b23bde712dff63f4c0980adbfb48f5df22e3182c2170661555b332cf20d",
+    "scripts/build_native_full_deck_public_chance.py": "ca24c69c71715c746aeb86a0cc94ae39f0e4fc99bd0ed7c963064791559af911",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/full_deck_public_chance_reference.py": "dba4ef9a7d0a956d4b1e9a87467741b80bc88e92219a9a5944bf7c3e8e52122b",
+    "tests/native/full_deck_public_chance_preflight_controls.cpp": "95962b5e6b9858505651359c5b82f85c74bd70ec194e14d4d85a17e46bfb5188",
+    "tests/test_build_native_full_deck_public_chance.py": "5a7bef461fecc87698d643345c9dd8bf342c6fd221410f4d8bc4ebfbd2191cb0",
+    "tests/test_native_full_deck_public_chance.py": "29fa454fe3bce66dc0e8e37d6c140cded6b1edd80b6c9bb5ef1ffe7f9178fdd5"
+  },
+  "source_stable": true
+}
