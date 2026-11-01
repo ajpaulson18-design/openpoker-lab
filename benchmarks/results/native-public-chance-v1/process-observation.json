@@ -1,0 +1,8 @@
+{
+  "schema": "native-public-chance-frozen-process-v1",
+  "confirmed_terminal_handle": "63331",
+  "terminal_exit_code": 0,
+  "source": "root write_stdin confirmed actual terminal",
+  "controller_sha256_at_packaging": "2d8a4eabf47161dc523a609cd1c25c70de25c84c0a64a2bf8f3b1b5e8354c324",
+  "note": "External stdlib orchestration is separate from the authenticated 2232-file committed project closure."
+}

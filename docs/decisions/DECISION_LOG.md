@@ -58,6 +58,12 @@ training. Lazy full-history row storage, complete policy semantics, variance,
 convergence and independent full-game quality remain open. Logical forecasts
 do not establish CPU/RSS bounds or commercial capability.
 
+Committed component controls at `32ddc17` now pass all 18 cases normally and
+optimized, with per-board independent physical/rank comparisons and complete
+project-source/build admission. The [frozen record](../native-full-deck-public-chance.md)
+preserves earlier misses and materialization-guard corrections. Native full-history
+update proof/training remains unimplemented; this does not close the overall goal.
+
 ### D076: Certify saved selected-game policies without world tables (October 31, 2026)
 
 The [next integrated verifier](../matrix-free-certificate.md) addresses a measured

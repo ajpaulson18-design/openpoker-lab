@@ -1,9 +1,10 @@
 # Native public-chance probability and payoff boundary
 
-Status: engineering candidate under the scalable unified-solver goal. This is a
+Status: committed-source component conformance passes under the scalable
+unified-solver goal; final publication CI remains a separate gate. This is a
 native component for the future virtual-chance four-street path, not a sampler,
 trainer, complete strategy, or full-deck quality certificate. Independent compiled
-numerical controls, the complete source freeze and publication gates remain open.
+numerical controls and the complete source freeze are recorded below.
 The [selected-game certificate result](matrix-free-certificate-result.md) is merged
 separately in PR #279 as `e9739a3`; its two quality passes and 26 misses remain.
 
@@ -132,13 +133,35 @@ skips and stable scoped source pins. Compiled observer controls verify early
 duplicate/reach rejection and probe-owned payload/entry admission. Both versions
 and the earlier capture gaps remain in the
 [development manifest](../benchmarks/results/native-public-chance-development-v1/manifest.json).
-The current test source adds per-board equality before expectation summation;
-the committed-source gate must execute these additional checks. The controls cover
+The frozen test source adds per-board equality before expectation summation.
+The controls cover
 literal physical pair arithmetic with a separate best-five ranker,
 the existing independent full52 prefix operator, full 1,326-by-1,326 combinatorial
 mass anchors, ordered prefix partitions, zero-target boards, exact and binary64
-terminal results, extreme priors, and rejection controls. Complete committed-source
-acceptance and publication CI remain pending.
+terminal results, extreme priors, and rejection controls.
+
+### Committed-source conformance result
+
+Freeze `32ddc17409d7e56e012a9d749863af438a79a3d9` passes all 18 controls normally
+(27.189 seconds) and assertions-disabled (26.579 seconds), with no skips or
+failure. Each of 20,160 terminal results matches the independent literal
+physical/best-five oracle before expectation summation. All 2,232 tracked project
+raw/Git blobs, nine original compiled inputs and 198 actual Boost headers were
+authenticated before component mathematics and remained stable after both modes.
+The original executable is SHA-256
+`3ca382a6c2b709115513aab01288e614733d77c658f1da5416dc13962a9b69ef`.
+Outer process handle 63331 returned observed terminal exit 0.
+
+The [frozen evidence manifest](../benchmarks/results/native-public-chance-v1/manifest.json)
+binds the project closure, build identity, mode status/streams, named preflight
+materialization controls and separate external-controller observation. The
+external stdlib controller is captured separately from the committed project
+closure. Archived code was not executed. Frozen-head Linux/Windows and sanitizer
+component jobs also pass; final publication checks are tracked in
+[PR #281](https://github.com/ajpaulson18-design/openpoker-lab/pull/281).
+
+These results validate the declared component controls. They do not establish a
+regret-update estimator, full-game policy, convergence, speed or measured RSS.
 
 ## Next integration gates
 

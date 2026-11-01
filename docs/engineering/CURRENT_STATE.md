@@ -4,9 +4,10 @@ The [new native public-chance boundary](../native-full-deck-public-chance.md)
 is an engineering candidate for full-deck prefix mass and exact single-board
 importance-weighted payoff vectors. It retains no board/pair/world list and has
 no policy, history router, sampler or trainer. Independent numerical/resource
-acceptance and publication are pending. Eighteen corrected compiled development
-controls pass normal/optimized with no skips; all earlier receipts/capture gaps
-are preserved. It establishes no full-deck solve.
+conformance now passes at committed freeze `32ddc17`: 18 normal/optimized
+controls, no skips, stable 2,232-file project closure and original build. Frozen-head
+Linux/Windows/sanitizer jobs pass; final publication CI remains pending in PR #281.
+All earlier receipts/capture gaps are preserved. It establishes no full-deck solve.
 
 The [matrix-free saved-policy certificate result](../matrix-free-certificate-result.md)
 completes all 28 retained policies: 22 old exact matches and six separate scalar
