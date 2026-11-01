@@ -1,0 +1,22 @@
+{
+  "contract": "matrix-free-certificate-publication-v1",
+  "files": {
+    "README.md": "667b1f2f5b7458e7bbff52715b8c9b3b38e6685ede14cae489e111453f02be0a",
+    "archive-audit-first-failure.json": "674cbe0aa6e0a642cba65a332e3390091300edeb889e35d78f24fdf9cb792b5b",
+    "archive-audit-v1.json": "a22d0a7ce91650b5b877561e369f82683393746dab84c277fa246f4b6eac5b09",
+    "archive-audit-v2.json": "f2465603863bbaf09b4575d64458dd62470c20841090df0cb590a70e91c1fec9",
+    "archive-audit-v2.status.txt": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "archive-audit-v2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive-audit-v2.stdout.log": "13a82696b926d037dba7298415b3bf4e61e2c8b793d85d3d0689c217951a477c",
+    "audit-archive.py": "c3804ffb0025cdf115fed1937a2c90f21fcfe4dc4eca70e516a71088bb485bd6",
+    "evidence.zip": "404c1e2f73fb30c96684f707c66638dcf18184b1118add3a37fddf677bd4979a",
+    "independent-review.json": "8267483dce9561a0da28cef56e6af40a7aa990ac7f23461dbc7677cad4dc018c",
+    "package.json": "e6a3ec7f48793acb8fc9aa07e32e321702c1aeffaa22c4995e87c936323a0c54",
+    "report.json": "ae13c9dd75f4931441d760b0da8e9dab2fc76f072940b527c0db054c74cbe0e4",
+    "review-process-observation.json": "0731bf9f4f030167e055c497953b2c3a0731914e1164661fad488b75ad278049",
+    "source-after.json": "5b273b350b358535474656c8c7d0e8b914f29017b4e5195b914e8636d4e6cb9c",
+    "study-manifest.json": "7a04c70d610fee18a942a1e931507fd15eb015f893f919d26787f5e73c1b5b1b",
+    "study-process-observation.json": "a57bca062bbccb4099a766c226c251e3c1e96dd29e2eb426c27f06daf981fc13"
+  },
+  "source_commit": "83b5e93cb09729522e090d234339a1188cc160a7"
+}

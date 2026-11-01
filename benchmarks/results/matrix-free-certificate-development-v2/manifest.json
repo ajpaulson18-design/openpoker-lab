@@ -1,0 +1,14 @@
+{
+  "files": {
+    "README.md": "2367c29f64f62ae17e7b4c875500af22305b22b7b15d919c6d51c90360a787f9",
+    "normal-status.json": "c026c84bf9be908fea1d069391d4fe897a455ce6fbf83927ff5ac1a2ad6c8d21",
+    "normal.stderr.log": "e7df255f45016499fab70b3bfa52e465f00c0bc6b92b0410c64ff16570607b39",
+    "normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "optimized-status.json": "b2d9583c7eae9080f25e83e408fcc010354cea375b4359b353d2a79d59e32bde",
+    "optimized.stderr.log": "802f0fe64c8f5e3547affb1662ebf5b278dd1fb9cee4839c0fd7dff01e8b8bab",
+    "optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipt.json": "64ebd31d9548edddb8643f0af9a5d7719bd13a40023650cb9ccea61415e0f78f",
+    "run-controls.py": "0978d1d70f89f5f5aa87e4cba3c4bc03e63ad203e324529d980e49149587f99c"
+  },
+  "schema": "matrix-free-development-controls-v2"
+}

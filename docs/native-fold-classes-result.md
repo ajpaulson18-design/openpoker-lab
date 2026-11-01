@@ -1,5 +1,10 @@
 # Frozen native fold-class result
 
+This page preserves the original study's exact-status inventory. The subsequent
+[matrix-free certificate study](matrix-free-certificate-result.md) independently
+verifies all six former exact unknowns as accuracy misses, without retraining or
+changing this frozen evidence. The follow-up total is two passes and 26 misses.
+
 The explicit V5 fold-mask operator preserves every completed V4 policy and all
 eight binary64 metrics in this fixed study. It does not expand the admitted
 frontier, and the prespecified original T10 median is **31.76984% slower**.
@@ -126,5 +131,7 @@ explicitly captured original fold-development archive.
 Development checks retain 91 integrated optimized controls, 12 runner controls
 in normal and optimized modes, native callback/budget tests and independent
 source review. All source-freeze GitHub workflows pass, including Python
-3.11/3.12/3.13, Windows/Linux native and sanitizer jobs. Publication-head checks
-and merge ancestry are separate final gates recorded in PR #277.
+3.11/3.12/3.13, Windows/Linux native and sanitizer jobs. All publication-head
+checks also pass. PR #277 merged as `df76cb9754503ac19eeab925b5026ace1347deba`;
+fetched main matches tested tree `f0cc3c8d7d7c99624c7cb000c44b2ed8fb74e1b7`,
+and tested-head ancestry is verified.

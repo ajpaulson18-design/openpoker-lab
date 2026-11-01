@@ -1,0 +1,15 @@
+{
+  "schema": "matrix-free-archive-audit-first-failure-v1",
+  "actual_tool_session": "81344",
+  "actual_exit_code": 1,
+  "stage": "standalone archive audit",
+  "exception_type": "ValueError",
+  "message": "committed source object identity",
+  "cause": "The initial auditor required every Git-normalized blob ID to equal its committed tree ID. The authenticated source contract permits either raw-byte blob identity or Git-normalized blob identity. Thirteen older source files satisfy the raw-byte identity route.",
+  "archive_sha256": "404c1e2f73fb30c96684f707c66638dcf18184b1118add3a37fddf677bd4979a",
+  "original_auditor_source_preserved_in_archive": "helpers/audit-matrix-free-certificate-archive-v1.py",
+  "correction_scope": "Standalone auditor only; add full frozen raw SHA verification and accept the existing raw-or-normalized committed identity contract.",
+  "study_or_solver_repeated": false,
+  "archive_replaced": false,
+  "note": "Reconstructed observation of the retained tool output; not a separately captured original stderr stream."
+}

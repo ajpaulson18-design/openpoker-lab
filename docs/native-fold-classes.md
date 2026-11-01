@@ -1,5 +1,9 @@
 # Exact fold payoff classes
 
+The [later saved-only certificate](matrix-free-certificate-result.md) resolves
+the six original exact unknowns as accuracy misses; the historical result and
+operator timing below remain unchanged.
+
 Status: opt-in V5 candidate connected to the same native indexed
 four-street trainer through explicit Python/native selection and a checked
 fold-operator receipt. The [frozen result](native-fold-classes-result.md) now has
@@ -127,7 +131,8 @@ concrete runner blocker; that is not saved-data acceptance.
 The schedule and saved review are complete. Producer terminal exit is confirmed
 0; the review's passed receipt and empty stderr are retained, while its original
 process handle is unavailable and review terminal exit remains unknown. Final
-publication-head checks and merge ancestry remain separate gates. The next
+publication CI passed, and PR #277 merged with tested-tree equality and ancestry
+verified on fetched main. The next
 architectural candidate is independent saved-policy value/BR verification
 without complete-world expansion, preserving all earlier unknown receipts.
 Full-deck law, strategy storage,

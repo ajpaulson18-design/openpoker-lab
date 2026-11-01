@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "archive_sha256": "404c1e2f73fb30c96684f707c66638dcf18184b1118add3a37fddf677bd4979a",
+  "manifest_sha256": "5417c3a202b045845ea47610cbe7db6343a5e9e7031835de770e97f597164d30",
+  "source_commit": "83b5e93cb09729522e090d234339a1188cc160a7",
+  "members": 975,
+  "archived_source_files": 804,
+  "study_records": 28,
+  "candidate_complete": 28,
+  "candidate_resource_unverified": 0,
+  "independent_receipt_sha256": "8267483dce9561a0da28cef56e6af40a7aa990ac7f23461dbc7677cad4dc018c",
+  "auditor_sha256": "c3804ffb0025cdf115fed1937a2c90f21fcfe4dc4eca70e516a71088bb485bd6",
+  "archived_source_executed": false,
+  "raw_committed_identity_fallbacks": [
+    "docs/coach-analysis-v1.md",
+    "docs/luna-eighth-slice.md",
+    "docs/luna-fifth-slice.md",
+    "docs/luna-fourth-slice.md",
+    "docs/luna-ninth-slice.md",
+    "docs/luna-second-slice.md",
+    "docs/luna-seventh-slice.md",
+    "docs/luna-sixth-slice.md",
+    "pokerlab/coach_analysis.py",
+    "pokerlab/coach_grounding.py",
+    "pokerlab/coach_provider.py",
+    "pokerlab/contracts.py",
+    "tests/test_coach_analysis.py"
+  ],
+  "initial_auditor_failure_preserved": "matrix-free-certificate-archive-audit-first-failure-v1.json",
+  "pinned_tree_and_normalized_maps_recomputed": true
+}

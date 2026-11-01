@@ -1,0 +1,16 @@
+{
+  "mode": "optimized",
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-O",
+    "-m",
+    "unittest",
+    "tests.test_exact_selected_matrix_free_certificate",
+    "tests.test_matrix_free_selected_payoffs",
+    "tests.test_matrix_free_four_street_rules",
+    "tests.test_matrix_free_certificate_serialization",
+    "-v"
+  ],
+  "returncode": 0
+}

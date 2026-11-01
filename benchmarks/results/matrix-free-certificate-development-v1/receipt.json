@@ -1,0 +1,76 @@
+{
+  "results": [
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "tests.test_exact_selected_matrix_free_certificate",
+        "tests.test_matrix_free_selected_payoffs",
+        "tests.test_matrix_free_four_street_rules",
+        "tests.test_matrix_free_certificate_serialization",
+        "-v"
+      ],
+      "mode": "normal",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-O",
+        "-m",
+        "unittest",
+        "tests.test_exact_selected_matrix_free_certificate",
+        "tests.test_matrix_free_selected_payoffs",
+        "tests.test_matrix_free_four_street_rules",
+        "tests.test_matrix_free_certificate_serialization",
+        "-v"
+      ],
+      "mode": "optimized",
+      "returncode": 0
+    }
+  ],
+  "source_after": {
+    "scripts/benchmark_matrix_free_river.py": "baf8386b20bbeca5eee15217c205203b128db2deefb93d05a556a0350d684ad5",
+    "scripts/benchmark_matrix_free_turn.py": "27dd5fd5922ea2c32f483dd5eef945f19565ef032b0118fe059cbbd32ed1cd1d",
+    "scripts/exact_selected_matrix_free_certificate.py": "c044f6b425090b510d053f8097848c061b8af718ea9172f10708c0017a8648af",
+    "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+    "scripts/matrix_free_certificate_serialization.py": "e84ac33cd9d2506faad5a8f92ffbd1898d6ed26afbba23e92848da3aa8175fa7",
+    "scripts/matrix_free_four_street_rules.py": "ba2046e73c276f3efc47c9cfbe825dc1bd36715b74c6fa8de7354ce75465e197",
+    "scripts/matrix_free_selected_payoffs.py": "22975c02c41df93c98b08e6f8aa1ff7356401e2504f8f0a74b3fc82d794489dd",
+    "tests/test_exact_selected_matrix_free_certificate.py": "67a80a907c83cfd64af92158cb3ef880dd5a950c275e703e456dd16e310069b7",
+    "tests/test_matrix_free_certificate_serialization.py": "2ae7e7b1d4318ffaa0ff89b8f1e3f8a176998765d692ea993dfd792b347f04ec",
+    "tests/test_matrix_free_four_street_rules.py": "af6d1451aa2e85e869ec212aecc07672aaf5ceddc3fdaf9f250c41f605b60e5e",
+    "tests/test_matrix_free_river.py": "6190b39ff8123d3e08e3c74e2c61736204867fa4fd36fba756df2341e3f4ab76",
+    "tests/test_matrix_free_river_tail.py": "efa9ff18e1979977058c9b893ec233944193ea0b3d369d193ad7827661116523",
+    "tests/test_matrix_free_selected_payoffs.py": "a60d6d70f499e6853c47ab2044454e1b2a7f98a49112bf4a4070aef718c8e63e",
+    "tests/test_matrix_free_turn.py": "de6600a2524adeb20a9476bc6d33aa0f3b7c27cf824ec4c93c83bfe542033c2c",
+    "tests/test_matrix_free_turn_cache.py": "d6cfe31a97c5e9131aea748668bb64a65cf0f3037d5d10d1a6af97583bbd36ad",
+    "tests/test_matrix_free_turn_cache_review.py": "e45a5d99b5d59a3e40b0c941e26bea2f7622c4b5e23b05b723686365e16a9e5a",
+    "tests/test_matrix_free_turn_tail.py": "59c0e6cb296c15420d7f227791fcf7506d7921f2729cde04afec80083bd39f37",
+    "tests/test_matrix_free_turn_tail_independent.py": "b27026c72c12cdc5e8c43cfa3d90a481fcee9f13714576b3d5caec144d9141dd"
+  },
+  "source_before": {
+    "scripts/benchmark_matrix_free_river.py": "baf8386b20bbeca5eee15217c205203b128db2deefb93d05a556a0350d684ad5",
+    "scripts/benchmark_matrix_free_turn.py": "27dd5fd5922ea2c32f483dd5eef945f19565ef032b0118fe059cbbd32ed1cd1d",
+    "scripts/exact_selected_matrix_free_certificate.py": "c044f6b425090b510d053f8097848c061b8af718ea9172f10708c0017a8648af",
+    "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+    "scripts/matrix_free_certificate_serialization.py": "e84ac33cd9d2506faad5a8f92ffbd1898d6ed26afbba23e92848da3aa8175fa7",
+    "scripts/matrix_free_four_street_rules.py": "ba2046e73c276f3efc47c9cfbe825dc1bd36715b74c6fa8de7354ce75465e197",
+    "scripts/matrix_free_selected_payoffs.py": "22975c02c41df93c98b08e6f8aa1ff7356401e2504f8f0a74b3fc82d794489dd",
+    "tests/test_exact_selected_matrix_free_certificate.py": "67a80a907c83cfd64af92158cb3ef880dd5a950c275e703e456dd16e310069b7",
+    "tests/test_matrix_free_certificate_serialization.py": "2ae7e7b1d4318ffaa0ff89b8f1e3f8a176998765d692ea993dfd792b347f04ec",
+    "tests/test_matrix_free_four_street_rules.py": "af6d1451aa2e85e869ec212aecc07672aaf5ceddc3fdaf9f250c41f605b60e5e",
+    "tests/test_matrix_free_river.py": "6190b39ff8123d3e08e3c74e2c61736204867fa4fd36fba756df2341e3f4ab76",
+    "tests/test_matrix_free_river_tail.py": "efa9ff18e1979977058c9b893ec233944193ea0b3d369d193ad7827661116523",
+    "tests/test_matrix_free_selected_payoffs.py": "a60d6d70f499e6853c47ab2044454e1b2a7f98a49112bf4a4070aef718c8e63e",
+    "tests/test_matrix_free_turn.py": "de6600a2524adeb20a9476bc6d33aa0f3b7c27cf824ec4c93c83bfe542033c2c",
+    "tests/test_matrix_free_turn_cache.py": "d6cfe31a97c5e9131aea748668bb64a65cf0f3037d5d10d1a6af97583bbd36ad",
+    "tests/test_matrix_free_turn_cache_review.py": "e45a5d99b5d59a3e40b0c941e26bea2f7622c4b5e23b05b723686365e16a9e5a",
+    "tests/test_matrix_free_turn_tail.py": "59c0e6cb296c15420d7f227791fcf7506d7921f2729cde04afec80083bd39f37",
+    "tests/test_matrix_free_turn_tail_independent.py": "b27026c72c12cdc5e8c43cfa3d90a481fcee9f13714576b3d5caec144d9141dd"
+  },
+  "source_stable": true
+}

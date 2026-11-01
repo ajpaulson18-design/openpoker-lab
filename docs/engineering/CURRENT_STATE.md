@@ -1,5 +1,15 @@
 # Current engineering state
 
+The [matrix-free saved-policy certificate result](../matrix-free-certificate-result.md)
+completes all 28 retained policies: 22 old exact matches and six separate scalar
+matches, with two accuracy passes and 26 misses. Candidate exact evaluation
+retains no private-pair/world tables; public histories and complete policies
+remain explicit. All source/build/artifacts stayed stable and protected solver,
+native and training calls were zero. Both study/reviewer processes exited 0.
+Fifty-six normal/optimized controls pass; the audited archive preserves the first
+audit failure and its correction. No old oracle cap or policy changed. Final
+publication is tracked in PR #279. Full-deck capability remains absent.
+
 An explicit V5 [exact fold-class candidate](../native-fold-classes.md) factors
 repeated fold callbacks using per-hand selected-board masks and exact card
 buckets, with no retained private-pair coefficients. Strict callback/coupled
@@ -12,8 +22,9 @@ Terra review closes the host reservation issues. The [fixed 34-call result](../n
 retains 28 completions, six rejections and 14 matching pairs. Fresh saved-only
 acceptance and archive verification pass; exact quality retains 20 misses, two
 private-flush passes and six unknowns. Original T10 median regresses 31.76984%;
-no admitted-frontier gain is observed. Source-freeze CI passes; publication-head
-checks and merge ancestry remain separate gates. Existing defaults remain
+no admitted-frontier gain is observed. All publication CI passes and PR #277 is
+merged as `df76cb9`; fetched main matches tested tree `f0cc3c8` and ancestry is
+verified. Existing defaults remain
 literal. The next major candidate is independent certification without
 complete-world expansion.
 
