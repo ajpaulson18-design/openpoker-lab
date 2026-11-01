@@ -1,0 +1,21 @@
+test_explicit_wrapper_delegates_only_to_new_target (tests.test_build_native_full_deck_public_chance.NativeFullDeckBuildContractTests.test_explicit_wrapper_delegates_only_to_new_target) ... ok
+test_wrapper_forwards_exact_target_without_building_on_invalid_path (tests.test_build_native_full_deck_public_chance.NativeFullDeckBuildContractTests.test_wrapper_forwards_exact_target_without_building_on_invalid_path) ... ok
+test_build_manifest_authenticates_exact_probe_closure_and_scope (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_build_manifest_authenticates_exact_probe_closure_and_scope) ... skipped 'native C++20 compiler is not installed in this environment'
+test_malformed_proposal_and_foreign_card_return_bounded_errors (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_malformed_proposal_and_foreign_card_return_bounded_errors) ... skipped 'native C++20 compiler is not installed in this environment'
+test_oversized_request_stops_immediately (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_oversized_request_stops_immediately) ... skipped 'native C++20 compiler is not installed in this environment'
+test_prefix_exact_and_binary64_keep_rows_and_support (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_prefix_exact_and_binary64_keep_rows_and_support) ... skipped 'native C++20 compiler is not installed in this environment'
+test_terminal_exact_and_binary64_shape_with_q_and_reach (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_terminal_exact_and_binary64_shape_with_q_and_reach) ... skipped 'native C++20 compiler is not installed in this environment'
+test_transport_reserve_is_deducted_before_kernel_query (tests.test_build_native_full_deck_public_chance.NativeFullDeckProbeBuildTests.test_transport_reserve_is_deducted_before_kernel_query) ... skipped 'native C++20 compiler is not installed in this environment'
+test_all_nine_card_prefix_partitions_preserve_one_global_prior (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_all_nine_card_prefix_partitions_preserve_one_global_prior) ... ok
+test_all_proposal_outcomes_recover_literal_terminal_expectations (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_all_proposal_outcomes_recover_literal_terminal_expectations) ... ok
+test_complete_1326_by_1326_prefix_uses_combinatorial_anchor (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_complete_1326_by_1326_prefix_uses_combinatorial_anchor) ... ok
+test_full52_prefixes_match_literal_pairs_and_separate_python_operator (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_full52_prefixes_match_literal_pairs_and_separate_python_operator) ... ok
+test_invalid_queries_and_reduced_limits_reject (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_invalid_queries_and_reduced_limits_reject) ... ok
+test_terminal_exact_values_and_bits_use_global_prior_and_proposal_once (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_terminal_exact_values_and_bits_use_global_prior_and_proposal_once) ... ok
+test_tiny_priors_preserve_exact_support_and_strict_conversion (tests.test_native_full_deck_public_chance.NativePublicChanceTests.test_tiny_priors_preserve_exact_support_and_strict_conversion) ... ok
+test_declared_nine_card_game_has_all_three_showdown_signs (tests.test_native_full_deck_public_chance.PhysicalReferenceFixtureTests.test_declared_nine_card_game_has_all_three_showdown_signs) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 4.079s
+
+OK (skipped=6)

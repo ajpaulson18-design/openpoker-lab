@@ -1,5 +1,13 @@
 # Current engineering state
 
+The [new native public-chance boundary](../native-full-deck-public-chance.md)
+is an engineering candidate for full-deck prefix mass and exact single-board
+importance-weighted payoff vectors. It retains no board/pair/world list and has
+no policy, history router, sampler or trainer. Independent numerical/resource
+acceptance and publication are pending. Eighteen corrected compiled development
+controls pass normal/optimized with no skips; all earlier receipts/capture gaps
+are preserved. It establishes no full-deck solve.
+
 The [matrix-free saved-policy certificate result](../matrix-free-certificate-result.md)
 completes all 28 retained policies: 22 old exact matches and six separate scalar
 matches, with two accuracy passes and 26 misses. Candidate exact evaluation
@@ -8,7 +16,9 @@ remain explicit. All source/build/artifacts stayed stable and protected solver,
 native and training calls were zero. Both study/reviewer processes exited 0.
 Fifty-six normal/optimized controls pass; the audited archive preserves the first
 audit failure and its correction. No old oracle cap or policy changed. Final
-publication is tracked in PR #279. Full-deck capability remains absent.
+publication merged as `e9739a3` in PR #279 with all 13 workflow groups passing;
+fetched main matches tested tree `d205b898` and tested-head ancestry. Full-deck
+solving remains absent.
 
 An explicit V5 [exact fold-class candidate](../native-fold-classes.md) factors
 repeated fold callbacks using per-hand selected-board masks and exact card

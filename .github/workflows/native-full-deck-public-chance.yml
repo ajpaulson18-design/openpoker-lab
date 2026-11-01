@@ -1,0 +1,68 @@
+name: Native full-deck public-chance component
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-component:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build explicit component probe
+        shell: bash
+        run: |
+          python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance"
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_FULL_DECK_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance/native-full-deck-public-chance-probe$suffix" >> "$GITHUB_ENV"
+      - name: Independent physical and preflight controls
+        shell: bash
+        env:
+          OPENPOKER_NATIVE_FULL_DECK_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/controls
+        run: |
+          python -O -m unittest tests.test_build_native_full_deck_public_chance tests.test_native_full_deck_public_chance -v > "$RUNNER_TEMP/native-full-deck-chance/tests.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/tests.stderr.log"
+      - name: Preserve compiler and first failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-full-deck-chance-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/native-full-deck-chance/**/*.log
+            ${{ runner.temp }}/native-full-deck-chance/**/*.json
+            ${{ runner.temp }}/native-full-deck-chance/**/*.txt
+  sanitized-component:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build ASan and UBSan component probe
+        shell: bash
+        run: |
+          python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized" --sanitize
+          echo "OPENPOKER_NATIVE_FULL_DECK_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/native-full-deck-public-chance-probe" >> "$GITHUB_ENV"
+      - name: Sanitized physical component controls
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+          OPENPOKER_NATIVE_FULL_DECK_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/controls
+        run: |
+          python -m unittest tests.test_build_native_full_deck_public_chance tests.test_native_full_deck_public_chance -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/tests.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/tests.stderr.log"
+      - name: Preserve sanitizer and first failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-full-deck-chance-sanitized
+          path: |
+            ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.log
+            ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.json
+            ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.txt

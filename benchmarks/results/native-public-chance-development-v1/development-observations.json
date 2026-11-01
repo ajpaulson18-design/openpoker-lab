@@ -1,0 +1,21 @@
+{
+  "scope": "Development only, not a source-frozen quality study or full-deck solver.",
+  "root_controls": {
+    "v1": "16 tests per mode, 6 compiler-dependent skips; both exit 0.",
+    "v2": "17 tests normal 15.028s and optimized 16.173s, no skips, handle98333 exit0.",
+    "v3": "18 tests normal30.099s and optimized40.887s, no skips, handle64508 exit0."
+  },
+  "preserved_findings": [
+    "Converter work was initially not composed; corrected before v3 probe.",
+    "Response global scalar width/transport work needed correction; v1/v2/v3 builds retained.",
+    "Final review found proposal payload ownership, over-one reach and duplicate-seat prevalidation gaps; corrected in v4."
+  ],
+  "capture_gaps": [
+    "Luna focused assertion/cleanup failures were tool-output-only: CRLF, scaled-rational expectation, positional receipt, and two WinError5 cleanup failures.",
+    "Luna v4 aggregate unittest handle42026 became unknown. Its preflight child status0 is not aggregate unittest proof.",
+    "Luna started v5 capture before a no-rerun message arrived, then terminated outer cell g4:368. Partial files preserved; no aggregate result inferred.",
+    "Early development source versions are not all archived; raw hash maps distinguish them. source-current may postdate earlier receipts and adds per-board checks beyond aggregate expectation."
+  ],
+  "frozen_prior_studies_retrained": false,
+  "archived_code_executed": false
+}

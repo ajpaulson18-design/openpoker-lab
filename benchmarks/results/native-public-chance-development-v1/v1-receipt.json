@@ -1,0 +1,62 @@
+{
+  "executable": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\full-deck-public-chance-build-luna-v3\\native-full-deck-public-chance-probe.exe",
+  "executable_sha256": "de6ac498c90f18bc2efccbd1bd9df0911db2b6a009162952012a4ca81bcbcbf9",
+  "manifest_sha256": "81699f4d4f5c5890dd71753a0127d343f6b98a83dbb7db0a3f1d4d504bd65d76",
+  "results": [
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "tests.test_build_native_full_deck_public_chance",
+        "tests.test_native_full_deck_public_chance",
+        "-v"
+      ],
+      "mode": "normal",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-O",
+        "-m",
+        "unittest",
+        "tests.test_build_native_full_deck_public_chance",
+        "tests.test_native_full_deck_public_chance",
+        "-v"
+      ],
+      "mode": "optimized",
+      "returncode": 0
+    }
+  ],
+  "scope": "Development controls; scoped source pins, not full committed-source acceptance.",
+  "source_after": {
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/full_deck_public_chance.hpp": "0147e83f07ab2640c2b20dc759bf061c4053d60017ade837de737addc3e226fc",
+    "native/full_deck_public_chance_probe.cpp": "1b71874d2ef9a486e41626dc4bdd594fc416718123e15305d8196c1b38fb0190",
+    "pokerlab/full_deck_prefix_mass.py": "5a97b42073692b61db0132bbce0add610b07d27569cf8ce1a4981b9ac3595dee",
+    "scripts/build_native_exact_four_street.py": "4b9c2fc385826be905a3b2c1ee84fdee02aa706375b0a64b80fd109894d925aa",
+    "scripts/build_native_full_deck_public_chance.py": "ca24c69c71715c746aeb86a0cc94ae39f0e4fc99bd0ed7c963064791559af911",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/full_deck_public_chance_reference.py": "dba4ef9a7d0a956d4b1e9a87467741b80bc88e92219a9a5944bf7c3e8e52122b",
+    "tests/test_build_native_full_deck_public_chance.py": "76a085c7b6797f53ff74137d1d92d773198237d0fc47eaa5a4146d515ecdbfe2",
+    "tests/test_native_full_deck_public_chance.py": "687ce7ac0b406caa3e1966ef5695a2908b150ab69b0b9c90e8e8620482fb6a37"
+  },
+  "source_before": {
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/full_deck_public_chance.hpp": "0147e83f07ab2640c2b20dc759bf061c4053d60017ade837de737addc3e226fc",
+    "native/full_deck_public_chance_probe.cpp": "1b71874d2ef9a486e41626dc4bdd594fc416718123e15305d8196c1b38fb0190",
+    "pokerlab/full_deck_prefix_mass.py": "5a97b42073692b61db0132bbce0add610b07d27569cf8ce1a4981b9ac3595dee",
+    "scripts/build_native_exact_four_street.py": "4b9c2fc385826be905a3b2c1ee84fdee02aa706375b0a64b80fd109894d925aa",
+    "scripts/build_native_full_deck_public_chance.py": "ca24c69c71715c746aeb86a0cc94ae39f0e4fc99bd0ed7c963064791559af911",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/full_deck_public_chance_reference.py": "dba4ef9a7d0a956d4b1e9a87467741b80bc88e92219a9a5944bf7c3e8e52122b",
+    "tests/test_build_native_full_deck_public_chance.py": "76a085c7b6797f53ff74137d1d92d773198237d0fc47eaa5a4146d515ecdbfe2",
+    "tests/test_native_full_deck_public_chance.py": "687ce7ac0b406caa3e1966ef5695a2908b150ab69b0b9c90e8e8620482fb6a37"
+  },
+  "source_stable": true
+}

@@ -36,6 +36,28 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D077: Separate native full-deck prefix law from sampled terminal vectors (October 31, 2026)
+
+Engineering decision under the owner's scalable unified-solver goal. The
+[new native boundary](../native-full-deck-public-chance.md) owns original ranges
+and one globally blocker-conditioned Z, without a selected-board list. Prefix
+marginals use only the visible prefix; sampled terminal vectors apply an explicit
+proposal correction before final binary64 conversion. A one-board selected-game
+normalizer or reweighting an already-rounded vector is not this law. Keep all
+old selected APIs/defaults and immutable evidence unchanged.
+
+The requested architect is unavailable; root supplies the architectural substitute,
+Terra implements/challenges exact native arithmetic, Luna integrates the bounded
+probe/build path, and root owns independent physical/ranking controls. Source
+ownership is separate and evidence remains distinct from model assignment.
+
+This is a component of one virtual-chance four-street path, not a stand-alone
+solver milestone. Require independent compiled numerical/resource controls, then
+exact all-proposal-outcome regret and average increment proofs before any native
+training. Lazy full-history row storage, complete policy semantics, variance,
+convergence and independent full-game quality remain open. Logical forecasts
+do not establish CPU/RSS bounds or commercial capability.
+
 ### D076: Certify saved selected-game policies without world tables (October 31, 2026)
 
 The [next integrated verifier](../matrix-free-certificate.md) addresses a measured
