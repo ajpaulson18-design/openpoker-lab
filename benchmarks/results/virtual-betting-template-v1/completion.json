@@ -1,0 +1,74 @@
+{
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "scripts.build_native_exact_four_street",
+        "--target",
+        "virtual-betting-template",
+        "--output-dir",
+        "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe"
+      ],
+      "exit_code": 0,
+      "label": "build-probe",
+      "seconds": 8.5
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "scripts.build_native_exact_four_street",
+        "--target",
+        "virtual-betting-template-controls",
+        "--output-dir",
+        "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\compiled-controls"
+      ],
+      "exit_code": 0,
+      "label": "build-controls",
+      "seconds": 7.23499999998603
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\compiled-controls\\native-virtual-betting-template-controls.exe"
+      ],
+      "exit_code": 0,
+      "label": "compiled-controls",
+      "seconds": 0.06300000002374873
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "tests.test_native_virtual_betting_template",
+        "-v"
+      ],
+      "exit_code": 0,
+      "label": "normal",
+      "seconds": 2.827999999979511
+    },
+    {
+      "command": [
+        "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-O",
+        "-m",
+        "unittest",
+        "tests.test_native_virtual_betting_template",
+        "-v"
+      ],
+      "exit_code": 0,
+      "label": "optimized",
+      "seconds": 1.7810000000172295
+    }
+  ],
+  "contract": "virtual-betting-template-committed-controls-v1",
+  "controller_sha256_after": "62e4ea63b1d6103371efa9f0ed826d1e424031dd8297097a94a473514a029b14",
+  "controller_sha256_before": "62e4ea63b1d6103371efa9f0ed826d1e424031dd8297097a94a473514a029b14",
+  "failure": null,
+  "source_stable": true
+}

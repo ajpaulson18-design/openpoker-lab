@@ -1,0 +1,62 @@
+{
+  "command": [
+    "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+    "/nologo",
+    "/std:c++20",
+    "/O2",
+    "/W4",
+    "/WX",
+    "/EHsc",
+    "/MT",
+    "/fp:strict",
+    "/DBOOST_MP_STANDALONE",
+    "/IC:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe\\boost-include",
+    "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-repo\\native\\virtual_betting_template_probe.cpp",
+    "/FoC:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe\\native-virtual-betting-template-probe.obj",
+    "/FeC:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe\\native-virtual-betting-template-probe.exe"
+  ],
+  "compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+  "compiler_version": "usage: cl [ option... ] filename... [ /link linkoption... ]\r\nMicrosoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\r\nCopyright (C) Microsoft Corporation.  All rights reserved.\r\n\r\n",
+  "contract": "native-exact-build-v1",
+  "dependency_archive_sha256": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+  "dependency_commit": "1f7acd34fe929573c131e869867dc1d12b8080b6",
+  "dependency_headers": 198,
+  "dependency_manifest_sha256": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555",
+  "executable": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe\\native-virtual-betting-template-probe.exe",
+  "executable_sha256": "8e7ba52c23fc45ae490209bf71faf77e6551356aad21735ba9dc43ad0e917eeb",
+  "flags": [
+    "/nologo",
+    "/std:c++20",
+    "/O2",
+    "/W4",
+    "/WX",
+    "/EHsc",
+    "/MT",
+    "/fp:strict",
+    "/DBOOST_MP_STANDALONE",
+    "/IC:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe\\boost-include"
+  ],
+  "license": "BSL-1.0",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "scope": "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance.",
+  "source_lf_sha256": {
+    "native/exact_binary64.hpp": "596cd7fa8707bcdf683f609fb6c172773f4a8fe6e0052a0b438b430c26b2b6cd",
+    "native/exact_selected_kernel.hpp": "374e2509f28b38c95d34d9592921b7023a4920d018037349ceb05bdff607563f",
+    "native/virtual_betting_template.hpp": "8eac9dd5249b6520e4a2a16d59a9f8be1a48cdbf65c1d27f10ae0c82b283c54d",
+    "native/virtual_betting_template_probe.cpp": "a2ad06d2d377cf0d25a4eb659bd277c674f48150dc4dde8eb7ee48cd16c27955",
+    "scripts/build_native_exact_four_street.py": "063ee72748c083d9580341b451e6b6919312f8227fa25b78aeba11f2140b42a2",
+    "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+    "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+  },
+  "source_sha256": {
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+    "native/virtual_betting_template_probe.cpp": "37e550900328c61421b74cc0cfcf969b53edb491a4422df891814f2e6aa77d6e",
+    "scripts/build_native_exact_four_street.py": "06ac20842097b601ceab099c1cd77b150cafcafbe712f145274ab8c3bb50a565",
+    "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+    "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+    "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+  },
+  "target": "virtual-betting-template"
+}

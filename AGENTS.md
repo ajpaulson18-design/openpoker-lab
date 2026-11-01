@@ -6,6 +6,15 @@ Read [docs/START_HERE.md](docs/START_HERE.md) and the relevant canonical specifi
 
 ## Project
 
+The explicit [card-free betting template](docs/virtual-betting-template.md)
+shares numeric continuations, never information sets. Preserve exact configured
+binary64/nine-decimal money, initial limp/BB option, full state keys, checked
+history multiplicities, and separate semantic/legacy fold-history counts.
+Supplied states are validated synthetic decision suffixes, without a history
+reachability claim. Preserve both failed 60-board reference censuses and the old
+caps; a template count is not physical support, lazy strategy admission, sampled
+update proof, training or solved quality. No selected-path fallback is allowed.
+
 The opt-in [indexed admission profile](docs/native-indexed-admission.md) reserves
 executed host preparation/diagnostics and native construction/learning against
 one remaining work allowance. Preserve legacy defaults, all geometry/storage/

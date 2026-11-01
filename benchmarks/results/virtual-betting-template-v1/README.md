@@ -1,0 +1,5 @@
+# Committed card-free betting-template conformance
+
+All 16 controls pass normally and with Python assertions disabled, with no skips. Both native targets compile; fixed rounding/admission controls pass. The complete 2,281-file project closure matches captured committed HEAD and remains raw-byte stable. Git filters are independently checked for 1,345 paths per side. Outer handle 96625 returned observed exit 0. Both original executables, compiled input maps, actual Boost identities, compiler logs, source admission, unit streams/status and the separate controller/process observation are preserved.
+
+The external stdlib capture controller is outside the committed project closure. No archived source or binary executes during publication. The preceding development source-drift failure and two 60-board census failures remain separate immutable records. See the [component contract](../../../docs/virtual-betting-template.md) for scope and remaining full-history update/storage/training/quality gates.

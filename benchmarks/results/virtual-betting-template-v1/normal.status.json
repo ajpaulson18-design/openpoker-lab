@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "tests.test_native_virtual_betting_template",
+    "-v"
+  ],
+  "exit_code": 0,
+  "label": "normal",
+  "seconds": 2.827999999979511
+}

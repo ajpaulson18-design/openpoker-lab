@@ -49,6 +49,12 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "tests/native/exact_public_history_index_controls.cpp", "native/exact_public_history_index.hpp",
         "tests/native/exact_history_index_schedule_controls.cpp",
         "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-betting-template-controls": ("native-virtual-betting-template-controls", (
+        "tests/native/virtual_betting_template_controls.cpp", "native/virtual_betting_template.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-betting-template": ("native-virtual-betting-template-probe", (
+        "native/virtual_betting_template_probe.cpp", "native/virtual_betting_template.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "full-deck-chance": ("native-full-deck-public-chance-probe", (
         "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp",
@@ -202,7 +208,9 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "active-routing" else "Exact fold-class callback/coupled trainer conformance helper; no public protocol or capacity acceptance."
                   if target == "fold-classes" else "Full-deck public-chance exact probability probe only; no sampler, trainer, or whole-game acceptance."
                   if target == "full-deck-chance" else "Full-deck public-chance preflight controls only; no numerical-kernel or solver acceptance."
-                  if target == "full-deck-chance-preflight" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
+                  if target == "full-deck-chance-preflight" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
+                  if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
+                  if target == "virtual-betting-template-controls" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,

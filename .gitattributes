@@ -224,3 +224,6 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/matrix-free-certificate-v1/** -text
 /benchmarks/results/native-public-chance-development-v1/** -text
 /benchmarks/results/native-public-chance-v1/** -text
+/benchmarks/results/update-proof-census-failures-v1/** -text
+/benchmarks/results/virtual-betting-template-development-v1/** -text
+/benchmarks/results/virtual-betting-template-v1/** -text

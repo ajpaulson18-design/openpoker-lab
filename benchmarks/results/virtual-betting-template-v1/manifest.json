@@ -1,0 +1,63 @@
+{
+  "builds": {
+    "compiled-controls": {
+      "actual_headers_verified_after": 198,
+      "compiled_inputs": 8,
+      "executable_sha256": "da68390edfe03db1d48a746a01c9260682c9e9a82e259e14d5e562b462ecd52d"
+    },
+    "probe": {
+      "actual_headers_verified_after": 198,
+      "compiled_inputs": 8,
+      "executable_sha256": "8e7ba52c23fc45ae490209bf71faf77e6551356aad21735ba9dc43ad0e917eeb"
+    }
+  },
+  "contract": "virtual-betting-template-committed-conformance-v1",
+  "frozen_commit": "94b4f5fa48fa7388dcc0bf106b5f065ed84e7164",
+  "git_filtered_paths_verified_each_side": 1345,
+  "limitations": [
+    "External stdlib capture controller is separate from committed project source.",
+    "Compiled controls use named logical charges, not a general allocator spy.",
+    "History suffix validation proves ledger consistency, not prior-history reachability.",
+    "Source/binaries are inert provenance; no archived code or binary was executed by publication."
+  ],
+  "member_sha256": {
+    "build-controls.status.json": "7fd5d33f3a5beb442d9999de6adc48930a0b4ed0785dd60169db8a5a6ca8a2e3",
+    "build-controls.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build-controls.stdout.log": "928e45a3b1a01648d56375ba4a79b745d6b98b882e666823f9e0ff84d14b1e8b",
+    "build-probe.status.json": "43fa4b68366cd883007e58651fc82c43598c02114410521a09b13d3aeb350e03",
+    "build-probe.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build-probe.stdout.log": "56b8c0526d4aaa090108da9c6b5d66ca878fd585f42754ca42d07dc45f86fed9",
+    "captured-controller.py": "62e4ea63b1d6103371efa9f0ed826d1e424031dd8297097a94a473514a029b14",
+    "committed-source-after.json": "49e878421611e39764215a36d952061a18224c57525aef0666a9abfdd883dbab",
+    "committed-source-before.json": "49e878421611e39764215a36d952061a18224c57525aef0666a9abfdd883dbab",
+    "compiled-binaries.zip": "68929fb3652a10e33b94d7ee85400b39eb7314f4009cd1953a97c4ebbf774995",
+    "compiled-controls.status.json": "d2a8b1313c23db1ebb18173638d0fb8b3f5ddb3334e19303b8a20b480fb384bb",
+    "compiled-controls.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compiled-controls.stdout.log": "e9579dde6ca5b00394b32d1bddc2d5e81ada08471d9ca7b7a051f5c2a7b21682",
+    "compiled-controls/build.log": "1fadb12575643a097a4fb4e09e229f5219078e5f17f964991dfa54f1ba0d10d7",
+    "compiled-controls/compiler-version.log": "7ab3c29b079e023c33e4f786d2aa6642bf4615ec683304477750f1c010ce0868",
+    "compiled-controls/native-exact-build-manifest.json": "a53edd83c806947a7c9bb999d851ba47092de5866ab54b3ed3c8a38c5a239e1e",
+    "completion.json": "81087c82bcb1575142947596a3dd57838b706df08f4d5dce1ec4ace53e2692e0",
+    "normal.status.json": "8608332e9921e6a9bd55eaf2855ba8c82e3bd47c89d13bb8a17891f790347b0a",
+    "normal.stderr.log": "151b6d6c4604de5cc31067fc7878209e049fe1d28de66e6a13d064f508a7950f",
+    "normal.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "optimized.status.json": "348055beaac5dee7cfd4d1b407c7b9b8993d5669ff58f0bba722e8dcf6863010",
+    "optimized.stderr.log": "1a22808c6a8b18f2f19b28b46c915d087880ac9434153a4d2bfdb4fcbbf9554a",
+    "optimized.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "probe/build.log": "bd78dbfb4db907c75e963983ad11f3a019ac19a14c1fd6a6f51b67ef1b052fbf",
+    "probe/compiler-version.log": "7ab3c29b079e023c33e4f786d2aa6642bf4615ec683304477750f1c010ce0868",
+    "probe/native-exact-build-manifest.json": "74a03813459e906ea654b42198b7ebfaaa1086ec7468859109248cbe342ad1da",
+    "process-observation.json": "a12166414871e871bca00c4316f2b7e7c64577ee02ee30619de3087e990ed8e9",
+    "source-after.json": "11119e2acf10c3dbff0a89ed016a7ce06868ff20dfabbafebf49172f916610b7",
+    "source-before.json": "11119e2acf10c3dbff0a89ed016a7ce06868ff20dfabbafebf49172f916610b7"
+  },
+  "normal_tests": 16,
+  "observed_outer_exit_code": 0,
+  "observed_outer_session": 96625,
+  "optimized_tests": 16,
+  "project_files": 2281,
+  "publisher_sha256_at_packaging": "98c7bab825b5aefc6d59d69ea849a3008c4f710af289b0dc74c2ad7c03f7ea54",
+  "raw_source_before_after_equal": true,
+  "scope": "Card-free structural component conformance; no sampled update, trainer, policy quality, speed or RSS result.",
+  "skips": 0
+}

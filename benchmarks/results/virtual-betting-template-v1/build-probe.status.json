@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-m",
+    "scripts.build_native_exact_four_street",
+    "--target",
+    "virtual-betting-template",
+    "--output-dir",
+    "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\virtual-betting-template-frozen-controls-v1\\probe"
+  ],
+  "exit_code": 0,
+  "label": "build-probe",
+  "seconds": 8.5
+}

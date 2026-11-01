@@ -1,0 +1,68 @@
+name: Native virtual betting template
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-template:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build explicit card-free template probe
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target virtual-betting-template --output-dir "$RUNNER_TEMP/native-virtual-betting-template"
+          python -m scripts.build_native_exact_four_street --target virtual-betting-template-controls --output-dir "$RUNNER_TEMP/native-virtual-betting-template/controls"
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_VIRTUAL_BETTING_TEMPLATE_EXE=$RUNNER_TEMP/native-virtual-betting-template/native-virtual-betting-template-probe$suffix" >> "$GITHUB_ENV"
+      - name: Independent numeric rules and history counts
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          "$RUNNER_TEMP/native-virtual-betting-template/controls/native-virtual-betting-template-controls$suffix" > "$RUNNER_TEMP/native-virtual-betting-template/controls.stdout.log" 2> "$RUNNER_TEMP/native-virtual-betting-template/controls.stderr.log"
+          python -O -m unittest tests.test_native_virtual_betting_template -v > "$RUNNER_TEMP/native-virtual-betting-template/tests.stdout.log" 2> "$RUNNER_TEMP/native-virtual-betting-template/tests.stderr.log"
+      - name: Preserve compiler and first failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-virtual-betting-template-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/native-virtual-betting-template/**/*.log
+            ${{ runner.temp }}/native-virtual-betting-template/**/*.json
+  sanitized-template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build ASan and UBSan card-free probe
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target virtual-betting-template --output-dir "$RUNNER_TEMP/native-virtual-betting-template-sanitized" --sanitize
+          python -m scripts.build_native_exact_four_street --target virtual-betting-template-controls --output-dir "$RUNNER_TEMP/native-virtual-betting-template-sanitized/controls" --sanitize
+          echo "OPENPOKER_NATIVE_VIRTUAL_BETTING_TEMPLATE_EXE=$RUNNER_TEMP/native-virtual-betting-template-sanitized/native-virtual-betting-template-probe" >> "$GITHUB_ENV"
+      - name: Sanitized independent template controls
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          "$RUNNER_TEMP/native-virtual-betting-template-sanitized/controls/native-virtual-betting-template-controls" > "$RUNNER_TEMP/native-virtual-betting-template-sanitized/controls.stdout.log" 2> "$RUNNER_TEMP/native-virtual-betting-template-sanitized/controls.stderr.log"
+          python -m unittest tests.test_native_virtual_betting_template -v > "$RUNNER_TEMP/native-virtual-betting-template-sanitized/tests.stdout.log" 2> "$RUNNER_TEMP/native-virtual-betting-template-sanitized/tests.stderr.log"
+      - name: Preserve sanitizer and first failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-virtual-betting-template-sanitized
+          path: |
+            ${{ runner.temp }}/native-virtual-betting-template-sanitized/**/*.log
+            ${{ runner.temp }}/native-virtual-betting-template-sanitized/**/*.json
