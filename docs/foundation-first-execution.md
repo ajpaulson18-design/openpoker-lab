@@ -16,8 +16,13 @@ are preserved as inert evidence, without rerunning or changing the old cap.
 
 The [card-free betting template](virtual-betting-template.md) is the structural
 response, with shared numeric continuations and distinct full action-history
-multiplicities. Implementation and independent controls are in progress; no
-admitted full-game, update estimator, trainer or quality result is recorded.
+multiplicities. Committed-source conformance at `94b4f5f` now passes all 16
+normal/optimized tests with no skips, both compiled targets and a stable complete
+2,281-file source closure. All actual build inputs/Boost headers are checked;
+root observes outer exit 0. The [frozen record](../benchmarks/results/virtual-betting-template-v1/manifest.json)
+retains original artifacts without replaying stopped producers. Windows/Linux/
+sanitizer component jobs pass; final PR #283 publication checks are pending.
+No admitted full-game, update estimator, trainer or quality result is recorded.
 
 ## Frozen independent saved-policy certificate (October 31)
 

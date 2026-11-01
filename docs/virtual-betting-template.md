@@ -1,6 +1,7 @@
 # Card-free betting template for virtual public chance
 
-Status: implementation and independent controls are in progress. This is the
+Status: committed-source structural component conformance passes; final
+publication CI remains pending. This is the
 next structural boundary in the [unified foundation](foundation-first-audit.md),
 after the [native chance component](native-full-deck-public-chance.md), merged
 in [PR #281](https://github.com/ajpaulson18-design/openpoker-lab/pull/281).
@@ -164,9 +165,33 @@ matches the eleven reference counts. Missing separate observations of an outer
 controller's exit are not inferred from its own completion file.
 
 The formatted native source changes whitespace only; every formatter replacement
-was checked and original bytes preserved. A fresh committed-source run and final
-publication checks are still required. The archive preserves historical source
-pins and identifies gaps; current source copies do not relabel older runs.
+was checked and original bytes preserved. The archive preserves historical
+source pins and identifies gaps; current source copies do not relabel older runs.
+
+### Committed-source result
+
+Freeze `94b4f5fa48fa7388dcc0bf106b5f065ed84e7164` passes all **16 tests normally
+and optimized, no skips**. Both explicit native targets compile and the rounding,
+resource/ledger and rounding-mode controls pass. The complete 2,281-file project
+matches captured committed HEAD before mathematics and remains byte-identical
+afterward; 1,345 paths per side additionally match their Git-filtered blobs.
+Both eight-input native build closures and all 198 actual extracted Boost
+headers are checked. Root observed outer handle 96625 terminate with exit 0.
+
+The [frozen record](../benchmarks/results/virtual-betting-template-v1/manifest.json)
+retains source/Git maps, original build manifests/compiler logs, raw unit
+streams/status, both original executables, the external stdlib controller and
+its separate process observation. The controller is outside the committed
+project closure. Its normal/optimized subprocess times are 2.828/1.781 seconds;
+these are conformance observations, not performance comparisons. No archived
+source or binary executes during publication.
+
+Windows, Linux and ASan/UBSan component jobs pass on the frozen head. Final
+publication checks are tracked in
+[PR #283](https://github.com/ajpaulson18-design/openpoker-lab/pull/283).
+These controls establish the stated structural boundary; the complete
+regret/average update, physical row admission, lazy storage, training and
+independent full-game quality remain open.
 
 1. Compare native ordered menus, raw money bits, actions, terminal data and
    successors with independent numeric rules, including rounding boundaries,

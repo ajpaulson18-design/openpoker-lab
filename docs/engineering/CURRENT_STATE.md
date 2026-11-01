@@ -3,10 +3,13 @@
 The [card-free betting template](../virtual-betting-template.md) is the next
 structural candidate after two preserved 60-board dry-census failures. Native
 numeric continuations, symbolic reveals and full-path multiplicity counts have
-development parity against independent rules and a bounded literal tree. Both
-15-test development modes pass, but that controller's source-stability gate
-fails from a concurrent documentation edit. Fresh committed-source conformance
-and final publication checks remain pending. There is no strategy/history arena,
+development parity against independent rules and a bounded literal tree. The
+15-test development modes pass but their controller's source-stability gate
+fails from a concurrent documentation edit; this failure is preserved. A separate
+committed-source run at `94b4f5f` passes all 16 tests in both modes, with no skips,
+stable 2,281-file source closure, both original native builds and observed outer
+exit 0. Frozen-head Windows/Linux/sanitizer jobs pass; final publication checks
+remain pending in PR #283. There is no strategy/history arena,
 sampling, update estimator, new trainer or full-deck quality result.
 
 The [new native public-chance boundary](../native-full-deck-public-chance.md)

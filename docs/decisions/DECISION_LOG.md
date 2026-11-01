@@ -52,7 +52,10 @@ check configured binary64/nine-decimal arithmetic and multiplicity counts,
 including reconvergent histories and the legacy fold-history convention.
 Require pre-operation reduce-only admission and explicit overflow rejection.
 
-Implementation and independent controls are in progress. Physical supported
+Committed freeze `94b4f5f` passes all 16 controls normally/optimized with no skips,
+stable complete project source/build identity and observed outer exit 0.
+Frozen-head Windows/Linux/sanitizer component jobs pass; final publication
+checks remain pending in PR #283. Physical supported
 row census, lazy persistent storage, sampling/update proof, whole-game training
 and independent quality remain open. The existing native chance component is
 merged in PR #281; no full-deck solve follows from either component.
