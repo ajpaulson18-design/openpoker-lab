@@ -1,5 +1,24 @@
 # Foundation-first execution record
 
+## Virtual-chance structural barrier (November 1)
+
+The exact native [chance component](native-full-deck-public-chance.md) is merged
+in PR #281 after all 14 final workflow groups passed. Fetched main has the exact
+tested tree `20b4f1059a0468c622e12efb8c36aba9ec011d28` and contains the tested head.
+
+Two subsequent independent public-tree reference attempts at frozen `32ddc174`
+stopped during dry census at the existing 500,000,000 logical-work cap: first in
+successor admission, then in menu admission. Both used all 60 positive-target
+nine-card boards; the second used the existing accepted betting configuration.
+Neither materialized the model or reached its policy/update proof. Their
+[original controllers, failures and source maps](../benchmarks/results/update-proof-census-failures-v1/manifest.json)
+are preserved as inert evidence, without rerunning or changing the old cap.
+
+The [card-free betting template](virtual-betting-template.md) is the structural
+response, with shared numeric continuations and distinct full action-history
+multiplicities. Implementation and independent controls are in progress; no
+admitted full-game, update estimator, trainer or quality result is recorded.
+
 ## Frozen independent saved-policy certificate (October 31)
 
 The [new saved-only verifier](matrix-free-certificate.md) joins independent public

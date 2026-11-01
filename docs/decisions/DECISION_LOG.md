@@ -36,6 +36,27 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D078: Compile card-free betting continuations before virtual history expansion (November 1, 2026)
+
+Engineering direction under the owner's scalable unified-solver goal. Two
+separate 60-board reference dry censuses stopped at the unchanged work limit,
+including the existing accepted betting template. Preserve both failures and
+their exact configurations. The [new structural boundary](../virtual-betting-template.md)
+compiles numeric betting continuations with symbolic reveals, without private
+ranges, boards or ranks. This addresses repeated numeric/menu work; it does
+not replace the complete full-history regret/average proof with an easier game.
+
+Continuation identity must retain all exact money, actor, reopening/check and
+initial-history dependencies. It never identifies a strategy row. Independently
+check configured binary64/nine-decimal arithmetic and multiplicity counts,
+including reconvergent histories and the legacy fold-history convention.
+Require pre-operation reduce-only admission and explicit overflow rejection.
+
+Implementation and independent controls are in progress. Physical supported
+row census, lazy persistent storage, sampling/update proof, whole-game training
+and independent quality remain open. The existing native chance component is
+merged in PR #281; no full-deck solve follows from either component.
+
 ### D077: Separate native full-deck prefix law from sampled terminal vectors (October 31, 2026)
 
 Engineering decision under the owner's scalable unified-solver goal. The

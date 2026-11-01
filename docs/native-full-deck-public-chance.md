@@ -1,7 +1,7 @@
 # Native public-chance probability and payoff boundary
 
-Status: committed-source component conformance passes under the scalable
-unified-solver goal; final publication CI remains a separate gate. This is a
+Status: committed-source component conformance and all 14 publication workflow
+groups pass; PR #281 is merged as `692c301`. This is a
 native component for the future virtual-chance four-street path, not a sampler,
 trainer, complete strategy, or full-deck quality certificate. Independent compiled
 numerical controls and the complete source freeze are recorded below.
@@ -156,14 +156,20 @@ The [frozen evidence manifest](../benchmarks/results/native-public-chance-v1/man
 binds the project closure, build identity, mode status/streams, named preflight
 materialization controls and separate external-controller observation. The
 external stdlib controller is captured separately from the committed project
-closure. Archived code was not executed. Frozen-head Linux/Windows and sanitizer
-component jobs also pass; final publication checks are tracked in
+closure. Archived code was not executed. Final-head Linux/Windows and sanitizer
+component jobs, existing whole-game conformance, and Python 3.11/3.12/3.13 tests
+pass. The fetched merge contains the exact tested publication tree; see
 [PR #281](https://github.com/ajpaulson18-design/openpoker-lab/pull/281).
 
 These results validate the declared component controls. They do not establish a
 regret-update estimator, full-game policy, convergence, speed or measured RSS.
 
 ## Next integration gates
+
+The [card-free betting template](virtual-betting-template.md) addresses two
+subsequent reference dry-census failures before the full update proof. Neither
+failed reference constructed its public model. Structural template counts are
+distinct from admitted physical support, strategy rows and update correctness.
 
 The reviewed reduced nine-card anchor has three compatible private pairs, each
 with 20 legal canonical-flop/ordered-turn/river outcomes: exactly 60 target boards

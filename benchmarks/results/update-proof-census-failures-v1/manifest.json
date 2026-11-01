@@ -1,0 +1,127 @@
+{
+  "contract": "update-proof-census-failures-v1",
+  "status": "two_stopped_reference_censuses_no_update_proof",
+  "frozen_project_commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+  "archive_sha256": "961d63cf26e62bf104a6ce7604da399c003885450c9110ae79bce53a14f97254",
+  "archive_bytes": 524505,
+  "archive_members": 15,
+  "attempts": [
+    {
+      "version": "v1",
+      "observed_completion": {
+        "completed": true,
+        "exit_code": 1,
+        "helper_sha256_after_math": "ff5be8feb920584094300a63faba1b418f7ecf00127c3a95a416fbfa5ffc03aa",
+        "helper_sha256_before_math": "ff5be8feb920584094300a63faba1b418f7ecf00127c3a95a416fbfa5ffc03aa",
+        "source_authentication_after": {
+          "commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+          "filtered_files": 2232,
+          "filtered_mismatches": 0,
+          "filtered_paths_checked_against_filter": 13,
+          "raw_files": 2232,
+          "raw_mismatches": 0,
+          "raw_missing": 0,
+          "snapshot_sha256": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+          "status": "clean",
+          "tree_files": 2232,
+          "tree_mismatches": 0
+        },
+        "source_authentication_before_math": {
+          "commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+          "filtered_files": 2232,
+          "filtered_mismatches": 0,
+          "filtered_paths_checked_against_filter": 13,
+          "raw_files": 2232,
+          "raw_mismatches": 0,
+          "raw_missing": 0,
+          "snapshot_sha256": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+          "status": "clean",
+          "tree_files": 2232,
+          "tree_mismatches": 0
+        },
+        "source_before_after_equal": true,
+        "status": "failed"
+      },
+      "controller_sha256": "ff5be8feb920584094300a63faba1b418f7ecf00127c3a95a416fbfa5ffc03aa",
+      "files_sha256": {
+        "auth-before.json": "c4eb4f6b500b24c924b49530f334b49dd7e6ae07847e4455cb87c2ebfecf8f0c",
+        "completion.json": "01eed40cdce7c53f5f848acaca9f875d311b7386ad8bfe6994f167d01e029846",
+        "first-failure.json": "8d9f1a67d193d94a534e6c743381bd6a63bbd1e3c5708a425156b0e51a3aeaf6",
+        "source-before.json": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+        "stderr.log": "1afc66f5f6e5be3b76b6adb1197ef2050e60a72573c9e62446ebfc14241b5d66",
+        "stdout.log": "fe6c386c25bbc2388fc093cdbc6e18342ba73e76590b9d927e5a3e7687f4960f"
+      }
+    },
+    {
+      "version": "v2",
+      "observed_completion": {
+        "completed": true,
+        "exit_code": 1,
+        "helper_sha256_after_math": "d299e1c7d04b6915cba5cae508cee7ec1f0bc39ee0994529cede789bc7266e57",
+        "helper_sha256_before_math": "d299e1c7d04b6915cba5cae508cee7ec1f0bc39ee0994529cede789bc7266e57",
+        "source_authentication_after": {
+          "commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+          "filtered_files": 2232,
+          "filtered_mismatches": 0,
+          "filtered_paths_checked_against_filter": 13,
+          "raw_files": 2232,
+          "raw_mismatches": 0,
+          "raw_missing": 0,
+          "snapshot_sha256": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+          "status": "clean",
+          "tree_files": 2232,
+          "tree_mismatches": 0
+        },
+        "source_authentication_before_math": {
+          "commit": "32ddc17409d7e56e012a9d749863af438a79a3d9",
+          "filtered_files": 2232,
+          "filtered_mismatches": 0,
+          "filtered_paths_checked_against_filter": 13,
+          "raw_files": 2232,
+          "raw_mismatches": 0,
+          "raw_missing": 0,
+          "snapshot_sha256": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+          "status": "clean",
+          "tree_files": 2232,
+          "tree_mismatches": 0
+        },
+        "source_before_after_equal": true,
+        "status": "failed"
+      },
+      "controller_sha256": "d299e1c7d04b6915cba5cae508cee7ec1f0bc39ee0994529cede789bc7266e57",
+      "files_sha256": {
+        "auth-before.json": "c4eb4f6b500b24c924b49530f334b49dd7e6ae07847e4455cb87c2ebfecf8f0c",
+        "bet-template-inventory.md": "ea650d47ca8d0ae4d43dc37470d1459c3bb4adf26b921d7616c65b3b70042276",
+        "completion.json": "d68f015447df82debb091e8de5141d6be0ee85126d848a99d01b8d8c2788c5c2",
+        "first-failure.json": "739357bab54690e3c94156151c8907d245ef1f5011c05abad2b739716599a286",
+        "source-before.json": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+        "stderr.log": "170d78d72dc611c45f7c5f16c397be2875357c87962398f59b2e61399749050f",
+        "stdout.log": "fe6c386c25bbc2388fc093cdbc6e18342ba73e76590b9d927e5a3e7687f4960f"
+      }
+    }
+  ],
+  "member_sha256": {
+    "v1/auth-before.json": "c4eb4f6b500b24c924b49530f334b49dd7e6ae07847e4455cb87c2ebfecf8f0c",
+    "v1/completion.json": "01eed40cdce7c53f5f848acaca9f875d311b7386ad8bfe6994f167d01e029846",
+    "v1/controller.py": "ff5be8feb920584094300a63faba1b418f7ecf00127c3a95a416fbfa5ffc03aa",
+    "v1/first-failure.json": "8d9f1a67d193d94a534e6c743381bd6a63bbd1e3c5708a425156b0e51a3aeaf6",
+    "v1/source-before.json": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+    "v1/stderr.log": "1afc66f5f6e5be3b76b6adb1197ef2050e60a72573c9e62446ebfc14241b5d66",
+    "v1/stdout.log": "fe6c386c25bbc2388fc093cdbc6e18342ba73e76590b9d927e5a3e7687f4960f",
+    "v2/auth-before.json": "c4eb4f6b500b24c924b49530f334b49dd7e6ae07847e4455cb87c2ebfecf8f0c",
+    "v2/bet-template-inventory.md": "ea650d47ca8d0ae4d43dc37470d1459c3bb4adf26b921d7616c65b3b70042276",
+    "v2/completion.json": "d68f015447df82debb091e8de5141d6be0ee85126d848a99d01b8d8c2788c5c2",
+    "v2/controller.py": "d299e1c7d04b6915cba5cae508cee7ec1f0bc39ee0994529cede789bc7266e57",
+    "v2/first-failure.json": "739357bab54690e3c94156151c8907d245ef1f5011c05abad2b739716599a286",
+    "v2/source-before.json": "a9798bcaba0581722a57a6a5b8b045f44106ae89f22cab7b2610f625e9afe479",
+    "v2/stderr.log": "170d78d72dc611c45f7c5f16c397be2875357c87962398f59b2e61399749050f",
+    "v2/stdout.log": "fe6c386c25bbc2388fc093cdbc6e18342ba73e76590b9d927e5a3e7687f4960f"
+  },
+  "packager_sha256": "b44d8d91ec3174a76139fc5392278cc7b1b0e9697f5262a687ac65531731b662",
+  "limits": [
+    "Neither public model materialized; no complete policy fixture or update proof.",
+    "Original controllers enumerate the three proof-deck pairs and board inputs before public census.",
+    "The reported failure is an original logical-work admission failure, not a capacity impossibility proof.",
+    "Packaging reads original files only; archived controllers are never executed."
+  ]
+}

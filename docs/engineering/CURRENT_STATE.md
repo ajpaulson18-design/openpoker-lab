@@ -1,12 +1,22 @@
 # Current engineering state
 
+The [card-free betting template](../virtual-betting-template.md) is the next
+structural candidate after two preserved 60-board dry-census failures. Native
+numeric continuations, symbolic reveals and full-path multiplicity counts have
+development parity against independent rules and a bounded literal tree. Both
+15-test development modes pass, but that controller's source-stability gate
+fails from a concurrent documentation edit. Fresh committed-source conformance
+and final publication checks remain pending. There is no strategy/history arena,
+sampling, update estimator, new trainer or full-deck quality result.
+
 The [new native public-chance boundary](../native-full-deck-public-chance.md)
 is an engineering candidate for full-deck prefix mass and exact single-board
 importance-weighted payoff vectors. It retains no board/pair/world list and has
 no policy, history router, sampler or trainer. Independent numerical/resource
 conformance now passes at committed freeze `32ddc17`: 18 normal/optimized
-controls, no skips, stable 2,232-file project closure and original build. Frozen-head
-Linux/Windows/sanitizer jobs pass; final publication CI remains pending in PR #281.
+controls, no skips, stable 2,232-file project closure and original build. All 14
+final publication workflow groups pass; PR #281 is merged as `692c301`, with
+tested tree `20b4f105` and tested-head ancestry verified on fetched main.
 All earlier receipts/capture gaps are preserved. It establishes no full-deck solve.
 
 The [matrix-free saved-policy certificate result](../matrix-free-certificate-result.md)
