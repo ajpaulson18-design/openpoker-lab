@@ -36,6 +36,28 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D080: Carry exact sequence reaches toward finite-grid training (November 4, 2026)
+
+Engineering direction under the unchanged unified foundation goal. Add an
+explicit common-denominator rational reach entry to the existing public-chance
+kernel, retaining original holding identities, global prior and shared blocker/
+rank semantics. Preserve every old API limit/default and require raw response/
+receipt parity to the active pre-change baseline. Direct component conformance
+is separate from full update identity and changing-policy training.
+
+For the next deterministic whole-game trainer, prefer exact dyadic policy units
+on a declared 2^52 grid and cumulative integer regret/average masses. Normalizing
+arbitrary binary64 rows by different exact odd sums can cause future-value
+denominator explosion across branches. Largest-remainder quantization has
+measurable numerical effects, including possible zeroing of small action weights;
+saved policy/visible-information best-response quality remains mandatory.
+Exhaustive reveal summation uses q=1 and visible-prefix fold values; prune only
+zero prior physical prefix mass. Keep full histories, zero-policy actions and
+all physically supported counterfactual rows. Admit full history depth, bit
+width, work and persistent storage before training. The complete frozen-update
+identity and its saved-only acceptance remain the gate before training runs.
+See the [implemented boundary and unresolved gates](../native-exact-reach.md).
+
 ### D079: Prove complete frozen updates before evolving-policy training (November 4, 2026)
 
 Engineering direction under the unchanged scalable-foundation goal. Join the

@@ -1,0 +1,50 @@
+{
+  "version": "native-exact-reach-development-v1",
+  "scope": "source-only DEVELOPMENT component controls; uncommitted raw tree; full-game changing-policy/training admission is open",
+  "active_prechange_baseline": "9dbf1ef9f42c0e63be96c4391f7084b8444e009f",
+  "initial_controls": {
+    "normal_tests": 3,
+    "terminal_vectors": 90720,
+    "guards": 13,
+    "legacy_component_tests": 18
+  },
+  "current_controls": {
+    "normal_tests": 22,
+    "optimized_tests": 22,
+    "terminal_vectors_per_mode": 120960,
+    "legacy_raw_parity_requests_per_mode": 10464,
+    "guards_per_mode": 13,
+    "observed_exit_codes": [
+      0,
+      0
+    ],
+    "raw_source_stable": true,
+    "compiled_project_sources": {
+      "normal": 12,
+      "optimized": 12
+    }
+  },
+  "source_sha256": {
+    "native/full_deck_public_chance.hpp": "694544756c01145f0fecea18d6041642d69f4bf69c73da88058f7acedaeb4b77",
+    "tests/native/full_deck_exact_reach_controls.cpp": "13735ba36d841e942c3752aa908a04fcc856545a031215664309c676789e142c",
+    "tests/test_native_exact_reach.py": "6af9a3ecc2610503971ea27b1b1c6da535f1c4436346d001acb3bbd92992880f",
+    "scripts/build_native_exact_four_street.py": "54ca577bc66c2f3e36456472d59b3d1226ffcd32ee93362c0dc68369617c8f01",
+    ".github/workflows/native-full-deck-public-chance.yml": "896b9b86e688610674407c095894121cbf16e36a244b02a6d88620f56d354172"
+  },
+  "archive": {
+    "path": "development.zip",
+    "sha256": "0c705e06e3a3d74fbb5b7b548d10803a1d2d13f02c9dbc2060e0042fcd38d588",
+    "bytes": 2364226,
+    "members": 1920,
+    "uncompressed_bytes": 94567303
+  },
+  "review": {
+    "status": "Sol source inspection found no algebra/admission/lifetime blocker; actual controls prove separate execution",
+    "preserved_review_correction": "An initial predicted width-control failure was retracted after inspecting unreduced53-bit significands and actual passing guards. Constructor width120, query bound about196, cap128 is appropriate.",
+    "positive_exponent_gap": "Added a 2^200 showdown fixture and raw legacy compatibility cases after review"
+  },
+  "preserved_metadata_correction": "First new target inherited a generic engine scope in its build manifest. Current build target has explicit component-only scope; no engine/training acceptance is claimed from either version.",
+  "committed_component_acceptance": null,
+  "training_calls": 0,
+  "full_fixed_update_producer": "original174b666 continues once in separate immutable checkout"
+}

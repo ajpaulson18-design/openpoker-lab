@@ -69,6 +69,9 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
     "virtual-betting-template": ("native-virtual-betting-template-probe", (
         "native/virtual_betting_template_probe.cpp", "native/virtual_betting_template.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "full-deck-exact-reach-controls": ("native-full-deck-exact-reach-controls", (
+        "tests/native/full_deck_exact_reach_controls.cpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "full-deck-chance": ("native-full-deck-public-chance-probe", (
         "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp",
@@ -225,7 +228,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "active-routing" else "Exact fold-class callback/coupled trainer conformance helper; no public protocol or capacity acceptance."
                   if target == "fold-classes" else "Full-deck public-chance exact probability probe only; no sampler, trainer, or whole-game acceptance."
                   if target == "full-deck-chance" else "Full-deck public-chance preflight controls only; no numerical-kernel or solver acceptance."
-                  if target == "full-deck-chance-preflight" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
+                  if target == "full-deck-chance-preflight" else "Exact rational opponent-reach component controls only; no sampler, changing-policy trainer or whole-game acceptance."
+                  if target == "full-deck-exact-reach-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
                   if target == "virtual-betting-template-controls" else "PROOF9/v1 exact frozen-update preflight and value probe only; no RNG, training, generic solver backend or quality acceptance."
                   if target == "virtual-frozen-update" else "Frozen-update arithmetic, admission, ownership and bounded zero-target controls; no full-game acceptance."

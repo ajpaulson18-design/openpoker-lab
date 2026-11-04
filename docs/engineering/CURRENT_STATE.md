@@ -1,5 +1,14 @@
 # Current engineering state
 
+The [exact sequence-reach transport](../native-exact-reach.md) is implemented in
+development. All 120,960 independent terminal vectors and 10,464 raw active-
+baseline compatibility requests pass in each mode, together with 13 rejection
+guards and the existing component checks (22 tests total per mode). Source-only
+development receipts show stable raw project bytes and observed exits 0. A
+committed component cohort and final CI remain pending. Whole-game training,
+persistent strategy storage and quality remain unfinished; the original
+fixed-profile producer and its queued saved review continue unchanged.
+
 The complete frozen-update producer started once at `174b666`, following 67
 source-only controls in each mode with observed exits and full raw-source
 stability. It is still running; no complete identity result is claimed.

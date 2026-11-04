@@ -134,6 +134,94 @@ class PublicChanceKernel final {
         const auto j = same_[own][i];
         return j != missing && active[j] ? values[j] : Integer(0);
     }
+    // Both reach front doors enter the same admitted blocker/rank evaluator.
+    // `factor` already includes the old dyadic reach exponent on the double path.
+    template<class ReachAt>
+    [[nodiscard]] ExactVector terminal_integer_values(std::size_t player,
+            std::span<const std::uint8_t> board, TerminalKind kind,
+            std::uint64_t blocked, bool any, const Integer& pay_sig, int factor,
+            const Integer& reach_denominator, const Integer& proposal_num,
+            const Integer& proposal_den, ReachAt&& reach_at) {
+        const auto opp = 1-player;
+        std::vector<Integer> weighted(hands_[opp].size());
+        std::vector<unsigned char> active(hands_[opp].size());
+        for (std::size_t j=0;j<hands_[opp].size();++j) {
+            if (mask(hands_[opp][j]) & blocked) continue;
+            const auto& reach = reach_at(j);
+            if (reach == 0) continue;
+            weighted[j]=weights_[opp][j]*reach;
+            active[j]=1;
+        }
+        ExactVector out;
+        out.denominator=normalizer_*divisor(5)*proposal_num;
+        if (reach_denominator != 1) out.denominator *= reach_denominator;
+        if (factor<0) out.denominator <<= static_cast<unsigned>(-factor);
+        out.numerators.resize(hands_[player].size());
+        Bucket all;
+        for (std::size_t j=0;j<hands_[opp].size();++j)
+            if (active[j]) add_bucket(all,hands_[opp][j],weighted[j]);
+        if (kind==TerminalKind::fold) {
+            for (std::size_t i=0;i<hands_[player].size();++i) {
+                const auto hand=hands_[player][i];
+                if (mask(hand)&blocked) continue;
+                Integer value=weights_[player][i]*compatible(all,hand,same_value(player,i,weighted,active));
+                value*=pay_sig; value*=proposal_den;
+                if (factor>0) value <<= static_cast<unsigned>(factor);
+                out.numerators[i]=std::move(value);
+            }
+        } else if (pay_sig != 0 && any) {
+            std::array<std::uint8_t,5> public_cards{};
+            std::copy(board.begin(),board.end(),public_cards.begin());
+            std::vector<Row> opponents,own;
+            std::vector<prior::Rank> ranks(hands_[opp].size());
+            opponents.reserve(hands_[opp].size()); own.reserve(hands_[player].size());
+            auto hand_rank=[&](Hand hand) {
+                std::array<std::uint8_t,7> all_cards{hand.first,hand.second,
+                    public_cards[0],public_cards[1],public_cards[2],public_cards[3],public_cards[4]};
+                ++receipt_.rank_calls; return prior::rank_seven(all_cards);
+            };
+            for (std::size_t j=0;j<hands_[opp].size();++j) if (active[j]) {
+                ranks[j]=hand_rank(hands_[opp][j]); opponents.push_back(Row{ranks[j],j});
+            }
+            for (std::size_t i=0;i<hands_[player].size();++i)
+                if (!(mask(hands_[player][i]) & blocked)) own.push_back(Row{hand_rank(hands_[player][i]),i});
+            const auto less=[](const Row& a,const Row& b) {
+                return a.rank==b.rank ? a.index<b.index : a.rank<b.rank;
+            };
+            std::sort(opponents.begin(),opponents.end(),less);std::sort(own.begin(),own.end(),less);
+            Bucket lower; std::size_t pos=0, i=0;
+            while (i<own.size()) {
+                const auto rank=own[i].rank;
+                while (pos<opponents.size() && opponents[pos].rank<rank) {
+                    const auto j=opponents[pos++].index; add_bucket(lower,hands_[opp][j],weighted[j]);
+                }
+                Bucket equal; auto end=pos;
+                while (end<opponents.size() && opponents[end].rank==rank) {
+                    const auto j=opponents[end++].index;add_bucket(equal,hands_[opp][j],weighted[j]);
+                }
+                while (i<own.size() && own[i].rank==rank) {
+                    const auto row=own[i++].index;const auto hand=hands_[player][row];const auto j=same_[player][row];
+                    Integer allsame=0, lowsame=0, equalsame=0;
+                    if (j!=missing && active[j]) {
+                        allsame=weighted[j];
+                        if (ranks[j]<rank) lowsame=weighted[j];
+                        else if (ranks[j]==rank) equalsame=weighted[j];
+                    }
+                    const Integer lo=compatible(lower,hand,lowsame);
+                    const Integer hi=compatible(all,hand,allsame)-lo-compatible(equal,hand,equalsame);
+                    if (hi<0) fail(ErrorCode::invalid_query,"negative blocker-compatible rank mass");
+                    Integer value=weights_[player][row]*(lo-hi);
+                    value*=pay_sig;value*=proposal_den;
+                    if (factor>0) value <<= static_cast<unsigned>(factor);
+                    out.numerators[row]=std::move(value);
+                }
+                while (pos<end) {
+                    const auto j=opponents[pos++].index;add_bucket(lower,hands_[opp][j],weighted[j]);
+                }
+            }
+        }
+        ++receipt_.terminal_queries; return out;
+    }
 public:
     PublicChanceKernel(std::span<const WeightedHand> sb, std::span<const WeightedHand> bb,
                        DeckDefinition deck = DeckDefinition::full52(), Limits limits = {})
@@ -286,84 +374,77 @@ public:
         const auto bits=std::max({num_bits,den_bits,qn,qd,std::size_t{53}});
         const auto sorting=static_cast<std::uint64_t>(64*h*(1+log2ceil(h)));
         reserve_query(4096+512*h+sorting, 24*h+2048, bits);
-        std::vector<Integer> weighted(hands_[opp].size());
-        std::vector<unsigned char> active(hands_[opp].size());
-        for (std::size_t j=0;j<hands_[opp].size();++j) {
-            const auto parts=prior::decode_parts(std::bit_cast<std::uint64_t>(opponent_reach[j]),false,true,"invalid opponent reach");
-            if (!parts.significand || (mask(hands_[opp][j]) & blocked)) continue;
-            weighted[j]=weights_[opp][j]*(Integer(parts.significand) << static_cast<unsigned>(parts.exponent-common));
-            active[j]=1;
-        }
         Integer pay_sig=pay.significand;
         if ((paybits>>63) && pay_sig != 0) pay_sig=-pay_sig;
-        ExactVector out;
-        out.denominator=normalizer_*divisor(5)*proposal_num;
-        if (factor<0) out.denominator <<= static_cast<unsigned>(-factor);
-        out.numerators.resize(hands_[player].size());
-        Bucket all;
-        for (std::size_t j=0;j<hands_[opp].size();++j)
-            if (active[j]) add_bucket(all,hands_[opp][j],weighted[j]);
-        if (kind==TerminalKind::fold) {
-            for (std::size_t i=0;i<hands_[player].size();++i) {
-                const auto hand=hands_[player][i];
-                if (mask(hand)&blocked) continue;
-                Integer value=weights_[player][i]*compatible(all,hand,same_value(player,i,weighted,active));
-                value*=pay_sig; value*=proposal_den;
-                if (factor>0) value <<= static_cast<unsigned>(factor);
-                out.numerators[i]=std::move(value);
-            }
-        } else if (pay.significand && any) {
-            std::array<std::uint8_t,5> public_cards{};
-            std::copy(board.begin(),board.end(),public_cards.begin());
-            std::vector<Row> opponents,own;
-            std::vector<prior::Rank> ranks(hands_[opp].size());
-            opponents.reserve(hands_[opp].size()); own.reserve(hands_[player].size());
-            auto hand_rank=[&](Hand hand) {
-                std::array<std::uint8_t,7> all_cards{hand.first,hand.second,
-                    public_cards[0],public_cards[1],public_cards[2],public_cards[3],public_cards[4]};
-                ++receipt_.rank_calls; return prior::rank_seven(all_cards);
-            };
-            for (std::size_t j=0;j<hands_[opp].size();++j) if (active[j]) {
-                ranks[j]=hand_rank(hands_[opp][j]); opponents.push_back(Row{ranks[j],j});
-            }
-            for (std::size_t i=0;i<hands_[player].size();++i)
-                if (!(mask(hands_[player][i]) & blocked)) own.push_back(Row{hand_rank(hands_[player][i]),i});
-            const auto less=[](const Row& a,const Row& b) {
-                return a.rank==b.rank ? a.index<b.index : a.rank<b.rank;
-            };
-            std::sort(opponents.begin(),opponents.end(),less);std::sort(own.begin(),own.end(),less);
-            Bucket lower; std::size_t pos=0, i=0;
-            while (i<own.size()) {
-                const auto rank=own[i].rank;
-                while (pos<opponents.size() && opponents[pos].rank<rank) {
-                    const auto j=opponents[pos++].index; add_bucket(lower,hands_[opp][j],weighted[j]);
-                }
-                Bucket equal; auto end=pos;
-                while (end<opponents.size() && opponents[end].rank==rank) {
-                    const auto j=opponents[end++].index;add_bucket(equal,hands_[opp][j],weighted[j]);
-                }
-                while (i<own.size() && own[i].rank==rank) {
-                    const auto row=own[i++].index;const auto hand=hands_[player][row];const auto j=same_[player][row];
-                    Integer allsame=0, lowsame=0, equalsame=0;
-                    if (j!=missing && active[j]) {
-                        allsame=weighted[j];
-                        if (ranks[j]<rank) lowsame=weighted[j];
-                        else if (ranks[j]==rank) equalsame=weighted[j];
-                    }
-                    const Integer lo=compatible(lower,hand,lowsame);
-                    const Integer hi=compatible(all,hand,allsame)-lo-compatible(equal,hand,equalsame);
-                    if (hi<0) fail(ErrorCode::invalid_query,"negative blocker-compatible rank mass");
-                    Integer value=weights_[player][row]*(lo-hi);
-                    value*=pay_sig;value*=proposal_den;
-                    if (factor>0) value <<= static_cast<unsigned>(factor);
-                    out.numerators[row]=std::move(value);
-                }
-                while (pos<end) {
-                    const auto j=opponents[pos++].index;add_bucket(lower,hands_[opp][j],weighted[j]);
-                }
-            }
+        return terminal_integer_values(player,board,kind,blocked,any,pay_sig,factor,
+            Integer(1),proposal_num,proposal_den,[&](std::size_t j) -> Integer {
+                const auto parts=prior::decode_parts(std::bit_cast<std::uint64_t>(opponent_reach[j]),false,true,"invalid opponent reach");
+                return Integer(parts.significand) << static_cast<unsigned>(parts.exponent-common);
+            });
+    }
+    // Exact input-order opponent sequence reaches n_j/D, including off-path
+    // zeros. The caller owns/admit its immutable input storage and common-D
+    // construction. No rational is rounded through binary64 here.
+    [[nodiscard]] ExactVector terminal_exact_reach(std::size_t player,
+            std::span<const std::uint8_t> board, TerminalKind kind, double payoff,
+            std::span<const Integer> reach_numerators, const Integer& reach_denominator,
+            const Integer& proposal_num, const Integer& proposal_den) {
+        if (player > 1 || (kind != TerminalKind::fold && kind != TerminalKind::showdown))
+            fail(ErrorCode::invalid_query,"invalid exact-reach terminal player or kind");
+        const auto opp=1-player;
+        if (reach_numerators.size()!=hands_[opp].size())
+            fail(ErrorCode::invalid_query,"exact opponent reach length mismatch");
+        charge(128 + 32 * hands_[opp].size());
+        const auto blocked=board_mask(board,true);
+        const auto qn=width(proposal_num), qd=width(proposal_den);
+        const auto rd=width(reach_denominator);
+        if (std::max({qn,qd,rd}) > limits_.max_integer_bits)
+            fail(ErrorCode::integer_bit_limit,"exact reach/proposal width exceeded");
+        // Charge width-dependent comparisons before entering them, including
+        // invalid/rejected input. These charges remain on the same owner.
+        charge(prior::checked_mul_count(16,std::max({qn,qd,rd,std::size_t{1}})));
+        if (proposal_num<=0 || proposal_den<=0 || proposal_num>proposal_den || reach_denominator<=0)
+            fail(ErrorCode::invalid_query,"invalid exact reach/proposal denominator or probability");
+        bool any=false;
+        std::size_t max_reach_bits=0;
+        for (const auto& value:reach_numerators) {
+            const auto n=width(value);
+            if (n>limits_.max_integer_bits)
+                fail(ErrorCode::integer_bit_limit,"exact reach numerator width exceeded");
+            charge(prior::checked_mul_count(16,prior::checked_add_count(n,rd)));
+            if (value<0 || value>reach_denominator)
+                fail(ErrorCode::invalid_query,"exact reach must lie between zero and one");
+            any=any || value!=0;
+            max_reach_bits=std::max(max_reach_bits,n);
         }
-        ++receipt_.terminal_queries; return out;
+        const auto paybits=std::bit_cast<std::uint64_t>(payoff);
+        const auto pay=prior::decode_parts(paybits,true,true,"invalid exact-reach terminal payoff");
+        if (kind==TerminalKind::showdown && (paybits>>63) && pay.significand)
+            fail(ErrorCode::invalid_dyadic,"showdown stake must be nonnegative");
+        const auto h=hands_[0].size()+hands_[1].size();
+        const auto pay_width=pay.significand ? static_cast<std::size_t>(64-std::countl_zero(pay.significand)) : 1U;
+        const auto opp_sum=weight_bits_[opp]+max_reach_bits+log2ceil(hands_[opp].size())+6;
+        const auto num_bits=weight_bits_[player]+opp_sum+pay_width+qd+
+            static_cast<std::size_t>(std::max(0,pay.exponent))+12;
+        const auto den_bits=normalizer_bits_+log2ceil(divisor(5)+1)+qn+rd+
+            static_cast<std::size_t>(std::max(0,-pay.exponent))+8;
+        const auto bits=std::max({num_bits,den_bits,qn,qd,rd,std::size_t{53}});
+        const auto sorting=prior::checked_mul_count(64*h,1+log2ceil(h));
+        // Logical 64-bit word-width-product accounting, not Boost allocation,
+        // machine instruction count or elapsed time. Retain all old charges;
+        // exact input scans and quadratic-width arithmetic are additional.
+        const auto words=prior::checked_add_count(bits,63)/64;
+        const auto word_work=prior::checked_mul_count(4096+64*h,
+            prior::checked_mul_count(words,words));
+        const auto work=prior::checked_add_count(4096+512*h,
+            prior::checked_add_count(sorting,word_work));
+        reserve_query(work,24*h+2048,bits);
+        Integer pay_sig=pay.significand;
+        if ((paybits>>63) && pay_sig!=0) pay_sig=-pay_sig;
+        return terminal_integer_values(player,board,kind,blocked,any,pay_sig,pay.exponent,
+            reach_denominator,proposal_num,proposal_den,[&](std::size_t j) -> const Integer& {
+                return reach_numerators[j];
+            });
     }
     [[nodiscard]] std::vector<double> binary64(const ExactVector& value) {
         if (value.denominator<=0 || value.numerators.size()>limits_.max_hands_per_side)
