@@ -1,5 +1,16 @@
 # Current engineering state
 
+Development under the [frozen-update contract](../virtual-frozen-update.md) now
+has exact saved-row comparison, per-law integer expectation accumulation and
+streaming exact-reference artifacts. Native component checks pass on Windows,
+Linux and ASan/UBSan at `b0fa38e`; these are bounded controls, not all-outcome
+update equivalence. The [whole-study resource plan](../virtual-frozen-whole-study.md)
+composes all 5,040 EVAL requests and two native admission scopes, while keeping
+source/build authentication and an enforcing controller as separate gates.
+Reference preparation now shares one numeric meter across all of its builds;
+old default helper behavior and all native game limits remain unchanged. The
+complete study, evolving-policy training and quality milestone remain unfinished.
+
 The [card-free betting template](../virtual-betting-template.md) is the next
 structural candidate after two preserved 60-board dry-census failures. Native
 numeric continuations, symbolic reveals and full-path multiplicity counts have

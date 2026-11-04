@@ -394,7 +394,7 @@ def _literal_history_skeleton_counts(template):
     return len(seen)
 
 
-def build_frozen_update_census():
+def build_frozen_update_census(*, rule_budget=None):
     """Return an independent scalar row/action census for the pinned v1/N9 case.
 
     No physical row keys are retained. Full-history identity is counted from
@@ -402,8 +402,8 @@ def build_frozen_update_census():
     support applied as a separate factor.
     """
     case = _template_case()
-    template = build_reference_template(case)
-    literal = literal_reference_census(case)
+    template = build_reference_template(case, rule_budget=rule_budget)
+    literal = literal_reference_census(case, rule_budget=rule_budget)
     if template.receipt["nodes"] != 388 or template.receipt["edges"] != 410:
         raise ArithmeticError("the v1 card-free template geometry changed")
     if literal["logical_occurrences"] != 1105:

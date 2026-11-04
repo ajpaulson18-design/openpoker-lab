@@ -85,7 +85,7 @@ class ExpectedUpdateAdmission:
                 "work": self.rule_setup_work,
                 "entries": self.rule_setup_entries,
                 "created_bits": self.rule_setup_created_bits,
-                "scope": "one independent template build plus its existing literal-history validation",
+                "scope": "complete census, literal validation, second template build and fixed N9 setup on one shared reduce-only meter; values are reserved upper bounds",
             },
             "scope": "bounded nine-card expected update; no proposal q, sampling, training, or native values",
         }
@@ -169,8 +169,18 @@ def prepare_expected_update_reference(limits=None):
     ceilings = _checked_limits(limits)
     # The census checks the cache against the #283 literal route walk and
     # independently derives all physical-prefix support totals.
-    census = build_frozen_update_census()
-    template = build_reference_template(_template_case())
+    setup_forecast = {"work": 200_000_000, "entries": 1_000_000,
+                      "created_bits": 2_000_000_000, "integer_bits": 4096}
+    for name,value in setup_forecast.items():
+        if value>ceilings[name]:
+            raise ValueError("expected-update complete setup "+{"entries":"entry","integer_bits":"integer bit","created_bits":"cumulative integer bit"}.get(name,name)+" limit exceeded")
+    setup_budget=Budget(setup_forecast)
+    # Precharge the fixed N9 physical-prefix/proposal scan, outside numeric rules.
+    setup_budget.charge("fixed_n9_prefix_setup",10_000_000)
+    setup_budget.entries(200_000,"fixed N9 setup scratch")
+    setup_budget.created_bits += 100_000_000
+    census = build_frozen_update_census(rule_budget=setup_budget)
+    template = build_reference_template(_template_case(),rule_budget=setup_budget)
     ranges = scaled_proof9_ranges()
     normalizer = census["target_prior"]["normalizer_z"]
     if normalizer != Fraction(29, 64):
@@ -216,9 +226,10 @@ def prepare_expected_update_reference(limits=None):
     created_bits_upper = 4096 * fraction_ops_upper + 2_200 * rank_calls
     max_integer_bits_upper = 4096
     setup = template.receipt["rule_budget"]
-    setup_work = setup["work"]
-    setup_entries = setup["entries"]
-    setup_created = setup["created_bits"]
+    # Reserve the entire admitted setup, not just the last template build.
+    setup_work = setup_forecast["work"]
+    setup_entries = setup_forecast["entries"]
+    setup_created = setup_forecast["created_bits"]
 
     # Admission happens before profile tables, row dictionaries, or result
     # vectors. The bound is a logical model, not Python RSS/allocator bytes.

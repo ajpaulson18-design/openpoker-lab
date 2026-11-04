@@ -1,0 +1,65 @@
+{
+  "version": "virtual-frozen-whole-study-admission-v1",
+  "uses": {
+    "native_work": 2521000000000,
+    "reference_work": 944670688,
+    "reference_created_bits": 145885205440,
+    "comparison_work": 175192335360,
+    "comparison_created_bits": 829758504960,
+    "aggregation_work": 258587328,
+    "aggregation_created_bits": 21270588288,
+    "codec_work": 10009808832,
+    "peak_logical_entries": 12361702,
+    "peak_integer_payload_bits": 8722755584,
+    "artifact_bytes": 36367529588,
+    "authentication_read_bytes": 14216878620672
+  },
+  "limits": {
+    "native_work": 3000000000000,
+    "reference_work": 3000000000000,
+    "reference_created_bits": 100000000000000,
+    "comparison_work": 200000000000,
+    "comparison_created_bits": 1000000000000,
+    "aggregation_work": 300000000,
+    "aggregation_created_bits": 22000000000,
+    "codec_work": 11000000000,
+    "peak_logical_entries": 16000000,
+    "peak_integer_payload_bits": 34359738368,
+    "artifact_bytes": 68719476736,
+    "authentication_read_bytes": 17592186044416
+  },
+  "file_families": {
+    "native_stdout": 10767069992,
+    "native_stderr": 330432512,
+    "requests": 5168050,
+    "call_receipts": 330432512,
+    "source_snapshot": 1073741824,
+    "headers_and_build": 268435456,
+    "controller_and_failure_logs": 268435456,
+    "saved_mutation_controls": 134217728,
+    "reference_artifacts": 4938722400,
+    "archive_with_headers_upper": 18250873658
+  },
+  "source_limits": {
+    "paths": 4096,
+    "single_file_bytes": 67108864,
+    "total_bytes": 1073741824,
+    "path_bytes": 1024,
+    "stream_chunk_bytes": 1048576
+  },
+  "reference_setup_count": 1,
+  "q_free_oracle_count": 1,
+  "native_eval_requests": 5040,
+  "native_admit_requests": 2,
+  "active_law_owners": 1,
+  "retained_law_results": "receipts only after finalization and owner release",
+  "ready_for_producer": false,
+  "remaining_gates": [
+    "clean committed executable/protocol freeze",
+    "source/build/dependency authentication",
+    "two frozen worst-law native admissions",
+    "enforced output/log/source inventory bounds",
+    "exclusive controller claim and authoritative child process observation"
+  ],
+  "scope": "complete fixed experiment resource composition; no capacity, equivalence or quality result"
+}

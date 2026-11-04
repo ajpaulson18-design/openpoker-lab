@@ -1,0 +1,44 @@
+[
+  {
+    "path": "tests/virtual_betting_template_reference.py",
+    "tested_sha256": "d6451f3a3331e0fa9d66b669dc962093fea61932617a9a1776d088e1b9c46044",
+    "final_sha256": "8e8f4ed3e1d47d7583635275c29b1870e756b1196d397d410943d839a045f65d",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/virtual_frozen_sample_reference.py",
+    "tested_sha256": "0466c2286d4922dc434245746bc008e936cd197f82b98fd290f47978fb842a2d",
+    "final_sha256": "e8deda489e87a701758a7dad28939278112c4852be8081557cad0b3633f2a73f",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/virtual_frozen_update_reference.py",
+    "tested_sha256": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+    "final_sha256": "496f5ae6cd3c5f20ba4528c39a396b29255193aba60058eefcb97b2cbbf83cfc",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/virtual_frozen_value_reference.py",
+    "tested_sha256": "87b250ac7bcc1806245b5689917138ee61419f796eb6d6e9d0c0f9f370fdecf0",
+    "final_sha256": "7ae3d9242fc3634b1c6f5d18eceb5c6bca3a017aaa7a5b101dbb8b9ee9536eec",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_shared_preparation.py",
+    "tested_sha256": "44db53563c09efcd50bdeb9b7ecc6b1a29354e7ceb1270a46d896f3bdafefbf3",
+    "final_sha256": "78cd604b6c0338a0f540d1800b3616126b0afb443ab0ac12dccb8d51ec329768",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_whole_study.py",
+    "tested_sha256": "7c92927321b91304be0b33b54530ab1b9f3cdecef0d1a30abacb2353505fd9aa",
+    "final_sha256": "259fe7cf175e2a071dec7c2b424676159401e36a6fed9f6dcb65e70593c4a560",
+    "scope": "trailing newline cleanup only"
+  },
+  {
+    "path": "tests/virtual_frozen_whole_study.py",
+    "tested_sha256": "51f3370385a38266d2c4d7a1e9a975f82e96703c9316dcdbf3ee67af17794d2d",
+    "final_sha256": "f1cfc13b0dec4e9f5fcd4e303d69753c2e329b0a7fc0d33e137bd7ab8a9182e3",
+    "scope": "trailing newline cleanup only"
+  }
+]

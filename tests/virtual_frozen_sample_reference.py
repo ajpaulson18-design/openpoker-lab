@@ -283,19 +283,22 @@ def build_sampled_reference_context(limits=None):
             raise ValueError(f"sampled-reference context {field} limit exceeded")
 
     case = _template_case()
-    template = build_reference_template(case)
-    literal = literal_reference_census(case)
+    setup_budget=Budget({"work":MAX_CONTEXT_WORK,"entries":1_000_000,
+                         "integer_bits":MAX_CONTEXT_INTEGER_BITS,
+                         "created_bits":MAX_CONTEXT_CREATED_BITS})
+    setup_budget.charge("fixed_n9_context_scan",1_000_000)
+    setup_budget.created_bits += 100_000_000
+    template = build_reference_template(case,rule_budget=setup_budget)
+    literal = literal_reference_census(case,rule_budget=setup_budget)
     if (template.receipt["nodes"] != 388 or template.receipt["edges"] != 410 or
             literal["logical_occurrences"] != 1105 or
             any(literal["by_key"].get(node.key, (0,))[0] != template.histories[index][0]
                 for index, node in enumerate(template.nodes))):
         raise ArithmeticError("independent template/literal history census changed")
-    setup_work = (template.receipt["rule_budget"]["work"] +
-                  literal["rule_budget"]["work"] + 1_000_000)
+    setup_work = setup_budget.work
     setup_entries = (64 * len(template.nodes) + 32 * template.receipt["edges"] +
                      32 * 3109 + 16 * literal["logical_occurrences"] + 512)
-    setup_created = (template.receipt["rule_budget"]["created_bits"] +
-                     literal["rule_budget"]["created_bits"] + 100_000_000)
+    setup_created = setup_budget.created_bits
     if (setup_work > setup_forecast["work"] or
             setup_entries > setup_forecast["entries"] or
             setup_created > setup_forecast["created_bits"]):
@@ -313,6 +316,8 @@ def build_sampled_reference_context(limits=None):
     context_receipt = MappingProxyType({
         **setup_forecast,
         "actual_rule_setup_work": setup_work,
+        "numeric_setup_cumulative_entries": setup_budget.logical_entries,
+        "numeric_setup_entries_limit":setup_budget.limits["entries"],
         "actual_logical_entry_upper": setup_entries,
         "actual_created_bits_upper": setup_created,
         "actual_template_nodes": len(frozen_nodes),

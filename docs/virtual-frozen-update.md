@@ -220,6 +220,13 @@ preserves the original assertion failure and all control streams. Full source/
 build/metadata/log preservation still needs whole-study composition; no real
 all-outcome update or exported expected result has run.
 
+The [whole-study resource plan](virtual-frozen-whole-study.md) now composes native,
+reference, exact comparison, accumulation, export/readback, peak logical state,
+source authentication and artifact preservation families. The composition audit
+also corrected reference setup accounting to use one shared numeric owner across
+all template/literal builds. Full frozen-source/native admission and an enforcing
+exclusive controller remain prerequisites to the real batch.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it

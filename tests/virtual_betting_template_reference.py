@@ -145,12 +145,17 @@ def _edge_from_detail(action, detail, child):
     )
 
 
-def build_reference_template(case, *, limits=None, initial_history_empty=True):
+def build_reference_template(case, *, limits=None, initial_history_empty=True, rule_budget=None):
     """Build a bounded symbolic continuation graph from independent numeric rules."""
     if type(initial_history_empty) is not bool:
         raise ValueError("initial_history_empty must be boolean")
     ceilings = _limits_snapshot(limits)
-    budget = Budget({"work": 500_000_000, "entries": 8_000_000})
+    if rule_budget is not None and type(rule_budget) is not Budget:
+        raise ValueError("shared numeric-rule budget must be a Budget owner")
+    # Default component accounting is unchanged. Integration can share one
+    # parent meter across multiple builds without resetting numeric costs.
+    budget = (Budget({"work": 500_000_000, "entries": 8_000_000})
+              if rule_budget is None else rule_budget)
     normalized_case, stacks, sb, bb, stages = _source_parts(case, budget)
     initial = _initial_state(stacks, sb, bb, budget)
     # The numeric rules' legacy state has no explicit empty-history flag. A
@@ -302,7 +307,7 @@ def _history_census(nodes, root, topology, limits):
     return histories, street, max(depth, default=0), total_occurrences
 
 
-def literal_reference_census(case, *, initial_history_empty=True, limits=None):
+def literal_reference_census(case, *, initial_history_empty=True, limits=None, rule_budget=None):
     """Expand each symbolic action/reveal path without interning states.
 
     This is intentionally a small-fixture oracle. It independently checks the
@@ -310,7 +315,12 @@ def literal_reference_census(case, *, initial_history_empty=True, limits=None):
     literal tree walk only after every path has been visited.
     """
     ceilings = _limits_snapshot(limits)
-    budget = Budget({"work": 500_000_000, "entries": 8_000_000})
+    if rule_budget is not None and type(rule_budget) is not Budget:
+        raise ValueError("shared numeric-rule budget must be a Budget owner")
+    # Default component accounting is unchanged. Integration can share one
+    # parent meter across multiple builds without resetting numeric costs.
+    budget = (Budget({"work": 500_000_000, "entries": 8_000_000})
+              if rule_budget is None else rule_budget)
     _normalized, stacks, sb, bb, stages = _source_parts(case, budget)
     initial = _initial_state(stacks, sb, bb, budget)
     if not initial_history_empty:
@@ -505,4 +515,3 @@ def native_state_tokens(case, state, *, initial_history_empty=True, limits=None)
 
 def _bits(value):
     return f"{_double_bits(value):016x}"
-

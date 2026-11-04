@@ -5,6 +5,12 @@ the complete [PROOF9/v1 game](virtual-frozen-update.md), not a reduced substitut
 for that game. All 2,520 public boards under both proposal laws are required.
 No outcome is discarded or redrawn because its physical target mass is zero.
 
+The [whole-experiment resource composition](virtual-frozen-whole-study.md) now
+combines the component allowances and exposes the remaining execution gates.
+A composition receipt is a resource plan; it does not authenticate frozen source
+or substitute for two actual native admissions. Preparation uses shared numeric
+meters across repeated template/literal builds.
+
 ## Execution order and acceptance
 
 Freeze clean committed project source, reference/protocol/build inputs and actual
