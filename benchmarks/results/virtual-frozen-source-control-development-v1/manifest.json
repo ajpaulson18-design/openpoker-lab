@@ -1,0 +1,13 @@
+{
+  "status": "controller prerequisite development controls; all-outcome update study unrun",
+  "archive_sha256": "9bbb634d2fe8aa1323ec08e10d27ad5587080508a31f7bda95c110cd4464e82f",
+  "members": 18,
+  "source_guard_normal_tests": 7,
+  "source_guard_optimized_tests": 7,
+  "run_control_normal_tests": 4,
+  "run_control_optimized_tests": 4,
+  "native_study_calls": 0,
+  "preserved_failure": "initial LF bridge fixture was dirty; corrected fixture refreshes normalized index then hides raw drift with cached metadata to exercise raw guard",
+  "production_tree_authentication": "not yet observed by these fixture controls",
+  "scope": "committed/raw source and exclusive/bounded child controls; no mathematical acceptance"
+}

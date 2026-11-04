@@ -227,6 +227,14 @@ also corrected reference setup accounting to use one shared numeric owner across
 all template/literal builds. Full frozen-source/native admission and an enforcing
 exclusive controller remain prerequisites to the real batch.
 
+The [source and run controls](virtual-frozen-source-control.md) now provide a
+streamed committed-tree/raw-byte guard, explicit initial newline bridge,
+strict later byte-drift checks, exclusive attempt directories and bounded child
+stdout/stderr/deadline observation. Seven source-fixture and four process
+controls pass normally and optimized, with the initial dirty-fixture failure
+preserved. They still require integration with build/dependency authentication
+and the complete experiment's enforcing controller.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it
