@@ -1,0 +1,20 @@
+{
+  "status": "rank-free development controls; no update study",
+  "archive_sha256": "a8e9b62cd50549df8ba3f2f4b07c033b3d37da41f84710abe8168ea37492023c",
+  "archive_bytes": 5935,
+  "members": 12,
+  "normal_tests": 3,
+  "optimized_tests": 3,
+  "native_update_calls": 0,
+  "reference_update_calls": 0,
+  "obligations_remaining": [
+    "native frozen-source admission",
+    "q-free expected oracle admission",
+    "exact row comparison and aggregation budget",
+    "full numeric serialization and total artifact envelope",
+    "committed source/executable freeze",
+    "all5040 actual native/reference comparisons",
+    "two-law expectation identity",
+    "saved mutation witnesses"
+  ]
+}

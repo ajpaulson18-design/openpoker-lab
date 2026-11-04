@@ -1,0 +1,49 @@
+name: Native experimental frozen update
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-controls:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            tag: windows
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: linux
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: sanitized
+            sanitize: --sanitize
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build probe and bounded native controls
+        shell: bash
+        run: |
+          python -m scripts.build_native_exact_four_street --target virtual-frozen-update --output-dir "$RUNNER_TEMP/frozen-update/probe" ${{ matrix.sanitize }}
+          python -m scripts.build_native_exact_four_street --target virtual-frozen-update-controls --output-dir "$RUNNER_TEMP/frozen-update/controls" ${{ matrix.sanitize }}
+      - name: Run primitive, ownership and failure controls
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          "$RUNNER_TEMP/frozen-update/controls/native-virtual-frozen-update-controls$suffix" > "$RUNNER_TEMP/frozen-update/controls.stdout.log" 2> "$RUNNER_TEMP/frozen-update/controls.stderr.log"
+      - name: Preserve first failure and build identities
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experimental-frozen-update-${{ matrix.tag }}
+          path: |
+            ${{ runner.temp }}/frozen-update/**/*.log
+            ${{ runner.temp }}/frozen-update/**/*.json

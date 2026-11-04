@@ -171,6 +171,13 @@ are still under implementation. None of these controls establishes all-outcome
 update equivalence, training, quality or performance. Development receipts are
 kept outside the checkout pending a source-frozen publication cohort.
 
+The [complete-study protocol](virtual-frozen-update-study.md) now has an
+executable rank-free two-law admission census. Every board's proposal widths
+are bounded by the declared worst-law scope, and exact summation verifies all
+prefix probabilities. This closes the proposal-width dominance obligation at
+the inspected development source; native frozen-source admissions, aggregation,
+q-free oracle and serialization still precede the full producer.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it
