@@ -24,7 +24,11 @@ producer claim. The per-call full-row comparator is now implemented with a pre-a
 maximum intermediate width. Reference scalar inputs are bounded to 4,096 bits
 and native inputs to the 384-bit wire cap. Across 5,040 calls its allowances
 are separately summed; these are named logical accounting, not CPU/RSS bounds.
-The q-free oracle, aggregation and total export admission remain unfinished.
+The [expectation accumulator](virtual-frozen-expectation.md) now reserves a
+cumulative owner allowance for each law, with exact shared-denominator integer
+updates and independent q-free final comparison. Partial-stream controls pass;
+the full positive expectation gate is unrun. The q-free oracle and total
+artifact/export admission still require complete experiment composition.
 
 Once admitted, save raw native stdout/stderr and the exact request for every
 call before parsing or comparison. Every native semantic row must match the

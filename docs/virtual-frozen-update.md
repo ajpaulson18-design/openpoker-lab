@@ -199,6 +199,16 @@ these controls. The [comparison development receipt](../benchmarks/results/virtu
 pins raw test streams, comparison allowances and the successful three-job native
 CI observation. Real full-row equivalence and mutation witnesses remain open.
 
+The [exact expectation accumulator](virtual-frozen-expectation.md) now keeps one
+proposal-corrected integer denominator per law for regrets and one per full
+visible row for averages. It owns a cumulative meter, rejects duplicate boards
+and raw denominator/profile drift, consumes failed owners, and requires complete
+board/row/action coverage before q-free comparison can succeed. Four synthetic
+partial-stream controls pass normally and optimized. The
+[development manifest](../benchmarks/results/virtual-frozen-expectation-development-v1/manifest.json)
+preserves raw controls and the composed allowances. Successful complete-stream
+finalization and actual q-free expectation identity remain unrun.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it
