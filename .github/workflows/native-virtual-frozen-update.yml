@@ -29,8 +29,23 @@ jobs:
       - name: Build probe and bounded native controls
         shell: bash
         run: |
-          python -m scripts.build_native_exact_four_street --target virtual-frozen-update --output-dir "$RUNNER_TEMP/frozen-update/probe" ${{ matrix.sanitize }}
-          python -m scripts.build_native_exact_four_street --target virtual-frozen-update-controls --output-dir "$RUNNER_TEMP/frozen-update/controls" ${{ matrix.sanitize }}
+          for spec in virtual-frozen-update:probe virtual-frozen-update-controls:controls; do
+            target=${spec%%:*}; output=${spec##*:}
+            if ! python -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/frozen-update/$output" ${{ matrix.sanitize }}; then
+              python - "$RUNNER_TEMP/frozen-update/$output/build.log" <<'PY'
+          import pathlib, sys
+          path = pathlib.Path(sys.argv[1])
+          if path.exists():
+              text = path.read_text(errors='replace')
+              print(text[-60000:])
+              diagnostics = [line for line in text.splitlines() if 'error:' in line or 'error C' in line or 'warning:' in line]
+              for line in diagnostics[:20]:
+                  safe = line[:2000].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  print('::error::' + safe)
+          PY
+              exit 1
+            fi
+          done
       - name: Run primitive, ownership and failure controls
         shell: bash
         env:

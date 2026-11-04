@@ -178,6 +178,16 @@ prefix probabilities. This closes the proposal-width dominance obligation at
 the inspected development source; native frozen-source admissions, aggregation,
 q-free oracle and serialization still precede the full producer.
 
+The first new compiled CI run passes Windows but fails both Linux builds.
+Raw remote logs are unavailable through anonymous access; failure annotations
+are retained. Native files are now formatted with all non-whitespace bytes
+verified against the original sources. The local formatting investigation
+briefly removed a used prefix-index variable, producing two retained build
+errors; that edit is restored. Formatted MSVC controls build and run successfully.
+The [portability evidence](../benchmarks/results/virtual-frozen-native-portability-development-v1/manifest.json)
+retains these attempts. New CI diagnostics expose compiler errors directly;
+corrected-source Linux/sanitizer acceptance remains pending.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it
