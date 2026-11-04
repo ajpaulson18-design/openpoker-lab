@@ -168,6 +168,7 @@ def build(output_directory, *, target="converter", sanitize=False):
     if compiler is None:
         raise RuntimeError("Installed C++20 compiler unavailable; no automatic installation")
     compiler = str(Path(compiler).resolve())
+    compiler_sha256 = _hash(_bounded_read(Path(compiler),64 * 1024 * 1024))
     helper, sources = TARGETS[target]
     source_names = (*sources, "scripts/build_native_exact_four_street.py",
         "third_party/boost-multiprecision-1.92.0/manifest.json",
@@ -212,6 +213,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         raise RuntimeError("Native exact compilation failed; preserved build.log and build-failure.json")
     _need(all(_bounded_read(ROOT / name, 2 * 1024 * 1024) == raw for name, raw in raw_sources.items()),
           "Native exact source changed during compilation")
+    _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
+          "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
         "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
@@ -231,7 +234,7 @@ def build(output_directory, *, target="converter", sanitize=False):
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,
         "dependency_manifest_sha256": DEPENDENCY_MANIFEST_SHA256, "dependency_headers": len(headers),
-        "license": "BSL-1.0", "compiler": compiler,
+        "license": "BSL-1.0", "compiler": compiler, "compiler_sha256": compiler_sha256,
         "compiler_version": (version.stdout + version.stderr).decode(errors="replace"),
         "flags": flags, "platform": platform.platform(), "command": command,
         "executable": str(executable), "executable_sha256": _hash(executable.read_bytes())}

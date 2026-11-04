@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,sys,tempfile,unittest
+import json,sys,tempfile,unittest,os
 from tests.virtual_frozen_run_control import RunClaim,run_bounded_child
 
 class RunControlTests(unittest.TestCase):
@@ -9,6 +9,7 @@ class RunControlTests(unittest.TestCase):
     def command(self,code):return [sys.executable,'-B','-c',code]
     def test_exclusive_claim_and_terminal_receipt_never_overwrite(self):
         path=self.root/'claim';claim=RunClaim(path,'a'*40);raw=(path/'claim.json').read_bytes()
+        self.assertEqual(json.loads(raw)['controller_pid'],os.getpid())
         with self.assertRaises(FileExistsError):RunClaim(path,'b'*40)
         claim.finish('failed',{'first_error':'preserved'})
         with self.assertRaises(ValueError):claim.finish('complete',{})

@@ -11,6 +11,12 @@ A composition receipt is a resource plan; it does not authenticate frozen source
 or substitute for two actual native admissions. Preparation uses shared numeric
 meters across repeated template/literal builds.
 
+The [complete controller](virtual-frozen-controller.md) is implemented, with
+pre-execution gate tests and actual build-identity controls. The full positive
+experiment remains unrun. It uses full-tree boundary checks and a saved complete
+execution-input closure around each native request; no outcome or mathematical
+comparison is reduced by that evidence scheduling.
+
 ## Execution order and acceptance
 
 Freeze clean committed project source, reference/protocol/build inputs and actual

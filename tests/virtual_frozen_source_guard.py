@@ -205,3 +205,41 @@ def verify_source(repo,receipt):
     _clean(repo)
     if head!=final_head or files!=final_files or total!=receipt['bytes']:raise ValueError('source recheck tree/size drift')
     return {'head':head,'files':len(files),'bytes':total,'raw_bytes_identical':True}
+
+
+def loaded_project_sources(repo):
+    """All currently loaded project modules; new project imports must reject."""
+    import sys
+    repo=Path(repo).resolve();names=set()
+    for module in tuple(sys.modules.values()):
+        filename=getattr(module,'__file__',None)
+        if filename:
+            path=Path(filename).resolve()
+            if path.is_relative_to(repo):
+                if path.suffix!='.py':raise ValueError('untracked project binary/bytecode module')
+                names.add(path.relative_to(repo).as_posix())
+    return names
+
+
+def capture_execution_closure(repo,source_receipt,compiled_names):
+    repo=Path(repo).resolve();loaded=loaded_project_sources(repo)
+    names=loaded|set(compiled_names)|{'.gitattributes','pyproject.toml'}
+    if not names<=set(source_receipt['files']):raise ValueError('execution input is outside captured source tree')
+    return {'loaded_python':sorted(loaded),'inputs':sorted(names),'head':source_receipt['head']}
+
+
+def verify_execution_closure(repo,source_receipt,closure):
+    repo=Path(repo).resolve()
+    if sorted(loaded_project_sources(repo))!=closure['loaded_python']:
+        raise ValueError('loaded project module closure changed')
+    head=_git(repo,['rev-parse','HEAD']).decode().strip()
+    if head!=source_receipt['head'] or head!=closure['head']:raise ValueError('execution source HEAD changed')
+    names=closure['inputs'];attrs=_attributes(repo,names);total=0
+    for name in names:
+        expected=source_receipt['files'][name]
+        if attrs[name]!=expected['attributes']:raise ValueError('execution source attributes changed')
+        actual=_raw_file(_path(repo,name));total+=actual['bytes']
+        if any(actual[k]!=expected[k] for k in actual):raise ValueError('execution source raw drift: '+name)
+    _clean(repo)
+    return {'head':head,'inputs':len(names),'bytes':total,'raw_bytes_identical':True,
+            'scope':'all loaded project Python and declared compiled inputs; full-tree guard remains required at batch boundaries'}

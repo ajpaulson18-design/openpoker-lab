@@ -51,9 +51,11 @@ file-family bound while writing, retain first errors, and check available storag
 before execution. This is an upper allowance, not a claimed measured file size.
 
 Source admission permits at most 4,096 paths, 1,024 bytes per path, 64 MiB per
-source file and one GiB total source bytes. Authentication reserves a complete
-closure read before/after every native request and outer guards, with bounded
-streaming I/O. Compiler/header/executable identities are included separately.
+source file and one GiB total source bytes. The [controller](virtual-frozen-controller.md) now uses complete-tree boundary
+guards plus an explicitly pinned complete loaded-Python/compiled-input closure
+around each native request. The original larger whole-tree-per-request read
+allowance remains conservative; I/O stays bounded and changes in imported code
+reject. Compiler/header/executable identities are included separately.
 The plan does not establish that actual source or filesystem state passes these
 limits. A preliminary current checkout census observed 2,357 tracked files,
 358,169,452 bytes and a largest file of 23,204,718 bytes; this dated path/stat

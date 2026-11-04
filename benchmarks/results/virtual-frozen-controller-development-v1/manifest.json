@@ -1,0 +1,13 @@
+{
+  "status": "complete controller implementation with pre-execution controls; full numerical batch unrun",
+  "archive_sha256": "42cd40fb4eea4f92c8fe51d253d96d8ce05306b6edd4f86c77946419177c3946",
+  "members": 25,
+  "normal_gate_tests": 16,
+  "optimized_gate_tests": 16,
+  "actual_fresh_probe_build": "strict MSVC exit0",
+  "build_identity_negative_controls": 4,
+  "all_build_files_restored": true,
+  "native_eval_requests_in_controls": 0,
+  "source_scheduling": "full-tree batch boundaries; complete explicitly saved loaded-Python/compiled-input closure around every native request",
+  "acceptance": "requires committed cohort freeze, complete producer, saved-only independent replay and real mutation witnesses"
+}

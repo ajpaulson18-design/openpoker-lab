@@ -235,6 +235,13 @@ controls pass normally and optimized, with the initial dirty-fixture failure
 preserved. They still require integration with build/dependency authentication
 and the complete experiment's enforcing controller.
 
+The [complete study controller](virtual-frozen-controller.md) now integrates
+source capture, fresh build/compiler/header authentication, full admission,
+exact saved reference exports, all per-board comparisons and cumulative law
+expectations. Sixteen pre-execution controls pass normally and optimized; a fresh
+strict probe build and four actual build-identity mutation controls also pass.
+The full positive controller experiment and saved-only acceptance remain unrun.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it

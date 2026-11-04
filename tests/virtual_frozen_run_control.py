@@ -1,6 +1,6 @@
 """Exclusive evidence directories and bounded child observation; no auto-retry."""
 from pathlib import Path
-import hashlib,json,subprocess,threading,time
+import hashlib,json,subprocess,threading,time,os
 
 
 def _json_exclusive(path,value,cap=65536):
@@ -16,7 +16,7 @@ class RunClaim:
             raise ValueError('claim needs a committed source identity')
         self.directory=Path(directory)
         self.directory.mkdir(parents=True,exist_ok=False)
-        _json_exclusive(self.directory/'claim.json',{'version':'virtual-frozen-run-claim-v1','head':head,'scope':'single immutable attempt; no automatic retry'})
+        _json_exclusive(self.directory/'claim.json',{'version':'virtual-frozen-run-claim-v1','head':head,'controller_pid':os.getpid(),'claim_epoch_seconds':time.time(),'scope':'single immutable attempt; no automatic retry; PID metadata is not proof of liveness'})
         self._closed=False
     def finish(self,status,receipt):
         if self._closed:raise ValueError('run claim already consumed')
