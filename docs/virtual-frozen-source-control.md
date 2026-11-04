@@ -63,6 +63,15 @@ The [development manifest](../benchmarks/results/virtual-frozen-source-control-d
 preserves the original dirty-fixture failure, raw control streams and before/after
 source identities. All final normal/optimized control processes exited 0.
 
+A separate [actual project-tree observation](../benchmarks/results/virtual-frozen-real-source-auth-v1/manifest.json)
+at committed source `2628a0eff7c38d148906518817fa16db456a7b83` authenticates
+2,373 files/358,262,859 bytes, then passes the full raw-byte recheck. The observed
+outer process exits 0, entering zero native or reference computations. Total
+capture plus recheck takes 117.575 seconds in this environment. This is guard
+cost, not solver speed. The archive retains the hash inventory and raw process
+receipt, not a copy of every source file. Complete study freeze must still save
+its own cohort and authenticate actual build/dependency/executable identities.
+
 ## Remaining integration
 
 A full enforcing controller still must compose source/build authentication,
