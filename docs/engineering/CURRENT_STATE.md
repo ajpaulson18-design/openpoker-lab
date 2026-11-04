@@ -9,6 +9,8 @@ both whole-law expectations. Seventeen verifier/mutation controls pass in each
 mode, following an earlier 82-control combined development run in each mode; three real
 saved-native corruption witnesses were detected. Full replay and the q-free
 terminal witness remain pending. The frozen producer checkout is unchanged.
+The separate verifier freeze `6b49057` now passes all 84 source-only controls in
+each mode with stable raw source, final bootstrap receipts and observed exits 0.
 
 Development under the [frozen-update contract](../virtual-frozen-update.md) now
 has exact saved-row comparison, per-law integer expectation accumulation and

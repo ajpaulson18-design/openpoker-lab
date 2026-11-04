@@ -52,5 +52,22 @@
     "tests/test_virtual_frozen_saved_mutations.py": "dc8d18110aeae91fbdd241416b116a5b2386e3cab83486ce249dfb49839723ce",
     "scripts/verify_virtual_frozen_update_study.py": "aa5b04457e6316ee5b50a673030645fd1dbd582590154c0ab700e7bafeffb419",
     "scripts/run_virtual_frozen_source_only.py": "7b2bb61566f2f3ba9cd353b54182a1e83aa761c482f50a41ad09da016de51eb5"
+  },
+  "committed_verifier_controls": {
+    "head": "6b49057bc62a6599bfc23086ecda52576d755908",
+    "normal": 84,
+    "optimized": 84,
+    "outer_returncodes": [
+      0,
+      0
+    ],
+    "compiled_project_files": 41,
+    "final_bootstrap_receipts": true,
+    "raw_source_stable": true,
+    "archive": {
+      "path": "committed-verifier-controls.zip",
+      "sha256": "4d76c93cfebabc16e606f21bf1ea488ed4a59177c4a984c9344952377260a687",
+      "bytes": 240689
+    }
   }
 }

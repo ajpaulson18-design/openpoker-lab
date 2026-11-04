@@ -79,6 +79,17 @@ checks, then found no further concrete implementation blocker. Source review is
 separate from executed acceptance. See the
 [development evidence](../benchmarks/results/virtual-frozen-saved-review-development-v1/manifest.json).
 
+The verifier is now frozen independently at
+`6b49057bc62a6599bfc23086ecda52576d755908`. Its entire 84-control corpus passes
+normally and optimized through the trusted source-only operator, with 41 compiled
+project files, both actual outer exits 0, final bootstrap receipts and identical
+whole-tree raw snapshots. The separate committed-control archive preserves those
+receipts and the operator sources. A watcher holds the original producer process
+handle and checks its creation time and observed exit, then requires successful
+producer-operator finalization before starting this saved-only review exactly
+once. A producer failure never triggers a retry. This scheduling is operational
+continuity, not evidence that the remaining numerical gates have passed.
+
 Successful inner replay still requires its authoritative outer exit and final
 verifier bootstrap receipt. All frozen producer errors remain immutable; repair
 review/packaging from saved evidence. Actual sampling, changing-policy training,
