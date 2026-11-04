@@ -1,6 +1,6 @@
 from pathlib import Path
 from unittest.mock import patch
-import tempfile,unittest,json,copy
+import tempfile,unittest,json,copy,sys
 from scripts.run_virtual_frozen_update_study import AllowanceMeter,run_complete_study,_git,validate_build_bootstrap
 
 class ControllerGateTests(unittest.TestCase):
@@ -32,8 +32,9 @@ class ControllerGateTests(unittest.TestCase):
         head=_git(Path.cwd(),['rev-parse','HEAD']).decode().strip()
         with tempfile.TemporaryDirectory(dir=Path.cwd().parent) as temp:
             output=Path(temp)/'unsafe'
-            with self.assertRaisesRegex(ValueError,'source-only bootstrap required'):
-                run_complete_study(output,head)
+            with patch.object(sys,'_opl_source_bootstrap',None,create=True):
+                with self.assertRaisesRegex(ValueError,'source-only bootstrap required'):
+                    run_complete_study(output,head)
             self.assertFalse(output.exists())
     def test_build_bootstrap_requires_exact_compiled_bytes_and_runtime(self):
         names=['scripts/run_virtual_frozen_source_only.py','scripts/build_native_exact_four_street.py']
