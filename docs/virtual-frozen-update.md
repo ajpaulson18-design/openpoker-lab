@@ -186,7 +186,18 @@ briefly removed a used prefix-index variable, producing two retained build
 errors; that edit is restored. Formatted MSVC controls build and run successfully.
 The [portability evidence](../benchmarks/results/virtual-frozen-native-portability-development-v1/manifest.json)
 retains these attempts. New CI diagnostics expose compiler errors directly;
-corrected-source Linux/sanitizer acceptance remains pending.
+at source `b0fa38e`, all three native jobs now pass: Windows, Linux and
+ASan/UBSan. Both the probe and bounded controls compile, and the controls run
+successfully. These jobs do not run the all-proposal numerical proof.
+
+The saved-only exact comparator now checks every complete physical key, ordered
+menu, policy exponent and regret/average rational against the independent sampled
+reference snapshot. Equivalent unreduced fractions are accepted. Six synthetic
+mutations pass wire invariants but fail semantic comparison. Three controls
+pass normally and optimized; no native or reference producer executes during
+these controls. The [comparison development receipt](../benchmarks/results/virtual-frozen-comparison-development-v1/manifest.json)
+pins raw test streams, comparison allowances and the successful three-job native
+CI observation. Real full-row equivalence and mutation witnesses remain open.
 
 ## Remaining acceptance
 

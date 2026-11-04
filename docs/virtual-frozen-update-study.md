@@ -19,7 +19,12 @@ physical prefix index. Require the two declared worst-law native admissions,
 zero callbacks, and source-reviewed dominance of every forecast term. Admit the
 q-free expected oracle, full-row comparisons, rational aggregation, serialization,
 evidence preservation and failure cleanup separately before creating an exclusive
-producer claim. Those last admission components remain unfinished.
+producer claim. The per-call full-row comparator is now implemented with a pre-admitted
+34,760,384-work, 131,272-entry, 164,634,624-created-bit envelope and 8,192-bit
+maximum intermediate width. Reference scalar inputs are bounded to 4,096 bits
+and native inputs to the 384-bit wire cap. Across 5,040 calls its allowances
+are separately summed; these are named logical accounting, not CPU/RSS bounds.
+The q-free oracle, aggregation and total export admission remain unfinished.
 
 Once admitted, save raw native stdout/stderr and the exact request for every
 call before parsing or comparison. Every native semantic row must match the

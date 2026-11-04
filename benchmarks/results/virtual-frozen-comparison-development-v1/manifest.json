@@ -1,0 +1,21 @@
+{
+  "status": "synthetic saved-only comparison development; no full update study",
+  "archive_sha256": "60be0cebc10883c990543ffafb3d2b856ac0f3d7a04f84b47af5f3f11814ceb1",
+  "native_ci_jobs_sha256": "bb61e08211bf57d0c437efe04a30fbdadf60d65e1a2591d4078211bfb472f540",
+  "native_tested_head": "b0fa38e1bf5f4b3c2e14a8523f80222e281f792f",
+  "native_run": 41842295851,
+  "native_jobs": "Windows, Linux, ASan/UBSan all successful; probe builds and bounded primitive/ownership controls, no all-outcome updates",
+  "tests_normal": 3,
+  "tests_optimized": 3,
+  "comparison_forecast": {
+    "work": 34760384,
+    "entries": 131272,
+    "created_bits": 164634624,
+    "integer_bits": 8192
+  },
+  "all5040_comparison_work_upper": 175192335360,
+  "all5040_comparison_created_bits_upper": 829758504960,
+  "synthetic_mutations": 6,
+  "actual_native_vs_reference_full_rows": "not yet evaluated",
+  "goal": "active"
+}
