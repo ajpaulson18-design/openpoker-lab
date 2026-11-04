@@ -1,6 +1,6 @@
 from pathlib import Path
 import json,sys,tempfile,unittest,os
-from tests.virtual_frozen_run_control import RunClaim,run_bounded_child
+from tests.virtual_frozen_run_control import RunClaim,run_bounded_child,run_bounded_probe_batch
 
 class RunControlTests(unittest.TestCase):
     def setUp(self):
@@ -35,5 +35,31 @@ class RunControlTests(unittest.TestCase):
         receipt=run_bounded_child(self.command('import time;time.sleep(5)'),b'',path,stdout_limit=16,timeout=.05)
         self.assertEqual(receipt['status'],'timeout');self.assertIsNotNone(receipt['returncode'])
         self.assertTrue(receipt['actual_exit_observed']);self.assertTrue((path/'process.json').exists())
+    def test_batch_admits_multiple_records_without_raising_single_request_cap(self):
+        raw=(b'q'*599+b'\n')*4
+        with self.assertRaisesRegex(ValueError,'bounded child request'):
+            run_bounded_child(self.command('pass'),raw,self.root/'single',stdout_limit=64)
+        self.assertFalse((self.root/'single').exists())
+        path=self.root/'batch'
+        observed=run_bounded_probe_batch(self.command('import sys;sys.stdout.buffer.write(sys.stdin.buffer.read())'),raw,path)
+        self.assertEqual(observed['status'],'exited');self.assertEqual(observed['returncode'],0)
+        self.assertEqual((path/'stdout.bin').read_bytes(),raw)
+        self.assertEqual(json.loads((path/'batch-contract.json').read_bytes())['records'],4)
+    def test_batch_input_bounds_reject_before_process_or_directory(self):
+        from unittest.mock import patch
+        bad=[b'',b'q\n'*129,(b'q'*599+b'\n')*128,b'q'*1025+b'\n',b'bad\r\n',b'\0\n']
+        with patch('tests.virtual_frozen_run_control.subprocess.Popen') as start:
+            for index,raw in enumerate(bad):
+                path=self.root/('invalid-'+str(index))
+                with self.assertRaises(ValueError):run_bounded_probe_batch(self.command('pass'),raw,path)
+                self.assertFalse(path.exists())
+            start.assert_not_called()
+    def test_batch_output_overflow_is_bounded_while_streaming(self):
+        path=self.root/'batch-overflow'
+        observed=run_bounded_probe_batch(self.command('import sys,time;sys.stdout.buffer.write(b"x"*3000000);sys.stdout.flush();time.sleep(5)'),b'q\n',path)
+        self.assertEqual(observed['status'],'stream_failure')
+        self.assertIn('stdout_limit',observed['failures'])
+        self.assertEqual((path/'stdout.bin').stat().st_size,2100000)
+        self.assertTrue(observed['actual_exit_observed'])
 
 if __name__ == '__main__':unittest.main()

@@ -95,6 +95,33 @@ explicit active baseline. Their actual final-head outcomes remain a separate
 publication gate. The full fixed-profile study continues in its unchanged source
 freeze, with [saved-only acceptance](virtual-frozen-saved-review.md) queued.
 
+## Committed component procedure
+
+The source-only entry `scripts.run_native_exact_reach_conformance` captures the
+complete candidate and active-baseline committed/raw source trees before
+mathematics. It builds fresh current exact/legacy probes and a separately
+source-only baseline probe. Every declared compiled source digest is bound to
+the corresponding captured tree immediately after its build, with exact input
+set, extracted-header and executable/compiler checks.
+
+The controller runs 34 controls in each mode: the 22 numerical/build controls
+and 12 controller/process guards. It rejects skipped or incomplete suites,
+preserves first errors and never retries an output directory. Each native call
+has executable identities recorded before/after. Legacy probe batches stream
+bounded logs: at most 128 independent records, each at most 1,025 LF-framed
+bytes, aggregate request at most 65,536 bytes, stdout 2.1 MB, stderr 64 KiB and
+120 seconds. The original single-request observation API retains its 1,025-byte
+ceiling. This aggregate test transport does not admit a training owner.
+
+Before launch, five controller and seven process controls pass, including
+compiled-source mismatch before binary admission and an actual oversized child
+stream stopped at the batch output ceiling. The complete committed cohort has
+not yet launched. An 8 GiB evidence allowance covers both source trees, fixed
+test streams and build artifacts; kernel ceilings are unchanged. Invoke through
+the trusted one-buffer bootstrap with `--output`, `--expected-head` and
+`--baseline-repo` pointing to the clean active `9dbf1ef` checkout. The final outer
+exit and bootstrap receipt remain required after the inner terminal claim.
+
 ## Next integration
 
 The generic rational input API alone does not solve policy/value denominator

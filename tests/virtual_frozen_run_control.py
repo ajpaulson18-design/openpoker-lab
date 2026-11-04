@@ -31,10 +31,38 @@ def run_bounded_child(command,request,directory,*,stdout_limit,stderr_limit=6553
     This is process observation only. Success does not validate a response,
     authenticate code, or imply numerical acceptance.
     """
+    return _run_streamed_child(command,request,directory,stdout_limit=stdout_limit,
+        stderr_limit=stderr_limit,timeout=timeout,request_limit=1025)
+
+
+def run_bounded_probe_batch(command,request,directory):
+    """At most 128 independent probe records, each <=1025 LF-framed bytes.
+
+    This test-only aggregate transport leaves the single-request API unchanged.
+    It does not combine independent kernels into an admitted training owner.
+    """
+    if (type(request) is not bytes or not 0<len(request)<=65536 or
+            not request.endswith(b'\n') or not 1<=request.count(b'\n')<=128 or
+            any(byte!=10 and not 32<=byte<=126 for byte in request)):
+        raise ValueError('bounded independent probe batch request')
+    records=request.split(b'\n')[:-1]
+    if any(not 0<len(record)<=1024 for record in records):
+        raise ValueError('bounded independent probe batch record')
+    observed=_run_streamed_child(command,request,directory,stdout_limit=2100000,
+        stderr_limit=65536,timeout=120,request_limit=65536)
+    _json_exclusive(Path(directory)/'batch-contract.json',{
+        'version':'independent-probe-batch-v1','records':len(records),
+        'record_bytes_with_lf_max':1025,'aggregate_request_bytes_max':65536,
+        'stdout_bytes_max':2100000,'stderr_bytes_max':65536,'timeout_seconds':120,
+        'scope':'independent component records only; no training admission'})
+    return observed
+
+
+def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit):
     if (type(command) is not list or not 1<=len(command)<=64 or
             any(type(a) is not str or not a or len(a)>4096 for a in command)):
         raise ValueError('bounded child command')
-    if type(request) is not bytes or len(request)>1025:raise ValueError('bounded child request')
+    if type(request) is not bytes or len(request)>request_limit:raise ValueError('bounded child request')
     if (type(stdout_limit) is not int or not 0<stdout_limit<=2135476 or
             type(stderr_limit) is not int or not 0<stderr_limit<=65536 or
             type(timeout) not in (int,float) or not 0<timeout<=300):

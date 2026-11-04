@@ -6,10 +6,9 @@ from tempfile import TemporaryDirectory
 import hashlib
 import json
 import os
-import subprocess
 import unittest
 from scripts.preflop_validation import independent_rank
-from tests.virtual_frozen_run_control import run_bounded_child
+from tests.virtual_frozen_run_control import run_bounded_child, run_bounded_probe_batch
 from tests.full_deck_public_chance_reference import card_name
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,7 +64,21 @@ def literal(player, board, mode, reach):
 
 
 def sha(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    path = Path(path)
+    size = path.stat().st_size
+    if size > 64 << 20:
+        raise AssertionError('component hash input size bound')
+    h = hashlib.sha256()
+    total = 0
+    with path.open('rb') as source:
+        for chunk in iter(lambda: source.read(65536), b''):
+            total += len(chunk)
+            if total > 64 << 20:
+                raise AssertionError('component hash input grew past bound')
+            h.update(chunk)
+    if total != size or path.stat().st_size != size:
+        raise AssertionError('component hash input size drift')
+    return h.hexdigest()
 
 
 def authenticate(exe, root, target):
@@ -127,7 +140,15 @@ class NativeExactReachTests(unittest.TestCase):
 
     def invoke(self, name, selectors, *, cap=2_100_000):
         directory = self.output/name
+        expected = self.identity[1]['executable_sha256']
+        before = sha(self.exe)
+        self.assertEqual(before,expected,'exact-reach executable changed before launch')
         observed = run_bounded_child([str(self.exe),*selectors],b'',directory,stdout_limit=cap)
+        after = sha(self.exe)
+        (directory/'native-identity.json').write_text(json.dumps({'expected_sha256':expected,
+            'before_sha256':before,'after_sha256':after,
+            'captured_manifest_sha256':hashlib.sha256(self.identity[0]).hexdigest()})+'\n')
+        self.assertEqual(after,expected,'exact-reach executable changed after launch')
         self.assertEqual(observed['status'],'exited')
         self.assertTrue(observed['actual_exit_observed'])
         self.assertEqual(observed['returncode'],0,(directory/'stderr.bin').read_bytes())
@@ -234,34 +255,29 @@ class LegacyRawParityTests(unittest.TestCase):
             outputs = []
             for label,exe in [('baseline',self.baseline),('current',self.current)]:
                 directory = self.output/f'{offset:05d}-{label}'
-                directory.mkdir()
-                (directory/'request.bin').write_bytes(raw)
-                try:
-                    completed = subprocess.run([str(exe)],input=raw,capture_output=True,timeout=120)
-                except subprocess.TimeoutExpired as error:
-                    (directory/'stdout.bin').write_bytes(error.stdout or b'')
-                    (directory/'stderr.bin').write_bytes(error.stderr or b'')
-                    (directory/'process.json').write_text(json.dumps({'status':'timeout',
-                        'actual_exit_observed':False,'automatic_retries':0})+'\n')
-                    raise
-                (directory/'stdout.bin').write_bytes(completed.stdout)
-                (directory/'stderr.bin').write_bytes(completed.stderr)
-                (directory/'process.json').write_text(json.dumps({'status':'exited',
-                    'actual_exit_observed':True,'returncode':completed.returncode,'automatic_retries':0,
-                    'stdout_sha256':hashlib.sha256(completed.stdout).hexdigest()})+'\n')
-                self.assertEqual(completed.returncode,0,completed.stderr)
-                self.assertEqual(completed.stderr,b'')
-                # Fixed four-row inputs and <=1,100-bit old aligned reaches bound
-                # each fixture response; cap bytes before decode/parse. This
-                # development helper is not a process heap/RSS bound.
-                self.assertLessEqual(len(completed.stdout),2_100_000)
-                reader = Tokens(completed.stdout.decode('ascii'))
+                identity = self.identities[1 if label=='baseline' else 0]
+                expected = identity[1]['executable_sha256']
+                before = sha(exe)
+                self.assertEqual(before,expected,'legacy executable changed before launch')
+                observed = run_bounded_probe_batch([str(exe)],raw,directory)
+                after = sha(exe)
+                (directory/'native-identity.json').write_text(json.dumps({'expected_sha256':expected,
+                    'before_sha256':before,'after_sha256':after,
+                    'captured_manifest_sha256':hashlib.sha256(identity[0]).hexdigest()})+'\n')
+                self.assertEqual(after,expected,'legacy executable changed after launch')
+                self.assertEqual(observed['status'],'exited')
+                self.assertTrue(observed['actual_exit_observed'])
+                self.assertEqual(observed['returncode'],0)
+                self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+                stdout = (directory/'stdout.bin').read_bytes()
+                self.assertLessEqual(len(stdout),2_100_000)
+                reader = Tokens(stdout.decode('ascii'))
                 for _,convert in batch:
                     result = parse_response(reader,convert)
                     self.assertNotIn('error',result)
                 with self.assertRaises(StopIteration):
                     reader.get()
-                outputs.append(completed.stdout)
+                outputs.append(stdout)
             self.assertEqual(outputs[0],outputs[1],f'raw legacy compatibility offset {offset}')
         self.assertEqual(len(queries),10464)
 
