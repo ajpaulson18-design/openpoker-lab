@@ -242,6 +242,15 @@ expectations. Sixteen pre-execution controls pass normally and optimized; a fres
 strict probe build and four actual build-identity mutation controls also pass.
 The full positive controller experiment and saved-only acceptance remain unrun.
 
+Independent Sol review of the initial controller found a project bytecode-cache
+provenance gap. The [source-only remediation](virtual-frozen-controller.md)
+now uses a trusted one-buffer first stage, isolated/no-site startup, direct
+compilation of recorded project source and interpreter identity checks. All 22
+current controls pass normally and optimized. System build/runtime limitations
+are explicit; final source inspection finds no further bootstrap blocker.
+Outer exit/final bootstrap receipt, complete numerical production and saved-only
+acceptance remain required. No full EVAL batch has run.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it

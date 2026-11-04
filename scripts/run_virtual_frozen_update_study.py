@@ -4,7 +4,7 @@ from collections.abc import Mapping
 from fractions import Fraction
 import argparse,json,sys,shutil,traceback,time
 from tests.virtual_frozen_source_guard import (capture_source,verify_source,capture_execution_closure,
-    verify_execution_closure,_git)
+    verify_execution_closure,require_source_bootstrap,_git)
 from tests.virtual_frozen_build_guard import authenticate_build
 from tests.virtual_frozen_run_control import RunClaim,run_bounded_child
 from tests.virtual_frozen_study_admission import census_study_admission,WORST_BOARD
@@ -15,6 +15,7 @@ from tests.virtual_frozen_expectation import ExactExpectation,FORECAST as AGGREG
 from tests.virtual_frozen_update_comparison import FORECAST as COMPARISON
 from tests.virtual_frozen_reference_artifact import write_reference,read_reference,artifact_allowance
 from tests.virtual_frozen_probe_protocol import request,parse,MAX_BYTES
+from scripts.run_virtual_frozen_source_only import source_only_command
 
 class AllowanceMeter:
     def __init__(self,limits):self.limits=dict(limits);self.used={name:0 for name in limits}
@@ -32,6 +33,19 @@ def _safe(value):
     raise ValueError('unsupported controller metadata type')
 
 
+def validate_build_bootstrap(child,source,parent):
+    required={'scripts/run_virtual_frozen_source_only.py','scripts/build_native_exact_four_street.py'}
+    if (child.get('version')!='project-source-only-bootstrap-v1' or
+            child.get('entry_module')!='scripts.build_native_exact_four_street' or
+            child.get('root')!=parent['root'] or child.get('interpreter')!=parent['interpreter'] or
+            type(child.get('compiled')) is not dict or not required<=set(child['compiled']) or
+            len(child['compiled'])>SOURCE['paths']):
+        raise ValueError('build child source-only runtime differs')
+    for name,identity in child['compiled'].items():
+        if name not in source['files'] or identity!=source['files'][name]['raw_sha256']:
+            raise ValueError('build child executed Python differs from committed source')
+
+
 def run_complete_study(directory,expected_head):
     repo=Path(__file__).resolve().parents[1]
     if Path.cwd().resolve()!=repo:raise ValueError('controller must run in its source checkout')
@@ -39,10 +53,11 @@ def run_complete_study(directory,expected_head):
     if directory.is_relative_to(repo):raise ValueError('study output must be external')
     head=_git(repo,['rev-parse','HEAD']).decode().strip()
     if head!=expected_head:raise ValueError('requested committed source does not match HEAD')
+    require_source_bootstrap(repo)
     claim=RunClaim(directory,head);started=time.perf_counter();evals=0;eval_attempts=0
     # Preparation outputs are bounded before the rank-free full resource plan.
     files=AllowanceMeter({**FILE_FAMILIES,'reference_artifacts':5_000_000_000})
-    files.reserve('controller_and_failure_logs',131072)
+    files.reserve('controller_and_failure_logs',131072+65536)
     call_metadata={}
     files.reserve('controller_and_failure_logs',(2*(5040+2)+32)*1024)
     progress=(directory/'progress.jsonl').open('xb');events=0
@@ -65,15 +80,23 @@ def run_complete_study(directory,expected_head):
         files.reserve('source_snapshot',SOURCE['total_bytes'])
         source=capture_source(repo,snapshot_directory=directory/'source')
         if source['head']!=head:raise ValueError('source changed before full capture')
+        boot=require_source_bootstrap(repo,source)
+        save(directory/'python-bootstrap.json',boot,family='controller_and_failure_logs',cap=1<<20)
         save(directory/'source.json',source,family='controller_and_failure_logs',cap=16*(1<<20))
         emit('source_capture_complete',files=len(source['files']),bytes=source['bytes'])
         # Build under the authenticated current source, outside its checkout.
-        files.reserve('controller_and_failure_logs',MAX_BYTES+2*65536)
+        files.reserve('controller_and_failure_logs',MAX_BYTES+2*65536+(2<<20))
         build_dir=directory/'build'
-        built=run_bounded_child([sys.executable,'-B','-m','scripts.build_native_exact_four_street',
-             '--target','virtual-frozen-update','--output-dir',str(build_dir)],b'',directory/'build-process',
+        built=run_bounded_child(source_only_command(repo/'scripts/run_virtual_frozen_source_only.py',
+             source['files']['scripts/run_virtual_frozen_source_only.py']['raw_sha256'],
+             'scripts.build_native_exact_four_street',directory/'build-bootstrap.json',
+             ['--target','virtual-frozen-update','--output-dir',str(build_dir)]),b'',directory/'build-process',
              stdout_limit=MAX_BYTES,timeout=300)
         if built['status']!='exited' or built['returncode']!=0:raise ValueError('native proof build failed')
+        child_boot_path=directory/'build-bootstrap.json'
+        if child_boot_path.stat().st_size>1<<20:raise ValueError('build bootstrap receipt bound')
+        child_boot=json.loads(child_boot_path.read_bytes())
+        validate_build_bootstrap(child_boot,source,boot)
         build_size=sum(p.stat().st_size for p in build_dir.rglob('*') if p.is_file())
         files.reserve('headers_and_build',build_size)
         build=authenticate_build(repo,build_dir,source)
@@ -173,6 +196,8 @@ def run_complete_study(directory,expected_head):
             save(directory/(law+'-expectation.json'),law_results[law],family='controller_and_failure_logs')
             del owner
         numeric.reserve('authentication_read_bytes',SOURCE['total_bytes'])
+        from scripts.run_virtual_frozen_source_only import scan_project_caches
+        scan_project_caches(repo)
         final_source=verify_source(repo,source)
         if authenticate_build(repo,build_dir,source)!=build:raise ValueError('final build identity changed')
         receipt={'status':'exact_update_identity_pass','native_eval_completions':evals,'native_eval_attempts':eval_attempts,

@@ -235,6 +235,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,
         "dependency_manifest_sha256": DEPENDENCY_MANIFEST_SHA256, "dependency_headers": len(headers),
         "license": "BSL-1.0", "compiler": compiler, "compiler_sha256": compiler_sha256,
+        "system_build_inputs": "SDK/standard headers, linker/libraries/runtime are environmental inputs, not exhaustively byte-attested; bit reproducibility unproven",
+        "toolchain_environment": {key: environment[key] for key in ("INCLUDE", "LIB", "LIBPATH", "VCINSTALLDIR", "VCToolsInstallDir", "WindowsSdkDir", "WindowsSDKVersion") if key in environment},
         "compiler_version": (version.stdout + version.stderr).decode(errors="replace"),
         "flags": flags, "platform": platform.platform(), "command": command,
         "executable": str(executable), "executable_sha256": _hash(executable.read_bytes())}

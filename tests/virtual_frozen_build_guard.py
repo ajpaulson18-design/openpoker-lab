@@ -51,4 +51,5 @@ def authenticate_build(repo,directory,source_receipt):
         raise ValueError('actual compiler identity missing or changed')
     return {'manifest_sha256':hashlib.sha256(raw).hexdigest(),'sources':manifest['source_sha256'],
             'headers':198,'executable':str(executable),'executable_sha256':manifest['executable_sha256'],
-            'compiler':str(compiler),'compiler_sha256':manifest['compiler_sha256']}
+            'compiler':str(compiler),'compiler_sha256':manifest['compiler_sha256'],
+            'scope':'declared project sources, vendored headers, compiler and observed binary; system SDK/standard headers, linker/libraries/runtime are not exhaustively byte-attested; bit reproducibility unproven'}

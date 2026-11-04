@@ -13,11 +13,11 @@ class ExecutionClosureTests(unittest.TestCase):
     def tearDown(self):self.fixture.tearDown()
     def test_declared_execution_input_and_new_import_gate(self):
         source=capture_source(self.repo)
-        with patch('tests.virtual_frozen_source_guard.loaded_project_sources',return_value={'a.txt'}):
+        with patch('tests.virtual_frozen_source_guard.require_source_bootstrap',return_value={'compiled':{},'interpreter':{}}), patch('tests.virtual_frozen_source_guard.loaded_project_sources',return_value={'a.txt'}):
             closure=capture_execution_closure(self.repo,source,{'raw.bin'})
             result=verify_execution_closure(self.repo,source,closure)
             self.assertEqual(result['inputs'],4)
-        with patch('tests.virtual_frozen_source_guard.loaded_project_sources',return_value={'a.txt','new.py'}):
+        with patch('tests.virtual_frozen_source_guard.require_source_bootstrap',return_value={'compiled':{},'interpreter':{}}), patch('tests.virtual_frozen_source_guard.loaded_project_sources',return_value={'a.txt','new.py'}):
             with self.assertRaisesRegex(ValueError,'module closure changed'):verify_execution_closure(self.repo,source,closure)
     # Inherited fixture controls are exercised separately; this class only
     # adds the execution-closure case.

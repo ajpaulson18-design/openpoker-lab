@@ -207,6 +207,25 @@ def verify_source(repo,receipt):
     return {'head':head,'files':len(files),'bytes':total,'raw_bytes_identical':True}
 
 
+def require_source_bootstrap(repo,source_receipt=None):
+    import sys
+    from scripts.run_virtual_frozen_source_only import digest,public_receipt
+    state=getattr(sys,'_opl_source_bootstrap',None)
+    repo=Path(repo).resolve()
+    if (not isinstance(state,dict) or state.get('version')!='project-source-only-bootstrap-v1' or
+            Path(state['root']).resolve()!=repo or not sys.flags.isolated or
+            not sys.flags.no_site or not sys.dont_write_bytecode):
+        raise ValueError('isolated source-only bootstrap required before project execution')
+    if digest(Path(sys.executable))!=state['interpreter']['sha256'] or sys.version!=state['interpreter']['version']:
+        raise ValueError('Python interpreter identity changed')
+    if len(state['compiled'])>SOURCE['paths']:raise ValueError('compiled Python source count bound')
+    if source_receipt is not None:
+        for name,identity in state['compiled'].items():
+            if name not in source_receipt['files'] or identity!=source_receipt['files'][name]['raw_sha256']:
+                raise ValueError('executed Python bytes differ from committed capture: '+name)
+    return public_receipt(state)
+
+
 def loaded_project_sources(repo):
     """All currently loaded project modules; new project imports must reject."""
     import sys
@@ -217,19 +236,29 @@ def loaded_project_sources(repo):
             path=Path(filename).resolve()
             if path.is_relative_to(repo):
                 if path.suffix!='.py':raise ValueError('untracked project binary/bytecode module')
+                cached=getattr(module,'__cached__',None)
+                if cached and Path(cached).exists():raise ValueError('existing project bytecode cache')
+                state=getattr(sys,'_opl_source_bootstrap',None)
+                if state is not None and getattr(getattr(module,'__loader__',None),'_opl_source_token',None) is not state.get('_token'):
+                    raise ValueError('project module has unsupported source loader')
                 names.add(path.relative_to(repo).as_posix())
     return names
 
 
 def capture_execution_closure(repo,source_receipt,compiled_names):
     repo=Path(repo).resolve();loaded=loaded_project_sources(repo)
-    names=loaded|set(compiled_names)|{'.gitattributes','pyproject.toml'}
+    boot=require_source_bootstrap(repo,source_receipt)
+    names=loaded|set(boot['compiled'])|set(compiled_names)|{'.gitattributes','pyproject.toml'}
     if not names<=set(source_receipt['files']):raise ValueError('execution input is outside captured source tree')
-    return {'loaded_python':sorted(loaded),'inputs':sorted(names),'head':source_receipt['head']}
+    return {'loaded_python':sorted(loaded),'compiled_python_sha256':dict(boot['compiled']),
+            'interpreter':dict(boot['interpreter']),'inputs':sorted(names),'head':source_receipt['head']}
 
 
 def verify_execution_closure(repo,source_receipt,closure):
     repo=Path(repo).resolve()
+    boot=require_source_bootstrap(repo,source_receipt)
+    if boot['compiled']!=closure['compiled_python_sha256'] or boot['interpreter']!=closure['interpreter']:
+        raise ValueError('executed Python/interpreter closure changed')
     if sorted(loaded_project_sources(repo))!=closure['loaded_python']:
         raise ValueError('loaded project module closure changed')
     head=_git(repo,['rev-parse','HEAD']).decode().strip()
