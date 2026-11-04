@@ -1,0 +1,56 @@
+{
+  "version": "virtual-frozen-saved-review-development-v1",
+  "scope": "development evidence only; complete numerical producer is in progress and full saved replay/q-free terminal witness are not run",
+  "frozen_producer_head": "174b66645a05d5f050d4361ce81b06ea9a4e5ac3",
+  "committed_source_only_controls": {
+    "normal": 67,
+    "optimized": 67,
+    "final_bootstrap_receipts": true,
+    "raw_source_stable": true,
+    "outer_returncodes": [
+      0,
+      0
+    ]
+  },
+  "combined_development_controls": {
+    "normal": 82,
+    "optimized": 82,
+    "outer_returncodes": [
+      0,
+      0
+    ]
+  },
+  "final_saved_review_controls": {
+    "normal": 17,
+    "optimized": 17,
+    "outer_returncodes": [
+      0,
+      0
+    ]
+  },
+  "real_native_mutations": {
+    "parser_valid": 3,
+    "detected": 3,
+    "selected_calls": [
+      "0000",
+      "0036"
+    ],
+    "numerical_producer_calls": 0
+  },
+  "formal_complete_replay": null,
+  "formal_q_free_terminal_witness": null,
+  "archive": {
+    "path": "development.zip",
+    "sha256": "80c12fd86fefd8a4cecdfb1e2d0839db8dc421d17520917bb0d986d4162e939f",
+    "bytes": 302637,
+    "members": 56
+  },
+  "source_sha256": {
+    "tests/virtual_frozen_saved_review.py": "db2b1d4c7a12c3bfdc6f4fd2ab91bf759c20b17923711af1d372a3ba43f0c33f",
+    "tests/test_virtual_frozen_saved_review.py": "07846e6ba1a8a3e2f99960dd9ec4f0757361da51e72cfb41020a23e088cb62b6",
+    "tests/virtual_frozen_saved_mutations.py": "293cecad4bf35525cc6e746ab51d300b2411481c70d5e7befbf757f0e02c2146",
+    "tests/test_virtual_frozen_saved_mutations.py": "dc8d18110aeae91fbdd241416b116a5b2386e3cab83486ce249dfb49839723ce",
+    "scripts/verify_virtual_frozen_update_study.py": "aa5b04457e6316ee5b50a673030645fd1dbd582590154c0ab700e7bafeffb419",
+    "scripts/run_virtual_frozen_source_only.py": "7b2bb61566f2f3ba9cd353b54182a1e83aa761c482f50a41ad09da016de51eb5"
+  }
+}

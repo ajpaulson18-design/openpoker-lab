@@ -1,6 +1,9 @@
 # Complete frozen-update study controller
 
-Status: implemented, pre-execution controls pass, complete numerical batch unrun.
+Status: implemented; the complete numerical batch started once at frozen source
+`174b666`, after 67 source-only controls passed in both modes with full raw-source
+stability. Final numerical result and [saved-only review](virtual-frozen-saved-review.md)
+remain pending. The earlier pre-execution records below retain their original scope.
 `scripts/run_virtual_frozen_update_study.py` runs only the full fixed PROOF9/v1
 experiment: two native ADMIT scopes and all 2,520 boards for both proposal laws.
 It has no board subset, automatic retry or partial-batch resume option.
@@ -100,8 +103,8 @@ The [development manifest](../benchmarks/results/virtual-frozen-controller-devel
 preserves gate test streams, fresh build/compiler identity and deliberate build
 mutation receipts.
 
-The full clean committed cohort still needs final review/freeze and one genuine
-complete producer run, followed by saved-only acceptance and corruption controls.
+The full clean committed cohort has started its one genuine complete producer
+run. It still needs the complete result, saved-only acceptance and corruption controls.
 The unified training, evolving-policy reach, persistent strategy storage,
 convergence and policy/best-response quality obligations remain open.
 

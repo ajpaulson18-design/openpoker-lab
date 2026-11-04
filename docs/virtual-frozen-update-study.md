@@ -1,6 +1,9 @@
 # Complete frozen-update verification study
 
-Status: preparation; the all-outcome producer has not run. This protocol covers
+Status: the complete producer is running at frozen source `174b666`; final
+results and [saved-only acceptance](virtual-frozen-saved-review.md) remain pending.
+Its 67 source-only controls passed normally and optimized with stable raw source.
+This protocol covers
 the complete [PROOF9/v1 game](virtual-frozen-update.md), not a reduced substitute
 for that game. All 2,520 public boards under both proposal laws are required.
 No outcome is discarded or redrawn because its physical target mass is zero.

@@ -1,5 +1,15 @@
 # Current engineering state
 
+The complete frozen-update producer started once at `174b666`, following 67
+source-only controls in each mode with observed exits and full raw-source
+stability. It is still running; no complete identity result is claimed.
+The [saved-only acceptance path](../virtual-frozen-saved-review.md) now checks
+original requests, exits, source/build/bootstrap receipts, every exact row and
+both whole-law expectations. Seventeen verifier/mutation controls pass in each
+mode, following an earlier 82-control combined development run in each mode; three real
+saved-native corruption witnesses were detected. Full replay and the q-free
+terminal witness remain pending. The frozen producer checkout is unchanged.
+
 Development under the [frozen-update contract](../virtual-frozen-update.md) now
 has exact saved-row comparison, per-law integer expectation accumulation and
 streaming exact-reference artifacts. Native component checks pass on Windows,
@@ -25,7 +35,7 @@ The component itself has no policy or trainer. The next integration is the
 [experimental frozen update](../virtual-frozen-update.md): owned visible-history
 keys, exact staged regrets/averages and independent reference controls are
 implemented in development. Complete per-board equivalence and the two-law
-expectation study remain unrun; evolving-policy training and quality remain open.
+expectation study remain unfinished; evolving-policy training and quality remain open.
 
 The [new native public-chance boundary](../native-full-deck-public-chance.md)
 is an engineering candidate for full-deck prefix mass and exact single-board

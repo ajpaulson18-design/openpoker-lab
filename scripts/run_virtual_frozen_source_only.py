@@ -85,7 +85,7 @@ def main():
     if not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):
         raise ValueError('source-only bootstrap requires isolated no-site no-cache-write startup')
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--module',choices=['scripts.run_virtual_frozen_update_study','scripts.build_native_exact_four_street','unittest'],required=True)
+    parser.add_argument('--module',choices=['scripts.run_virtual_frozen_update_study','scripts.verify_virtual_frozen_update_study','scripts.build_native_exact_four_street','unittest'],required=True)
     parser.add_argument('--receipt',type=Path,required=True)
     parser.add_argument('arguments',nargs=argparse.REMAINDER)
     args=parser.parse_args();root=Path(__file__).resolve().parents[1]

@@ -62,6 +62,14 @@ policy exports and independent best responses remain subsequent obligations.
 Root continues integration when worker model quotas prevent completion; completed
 worker inspection is distinct from unavailable further review.
 
+The complete producer started once at committed source `174b666` after the
+source-only 67-control cohort passed in both modes. The separate
+[saved-only verifier](../virtual-frozen-saved-review.md) checks the original full
+outputs and four real corruption lanes without invoking numerical producers.
+Partial progress and three development detection witnesses are not complete
+numerical acceptance. Final outer exits/bootstrap receipts remain required;
+never restart the frozen producer to repair a verifier or packaging defect.
+
 
 ### D078: Compile card-free betting continuations before virtual history expansion (November 1, 2026)
 
