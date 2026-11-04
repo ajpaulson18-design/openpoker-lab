@@ -209,6 +209,17 @@ partial-stream controls pass normally and optimized. The
 preserves raw controls and the composed allowances. Successful complete-stream
 finalization and actual q-free expectation identity remain unrun.
 
+The [streaming exact reference codec](virtual-frozen-reference-artifact.md) now
+saves sampled and q-free semantic rows without a whole-file JSON buffer. Bounded
+line/depth/integer parsing, exact hexadecimal rationals, exclusive output and
+body checksums preserve inspectable values. Seven controls pass normally and
+optimized, including replay through the separate comparator and a changed value
+with a recomputed checksum still failing that comparison. The
+[development manifest](../benchmarks/results/virtual-frozen-reference-artifact-development-v1/manifest.json)
+preserves the original assertion failure and all control streams. Full source/
+build/metadata/log preservation still needs whole-study composition; no real
+all-outcome update or exported expected result has run.
+
 ## Remaining acceptance
 
 First preserve the complete v1 whole-request forecast and its outcome. If it

@@ -29,6 +29,9 @@ cumulative owner allowance for each law, with exact shared-denominator integer
 updates and independent q-free final comparison. Partial-stream controls pass;
 the full positive expectation gate is unrun. The q-free oracle and total
 artifact/export admission still require complete experiment composition.
+The [streaming reference artifact family](virtual-frozen-reference-artifact.md)
+now supplies explicit sampled/q-free byte, entry and integer-payload allowances.
+These do not yet include all native/request/log/metadata/source/build artifacts.
 
 Once admitted, save raw native stdout/stderr and the exact request for every
 call before parsing or comparison. Every native semantic row must match the
