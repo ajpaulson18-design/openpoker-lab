@@ -8,9 +8,13 @@ development parity against independent rules and a bounded literal tree. The
 fails from a concurrent documentation edit; this failure is preserved. A separate
 committed-source run at `94b4f5f` passes all 16 tests in both modes, with no skips,
 stable 2,281-file source closure, both original native builds and observed outer
-exit 0. Frozen-head Windows/Linux/sanitizer jobs pass; final publication checks
-remain pending in PR #283. There is no strategy/history arena,
-sampling, update estimator, new trainer or full-deck quality result.
+exit 0. All 15 final workflow groups pass; PR #283 is merged as `7e5efbf`,
+with tested tree `1962013c` and tested-head ancestry verified on fetched main.
+The component itself has no policy or trainer. The next integration is the
+[experimental frozen update](../virtual-frozen-update.md): owned visible-history
+keys, exact staged regrets/averages and independent reference controls are
+implemented in development. Complete per-board equivalence and the two-law
+expectation study remain unrun; evolving-policy training and quality remain open.
 
 The [new native public-chance boundary](../native-full-deck-public-chance.md)
 is an engineering candidate for full-deck prefix mass and exact single-board
