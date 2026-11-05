@@ -90,9 +90,11 @@ the positive-exponent fixture and raw compatibility check. Neither version is
 an engine or complete-game result. See the
 [development manifest](../benchmarks/results/native-exact-reach-development-v1/manifest.json).
 
-Windows/Linux and sanitizer CI now build both exact-reach controls and the
-explicit active baseline. Their actual final-head outcomes remain a separate
-publication gate. The full fixed-profile study continues in its unchanged source
+Windows/Linux and sanitizer CI build both exact-reach controls and the
+explicit active baseline. All 15 workflow groups at the committed source
+`a44087b8a0608a61985ae593de69d8aec20f5808` completed successfully, including the
+full Tests matrix and native component/sanitizer workflow. Later publication
+heads still need their own checks. The full fixed-profile study continues in its unchanged source
 freeze, with [saved-only acceptance](virtual-frozen-saved-review.md) queued.
 
 ## Committed component procedure
@@ -115,8 +117,22 @@ ceiling. This aggregate test transport does not admit a training owner.
 
 Before launch, five controller and seven process controls pass, including
 compiled-source mismatch before binary admission and an actual oversized child
-stream stopped at the batch output ceiling. The complete committed cohort has
-not yet launched. An 8 GiB evidence allowance covers both source trees, fixed
+stream stopped at the batch output ceiling. The complete committed cohort at
+`a44087b8a0608a61985ae593de69d8aec20f5808` passed all 34 controls normally
+(105.317 seconds) and optimized (112.922 seconds), with no skips. Each mode
+includes 120,960 exact terminal vectors, 13 rejection guards and 10,464 raw
+legacy requests. The outer operator observed exit 0, verified its final
+21-file compiled-byte receipt and stable full raw source inventories; each
+test child supplied a final 28-file compiled-byte receipt. The candidate
+2,406-file and baseline 2,399-file source inventories stayed identical.
+See the [committed evidence manifest](../benchmarks/results/native-exact-reach-committed-v1/manifest.json).
+The archive retains control streams, build/executable/compiler identities,
+source code and outer receipts. Old benchmark result trees are omitted from
+the packaged source snapshots with explicit per-file identities; full source
+inventories remain included, full snapshots remain locally retained, and
+the old evidence is available at the pinned Git commits.
+
+An 8 GiB evidence allowance covers both source trees, fixed
 test streams and build artifacts; kernel ceilings are unchanged. Invoke through
 the trusted one-buffer bootstrap with `--output`, `--expected-head` and
 `--baseline-repo` pointing to the clean active `9dbf1ef` checkout. The final outer
