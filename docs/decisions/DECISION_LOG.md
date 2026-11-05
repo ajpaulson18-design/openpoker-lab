@@ -58,6 +58,14 @@ width, work and persistent storage before training. The complete frozen-update
 identity and its saved-only acceptance remain the gate before training runs.
 See the [implemented boundary and unresolved gates](../native-exact-reach.md).
 
+The [finite-grid and prefix-fold prerequisites](../native-dyadic-prerequisites.md)
+now have independent development controls. Quantize both current regrets and
+exported average masses to the declared grid, preserving the raw masses and
+distinct image kinds. A grid export is an approximation to the raw average;
+certify the saved image itself. The quantizer owner cannot be copied or reset.
+Visible-prefix folds use d_k with q=1 and the unchanged global prior. Persistent
+row ownership and cumulative full-game admission remain separate unfinished work.
+
 ### D079: Prove complete frozen updates before evolving-policy training (November 4, 2026)
 
 Engineering direction under the unchanged scalable-foundation goal. Join the
