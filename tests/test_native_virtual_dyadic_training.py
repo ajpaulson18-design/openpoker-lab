@@ -3,16 +3,51 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import subprocess
+import sys
 from tempfile import TemporaryDirectory
 import unittest
 
 from scripts.run_virtual_dyadic_training_cohort import exact_json, validate_admission
+from scripts.run_virtual_frozen_source_only import source_only_command
 from tests.test_native_exact_reach import authenticate, sha
 from tests.virtual_frozen_run_control import run_bounded_child, run_bounded_dyadic_probe
 
 
 ROOT=Path(__file__).resolve().parents[1]
 ENV='OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE'
+
+
+class DyadicTrainingHarnessControls(unittest.TestCase):
+    def test_large_training_stream_is_only_available_to_fixed_transport(self):
+        command=[sys.executable,'-B','-c',
+                 'import sys;request=sys.stdin.buffer.read();sys.stdout.buffer.write(request+b"x"*3000000)']
+        with TemporaryDirectory(dir=ROOT.parent) as temporary:
+            root=Path(temporary)
+            with self.assertRaisesRegex(ValueError,'reduce-only child bounds'):
+                run_bounded_child(command,b'',root/'old',stdout_limit=3000100)
+            with self.assertRaisesRegex(ValueError,'invalid fixed dyadic'):
+                run_bounded_dyadic_probe(command,'TRAIN extra',root/'foreign')
+            self.assertFalse((root/'old').exists())
+            self.assertFalse((root/'foreign').exists())
+            target=root/'training'
+            observed=run_bounded_dyadic_probe(command,'TRAIN',target)
+            self.assertEqual((observed['status'],observed['returncode'],observed['actual_exit_observed']),('exited',0,True))
+            self.assertEqual((target/'request.bin').read_bytes(),b'DYADIC_T2_V1 TRAIN\n')
+            self.assertEqual((target/'stdout.bin').stat().st_size,3_000_019)
+
+    def test_both_named_source_only_entries_load_without_producer_calls(self):
+        script=ROOT/'scripts/run_virtual_frozen_source_only.py'
+        with TemporaryDirectory(dir=ROOT.parent) as temporary:
+            for module in ('scripts.run_virtual_dyadic_training_cohort','scripts.verify_virtual_dyadic_training'):
+                with self.subTest(module=module):
+                    name=module.replace('.','/')+'.py'
+                    receipt=Path(temporary)/(Path(name).stem+'.json')
+                    process=subprocess.run(source_only_command(script,sha(script),module,receipt,['--help']),
+                        capture_output=True,check=False,timeout=30)
+                    self.assertEqual(process.returncode,0,process.stderr)
+                    self.assertIn(b'usage:',process.stdout)
+                    self.assertEqual(json.loads(receipt.read_bytes())['compiled'][name],sha(ROOT/name))
 
 
 @unittest.skipUnless(os.environ.get(ENV),'explicit source-built PROOF9 T2 probe required')

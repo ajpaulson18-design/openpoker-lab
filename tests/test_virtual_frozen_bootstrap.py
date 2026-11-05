@@ -22,18 +22,6 @@ class SourceOnlyBootstrapTests(unittest.TestCase):
         self.assertEqual(record['compiled']['scripts/build_native_exact_four_street.py'],hashlib.sha256(target.read_bytes()).hexdigest())
         self.assertEqual(record['interpreter']['isolated'],1)
         self.assertEqual(record['final_cache_scan']['project_bytecode_files'],0)
-    def test_dyadic_controller_and_reviewer_have_named_source_only_entries(self):
-        script,_=self.bootstrap_fixture()
-        for module in ('scripts.run_virtual_dyadic_training_cohort','scripts.verify_virtual_dyadic_training'):
-            with self.subTest(module=module):
-                name=module.replace('.','/')+'.py';target=self.root/name
-                target.write_text('print("SOURCE_ONLY_DYADIC")\n')
-                receipt=self.root/(target.stem+'.json')
-                result=subprocess.run(source_only_command(script,hashlib.sha256(script.read_bytes()).hexdigest(),
-                    module,receipt,[]),capture_output=True,check=False)
-                self.assertEqual(result.returncode,0,result.stderr)
-                self.assertIn(b'SOURCE_ONLY_DYADIC',result.stdout)
-                self.assertEqual(json.loads(receipt.read_bytes())['compiled'][name],hashlib.sha256(target.read_bytes()).hexdigest())
     def test_ignored_cache_rejects_before_any_project_module(self):
         script,target=self.bootstrap_fixture();cache=self.root/'__pycache__';cache.mkdir();(cache/'hidden.pyc').write_bytes(b'x')
         target.write_text('raise RuntimeError("PROJECT_ENTRY_MUST_NOT_RUN")\n')
