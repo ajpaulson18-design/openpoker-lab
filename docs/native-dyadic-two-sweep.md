@@ -4,9 +4,9 @@ The explicit `virtual-dyadic-training` target joins the accepted
 [fixed-profile proof](virtual-frozen-update-study.md) with the
 [prepared chance, compact history and persistent state](native-dyadic-training-foundation.md).
 It accepts only the pinned reduced nine-card game, exhaustive physical reveals
-with q=1, and two simultaneous CFR+ sweeps. No existing solver entry dispatches
-to this candidate. The admission-only development check passed; a source-frozen
-trained-policy result and independent saved replay remain separate gates.
+with q=1, and two simultaneous CFR+ sweeps. The committed cohort at `aa38559`
+completed one training invocation and passed the independent replay of its saved
+binary output. [Accepted evidence manifest](../benchmarks/results/native-dyadic-two-sweep-accepted-v1/manifest.json)
 
 The driver visits all legal actions and prunes only a visible prefix with zero
 physical prior support. Each target pass consumes the same exact ordered row
@@ -52,7 +52,16 @@ actual build inputs, vendored headers and executable, observes an admission-only
 child, and enters a single native training child only with explicit `--train`.
 The independent replay runs after that child exits and after source and output
 identity checks. Observe the outer controller exit and final bootstrap too.
-An existing evidence directory cannot be reused. Repair a verifier or packaging
-failure from its saved output; do not rerun a frozen numerical producer to fix it.
-An exact two-sweep replay would establish feedback and a measured finite-game
-policy, with no convergence or wider solver-quality claim.
+The accepted replay checked all 24,420 rows, 58,164 action slots per sweep,
+four root holding values per sweep, and the exported average policy. All 24,420
+current rows changed between sweeps. The independent best responses measured
+exploitability of approximately 2.746696 big blinds for that exported policy.
+This is an early training checkpoint, with convergence and larger games still
+open.
+
+The run consumed 344,067,616 modeled work units. The largest charges were
+106,327,000 for the parent traversal and arithmetic, 73,455,536 for state,
+and 54,311,964 for quantization. The isolated native process took 0.884 seconds
+on the recorded MSVC fixture run, including binary output. The archive retains
+the raw output, child exits, final verifier receipts, build identities, and
+captured source inventory. Reuse saved output for any future replay.

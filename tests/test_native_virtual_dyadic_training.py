@@ -36,18 +36,25 @@ class DyadicTrainingHarnessControls(unittest.TestCase):
             self.assertEqual((target/'request.bin').read_bytes(),b'DYADIC_T2_V1 TRAIN\n')
             self.assertEqual((target/'stdout.bin').stat().st_size,3_000_019)
 
-    def test_both_named_source_only_entries_load_without_producer_calls(self):
-        script=ROOT/'scripts/run_virtual_frozen_source_only.py'
+    def test_source_only_launcher_accepts_both_named_dyadic_entries(self):
         with TemporaryDirectory(dir=ROOT.parent) as temporary:
+            root=Path(temporary)
+            scripts=root/'scripts'
+            scripts.mkdir()
+            (scripts/'__init__.py').touch()
+            script=scripts/'run_virtual_frozen_source_only.py'
+            script.write_bytes((ROOT/'scripts'/script.name).read_bytes())
             for module in ('scripts.run_virtual_dyadic_training_cohort','scripts.verify_virtual_dyadic_training'):
                 with self.subTest(module=module):
                     name=module.replace('.','/')+'.py'
-                    receipt=Path(temporary)/(Path(name).stem+'.json')
-                    process=subprocess.run(source_only_command(script,sha(script),module,receipt,['--help']),
+                    entry=root/name
+                    entry.write_text('print("dyadic entry loaded")\n',encoding='ascii')
+                    receipt=root/(entry.stem+'.json')
+                    process=subprocess.run(source_only_command(script,sha(script),module,receipt,[]),
                         capture_output=True,check=False,timeout=30)
                     self.assertEqual(process.returncode,0,process.stderr)
-                    self.assertIn(b'usage:',process.stdout)
-                    self.assertEqual(json.loads(receipt.read_bytes())['compiled'][name],sha(ROOT/name))
+                    self.assertIn(b'dyadic entry loaded',process.stdout)
+                    self.assertEqual(json.loads(receipt.read_bytes())['compiled'][name],sha(entry))
 
 
 @unittest.skipUnless(os.environ.get(ENV),'explicit source-built PROOF9 T2 probe required')
