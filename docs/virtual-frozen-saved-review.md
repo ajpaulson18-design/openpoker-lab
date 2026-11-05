@@ -1,6 +1,10 @@
 # Saved-only frozen-update acceptance
 
-Status: verifier implemented; complete study and formal saved replay pending.
+Status: **complete fixed-profile update identity accepted for PROOF9/v1**.
+The producer and saved-only review both exited 0 with final compiled-byte
+receipts and stable whole-tree source inventories. The
+[accepted archive manifest](../benchmarks/results/virtual-frozen-complete-v1/manifest.json)
+identifies all raw call, build, source, operator and corruption evidence.
 The complete producer started once at source freeze
 `174b66645a05d5f050d4361ce81b06ea9a4e5ac3` after 67 source-only controls passed
 normally and optimized, with observed exits, final bootstrap receipts and full
@@ -73,7 +77,7 @@ Seventeen focused verifier/mutation controls pass normally and optimized. The
 preceding 82-control combined development corpus also passed in both modes;
 the final saved-verifier hardening is covered by the 17-control runs. Three real saved native mutants
 were detected in development, without another numerical producer call. The
-complete numeric replay and the real q-free terminal detector remain unrun.
+subsequent committed saved review also detected the real q-free terminal mutant.
 Source inspection by Sol found and closed linked-evidence and omitted build-exit
 checks, then found no further concrete implementation blocker. Source review is
 separate from executed acceptance. See the
@@ -90,8 +94,16 @@ producer-operator finalization before starting this saved-only review exactly
 once. A producer failure never triggers a retry. This scheduling is operational
 continuity, not evidence that the remaining numerical gates have passed.
 
-Successful inner replay still requires its authoritative outer exit and final
-verifier bootstrap receipt. All frozen producer errors remain immutable; repair
-review/packaging from saved evidence. Actual sampling, changing-policy training,
-persistent storage, convergence, policy exports and independent best responses
-remain open under the unchanged overall goal.
+The producer's 22-file and verifier's 24-file final bootstrap receipts, outer
+exit observations, both law results, all 5,040 canonical replay records and the
+four detected corruption witnesses passed. The replay entered zero numerical
+producer calls. Both laws matched the saved q-free oracle on all 24,420 rows,
+58,164 slots and 140,748 exact scalar comparisons per law. The full raw source
+inventories cover 2,389 producer files and 2,398 verifier files. Prior benchmark
+payloads inside the source snapshots are indexed by raw hash and recoverable
+from the pinned commits; the archive avoids storing those old payloads twice.
+
+All frozen producer errors remain immutable; repair review/packaging from saved
+evidence. Actual sampling, changing-policy training, persistent whole-game
+admission, convergence, policy exports and independent best responses remain
+open under the unchanged overall goal.
