@@ -59,6 +59,11 @@ retains the Linux failure and fresh Windows evidence; final CI is separate.
 
 ## First whole-game plan
 
+The [fixed two-sweep driver](native-dyadic-two-sweep.md) implements this
+composition. Its corrected admission counts hidden all-in completions and has
+passed; the design model below is retained as the earlier forecast, and does
+not substitute for the executed admission or the saved training replay.
+
 The rank-free source census gives 24,420 rows, 58,164 slots, 16,631 fold and
 17,356 showdown occurrences per target pass on the same declared game. Its
 maximum 12 decisions and reduced exact matched-payoff shift of one bit give

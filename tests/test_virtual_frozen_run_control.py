@@ -1,6 +1,6 @@
 from pathlib import Path
 import json,sys,tempfile,unittest,os
-from tests.virtual_frozen_run_control import RunClaim,run_bounded_child,run_bounded_probe_batch
+from tests.virtual_frozen_run_control import RunClaim,run_bounded_child,run_bounded_dyadic_probe,run_bounded_probe_batch
 
 class RunControlTests(unittest.TestCase):
     def setUp(self):
@@ -61,5 +61,19 @@ class RunControlTests(unittest.TestCase):
         self.assertIn('stdout_limit',observed['failures'])
         self.assertEqual((path/'stdout.bin').stat().st_size,2100000)
         self.assertTrue(observed['actual_exit_observed'])
+
+    def test_large_training_stream_is_only_available_to_fixed_transport(self):
+        command=self.command('import sys;request=sys.stdin.buffer.read();sys.stdout.buffer.write(request+b"x"*3000000)')
+        with self.assertRaisesRegex(ValueError,'reduce-only child bounds'):
+            run_bounded_child(command,b'',self.root/'old',stdout_limit=3000100)
+        with self.assertRaisesRegex(ValueError,'invalid fixed dyadic'):
+            run_bounded_dyadic_probe(command,'TRAIN extra',self.root/'foreign')
+        self.assertFalse((self.root/'old').exists())
+        self.assertFalse((self.root/'foreign').exists())
+        target=self.root/'training'
+        observed=run_bounded_dyadic_probe(command,'TRAIN',target)
+        self.assertEqual((observed['status'],observed['returncode'],observed['actual_exit_observed']),('exited',0,True))
+        self.assertEqual((target/'request.bin').read_bytes(),b'DYADIC_T2_V1 TRAIN\n')
+        self.assertEqual((target/'stdout.bin').stat().st_size,3_000_019)
 
 if __name__ == '__main__':unittest.main()

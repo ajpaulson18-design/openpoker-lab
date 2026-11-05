@@ -58,12 +58,27 @@ def run_bounded_probe_batch(command,request,directory):
     return observed
 
 
-def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit):
+_DYADIC_T2_STDOUT = 22_587_756
+
+
+def run_bounded_dyadic_probe(command,mode,directory):
+    """Closed transport for the fixed two-sweep probe's larger binary artifact."""
+    if type(mode) is not str or mode not in ('ADMIT','TRAIN'):
+        raise ValueError('invalid fixed dyadic probe transport mode')
+    request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
+    ceiling=_DYADIC_T2_STDOUT if mode=='TRAIN' else 2135476
+    return _run_streamed_child(command,request,directory,stdout_limit=ceiling if mode=='TRAIN' else 65536,
+        stderr_limit=65536,timeout=300,request_limit=19,stdout_ceiling=ceiling)
+
+
+def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,
+                        stdout_ceiling=2135476):
     if (type(command) is not list or not 1<=len(command)<=64 or
             any(type(a) is not str or not a or len(a)>4096 for a in command)):
         raise ValueError('bounded child command')
     if type(request) is not bytes or len(request)>request_limit:raise ValueError('bounded child request')
-    if (type(stdout_limit) is not int or not 0<stdout_limit<=2135476 or
+    if (stdout_ceiling not in (2135476,_DYADIC_T2_STDOUT) or
+            type(stdout_limit) is not int or not 0<stdout_limit<=stdout_ceiling or
             type(stderr_limit) is not int or not 0<stderr_limit<=65536 or
             type(timeout) not in (int,float) or not 0<timeout<=300):
         raise ValueError('reduce-only child bounds')
