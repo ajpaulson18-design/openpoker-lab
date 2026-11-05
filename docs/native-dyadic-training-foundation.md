@@ -81,6 +81,17 @@ codec before training. This mode gives the parent the remainder after reserving
 the other components under the existing 500-million-unit total. Earlier modes
 retain their original 115-million-unit parent ceiling.
 
+The scaled-average profile constructs the average increment in the packed
+row's units. For `p` prior actions by the row's actor and a reduced own-reach
+exponent `e`, the row base is `own_numerator * (marginal * prior_scale)`
+shifted left by `52*p-e`. The producer forms this base once per row and then
+multiplies by each frozen action unit. The maximum marginal times prior scale
+is bounded by the fixed denominator base, and `e <= 52*p` makes the shift
+nonnegative. The typed input checks its shift against the registered row and
+checks the increment and committed sum against the compact width. Checkpoint
+output still reconstructs the full numerator. Earlier requests keep the
+full-width update input and their original work receipts.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

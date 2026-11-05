@@ -78,6 +78,10 @@ struct AverageExport {
     std::unique_ptr<unsigned char[]> uniform_fallback;
     std::unique_ptr<Integer[]> raw_masses;
 };
+struct ScaledAverageIncrements {
+    std::span<const Integer> values;
+    std::size_t shift = 0;
+};
 
 class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
@@ -198,6 +202,14 @@ class State final {
             fail(ErrorCode::arithmetic,"state average increment is outside certified packed scale");
         Integer value=load_compact(packed_averages_.get(),row.limb_offset,row.shift,action);
         value+=increment>>row.shift;
+        if (width(value)>forecast_.value_bits-row.shift)
+            fail(ErrorCode::integer_width,"state retained average exceeds packed admission");
+        store_compact(staged_packed_averages_.get(),row.limb_offset,row.shift,action,value,
+                      "state packed average encoding width changed");
+    }
+    void stage_compact_scaled(const PackedRow& row,std::size_t action,const Integer& increment) {
+        Integer value=load_compact(packed_averages_.get(),row.limb_offset,row.shift,action);
+        value+=increment;
         if (width(value)>forecast_.value_bits-row.shift)
             fail(ErrorCode::integer_width,"state retained average exceeds packed admission");
         store_compact(staged_packed_averages_.get(),row.limb_offset,row.shift,action,value,
@@ -549,20 +561,30 @@ public:
         if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state policy requires an active frozen sweep");
         const auto& r=rows_[row];return {units_.get()+r.offset,r.actions.size()};
     }
+private:
     // The returned exact mixed numerator belongs to the enclosing traversal.
-    Integer stage_row(std::size_t row,std::span<const Integer> action_values,
-                      std::span<const Integer> average_action_increments) {
+    Integer stage_row_impl(std::size_t row,std::span<const Integer> action_values,
+                           std::span<const Integer> average_action_increments,
+                           std::optional<std::size_t> scaled_shift) {
         healthy();
         try {
             if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state staging requires active sweep");
             index_bound(row);const auto& r=rows_[row];const auto count=r.actions.size();
             if (seen_[row] || action_values.size()!=count || average_action_increments.size()!=count)
                 fail(ErrorCode::invalid_row,"state duplicate or incomplete staged row");
+            if (scaled_shift && (!packed() || *scaled_shift!=packed_rows_[row].shift))
+                fail(ErrorCode::invalid_row,"state scaled average requires matching packed row shift");
             // Constant bounded backend width inspection/sign checks precede
             // arithmetic. Inputs are caller-owned and never mutated.
             charge(64+128*count);
             for (std::size_t a=0;a<count;++a) {
-                input_width(action_values[a]);input_width(average_action_increments[a]);
+                input_width(action_values[a]);
+                if (scaled_shift) {
+                    const auto bits=width(average_action_increments[a]);
+                    receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,bits);
+                    if (bits>forecast_.value_bits-*scaled_shift)
+                        fail(ErrorCode::integer_width,"state scaled average increment exceeds packed admission");
+                } else input_width(average_action_increments[a]);
                 if (average_action_increments[a]<0) fail(ErrorCode::invalid_row,"state average increment must be nonnegative");
             }
             const auto temp_bits=forecast_.value_bits+58;
@@ -587,7 +609,8 @@ public:
                     retained_width(regret);
                     staged_regrets_[at]=std::move(regret);
                 }
-                if (packed()) stage_compact(packed_rows_[row],a,average_action_increments[a]);
+                if (scaled_shift) stage_compact_scaled(packed_rows_[row],a,average_action_increments[a]);
+                else if (packed()) stage_compact(packed_rows_[row],a,average_action_increments[a]);
                 else {
                     Integer average=averages_[at]+average_action_increments[a];
                     retained_width(average);
@@ -597,6 +620,15 @@ public:
             seen_[row]=1;++receipt_.staged_rows;
             return mixed;
         } catch (...) { failed_=true;throw; }
+    }
+public:
+    Integer stage_row(std::size_t row,std::span<const Integer> action_values,
+                      std::span<const Integer> average_action_increments) {
+        return stage_row_impl(row,action_values,average_action_increments,std::nullopt);
+    }
+    Integer stage_scaled_row(std::size_t row,std::span<const Integer> action_values,
+                             ScaledAverageIncrements average_increments) {
+        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
     }
     void commit_sweep() {
         healthy();

@@ -127,6 +127,10 @@ inline std::uint64_t mul_cost(std::size_t left,std::size_t right) {
     const auto x=words(left),y=words(right);
     return 2+2*(x+y)+x*y;
 }
+inline std::uint64_t scaled_average_cost(std::size_t past_bits,std::size_t base_bits,std::size_t actions) {
+    const auto row_bits=past_bits+base_bits;
+    return 32+mul_cost(past_bits+1,base_bits)+copy_cost(row_bits)+actions*(8+mul_cost(row_bits,53));
+}
 
 struct Prefix {
     std::array<std::uint8_t,5> cards{};
@@ -213,6 +217,7 @@ struct Plan {
     Traversal traversal=Traversal::by_seat;
     bool packed_averages=false;
     bool packed_regrets=false;
+    bool scaled_averages=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -223,6 +228,7 @@ struct Plan {
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
     std::uint64_t packed_average_limbs=0,packed_average_work=0;
     std::uint64_t packed_regret_limbs=0,packed_regret_work=0;
+    std::uint64_t scaled_average_build_work=0;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -359,7 +365,13 @@ class Forecast final {
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=sweeps*np*m*2*add_cost(value_bits);
-            work[work_index(Work::average)]+=sweeps*slots*(16+3*mul_cost(value_bits,53)+copy_cost(value_bits));
+            if (plan_.scaled_averages) {
+                const auto build=sweeps*rows*scaled_average_cost(grid_bits*past[actor],base_bits,m);
+                plan_.scaled_average_build_work+=build;
+                work[work_index(Work::average)]+=build;
+            } else {
+                work[work_index(Work::average)]+=sweeps*slots*(16+3*mul_cost(value_bits,53)+copy_cost(value_bits));
+            }
             ++past[actor];
             first[actor]+=uniform_exponent(m);
         } else if (node.state.phase==betting::Phase::reveal) {
@@ -420,13 +432,16 @@ class Forecast final {
         require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
     }
 public:
-    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages,bool packed_regrets)
+    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages,bool packed_regrets,
+             bool scaled_averages)
         :source_(source),meter_(meter) {
-        require((!packed_averages || mode==Traversal::paired) && (!packed_regrets || packed_averages),
+        require((!packed_averages || mode==Traversal::paired) && (!packed_regrets || packed_averages) &&
+            (!scaled_averages || packed_regrets),
             "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=packed_averages;
         plan_.packed_regrets=packed_regrets;
+        plan_.scaled_averages=scaled_averages;
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
@@ -492,7 +507,10 @@ public:
                 "packed average word census outside fixed bounds");
             // Precharge fixed storage codec operations in addition to the
             // original conservative state charge. No training occurs here.
-            plan_.packed_average_work=32*R+36*plan_.packed_average_limbs+(14*words(value_bits)+70)*S;
+            // A scaled stage only loads, adds and stores compact limbs. The
+            // checkpoint still expands twice and the export decodes once.
+            const auto wide_word_factor=plan_.scaled_averages?6:14;
+            plan_.packed_average_work=32*R+36*plan_.packed_average_limbs+(wide_word_factor*words(value_bits)+70)*S;
             w[work_index(Work::average)]+=plan_.packed_average_work;
         }
         if (plan_.packed_regrets) {
@@ -685,6 +703,22 @@ template<bool Paired> class Walk final {
             out[action]<<=scale-grid_bits;
         }
     }
+    void stage_scaled_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
+                              const Marginal& prior,const Reach& own,std::size_t holding,
+                              std::size_t row_shift) {
+        require(row_shift<=plan_.shift-grid_bits,"scaled average row shift outside fixed game scale");
+        const auto past_bits=plan_.shift-grid_bits-row_shift;
+        meter_.charge(Work::average,scaled_average_cost(past_bits,width(plan_.denominator_base),out.size()));
+        require(own.exponent<=past_bits && prior.scale && prior.numerators[holding]>0 &&
+            prior.numerators[holding]<=plan_.denominator_base/prior.scale,
+            "scaled average reach exponent or marginal outside fixed bounds");
+        const auto marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
+        // The reduced own reach is at most one. Factor the row scale out
+        // before multiplying by the frozen action units, including zeros.
+        Integer row_base=own.numerators[holding]*marginal;
+        row_base<<=past_bits-own.exponent;
+        for (std::size_t action=0;action<out.size();++action) out[action]=row_base*policy[action];
+    }
     LaneValues visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
@@ -786,8 +820,15 @@ template<bool Paired> class Walk final {
         if (acting_lane<lanes) {
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 std::array<Integer,4> increments{};
-                stage_average({increments.data(),menu},policy[holding],prior[acting_lane],actor_reach,holding);
-                result[acting_lane][holding]=state_.stage_row(row_ids[holding],{action_values[holding].data(),menu},{increments.data(),menu});
+                const std::span<Integer> average{increments.data(),menu};
+                const std::span<const Integer> values{action_values[holding].data(),menu};
+                if (plan_.scaled_averages) {
+                    stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
+                    result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
+                } else {
+                    stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
+                    result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                }
             }
         }
         return result;
@@ -939,8 +980,9 @@ class Driver final {
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
 public:
-    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false,bool packed_regrets=false)
-        :plan_(Forecast(source_,meter_,mode,packed_averages,packed_regrets).make()) {}
+    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false,bool packed_regrets=false,
+                    bool scaled_averages=false)
+        :plan_(Forecast(source_,meter_,mode,packed_averages,packed_regrets,scaled_averages).make()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;

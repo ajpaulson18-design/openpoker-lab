@@ -454,6 +454,60 @@ void packed_average_controls(h::History& history) {
         reject("packed_limb_census",ErrorCode::capacity,[&] {packed.freeze();});
         require_poisoned(packed);
     }
+    {
+        constexpr std::size_t shift=200;
+        s::State dense(history,hands,denominator,plan);
+        s::State raw(history,hands,denominator,plan,{}, {}, {4});
+        s::State scaled(history,hands,denominator,plan,{}, {}, {4});
+        for (std::size_t row=0;row<2;++row) {
+            (void)dense.register_row(root,0,row,menu);
+            (void)raw.register_row(root,0,row,menu,shift);
+            (void)scaled.register_row(root,0,row,menu,shift);
+        }
+        dense.freeze();raw.freeze();scaled.freeze();
+        const std::array<Integer,2> compact{5,0};
+        const std::array<Integer,2> expanded{Integer(5)<<shift,0};
+        const s::ScaledAverageIncrements increments{{compact.data(),compact.size()},shift};
+        for (auto* state : {&dense,&raw,&scaled}) state->begin_sweep();
+        for (std::size_t row=0;row<2;++row) {
+            (void)dense.stage_row(row,zero_actions,expanded);
+            (void)raw.stage_row(row,zero_actions,expanded);
+            (void)scaled.stage_scaled_row(row,zero_actions,increments);
+        }
+        for (auto* state : {&dense,&raw,&scaled}) state->commit_sweep();
+        for (std::size_t row=0;row<2;++row) for (std::size_t action=0;action<2;++action)
+            require(dense.average_numerator(row,action)==raw.average_numerator(row,action) &&
+                raw.average_numerator(row,action)==scaled.average_numerator(row,action),
+                "already-scaled average differs from dense or raw packed feedback");
+        std::cout<<"SCALED_AVERAGE exact_feedback\n";
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {4});
+        (void)packed.register_row(root,0,0,menu,200);(void)packed.register_row(root,0,1,menu,200);
+        packed.freeze();packed.begin_sweep();
+        const std::array<Integer,2> compact{1,0};
+        reject("scaled_wrong_shift",ErrorCode::invalid_row,[&] {
+            (void)packed.stage_scaled_row(0,zero_actions,{{compact.data(),compact.size()},199});
+        });
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {4});
+        (void)packed.register_row(root,0,0,menu,200);(void)packed.register_row(root,0,1,menu,200);
+        packed.freeze();packed.begin_sweep();
+        const std::array<Integer,2> compact{Integer(1)<<57,0};
+        reject("scaled_width",ErrorCode::integer_width,[&] {
+            (void)packed.stage_scaled_row(0,zero_actions,{{compact.data(),compact.size()},200});
+        });
+    }
+    {
+        s::State dense(history,hands,denominator,plan);
+        (void)dense.register_row(root,0,0,menu);(void)dense.register_row(root,0,1,menu);
+        dense.freeze();dense.begin_sweep();
+        const std::array<Integer,2> compact{1,0};
+        reject("scaled_dense_mode",ErrorCode::invalid_row,[&] {
+            (void)dense.stage_scaled_row(0,zero_actions,{{compact.data(),compact.size()},0});
+        });
+    }
 }
 void packed_dual_controls(h::History& history) {
     const std::array<std::size_t,2> hands{2,2};
