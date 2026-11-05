@@ -386,6 +386,75 @@ void action_catalog_controls(h::History& history,const b::Template& source) {
         reject("catalog_invalid_token",ErrorCode::invalid_row,[&] {(void)state.register_catalog_row(root,0,0,0,invalid);});
     }
 }
+void packed_average_controls(h::History& history) {
+    const std::array<std::size_t,2> hands{2,2};
+    const auto root=history.root();
+    const auto plan=forecast(2,4);
+    const Integer denominator=1;
+    const std::array<std::size_t,2> shifts{190,201};
+    {
+        s::State dense(history,hands,denominator,plan);
+        s::State packed(history,hands,denominator,plan,{}, {}, {6});
+        for (std::size_t row=0;row<2;++row) {
+            require(dense.register_row(root,0,row,menu)==row &&
+                packed.register_row(root,0,row,menu,shifts[row])==row &&
+                packed.average_row_shift(row)==shifts[row],"packed row order or shift changed");
+        }
+        dense.freeze();packed.freeze();
+        require(packed.averages().empty(),"packed state exposed a dense average image");
+        for (std::size_t sweep=0;sweep<2;++sweep) {
+            dense.begin_sweep();packed.begin_sweep();
+            for (std::size_t row=0;row<2;++row) {
+                const auto shift=shifts[row];
+                const Integer numerator=((Integer(1)<<(sweep?3:255-shift))+17)<<shift;
+                const std::array<Integer,2> increments{numerator,sweep?Integer(5)<<shift:Integer(0)};
+                require(dense.stage_row(row,zero_actions,increments)==packed.stage_row(row,zero_actions,increments),
+                    "packed stage mixed value changed");
+            }
+            dense.commit_sweep();packed.commit_sweep();
+            for (std::size_t row=0;row<2;++row) for (std::size_t action=0;action<2;++action)
+                require(dense.averages()[row*2+action]==packed.average_numerator(row,action),
+                    "packed committed numerator changed");
+        }
+        const auto expected=dense.export_average();
+        const auto actual=packed.export_average(false);
+        require(!actual.raw_masses && actual.kind==expected.kind && actual.rows==expected.rows && actual.slots==expected.slots &&
+            std::equal(actual.units.get(),actual.units.get()+actual.slots,expected.units.get()) &&
+            std::equal(actual.uniform_fallback.get(),actual.uniform_fallback.get()+actual.rows,expected.uniform_fallback.get()),
+            "packed policy-only export changed allocation");
+        std::cout<<"PACKED_AVERAGE exact_feedback\n";
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {4});
+        for (std::size_t row=0;row<2;++row) (void)packed.register_row(root,0,row,menu,200);
+        packed.freeze();packed.begin_sweep();
+        const std::array<Integer,2> increments{Integer(1)<<200,Integer(2)<<200};
+        for (std::size_t row=0;row<2;++row) packed.stage_row(row,zero_actions,increments);
+        packed.commit_sweep();packed.begin_sweep();
+        const std::array<Integer,2> invalid{increments[0],increments[1]+1};
+        reject("packed_nondivisible",ErrorCode::arithmetic,[&] {packed.stage_row(0,zero_actions,invalid);});
+        require(packed.average_numerator(0,0)==increments[0] && packed.average_numerator(0,1)==increments[1],
+            "failed packed stage changed a committed average");
+        require_poisoned(packed);
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {4});
+        for (std::size_t row=0;row<2;++row) (void)packed.register_row(root,0,row,menu,200);
+        packed.freeze();packed.begin_sweep();
+        const std::array<Integer,2> increments{Integer(1)<<255,0};
+        for (std::size_t row=0;row<2;++row) packed.stage_row(row,zero_actions,increments);
+        packed.commit_sweep();packed.begin_sweep();
+        reject("packed_cumulative_width",ErrorCode::integer_width,[&] {packed.stage_row(0,zero_actions,increments);});
+        require(packed.average_numerator(0,0)==increments[0],"packed overflow changed a committed average");
+        require_poisoned(packed);
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {5});
+        for (std::size_t row=0;row<2;++row) (void)packed.register_row(root,0,row,menu,200);
+        reject("packed_limb_census",ErrorCode::capacity,[&] {packed.freeze();});
+        require_poisoned(packed);
+    }
+}
 } // namespace
 
 int main() {
@@ -396,6 +465,7 @@ int main() {
         feedback(history,source);
         guards(history,source);
         action_catalog_controls(history,source);
+        packed_average_controls(history);
         std::cout<<"END\n";
         return 0;
     } catch (const std::exception& error) {

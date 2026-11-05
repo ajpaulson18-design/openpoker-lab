@@ -89,17 +89,22 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
 
     def test_admission_covers_all_in_hidden_payoffs_without_training(self):
         plans=[]
-        for paired,mode in ((False,'ADMIT'),(True,'ADMIT_PAIRED')):
+        for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED'):
             with self.subTest(mode=mode):
                 directory,process=self.observe(mode.lower(),lambda p:run_bounded_dyadic_probe([str(self.exe)],mode,p))
                 self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
                 self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
-                plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),paired=paired)
+                plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),
+                    paired=mode=='ADMIT_PAIRED',packed=mode=='ADMIT_PACKED')
                 self.assertEqual(plan['training_invocations'],0)
                 self.assertEqual(plan['rank_calls'],0)
                 self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
-                plans.append(plan['planned_total_work'])
-        self.assertLess(plans[1],plans[0])
+                plans.append(plan)
+        legacy,paired,packed=plans
+        self.assertLess(paired['planned_total_work'],legacy['planned_total_work'])
+        self.assertEqual(packed['planned_total_work']-paired['planned_total_work'],packed['packed_average_work'])
+        self.assertEqual(packed['parent_work']['average']-paired['parent_work']['average'],packed['packed_average_work'])
+        self.assertEqual(packed['actual_admission_work'],paired['actual_admission_work'])
 
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',

@@ -5,11 +5,14 @@
 #include "virtual_dyadic_history.hpp"
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <map>
 #include <memory>
+#include <optional>
 #include <span>
 #include <stdexcept>
 #include <string_view>
@@ -43,6 +46,11 @@ struct Forecast {
 struct ActionCatalogCapacity {
     std::size_t keys = 0, token_slots = 0;
 };
+struct PackedAverageCapacity {
+    // Exact census of uint64_t words in one committed or staged image.
+    std::size_t limb_count = 0;
+};
+struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
     std::size_t token_slots, catalog_keys, stored_tokens, stored_menus;
     std::size_t token_slot_bytes, catalog_key_bytes;
@@ -73,12 +81,15 @@ class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
     using ActionText = std::array<char,64>;
     using Menu = std::span<const std::string_view>;
+    struct PackedAverageRow { std::size_t limb_offset = 0, shift = 0; };
     enum class Phase { building, closed, sweeping };
     const History* history_;
     std::array<std::size_t,2> hand_counts_;
     Forecast forecast_;
     Limits limits_;
     const ActionCatalogCapacity catalog_;
+    const PackedAverageCapacity packed_;
+    const StorageForecast storage_;
     dyadic_policy::Quantizer quantizer_;
     Receipt receipt_{};
     Integer denominator_;
@@ -89,6 +100,9 @@ class State final {
     std::size_t stored_tokens_ = 0, stored_menus_ = 0;
     std::map<Key,std::size_t> index_;
     std::unique_ptr<Integer[]> regrets_, averages_, staged_regrets_, staged_averages_;
+    std::unique_ptr<PackedAverageRow[]> packed_rows_;
+    std::unique_ptr<std::uint64_t[]> packed_averages_, staged_packed_averages_;
+    std::size_t packed_words_registered_ = 0;
     std::unique_ptr<std::uint64_t[]> units_;
     std::unique_ptr<unsigned char[]> seen_;
     Phase phase_ = Phase::building;
@@ -125,14 +139,6 @@ class State final {
             plus(f.value_bits,58)>limits.integer_bits || !f.own_work || !f.quantizer_work ||
             plus(f.own_work,f.quantizer_work)>limits.work)
             fail(ErrorCode::invalid_forecast,"invalid state dimensions or work partition");
-        // Four retained integer arrays, frozen policy units, ordered token
-        // metadata and map/row headers; additionally reserve one returned export
-        // (raw masses, units and fallback flags) and quantizer/mix scratch.
-        const auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
-        const auto payload=plus(times(plus(times(5,f.slots),256),plus(f.value_bits,58)),
-            plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
-        if (entries>limits.entries || payload>limits.integer_payload_bits)
-            fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return f;
     }
     static dyadic_policy::Limits policy_limits(const Forecast& f, const Limits& limits) {
@@ -154,6 +160,47 @@ class State final {
     }
     [[nodiscard]] std::size_t token_capacity() const noexcept {
         return catalog_.keys?catalog_.token_slots:forecast_.slots;
+    }
+    [[nodiscard]] bool packed() const noexcept { return packed_.limb_count!=0; }
+    static StorageForecast admit_storage(const Forecast& f,const Limits& limits,
+                                         ActionCatalogCapacity catalog,PackedAverageCapacity packed) {
+        const auto footprint=storage_forecast(f,catalog,packed);
+        if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
+            fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
+        return footprint;
+    }
+    [[nodiscard]] std::size_t packed_stride(std::size_t shift) const noexcept {
+        return static_cast<std::size_t>(words(forecast_.value_bits-shift));
+    }
+    [[nodiscard]] Integer load_compact(const PackedAverageRow& row,std::size_t action) const {
+        const auto stride=packed_stride(row.shift);
+        const auto* first=packed_averages_.get()+row.limb_offset+action*stride;
+        Integer result;
+        // A native little-endian uint64_t pointer selects Boost's bounded copy
+        // and normalize path. Packed mode admits this layout before allocation.
+        boost::multiprecision::import_bits(result,first,first+stride,64,false);
+        return result;
+    }
+    [[nodiscard]] Integer load_average(const PackedAverageRow& row,std::size_t action) const {
+        Integer result=load_compact(row,action);
+        result<<=row.shift;
+        return result;
+    }
+    void stage_compact(const PackedAverageRow& row,std::size_t action,const Integer& increment) {
+        if (increment!=0 && boost::multiprecision::lsb(increment)<row.shift)
+            fail(ErrorCode::arithmetic,"state average increment is outside certified packed scale");
+        Integer value=load_compact(row,action);
+        value+=increment>>row.shift;
+        if (width(value)>forecast_.value_bits-row.shift)
+            fail(ErrorCode::integer_width,"state retained average exceeds packed admission");
+        const auto stride=packed_stride(row.shift);
+        auto* first=staged_packed_averages_.get()+row.limb_offset+action*stride;
+        const auto& raw=value.backend();
+        const auto used=raw.size()*sizeof(*raw.limbs());
+        const auto bytes=stride*sizeof(*first);
+        if (raw.sign() || used>bytes) fail(ErrorCode::arithmetic,"state packed average encoding width changed");
+        std::memcpy(first,raw.limbs(),used);
+        std::memset(reinterpret_cast<unsigned char*>(first)+used,0,bytes-used);
     }
     void healthy() const { if (failed_) fail(ErrorCode::failed_owner,"state owner already failed"); }
     void charge(std::uint64_t work) {
@@ -181,6 +228,36 @@ class State final {
         if (row>=receipt_.rows) fail(ErrorCode::invalid_row,"state row index");
     }
 public:
+    static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
+                                             PackedAverageCapacity packed={}) {
+        (void)admit_catalog(f,catalog);
+        auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
+        const auto width_with_scratch=plus(f.value_bits,58);
+        // Preserve the original integer/text reservation in both modes.
+        const auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
+            plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
+        if (packed.limb_count) {
+            if (std::endian::native!=std::endian::little || !f.slots || !f.rows || !f.value_bits || f.value_bits>65536 ||
+                packed.limb_count<f.slots || packed.limb_count>times(f.slots,words(f.value_bits)))
+                fail(ErrorCode::invalid_forecast,"invalid packed average dimensions or platform");
+            // Replace the dense committed/staged/export average arrays and,
+            // when used, the original per-row menu reservation. Count each
+            // retained packed word as an entry, plus metadata and one decoder.
+            entries-=times(3,f.slots);
+            if (catalog.keys) {
+                entries-=times(3,f.slots);
+                entries=plus(entries,plus(times(3,catalog.token_slots),times(2,catalog.keys)));
+            }
+            entries=plus(entries,plus(times(2,packed.limb_count),plus(times(2,f.rows),32)));
+            const auto packed_bits=plus(times(128,packed.limb_count),plus(times(8*sizeof(PackedAverageRow),f.rows),
+                times(std::min<std::size_t>(20,f.slots)+4,width_with_scratch)));
+            if (packed_bits>times(times(3,f.slots),width_with_scratch))
+                fail(ErrorCode::capacity,"packed average exceeds original integer payload reservation");
+        }
+        if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
+            fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
+        return {static_cast<std::size_t>(entries),static_cast<std::size_t>(payload)};
+    }
     // History must remain alive for this owner's entire lifetime. Menus and
     // prior physical support are authenticated by the enclosing trainer.
     State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
@@ -188,20 +265,23 @@ public:
         : State(history,hands,denominator,forecast,limits,{}) {}
     State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
           Forecast forecast,Limits limits,ActionCatalogCapacity catalog)
+        : State(history,hands,denominator,forecast,limits,catalog,{}) {}
+    State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
+          Forecast forecast,Limits limits,ActionCatalogCapacity catalog,PackedAverageCapacity packed)
         : history_(&history),hand_counts_(hands),forecast_(admit(forecast,limits,hands)),
-          limits_(limits),catalog_(admit_catalog(forecast_,catalog)),quantizer_(policy_limits(forecast_,limits_)) {
+          limits_(limits),catalog_(catalog),packed_(packed),storage_(admit_storage(forecast_,limits_,catalog_,packed_)),
+          quantizer_(policy_limits(forecast_,limits_)) {
         if (denominator<=0) fail(ErrorCode::invalid_scale,"state fixed game denominator must be positive");
         input_width(denominator);
-        receipt_.reserved_entries=static_cast<std::size_t>(plus(1024,plus(times(16,forecast_.rows),times(10,forecast_.slots))));
-        receipt_.reserved_integer_and_text_payload_bits=static_cast<std::size_t>(
-            plus(times(plus(times(5,forecast_.slots),256),plus(forecast_.value_bits,58)),
-                 plus(times(128,forecast_.slots),plus(times(512,forecast_.slots),times(16,forecast_.rows)))));
+        receipt_.reserved_entries=storage_.entries;
+        receipt_.reserved_integer_and_text_payload_bits=storage_.payload_bits;
         charge(plus(1024,plus(times(8,forecast_.rows),plus(times(16,forecast_.slots),times(4,words(width(denominator)))))));
         denominator_=denominator;
         rows_=std::make_unique<Row[]>(forecast_.rows);
         action_text_=std::make_unique<ActionText[]>(token_capacity());
         action_views_=std::make_unique<std::string_view[]>(token_capacity());
         if (catalog_.keys) action_catalog_=std::make_unique<Menu[]>(catalog_.keys);
+        if (this->packed()) packed_rows_=std::make_unique<PackedAverageRow[]>(forecast_.rows);
     }
     State(const State&)=delete;
     State& operator=(const State&)=delete;
@@ -225,31 +305,57 @@ public:
         return phase_==Phase::building ? std::span<const Integer>() : std::span<const Integer>(regrets_.get(),forecast_.slots);
     }
     [[nodiscard]] std::span<const Integer> averages() const noexcept {
-        return phase_==Phase::building ? std::span<const Integer>() : std::span<const Integer>(averages_.get(),forecast_.slots);
+        return phase_==Phase::building || packed()?std::span<const Integer>():
+            std::span<const Integer>(averages_.get(),forecast_.slots);
+    }
+    [[nodiscard]] std::size_t average_row_shift(std::size_t row) const {
+        index_bound(row);
+        if (!packed()) fail(ErrorCode::invalid_row,"state has no packed average row shift");
+        return packed_rows_[row].shift;
+    }
+    // This reads the committed image, including after a failed staging call.
+    // A packed caller admits the copy/shift codec work for each requested value.
+    [[nodiscard]] Integer average_numerator(std::size_t row,std::size_t action) const {
+        if (phase_==Phase::building) fail(ErrorCode::phase,"state average read before freeze");
+        index_bound(row);
+        if (action>=rows_[row].actions.size()) fail(ErrorCode::invalid_row,"state average action index");
+        return packed()?load_average(packed_rows_[row],action):averages_[rows_[row].offset+action];
     }
     [[nodiscard]] std::size_t register_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
                                           std::span<const std::string_view> actions) {
-        return register_owned_row(cursor,actor,holding,0,false,actions);
+        return register_owned_row(cursor,actor,holding,0,false,actions,std::nullopt);
+    }
+    [[nodiscard]] std::size_t register_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
+                                          std::span<const std::string_view> actions,std::size_t average_shift) {
+        return register_owned_row(cursor,actor,holding,0,false,actions,average_shift);
     }
     // The trainer supplies an already verified source node ID. Menus are
     // always copied into this owner's arrays, and an occupied ID must match
     // every ordered token. No source view survives registration.
     [[nodiscard]] std::size_t register_catalog_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
                                                   std::size_t menu_key,std::span<const std::string_view> actions) {
-        return register_owned_row(cursor,actor,holding,menu_key,true,actions);
+        return register_owned_row(cursor,actor,holding,menu_key,true,actions,std::nullopt);
+    }
+    [[nodiscard]] std::size_t register_catalog_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
+                                                  std::size_t menu_key,std::span<const std::string_view> actions,
+                                                  std::size_t average_shift) {
+        return register_owned_row(cursor,actor,holding,menu_key,true,actions,average_shift);
     }
 private:
     static bool same_menu(Menu left,Menu right) {
         return left.size()==right.size() && std::equal(left.begin(),left.end(),right.begin());
     }
     [[nodiscard]] std::size_t register_owned_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
-                                                std::size_t menu_key,bool catalogued,Menu actions) {
+                                                std::size_t menu_key,bool catalogued,Menu actions,
+                                                std::optional<std::size_t> average_shift) {
         healthy();
         try {
             if (phase_!=Phase::building) fail(ErrorCode::phase,"state row registration is closed");
             if (actions.empty() || actions.size()>20) fail(ErrorCode::invalid_row,"state legal menu width");
             if (catalogued?menu_key>=catalog_.keys:catalog_.keys!=0)
                 fail(ErrorCode::invalid_row,"state action catalog key or mode");
+            if (average_shift.has_value()!=packed() || (average_shift && *average_shift>=forecast_.value_bits))
+                fail(ErrorCode::invalid_row,"state packed average shift or mode");
             charge(plus(128,plus(times(16,logceil(forecast_.rows+1)),times(256,actions.size()))));
             for (const auto action:actions) {
                 if (action.empty() || action.size()>64) fail(ErrorCode::invalid_row,"state action token length");
@@ -263,10 +369,15 @@ private:
             if (found!=index_.end()) {
                 if (!same_menu(rows_[found->second].actions,actions))
                     fail(ErrorCode::changed_menu,"state repeated row legal menu changed");
+                if (average_shift && packed_rows_[found->second].shift!=*average_shift)
+                    fail(ErrorCode::invalid_row,"state repeated row packed average shift changed");
                 return found->second;
             }
             if (receipt_.rows>=forecast_.rows || actions.size()>forecast_.slots-receipt_.slots)
                 fail(ErrorCode::capacity,"state row or slot forecast exceeded");
+            const auto packed_words=average_shift?actions.size()*packed_stride(*average_shift):0;
+            if (packed_words>packed_.limb_count-packed_words_registered_)
+                fail(ErrorCode::capacity,"state packed average limb census exceeded");
             const auto number=receipt_.rows, offset=receipt_.slots;
             if (owned.empty()) {
                 const auto token_offset=catalogued?stored_tokens_:offset;
@@ -286,6 +397,8 @@ private:
             }
             rows_[number]={std::get<0>(identity),actor,holding,offset,owned};
             index_.emplace(identity,number);
+            if (average_shift) packed_rows_[number]={packed_words_registered_,*average_shift};
+            packed_words_registered_+=packed_words;
             ++receipt_.rows;
             receipt_.slots+=actions.size();
             return number;
@@ -306,11 +419,18 @@ public:
         try {
             if (phase_!=Phase::building || receipt_.rows!=forecast_.rows || receipt_.slots!=forecast_.slots)
                 fail(ErrorCode::phase,"state complete row/slot census required before freeze");
+            if (packed_words_registered_!=packed_.limb_count)
+                fail(ErrorCode::capacity,"state complete packed average limb census required before freeze");
             charge(plus(times(8,forecast_.slots),times(2,forecast_.rows)));
             regrets_=std::make_unique<Integer[]>(forecast_.slots);
-            averages_=std::make_unique<Integer[]>(forecast_.slots);
             staged_regrets_=std::make_unique<Integer[]>(forecast_.slots);
-            staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
+            if (packed()) {
+                packed_averages_=std::make_unique<std::uint64_t[]>(packed_.limb_count);
+                staged_packed_averages_=std::make_unique<std::uint64_t[]>(packed_.limb_count);
+            } else {
+                averages_=std::make_unique<Integer[]>(forecast_.slots);
+                staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
+            }
             units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
             phase_=Phase::closed;
@@ -366,9 +486,14 @@ public:
                 const auto at=r.offset+a;
                 Integer regret=regrets_[at]+action_values[a]-mixed;
                 if (regret<0) regret=0;
-                Integer average=averages_[at]+average_action_increments[a];
-                retained_width(regret);retained_width(average);
-                staged_regrets_[at]=std::move(regret);staged_averages_[at]=std::move(average);
+                retained_width(regret);
+                if (packed()) stage_compact(packed_rows_[row],a,average_action_increments[a]);
+                else {
+                    Integer average=averages_[at]+average_action_increments[a];
+                    retained_width(average);
+                    staged_averages_[at]=std::move(average);
+                }
+                staged_regrets_[at]=std::move(regret);
             }
             seen_[row]=1;++receipt_.staged_rows;
             return mixed;
@@ -382,26 +507,38 @@ public:
             charge(times(4,receipt_.rows));
             for (std::size_t row=0;row<receipt_.rows;++row)
                 if (!seen_[row]) fail(ErrorCode::phase,"state missing staged row");
-            regrets_.swap(staged_regrets_);averages_.swap(staged_averages_);
+            regrets_.swap(staged_regrets_);
+            if (packed()) packed_averages_.swap(staged_packed_averages_);
+            else averages_.swap(staged_averages_);
             ++receipt_.completed_sweeps;phase_=Phase::closed;
         } catch (...) { failed_=true;throw; }
     }
-    [[nodiscard]] AverageExport export_average() {
+    [[nodiscard]] AverageExport export_average(bool include_raw=true) {
         healthy();
         try {
             if (phase_!=Phase::closed || receipt_.completed_sweeps!=forecast_.sweeps || exported_)
                 fail(ErrorCode::phase,"state average export requires all requested sweeps once");
+            if (packed() && include_raw) fail(ErrorCode::phase,"state packed export requires policy-only mode");
             charge(plus(times(4*words(forecast_.value_bits)+4,forecast_.slots),times(4,forecast_.rows)));
             AverageExport image;
             image.rows=forecast_.rows;
             image.slots=forecast_.slots;
             image.units=std::make_unique<std::uint64_t[]>(image.slots);
             image.uniform_fallback=std::make_unique<unsigned char[]>(image.rows);
-            image.raw_masses=std::make_unique<Integer[]>(image.slots);
-            std::copy_n(averages_.get(),image.slots,image.raw_masses.get());
+            if (include_raw) {
+                image.raw_masses=std::make_unique<Integer[]>(image.slots);
+                std::copy_n(averages_.get(),image.slots,image.raw_masses.get());
+            }
+            std::optional<std::array<Integer,20>> decoded;
+            if (packed()) decoded.emplace();
             for (std::size_t i=0;i<image.rows;++i) {
                 const auto& row=rows_[i];charge(16+4*row.actions.size());
-                const auto policy=quantizer_.average_export({averages_.get()+row.offset,row.actions.size()});
+                const Integer* masses;
+                if (decoded) {
+                    for (std::size_t a=0;a<row.actions.size();++a) (*decoded)[a]=load_average(packed_rows_[i],a);
+                    masses=decoded->data();
+                } else masses=averages_.get()+row.offset;
+                const auto policy=quantizer_.average_export({masses,row.actions.size()});
                 image.uniform_fallback[i]=static_cast<unsigned char>(policy.uniform_fallback());
                 std::copy(policy.units().begin(),policy.units().end(),image.units.get()+row.offset);
             }

@@ -47,6 +47,22 @@ retains its own row and numerical offsets. The generic state interface still
 owns a copy per row for callers that supply their own legal menus. Admission
 continues to reserve the original conservative per-row storage and work.
 
+The opt-in paired packed-average path stores a committed and staged limb array.
+For an actor's `d` decisions through the current action, every average increment
+has a factor `2^(625 - 52*d)` in this fixture. The reach exponent is at most
+`52*(d - 1)` before that action. Each literal path carries its own depth across
+reveals, and the sweep checks the shift against the registered row. Different
+histories can share a menu and require different shifts. Registration admits
+the full limb census before allocation. Staging rejects nondivisible inputs and
+sum overflow before a sweep can commit.
+
+Checkpoint output and final quantization decode exact numerators one row at a
+time. The packed trainer exports policy units and uniform flags directly after
+its full checkpoint, avoiding a third dense mass array. The generic State API
+continues to return its dense raw masses. Packed admission counts the two limb
+arrays, row metadata and bounded scratch, and precharges conversion work inside
+the existing parent work cap.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

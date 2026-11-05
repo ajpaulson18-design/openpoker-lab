@@ -210,6 +210,7 @@ struct Plan {
     std::array<std::uint64_t,3> quantizer_terms{};
     WorkList parent{};
     Traversal traversal=Traversal::by_seat;
+    bool packed_averages=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -217,7 +218,13 @@ struct Plan {
     std::uint64_t showdown_contractions=0,hidden_candidates=0;
     std::uint64_t template_work=0,chance_work=0,history_work=0,state_work=0,quantizer_work=0,total_work=0;
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
+    std::uint64_t packed_average_limbs=0,packed_average_work=0;
 };
+inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
+    require(past_actions<reach_operand_bits/grid_bits && grid_bits*(past_actions+1)<=denominator_shift,
+        "fixed average row shift exceeds admitted actor depth");
+    return denominator_shift-grid_bits*(past_actions+1);
+}
 inline constexpr std::size_t header_words=16, literal_bytes=96, row_bytes=24;
 inline constexpr std::size_t footer_words=64;
 inline std::uint64_t artifact_bytes(const Counts& c) {
@@ -330,6 +337,8 @@ class Forecast final {
             // First regrets have the common 2^(shift-M-E) divisor. Average
             // masses have the common 2^(shift-EA) divisor for both sweeps.
             require(E+plan_.M<=plan_.shift && EA<=plan_.shift,"pinned fixed-scale divisibility forecast");
+            if (plan_.packed_averages)
+                plan_.packed_average_limbs+=slots*words(value_bits-(plan_.shift-EA));
             plan_.quantizer_terms[0]+=rows*(320+48*m);
             plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA);
@@ -397,8 +406,10 @@ class Forecast final {
         require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
     }
 public:
-    Forecast(const betting::Template& source,Meter& meter,Traversal mode):source_(source),meter_(meter) {
+    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages):source_(source),meter_(meter) {
+        require(!packed_averages || mode==Traversal::paired,"packed averages require paired training");
         plan_.traversal=mode;
+        plan_.packed_averages=packed_averages;
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
@@ -452,6 +463,14 @@ public:
         w[work_index(Work::support)]=64*((public_walks+1)*g.candidates+public_walks*plan_.hidden_candidates);
         w[work_index(Work::route)]=public_walks*16*R+16*R+4*S;
         w[work_index(Work::average)]+=seat_passes*(g.reveals+1)*24;
+        if (plan_.packed_averages) {
+            require(plan_.packed_average_limbs>=S && plan_.packed_average_limbs<=words(value_bits)*S,
+                "packed average word census outside fixed bounds");
+            // Precharge fixed storage codec operations in addition to the
+            // original conservative state charge. No training occurs here.
+            plan_.packed_average_work=32*R+36*plan_.packed_average_limbs+(14*words(value_bits)+70)*S;
+            w[work_index(Work::average)]+=plan_.packed_average_work;
+        }
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
         w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
@@ -460,6 +479,14 @@ public:
             plan_.state_work+plan_.quantizer_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
+        if (plan_.packed_averages) {
+            const auto storage=state::State::storage_forecast(
+                {static_cast<std::size_t>(R),static_cast<std::size_t>(S),sweeps,15,value_bits,
+                 plan_.state_work,plan_.quantizer_work},
+                {template_receipt.nodes,template_receipt.edges},{static_cast<std::size_t>(plan_.packed_average_limbs)});
+            plan_.state_entries=storage.entries;
+            plan_.state_payload=storage.payload_bits;
+        }
         plan_.entries=plan_.state_entries+template_receipt.entries+template_receipt.peak_scratch_entries+
             chance_entries+32*literal_count+1+parent_entries;
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
@@ -622,7 +649,7 @@ template<bool Paired> class Walk final {
         }
     }
     LaneValues visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
-                     const Reach& sb,const Reach& bb,const Marginals& prior) {
+                     const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
             id<source_.nodes().size() && history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
@@ -640,10 +667,10 @@ template<bool Paired> class Walk final {
                 if (!live[0]) return; // prior physical support only
                 require(++shape_.reveals<=plan_.shape.reveals,"dense positive reveal count changed");
                 const auto child=history_.append_reveal(cursor,next.view());
-                if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior);
+                if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior,past);
                 else {
                     const auto child_prior=marginal(next,live);
-                    add_lanes(result,visit(node.edges[0].child,child,next,live,sb,bb,child_prior));
+                    add_lanes(result,visit(node.edges[0].child,child,next,live,sb,bb,child_prior,past));
                 }
             });
             return result;
@@ -658,12 +685,16 @@ template<bool Paired> class Walk final {
         const auto actor=node.state.actor;
         const auto menu=node.edges.size();
         require(actor<2 && menu>=2 && menu<=4,"dense decision menu changed");
+        const auto row_shift=plan_.packed_averages?average_shift(plan_.shift,past[actor]++):0;
         if (target_==catalog) {
             meter_.charge(Work::route,16+4*menu);
             std::array<std::string_view,4> tokens{};
             for (std::size_t action=0;action<menu;++action) tokens[action]=node.edges[action].action.token;
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
-                const auto row=state_.register_catalog_row(cursor,actor,holding,id,{tokens.data(),menu});
+                const std::span<const std::string_view> actions{tokens.data(),menu};
+                const auto row=plan_.packed_averages?
+                    state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift):
+                    state_.register_catalog_row(cursor,actor,holding,id,actions);
                 require(row==shape_.rows && state_.rows()[row].offset==shape_.slots,"catalog row order changed");
                 ++shape_.rows;
                 shape_.slots+=menu;
@@ -671,7 +702,7 @@ template<bool Paired> class Walk final {
             for (std::size_t action=0;action<menu;++action) {
                 ++shape_.actions;
                 const auto child=history_.append_action(cursor,action);
-                (void)visit(node.edges[action].child,child,prefix,support,sb,bb,prior);
+                (void)visit(node.edges[action].child,child,prefix,support,sb,bb,prior,past);
             }
             return {};
         }
@@ -687,6 +718,8 @@ template<bool Paired> class Walk final {
             // Check the complete identity and packed extent before policy access.
             require(record.history_ordinal==key && record.actor==actor && record.holding_index==holding &&
                 record.offset==shape_.slots && record.actions.size()==menu,"dense policy route changed");
+            if (plan_.packed_averages)
+                require(state_.average_row_shift(row)==row_shift,"packed average row depth changed");
             shape_.slots+=menu;
             row_ids[holding]=row;
             policy[holding]=state_.policy_units(row);
@@ -699,8 +732,8 @@ template<bool Paired> class Walk final {
             require(++shape_.actions<=plan_.shape.actions,"dense action count changed");
             const auto child=history_.append_action(cursor,action);
             const auto next=advance(actor_reach,policy,action,support[actor]);
-            auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior):
-                visit(node.edges[action].child,child,prefix,support,next,bb,prior);
+            auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior,past):
+                visit(node.edges[action].child,child,prefix,support,next,bb,prior,past);
             for (std::size_t lane=0;lane<lanes;++lane) {
                 if (lane!=acting_lane) add_values(result[lane],values[lane]);
                 else for (std::size_t holding=0;holding<2;++holding)
@@ -863,7 +896,8 @@ class Driver final {
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
 public:
-    explicit Driver(Traversal mode=Traversal::by_seat):plan_(Forecast(source_,meter_,mode).make()) {}
+    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false)
+        :plan_(Forecast(source_,meter_,mode,packed_averages).make()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -893,12 +927,13 @@ public:
         history_limits.depth=15;
         history::History history(source_,deck,history_limits);
         const Integer denominator=Integer(p.denominator_base)<<p.shift;
+        if (p.packed_averages) meter_.charge(Work::average,p.packed_average_work);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
              static_cast<std::size_t>(p.state_payload)},
-            {source_.nodes().size(),source_.receipt().edges});
+            {source_.nodes().size(),source_.receipt().edges},{static_cast<std::size_t>(p.packed_average_limbs)});
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -920,10 +955,16 @@ public:
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
             state.commit_sweep();
             for (const auto& value:state.regrets()) out.wide(value);
-            for (const auto& value:state.averages()) out.wide(value);
+            if (p.packed_averages) {
+                for (std::size_t row=0;row<state.rows().size();++row)
+                    for (std::size_t action=0;action<state.rows()[row].actions.size();++action)
+                        out.wide(state.average_numerator(row,action));
+            } else {
+                for (const auto& value:state.averages()) out.wide(value);
+            }
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
         }
-        const auto image=state.export_average();
+        const auto image=state.export_average(!p.packed_averages);
         require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
             "fixed export policy image changed");
         for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);

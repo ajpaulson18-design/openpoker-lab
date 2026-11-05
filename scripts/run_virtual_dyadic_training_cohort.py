@@ -37,7 +37,7 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_admission(receipt,*,paired=False):
+def validate_admission(receipt,*,paired=False,packed=False):
     fixed={'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
            'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,'H':12,'M':1,
            'D_bits':635,'value_bits':642,'normalizer':29,'d5':20,'output_bytes':TOTAL_BYTES,
@@ -46,8 +46,12 @@ def validate_admission(receipt,*,paired=False):
            'showdown_contractions_per_pass':EXPECTED_TERMINAL_COMPLETIONS[0],
            'hidden_completion_candidates_per_pass':EXPECTED_TERMINAL_COMPLETIONS[1],
            **dict(zip(SHAPE,EXPECTED_SHAPE))}
-    if paired:
+    if paired or packed:
         fixed['public_walks_per_sweep']=1
+    if packed:
+        fixed['packed_average_limbs']=258_694
+        fixed['packed_average_work']=23_123_160
+        fixed['entries']=1_351_755
     require(type(receipt) is dict and all(type(receipt.get(k)) is type(v) and receipt[k]==v for k,v in fixed.items()),
             'fixed admission census or zero-call receipt mismatch')
     for name,keys in [('component_work',FAMILIES),('parent_work',PARENT)]:
@@ -58,6 +62,11 @@ def validate_admission(receipt,*,paired=False):
     require(type(receipt.get('planned_total_work')) is int and 0<sum(component.values())==receipt['planned_total_work']<=500_000_000,
             'fixed admission whole work exceeds allowance')
     require(component['parent']==sum(receipt['parent_work'].values()),'fixed admission parent work sum')
+    if packed:
+        require(receipt['packed_average_work']<=receipt['parent_work']['average'], 'packed average codec work missing')
+    else:
+        require('packed_average_limbs' not in receipt and 'packed_average_work' not in receipt,
+                'packed codec receipt for dense storage')
     quantizer=receipt.get('quantizer_terms')
     require(type(quantizer) is list and len(quantizer)==3 and all(type(x) is int and x>0 for x in quantizer)
             and sum(quantizer)==component['quantizer'],'fixed admission quantizer allocation')
@@ -162,9 +171,11 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def run(output,expected_head,*,train=False,paired=False):
+def run(output,expected_head,*,train=False,paired=False,packed=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    require(type(train) is bool and type(paired) is bool,'explicit fixed cohort mode')
+    require(all(type(flag) is bool for flag in (train,paired,packed)),'explicit fixed cohort mode')
+    paired=paired or packed
+    suffix='_PACKED' if packed else ('_PAIRED' if paired else '')
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
     unlinked_path(output.parent)
@@ -199,8 +210,8 @@ def run(output,expected_head,*,train=False,paired=False):
             require(sha(build_path)==build_hash,'fixed build manifest changed after probe')
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             return directory,receipt
-        admitted,_=observed('ADMIT_PAIRED' if paired else 'ADMIT')
-        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired)
+        admitted,_=observed('ADMIT'+suffix)
+        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,packed=packed)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -208,7 +219,7 @@ def run(output,expected_head,*,train=False,paired=False):
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
             entered=1
-            trained,process=observed('TRAIN_PAIRED' if paired else 'TRAIN')
+            trained,process=observed('TRAIN'+suffix)
             raw=trained/'stdout.bin'
             digest=process['streams'][0]['sha256']
             require(raw.stat().st_size==TOTAL_BYTES and sha(raw)==digest,'saved binary byte identity after training')
@@ -275,8 +286,10 @@ def main():
     parser.add_argument('--expected-head',required=True)
     parser.add_argument('--train',action='store_true')
     parser.add_argument('--paired',action='store_true')
+    parser.add_argument('--packed-averages',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired),sort_keys=True))
+    print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
+        packed=args.packed_averages),sort_keys=True))
 
 
 if __name__=='__main__':main()
