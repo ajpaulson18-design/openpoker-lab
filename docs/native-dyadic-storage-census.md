@@ -79,5 +79,29 @@ packed word is counted separately. The conservative payload cap and reservation
 are retained. The measured memory gain applies to this exact nine-card
 profile and its two sweeps.
 
+## Packing both strategy fields
+
+The compact profile also stores regrets with a certified row-specific binary
+shift. The four committed and staged arrays contain 9,707,680 bytes of limbs
+before metadata. The full nine-card profile admits 1,980,339 entries and
+498,002,048 modeled work units under the existing total ceilings.
+
+The source-frozen run at `528bc32` matched all 22,587,236 numerical bytes from
+the packed-average run. Independent replay verified both sweeps and the final
+policy's best responses. The saved-only quantizer census predicted a reduction
+of 1,516,512 charged units from scanning the compact values directly, which
+matched the native receipt. The codec and suffix census add 31,453,424 units,
+bringing total charged work to 370,808,000.
+[Compact strategy evidence](../benchmarks/results/native-dyadic-compact-strategy-accepted-v1/manifest.json)
+
+In single Windows observations, peak working set fell from 25,251,840 to
+18,878,464 bytes. Peak commit fell from 22,761,472 to 16,031,744 bytes. Native
+wall-clock time rose from 0.645 to 0.879 seconds. These measurements cover the
+same bounded game and two sweeps.
+
+The rank-free ten-card projection needs 47,403,552 bytes in the four limb
+arrays and 8,874,558 modeled state entries before chance and history. Further
+growth needs a different resident storage model and a separate work forecast.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)

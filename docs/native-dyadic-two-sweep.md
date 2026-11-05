@@ -91,3 +91,9 @@ average masses. The cohort controller selects this mode with
 values for independent replay. The receipt footer accounts for the packed
 layout and conversion. See the [storage measurements](native-dyadic-storage-census.md#packed-exact-average-masses)
 for the observed memory comparison and the remaining capacity limit.
+
+`ADMIT_COMPACT` and `TRAIN_COMPACT` select both packed fields and direct
+quantization of their compact values. Use `--compact-strategy` with the cohort
+controller. The checkpoint format still carries the full numerators. See the
+[compact strategy comparison](native-dyadic-storage-census.md#packing-both-strategy-fields)
+for the frozen exact replay and measured tradeoff.
