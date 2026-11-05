@@ -88,13 +88,18 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         return directory,process
 
     def test_admission_covers_all_in_hidden_payoffs_without_training(self):
-        directory,process=self.observe('admit',lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT',p))
-        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
-        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
-        plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()))
-        self.assertEqual(plan['training_invocations'],0)
-        self.assertEqual(plan['rank_calls'],0)
-        self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
+        plans=[]
+        for paired,mode in ((False,'ADMIT'),(True,'ADMIT_PAIRED')):
+            with self.subTest(mode=mode):
+                directory,process=self.observe(mode.lower(),lambda p:run_bounded_dyadic_probe([str(self.exe)],mode,p))
+                self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+                self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+                plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),paired=paired)
+                self.assertEqual(plan['training_invocations'],0)
+                self.assertEqual(plan['rank_calls'],0)
+                self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
+                plans.append(plan['planned_total_work'])
+        self.assertLess(plans[1],plans[0])
 
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',

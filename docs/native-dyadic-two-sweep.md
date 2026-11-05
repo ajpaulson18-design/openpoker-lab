@@ -65,3 +65,11 @@ and 54,311,964 for quantization. The isolated native process took 0.884 seconds
 on the recorded MSVC fixture run, including binary output. The archive retains
 the raw output, child exits, final verifier receipts, build identities, and
 captured source inventory. Reuse saved output for any future replay.
+
+The opt-in `ADMIT_PAIRED` and `TRAIN_PAIRED` modes carry both seats' values
+through one public walk per sweep. Each decision stages the acting seat once.
+The shared walk uses the same frozen policy, board support, action order, and
+fixed-point arithmetic. Rank-free admission plans 443,428,568 modeled work units
+for the paired path. The paired cohort compares every byte before the receipt
+footer with the saved two-pass result, then runs the independent replay. On
+Windows it records the child process's lifetime peak working set and commit.

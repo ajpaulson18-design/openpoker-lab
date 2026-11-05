@@ -61,18 +61,44 @@ def run_bounded_probe_batch(command,request,directory):
 _DYADIC_T2_STDOUT = 22_587_756
 
 
+def _windows_peak_memory(process):
+    """Read the retained child process's lifetime peaks after its observed exit."""
+    import ctypes
+    from ctypes import wintypes
+
+    class ProcessMemoryCounters(ctypes.Structure):
+        _fields_ = [('size', wintypes.DWORD), ('page_faults', wintypes.DWORD)] + [
+            (name, ctypes.c_size_t) for name in (
+                'peak_working_set', 'working_set', 'peak_paged_pool', 'paged_pool',
+                'peak_nonpaged_pool', 'nonpaged_pool', 'commit', 'peak_commit', 'private_usage',
+            )
+        ]
+
+    counters=ProcessMemoryCounters()
+    counters.size=ctypes.sizeof(counters)
+    query=ctypes.WinDLL('kernel32',use_last_error=True).K32GetProcessMemoryInfo
+    query.argtypes=(wintypes.HANDLE,ctypes.POINTER(ProcessMemoryCounters),wintypes.DWORD)
+    query.restype=wintypes.BOOL
+    if not query(int(process._handle),ctypes.byref(counters),counters.size):
+        return {'source':'windows.K32GetProcessMemoryInfo','error_code':ctypes.get_last_error()}
+    return {'source':'windows.K32GetProcessMemoryInfo',
+            'peak_working_set_bytes':counters.peak_working_set,'peak_commit_bytes':counters.peak_commit}
+
+
 def run_bounded_dyadic_probe(command,mode,directory):
     """Closed transport for the fixed two-sweep probe's larger binary artifact."""
-    if type(mode) is not str or mode not in ('ADMIT','TRAIN'):
+    if type(mode) is not str or mode not in ('ADMIT','TRAIN','ADMIT_PAIRED','TRAIN_PAIRED'):
         raise ValueError('invalid fixed dyadic probe transport mode')
     request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
-    ceiling=_DYADIC_T2_STDOUT if mode=='TRAIN' else 2135476
-    return _run_streamed_child(command,request,directory,stdout_limit=ceiling if mode=='TRAIN' else 65536,
-        stderr_limit=65536,timeout=300,request_limit=19,stdout_ceiling=ceiling)
+    training=mode in ('TRAIN','TRAIN_PAIRED')
+    ceiling=_DYADIC_T2_STDOUT if training else 2135476
+    return _run_streamed_child(command,request,directory,stdout_limit=ceiling if training else 65536,
+        stderr_limit=65536,timeout=300,request_limit=26 if mode.endswith('_PAIRED') else 19,stdout_ceiling=ceiling,
+        measure_peak_memory=mode=='TRAIN_PAIRED')
 
 
 def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,
-                        stdout_ceiling=2135476):
+                        stdout_ceiling=2135476,measure_peak_memory=False):
     if (type(command) is not list or not 1<=len(command)<=64 or
             any(type(a) is not str or not a or len(a)>4096 for a in command)):
         raise ValueError('bounded child command')
@@ -128,5 +154,10 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
              'actual_exit_observed':process is not None and process.poll() is not None,
              'duration_seconds':time.perf_counter()-started,'streams':records,'failures':failures,
              'request_sha256':hashlib.sha256(request).hexdigest(),'automatic_retries':0}
+    if measure_peak_memory and os.name=='nt' and receipt['actual_exit_observed']:
+        try:
+            receipt['memory']=_windows_peak_memory(process)
+        except (AttributeError,OSError,TypeError,ValueError) as error:
+            receipt['memory']={'source':'windows.K32GetProcessMemoryInfo','error':type(error).__name__}
     _json_exclusive(directory/'process.json',receipt)
     return receipt

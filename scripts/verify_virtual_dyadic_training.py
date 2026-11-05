@@ -60,7 +60,7 @@ class Reader:
         return -magnitude if sign else magnitude
 
 
-def replay(path,expected_sha256):
+def replay(path,expected_sha256,*,paired=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     path=unlinked_path(path)
@@ -133,7 +133,7 @@ def replay(path,expected_sha256):
             require(units==expected[key],f'saved exported average grid mismatch: {key}')
             saved[key]=units
         require(r.read(ROWS)==bytes(not any(average[key]) for key,_ in ordered),'saved average fallback flags')
-        require(r.read(8)==END,'saved complete footer magic')
+        require(r.read(8)==(b'OPLDEND2' if paired else END),'saved complete footer magic')
         plan=dict(zip(FAMILIES,r.words(6)));actual=dict(zip(FAMILIES,r.words(6)))
         parent_plan=dict(zip(PARENT,r.words(9)));parent_actual=dict(zip(PARENT,r.words(9)))
         shape=r.words(8)
@@ -143,7 +143,8 @@ def replay(path,expected_sha256):
         completed,passes,invocations,history_entries,history_bytes,state_entries,state_payload=r.words(7)
         require(r.bytes==TOTAL_BYTES and not stream.read(1),'saved trailing or missing output bytes')
         require(r.digest.hexdigest()==expected_sha256,'saved training output digest differs')
-    require(shape==EXPECTED_SHAPE and (completed,passes,invocations)==(2,4,1),'saved run shape/iteration counters')
+    require(shape==EXPECTED_SHAPE and (completed,passes,invocations)==(2,2 if paired else 4,1),
+            'saved run shape/iteration counters')
     require(feedback==changes,'saved feedback receipt differs')
     require(sum(plan.values())<=500_000_000 and all(0<actual[k]<=plan[k] for k in plan),'saved composed work receipt')
     require(sum(parent_plan.values())==plan['parent'] and sum(parent_actual.values())==actual['parent']
@@ -170,6 +171,7 @@ def replay(path,expected_sha256):
             'parent_work_plan':parent_plan,'parent_work_actual':parent_actual,
             'planned_entries':entries,'planned_payload_bits':payload,
             'native_producer_calls':0,'quality_gate':None,'duration_seconds':time.perf_counter()-started,
+            'public_walks_per_sweep':passes//completed,
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
 
 
@@ -181,8 +183,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--saved',type=Path,required=True)
     parser.add_argument('--sha256',required=True)
+    parser.add_argument('--paired',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(replay(args.saved,args.sha256),sort_keys=True))
+    print(json.dumps(replay(args.saved,args.sha256,paired=args.paired),sort_keys=True))
 
 
 if __name__=='__main__':main()

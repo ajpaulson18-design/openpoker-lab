@@ -2,10 +2,12 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import time
 import traceback
+from zipfile import ZipFile
 
 from scripts.build_native_exact_four_street import build
 from scripts.run_native_exact_reach_conformance import bind_build, save, sha
@@ -19,6 +21,8 @@ ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
 PRODUCER='174b66645a05d5f050d4361ce81b06ea9a4e5ac3'
 VERIFIER='6b49057bc62a6599bfc23086ecda52576d755908'
+TWO_PASS_HEAD='aa3855903fbcb97020963235c9379e457e3a78c7'
+NUMERIC_BYTES=TOTAL_BYTES-8-64*8
 ARTIFACT_ALLOWANCE=2<<30
 
 
@@ -33,7 +37,7 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_admission(receipt):
+def validate_admission(receipt,*,paired=False):
     fixed={'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
            'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,'H':12,'M':1,
            'D_bits':635,'value_bits':642,'normalizer':29,'d5':20,'output_bytes':TOTAL_BYTES,
@@ -42,6 +46,8 @@ def validate_admission(receipt):
            'showdown_contractions_per_pass':EXPECTED_TERMINAL_COMPLETIONS[0],
            'hidden_completion_candidates_per_pass':EXPECTED_TERMINAL_COMPLETIONS[1],
            **dict(zip(SHAPE,EXPECTED_SHAPE))}
+    if paired:
+        fixed['public_walks_per_sweep']=1
     require(type(receipt) is dict and all(type(receipt.get(k)) is type(v) and receipt[k]==v for k,v in fixed.items()),
             'fixed admission census or zero-call receipt mismatch')
     for name,keys in [('component_work',FAMILIES),('parent_work',PARENT)]:
@@ -87,6 +93,60 @@ def require_exit(observed,path):
     require((path/'stderr.bin').stat().st_size==0,'fixed cohort child had stderr')
 
 
+def paired_baseline(source):
+    directory='benchmarks/results/native-dyadic-two-sweep-accepted-v1'
+    name=f'{directory}/manifest.json'
+    raw=(ROOT/name).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][name]['raw_sha256'],
+            'accepted two-pass manifest source drift')
+    baseline=exact_json(raw)
+    require(baseline['status']=='accepted_scoped_two_sweep_training_and_replay' and
+            baseline['source_head']==TWO_PASS_HEAD and baseline['training_invocations']==1 and
+            baseline['operator']['actual_exit_observed'] and baseline['operator']['returncode']==0 and
+            baseline['operator']['raw_source_stable'], 'accepted two-pass baseline required')
+    name=f'{directory}/evidence.zip'
+    archive=ROOT/name
+    identity=baseline['archive']
+    require(identity['path']=='evidence.zip' and 0<archive.stat().st_size==identity['bytes']<=50<<20 and
+            sha(archive)==identity['sha256']==source['files'][name]['raw_sha256'],
+            'accepted two-pass archive identity differs')
+    return archive,baseline
+
+
+def compare_paired_output(path,archive,baseline):
+    """Compare every data byte against the original saved two-pass output."""
+    member='cohort/train/stdout.bin'
+    with ZipFile(archive) as zipped, path.open('rb') as new:
+        require(zipped.getinfo(member).file_size==TOTAL_BYTES,'two-pass artifact size')
+        process_member='cohort/train/process.json'
+        require(zipped.getinfo(process_member).file_size<=65536,'two-pass process receipt size')
+        process=exact_json(zipped.read(process_member))
+        require(process['actual_exit_observed'] and process['returncode']==0 and
+                type(process['duration_seconds']) in (int,float) and 0<process['duration_seconds']<=300,
+                'two-pass process receipt differs')
+        original_hash=hashlib.sha256()
+        numeric_hash=hashlib.sha256()
+        with zipped.open(member) as original:
+            remaining=NUMERIC_BYTES
+            while remaining:
+                count=min(remaining,1<<20)
+                old_bytes=original.read(count)
+                require(len(old_bytes)==count and new.read(count)==old_bytes,
+                        f'paired numeric output differs at or after byte {NUMERIC_BYTES-remaining}')
+                original_hash.update(old_bytes)
+                numeric_hash.update(old_bytes)
+                remaining-=count
+            footer=original.read(TOTAL_BYTES-NUMERIC_BYTES)
+            require(len(footer)==TOTAL_BYTES-NUMERIC_BYTES and footer.startswith(b'OPLDEND1') and
+                    not original.read(1),'two-pass artifact footer')
+            original_hash.update(footer)
+    digest=original_hash.hexdigest()
+    require(digest==baseline['saved_replay']['saved_output_sha256'],'two-pass artifact SHA-256 differs')
+    return {'baseline_head':TWO_PASS_HEAD,'baseline_output_sha256':digest,
+            'baseline_native_process_seconds':process['duration_seconds'],
+            'equal_numeric_bytes':NUMERIC_BYTES,'numeric_sha256':numeric_hash.hexdigest()}
+
+
 def check_verifier_bootstrap(path,source):
     receipt=exact_json(path.read_bytes())
     name='scripts/run_virtual_frozen_source_only.py'
@@ -102,9 +162,9 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def run(output,expected_head,*,train=False):
+def run(output,expected_head,*,train=False,paired=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    require(type(train) is bool,'explicit fixed cohort mode')
+    require(type(train) is bool and type(paired) is bool,'explicit fixed cohort mode')
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
     unlinked_path(output.parent)
@@ -120,6 +180,8 @@ def run(output,expected_head,*,train=False):
         save(output/'source.json',source)
         gate=require_frozen_gate(source)
         save(output/'fixed-proof-gate.json',gate)
+        if paired:
+            baseline_archive,baseline=paired_baseline(source)
         build_dir=output/'build'
         manifest=build(build_dir,target=TARGET)
         bind_build(manifest,source,TARGET,output/'source',build_dir)
@@ -137,8 +199,8 @@ def run(output,expected_head,*,train=False):
             require(sha(build_path)==build_hash,'fixed build manifest changed after probe')
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             return directory,receipt
-        admitted,_=observed('ADMIT')
-        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()))
+        admitted,_=observed('ADMIT_PAIRED' if paired else 'ADMIT')
+        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -146,16 +208,21 @@ def run(output,expected_head,*,train=False):
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
             entered=1
-            trained,process=observed('TRAIN')
+            trained,process=observed('TRAIN_PAIRED' if paired else 'TRAIN')
             raw=trained/'stdout.bin'
             digest=process['streams'][0]['sha256']
             require(raw.stat().st_size==TOTAL_BYTES and sha(raw)==digest,'saved binary byte identity after training')
             verify_source(ROOT,source)
+            if paired:
+                comparison=compare_paired_output(raw,baseline_archive,baseline)
+                save(output/'paired-numeric-comparison.json',comparison)
             entry='scripts.verify_virtual_dyadic_training'
             bootstrap=ROOT/'scripts/run_virtual_frozen_source_only.py'
             receipt_path=output/'saved-review-bootstrap.json'
             command=source_only_command(bootstrap,source['files']['scripts/run_virtual_frozen_source_only.py']['raw_sha256'],
                 entry,receipt_path,['--saved',str(raw),'--sha256',digest])
+            if paired:
+                command.append('--paired')
             save(output/'saved-review-command.json',command)
             replay_dir=output/'saved-review'
             observed_replay=run_bounded_child(command,b'',replay_dir,stdout_limit=65536)
@@ -171,6 +238,21 @@ def run(output,expected_head,*,train=False):
                     'saved replay result differs from admitted producer')
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
+            if paired:
+                original=sum(baseline['saved_replay']['work_actual'].values())
+                actual=sum(numeric['work_actual'].values())
+                require(numeric['public_walks_per_sweep']==1 and actual<original,
+                        'paired traversal must use fewer modeled work units')
+                comparison.update(baseline_work=original,paired_work=actual,modeled_work_saved=original-actual)
+                comparison['native_process_seconds']=process['duration_seconds']
+                if os.name=='nt':
+                    memory=process.get('memory',{})
+                    require(memory.get('source')=='windows.K32GetProcessMemoryInfo' and
+                            all(type(memory.get(key)) is int and memory[key]>0 for key in
+                                ('peak_working_set_bytes','peak_commit_bytes')),
+                            'paired Windows process memory measurement missing')
+                    comparison['native_process_memory']=memory
+                result['paired_comparison']=comparison
         result['source_final']=verify_source(ROOT,source)
         result['duration_seconds']=time.perf_counter()-started
         scan_project_caches(ROOT)
@@ -192,8 +274,9 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--expected-head',required=True)
     parser.add_argument('--train',action='store_true')
+    parser.add_argument('--paired',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(run(args.output,args.expected_head,train=args.train),sort_keys=True))
+    print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired),sort_keys=True))
 
 
 if __name__=='__main__':main()

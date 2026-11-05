@@ -24,7 +24,12 @@ namespace state=virtual_dyadic_state;
 using chance::Integer;
 using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
-inline constexpr std::size_t sweeps=2, targets=2, passes=sweeps*targets;
+inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
+enum class Traversal { by_seat, paired };
+inline constexpr std::uint64_t visit_cost(Traversal mode) {
+    // Paired frames carry one additional two-holding lane and lane routing.
+    return mode==Traversal::paired?12:8;
+}
 inline constexpr std::size_t literal_count=1105, template_count=388;
 inline constexpr std::size_t integer_words=11, value_bits=642;
 inline constexpr std::uint64_t grid=dyadic_policy::grid_units;
@@ -38,6 +43,9 @@ inline constexpr std::size_t entries_cap=2000000, payload_cap=std::size_t{1}<<30
     history_bytes=std::size_t{1}<<20, parent_entries=16384, parent_payload=std::size_t{1}<<22;
 inline constexpr std::uint64_t chance_setup_bound=65536;
 static_assert(template_cap+chance_cap+history_cap+state_cap+quantizer_cap+parent_cap<=work_cap);
+// At most 16 visible frames plus three hidden reveal levels. Even 64
+// simultaneous 700-bit integer objects per level fit the parent reservation.
+static_assert(19*64*(value_bits+58)<parent_payload);
 
 class Error final : public std::runtime_error {
 public:
@@ -201,6 +209,8 @@ struct Plan {
     std::array<PrefixStats,4> prefixes{};
     std::array<std::uint64_t,3> quantizer_terms{};
     WorkList parent{};
+    Traversal traversal=Traversal::by_seat;
+    std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
     std::uint64_t normalizer=0,denominator_base=0,expected_rank_calls=0;
@@ -324,7 +334,7 @@ class Forecast final {
             plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA);
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
-            work[work_index(Work::reach)]+=passes*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
+            work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=sweeps*np*m*2*add_cost(value_bits);
             work[work_index(Work::average)]+=sweeps*slots*(16+3*mul_cost(value_bits,53)+copy_cost(value_bits));
             ++past[actor];
@@ -335,7 +345,7 @@ class Forecast final {
             const auto child=plan_.prefixes[street_index(next)].count;
             shape.reveals+=child;
             shape.candidates+=np*candidate_count(k);
-            work[work_index(Work::value_add)]+=passes*child*2*add_cost(value_bits);
+            work[work_index(Work::value_add)]+=seat_passes*child*2*add_cost(value_bits);
             for (std::size_t target=0;target<2;++target) contractions_+=sweeps*chance_cost(false,next,target,0);
         } else {
             const auto showdown=node.state.phase==betting::Phase::showdown;
@@ -348,14 +358,14 @@ class Forecast final {
                     constexpr std::array<std::size_t,3> visible{0,3,4};
                     for (auto street=street_index(k);street<visible.size();++street)
                         plan_.hidden_candidates+=plan_.prefixes[street].count*candidate_count(visible[street]);
-                    work[work_index(Work::value_add)]+=passes*full*2*add_cost(value_bits);
+                    work[work_index(Work::value_add)]+=seat_passes*full*2*add_cost(value_bits);
                 }
             }
             for (std::size_t target=0;target<2;++target) {
                 contractions_+=chance_cost(showdown,showdown?5:k,target,first[1-target]);
                 contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
             }
-            work[work_index(Work::terminal_scale)]+=passes*np*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits));
+            work[work_index(Work::terminal_scale)]+=seat_passes*np*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits));
         }
         for (const auto& edge:node.edges) literal(edge.child,past,first);
     }
@@ -387,7 +397,10 @@ class Forecast final {
         require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
     }
 public:
-    Forecast(const betting::Template& source,Meter& meter):source_(source),meter_(meter) {}
+    Forecast(const betting::Template& source,Meter& meter,Traversal mode):source_(source),meter_(meter) {
+        plan_.traversal=mode;
+        plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
+    }
     Plan make() {
         const auto& template_receipt=source_.receipt();
         require(template_receipt.nodes==template_count && template_receipt.edges==410 &&
@@ -426,7 +439,8 @@ public:
         // fixed four-holding copies/normalization. At most 60 misses retain
         // every physically supported ordered board in the 64-plane owner.
         plan_.chance_work=chance_setup_bound+contractions_+p[3].count*(4*4096+512+64+4*64);
-        plan_.history_work=4096*literal_count+1280+(passes+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
+        const auto public_walks=plan_.public_walks;
+        plan_.history_work=4096*literal_count+1280+(public_walks+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
         const auto lookup=16*logceil(static_cast<std::size_t>(R+1));
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+256*S+8*S+2*R+
             sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
@@ -434,10 +448,10 @@ public:
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
         auto& w=plan_.parent;
         w[work_index(Work::geometry)]=3000000;
-        w[work_index(Work::visit)]=(passes+1)*8*g.visits;
-        w[work_index(Work::support)]=64*((passes+1)*g.candidates+passes*plan_.hidden_candidates);
-        w[work_index(Work::route)]=passes*16*R+16*R+4*S;
-        w[work_index(Work::average)]+=passes*(g.reveals+1)*24;
+        w[work_index(Work::visit)]=(8+public_walks*visit_cost(plan_.traversal))*g.visits;
+        w[work_index(Work::support)]=64*((public_walks+1)*g.candidates+public_walks*plan_.hidden_candidates);
+        w[work_index(Work::route)]=public_walks*16*R+16*R+4*S;
+        w[work_index(Work::average)]+=seat_passes*(g.reveals+1)*24;
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
         w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
@@ -462,7 +476,10 @@ public:
 struct Reach { Values numerators{1,1}; std::size_t exponent=0; };
 struct Marginal { Values numerators{}; std::uint64_t scale=0; };
 
-class Walk final {
+template<bool Paired> class Walk final {
+    static constexpr std::size_t lanes=Paired?targets:1;
+    using LaneValues=std::array<Values,lanes>;
+    using Marginals=std::array<Marginal,lanes>;
     const betting::Template& source_;
     const Plan& plan_;
     Meter& meter_;
@@ -472,38 +489,53 @@ class Walk final {
     std::size_t target_;
     Counts shape_{};
     std::uint64_t showdown_contractions_=0,hidden_candidates_=0;
-    static constexpr std::size_t catalog=2;
+    static constexpr std::size_t catalog=targets;
+
+    [[nodiscard]] std::size_t seat(std::size_t lane) const { return Paired?lane:target_; }
+    static const Reach& opposite(std::size_t player,const Reach& sb,const Reach& bb) { return player?sb:bb; }
 
     void add_values(Values& total,const Values& child) {
         meter_.charge(Work::value_add,2*add_cost(value_bits));
         for (std::size_t holding=0;holding<2;++holding) total[holding]+=child[holding];
     }
-    prepared::Contraction contraction(const Prefix& prefix,chance::TerminalKind kind,const Reach& opposite) {
-        auto result=chance_.contraction(target_,prefix.view(),kind,opposite.numerators,opposite.exponent);
-        require(result.numerators.size()==2 && result.reach_exponent==opposite.exponent &&
+    void add_lanes(LaneValues& total,const LaneValues& child) {
+        for (std::size_t lane=0;lane<lanes;++lane) add_values(total[lane],child[lane]);
+    }
+    prepared::Contraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
+        auto result=chance_.contraction(target,prefix.view(),kind,reach.numerators,reach.exponent);
+        require(result.numerators.size()==2 && result.reach_exponent==reach.exponent &&
             result.prefix_divisor==chance_divisors[street_index(prefix.size)],"prepared contraction identity changed");
         return result;
     }
-    Marginal marginal(const Prefix& prefix,Support support) {
-        meter_.charge(Work::average,24);
-        auto result=contraction(prefix,chance::TerminalKind::fold,Reach{});
-        Marginal mass;
-        mass.scale=chance_divisors[3]/result.prefix_divisor;
-        for (std::size_t holding=0;holding<2;++holding) {
-            const auto& value=result.numerators[holding];
-            require(value>=0 && (value>0)==bool(support[target_]&(1U<<holding)),"prior own marginal support changed");
-            mass.numerators[holding]=std::move(result.numerators[holding]);
+    Marginals marginal(const Prefix& prefix,Support support) {
+        Marginals masses{};
+        for (std::size_t lane=0;lane<lanes;++lane) {
+            meter_.charge(Work::average,24);
+            const auto target=seat(lane);
+            auto result=contraction(target,prefix,chance::TerminalKind::fold,Reach{});
+            auto& mass=masses[lane];
+            mass.scale=chance_divisors[3]/result.prefix_divisor;
+            for (std::size_t holding=0;holding<2;++holding) {
+                const auto& value=result.numerators[holding];
+                require(value>=0 && (value>0)==bool(support[target]&(1U<<holding)),"prior own marginal support changed");
+                mass.numerators[holding]=std::move(result.numerators[holding]);
+            }
         }
-        return mass;
+        return masses;
     }
-    Values ranked(const Prefix& board,const Reach& opposite) {
+    LaneValues ranked(const Prefix& board,const Reach& sb,const Reach& bb) {
         require(board.size==5 && ++showdown_contractions_<=plan_.showdown_contractions,"ranked completion census changed");
-        auto result=contraction(board,chance::TerminalKind::showdown,opposite);
-        return {std::move(result.numerators[0]),std::move(result.numerators[1])};
+        LaneValues values{};
+        for (std::size_t lane=0;lane<lanes;++lane) {
+            const auto target=seat(lane);
+            auto result=contraction(target,board,chance::TerminalKind::showdown,opposite(target,sb,bb));
+            values[lane]={std::move(result.numerators[0]),std::move(result.numerators[1])};
+        }
+        return values;
     }
-    void hidden_completions(const Prefix& prefix,const Reach& opposite,Values& sum) {
+    void hidden_completions(const Prefix& prefix,const Reach& sb,const Reach& bb,LaneValues& sum) {
         if (prefix.size==5) {
-            add_values(sum,ranked(prefix,opposite));
+            add_lanes(sum,ranked(prefix,sb,bb));
             return;
         }
         const auto candidates=candidate_count(prefix.size);
@@ -511,34 +543,43 @@ class Walk final {
         hidden_candidates_+=candidates;
         require(hidden_candidates_<=plan_.hidden_candidates,"hidden runout candidate census changed");
         reveal(prefix,[&](const Prefix& next) {
-            if (physical_support(next.mask)[0]) hidden_completions(next,opposite,sum);
+            if (physical_support(next.mask)[0]) hidden_completions(next,sb,bb,sum);
         });
     }
-    Values terminal(const betting::State& node,const Prefix& prefix,const Reach& opposite) {
-        meter_.charge(Work::terminal_scale,2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits)));
+    LaneValues terminal(const betting::State& node,const Prefix& prefix,const Reach& sb,const Reach& bb) {
+        meter_.charge(Work::terminal_scale,lanes*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits)));
         const bool showdown=node.phase==betting::Phase::showdown;
         const auto money=stake(node);
         require(width(money.significand)<=plan_.pay_bits && money.power>=-static_cast<int>(plan_.M),"pinned terminal money exceeds forecast");
-        const auto shift=static_cast<int>(plan_.shift)-static_cast<int>(opposite.exponent)+money.power;
-        require(shift>=0,"terminal outside fixed game scale");
-        Values result{};
+        std::array<unsigned,lanes> shifts{};
+        for (std::size_t lane=0;lane<lanes;++lane) {
+            const auto exponent=opposite(seat(lane),sb,bb).exponent;
+            const auto shift=static_cast<int>(plan_.shift)-static_cast<int>(exponent)+money.power;
+            require(shift>=0,"terminal outside fixed game scale");
+            shifts[lane]=static_cast<unsigned>(shift);
+        }
+        LaneValues result{};
         std::uint64_t divisor=chance_divisors[3];
         if (showdown) {
-            if (prefix.size==5) result=ranked(prefix,opposite);
+            if (prefix.size==5) result=ranked(prefix,sb,bb);
             // An all-in has no later information sets. Integrate completions
             // as raw full-board numerators on one scale, with no History reveal.
-            else hidden_completions(prefix,opposite,result);
+            else hidden_completions(prefix,sb,bb,result);
         } else {
-            auto raw=contraction(prefix,chance::TerminalKind::fold,opposite);
-            divisor=raw.prefix_divisor;
-            for (std::size_t holding=0;holding<2;++holding) result[holding]=std::move(raw.numerators[holding]);
+            divisor=chance_divisors[street_index(prefix.size)];
+            for (std::size_t lane=0;lane<lanes;++lane) {
+                const auto target=seat(lane);
+                auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
+                result[lane]={std::move(raw.numerators[0]),std::move(raw.numerators[1])};
+            }
         }
-        for (auto& value:result) {
-            value*=money.significand;
-            value*=chance_divisors[3]/divisor;
-            value<<=static_cast<unsigned>(shift);
-            if (!showdown && node.winner!=target_) value=-value;
-        }
+        for (std::size_t lane=0;lane<lanes;++lane)
+            for (auto& value:result[lane]) {
+                value*=money.significand;
+                value*=chance_divisors[3]/divisor;
+                value<<=shifts[lane];
+                if (!showdown && node.winner!=seat(lane)) value=-value;
+            }
         return result;
     }
     Reach advance(const Reach& previous,const std::array<std::span<const std::uint64_t>,2>& policy,
@@ -580,16 +621,16 @@ class Walk final {
             out[action]<<=scale-grid_bits;
         }
     }
-    Values visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
-                 const Reach& sb,const Reach& bb,const Marginal& prior) {
-        meter_.charge(Work::visit,8);
+    LaneValues visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
+                     const Reach& sb,const Reach& bb,const Marginals& prior) {
+        meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
             id<source_.nodes().size() && history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
             "dense public visit identity changed");
         const auto& node=source_.nodes()[id];
         require(node.state.street==prefix.size,"dense visible street changed");
         if (node.state.phase==betting::Phase::reveal) {
-            Values result{};
+            LaneValues result{};
             const auto candidates=candidate_count(prefix.size);
             meter_.charge(Work::support,64*candidates);
             shape_.candidates+=candidates;
@@ -602,7 +643,7 @@ class Walk final {
                 if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior);
                 else {
                     const auto child_prior=marginal(next,live);
-                    add_values(result,visit(node.edges[0].child,child,next,live,sb,bb,child_prior));
+                    add_lanes(result,visit(node.edges[0].child,child,next,live,sb,bb,child_prior));
                 }
             });
             return result;
@@ -612,7 +653,7 @@ class Walk final {
             auto& total=showdown?shape_.showdowns:shape_.folds;
             require(++total<=(showdown?plan_.shape.showdowns:plan_.shape.folds),"dense terminal count changed");
             if (target_==catalog) return {};
-            return terminal(node.state,prefix,target_?sb:bb);
+            return terminal(node.state,prefix,sb,bb);
         }
         const auto actor=node.state.actor;
         const auto menu=node.edges.size();
@@ -650,23 +691,28 @@ class Walk final {
             row_ids[holding]=row;
             policy[holding]=state_.policy_units(row);
         }
-        Values result{};
+        LaneValues result{};
         std::array<std::array<Integer,4>,2> action_values{};
         const auto& actor_reach=actor?bb:sb;
+        const std::size_t acting_lane=Paired?actor:(actor==target_?0:lanes);
         for (std::size_t action=0;action<menu;++action) {
             require(++shape_.actions<=plan_.shape.actions,"dense action count changed");
             const auto child=history_.append_action(cursor,action);
             const auto next=advance(actor_reach,policy,action,support[actor]);
             auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior):
                 visit(node.edges[action].child,child,prefix,support,next,bb,prior);
-            if (actor!=target_) add_values(result,values);
-            else for (std::size_t holding=0;holding<2;++holding)
-                action_values[holding][action]=std::move(values[holding]);
+            for (std::size_t lane=0;lane<lanes;++lane) {
+                if (lane!=acting_lane) add_values(result[lane],values[lane]);
+                else for (std::size_t holding=0;holding<2;++holding)
+                    action_values[holding][action]=std::move(values[lane][holding]);
+            }
         }
-        if (actor==target_) for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
-            std::array<Integer,4> increments{};
-            stage_average({increments.data(),menu},policy[holding],prior,actor_reach,holding);
-            result[holding]=state_.stage_row(row_ids[holding],{action_values[holding].data(),menu},{increments.data(),menu});
+        if (acting_lane<lanes) {
+            for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
+                std::array<Integer,4> increments{};
+                stage_average({increments.data(),menu},policy[holding],prior[acting_lane],actor_reach,holding);
+                result[acting_lane][holding]=state_.stage_row(row_ids[holding],{action_values[holding].data(),menu},{increments.data(),menu});
+            }
         }
         return result;
     }
@@ -674,10 +720,11 @@ public:
     Walk(const betting::Template& source,const Plan& plan,Meter& meter,history::History& history,
          prepared::PreparedPublicChance& chance,state::State& state,std::size_t target)
         :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target) {}
-    Values run(Cursor root) {
-        require(target_<=catalog,"invalid fixed sweep target");
+    LaneValues run(Cursor root) {
+        require(Paired?(target_==0 && plan_.traversal==Traversal::paired):
+            (target_==catalog || (target_<catalog && plan_.traversal==Traversal::by_seat)),"invalid fixed sweep target");
         const auto support=physical_support(0);
-        const auto prior=target_==catalog?Marginal{}:marginal(Prefix{},support);
+        const auto prior=target_==catalog?Marginals{}:marginal(Prefix{},support);
         auto value=visit(source_.root(),root,Prefix{},support,Reach{},Reach{},prior);
         require(shape_==plan_.shape &&
             showdown_contractions_==(target_==catalog?0:plan_.showdown_contractions) &&
@@ -728,7 +775,7 @@ public:
 class Driver final {
     betting::Template source_{configuration(),template_limits()};
     Meter meter_;
-    const Plan plan_=Forecast(source_,meter_).make();
+    const Plan plan_;
     bool entered_=false;
 
     void skeleton(Binary& output) const {
@@ -794,14 +841,14 @@ class Driver final {
         const std::array<std::uint64_t,6> actual{source_.receipt().work,chance.modeled_work,history.work,
             state.state_work,state.quantizer_work,meter_.total()};
         for (std::size_t i=0;i<actual.size();++i) require(actual[i]<=forecast[i],"child component exceeded composed forecast");
-        require(chance.completed_contractions==passes*(p.shape.folds+p.showdown_contractions+p.shape.reveals+1) &&
+        require(chance.completed_contractions==seat_passes*(p.shape.folds+p.showdown_contractions+p.shape.reveals+1) &&
             chance.rank_calls==p.expected_rank_calls && chance.cache_misses==p.prefixes[3].count &&
-            chance.cache_hits+chance.cache_misses==passes*p.showdown_contractions && !chance.cache_evictions &&
+            chance.cache_hits+chance.cache_misses==seat_passes*p.showdown_contractions && !chance.cache_evictions &&
             chance.peak_live_entries<=chance_entries && chance.peak_integer_payload_bits<=chance_payload &&
             state.completed_sweeps==sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
-        out.text("OPLDEND1");
+        out.text(p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
         for (const auto word:p.parent) out.u64(word);
@@ -812,11 +859,11 @@ class Driver final {
             chance.prior_work,chance.setup_work,chance.input_work,chance.cache_lookup_work,chance.rank_work,chance.sort_work,
             chance.contraction_work,chance.completed_contractions,chance.rank_calls,chance.cache_hits,chance.cache_misses,
             chance.cache_evictions,chance.peak_live_entries,chance.peak_integer_payload_bits,chance.peak_integer_bits,feedback,
-            state.completed_sweeps,passes,1,history.entries,history.owned_bytes,state.reserved_entries,
+            state.completed_sweeps,p.public_walks,1,history.entries,history.owned_bytes,state.reserved_entries,
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
 public:
-    Driver()=default;
+    explicit Driver(Traversal mode=Traversal::by_seat):plan_(Forecast(source_,meter_,mode).make()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -852,7 +899,7 @@ public:
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
              static_cast<std::size_t>(p.state_payload)});
         const auto root=history.root();
-        (void)Walk(source_,p,meter_,history,chance,state,2).run(root);
+        (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
 
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
@@ -862,14 +909,18 @@ public:
         for (std::size_t sweep=0;sweep<sweeps;++sweep) {
             state.begin_sweep();
             feedback=profile(out,state,sweep);
-            const auto sb=Walk(source_,p,meter_,history,chance,state,0).run(root);
-            const auto bb=Walk(source_,p,meter_,history,chance,state,1).run(root);
-            require(sb[0]+sb[1]+bb[0]+bb[1]==0,"simultaneous fixed profile is not zero-sum");
+            std::array<Values,targets> roots{};
+            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0).run(root);
+            else {
+                auto sb=Walk<false>(source_,p,meter_,history,chance,state,0).run(root);
+                auto bb=Walk<false>(source_,p,meter_,history,chance,state,1).run(root);
+                roots={std::move(sb[0]),std::move(bb[0])};
+            }
+            require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
             state.commit_sweep();
             for (const auto& value:state.regrets()) out.wide(value);
             for (const auto& value:state.averages()) out.wide(value);
-            for (const auto& value:sb) out.wide(value,true);
-            for (const auto& value:bb) out.wide(value,true);
+            for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
         }
         const auto image=state.export_average();
         require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
