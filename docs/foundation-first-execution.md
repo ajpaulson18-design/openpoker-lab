@@ -1,5 +1,18 @@
 # Foundation-first execution record
 
+## Committed exact-reach component (November 4)
+
+The [exact reach boundary](native-exact-reach.md) passed a source-frozen
+component cohort at `a44087b8a0608a61985ae593de69d8aec20f5808`: 34 controls
+normally and optimized, no skips, actual outer exit 0 and final source-only
+receipts. Each mode verifies 120,960 exact terminal vectors, 13 rejection
+guards and 10,464 byte-identical legacy requests against active `9dbf1ef`.
+All 15 CI workflow groups at that source commit succeeded. The
+[raw archive and manifest](../benchmarks/results/native-exact-reach-committed-v1/manifest.json)
+preserve component acceptance separately from the live frozen full-update
+study. No changing-policy training, whole-game resource admission or saved-policy
+quality result follows from these component checks.
+
 ## Virtual-chance structural barrier (November 1)
 
 The exact native [chance component](native-full-deck-public-chance.md) is merged
