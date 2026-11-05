@@ -97,3 +97,8 @@ quantization of their compact values. Use `--compact-strategy` with the cohort
 controller. The checkpoint format still carries the full numerators. See the
 [compact strategy comparison](native-dyadic-storage-census.md#packing-both-strategy-fields)
 for the frozen exact replay and measured tradeoff.
+
+`ADMIT_SCALED` and `TRAIN_SCALED` use the compact strategy layout and construct
+average increments directly in each row's scale. Select this profile with
+`--scaled-averages`. The [measured comparison](native-dyadic-storage-census.md#constructing-averages-in-packed-units)
+uses the same independently replayed game and full checkpoint format.

@@ -103,5 +103,25 @@ The rank-free ten-card projection needs 47,403,552 bytes in the four limb
 arrays and 8,874,558 modeled state entries before chance and history. Further
 growth needs a different resident storage model and a separate work forecast.
 
+## Constructing averages in packed units
+
+The scaled-average profile builds one weighted own-reach value per row and
+multiplies by each frozen action unit. The packed state accepts the resulting
+compact increments directly. The saved-row census predicts 12,177,724 fewer
+units for average construction and 5,118,432 fewer units for the average codec.
+The observed receipts match both reductions, lowering planned total work from
+498,002,048 to 480,705,892 units and charged work from 370,808,000 to 353,511,844.
+
+The source-frozen run at `a6f2a14` matched all 22,587,236 numerical bytes from
+the compact-strategy run. Independent replay verified both sweeps and the final
+policy's best responses. The Windows observations measured 0.879 and 0.671
+seconds and peak working sets of 18,878,464 and 18,898,944 bytes respectively.
+Each variant has one observation on this bounded fixture.
+[Scaled-average evidence](../benchmarks/results/native-dyadic-scaled-averages-accepted-v1/manifest.json)
+
+With the same word widths and current accounting equations, the ten-card
+state and two codec reservations alone would require 599,711,120 work units.
+The projection also retains the 8,874,558-entry state requirement.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)
