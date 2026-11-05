@@ -1,6 +1,8 @@
 #include "../../native/virtual_dyadic_state.hpp"
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <string>
 #include <type_traits>
 
 namespace s=openpoker::virtual_dyadic_state;
@@ -282,6 +284,108 @@ void guards(h::History& history,const b::Template& source) {
         reject("second_export",ErrorCode::phase,[&] {(void)state.export_average();});
     }
 }
+void storage(std::string_view shape,const s::State& original,const s::State& compact) {
+    const auto before=original.action_storage(),after=compact.action_storage();
+    require(before.array_bytes()>after.array_bytes(),"catalog did not reduce owned action arrays");
+    const auto original_receipt=original.receipt(),compact_receipt=compact.receipt();
+    require(original_receipt.state_work==compact_receipt.state_work &&
+        original_receipt.reserved_entries==compact_receipt.reserved_entries &&
+        original_receipt.reserved_integer_and_text_payload_bits==compact_receipt.reserved_integer_and_text_payload_bits,
+        "catalog changed legacy state admission or charges");
+    std::cout<<"ACTION_STORAGE "<<shape<<' '<<before.token_slots<<' '<<after.token_slots<<' '<<after.catalog_keys
+        <<' '<<after.token_slot_bytes<<' '<<after.catalog_key_bytes<<' '<<before.array_bytes()<<' '<<after.array_bytes()<<'\n';
+}
+void action_catalog_controls(h::History& history,const b::Template& source) {
+    const std::array<std::size_t,2> hands{2,2};
+    const Integer denominator=1;
+    {
+        // Same allocated capacities as the PROOF9 training driver. No row
+        // registration, state freeze, sweep, or solver evaluation here.
+        const auto plan=forecast(24420,58164,642);
+        s::State original(history,hands,denominator,plan);
+        s::State compact(history,hands,denominator,plan,{}, {source.nodes().size(),source.receipt().edges});
+        storage("PROOF9",original,compact);
+    }
+    const auto root=history.root();
+    const auto call=history.append_action(root,1);
+    constexpr std::array<std::string_view,2> second{"check","raise@3"};
+    const auto plan=forecast(4,8);
+    {
+        s::State original(history,hands,denominator,plan);
+        s::State compact(history,hands,denominator,plan,{}, {2,4});
+        const auto put=[&](auto cursor,std::size_t actor,std::size_t holding,std::size_t key,
+                           std::span<const std::string_view> actions,std::size_t expected) {
+            require(original.register_row(cursor,actor,holding,actions)==expected &&
+                compact.register_catalog_row(cursor,actor,holding,key,actions)==expected,"catalog changed row identity");
+        };
+        {
+            std::string token="fold";
+            const std::array<std::string_view,2> borrowed{token,"call"};
+            put(root,0,0,0,borrowed,0);
+            token[0]='X';
+        }
+        put(root,0,0,0,menu,0);
+        put(root,0,1,0,menu,1);
+        put(call,1,0,1,second,2);
+        put(call,1,1,1,second,3);
+        require(original.rows()[0].actions.data()!=original.rows()[1].actions.data() &&
+            compact.rows()[0].actions.data()==compact.rows()[1].actions.data() &&
+            compact.rows()[2].actions.data()==compact.rows()[3].actions.data() &&
+            compact.rows()[0].actions.data()!=compact.rows()[2].actions.data(),"owned menu sharing changed");
+        for (std::size_t row=0;row<4;++row) {
+            const auto& original_row=original.rows()[row];
+            const auto& compact_row=compact.rows()[row];
+            const auto& expected=row<2?menu:second;
+            require(original_row.history_ordinal==compact_row.history_ordinal && original_row.actor==compact_row.actor &&
+                original_row.holding_index==compact_row.holding_index && original_row.offset==2*row &&
+                compact_row.offset==original_row.offset && original_row.actions.size()==2 && compact_row.actions.size()==2 &&
+                std::equal(original_row.actions.begin(),original_row.actions.end(),expected.begin()) &&
+                std::equal(compact_row.actions.begin(),compact_row.actions.end(),expected.begin()),"catalog changed ordered row data");
+        }
+        const auto used=compact.action_storage();
+        require(used.stored_tokens==4 && used.stored_menus==2,"catalog retained duplicate menus");
+        original.freeze();
+        compact.freeze();
+        storage("SMALL",original,compact);
+    }
+    reject("catalog_dimensions",ErrorCode::invalid_forecast,[&] {
+        s::State invalid(history,hands,denominator,plan,{}, {1,0});
+    });
+    reject("catalog_footprint",ErrorCode::capacity,[&] {
+        s::State invalid(history,hands,denominator,plan,{}, {1,8});
+    });
+    {
+        s::State state(history,hands,denominator,plan,{}, {2,4});
+        reject("catalog_key",ErrorCode::invalid_row,[&] {(void)state.register_catalog_row(root,0,0,2,menu);});
+        require_poisoned(state);
+    }
+    {
+        s::State state(history,hands,denominator,plan);
+        reject("catalog_mode",ErrorCode::invalid_row,[&] {(void)state.register_catalog_row(root,0,0,0,menu);});
+    }
+    {
+        s::State state(history,hands,denominator,plan,{}, {2,4});
+        reject("catalog_requires_key",ErrorCode::invalid_row,[&] {(void)state.register_row(root,0,0,menu);});
+    }
+    {
+        s::State state(history,hands,denominator,plan,{}, {2,4});
+        (void)state.register_catalog_row(root,0,0,0,menu);
+        reject("catalog_menu_change",ErrorCode::changed_menu,[&] {(void)state.register_catalog_row(root,0,1,0,reordered);});
+        require(state.rows().size()==1 && state.rows()[0].actions[0]=="fold","catalog failure changed first row");
+        require_poisoned(state);
+    }
+    {
+        s::State state(history,hands,denominator,plan,{}, {2,2});
+        (void)state.register_catalog_row(root,0,0,0,menu);
+        reject("catalog_token_capacity",ErrorCode::capacity,[&] {(void)state.register_catalog_row(call,1,0,1,second);});
+        require(state.rows().size()==1 && state.action_storage().stored_tokens==2,"catalog overflow wrote another row");
+    }
+    {
+        s::State state(history,hands,denominator,plan,{}, {2,4});
+        constexpr std::array<std::string_view,1> invalid{"\x01"};
+        reject("catalog_invalid_token",ErrorCode::invalid_row,[&] {(void)state.register_catalog_row(root,0,0,0,invalid);});
+    }
+}
 } // namespace
 
 int main() {
@@ -291,6 +395,7 @@ int main() {
         std::cout<<"VIRTUAL_DYADIC_STATE_V1\n";
         feedback(history,source);
         guards(history,source);
+        action_catalog_controls(history,source);
         std::cout<<"END\n";
         return 0;
     } catch (const std::exception& error) {

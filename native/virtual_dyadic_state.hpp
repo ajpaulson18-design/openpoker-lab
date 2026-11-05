@@ -40,6 +40,16 @@ struct Forecast {
     // these for the requested workload; constructor admission alone cannot.
     std::uint64_t own_work = 0, quantizer_work = 0;
 };
+struct ActionCatalogCapacity {
+    std::size_t keys = 0, token_slots = 0;
+};
+struct ActionStorage {
+    std::size_t token_slots, catalog_keys, stored_tokens, stored_menus;
+    std::size_t token_slot_bytes, catalog_key_bytes;
+    [[nodiscard]] std::size_t array_bytes() const noexcept {
+        return token_slots*token_slot_bytes+catalog_keys*catalog_key_bytes;
+    }
+};
 struct Receipt {
     std::uint64_t work = 0, state_work = 0, quantizer_work = 0;
     std::size_t rows = 0, slots = 0, completed_sweeps = 0, staged_rows = 0;
@@ -61,17 +71,22 @@ struct AverageExport {
 
 class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
+    using ActionText = std::array<char,64>;
+    using Menu = std::span<const std::string_view>;
     enum class Phase { building, closed, sweeping };
     const History* history_;
     std::array<std::size_t,2> hand_counts_;
     Forecast forecast_;
     Limits limits_;
+    const ActionCatalogCapacity catalog_;
     dyadic_policy::Quantizer quantizer_;
     Receipt receipt_{};
     Integer denominator_;
     std::unique_ptr<Row[]> rows_;
-    std::unique_ptr<std::array<char,64>[]> action_text_;
+    std::unique_ptr<ActionText[]> action_text_;
     std::unique_ptr<std::string_view[]> action_views_;
+    std::unique_ptr<Menu[]> action_catalog_;
+    std::size_t stored_tokens_ = 0, stored_menus_ = 0;
     std::map<Key,std::size_t> index_;
     std::unique_ptr<Integer[]> regrets_, averages_, staged_regrets_, staged_averages_;
     std::unique_ptr<std::uint64_t[]> units_;
@@ -124,6 +139,22 @@ class State final {
         // Maximum menu20: 32 retained + (12*20+64) scratch logical entries.
         return {f.quantizer_work,limits.integer_bits,336,limits.integer_payload_bits};
     }
+    static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
+        if (!capacity.keys && !capacity.token_slots) return capacity;
+        if (!capacity.keys || !capacity.token_slots || capacity.keys>f.rows || capacity.token_slots>f.slots)
+            fail(ErrorCode::invalid_forecast,"invalid state action catalog dimensions");
+        // The original reservation covers three logical entries and 64 text
+        // bytes per slot. Account for the catalog spans inside those same
+        // bounds. Their array initialization also fits the original slot work.
+        if (plus(times(3,capacity.token_slots),times(2,capacity.keys))>times(3,f.slots) ||
+            plus(times(sizeof(ActionText),capacity.token_slots),times(sizeof(Menu),capacity.keys))>
+                times(sizeof(ActionText),f.slots))
+            fail(ErrorCode::capacity,"state action catalog exceeds original footprint");
+        return capacity;
+    }
+    [[nodiscard]] std::size_t token_capacity() const noexcept {
+        return catalog_.keys?catalog_.token_slots:forecast_.slots;
+    }
     void healthy() const { if (failed_) fail(ErrorCode::failed_owner,"state owner already failed"); }
     void charge(std::uint64_t work) {
         if (work>forecast_.own_work-receipt_.state_work) fail(ErrorCode::work_limit,"state cumulative work allowance exceeded");
@@ -154,8 +185,11 @@ public:
     // prior physical support are authenticated by the enclosing trainer.
     State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
           Forecast forecast,Limits limits={})
+        : State(history,hands,denominator,forecast,limits,{}) {}
+    State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
+          Forecast forecast,Limits limits,ActionCatalogCapacity catalog)
         : history_(&history),hand_counts_(hands),forecast_(admit(forecast,limits,hands)),
-          limits_(limits),quantizer_(policy_limits(forecast_,limits_)) {
+          limits_(limits),catalog_(admit_catalog(forecast_,catalog)),quantizer_(policy_limits(forecast_,limits_)) {
         if (denominator<=0) fail(ErrorCode::invalid_scale,"state fixed game denominator must be positive");
         input_width(denominator);
         receipt_.reserved_entries=static_cast<std::size_t>(plus(1024,plus(times(16,forecast_.rows),times(10,forecast_.slots))));
@@ -165,8 +199,9 @@ public:
         charge(plus(1024,plus(times(8,forecast_.rows),plus(times(16,forecast_.slots),times(4,words(width(denominator)))))));
         denominator_=denominator;
         rows_=std::make_unique<Row[]>(forecast_.rows);
-        action_text_=std::make_unique<std::array<char,64>[]>(forecast_.slots);
-        action_views_=std::make_unique<std::string_view[]>(forecast_.slots);
+        action_text_=std::make_unique<ActionText[]>(token_capacity());
+        action_views_=std::make_unique<std::string_view[]>(token_capacity());
+        if (catalog_.keys) action_catalog_=std::make_unique<Menu[]>(catalog_.keys);
     }
     State(const State&)=delete;
     State& operator=(const State&)=delete;
@@ -181,6 +216,11 @@ public:
         return answer;
     }
     [[nodiscard]] std::span<const Row> rows() const noexcept { return {rows_.get(),receipt_.rows}; }
+    [[nodiscard]] ActionStorage action_storage() const noexcept {
+        return {token_capacity(),catalog_.keys,catalog_.keys?stored_tokens_:receipt_.slots,
+            catalog_.keys?stored_menus_:receipt_.rows,
+            sizeof(ActionText)+sizeof(std::string_view),sizeof(Menu)};
+    }
     [[nodiscard]] std::span<const Integer> regrets() const noexcept {
         return phase_==Phase::building ? std::span<const Integer>() : std::span<const Integer>(regrets_.get(),forecast_.slots);
     }
@@ -189,38 +229,69 @@ public:
     }
     [[nodiscard]] std::size_t register_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
                                           std::span<const std::string_view> actions) {
+        return register_owned_row(cursor,actor,holding,0,false,actions);
+    }
+    // The trainer supplies an already verified source node ID. Menus are
+    // always copied into this owner's arrays, and an occupied ID must match
+    // every ordered token. No source view survives registration.
+    [[nodiscard]] std::size_t register_catalog_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
+                                                  std::size_t menu_key,std::span<const std::string_view> actions) {
+        return register_owned_row(cursor,actor,holding,menu_key,true,actions);
+    }
+private:
+    static bool same_menu(Menu left,Menu right) {
+        return left.size()==right.size() && std::equal(left.begin(),left.end(),right.begin());
+    }
+    [[nodiscard]] std::size_t register_owned_row(History::Cursor cursor,std::size_t actor,std::size_t holding,
+                                                std::size_t menu_key,bool catalogued,Menu actions) {
         healthy();
         try {
             if (phase_!=Phase::building) fail(ErrorCode::phase,"state row registration is closed");
             if (actions.empty() || actions.size()>20) fail(ErrorCode::invalid_row,"state legal menu width");
+            if (catalogued?menu_key>=catalog_.keys:catalog_.keys!=0)
+                fail(ErrorCode::invalid_row,"state action catalog key or mode");
             charge(plus(128,plus(times(16,logceil(forecast_.rows+1)),times(256,actions.size()))));
             for (const auto action:actions) {
                 if (action.empty() || action.size()>64) fail(ErrorCode::invalid_row,"state action token length");
                 for (const unsigned char c:action) if (c<0x20 || c>0x7e) fail(ErrorCode::invalid_row,"state action token encoding");
             }
             const auto identity=key(cursor,actor,holding);
+            Menu owned=catalogued?action_catalog_[menu_key]:Menu{};
+            if (!owned.empty() && !same_menu(owned,actions))
+                fail(ErrorCode::changed_menu,"state action catalog menu changed");
             const auto found=index_.find(identity);
             if (found!=index_.end()) {
-                const auto& old=rows_[found->second].actions;
-                if (old.size()!=actions.size() || !std::equal(old.begin(),old.end(),actions.begin()))
+                if (!same_menu(rows_[found->second].actions,actions))
                     fail(ErrorCode::changed_menu,"state repeated row legal menu changed");
                 return found->second;
             }
             if (receipt_.rows>=forecast_.rows || actions.size()>forecast_.slots-receipt_.slots)
                 fail(ErrorCode::capacity,"state row or slot forecast exceeded");
             const auto number=receipt_.rows, offset=receipt_.slots;
-            for (std::size_t a=0;a<actions.size();++a) {
-                auto& token=action_text_[offset+a];
-                std::copy(actions[a].begin(),actions[a].end(),token.begin());
-                action_views_[offset+a]={token.data(),actions[a].size()};
+            if (owned.empty()) {
+                const auto token_offset=catalogued?stored_tokens_:offset;
+                if (catalogued && actions.size()>token_capacity()-token_offset)
+                    fail(ErrorCode::capacity,"state action catalog token capacity exceeded");
+                for (std::size_t a=0;a<actions.size();++a) {
+                    auto& token=action_text_[token_offset+a];
+                    std::copy(actions[a].begin(),actions[a].end(),token.begin());
+                    action_views_[token_offset+a]={token.data(),actions[a].size()};
+                }
+                owned={action_views_.get()+token_offset,actions.size()};
+                if (catalogued) {
+                    action_catalog_[menu_key]=owned;
+                    stored_tokens_+=actions.size();
+                    ++stored_menus_;
+                }
             }
-            rows_[number]={std::get<0>(identity),actor,holding,offset,{action_views_.get()+offset,actions.size()}};
+            rows_[number]={std::get<0>(identity),actor,holding,offset,owned};
             index_.emplace(identity,number);
             ++receipt_.rows;
             receipt_.slots+=actions.size();
             return number;
         } catch (...) { failed_=true;throw; }
     }
+public:
     [[nodiscard]] std::size_t find_row(History::Cursor cursor,std::size_t actor,std::size_t holding) {
         healthy();
         try {

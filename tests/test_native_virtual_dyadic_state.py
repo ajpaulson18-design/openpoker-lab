@@ -25,6 +25,8 @@ GUARDS = (
     'slot_capacity', 'incomplete_freeze', 'incomplete_commit', 'duplicate_stage',
     'nonmember_grid', 'negative_average', 'cumulative_width', 'oversized_input',
     'state_exhaustion', 'quantizer_exhaustion', 'early_export', 'second_export',
+    'catalog_dimensions', 'catalog_footprint', 'catalog_key', 'catalog_mode',
+    'catalog_requires_key', 'catalog_menu_change', 'catalog_token_capacity', 'catalog_invalid_token',
 )
 
 
@@ -63,7 +65,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         holdings = (0, 1, 0, 0)
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
-        rows = iter(line.split() for line in self.lines[1:] if not line.startswith('REJECT '))
+        rows = iter(line.split() for line in self.lines[1:] if not line.startswith(('REJECT ', 'ACTION_STORAGE ')))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
             self.assertEqual((case, int(exponent), int(denominator)), ('CASE', shift, 580 << (shift+100)))
@@ -129,6 +131,15 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
 
     def test_guard_inventory_and_closed_partial_updates(self):
         self.assertEqual([line.split()[1] for line in self.lines if line.startswith('REJECT ')], list(GUARDS))
+
+    def test_owned_menu_catalog_reduces_exact_sized_action_arrays(self):
+        records = [line.split()[1:] for line in self.lines if line.startswith('ACTION_STORAGE ')]
+        self.assertEqual([record[0] for record in records], ['PROOF9', 'SMALL'])
+        for record, shape in zip(records, [(58164, 410, 388), (8, 4, 2)]):
+            original, compact, keys, slot_bytes, key_bytes, before, after = map(int, record[1:])
+            self.assertEqual((original, compact, keys), shape)
+            self.assertEqual((before, after), (original*slot_bytes, compact*slot_bytes+keys*key_bytes))
+            self.assertLess(after, before)
 
 
 if __name__ == '__main__':

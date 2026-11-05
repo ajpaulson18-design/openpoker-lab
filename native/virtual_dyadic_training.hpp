@@ -663,7 +663,7 @@ template<bool Paired> class Walk final {
             std::array<std::string_view,4> tokens{};
             for (std::size_t action=0;action<menu;++action) tokens[action]=node.edges[action].action.token;
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
-                const auto row=state_.register_row(cursor,actor,holding,{tokens.data(),menu});
+                const auto row=state_.register_catalog_row(cursor,actor,holding,id,{tokens.data(),menu});
                 require(row==shape_.rows && state_.rows()[row].offset==shape_.slots,"catalog row order changed");
                 ++shape_.rows;
                 shape_.slots+=menu;
@@ -897,7 +897,8 @@ public:
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
-             static_cast<std::size_t>(p.state_payload)});
+             static_cast<std::size_t>(p.state_payload)},
+            {source_.nodes().size(),source_.receipt().edges});
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

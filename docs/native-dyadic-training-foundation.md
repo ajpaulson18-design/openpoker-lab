@@ -1,9 +1,8 @@
 # Prepared chance and persistent exact training state
 
-The [fixed-profile proof](virtual-frozen-update-study.md) has passed independent
-saved review for PROOF9/v1. These components support the next changing-policy
-trainer. No whole-game trainer has run through them, and they do not activate a
-production solver or establish quality.
+The [fixed-profile proof](virtual-frozen-update-study.md) passed independent
+saved review for PROOF9/v1. These components now support the
+[verified two-sweep trainer](native-dyadic-two-sweep.md) for that finite game.
 
 The earlier public-chance and history owners are useful component boundaries,
 but their complete-game accounting cannot be multiplied across training. For
@@ -40,6 +39,13 @@ average increments. It commits only after all registered rows are staged once.
 Average export retains the raw masses and produces a distinct grid policy. The
 enclosing trainer authenticates row menus and prior support, and admits the state
 and its one cumulative quantizer together with all other work and storage.
+
+The fixed trainer stores one ordered action menu per registered card-free
+template node. The state owner copies each menu on first use and checks all
+ordered token bytes on reuse. Every physical history and original holding
+retains its own row and numerical offsets. The generic state interface still
+owns a copy per row for callers that supply their own legal menus. Admission
+continues to reserve the original conservative per-row storage and work.
 
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
