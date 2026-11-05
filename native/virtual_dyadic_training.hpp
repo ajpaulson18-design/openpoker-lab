@@ -26,6 +26,7 @@ using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
+enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
@@ -218,6 +219,7 @@ struct Plan {
     bool packed_averages=false;
     bool packed_regrets=false;
     bool scaled_averages=false;
+    bool sealed_menus=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -229,6 +231,7 @@ struct Plan {
     std::uint64_t packed_average_limbs=0,packed_average_work=0;
     std::uint64_t packed_regret_limbs=0,packed_regret_work=0;
     std::uint64_t scaled_average_build_work=0;
+    std::uint64_t sealed_menu_count=0,sealed_token_count=0;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -432,16 +435,15 @@ class Forecast final {
         require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
     }
 public:
-    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages,bool packed_regrets,
-             bool scaled_averages)
+    Forecast(const betting::Template& source,Meter& meter,Traversal mode,StrategyProfile profile)
         :source_(source),meter_(meter) {
-        require((!packed_averages || mode==Traversal::paired) && (!packed_regrets || packed_averages) &&
-            (!scaled_averages || packed_regrets),
+        require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        plan_.packed_averages=packed_averages;
-        plan_.packed_regrets=packed_regrets;
-        plan_.scaled_averages=scaled_averages;
+        plan_.packed_averages=profile!=StrategyProfile::dense;
+        plan_.packed_regrets=profile==StrategyProfile::compact || profile==StrategyProfile::scaled || profile==StrategyProfile::sealed;
+        plan_.scaled_averages=profile==StrategyProfile::scaled || profile==StrategyProfile::sealed;
+        plan_.sealed_menus=profile==StrategyProfile::sealed;
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
@@ -474,6 +476,14 @@ public:
                 meter_.charge(Work::geometry,8);
                 require(suffix_[id].mark==2 && suffix_[id].decisions<=plan_.H,"packed regret suffix census changed");
                 plan_.suffix_decisions[id]=static_cast<std::uint8_t>(suffix_[id].decisions);
+                if (plan_.sealed_menus) {
+                    meter_.charge(Work::geometry,8);
+                    const auto& node=source_.nodes()[id];
+                    if (node.state.phase==betting::Phase::decision) {
+                        ++plan_.sealed_menu_count;
+                        plan_.sealed_token_count+=node.edges.size();
+                    }
+                }
             }
         }
         literal(source_.root(),{},{});
@@ -492,7 +502,17 @@ public:
         const auto public_walks=plan_.public_walks;
         plan_.history_work=4096*literal_count+1280+(public_walks+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
         const auto lookup=16*logceil(static_cast<std::size_t>(R+1));
-        plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+256*S+8*S+2*R+
+        auto registration_work=256*S;
+        if (plan_.sealed_menus) {
+            const auto M=plan_.sealed_menu_count,T=plan_.sealed_token_count;
+            require(M>0 && M<=template_count && T>=2*M && T<=template_receipt.edges,
+                "sealed action catalog census changed");
+            plan_.history_work=plan_.history_work-8*R+24*M+16*T;
+            registration_work=64*M+16*T+16*R;
+            const auto catalog_objects=template_receipt.nodes+template_receipt.edges;
+            if (catalog_objects>S) registration_work+=16*(catalog_objects-S);
+        }
+        plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
             sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
             (4*words(value_bits)+4)*S+20*R+4*S;
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
@@ -537,7 +557,7 @@ public:
             const auto storage=state::State::storage_forecast(
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),sweeps,15,value_bits,
                  plan_.state_work,plan_.quantizer_work},
-                {template_receipt.nodes,template_receipt.edges},{static_cast<std::size_t>(plan_.packed_average_limbs),
+                {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
                  static_cast<std::size_t>(plan_.packed_regret_limbs)});
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
@@ -761,11 +781,14 @@ template<bool Paired> class Walk final {
         if (target_==catalog) {
             meter_.charge(Work::route,16+4*menu);
             std::array<std::string_view,4> tokens{};
-            for (std::size_t action=0;action<menu;++action) tokens[action]=node.edges[action].action.token;
+            if (!plan_.sealed_menus)
+                for (std::size_t action=0;action<menu;++action) tokens[action]=node.edges[action].action.token;
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 const std::span<const std::string_view> actions{tokens.data(),menu};
                 std::size_t row;
-                if (plan_.packed_regrets)
+                if (plan_.sealed_menus)
+                    row=state_.register_sealed_row(cursor,holding,row_shift,row_regret_shift);
+                else if (plan_.packed_regrets)
                     row=state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift,row_regret_shift);
                 else if (plan_.packed_averages)
                     row=state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift);
@@ -980,9 +1003,8 @@ class Driver final {
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
 public:
-    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false,bool packed_regrets=false,
-                    bool scaled_averages=false)
-        :plan_(Forecast(source_,meter_,mode,packed_averages,packed_regrets,scaled_averages).make()) {}
+    explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense)
+        :plan_(Forecast(source_,meter_,mode,profile).make()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -1019,11 +1041,16 @@ public:
              p.state_work,p.quantizer_work},
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
              static_cast<std::size_t>(p.state_payload)},
-            {source_.nodes().size(),source_.receipt().edges},{static_cast<std::size_t>(p.packed_average_limbs),
+            {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
              static_cast<std::size_t>(p.packed_regret_limbs)});
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
+        if (p.sealed_menus) {
+            const auto actions=state.action_storage();
+            require(actions.stored_menus==p.sealed_menu_count && actions.stored_tokens==p.sealed_token_count,
+                "sealed action catalog realization differs from admission");
+        }
 
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
         Binary out(stream,p.output_bytes);

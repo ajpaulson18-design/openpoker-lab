@@ -37,7 +37,8 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False):
+def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False):
+    scaled=scaled or sealed
     compact=compact or scaled
     fixed={'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
            'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,'H':12,'M':1,
@@ -58,6 +59,9 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
         fixed['packed_regret_work']=31_450_320
     if scaled:
         fixed['scaled_average_build_work']=5_271_476
+    if sealed:
+        fixed['sealed_menu_count']=146
+        fixed['sealed_token_count']=371
     require(type(receipt) is dict and all(type(receipt.get(k)) is type(v) and receipt[k]==v for k,v in fixed.items()),
             'fixed admission census or zero-call receipt mismatch')
     for name,keys in [('component_work',FAMILIES),('parent_work',PARENT)]:
@@ -78,6 +82,9 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
                 'scaled average work missing')
     else:
         require('scaled_average_build_work' not in receipt,'scaled average receipt for earlier storage profile')
+    if not sealed:
+        require(not {'sealed_menu_count','sealed_token_count'} & receipt.keys(),
+                'sealed menu receipt for earlier storage profile')
     if compact:
         allowance=receipt.get('parent_allowance')
         non_parent=sum(value for name,value in component.items() if name!='parent')
@@ -191,12 +198,13 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False):
+def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    require(all(type(flag) is bool for flag in (train,paired,packed,compact,scaled)) and sum((paired,packed,compact,scaled))<=1,
+    modes=(paired,packed,compact,scaled,sealed)
+    require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
-    paired=paired or packed or compact or scaled
-    suffix='_SCALED' if scaled else ('_COMPACT' if compact else ('_PACKED' if packed else ('_PAIRED' if paired else '')))
+    suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED')) if flag),'')
+    paired=any(modes)
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
     unlinked_path(output.parent)
@@ -233,7 +241,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             return directory,receipt
         admitted,_=observed('ADMIT'+suffix)
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
-            packed=packed,compact=compact,scaled=scaled)
+            packed=packed,compact=compact,scaled=scaled,sealed=sealed)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -274,10 +282,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if paired:
                 original=sum(baseline['saved_replay']['work_actual'].values())
                 actual=sum(numeric['work_actual'].values())
-                require(numeric['public_walks_per_sweep']==1 and (compact or scaled or actual<original),
+                require(numeric['public_walks_per_sweep']==1 and (compact or scaled or sealed or actual<original),
                         'paired traversal or mode-specific work comparison differs')
                 comparison.update(baseline_work=original,paired_work=actual)
-                if compact or scaled:
+                if compact or scaled or sealed:
                     comparison['modeled_work_delta_from_two_pass']=actual-original
                 else:
                     comparison['modeled_work_saved']=original-actual
@@ -316,9 +324,11 @@ def main():
     modes.add_argument('--packed-averages',action='store_true')
     modes.add_argument('--compact-strategy',action='store_true')
     modes.add_argument('--scaled-averages',action='store_true')
+    modes.add_argument('--sealed-menus',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
-        packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages),sort_keys=True))
+        packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
+        sealed=args.sealed_menus),sort_keys=True))
 
 
 if __name__=='__main__':main()

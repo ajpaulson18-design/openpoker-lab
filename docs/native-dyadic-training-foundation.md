@@ -92,6 +92,15 @@ checks the increment and committed sum against the compact width. Checkpoint
 output still reconstructs the full numerator. Earlier requests keep the
 full-width update input and their original work receipts.
 
+The sealed-menu profile derives each row's actor, full ordinal, source node,
+and menu extent from the live History cursor. State borrows the immutable token
+bytes already owned by History and builds one view list per source node. State
+still assigns each physical history and original holding its own row and rejects
+foreign cursors, invalid shifts, and incompatible duplicates. The construction
+index is cleared after the complete row, slot, and limb checks and before the
+strategy arrays are allocated. Training uses the authenticated dense row order.
+Earlier profiles retain their original catalog and lookup behavior.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

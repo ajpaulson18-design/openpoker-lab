@@ -12,7 +12,7 @@
 namespace training=openpoker::virtual_dyadic_training;
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
-                  admit_scaled, train_scaled };
+                  admit_scaled, train_scaled, admit_sealed, train_sealed };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -37,6 +37,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_COMPACT") return Mode::train_compact;
     if (line=="DYADIC_T2_V1 ADMIT_SCALED") return Mode::admit_scaled;
     if (line=="DYADIC_T2_V1 TRAIN_SCALED") return Mode::train_scaled;
+    if (line=="DYADIC_T2_V1 ADMIT_SEALED") return Mode::admit_sealed;
+    if (line=="DYADIC_T2_V1 TRAIN_SEALED") return Mode::train_sealed;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -57,6 +59,8 @@ void admit(const training::Driver& driver) {
     if (plan.packed_regrets) std::cout<<",\"packed_regret_limbs\":"<<plan.packed_regret_limbs
         <<",\"packed_regret_work\":"<<plan.packed_regret_work<<",\"parent_allowance\":"<<plan.parent_allowance;
     if (plan.scaled_averages) std::cout<<",\"scaled_average_build_work\":"<<plan.scaled_average_build_work;
+    if (plan.sealed_menus) std::cout<<",\"sealed_menu_count\":"<<plan.sealed_menu_count
+        <<",\"sealed_token_count\":"<<plan.sealed_token_count;
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<training::value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<training::chance_divisors[3]<<",\"entries\":"<<plan.entries
@@ -98,13 +102,15 @@ int main() {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool scaled=mode==Mode::admit_scaled || mode==Mode::train_scaled;
-        const bool compact=scaled || mode==Mode::admit_compact || mode==Mode::train_compact;
-        const bool packed=compact || mode==Mode::admit_packed || mode==Mode::train_packed;
-        const bool paired=packed || mode==Mode::admit_paired || mode==Mode::train_paired;
-        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,packed,compact,scaled);
+        auto profile=training::StrategyProfile::dense;
+        if (mode==Mode::admit_sealed || mode==Mode::train_sealed) profile=training::StrategyProfile::sealed;
+        else if (mode==Mode::admit_scaled || mode==Mode::train_scaled) profile=training::StrategyProfile::scaled;
+        else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
+        else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
+        const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
+        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
         if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
-            mode==Mode::admit_compact || mode==Mode::admit_scaled) admit(driver);
+            mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed) admit(driver);
         else driver.train(std::cout);
         return 0;
     } catch (const std::exception& error) {

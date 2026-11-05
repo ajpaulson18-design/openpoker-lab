@@ -386,6 +386,67 @@ void action_catalog_controls(h::History& history,const b::Template& source) {
         reject("catalog_invalid_token",ErrorCode::invalid_row,[&] {(void)state.register_catalog_row(root,0,0,0,invalid);});
     }
 }
+void sealed_catalog_controls(h::History& history,const b::Template& source) {
+    const std::array<std::size_t,2> hands{2,2};
+    const auto root=history.root(),call=history.append_action(root,1);
+    const auto first=history.decision_key(root),next=history.decision_key(call);
+    const auto slots=2*first.actions+next.actions;
+    const auto plan=forecast(3,slots);
+    const Integer denominator=1;
+    constexpr std::size_t shift=190;
+    // Two limbs per action in both images for the 256-bit control width.
+    const s::PackedAverageCapacity packed{2*slots,2*slots};
+    const s::ActionCatalogCapacity catalog{source.nodes().size(),first.actions+next.actions,true};
+    {
+        s::State state(history,hands,denominator,plan,{},catalog,packed);
+        require(state.register_sealed_row(root,0,shift,shift)==0,"sealed first row index");
+        require(state.register_sealed_row(root,1,shift,shift)==1,"sealed shared-source row index");
+        require(state.register_sealed_row(call,0,shift,shift)==2,"sealed second source row index");
+        require(state.register_sealed_row(root,0,shift,shift)==0 && state.rows().size()==3,"sealed duplicate row changed census");
+        require(state.find_row(root,1)==1 && state.find_row(call,0)==2,"sealed lookup mismatch");
+        const auto rows=state.rows();
+        require(rows[0].actions.data()==rows[1].actions.data() && rows[0].actions.data()!=rows[2].actions.data(),
+            "sealed rows did not share source catalog views by source only");
+        const auto storage=state.action_storage();
+        require(storage.stored_menus==2 && storage.stored_tokens==first.actions+next.actions &&
+            storage.token_slot_bytes==sizeof(std::string_view),"sealed source-backed storage accounting");
+        std::array<std::string_view,20> actions{};
+        history.decision_actions(root,{actions.data(),first.actions});
+        require(std::equal(rows[0].actions.begin(),rows[0].actions.end(),actions.begin()) &&
+            rows[0].actions[0].data()==actions[0].data(),"sealed legal menu mismatch or copied token");
+        history.decision_actions(call,{actions.data(),next.actions});
+        require(std::equal(rows[2].actions.begin(),rows[2].actions.end(),actions.begin()),"sealed second legal menu mismatch");
+        state.freeze();
+        state.begin_sweep();
+        require(state.policy_units(0).size()==first.actions,"sealed row unavailable after index release");
+        reject("sealed_lookup_after_freeze",ErrorCode::phase,[&] {(void)state.find_row(root,0);});
+    }
+    {
+        s::State state(history,hands,denominator,plan,{},catalog,packed);
+        reject("sealed_generic_registration",ErrorCode::invalid_row,[&] {(void)state.register_row(root,0,0,menu);});
+    }
+    {
+        h::History other(source,c::DeckDefinition::reduced(deck));
+        s::State state(history,hands,denominator,plan,{},catalog,packed);
+        bool rejected=false;
+        try {(void)state.register_sealed_row(other.root(),0,shift,shift);} catch (const h::Error&) {rejected=true;}
+        require(rejected && state.failed(),"sealed foreign history cursor accepted");
+        std::cout<<"REJECT sealed_foreign_cursor\n";
+    }
+    {
+        s::State state(history,hands,denominator,plan,{},catalog,packed);
+        reject("sealed_invalid_shift",ErrorCode::invalid_row,[&] {
+            (void)state.register_sealed_row(root,0,plan.value_bits,shift);
+        });
+    }
+    {
+        s::State state(history,hands,denominator,plan,{},catalog,packed);
+        bool rejected=false;
+        try {(void)state.register_sealed_row(history.append_action(root,0),0,shift,shift);} catch (const h::Error&) {rejected=true;}
+        require(rejected && state.failed(),"sealed terminal history cursor accepted");
+        std::cout<<"REJECT sealed_nondecision_cursor\n";
+    }
+}
 void packed_average_controls(h::History& history) {
     const std::array<std::size_t,2> hands{2,2};
     const auto root=history.root();
@@ -580,6 +641,7 @@ int main() {
         feedback(history,source);
         guards(history,source);
         action_catalog_controls(history,source);
+        sealed_catalog_controls(history,source);
         packed_average_controls(history);
         packed_dual_controls(history);
         std::cout<<"END\n";

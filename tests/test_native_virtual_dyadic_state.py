@@ -27,6 +27,8 @@ GUARDS = (
     'state_exhaustion', 'quantizer_exhaustion', 'early_export', 'second_export',
     'catalog_dimensions', 'catalog_footprint', 'catalog_key', 'catalog_mode',
     'catalog_requires_key', 'catalog_menu_change', 'catalog_token_capacity', 'catalog_invalid_token',
+    'sealed_lookup_after_freeze', 'sealed_generic_registration', 'sealed_foreign_cursor',
+    'sealed_invalid_shift', 'sealed_nondecision_cursor',
     'packed_nondivisible', 'packed_cumulative_width', 'packed_limb_census',
     'scaled_wrong_shift', 'scaled_width', 'scaled_dense_mode', 'packed_regret_nondivisible',
 )

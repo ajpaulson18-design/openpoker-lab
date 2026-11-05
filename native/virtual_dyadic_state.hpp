@@ -45,6 +45,7 @@ struct Forecast {
 };
 struct ActionCatalogCapacity {
     std::size_t keys = 0, token_slots = 0;
+    bool sealed = false;
 };
 struct PackedAverageCapacity {
     // Exact word census per image. regret_limbs is zero in the legacy
@@ -155,15 +156,19 @@ class State final {
         return {f.quantizer_work,limits.integer_bits,336,limits.integer_payload_bits};
     }
     static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
-        if (!capacity.keys && !capacity.token_slots) return capacity;
-        if (!capacity.keys || !capacity.token_slots || capacity.keys>f.rows || capacity.token_slots>f.slots)
+        if (!capacity.keys && !capacity.token_slots) {
+            if (capacity.sealed) fail(ErrorCode::invalid_forecast,"sealed state requires an action catalog");
+            return capacity;
+        }
+        if (!capacity.keys || !capacity.token_slots ||
+            (capacity.sealed ? capacity.keys>250000 : capacity.keys>f.rows) || capacity.token_slots>f.slots)
             fail(ErrorCode::invalid_forecast,"invalid state action catalog dimensions");
         // The original reservation covers three logical entries and 64 text
         // bytes per slot. Account for the catalog spans inside those same
         // bounds. Their array initialization also fits the original slot work.
-        if (plus(times(3,capacity.token_slots),times(2,capacity.keys))>times(3,f.slots) ||
+        if (!capacity.sealed && (plus(times(3,capacity.token_slots),times(2,capacity.keys))>times(3,f.slots) ||
             plus(times(sizeof(ActionText),capacity.token_slots),times(sizeof(Menu),capacity.keys))>
-                times(sizeof(ActionText),f.slots))
+                times(sizeof(ActionText),f.slots)))
             fail(ErrorCode::capacity,"state action catalog exceeds original footprint");
         return capacity;
     }
@@ -270,11 +275,19 @@ public:
     static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
                                              PackedAverageCapacity packed={}) {
         (void)admit_catalog(f,catalog);
+        if (catalog.sealed && (!packed.limb_count || !packed.regret_limbs))
+            fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation in both modes.
-        const auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
+        auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
             plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
+        if (catalog.sealed) {
+            const auto menu_bits=plus(times(8*sizeof(std::string_view),catalog.token_slots),
+                times(8*sizeof(Menu),catalog.keys));
+            const auto reserved_menu_bits=times(640,f.slots);
+            if (menu_bits>reserved_menu_bits) payload=plus(payload,menu_bits-reserved_menu_bits);
+        }
         if (packed.limb_count) {
             if (std::endian::native!=std::endian::little || !f.slots || !f.rows || !f.value_bits || f.value_bits>65536 ||
                 packed.limb_count<f.slots || packed.limb_count>times(f.slots,words(f.value_bits)))
@@ -323,9 +336,13 @@ public:
         receipt_.reserved_entries=storage_.entries;
         receipt_.reserved_integer_and_text_payload_bits=storage_.payload_bits;
         charge(plus(1024,plus(times(8,forecast_.rows),plus(times(16,forecast_.slots),times(4,words(width(denominator)))))));
+        if (catalog_.sealed) {
+            const auto catalog_objects=plus(catalog_.keys,catalog_.token_slots);
+            if (catalog_objects>forecast_.slots) charge(times(16,catalog_objects-forecast_.slots));
+        }
         denominator_=denominator;
         rows_=std::make_unique<Row[]>(forecast_.rows);
-        action_text_=std::make_unique<ActionText[]>(token_capacity());
+        if (!catalog_.sealed) action_text_=std::make_unique<ActionText[]>(token_capacity());
         action_views_=std::make_unique<std::string_view[]>(token_capacity());
         if (catalog_.keys) action_catalog_=std::make_unique<Menu[]>(catalog_.keys);
         if (this->packed()) packed_rows_=std::make_unique<PackedRow[]>(forecast_.rows);
@@ -347,7 +364,7 @@ public:
     [[nodiscard]] ActionStorage action_storage() const noexcept {
         return {token_capacity(),catalog_.keys,catalog_.keys?stored_tokens_:receipt_.slots,
             catalog_.keys?stored_menus_:receipt_.rows,
-            sizeof(ActionText)+sizeof(std::string_view),sizeof(Menu)};
+            catalog_.sealed?sizeof(std::string_view):sizeof(ActionText)+sizeof(std::string_view),sizeof(Menu)};
     }
     [[nodiscard]] std::span<const Integer> regrets() const noexcept {
         return phase_==Phase::building || packed_regrets() ? std::span<const Integer>() : std::span<const Integer>(regrets_.get(),forecast_.slots);
@@ -414,6 +431,60 @@ public:
                                                   std::size_t average_shift,std::size_t regret_shift) {
         return register_owned_row(cursor,actor,holding,menu_key,true,actions,average_shift,regret_shift);
     }
+    // Sealed registration obtains every public row key and the legal menu from
+    // the live History owner. Source IDs are the only menu-sharing identity.
+    [[nodiscard]] std::size_t register_sealed_row(History::Cursor cursor,std::size_t holding,
+                                                   std::size_t average_shift,std::size_t regret_shift) {
+        healthy();
+        try {
+            if (!catalog_.sealed) fail(ErrorCode::invalid_row,"sealed registration requires sealed catalog mode");
+            if (phase_!=Phase::building) fail(ErrorCode::phase,"state row registration is closed");
+            const auto info=history_->decision_key(cursor);
+            if (info.actor>1 || holding>=hand_counts_[info.actor] || info.actions==0 || info.actions>20 ||
+                info.source>=catalog_.keys || info.depth>forecast_.max_history_depth)
+                fail(ErrorCode::invalid_row,"sealed history decision key outside admitted range");
+            if (average_shift>=forecast_.value_bits || regret_shift>=forecast_.value_bits ||
+                !packed() || !packed_regrets())
+                fail(ErrorCode::invalid_row,"sealed packed row shifts or mode");
+            charge(plus(128,times(16,logceil(forecast_.rows+1))));
+            const Key identity{info.ordinal,info.actor,holding};
+            const auto found=index_.find(identity);
+            if (found!=index_.end()) {
+                const auto& old=rows_[found->second];
+                if (old.actions.size()!=info.actions || old.actions.data()!=action_catalog_[info.source].data())
+                    fail(ErrorCode::changed_menu,"sealed repeated row menu changed");
+                if (packed_rows_[found->second].shift!=average_shift ||
+                    packed_regret_rows_[found->second].shift!=regret_shift)
+                    fail(ErrorCode::invalid_row,"sealed repeated row packed shift changed");
+                return found->second;
+            }
+            if (receipt_.rows>=forecast_.rows || info.actions>forecast_.slots-receipt_.slots)
+                fail(ErrorCode::capacity,"state row or slot forecast exceeded");
+            const auto pw=info.actions*packed_stride(average_shift);
+            const auto rw=info.actions*packed_stride(regret_shift);
+            if (pw>packed_.limb_count-packed_words_registered_ || rw>packed_.regret_limbs-packed_regret_words_registered_)
+                fail(ErrorCode::capacity,"state packed limb census exceeded");
+            auto owned=action_catalog_[info.source];
+            if (owned.empty()) {
+                if (info.actions>catalog_.token_slots-stored_tokens_)
+                    fail(ErrorCode::capacity,"state action catalog token capacity exceeded");
+                charge(64+16*info.actions);
+                auto destination=std::span<std::string_view>(action_views_.get()+stored_tokens_,info.actions);
+                history_->decision_actions(cursor,destination);
+                for (const auto token:destination)
+                    if (token.empty() || token.size()>64) fail(ErrorCode::invalid_row,"sealed action token length");
+                owned=destination;
+                action_catalog_[info.source]=owned;stored_tokens_+=info.actions;++stored_menus_;
+            } else if (owned.size()!=info.actions) fail(ErrorCode::changed_menu,"sealed source menu changed");
+            const auto number=receipt_.rows,offset=receipt_.slots;
+            rows_[number]={info.ordinal,info.actor,holding,offset,owned};
+            packed_rows_[number]={packed_words_registered_,average_shift};
+            packed_regret_rows_[number]={packed_regret_words_registered_,regret_shift};
+            index_.emplace(identity,number);packed_words_registered_+=pw;packed_regret_words_registered_+=rw;
+            ++receipt_.rows;receipt_.slots+=info.actions;
+            return number;
+        } catch (...) { failed_=true;throw; }
+    }
 private:
     static bool same_menu(Menu left,Menu right) {
         return left.size()==right.size() && std::equal(left.begin(),left.end(),right.begin());
@@ -425,6 +496,7 @@ private:
         healthy();
         try {
             if (phase_!=Phase::building) fail(ErrorCode::phase,"state row registration is closed");
+            if (catalog_.sealed) fail(ErrorCode::invalid_row,"generic registration disabled in sealed catalog mode");
             if (actions.empty() || actions.size()>20) fail(ErrorCode::invalid_row,"state legal menu width");
             if (catalogued?menu_key>=catalog_.keys:catalog_.keys!=0)
                 fail(ErrorCode::invalid_row,"state action catalog key or mode");
@@ -495,11 +567,26 @@ public:
     [[nodiscard]] std::size_t find_row(History::Cursor cursor,std::size_t actor,std::size_t holding) {
         healthy();
         try {
+            if (catalog_.sealed && phase_!=Phase::building) fail(ErrorCode::phase,"state row index lookup is closed after freeze");
+            if (catalog_.sealed) fail(ErrorCode::invalid_row,"sealed lookup requires history-authenticated overload");
             charge(64+16*logceil(forecast_.rows+1));
             const auto found=index_.find(key(cursor,actor,holding));
             if (found==index_.end()) fail(ErrorCode::invalid_row,"state full-history row is absent");
             return found->second;
         } catch (...) { failed_=true;throw; }
+    }
+    [[nodiscard]] std::size_t find_row(History::Cursor cursor,std::size_t holding) {
+        healthy();
+        try {
+            if (phase_!=Phase::building) fail(ErrorCode::phase,"state row index lookup is closed after freeze");
+            if (!catalog_.sealed) fail(ErrorCode::invalid_row,"history-authenticated lookup requires sealed mode");
+            const auto info=history_->decision_key(cursor);
+            if (info.actor>1 || holding>=hand_counts_[info.actor]) fail(ErrorCode::invalid_row,"sealed lookup holding");
+            charge(64+16*logceil(forecast_.rows+1));
+            const auto found=index_.find(Key{info.ordinal,info.actor,holding});
+            if (found==index_.end()) fail(ErrorCode::invalid_row,"state full-history row is absent");
+            return found->second;
+        } catch (...) {failed_=true;throw;}
     }
     void freeze() {
         healthy();
@@ -509,6 +596,10 @@ public:
             if (packed_words_registered_!=packed_.limb_count || packed_regret_words_registered_!=packed_.regret_limbs)
                 fail(ErrorCode::capacity,"state complete packed average limb census required before freeze");
             charge(plus(times(8,forecast_.slots),times(2,forecast_.rows)));
+            if (catalog_.sealed) {
+                charge(times(16,forecast_.rows));
+                index_.clear();
+            }
             if (!packed_regrets()) {
                 regrets_=std::make_unique<Integer[]>(forecast_.slots);
                 staged_regrets_=std::make_unique<Integer[]>(forecast_.slots);

@@ -11,6 +11,7 @@
 #include <span>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace openpoker::virtual_dyadic_history {
@@ -79,6 +80,9 @@ public:
                std::array<std::uint8_t,5> board):owner_(owner),generation_(gen),path_(path),size_(size),board_(board){}
     public: Cursor()=default;
     };
+    struct DecisionKey {
+        std::size_t ordinal,source,depth,actor,actions;
+    };
 private:
     const Occurrence& validate(Cursor c) const {
         if (failed_) throw Error("compact history owner failed");
@@ -88,6 +92,10 @@ private:
         const auto& p=paths_[c.path_];
         if (c.size_!=p.visible) throw Error("compact history cursor prefix mismatch");
         return p;
+    }
+    [[nodiscard]] std::size_t encoded_ordinal(Cursor c) const {
+        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|
+            board_code({c.board_.data(),c.size_}));
     }
 public:
     // Template construction is separately charged by the enclosing training owner.
@@ -174,8 +182,28 @@ public:
     [[nodiscard]] std::size_t ordinal(Cursor c) const {
         validate(c);
         charge(24);
-        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|
-            board_code({c.board_.data(),c.size_}));
+        return encoded_ordinal(c);
+    }
+    [[nodiscard]] DecisionKey decision_key(Cursor c) const {
+        const auto& p=validate(c);
+        if (p.phase!=betting::Phase::decision) throw Error("compact history cursor is not a decision");
+        charge(24);
+        return {encoded_ordinal(c),p.source,p.depth,p.actor,p.count};
+    }
+    // The returned views borrow the immutable occurrence records from History.
+    void decision_actions(Cursor c,std::span<std::string_view> out) const {
+        const auto& p=validate(c);
+        if (p.phase!=betting::Phase::decision || out.size()>p.children.size() || out.size()!=p.count)
+            throw Error("compact history decision menu extent");
+        charge(16+16*out.size());
+        for (std::size_t action=0;action<out.size();++action) {
+            const auto index=p.children[action];
+            if (index>=path_count_) throw Error("compact history decision child index");
+            const auto& child=paths_[index];
+            if (child.parent!=c.path_ || child.reveal || !child.incoming_size || child.incoming_size>child.incoming.size())
+                throw Error("compact history decision child token");
+            out[action]={child.incoming.data(),child.incoming_size};
+        }
     }
     [[nodiscard]] std::size_t literal_ordinal(Cursor c) const {validate(c);return c.path_;}
     [[nodiscard]] std::size_t source_node(Cursor c) const {return validate(c).source;}
