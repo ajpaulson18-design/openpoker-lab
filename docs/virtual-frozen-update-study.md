@@ -1,7 +1,10 @@
 # Complete frozen-update verification study
 
-Status: the complete producer is running at frozen source `174b666`; final
-results and [saved-only acceptance](virtual-frozen-saved-review.md) remain pending.
+Status: the complete producer at frozen source `174b666` and separate
+[saved-only review](virtual-frozen-saved-review.md) passed. Both law expectations
+equal the independent q-free reference, all 5,040 saved calls replayed, and all
+four corruption witnesses were detected. See the
+[accepted evidence manifest](../benchmarks/results/virtual-frozen-complete-v1/manifest.json).
 Its 67 source-only controls passed normally and optimized with stable raw source.
 This protocol covers
 the complete [PROOF9/v1 game](virtual-frozen-update.md), not a reduced substitute
@@ -15,8 +18,8 @@ or substitute for two actual native admissions. Preparation uses shared numeric
 meters across repeated template/literal builds.
 
 The [complete controller](virtual-frozen-controller.md) is implemented, with
-pre-execution gate tests and actual build-identity controls. The full positive
-experiment remains unrun. It uses full-tree boundary checks and a saved complete
+pre-execution gate tests and actual build-identity controls. The complete
+experiment used full-tree boundary checks and a saved complete
 execution-input closure around each native request; no outcome or mathematical
 comparison is reduced by that evidence scheduling.
 
@@ -41,9 +44,9 @@ and native inputs to the 384-bit wire cap. Across 5,040 calls its allowances
 are separately summed; these are named logical accounting, not CPU/RSS bounds.
 The [expectation accumulator](virtual-frozen-expectation.md) now reserves a
 cumulative owner allowance for each law, with exact shared-denominator integer
-updates and independent q-free final comparison. Partial-stream controls pass;
-the full positive expectation gate is unrun. The q-free oracle and total
-artifact/export admission still require complete experiment composition.
+updates and independent q-free final comparison. Partial-stream controls and both
+complete law gates passed. The full receipt includes the q-free oracle and the
+separately admitted evidence/export families.
 The [streaming reference artifact family](virtual-frozen-reference-artifact.md)
 now supplies explicit sampled/q-free byte, entry and integer-payload allowances.
 These do not yet include all native/request/log/metadata/source/build artifacts.
@@ -118,7 +121,7 @@ incorrect q(P). Every detector needs a real witness; preserve detection misses.
 Existing bounded ownership/admission controls are separate from these numerical
 mutations and whole-game equivalence.
 
-This experiment proves a single fixed-profile update identity if accepted. It
+This experiment proves a single fixed-profile update identity for PROOF9/v1. It
 does not supply an actual sampler, evolving-policy reach representation, bounded
 persistent learning storage, convergence, complete policy exports or independent
 whole-game best responses. Those remain part of the unchanged overall goal.

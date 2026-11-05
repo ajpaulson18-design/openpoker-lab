@@ -1,0 +1,371 @@
+{
+  "archives": [
+    {
+      "bytes": 9073335,
+      "members": 1508,
+      "path": "producer.zip",
+      "sha256": "35113ba49a1752e5f73db78c5d71a48929d268418f8ad4b5106c0a532dd4e570"
+    },
+    {
+      "bytes": 8223411,
+      "members": 1307,
+      "path": "review.zip",
+      "sha256": "7c629598d6a20fd3272ee17f4ec01a767de3c1773d117e0e7badc7fe76db5468"
+    },
+    {
+      "bytes": 1607050,
+      "members": 1765,
+      "path": "river_weighted-0000-0251.zip",
+      "sha256": "676983be1c7f00f694ce389f9c6e452346e48502f24b7e77d982b084b14e411e"
+    },
+    {
+      "bytes": 1282020,
+      "members": 1765,
+      "path": "river_weighted-0252-0503.zip",
+      "sha256": "fe795eca1a3f5211f04c4cc7c5e114da8186255fd1815ba25c54d3374f583acd"
+    },
+    {
+      "bytes": 1445570,
+      "members": 1765,
+      "path": "river_weighted-0504-0755.zip",
+      "sha256": "97d58f1dbf560c3f154cb74ec22233bdfdf921c7f264fc1a44cbe2a352cb115b"
+    },
+    {
+      "bytes": 1380918,
+      "members": 1765,
+      "path": "river_weighted-0756-1007.zip",
+      "sha256": "b50dcda3ec5a5503e9b1545e255d8f0f325bc0367b7d2a8dc73c4684d87f8b12"
+    },
+    {
+      "bytes": 1617576,
+      "members": 1765,
+      "path": "river_weighted-1008-1259.zip",
+      "sha256": "e690d4b12b1c9b5ef2e1d350474b768db8c8609b076b80fdfd8346fd0173165d"
+    },
+    {
+      "bytes": 1371613,
+      "members": 1765,
+      "path": "river_weighted-1260-1511.zip",
+      "sha256": "3f2c6b919ae26fc8efeea1aca8064b07a82b44a607c806c7e7b346c42a2dc954"
+    },
+    {
+      "bytes": 1375739,
+      "members": 1765,
+      "path": "river_weighted-1512-1763.zip",
+      "sha256": "b931b7b83383f10e93739fdd06634d205a2912d2fdd108628e45e19c99af93ca"
+    },
+    {
+      "bytes": 1203898,
+      "members": 1765,
+      "path": "river_weighted-1764-2015.zip",
+      "sha256": "863555bc78e633659f0fd969e4a0bad10f332061604848070044bf6b9ea31629"
+    },
+    {
+      "bytes": 1195265,
+      "members": 1765,
+      "path": "river_weighted-2016-2267.zip",
+      "sha256": "21ee963ef040a32a014a9060114b04a466bb84c7c971e69f99d0674488523b1c"
+    },
+    {
+      "bytes": 1198016,
+      "members": 1765,
+      "path": "river_weighted-2268-2519.zip",
+      "sha256": "c9794d27d578f5fa697fc62614ae3e1eb232564e33c934629540343f56d28b83"
+    },
+    {
+      "bytes": 1574857,
+      "members": 1765,
+      "path": "uniform-0000-0251.zip",
+      "sha256": "98b81e09bb0f0b3620956a43e62c1f9b7a76e2c7d6db966755c0b299aa016d17"
+    },
+    {
+      "bytes": 1251040,
+      "members": 1765,
+      "path": "uniform-0252-0503.zip",
+      "sha256": "2554134bbed975c40482205fe62cedfad3c32d055240e5f3a2dd803c468bb191"
+    },
+    {
+      "bytes": 1413813,
+      "members": 1765,
+      "path": "uniform-0504-0755.zip",
+      "sha256": "e58be000674388105ee6aba9e3e1f1310672ebba67489fa973163df08fb3fda5"
+    },
+    {
+      "bytes": 1350959,
+      "members": 1765,
+      "path": "uniform-0756-1007.zip",
+      "sha256": "e0ebb69a3ae1a65056862229a3b1d7ab45b3d8e506546bf3895448244b12838f"
+    },
+    {
+      "bytes": 1586637,
+      "members": 1765,
+      "path": "uniform-1008-1259.zip",
+      "sha256": "590d5131c554e39eeefdfbac208676b45e204eb6452877f09f42e679966560b2"
+    },
+    {
+      "bytes": 1341614,
+      "members": 1765,
+      "path": "uniform-1260-1511.zip",
+      "sha256": "3a5efe9e22d4c39734ac30fce4212fc9ceeb622fd5fc24b92e3c1b2fc7bc495f"
+    },
+    {
+      "bytes": 1346124,
+      "members": 1765,
+      "path": "uniform-1512-1763.zip",
+      "sha256": "2847b63d9bc14278ade25c566b8e3e6d7c354c2af06162ae4696e9d7ba7cbb48"
+    },
+    {
+      "bytes": 1172722,
+      "members": 1765,
+      "path": "uniform-1764-2015.zip",
+      "sha256": "051ca637cc00005b1b7a56cac5487dbbc1fd1b7da04a6603ce3f6b2dbe1893c9"
+    },
+    {
+      "bytes": 1164018,
+      "members": 1765,
+      "path": "uniform-2016-2267.zip",
+      "sha256": "5d9ba5ae70b8bdc9358d0e2c181fadd17b95e9c1386f816131af0905b74f96ca"
+    },
+    {
+      "bytes": 1166239,
+      "members": 1765,
+      "path": "uniform-2268-2519.zip",
+      "sha256": "1a4f0660e304369d6a5de315cf8a3b404082fc54e0d1ccb609d65bcce006701c"
+    }
+  ],
+  "laws": {
+    "river_weighted": {
+      "action_slots": 58164,
+      "actual": {
+        "counters": {
+          "aggregate_action_records": 8561280,
+          "aggregate_key_tokens": 40472320,
+          "fraction_operations": 4090440
+        },
+        "created_bits": 787208077,
+        "entries": 2273726,
+        "limits": {
+          "created_bits": 16000000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "work": 500000000
+        },
+        "max_forecast_bits": 324,
+        "work": 53124040
+      },
+      "boards": 2520,
+      "exact_scalar_comparisons": 140748,
+      "forecast": {
+        "created_bits": 10635294144,
+        "entries": 2273752,
+        "integer_bits": 8192,
+        "work": 129293664
+      },
+      "law": "river_weighted",
+      "native_producer_calls": 0,
+      "reference_producer_calls": 0,
+      "rows": 24420,
+      "scope": "full saved contribution expectation equals supplied q-free snapshot"
+    },
+    "uniform": {
+      "action_slots": 58164,
+      "actual": {
+        "counters": {
+          "aggregate_action_records": 8561280,
+          "aggregate_key_tokens": 40472320,
+          "fraction_operations": 4090440
+        },
+        "created_bits": 764934876,
+        "entries": 2273726,
+        "limits": {
+          "created_bits": 16000000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "work": 500000000
+        },
+        "max_forecast_bits": 322,
+        "work": 53124040
+      },
+      "boards": 2520,
+      "exact_scalar_comparisons": 140748,
+      "forecast": {
+        "created_bits": 10635294144,
+        "entries": 2273752,
+        "integer_bits": 8192,
+        "work": 129293664
+      },
+      "law": "uniform",
+      "native_producer_calls": 0,
+      "reference_producer_calls": 0,
+      "rows": 24420,
+      "scope": "full saved contribution expectation equals supplied q-free snapshot"
+    }
+  },
+  "native_mutation_witnesses": {
+    "all_detected": true,
+    "native_producer_calls": 0,
+    "reference_producer_calls": 0,
+    "unavailable": [],
+    "witnesses": [
+      {
+        "board": [
+          16,
+          17,
+          24,
+          32,
+          33
+        ],
+        "detail": {
+          "key": [
+            0,
+            43,
+            48,
+            []
+          ],
+          "row_index": 0
+        },
+        "detected": true,
+        "error": "exact average mass mismatch",
+        "index": 0,
+        "kind": "average_scale",
+        "mutant_file": "average_scale.bin",
+        "mutant_sha256": "2d81a73ae462927aabb825be5b9b88e179e065668b932289ef68c671b23ae74c",
+        "parser_valid": true,
+        "scope": "real saved contribution equality detector; fault diagnosis not implied",
+        "source_sha256": "d2c08c0443578b00c62678a4606e5a9c461e008811b4a975ed106073f28c8173"
+      },
+      {
+        "board": [
+          16,
+          17,
+          24,
+          32,
+          33
+        ],
+        "detail": {
+          "key": [
+            0,
+            43,
+            48,
+            [
+              "call",
+              "raise@3"
+            ]
+          ],
+          "row_index": 2
+        },
+        "detected": true,
+        "error": "full physical row key mismatch",
+        "index": 0,
+        "kind": "visible_history",
+        "mutant_file": "visible_history.bin",
+        "mutant_sha256": "b2edb3fefe5688003eaacb5a07873721e18b8e4ce258aabf2b56ebfe56737ae8",
+        "parser_valid": true,
+        "scope": "real saved contribution equality detector; fault diagnosis not implied",
+        "source_sha256": "d2c08c0443578b00c62678a4606e5a9c461e008811b4a975ed106073f28c8173"
+      },
+      {
+        "board": [
+          16,
+          17,
+          32,
+          33,
+          35
+        ],
+        "detail": {
+          "field": "shared regret denominator"
+        },
+        "detected": true,
+        "error": "exact regret mismatch",
+        "index": 36,
+        "kind": "regret_denominator",
+        "mutant_file": "regret_denominator.bin",
+        "mutant_sha256": "5e6b358186777f3867ba9b0027b38c9d63328d72a4ad914430db16b508134e9f",
+        "parser_valid": true,
+        "scope": "real saved contribution equality detector; fault diagnosis not implied",
+        "source_sha256": "db97df2aab4cd1e1a14d6ad35d46066b2bff7618b4c9d0ce215637de628789ec"
+      }
+    ]
+  },
+  "omitted_prior_evidence": {
+    "bytes": 463414,
+    "files": 2247,
+    "path": "omitted-prior-evidence.json",
+    "scope": "historical benchmarks/results payloads from producer and verifier source snapshots only; reconstruct from pinned commits; full raw inventories retained",
+    "sha256": "c92d9be2f76a1f8d0b5f65eee96e58216064dcac2e5045db29a0e1d4781f62db"
+  },
+  "producer_evaluations": 5040,
+  "producer_head": "174b66645a05d5f050d4361ce81b06ea9a4e5ac3",
+  "producer_outer": {
+    "head": "174b66645a05d5f050d4361ce81b06ea9a4e5ac3",
+    "raw_source_stable": true,
+    "runs": [
+      {
+        "actual_exit_observed": true,
+        "compiled_project_files": 22,
+        "failures": [],
+        "mode": "study",
+        "returncode": 0
+      }
+    ],
+    "scope": "outer observed numerical study; saved-only acceptance remains required"
+  },
+  "q_free_mutation_witness": {
+    "additional_budget_actual": {
+      "created_bits": 767,
+      "entries": 0,
+      "work": 5
+    },
+    "detail": {
+      "key": [
+        0,
+        [
+          43,
+          48
+        ],
+        []
+      ],
+      "mutated_average_mass": [
+        "16",
+        "1d"
+      ],
+      "original_average_mass": [
+        "b",
+        "1d"
+      ],
+      "row_index": 0
+    },
+    "detected": true,
+    "error": "exact q-free expectation mismatch",
+    "kind": "q_free_average_scale",
+    "mutant_body_sha256": "7f45b4383ade1df1e523adc886dbab4399a867001f1b9456ad2b7abecf40b240",
+    "mutant_bytes": 5470761,
+    "mutant_sha256": "de3ae855ddc07a5f350050925ce196c4c05412c474ac0217905afbc1d1b75920",
+    "parser_valid": true,
+    "scope": "terminal-only snapshot of complete saved accumulation; no add/retry or numerical producer",
+    "source_body_sha256": "2152c9136aef5b4d84a1d1559b3168968425c95bdd5203148ddc941a66e49ebd",
+    "source_bytes": 5470756
+  },
+  "quality_gate": null,
+  "review_outer": {
+    "head": "6b49057bc62a6599bfc23086ecda52576d755908",
+    "raw_source_stable": true,
+    "runs": [
+      {
+        "actual_exit_observed": true,
+        "compiled_project_files": 24,
+        "failures": [],
+        "mode": "review",
+        "returncode": 0
+      }
+    ],
+    "scope": "outer observed saved-only review; inspect numeric and corruption receipts"
+  },
+  "saved_replayed_evaluations": 5040,
+  "saved_review_producer_calls": 0,
+  "scope": "fixed procedural profile update identity in PROOF9 only; no actual training, quality, or broader scalability result",
+  "status": "accepted_fixed_profile_exact_update_identity",
+  "training_calls": 0,
+  "verifier_head": "6b49057bc62a6599bfc23086ecda52576d755908",
+  "version": "virtual-frozen-complete-saved-v1"
+}

@@ -37,6 +37,20 @@ retains original artifacts without replaying stopped producers. Windows/Linux/
 sanitizer component jobs pass; final PR #283 publication checks are pending.
 No admitted full-game, update estimator, trainer or quality result is recorded.
 
+## Complete frozen-profile update identity (November 4)
+
+The producer at `174b66645a05d5f050d4361ce81b06ea9a4e5ac3` completed all 5,040
+evaluations, and the separate saved-only verifier at
+`6b49057bc62a6599bfc23086ecda52576d755908` replayed all of them without a new
+numerical producer call. Both uniform and river-weighted expectations match the
+saved q-free oracle on 24,420 rows, 58,164 slots and 140,748 exact scalar values
+per law. All four parser-valid corruption witnesses were detected. Both outer
+operators observed actual exit 0 and stable whole-source inventories, with final
+compiled-byte receipts. The [accepted archive](../benchmarks/results/virtual-frozen-complete-v1/manifest.json)
+preserves the original calls, receipts, source/build evidence and mutations. This
+establishes fixed-profile update identity for the declared reduced deck only.
+Actual changing-policy training and independent saved-policy quality are open.
+
 ## Frozen independent saved-policy certificate (October 31)
 
 The [new saved-only verifier](matrix-free-certificate.md) joins independent public
