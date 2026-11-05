@@ -1,0 +1,20 @@
+{
+  "version": "native-dyadic-history-guard-v1",
+  "scope": "portable explicit bound check in compact history before fixed array access",
+  "initial_failed_head": "911c554fd28ee53aec67da0d16dd12e7b8e2ce66",
+  "diagnostic_head": "f1bafe2695500ea3ab230abfe17ba002f51bfc12",
+  "diagnostic_run": 41979056645,
+  "diagnostic_job": 127084648631,
+  "failed_target": "virtual-dyadic-history-controls",
+  "fail_mode": "GCC 13 -O3 -Werror=array-bounds on deliberately invalid edge 20",
+  "correction": "check children.size() explicitly before indexing, keeping phase and actual menu-width guards",
+  "normal_tests": 3,
+  "optimized_tests": 3,
+  "archive": {
+    "path": "development.zip",
+    "bytes": 232051,
+    "sha256": "97c7ce767d75d8cb021e9a41fd87b089fad47be17b234b45b167f7ee42c19989"
+  },
+  "linux_postfix_ci": "pending",
+  "training_calls": 0
+}

@@ -185,7 +185,8 @@ public:
     [[nodiscard]] Cursor append_action(Cursor c,std::size_t edge) {
         try {
             const auto& p=validate(c);charge(32);
-            if (p.phase!=betting::Phase::decision || edge>=p.count) throw Error("compact history invalid action");
+            if (edge>=p.children.size() || p.phase!=betting::Phase::decision || edge>=p.count)
+                throw Error("compact history invalid action");
             return Cursor(this,generation_,p.children[edge],c.size_,c.board_);
         } catch (...) {failed_=true;throw;}
     }

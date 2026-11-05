@@ -49,6 +49,14 @@ first state control build hit a test identifier collision under strict compiler
 warnings. The archive retains that failure and the corrected build. These are
 component results, including exact policy feedback on synthetic rows.
 
+The first optimized Linux history build stopped at the deliberately invalid
+edge-index control. Its compiler could not infer the constructor's array bound
+from the stored menu count. The action path now checks the fixed array extent
+explicitly before access, as well as phase and menu width. Both affected MSVC
+control suites passed again normally and optimized. The
+[portability receipt](../benchmarks/results/native-dyadic-history-guard-v1/manifest.json)
+retains the Linux failure and fresh Windows evidence; final CI is separate.
+
 ## First whole-game plan
 
 The rank-free source census gives 24,420 rows, 58,164 slots, 16,631 fold and
