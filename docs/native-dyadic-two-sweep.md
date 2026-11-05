@@ -102,3 +102,8 @@ for the frozen exact replay and measured tradeoff.
 average increments directly in each row's scale. Select this profile with
 `--scaled-averages`. The [measured comparison](native-dyadic-storage-census.md#constructing-averages-in-packed-units)
 uses the same independently replayed game and full checkpoint format.
+
+`ADMIT_SEALED` and `TRAIN_SEALED` use History-owned action tokens and release
+the row lookup index before training. Select the profile with `--sealed-menus`.
+The [sealed-menu comparison](native-dyadic-storage-census.md#reusing-history-owned-action-menus)
+records the measured work, memory, and runtime on the same fixture.

@@ -123,5 +123,32 @@ With the same word widths and current accounting equations, the ten-card
 state and two codec reservations alone would require 599,711,120 work units.
 The projection also retains the 8,874,558-entry state requirement.
 
+## Reusing History-owned action menus
+
+The sealed profile authenticates 146 source menus with 371 action tokens and
+reuses their immutable views across 24,420 independent strategy rows. It clears
+the construction index before allocating the strategy arrays. The independent
+census and native receipts agree on 14,483,984 fewer State units, 185,920 fewer
+History units, and 3,104 additional parent census units. Charged work fell to
+338,845,044, a reduction of 14,666,800 units. Planned work was 466,035,988.
+
+The source-frozen run at `3663096` matched all 22,587,236 numerical bytes from
+the scaled-average run. Independent replay verified both sweeps and the final
+policy's best responses. The Windows observations measured peak working sets of
+18,898,944 and 17,010,688 bytes, and native times of 0.671 and 1.254 seconds.
+Each version has one observation on this bounded fixture.
+[Sealed-menu evidence](../benchmarks/results/native-dyadic-sealed-menus-accepted-v1/manifest.json)
+
+With the same widths and current accounting, the ten-card State and codec
+reservations project 529,680,640 work units before traversal. The rank-free
+page census also partitions the ten-card geometry into 543 visible-board pages.
+The largest page holds 165,872 bytes of limb payload across all four images.
+With a 4 MiB page budget, a cold sweep that loads all four images per miss
+projects 284,426,144 read bytes. Keeping the frozen policy resident and reading
+committed images separately projects 111,110,688 read bytes and 23,701,776
+staged write bytes, plus 2,248,528 bytes for the resident frozen policy. These
+are payload projections for the current traversal order. The archived census
+records their phase, metadata, checkpoint, and filesystem assumptions.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)
