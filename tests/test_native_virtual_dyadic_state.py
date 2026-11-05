@@ -38,9 +38,9 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         identity = authenticate(exe, ROOT, 'virtual-dyadic-state-controls')
         target = os.environ.get(OUTPUT_ENV)
         if target is None:
-            temporary = TemporaryDirectory()
+            temporary = TemporaryDirectory(dir=ROOT.parent)
             cls.addClassCleanup(temporary.cleanup)
-            target = temporary.name
+            target = Path(temporary.name) / 'observed'
         output = Path(target)
         before = sha(exe)
         observed = run_bounded_child([str(exe)], b'', output, stdout_limit=2_100_000)

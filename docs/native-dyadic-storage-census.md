@@ -25,11 +25,35 @@ formula. Both exceed the trainer's limits before adding chance or history.
 Only the nine-card case has a verified training result.
 
 The river contains 98,000 of the 119,196 rows in the 10-card case. This makes
-river strategy state the first storage target. A bounded page layout can
+river strategy state the largest remaining storage target. A bounded page layout can
 preserve each exact visible row key while limiting resident state. Paging still
 incurs total storage and traversal work. Lossless per-row integer scaling and
 exact equivalence classes need separate proofs and capacity measurements before
 they can change the admission contract.
+
+## Measured action-menu sharing
+
+The fixed trainer reuses owned immutable legal-action menus by card-free
+template node. The Windows x64 allocation controls measured 4,653,120 bytes of
+action-token and view arrays before sharing and 39,008 bytes including the new
+catalog spans. The 4,614,112-byte saving applies to those arrays. The existing
+conservative admission and charged work are still used.
+
+The source-frozen paired run at `aaba040` produced all 22,587,756 bytes of the
+accepted `cc799a8` artifact exactly, including the receipt footer. Independent
+replay verified both sweeps and the exported policy's best responses again.
+Observed lifetime peak working set fell from 47,235,072 to 42,631,168 bytes.
+Peak commit fell from 45,768,704 to 41,164,800 bytes. The corresponding native
+wall-clock samples were 1.158 and 0.744 seconds. These are single observations
+on the same bounded nine-card fixture. [Shared-menu evidence](../benchmarks/results/native-dyadic-shared-menu-accepted-v1/manifest.json)
+
+The archive includes an offline width census of the saved integer arrays.
+Factoring the common power of two from each final row leaves 48,708 of 58,164
+regret slots and 47,442 average slots at 128 bits or fewer, counting zeros.
+The largest residual widths are 423 and 253 bits respectively. A lossless
+storage layout would need to handle both common small values and wider values,
+with space for each row's scale and indexing. This census measures the saved
+checkpoint, and a future layout will need its own bounds and replay.
 
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)
