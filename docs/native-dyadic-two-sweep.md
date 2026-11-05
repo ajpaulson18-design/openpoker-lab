@@ -69,7 +69,18 @@ captured source inventory. Reuse saved output for any future replay.
 The opt-in `ADMIT_PAIRED` and `TRAIN_PAIRED` modes carry both seats' values
 through one public walk per sweep. Each decision stages the acting seat once.
 The shared walk uses the same frozen policy, board support, action order, and
-fixed-point arithmetic. Rank-free admission plans 443,428,568 modeled work units
-for the paired path. The paired cohort compares every byte before the receipt
-footer with the saved two-pass result, then runs the independent replay. On
-Windows it records the child process's lifetime peak working set and commit.
+fixed-point arithmetic. Rank-free admission planned 443,428,568 modeled work
+units. The paired cohort at `cc799a8` matched all 22,587,236 data bytes before
+the receipt footer and passed independent replay, including best responses.
+[Paired evidence manifest](../benchmarks/results/native-dyadic-paired-accepted-v1/manifest.json)
+
+The paired run used 317,747,928 modeled units, down 26,319,688 or 7.65% from
+the two-pass run. The isolated native process took 1.158 seconds, compared with
+0.884 seconds for the saved two-pass run. These are single local samples. The
+paired Windows child recorded a lifetime peak working set of 47,235,072 bytes
+and peak commit of 45,768,704 bytes. Both policies have the same measured
+exploitability of approximately 2.746696 big blinds on PROOF9.
+
+The rank-free [storage census](native-dyadic-storage-census.md) keeps the
+holdings and betting template fixed while expanding the deck. It identifies
+dense river strategy storage as the first capacity barrier beyond PROOF9.

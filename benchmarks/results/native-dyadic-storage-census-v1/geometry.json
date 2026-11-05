@@ -1,0 +1,529 @@
+{
+  "deck_rule": "PROOF9 plus the lowest unused physical card IDs, sorted",
+  "nine_card_brute_force_check": "all four streets and four own holdings equal inclusion-exclusion",
+  "private_fixture": {
+    "compatible_pairs": 3,
+    "holdings": [
+      [
+        [
+          43,
+          48
+        ],
+        [
+          32,
+          43
+        ]
+      ],
+      [
+        [
+          24,
+          37
+        ],
+        [
+          16,
+          32
+        ]
+      ]
+    ]
+  },
+  "raw_census_inputs_sha256": {
+    "scripts/census_virtual_dyadic_storage.py": "2e0c8ca2b18bb8ff01a6457fde63851eb7d0edea699b74d6716a803ffd424ee2",
+    "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+    "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+    "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add"
+  },
+  "results": [
+    {
+      "by_street": {
+        "0": {
+          "rows": 12,
+          "slots": 30,
+          "supported_prefixes_by_hand": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "3": {
+          "rows": 880,
+          "slots": 2310,
+          "supported_prefixes_by_hand": [
+            [
+              19,
+              10
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        },
+        "4": {
+          "rows": 6728,
+          "slots": 16704,
+          "supported_prefixes_by_hand": [
+            [
+              40,
+              20
+            ],
+            [
+              36,
+              20
+            ]
+          ]
+        },
+        "5": {
+          "rows": 16800,
+          "slots": 39120,
+          "supported_prefixes_by_hand": [
+            [
+              40,
+              20
+            ],
+            [
+              40,
+              20
+            ]
+          ]
+        }
+      },
+      "current_state_modeled_reservation_bits": 241368880,
+      "current_state_modeled_reservation_entries": 973384,
+      "deck_ids": [
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "deck_size": 9,
+      "literal_joint_worlds": 60,
+      "one_checkpoint_packed_payload_lower_bound_bytes": 11312676,
+      "supported_action_slots": 58164,
+      "supported_rows": 24420,
+      "unfiltered_prefixes": {
+        "0": 1,
+        "3": 84,
+        "4": 504,
+        "5": 2520
+      }
+    },
+    {
+      "by_street": {
+        "0": {
+          "rows": 12,
+          "slots": 30,
+          "supported_prefixes_by_hand": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "3": {
+          "rows": 1696,
+          "slots": 4452,
+          "supported_prefixes_by_hand": [
+            [
+              36,
+              20
+            ],
+            [
+              30,
+              20
+            ]
+          ]
+        },
+        "4": {
+          "rows": 19488,
+          "slots": 48384,
+          "supported_prefixes_by_hand": [
+            [
+              116,
+              60
+            ],
+            [
+              100,
+              60
+            ]
+          ]
+        },
+        "5": {
+          "rows": 98000,
+          "slots": 228200,
+          "supported_prefixes_by_hand": [
+            [
+              240,
+              120
+            ],
+            [
+              220,
+              120
+            ]
+          ]
+        }
+      },
+      "current_state_modeled_reservation_bits": 1165699576,
+      "current_state_modeled_reservation_entries": 4718820,
+      "deck_ids": [
+        0,
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "deck_size": 10,
+      "literal_joint_worlds": 360,
+      "one_checkpoint_packed_payload_lower_bound_bytes": 54696044,
+      "supported_action_slots": 281066,
+      "supported_rows": 119196,
+      "unfiltered_prefixes": {
+        "0": 1,
+        "3": 120,
+        "4": 840,
+        "5": 5040
+      }
+    },
+    {
+      "by_street": {
+        "0": {
+          "rows": 12,
+          "slots": 30,
+          "supported_prefixes_by_hand": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "3": {
+          "rows": 6608,
+          "slots": 17346,
+          "supported_prefixes_by_hand": [
+            [
+              133,
+              84
+            ],
+            [
+              112,
+              84
+            ]
+          ]
+        },
+        "4": {
+          "rows": 151032,
+          "slots": 374976,
+          "supported_prefixes_by_hand": [
+            [
+              868,
+              504
+            ],
+            [
+              728,
+              504
+            ]
+          ]
+        },
+        "5": {
+          "rows": 1901200,
+          "slots": 4427080,
+          "supported_prefixes_by_hand": [
+            [
+              4620,
+              2520
+            ],
+            [
+              3920,
+              2520
+            ]
+          ]
+        }
+      },
+      "current_state_modeled_reservation_bits": 19985569312,
+      "current_state_modeled_reservation_entries": 81136976,
+      "deck_ids": [
+        0,
+        1,
+        2,
+        3,
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "deck_size": 13,
+      "literal_joint_worlds": 7560,
+      "one_checkpoint_packed_payload_lower_bound_bytes": 938246788,
+      "supported_action_slots": 4819432,
+      "supported_rows": 2058852,
+      "unfiltered_prefixes": {
+        "0": 1,
+        "3": 286,
+        "4": 2860,
+        "5": 25740
+      }
+    },
+    {
+      "by_street": {
+        "0": {
+          "rows": 12,
+          "slots": 30,
+          "supported_prefixes_by_hand": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "3": {
+          "rows": 108320,
+          "slots": 284340,
+          "supported_prefixes_by_hand": [
+            [
+              1940,
+              1540
+            ],
+            [
+              1750,
+              1540
+            ]
+          ]
+        },
+        "4": {
+          "rows": 7669920,
+          "slots": 19042560,
+          "supported_prefixes_by_hand": [
+            [
+              39140,
+              29260
+            ],
+            [
+              34580,
+              29260
+            ]
+          ]
+        },
+        "5": {
+          "rows": 342022800,
+          "slots": 796424520,
+          "supported_prefixes_by_hand": [
+            [
+              743280,
+              526680
+            ],
+            [
+              646380,
+              526680
+            ]
+          ]
+        }
+      },
+      "current_state_modeled_reservation_bits": 3382807999032,
+      "current_state_modeled_reservation_entries": 13754332356,
+      "deck_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "deck_size": 26,
+      "literal_joint_worlds": 1580040,
+      "one_checkpoint_packed_payload_lower_bound_bytes": 158843293100,
+      "supported_action_slots": 815751450,
+      "supported_rows": 349801052,
+      "unfiltered_prefixes": {
+        "0": 1,
+        "3": 2600,
+        "4": 59800,
+        "5": 1315600
+      }
+    },
+    {
+      "by_street": {
+        "0": {
+          "rows": 12,
+          "slots": 30,
+          "supported_prefixes_by_hand": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "3": {
+          "rows": 1158096,
+          "slots": 3040002,
+          "supported_prefixes_by_hand": [
+            [
+              19412,
+              17296
+            ],
+            [
+              18377,
+              17296
+            ]
+          ]
+        },
+        "4": {
+          "rows": 191615760,
+          "slots": 475735680,
+          "supported_prefixes_by_hand": [
+            [
+              903900,
+              778320
+            ],
+            [
+              843180,
+              778320
+            ]
+          ]
+        },
+        "5": {
+          "rows": 20633566800,
+          "slots": 48046734120,
+          "supported_prefixes_by_hand": [
+            [
+              41077080,
+              34246080
+            ],
+            [
+              37813380,
+              34246080
+            ]
+          ]
+        }
+      },
+      "current_state_modeled_reservation_bits": 201228832334368,
+      "current_state_modeled_reservation_entries": 818476550032,
+      "deck_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "deck_size": 52,
+      "literal_joint_worlds": 102738240,
+      "one_checkpoint_packed_payload_lower_bound_bytes": 9449352325788,
+      "supported_action_slots": 48525509832,
+      "supported_rows": 20826340668,
+      "unfiltered_prefixes": {
+        "0": 1,
+        "3": 22100,
+        "4": 1082900,
+        "5": 51979200
+      }
+    }
+  ],
+  "scope": "rank-free structural measurement; no expanded-deck training or quality claim",
+  "symbolic_template": {
+    "edges": 410,
+    "literal_occurrences": 1105,
+    "max_depth": 15,
+    "states": 388
+  }
+}
