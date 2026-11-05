@@ -5,6 +5,7 @@ permissions:
 jobs:
   compiled-component:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -19,16 +20,35 @@ jobs:
       - name: Build explicit component probe
         shell: bash
         run: |
-          python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance"
-          python -m scripts.build_native_exact_four_street --target full-deck-exact-reach-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/exact-reach"
-          python -m scripts.build_native_exact_four_street --target full-deck-prefix-fold-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/prefix-fold"
-          python -m scripts.build_native_exact_four_street --target dyadic-policy-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/policy"
-          python -m scripts.build_native_exact_four_street --target prepared-public-chance-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/prepared"
-          python -m scripts.build_native_exact_four_street --target virtual-dyadic-history-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/history"
-          python -m scripts.build_native_exact_four_street --target virtual-dyadic-state-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance/state"
+          build_probe() {
+            local module="$1" out="$2" label="$3"
+            shift 3
+            if python -m "$module" --output-dir "$out" "$@"; then return 0; fi
+            python - "$out" "$label" <<'PY'
+          from pathlib import Path
+          import os, sys
+          log = Path(sys.argv[1]) / 'build.log'
+          details = 'No compiler log was created; inspect the build step.'
+          if log.is_file():
+              with log.open('rb') as source:
+                  source.seek(max(0, log.stat().st_size - 6000), os.SEEK_SET)
+                  details = source.read(6000).decode('utf-8', 'replace').strip() or details
+          details = details.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print(f'::error title=Native build failed ({sys.argv[2]})::{details}')
+          PY
+            return 1
+          }
+          base="$RUNNER_TEMP/native-full-deck-chance"
+          build_probe scripts.build_native_full_deck_public_chance "$base" full-deck-chance
+          build_probe scripts.build_native_exact_four_street "$base/exact-reach" full-deck-exact-reach-controls --target full-deck-exact-reach-controls
+          build_probe scripts.build_native_exact_four_street "$base/prefix-fold" full-deck-prefix-fold-controls --target full-deck-prefix-fold-controls
+          build_probe scripts.build_native_exact_four_street "$base/policy" dyadic-policy-controls --target dyadic-policy-controls
+          build_probe scripts.build_native_exact_four_street "$base/prepared" prepared-public-chance-controls --target prepared-public-chance-controls
+          build_probe scripts.build_native_exact_four_street "$base/history" virtual-dyadic-history-controls --target virtual-dyadic-history-controls
+          build_probe scripts.build_native_exact_four_street "$base/state" virtual-dyadic-state-controls --target virtual-dyadic-state-controls
           git fetch --no-tags --depth=1 origin 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
           git worktree add --detach "$RUNNER_TEMP/exact-reach-baseline" 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
-          (cd "$RUNNER_TEMP/exact-reach-baseline" && python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance/baseline")
+          (cd "$RUNNER_TEMP/exact-reach-baseline" && build_probe scripts.build_native_full_deck_public_chance "$base/baseline" active-baseline)
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_FULL_DECK_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance/native-full-deck-public-chance-probe$suffix" >> "$GITHUB_ENV"
           echo "OPENPOKER_NATIVE_EXACT_REACH_EXE=$RUNNER_TEMP/native-full-deck-chance/exact-reach/native-full-deck-exact-reach-controls$suffix" >> "$GITHUB_ENV"
