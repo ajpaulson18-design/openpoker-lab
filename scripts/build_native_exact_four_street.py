@@ -69,6 +69,17 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
     "virtual-betting-template": ("native-virtual-betting-template-probe", (
         "native/virtual_betting_template_probe.cpp", "native/virtual_betting_template.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
+        "tests/native/virtual_dyadic_history_controls.cpp", "native/virtual_dyadic_history.hpp",
+        "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
+        "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
+        "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (
+        "tests/native/prepared_public_chance_controls.cpp", "native/prepared_public_chance.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "dyadic-policy-controls": ("native-dyadic-policy-controls", (
         "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/exact_binary64.hpp")),
     "full-deck-prefix-fold-controls": ("native-full-deck-prefix-fold-controls", (
@@ -235,7 +246,10 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "full-deck-chance" else "Full-deck public-chance preflight controls only; no numerical-kernel or solver acceptance."
                   if target == "full-deck-chance-preflight" else "Exact rational opponent-reach component controls only; no sampler, changing-policy trainer or whole-game acceptance."
                   if target == "full-deck-exact-reach-controls" else "Exact visible-prefix fold payoff controls only; changing-policy training and quality remain open."
-                  if target == "full-deck-prefix-fold-controls" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
+                  if target == "full-deck-prefix-fold-controls" else "Prepared q=1 public-chance contraction controls only; no cumulative whole-game training or quality admission."
+                  if target == "prepared-public-chance-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
+                  if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
+                  if target == "virtual-dyadic-state-controls" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
                   if target == "virtual-betting-template-controls" else "PROOF9/v1 exact frozen-update preflight and value probe only; no RNG, training, generic solver backend or quality acceptance."

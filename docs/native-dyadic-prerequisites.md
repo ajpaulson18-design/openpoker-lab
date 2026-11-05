@@ -81,6 +81,7 @@ retain the skipped first child, early copyable quantizer source and correction.
 Windows/Linux and sanitizer CI include both new components; final results are
 a separate publication check.
 
-Persistent full-history rows, one fixed game denominator, cumulative whole-request
-admission, actual T>=2 feedback and independent saved-policy quality remain
-unfinished. No cap was lifted and no frozen numerical study was restarted.
+The [prepared chance, compact history and persistent state](native-dyadic-training-foundation.md)
+now have independent component controls. Cumulative whole-request admission,
+actual whole-game T>=2 feedback and independent saved-policy quality remain open.
+No cap was lifted and no frozen numerical study was restarted.
