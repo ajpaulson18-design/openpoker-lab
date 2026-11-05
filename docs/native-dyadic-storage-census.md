@@ -55,5 +55,29 @@ storage layout would need to handle both common small values and wider values,
 with space for each row's scale and indexing. This census measures the saved
 checkpoint, and a future layout will need its own bounds and replay.
 
+## Packed exact average masses
+
+The fixed paired trainer's opt-in packed mode uses the guaranteed common
+power of two for each full-history row. It reserves 258,694 64-bit words per
+array, or 4,139,104 bytes for the committed and staged arrays together before
+metadata. The independent rank-free census agrees. The ten-card projection
+needs 1,295,812 words per array. Under the current accounting its state alone
+would reserve 5,864,478 entries, above the two-million entry cap.
+
+The source-frozen run at `584b0eb` matched all 22,587,236 numerical bytes from
+the shared-menu run. Independent replay matched both updates and the saved
+best responses. The receipt footer records the different admission and work
+charges. On Windows, the two single-run observations measured peak working
+sets of 42,631,168 and 25,251,840 bytes, and peak commit of 41,164,800 and
+22,761,472 bytes. Native wall-clock samples were 0.744 and 0.645 seconds.
+[Packed-average evidence](../benchmarks/results/native-dyadic-packed-averages-accepted-v1/manifest.json)
+
+The packed mode reserves and charges 23,123,160 additional modeled units for
+layout and conversion. Total modeled work was 340,871,088 units. Logical
+storage admission rose from 1,132,473 to 1,351,755 entries because each retained
+packed word is counted separately. The conservative payload cap and reservation
+are retained. The measured memory gain applies to this exact nine-card
+profile and its two sweeps.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)

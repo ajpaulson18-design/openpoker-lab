@@ -84,3 +84,10 @@ exploitability of approximately 2.746696 big blinds on PROOF9.
 The rank-free [storage census](native-dyadic-storage-census.md) keeps the
 holdings and betting template fixed while expanding the deck. It identifies
 dense river strategy storage as the first capacity barrier beyond PROOF9.
+
+`ADMIT_PACKED` and `TRAIN_PACKED` select the paired walk with exact packed
+average masses. The cohort controller selects this mode with
+`--packed-averages`. The checkpoint still emits the full unscaled integer
+values for independent replay. The receipt footer accounts for the packed
+layout and conversion. See the [storage measurements](native-dyadic-storage-census.md#packed-exact-average-masses)
+for the observed memory comparison and the remaining capacity limit.
