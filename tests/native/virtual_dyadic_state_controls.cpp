@@ -455,6 +455,67 @@ void packed_average_controls(h::History& history) {
         require_poisoned(packed);
     }
 }
+void packed_dual_controls(h::History& history) {
+    const std::array<std::size_t,2> hands{2,2};
+    const auto root=history.root();
+    const auto plan=forecast(2,4);
+    const Integer denominator=1;
+    constexpr std::size_t average_shift=200,regret_shift=190;
+    // A 256-bit field leaves one average limb and two regret limbs per slot.
+    constexpr s::PackedAverageCapacity capacity{4,8};
+    const Integer value_scale=Integer(1)<<regret_shift;
+    const std::array<Integer,2> values{0,2*value_scale};
+    const Integer average_scale=Integer(1)<<average_shift;
+    const std::array<Integer,2> increments{5*average_scale,3*average_scale};
+    {
+        s::State dense(history,hands,denominator,plan);
+        s::State packed(history,hands,denominator,plan,{}, {},capacity);
+        for (std::size_t row=0;row<2;++row) {
+            require(dense.register_row(root,0,row,menu)==row &&
+                packed.register_row(root,0,row,menu,average_shift,regret_shift)==row &&
+                packed.average_row_shift(row)==average_shift && packed.regret_row_shift(row)==regret_shift,
+                "dual packed row order or scale changed");
+        }
+        dense.freeze();packed.freeze();
+        require(packed.averages().empty() && packed.regrets().empty(),"dual packed state exposed a dense image");
+        for (std::size_t sweep=0;sweep<2;++sweep) {
+            dense.begin_sweep();packed.begin_sweep();
+            for (std::size_t row=0;row<2;++row) {
+                require(dense.policy_units(row).size()==packed.policy_units(row).size() &&
+                    std::equal(dense.policy_units(row).begin(),dense.policy_units(row).end(),packed.policy_units(row).begin()),
+                    "dual packed regret quantization changed policy units");
+                const auto mixed=dense.stage_row(row,values,increments);
+                require(packed.stage_row(row,values,increments)==mixed,"dual packed mixed value changed");
+            }
+            dense.commit_sweep();packed.commit_sweep();
+            for (std::size_t row=0;row<2;++row) for (std::size_t action=0;action<2;++action)
+                require(dense.regrets()[2*row+action]==packed.regret_numerator(row,action) &&
+                    dense.averages()[2*row+action]==packed.average_numerator(row,action),
+                    "dual packed committed image changed");
+        }
+        const auto expected=dense.export_average();
+        const auto actual=packed.export_average(false);
+        require(actual.kind==expected.kind && actual.rows==expected.rows && actual.slots==expected.slots &&
+            std::equal(actual.units.get(),actual.units.get()+actual.slots,expected.units.get()) &&
+            std::equal(actual.uniform_fallback.get(),actual.uniform_fallback.get()+actual.rows,
+                       expected.uniform_fallback.get()),"dual packed average policy export changed");
+        std::cout<<"PACKED_DUAL exact_feedback\n";
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {},capacity);
+        for (std::size_t row=0;row<2;++row) (void)packed.register_row(root,0,row,menu,average_shift,regret_shift);
+        packed.freeze();packed.begin_sweep();
+        for (std::size_t row=0;row<2;++row) packed.stage_row(row,values,increments);
+        packed.commit_sweep();packed.begin_sweep();
+        packed.stage_row(1,values,increments);
+        const std::array<Integer,2> off_grid{2,2*value_scale};
+        reject("packed_regret_nondivisible",ErrorCode::arithmetic,[&] {packed.stage_row(0,off_grid,increments);});
+        require(packed.regret_numerator(0,1)==value_scale && packed.average_numerator(1,0)==increments[0] &&
+            packed.receipt().completed_sweeps==1,
+            "failed dual packed stage changed a committed image");
+        require_poisoned(packed);
+    }
+}
 } // namespace
 
 int main() {
@@ -466,6 +527,7 @@ int main() {
         guards(history,source);
         action_catalog_controls(history,source);
         packed_average_controls(history);
+        packed_dual_controls(history);
         std::cout<<"END\n";
         return 0;
     } catch (const std::exception& error) {

@@ -28,6 +28,7 @@ GUARDS = (
     'catalog_dimensions', 'catalog_footprint', 'catalog_key', 'catalog_mode',
     'catalog_requires_key', 'catalog_menu_change', 'catalog_token_capacity', 'catalog_invalid_token',
     'packed_nondivisible', 'packed_cumulative_width', 'packed_limb_census',
+    'packed_regret_nondivisible',
 )
 
 
@@ -66,7 +67,8 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         holdings = (0, 1, 0, 0)
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
-        rows = iter(line.split() for line in self.lines[1:] if not line.startswith(('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ')))
+        separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ')
+        rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
             self.assertEqual((case, int(exponent), int(denominator)), ('CASE', shift, 580 << (shift+100)))
@@ -136,6 +138,10 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
     def test_packed_average_matches_dense_feedback(self):
         self.assertEqual([line for line in self.lines if line.startswith('PACKED_AVERAGE ')],
                          ['PACKED_AVERAGE exact_feedback'])
+
+    def test_dual_packed_regrets_and_averages_match_dense_feedback(self):
+        self.assertEqual([line for line in self.lines if line.startswith('PACKED_DUAL ')],
+                         ['PACKED_DUAL exact_feedback'])
 
     def test_owned_menu_catalog_reduces_exact_sized_action_arrays(self):
         records = [line.split()[1:] for line in self.lines if line.startswith('ACTION_STORAGE ')]

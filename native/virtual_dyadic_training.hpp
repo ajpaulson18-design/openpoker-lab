@@ -100,19 +100,20 @@ inline std::uint64_t sum_work(const WorkList& list) {
 }
 class Meter final {
     WorkList actual_{},limits_{};
-    std::uint64_t total_=0;
+    std::uint64_t total_=0,ceiling_=parent_cap;
 public:
     Meter() { limits_[work_index(Work::geometry)]=3000000; }
     void charge(Work family,std::uint64_t cost) {
         const auto at=work_index(family);
-        require(cost<=limits_[at]-actual_[at] && cost<=parent_cap-total_,"dyadic parent work admission exceeded");
+        require(cost<=limits_[at]-actual_[at] && cost<=ceiling_-total_,"dyadic parent work admission exceeded");
         actual_[at]+=cost;
         total_+=cost;
     }
-    void seal(const WorkList& limits) {
+    void seal(const WorkList& limits,std::uint64_t allowance) {
         for (std::size_t i=0;i<limits.size();++i) require(actual_[i]<=limits[i],"dyadic parent forecast underrun");
-        require(sum_work(limits)<=parent_cap,"dyadic parent forecast exceeds partition");
+        require(sum_work(limits)<=allowance,"dyadic parent forecast exceeds partition");
         limits_=limits;
+        ceiling_=allowance;
     }
     [[nodiscard]] const WorkList& actual() const noexcept { return actual_; }
     [[nodiscard]] std::uint64_t total() const noexcept { return total_; }
@@ -211,19 +212,28 @@ struct Plan {
     WorkList parent{};
     Traversal traversal=Traversal::by_seat;
     bool packed_averages=false;
+    bool packed_regrets=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
+    std::array<std::uint8_t,template_count> suffix_decisions{};
     std::uint64_t normalizer=0,denominator_base=0,expected_rank_calls=0;
     std::uint64_t showdown_contractions=0,hidden_candidates=0;
     std::uint64_t template_work=0,chance_work=0,history_work=0,state_work=0,quantizer_work=0,total_work=0;
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
     std::uint64_t packed_average_limbs=0,packed_average_work=0;
+    std::uint64_t packed_regret_limbs=0,packed_regret_work=0;
+    std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
     require(past_actions<reach_operand_bits/grid_bits && grid_bits*(past_actions+1)<=denominator_shift,
         "fixed average row shift exceeds admitted actor depth");
     return denominator_shift-grid_bits*(past_actions+1);
+}
+inline std::size_t regret_shift(std::size_t horizon,std::size_t opponent_past,std::size_t suffix) {
+    require(suffix>0 && suffix<=horizon && opponent_past<=horizon-suffix,
+        "fixed regret row shift exceeds admitted decision horizon");
+    return grid_bits*(horizon-opponent_past-suffix);
 }
 inline constexpr std::size_t header_words=16, literal_bytes=96, row_bytes=24;
 inline constexpr std::size_t footer_words=64;
@@ -339,6 +349,10 @@ class Forecast final {
             require(E+plan_.M<=plan_.shift && EA<=plan_.shift,"pinned fixed-scale divisibility forecast");
             if (plan_.packed_averages)
                 plan_.packed_average_limbs+=slots*words(value_bits-(plan_.shift-EA));
+            if (plan_.packed_regrets) {
+                const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
+                plan_.packed_regret_limbs+=slots*words(value_bits-shift);
+            }
             plan_.quantizer_terms[0]+=rows*(320+48*m);
             plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA);
@@ -406,10 +420,13 @@ class Forecast final {
         require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
     }
 public:
-    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages):source_(source),meter_(meter) {
-        require(!packed_averages || mode==Traversal::paired,"packed averages require paired training");
+    Forecast(const betting::Template& source,Meter& meter,Traversal mode,bool packed_averages,bool packed_regrets)
+        :source_(source),meter_(meter) {
+        require((!packed_averages || mode==Traversal::paired) && (!packed_regrets || packed_averages),
+            "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=packed_averages;
+        plan_.packed_regrets=packed_regrets;
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
@@ -437,6 +454,13 @@ public:
         plan_.denominator_bits=width(plan_.denominator_base)+plan_.shift;
         require(plan_.H==12 && plan_.M==1 && payoff_ceiling_==8 && plan_.max_first_exponent==420 &&
             plan_.denominator_bits==635 && plan_.denominator_bits+width(payoff_ceiling_)+3==value_bits,"pinned fixed denominator bounds changed");
+        if (plan_.packed_regrets) {
+            for (std::size_t id=0;id<source_.nodes().size();++id) {
+                meter_.charge(Work::geometry,8);
+                require(suffix_[id].mark==2 && suffix_[id].decisions<=plan_.H,"packed regret suffix census changed");
+                plan_.suffix_decisions[id]=static_cast<std::uint8_t>(suffix_[id].decisions);
+            }
+        }
         literal(source_.root(),{},{});
         require(literals_==literal_count && plan_.shape==expected_counts && plan_.max_actor_depth==std::array<std::size_t,2>{6,7} &&
             plan_.showdown_contractions==18180 && plan_.hidden_candidates==22168,
@@ -471,19 +495,32 @@ public:
             plan_.packed_average_work=32*R+36*plan_.packed_average_limbs+(14*words(value_bits)+70)*S;
             w[work_index(Work::average)]+=plan_.packed_average_work;
         }
+        if (plan_.packed_regrets) {
+            require(plan_.packed_regret_limbs>=S && plan_.packed_regret_limbs<=words(value_bits)*S,
+                "packed regret word census outside fixed bounds");
+            // Covers two signed-delta staging passes, two full checkpoint
+            // reads, two compact policy decodes, layout and routing. The
+            // original state charge still covers mix and update arithmetic.
+            plan_.packed_regret_work=32*R+44*plan_.packed_regret_limbs+(16*words(value_bits)+88)*S;
+            w[work_index(Work::route)]+=plan_.packed_regret_work;
+        }
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
         w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
             sweeps*(6*S+32*R)+160*literal_count+65536;
-        plan_.total_work=plan_.template_work+plan_.chance_work+plan_.history_work+
-            plan_.state_work+plan_.quantizer_work+sum_work(w);
+        const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
+            plan_.state_work+plan_.quantizer_work;
+        require(other_work<=work_cap,"fixed non-parent work exceeds aggregate cap");
+        if (plan_.packed_regrets) plan_.parent_allowance=work_cap-other_work;
+        plan_.total_work=other_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
         if (plan_.packed_averages) {
             const auto storage=state::State::storage_forecast(
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),sweeps,15,value_bits,
                  plan_.state_work,plan_.quantizer_work},
-                {template_receipt.nodes,template_receipt.edges},{static_cast<std::size_t>(plan_.packed_average_limbs)});
+                {template_receipt.nodes,template_receipt.edges},{static_cast<std::size_t>(plan_.packed_average_limbs),
+                 static_cast<std::size_t>(plan_.packed_regret_limbs)});
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -492,10 +529,10 @@ public:
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
         plan_.output_bytes=artifact_bytes(g);
         require(plan_.template_work<=template_cap && plan_.chance_work<=chance_cap && plan_.history_work<=history_cap &&
-            plan_.state_work<=state_cap && plan_.quantizer_work<=quantizer_cap && sum_work(w)<=parent_cap &&
+            plan_.state_work<=state_cap && plan_.quantizer_work<=quantizer_cap && sum_work(w)<=plan_.parent_allowance &&
             plan_.total_work<=work_cap && plan_.entries<=entries_cap && plan_.payload_bits<=payload_cap &&
             value_bits+58<=65536 && plan_.output_bytes<=22662720,"pinned complete training forecast exceeds original caps");
-        meter_.seal(w);
+        meter_.seal(w,plan_.parent_allowance);
         return plan_;
     }
 };
@@ -685,6 +722,7 @@ template<bool Paired> class Walk final {
         const auto actor=node.state.actor;
         const auto menu=node.edges.size();
         require(actor<2 && menu>=2 && menu<=4,"dense decision menu changed");
+        const auto row_regret_shift=plan_.packed_regrets?regret_shift(plan_.H,past[1-actor],plan_.suffix_decisions[id]):0;
         const auto row_shift=plan_.packed_averages?average_shift(plan_.shift,past[actor]++):0;
         if (target_==catalog) {
             meter_.charge(Work::route,16+4*menu);
@@ -692,9 +730,12 @@ template<bool Paired> class Walk final {
             for (std::size_t action=0;action<menu;++action) tokens[action]=node.edges[action].action.token;
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 const std::span<const std::string_view> actions{tokens.data(),menu};
-                const auto row=plan_.packed_averages?
-                    state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift):
-                    state_.register_catalog_row(cursor,actor,holding,id,actions);
+                std::size_t row;
+                if (plan_.packed_regrets)
+                    row=state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift,row_regret_shift);
+                else if (plan_.packed_averages)
+                    row=state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift);
+                else row=state_.register_catalog_row(cursor,actor,holding,id,actions);
                 require(row==shape_.rows && state_.rows()[row].offset==shape_.slots,"catalog row order changed");
                 ++shape_.rows;
                 shape_.slots+=menu;
@@ -720,6 +761,8 @@ template<bool Paired> class Walk final {
                 record.offset==shape_.slots && record.actions.size()==menu,"dense policy route changed");
             if (plan_.packed_averages)
                 require(state_.average_row_shift(row)==row_shift,"packed average row depth changed");
+            if (plan_.packed_regrets)
+                require(state_.regret_row_shift(row)==row_regret_shift,"packed regret row depth changed");
             shape_.slots+=menu;
             row_ids[holding]=row;
             policy[holding]=state_.policy_units(row);
@@ -896,8 +939,8 @@ class Driver final {
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
 public:
-    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false)
-        :plan_(Forecast(source_,meter_,mode,packed_averages).make()) {}
+    explicit Driver(Traversal mode=Traversal::by_seat,bool packed_averages=false,bool packed_regrets=false)
+        :plan_(Forecast(source_,meter_,mode,packed_averages,packed_regrets).make()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -928,12 +971,14 @@ public:
         history::History history(source_,deck,history_limits);
         const Integer denominator=Integer(p.denominator_base)<<p.shift;
         if (p.packed_averages) meter_.charge(Work::average,p.packed_average_work);
+        if (p.packed_regrets) meter_.charge(Work::route,p.packed_regret_work);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
              static_cast<std::size_t>(p.state_payload)},
-            {source_.nodes().size(),source_.receipt().edges},{static_cast<std::size_t>(p.packed_average_limbs)});
+            {source_.nodes().size(),source_.receipt().edges},{static_cast<std::size_t>(p.packed_average_limbs),
+             static_cast<std::size_t>(p.packed_regret_limbs)});
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -954,7 +999,13 @@ public:
             }
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
             state.commit_sweep();
-            for (const auto& value:state.regrets()) out.wide(value);
+            if (p.packed_regrets) {
+                for (std::size_t row=0;row<state.rows().size();++row)
+                    for (std::size_t action=0;action<state.rows()[row].actions.size();++action)
+                        out.wide(state.regret_numerator(row,action));
+            } else {
+                for (const auto& value:state.regrets()) out.wide(value);
+            }
             if (p.packed_averages) {
                 for (std::size_t row=0;row<state.rows().size();++row)
                     for (std::size_t action=0;action<state.rows()[row].actions.size();++action)

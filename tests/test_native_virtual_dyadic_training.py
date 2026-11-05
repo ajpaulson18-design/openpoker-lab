@@ -89,22 +89,28 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
 
     def test_admission_covers_all_in_hidden_payoffs_without_training(self):
         plans=[]
-        for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED'):
+        for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED','ADMIT_COMPACT'):
             with self.subTest(mode=mode):
                 directory,process=self.observe(mode.lower(),lambda p:run_bounded_dyadic_probe([str(self.exe)],mode,p))
                 self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
                 self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
                 plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),
-                    paired=mode=='ADMIT_PAIRED',packed=mode=='ADMIT_PACKED')
+                    paired=mode=='ADMIT_PAIRED',packed=mode=='ADMIT_PACKED',compact=mode=='ADMIT_COMPACT')
                 self.assertEqual(plan['training_invocations'],0)
                 self.assertEqual(plan['rank_calls'],0)
                 self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
                 plans.append(plan)
-        legacy,paired,packed=plans
+        legacy,paired,packed,compact=plans
         self.assertLess(paired['planned_total_work'],legacy['planned_total_work'])
         self.assertEqual(packed['planned_total_work']-paired['planned_total_work'],packed['packed_average_work'])
         self.assertEqual(packed['parent_work']['average']-paired['parent_work']['average'],packed['packed_average_work'])
         self.assertEqual(packed['actual_admission_work'],paired['actual_admission_work'])
+        self.assertEqual(compact['planned_total_work']-packed['planned_total_work'],compact['packed_regret_work'])
+        self.assertEqual(compact['parent_work']['route']-packed['parent_work']['route'],compact['packed_regret_work'])
+        self.assertEqual(compact['actual_admission_work']-packed['actual_admission_work'],8*388)
+        self.assertEqual(compact['packed_average_limbs'],packed['packed_average_limbs'])
+        with self.assertRaisesRegex(ValueError,'compact strategy allowance'):
+            validate_admission(dict(compact,parent_allowance=compact['parent_allowance']+1),compact=True)
 
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',

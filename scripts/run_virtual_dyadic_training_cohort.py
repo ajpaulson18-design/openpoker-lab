@@ -37,7 +37,7 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_admission(receipt,*,paired=False,packed=False):
+def validate_admission(receipt,*,paired=False,packed=False,compact=False):
     fixed={'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
            'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,'H':12,'M':1,
            'D_bits':635,'value_bits':642,'normalizer':29,'d5':20,'output_bytes':TOTAL_BYTES,
@@ -46,12 +46,15 @@ def validate_admission(receipt,*,paired=False,packed=False):
            'showdown_contractions_per_pass':EXPECTED_TERMINAL_COMPLETIONS[0],
            'hidden_completion_candidates_per_pass':EXPECTED_TERMINAL_COMPLETIONS[1],
            **dict(zip(SHAPE,EXPECTED_SHAPE))}
-    if paired or packed:
+    if paired or packed or compact:
         fixed['public_walks_per_sweep']=1
-    if packed:
+    if packed or compact:
         fixed['packed_average_limbs']=258_694
         fixed['packed_average_work']=23_123_160
-        fixed['entries']=1_351_755
+        fixed['entries']=1_980_339 if compact else 1_351_755
+    if compact:
+        fixed['packed_regret_limbs']=348_036
+        fixed['packed_regret_work']=31_450_320
     require(type(receipt) is dict and all(type(receipt.get(k)) is type(v) and receipt[k]==v for k,v in fixed.items()),
             'fixed admission census or zero-call receipt mismatch')
     for name,keys in [('component_work',FAMILIES),('parent_work',PARENT)]:
@@ -62,11 +65,20 @@ def validate_admission(receipt,*,paired=False,packed=False):
     require(type(receipt.get('planned_total_work')) is int and 0<sum(component.values())==receipt['planned_total_work']<=500_000_000,
             'fixed admission whole work exceeds allowance')
     require(component['parent']==sum(receipt['parent_work'].values()),'fixed admission parent work sum')
-    if packed:
+    if packed or compact:
         require(receipt['packed_average_work']<=receipt['parent_work']['average'], 'packed average codec work missing')
     else:
         require('packed_average_limbs' not in receipt and 'packed_average_work' not in receipt,
                 'packed codec receipt for dense storage')
+    if compact:
+        allowance=receipt.get('parent_allowance')
+        non_parent=sum(value for name,value in component.items() if name!='parent')
+        require(type(allowance) is int and component['parent']<=allowance==500_000_000-non_parent
+                and receipt['packed_regret_work']<=receipt['parent_work']['route'],
+                'compact strategy allowance does not compose')
+    else:
+        require(not {'packed_regret_limbs','packed_regret_work','parent_allowance'} & receipt.keys(),
+                'compact regret receipt for earlier storage profile')
     quantizer=receipt.get('quantizer_terms')
     require(type(quantizer) is list and len(quantizer)==3 and all(type(x) is int and x>0 for x in quantizer)
             and sum(quantizer)==component['quantizer'],'fixed admission quantizer allocation')
@@ -171,11 +183,12 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def run(output,expected_head,*,train=False,paired=False,packed=False):
+def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    require(all(type(flag) is bool for flag in (train,paired,packed)),'explicit fixed cohort mode')
-    paired=paired or packed
-    suffix='_PACKED' if packed else ('_PAIRED' if paired else '')
+    require(all(type(flag) is bool for flag in (train,paired,packed,compact)) and sum((paired,packed,compact))<=1,
+            'explicit fixed cohort mode')
+    paired=paired or packed or compact
+    suffix='_COMPACT' if compact else ('_PACKED' if packed else ('_PAIRED' if paired else ''))
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
     unlinked_path(output.parent)
@@ -211,7 +224,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False):
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             return directory,receipt
         admitted,_=observed('ADMIT'+suffix)
-        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,packed=packed)
+        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,packed=packed,compact=compact)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -252,9 +265,13 @@ def run(output,expected_head,*,train=False,paired=False,packed=False):
             if paired:
                 original=sum(baseline['saved_replay']['work_actual'].values())
                 actual=sum(numeric['work_actual'].values())
-                require(numeric['public_walks_per_sweep']==1 and actual<original,
-                        'paired traversal must use fewer modeled work units')
-                comparison.update(baseline_work=original,paired_work=actual,modeled_work_saved=original-actual)
+                require(numeric['public_walks_per_sweep']==1 and (compact or actual<original),
+                        'paired traversal or mode-specific work comparison differs')
+                comparison.update(baseline_work=original,paired_work=actual)
+                if compact:
+                    comparison['modeled_work_delta_from_two_pass']=actual-original
+                else:
+                    comparison['modeled_work_saved']=original-actual
                 comparison['native_process_seconds']=process['duration_seconds']
                 if os.name=='nt':
                     memory=process.get('memory',{})
@@ -285,11 +302,13 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--expected-head',required=True)
     parser.add_argument('--train',action='store_true')
-    parser.add_argument('--paired',action='store_true')
-    parser.add_argument('--packed-averages',action='store_true')
+    modes=parser.add_mutually_exclusive_group()
+    modes.add_argument('--paired',action='store_true')
+    modes.add_argument('--packed-averages',action='store_true')
+    modes.add_argument('--compact-strategy',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
-        packed=args.packed_averages),sort_keys=True))
+        packed=args.packed_averages,compact=args.compact_strategy),sort_keys=True))
 
 
 if __name__=='__main__':main()

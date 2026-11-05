@@ -63,6 +63,24 @@ continues to return its dense raw masses. Packed admission counts the two limb
 arrays, row metadata and bounded scratch, and precharges conversion work inside
 the existing parent work cap.
 
+The compact strategy profile packs both regrets and average masses. Let `H`
+be the full decision horizon, `o` the number of opponent actions before a row,
+and `t` the longest continuation measured in decisions including that row.
+The fixed denominator carries `52*H` bits beyond the terminal money scale.
+The opponent prefix and the continuation can consume at most `52*(o+t)` bits.
+Action values and their mixed value therefore share the factor
+`2^(52*(H-o-t))`. Subtraction, cumulative addition, and clipping at zero
+preserve it. The trainer recomputes each row's shift during routing and checks
+divisibility and width when staging the signed update.
+
+The same quantizer can consume the compact values directly because a common
+positive row factor preserves both the action ratios and zero support. The
+checkpoint reconstructs the original numerators in the same order. Admission
+reserves committed and staged limbs for each field and charges the compact
+codec before training. This mode gives the parent the remainder after reserving
+the other components under the existing 500-million-unit total. Earlier modes
+retain their original 115-million-unit parent ceiling.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

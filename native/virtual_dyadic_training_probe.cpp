@@ -11,7 +11,7 @@
 
 namespace training=openpoker::virtual_dyadic_training;
 namespace {
-enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed };
+enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -32,6 +32,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_PAIRED") return Mode::train_paired;
     if (line=="DYADIC_T2_V1 ADMIT_PACKED") return Mode::admit_packed;
     if (line=="DYADIC_T2_V1 TRAIN_PACKED") return Mode::train_packed;
+    if (line=="DYADIC_T2_V1 ADMIT_COMPACT") return Mode::admit_compact;
+    if (line=="DYADIC_T2_V1 TRAIN_COMPACT") return Mode::train_compact;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -49,6 +51,8 @@ void admit(const training::Driver& driver) {
     if (plan.traversal==training::Traversal::paired) std::cout<<",\"public_walks_per_sweep\":1";
     if (plan.packed_averages) std::cout<<",\"packed_average_limbs\":"<<plan.packed_average_limbs
         <<",\"packed_average_work\":"<<plan.packed_average_work;
+    if (plan.packed_regrets) std::cout<<",\"packed_regret_limbs\":"<<plan.packed_regret_limbs
+        <<",\"packed_regret_work\":"<<plan.packed_regret_work<<",\"parent_allowance\":"<<plan.parent_allowance;
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<training::value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<training::chance_divisors[3]<<",\"entries\":"<<plan.entries
@@ -90,10 +94,11 @@ int main() {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool packed=mode==Mode::admit_packed || mode==Mode::train_packed;
+        const bool compact=mode==Mode::admit_compact || mode==Mode::train_compact;
+        const bool packed=compact || mode==Mode::admit_packed || mode==Mode::train_packed;
         const bool paired=packed || mode==Mode::admit_paired || mode==Mode::train_paired;
-        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,packed);
-        if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed) admit(driver);
+        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,packed,compact);
+        if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed || mode==Mode::admit_compact) admit(driver);
         else driver.train(std::cout);
         return 0;
     } catch (const std::exception& error) {
