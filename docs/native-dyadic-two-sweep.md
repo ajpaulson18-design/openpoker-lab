@@ -125,3 +125,31 @@ for the separate construction and training budgets.
 one rank cache entry per validated final board set. Select this profile
 with `--rank-sets`. The training artifact retains the same ordered
 histories, exact policy format, and two-sweep nine-card scope.
+
+## Rank reuse by final board
+
+The source-frozen run at `3d52ddb` used three rank planes for all 60 ordered
+final boards. It observed seven hand ranks, three misses, 72,717 hits, and
+zero evictions. An independent physical traversal predicted every cache
+counter and the 150,872 charged lookup units. The previous ordered-cache
+run used 140 ranks, 60 misses, and 1,265,970 lookup units.
+
+The profile removed 28,490,684 planned chance units and 1,688,632 total
+charged units after the extra board-set census. All 22,587,236 numerical
+bytes and both backing files matched the compact-directory run. Saved-only
+replay verified both updates and final best responses. The single Windows
+process measurements were 3.365 seconds for the ordered cache and 2.660
+seconds for the board-set cache.
+[Rank-cache evidence](../benchmarks/results/native-dyadic-rank-sets-accepted-v1/manifest.json)
+
+Component controls compared both seats with the independent literal
+evaluator across every supported ordered river on both decks. The ten-card
+component used 17 board-set planes and 42 hand ranks for 340 ordered rivers.
+Whole-game ten-card admission still has separate work, payload, and
+checkpoint gates.
+
+A separate saved-data check reconstructed the prior 22,587,756-byte
+checkpoint from 2,114,028 bytes of metadata and policy data plus its two
+compact page files. The same split projects 9,833,076 stream bytes and
+47,403,552 page bytes on the ten-card geometry. This is a format
+feasibility result from saved data and a structural projection.
