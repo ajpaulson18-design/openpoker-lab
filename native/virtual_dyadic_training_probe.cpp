@@ -16,7 +16,7 @@ namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
                   admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split,
-                  admit_ten, train_ten };
+                  admit_ten, train_ten, admit_ten_buffered, train_ten_buffered };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -53,6 +53,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_SPLIT") return Mode::train_split;
     if (line=="DYADIC_T2_V1 ADMIT_TEN") return Mode::admit_ten;
     if (line=="DYADIC_T2_V1 TRAIN_TEN") return Mode::train_ten;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_BUFFERED") return Mode::admit_ten_buffered;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_BUFFERED") return Mode::train_ten_buffered;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -82,6 +84,9 @@ void admit(const training::Driver& driver) {
             <<",\"page_cache_banks\":"<<pages.cache_banks<<",\"page_read_word_limit\":"<<pages.read_words
             <<",\"page_write_word_limit\":"<<pages.write_words<<",\"page_request_limit\":"<<pages.requests
             <<",\"page_resident_bytes\":"<<training::paging::Image::resident_bytes(pages);
+        if (pages.stage_split_words)
+            std::cout<<",\"page_stage_split_words\":"<<pages.stage_split_words
+                <<",\"page_write_request_limit\":"<<pages.write_requests;
     }
     if (plan.compact_directory)
         std::cout<<",\"directory_work\":"<<plan.directory_work
@@ -148,13 +153,16 @@ int main(int argc,char* argv[]) {
         std::ios::sync_with_stdio(false);
         const auto mode=request();
         const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
-            mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten;
+            mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
+            mode==Mode::train_ten_buffered;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_ten || mode==Mode::train_ten) profile=training::StrategyProfile::ten_card;
+        if (mode==Mode::admit_ten_buffered || mode==Mode::train_ten_buffered)
+            profile=training::StrategyProfile::ten_card_buffered;
+        else if (mode==Mode::admit_ten || mode==Mode::train_ten) profile=training::StrategyProfile::ten_card;
         else if (mode==Mode::admit_split || mode==Mode::train_split) profile=training::StrategyProfile::split_checkpoint;
         else if (mode==Mode::admit_rank_sets || mode==Mode::train_rank_sets) profile=training::StrategyProfile::rank_sets;
         else if (mode==Mode::admit_directory || mode==Mode::train_directory) profile=training::StrategyProfile::directory;
@@ -168,7 +176,7 @@ int main(int argc,char* argv[]) {
         if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
-            mode==Mode::admit_split || mode==Mode::admit_ten) admit(driver);
+            mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered) admit(driver);
         else {
             const auto paging=driver.train(std::cout,scratch);
             if (paging) save_paging(scratch,*paging);

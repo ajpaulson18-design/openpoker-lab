@@ -1,4 +1,4 @@
-"""Source-frozen PROOF9 T2 admission or one native run with saved-only replay."""
+"""Source-frozen dyadic T2 admission or one native run with saved-only replay."""
 import argparse
 import hashlib
 import json
@@ -18,6 +18,7 @@ from scripts.verify_virtual_dyadic_training import TEN_CARD_IMAGE_BYTES, TEN_CAR
 from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
+from tests.virtual_dyadic_stage_schedule import stage_schedule
 
 ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
@@ -39,7 +40,7 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_ten_admission(receipt):
+def validate_ten_admission(receipt, *, buffered=False):
     expected={
         'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
         'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,
@@ -66,6 +67,14 @@ def validate_ten_admission(receipt):
                            value_add=49_700_420,terminal_scale=150_196_888,average=116_524_928,
                            route=299_862_360,output=15_790_772),
     }
+    if buffered:
+        extra_work=23_982_922
+        expected.update(page_stage_split_words=1_295_812,page_write_request_limit=19_560,
+                        page_resident_bytes=961_349,entries=1_559_639)
+        expected['paging_work']+=extra_work
+        expected['parent_work']['route']+=extra_work
+        expected['component_work']['parent']+=extra_work
+        expected['planned_total_work']+=extra_work
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
             'ten-card admission differs from the independent fixed census')
@@ -75,9 +84,9 @@ def validate_ten_admission(receipt):
 
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-                       directory=False,rank_sets=False,split=False,ten_card=False):
-    if ten_card:
-        return validate_ten_admission(receipt)
+                       directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False):
+    if ten_card or ten_buffered:
+        return validate_ten_admission(receipt,buffered=ten_buffered)
     require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
@@ -273,7 +282,7 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def verify_paging(directory,admission):
+def verify_paging(directory,admission,stage=None):
     path=unlinked_path(directory/'paging.json')
     require(path.is_file() and path.stat().st_size<=65536,'paged training receipt path or size')
     receipt=exact_json(path.read_bytes())
@@ -287,6 +296,13 @@ def verify_paging(directory,admission):
         fixed.update(read_calls=1_967_462,stage_calls=1_124_264,logical_read_words=10_555_076,
                      write_words=8_888_166,physical_write_requests=1_124_988)
         page_references=1_969_550
+    if stage is not None:
+        require(stage['average_words']==admission['page_stage_split_words'] and
+                stage['image_words']==admission['page_image_words'] and
+                stage['batched_write_calls']==admission['page_write_request_limit'],
+                'independent buffered write schedule differs from admission')
+        fixed.update(stage_calls=stage['per_sweep_stage_calls']*stage['sweeps'],
+                     write_words=stage['written_words'],physical_write_requests=stage['batched_write_calls'])
     counts=('read_words','physical_read_requests','cache_hits','cache_misses')
     require(type(receipt) is dict and set(receipt)==set(fixed)|set(counts)
             and all(type(receipt[key]) is int and receipt[key]==value for key,value in fixed.items())
@@ -304,15 +320,68 @@ def verify_paging(directory,admission):
     return {'counts':receipt,'images':files}
 
 
+def compare_buffered_ten(path,source,paging,images):
+    directory='benchmarks/results/native-dyadic-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'ten-card baseline manifest source drift')
+    baseline=exact_json(raw)
+    operator=baseline['operator']
+    require(baseline['status']=='accepted_ten_card_training_and_replay' and
+            baseline['source_head']=='bb46feb27a6a92f3a1cefbc8ad152ffaedead86d' and
+            baseline['training_invocations']==1 and operator['actual_exit_observed'] and
+            operator['returncode']==0 and operator['raw_source_stable'],'accepted direct-write baseline required')
+    original=baseline['comparison']
+    old_counts=original['paging']
+    new_counts=paging['counts']
+    require(images==baseline['saved_replay']['checkpoint_images'] and
+            all(old_counts[key]==value for key,value in new_counts.items() if key!='physical_write_requests'),
+            'buffered checkpoint or paging parity differs')
+    archive_name=f'{directory}/evidence.zip'
+    archive=ROOT/archive_name
+    identity=baseline['archive']
+    require(identity['path']=='evidence.zip' and 0<archive.stat().st_size==identity['bytes']<=50<<20 and
+            sha(archive)==identity['sha256']==source['files'][archive_name]['raw_sha256'],
+            'ten-card baseline archive identity differs')
+    member='cohort/train_ten/stdout.bin'
+    footer_bytes=8+64*8
+    numeric_bytes=TEN_CARD_SPLIT_BYTES-footer_bytes
+    numeric_hash=hashlib.sha256()
+    original_hash=hashlib.sha256()
+    with ZipFile(archive) as zipped, path.open('rb') as buffered:
+        require(zipped.getinfo(member).file_size==TEN_CARD_SPLIT_BYTES,'ten-card baseline stream size differs')
+        with zipped.open(member) as direct:
+            for at in range(0,numeric_bytes,1<<20):
+                count=min(numeric_bytes-at,1<<20)
+                data=direct.read(count)
+                require(len(data)==count and buffered.read(count)==data,
+                        f'buffered numeric output differs at or after byte {at}')
+                numeric_hash.update(data)
+                original_hash.update(data)
+            footer=direct.read(footer_bytes)
+            require(len(footer)==footer_bytes and footer.startswith(b'OPLDTP02') and not direct.read(1),
+                    'ten-card baseline stream footer differs')
+            original_hash.update(footer)
+    digest=original_hash.hexdigest()
+    require(digest==baseline['saved_replay']['saved_output_sha256'],'ten-card baseline stream SHA-256 differs')
+    return {'direct_source_head':baseline['source_head'],'direct_stream_sha256':digest,
+            'numeric_bytes':numeric_bytes,'numeric_sha256':numeric_hash.hexdigest(),
+            'exact_checkpoint_images':images,'direct_write_calls':old_counts['physical_write_requests'],
+            'buffered_write_calls':new_counts['physical_write_requests'],
+            'direct_native_observation':original['native_observation']}
+
+
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-        directory=False,rank_sets=False,split=False,ten_card=False):
+        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card)
+    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
-                                                 '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN')) if flag),'')
+                                                 '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED')) if flag),'')
     paired=any(modes)
+    ten_card=ten_card or ten_buffered
     split=split or ten_card
     uses_paging=paged or directory or rank_sets or split
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
@@ -357,7 +426,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admitted,_=observed('ADMIT'+suffix)
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
-            rank_sets=rank_sets,split=split,ten_card=ten_card)
+            rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -365,6 +434,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 'scope':'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
+            schedule=stage_schedule(ten_card=True) if ten_buffered else None
             entered=1
             trained,process=observed('TRAIN'+suffix)
             raw=trained/'stdout.bin'
@@ -388,11 +458,17 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--ten-card')
             if split:
                 pages=output/'page-images'
-                paging=verify_paging(pages,admission)
+                paging=verify_paging(pages,admission,schedule)
                 images=[{'name':name,**paging['images'][name]} for name in SPLIT_IMAGE_NAMES]
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
+                if ten_buffered:
+                    comparison=compare_buffered_ten(raw,source,paging,images)
+                    comparison['buffered_native_observation']={'duration_seconds':process['duration_seconds'],
+                                                               'memory':process.get('memory')}
+                    result['buffered_comparison']=comparison
+                    result['independent_stage_schedule']=schedule
                 command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
             replay_dir=output/'saved-review'
@@ -411,7 +487,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
             if uses_paging:
-                result['paging']=verify_paging(output/'page-images',admission)
+                result['paging']=verify_paging(output/'page-images',admission,schedule)
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
@@ -467,11 +543,13 @@ def main():
     modes.add_argument('--rank-sets',action='store_true')
     modes.add_argument('--split-checkpoint',action='store_true')
     modes.add_argument('--ten-card',action='store_true')
+    modes.add_argument('--ten-buffered',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
-        rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card),sort_keys=True))
+        rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
+        ten_buffered=args.ten_buffered),sort_keys=True))
 
 
 if __name__=='__main__':main()

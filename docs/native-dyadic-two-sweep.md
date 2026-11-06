@@ -217,3 +217,23 @@ The verified final exploitability was 2.9843 big blinds for the bounded
 fixture after two sweeps. This is an exactness and capacity result for
 the configured game. Longer-run convergence remains open.
 [Ten-card run evidence](../benchmarks/results/native-dyadic-ten-card-accepted-v1/manifest.json)
+
+### Buffered staging
+
+The explicit `--ten-buffered` cohort uses `ADMIT_TEN_BUFFERED` and
+`TRAIN_TEN_BUFFERED` on the same ten-card fixture. The pager retains one
+dirty page per field. It flushes only contiguous marked runs on a page
+change or commit. Average and regret extents can share a physical
+page. The write-once bitmap covers the entire image and survives buffer
+eviction. Reads continue to use the committed image until a successful
+flush and sweep commit.
+
+The independent rank-free traversal derives 19,560 stream write calls,
+including initialization, and 8,888,166 written words. The direct
+baseline used 1,124,988 calls for the same word count. Admission reserves
+961,349 pager bytes, including 66,576 bytes for the two dirty buffers and
+their metadata, and 2,126,173,102 work units within the ten-card cap.
+The cohort checks the write schedule, unchanged read counts, both
+checkpoint digests, and numerical stream bytes against the accepted
+direct baseline. It then replays both sweeps and best responses from
+the saved packet.

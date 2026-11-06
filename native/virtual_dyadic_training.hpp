@@ -30,7 +30,8 @@ using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
-    dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card
+    dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
+    ten_card_buffered
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -485,7 +486,9 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        if (profile==StrategyProfile::ten_card) plan_.fixture=&proof10;
+        const bool buffered=profile==StrategyProfile::ten_card_buffered;
+        if (profile==StrategyProfile::ten_card || buffered) plan_.fixture=&proof10;
+        if (buffered) plan_.page_limits.write_requests=19560;
         plan_.packed_averages=profile!=StrategyProfile::dense;
         plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card();
         require(!plan_.split_checkpoint || sweeps==2,"split checkpoint requires exactly two retained sweeps");
@@ -607,12 +610,20 @@ public:
             // stream skips both fields of both checkpoint scans.
             const auto requests=(plan_.split_checkpoint?11:15)*S;
             const auto read_words=plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
+            const auto write_requests=plan_.page_limits.write_requests;
             plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,3*L,requests,2,
-                plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy};
+                plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
+                write_requests?static_cast<std::size_t>(A):0,write_requests};
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
             plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*((L+4095)/4096)+8*((L+63)/64);
+            if (write_requests) {
+                // Up to two page fragments per staged extent, one copy and
+                // mark per staged word, and at most 64 bitmap words to scan
+                // and clear per nonempty flush, plus bookkeeping per run.
+                plan_.paging_work+=8*(2*sweeps*S)+2*sweeps*L+160*write_requests+2*(4096+64+1);
+            }
             w[work_index(Work::route)]+=plan_.paging_work;
         }
         if (plan_.compact_directory) {

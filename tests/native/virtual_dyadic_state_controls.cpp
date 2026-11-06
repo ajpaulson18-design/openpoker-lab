@@ -676,6 +676,55 @@ void paged_image_controls(const std::filesystem::path& scratch) {
     require(boundary==std::array<std::uint64_t,2>{99,99} && capped.receipt().read_words==4,
         "colliding boundary pages exceeded read admission");
     std::cout<<"PAGED_IMAGE exact_transaction\n";
+
+    constexpr std::size_t page=pages::default_page_words, words=page+5, split=page+2;
+    pages::Limits buffered{words,page,2,4*words,2*words,30,2,pages::Profile::legacy,split,6};
+    const std::vector<std::uint64_t> head(page-2,42);
+    const auto stage=[&](pages::Image& target) {
+        target.begin_sweep();
+        check_rejection.operator()<std::invalid_argument>([&] {target.stage(split-1,first);});
+        target.stage(page-2,first);
+        target.stage(split+1,tail);
+        target.stage(0,head);
+        check_rejection.operator()<std::invalid_argument>([&] {target.stage(page-2,tail);});
+        target.stage(split,tail);
+        target.stage(split+2,tail);
+        target.read(page-2,values,1);
+        require(values==std::array<std::uint64_t,4>{},"dirty buffers exposed staged values");
+    };
+    pages::Image batched(scratch/"buffered",buffered);
+    stage(batched);
+    require(batched.receipt().physical_write_requests==4,"unexpected early dirty flushes");
+    batched.commit_sweep();
+    batched.read(page-2,values,1);
+    require(values==first,"cross-page buffer contents differ");
+    std::array<std::uint64_t,3> shared_tail{};
+    batched.read(split,shared_tail);
+    require(shared_tail==std::array<std::uint64_t,3>{9,9,9},"shared page overwrote the other field");
+    batched.read(0,values);
+    require(values==std::array<std::uint64_t,4>{42,42,42,42} &&
+        batched.receipt().physical_write_requests==6 && batched.receipt().write_words==2*words &&
+        batched.receipt().stage_calls==5,"buffered image coverage or write receipt differs");
+
+    buffered.write_requests=5;
+    pages::Image failed(scratch/"failed-flush",buffered);
+    stage(failed);
+    check_rejection.operator()<std::length_error>([&] {failed.commit_sweep();});
+    check_rejection.operator()<std::logic_error>([&] {failed.commit_sweep();});
+    check_rejection.operator()<std::logic_error>([&] {failed.stage(0,tail);});
+    failed.read(split,shared_tail);
+    require(shared_tail==std::array<std::uint64_t,3>{} && failed.receipt().completed_sweeps==0 &&
+        failed.receipt().physical_write_requests==5,"partially flushed sweep replaced the committed image");
+
+    buffered.write_requests=6;
+    buffered.write_words=words+1;
+    pages::Image word_capped(scratch/"buffered-word-limit",buffered);
+    word_capped.begin_sweep();
+    word_capped.stage(0,tail);
+    check_rejection.operator()<std::length_error>([&] {word_capped.stage(2,tail);});
+    require(word_capped.receipt().write_words==words && word_capped.receipt().stage_calls==1,
+        "pending staged word escaped write admission");
+    std::cout<<"PAGED_IMAGE buffered_transaction\n";
 }
 
 void compact_directory_controls(h::History& history,const b::Template& source,

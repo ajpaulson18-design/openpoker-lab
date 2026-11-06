@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <limits>
+#include <memory>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -38,6 +39,8 @@ struct Limits {
     std::uint64_t requests = maximum_logical_requests;
     std::size_t cache_banks = 1; // appended; cache_pages is the total across banks
     Profile profile = Profile::legacy;
+    std::size_t stage_split_words = 0; // nonzero enables a write buffer for each field
+    std::uint64_t write_requests = 0;
 };
 
 struct Receipt {
@@ -54,6 +57,14 @@ struct Receipt {
 };
 
 class Image {
+    static constexpr std::size_t no_page = std::numeric_limits<std::size_t>::max();
+    struct DirtyPage {
+        std::array<std::uint64_t,default_page_words> words{};
+        std::array<std::uint64_t,default_page_words/64> marked{};
+        std::size_t page = no_page;
+    };
+    using WriteBuffers = std::array<DirtyPage,2>;
+
 public:
     // This forecast performs checked arithmetic and validation only; it allocates nothing.
     [[nodiscard]] static std::size_t resident_bytes(const Limits& limits) {
@@ -62,7 +73,8 @@ public:
         const auto word_bytes = checked_mul(cached_words, sizeof(std::uint64_t));
         const auto bitmap_bytes = limits.image_words / 8 + (limits.image_words % 8 != 0);
         const auto tag_bytes = checked_mul(limits.cache_pages, sizeof(std::size_t));
-        const auto total = checked_add(checked_add(checked_add(word_bytes, limits.cache_pages), tag_bytes), bitmap_bytes);
+        auto total = checked_add(checked_add(checked_add(word_bytes, limits.cache_pages), tag_bytes), bitmap_bytes);
+        if (limits.stage_split_words) total=checked_add(total,sizeof(WriteBuffers));
         if (total > maximum_resident_bytes) throw std::invalid_argument("resident image budget exceeded");
         return total;
     }
@@ -70,7 +82,8 @@ public:
     Image(const std::filesystem::path& fresh_directory, Limits limits)
         : limits_(limits), resident_bytes_(resident_bytes(limits)), cache_(limits.cache_pages * limits.page_words),
           cache_valid_(limits.cache_pages, 0), cache_tags_(limits.cache_pages, 0),
-          staged_bits_(limits.image_words / 8 + (limits.image_words % 8 != 0), 0) {
+          staged_bits_(limits.image_words / 8 + (limits.image_words % 8 != 0), 0),
+          write_buffers_(limits.stage_split_words ? std::make_unique<WriteBuffers>() : nullptr) {
         std::error_code ec;
         if (!std::filesystem::create_directory(fresh_directory, ec) || ec)
             throw std::runtime_error("fresh image directory could not be created exclusively");
@@ -79,10 +92,8 @@ public:
         if (!files_[0] || !files_[1]) throw std::runtime_error("cannot create private image files");
         for (std::size_t at=0; at<limits_.image_words;) {
             const auto n=std::min(limits_.image_words-at,limits_.page_words);
-            write_words(files_[0],at,{cache_.data(),n});
+            record_write(files_[0],at,{cache_.data(),n});
             at+=n;
-            receipt_.write_words+=n;
-            ++receipt_.physical_write_requests;
         }
         files_[0].flush();
         if (!files_[0]) throw std::runtime_error("cannot initialize committed image");
@@ -94,7 +105,7 @@ public:
     Image& operator=(Image&&) = delete;
 
     void begin_sweep() {
-        if (sweep_open_) throw std::logic_error("sweep already open");
+        if (failed_ || sweep_open_) throw std::logic_error("image cannot begin a sweep");
         std::fill(staged_bits_.begin(), staged_bits_.end(), static_cast<unsigned char>(0));
         staged_words_ = 0;
         sweep_open_ = true;
@@ -130,19 +141,24 @@ public:
     }
 
     void stage(std::size_t offset, std::span<const std::uint64_t> input) {
-        if (!sweep_open_) throw std::logic_error("stage requires an open sweep");
+        if (failed_ || !sweep_open_) throw std::logic_error("stage requires a usable open sweep");
         check_range(offset, input.size());
         check_request_admission(1);
+        if (write_buffers_ && offset<limits_.stage_split_words && input.size()>limits_.stage_split_words-offset)
+            throw std::invalid_argument("staged range crosses the field boundary");
         for (std::size_t i = 0; i < input.size(); ++i)
             if (bit_is_set(offset + i)) throw std::invalid_argument("overlapping staged range");
         if (input.size() > limits_.image_words - staged_words_)
             throw std::invalid_argument("staged image overflow");
-        if (receipt_.write_words > limits_.write_words || input.size() > limits_.write_words - receipt_.write_words)
+        // Include the initial image and every accepted word, even if it is still buffered.
+        const auto reserved=(1+receipt_.completed_sweeps)*limits_.image_words+staged_words_;
+        if (reserved > limits_.write_words || input.size() > limits_.write_words-reserved)
             throw std::length_error("write word limit exceeded");
         if (!input.empty()) {
-            write_words(files_[1-committed_],offset,input);
-            receipt_.write_words+=input.size();
-            ++receipt_.physical_write_requests;
+            try {
+                if (write_buffers_) buffer_stage(offset,input);
+                else record_write(files_[1-committed_],offset,input);
+            } catch (...) { failed_=true; throw; }
             for (std::size_t i = 0; i < input.size(); ++i) set_bit(offset + i);
             staged_words_ += input.size();
         }
@@ -150,12 +166,16 @@ public:
     }
 
     void commit_sweep() {
-        if (!sweep_open_) throw std::logic_error("no open sweep");
+        if (failed_ || !sweep_open_) throw std::logic_error("commit requires a usable open sweep");
         if (staged_words_ != limits_.image_words) throw std::logic_error("incomplete staged image");
         // The exact word count and overlap guard prove complete coverage.
-        auto& staged=files_[1-committed_];
-        staged.flush();
-        if (!staged) throw std::runtime_error("cannot flush staged image");
+        try {
+            if (write_buffers_)
+                for (auto& buffer:*write_buffers_) flush_dirty(buffer);
+            auto& staged=files_[1-committed_];
+            staged.flush();
+            if (!staged) throw std::runtime_error("cannot flush staged image");
+        } catch (...) { failed_=true; throw; }
         committed_=1-committed_;
         ++receipt_.completed_sweeps;
         sweep_open_ = false;
@@ -172,8 +192,9 @@ private:
     std::vector<unsigned char> cache_valid_;
     std::vector<std::size_t> cache_tags_;
     std::vector<unsigned char> staged_bits_;
+    std::unique_ptr<WriteBuffers> write_buffers_;
     std::size_t staged_words_ = 0;
-    bool sweep_open_ = false;
+    bool sweep_open_ = false, failed_ = false;
     Receipt receipt_;
     std::array<std::fstream,2> files_;
     std::size_t committed_ = 0;
@@ -202,6 +223,12 @@ private:
             throw std::invalid_argument("invalid image limits");
         if (l.image_words > static_cast<std::size_t>(std::numeric_limits<std::streamoff>::max()) / 8)
             throw std::overflow_error("image byte size exceeds stream range");
+        if (l.stage_split_words) {
+            const auto initialization=(l.image_words+l.page_words-1)/l.page_words;
+            if (l.page_words!=default_page_words || l.stage_split_words>=l.image_words ||
+                l.write_requests<initialization || l.write_requests>l.write_words)
+                throw std::invalid_argument("invalid buffered stage limits");
+        } else if (l.write_requests) throw std::invalid_argument("write request cap requires buffered staging");
     }
     void check_range(std::size_t offset, std::size_t count) const {
         if (offset > limits_.image_words || count > limits_.image_words - offset || count>limits_.page_words)
@@ -221,6 +248,51 @@ private:
         f.seekp(static_cast<std::streamoff>(word_offset * 8));
         f.write(reinterpret_cast<const char*>(input.data()),static_cast<std::streamsize>(bytes));
         if (!f) throw std::runtime_error("image write failed");
+    }
+    void record_write(std::fstream& file,std::size_t offset,std::span<const std::uint64_t> words) {
+        if (limits_.write_requests && receipt_.physical_write_requests>=limits_.write_requests)
+            throw std::length_error("physical write request limit exceeded");
+        write_words(file,offset,words);
+        receipt_.write_words+=words.size();
+        ++receipt_.physical_write_requests;
+    }
+    static std::size_t next_mark(const DirtyPage& buffer,std::size_t start,bool marked) {
+        while (start<default_page_words) {
+            const auto word=buffer.marked[start/64];
+            const auto bits=(marked?word:~word) & (UINT64_MAX<<(start%64));
+            if (bits) return (start/64)*64+static_cast<std::size_t>(std::countr_zero(bits));
+            start=(start/64+1)*64;
+        }
+        return default_page_words;
+    }
+    void flush_dirty(DirtyPage& buffer) {
+        if (buffer.page==no_page) return;
+        auto first=next_mark(buffer,0,true);
+        while (first<default_page_words) {
+            const auto end=next_mark(buffer,first,false);
+            record_write(files_[1-committed_],buffer.page*default_page_words+first,
+                std::span<const std::uint64_t>(buffer.words).subspan(first,end-first));
+            first=next_mark(buffer,end,true);
+        }
+        buffer.marked.fill(0);
+        buffer.page=no_page;
+    }
+    void buffer_stage(std::size_t offset,std::span<const std::uint64_t> input) {
+        auto& buffer=(*write_buffers_)[offset>=limits_.stage_split_words];
+        while (!input.empty()) {
+            const auto page=offset/default_page_words;
+            const auto first=offset%default_page_words;
+            const auto count=std::min(input.size(),default_page_words-first);
+            if (buffer.page!=page) {
+                flush_dirty(buffer);
+                buffer.page=page;
+            }
+            std::copy_n(input.data(),count,buffer.words.data()+first);
+            for (std::size_t i=first;i<first+count;++i)
+                buffer.marked[i/64]|=UINT64_C(1)<<(i%64);
+            offset+=count;
+            input=input.subspan(count);
+        }
     }
     void load_page(std::size_t page, std::size_t slot) {
         const auto first = page * limits_.page_words;
