@@ -181,5 +181,35 @@ the schedule. Substituting the projected page reservation into the existing
 State ledger leaves 3,060,972 entries. Ten-card training and convergence
 remain open.
 
+## Compact row directory
+
+The source-frozen directory run at `36806b4` kept all 24,420 rows in their
+original order. The independent census matched each saved history, actor,
+holding, menu extent, and slot offset. It found a maximum of ten probes
+against the 30-probe construction limit. The State reserves 231,814
+entries during construction and 340,956 after releasing the lookup array,
+including policy export. Composed admission fell from 841,925 to 500,045
+entries. The directory added 2,344,320 charged work units.
+
+Saved-only replay verified both sweeps and the final best responses. All
+22,587,236 numerical bytes, both compact backing files, and the pager
+counters matched the prior paged run. In one Windows observation per
+profile, peak working set fell from 8,151,040 to 6,598,656 bytes, and
+peak commit fell from 5,312,512 to 3,579,904 bytes. Native process time
+was 3.235 and 3.365 seconds respectively.
+[Compact directory evidence](../benchmarks/results/native-dyadic-compact-directory-accepted-v1/manifest.json)
+
+At the derived 644-bit width, the rank-free ten-card census projects
+1,392,228 State entries under the two-million-entry cap. Current formulas
+already reserve at least 735,665,344 work units across State, History,
+and paging and strategy bookkeeping. This subtotal excludes chance,
+quantization, and other traversal work. The full-width checkpoint projects
+108,768,308 bytes, and the integer and text payload reservation is
+1,182,148,028 bits. Those estimates exceed their current limits. The
+current rank cache would also see 340 ordered river prefixes. Grouping
+those prefixes by final board yields 17 potential rank-only keys while
+leaving ordered public histories distinct. The census does no hand ranking
+or training.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)

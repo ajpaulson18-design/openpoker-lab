@@ -117,4 +117,6 @@ tradeoff on the nine-card fixture.
 `ADMIT_DIRECTORY` and `TRAIN_DIRECTORY` use the same paged strategy with
 compact row records and a construction-only lookup array. Select this
 profile with `--compact-directory`. The request still covers the frozen
-nine-card, two-sweep fixture.
+nine-card, two-sweep fixture. See the
+[directory measurements](native-dyadic-storage-census.md#compact-row-directory)
+for the separate construction and training budgets.
