@@ -61,6 +61,7 @@ struct PagedStrategy {
     std::filesystem::path scratch;
     virtual_dyadic_paged_image::Limits limits;
     bool compact_rows=false;
+    bool ordered_rows=false;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -95,6 +96,7 @@ struct ScaledAverageIncrements {
 
 class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
+    using RegistrationOrder = std::pair<History::DecisionPath,std::size_t>;
     using ActionText = std::array<char,64>;
     using Menu = std::span<const std::string_view>;
     struct PackedRow { std::size_t limb_offset = 0, shift = 0; };
@@ -125,6 +127,7 @@ class State final {
     std::unique_ptr<std::uint32_t[]> compact_index_;
     std::size_t compact_index_slots_=0;
     std::size_t compact_probe_limit_=0;
+    std::optional<RegistrationOrder> last_registration_;
     std::unique_ptr<ActionText[]> action_text_;
     std::unique_ptr<std::string_view[]> action_views_;
     std::unique_ptr<Menu[]> action_catalog_;
@@ -218,7 +221,7 @@ class State final {
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
-                                              paged && paged->compact_rows);
+                                              paged && paged->compact_rows,paged && paged->ordered_rows);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -363,8 +366,10 @@ public:
     static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
                                              PackedAverageCapacity packed={},
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
-                                             bool compact_rows=false) {
+                                             bool compact_rows=false,bool ordered_rows=false) {
         (void)admit_catalog(f,catalog);
+        if (ordered_rows && !compact_rows)
+            fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
         if (catalog.sealed && (!packed.limb_count || !packed.regret_limbs))
             fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
         const bool expanded=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof10;
@@ -418,9 +423,11 @@ public:
                 entries=plus(entries,plus(resident_bytes,7)/8);
                 packed_bits=plus(packed_bits,times(8,resident_bytes));
                 if (compact_rows) {
-                    const auto common=plus(1056,plus(4*f.rows,plus(3*catalog.token_slots,2*catalog.keys)));
-                    const auto build=plus(common,compact_index_slots(f.rows));
-                    const auto frozen=plus(common,plus(2*f.rows,plus(2*f.slots,plus(resident_bytes,7)/8)));
+                    const auto order_entries=ordered_rows?(sizeof(last_registration_)+7)/8:0;
+                    const auto common=plus(1056+order_entries,plus(4*f.rows,plus(3*catalog.token_slots,2*catalog.keys)));
+                    const auto build=ordered_rows?common:plus(common,compact_index_slots(f.rows));
+                    const auto policies=times(ordered_rows?1:2,plus(f.rows,f.slots));
+                    const auto frozen=plus(common,plus(policies,plus(resident_bytes,7)/8));
                     entries=std::max(build,frozen);
                 }
                 if (packed_bits>packed_credit) payload=plus(payload,packed_bits-packed_credit);
@@ -464,10 +471,12 @@ public:
         if (paged_ && paged_->compact_rows) {
             if (hands[0]>2 || hands[1]>2)
                 fail(ErrorCode::invalid_forecast,"compact rows support at most two holdings per seat");
-            compact_index_slots_=compact_index_slots(forecast_.rows);
-            compact_probe_limit_=2*logceil(forecast_.rows+1);
             compact_rows_=std::make_unique<CompactRow[]>(forecast_.rows);
-            compact_index_=std::make_unique<std::uint32_t[]>(compact_index_slots_);
+            if (!paged_->ordered_rows) {
+                compact_index_slots_=compact_index_slots(forecast_.rows);
+                compact_probe_limit_=2*logceil(forecast_.rows+1);
+                compact_index_=std::make_unique<std::uint32_t[]>(compact_index_slots_);
+            }
         } else rows_=std::make_unique<Row[]>(forecast_.rows);
         if (!catalog_.sealed) action_text_=std::make_unique<ActionText[]>(token_capacity());
         action_views_=std::make_unique<std::string_view[]>(token_capacity());
@@ -582,7 +591,9 @@ public:
         try {
             if (!catalog_.sealed) fail(ErrorCode::invalid_row,"sealed registration requires sealed catalog mode");
             if (phase_!=Phase::building) fail(ErrorCode::phase,"state row registration is closed");
-            const auto info=history_->decision_key(cursor);
+            const bool ordered=paged_ && paged_->ordered_rows;
+            History::DecisionPath path{};
+            const auto info=history_->decision_key(cursor,ordered?&path:nullptr);
             if (info.actor>1 || holding>=hand_counts_[info.actor] || info.actions==0 || info.actions>20 ||
                 info.source>=catalog_.keys || info.depth>forecast_.max_history_depth)
                 fail(ErrorCode::invalid_row,"sealed history decision key outside admitted range");
@@ -592,7 +603,10 @@ public:
             charge(plus(128,times(16,logceil(forecast_.rows+1))));
             const Key identity{info.ordinal,info.actor,holding};
             std::size_t slot=0,existing=receipt_.rows;
-            if (compact_rows_) {
+            if (ordered) {
+                if (last_registration_ && RegistrationOrder{path,holding}<=*last_registration_)
+                    fail(ErrorCode::invalid_row,"sealed row is not in strict traversal order");
+            } else if (compact_rows_) {
                 slot=compact_slot(info.ordinal,holding);
                 if (compact_index_[slot]) existing=compact_index_[slot]-1;
             } else {
@@ -633,7 +647,8 @@ public:
                     static_cast<std::uint16_t>(info.source),static_cast<std::uint16_t>(average_shift),
                     static_cast<std::uint16_t>(regret_shift),static_cast<std::uint8_t>(info.actor),
                     static_cast<std::uint8_t>(holding)};
-                compact_index_[slot]=static_cast<std::uint32_t>(number+1);
+                if (ordered) last_registration_.emplace(path,holding);
+                else compact_index_[slot]=static_cast<std::uint32_t>(number+1);
             } else {
                 rows_[number]={info.ordinal,info.actor,holding,offset,owned};
                 packed_rows_[number]={packed_words_registered_,average_shift};
@@ -740,6 +755,7 @@ public:
         try {
             if (phase_!=Phase::building) fail(ErrorCode::phase,"state row index lookup is closed after freeze");
             if (!catalog_.sealed) fail(ErrorCode::invalid_row,"history-authenticated lookup requires sealed mode");
+            if (paged_ && paged_->ordered_rows) fail(ErrorCode::phase,"ordered registration has no row index");
             const auto info=history_->decision_key(cursor);
             if (info.actor>1 || holding>=hand_counts_[info.actor]) fail(ErrorCode::invalid_row,"sealed lookup holding");
             charge(64+16*logceil(forecast_.rows+1));
@@ -920,8 +936,14 @@ public:
             AverageExport image;
             image.rows=forecast_.rows;
             image.slots=forecast_.slots;
-            image.units=std::make_unique<std::uint64_t[]>(image.slots);
-            image.uniform_fallback=std::make_unique<unsigned char[]>(image.rows);
+            if (paged_ && paged_->ordered_rows) {
+                // The final commit ended all policy borrows and staging marks.
+                image.units=std::move(units_);
+                image.uniform_fallback=std::move(seen_);
+            } else {
+                image.units=std::make_unique<std::uint64_t[]>(image.slots);
+                image.uniform_fallback=std::make_unique<unsigned char[]>(image.rows);
+            }
             if (include_raw) {
                 image.raw_masses=std::make_unique<Integer[]>(image.slots);
                 std::copy_n(averages_.get(),image.slots,image.raw_masses.get());

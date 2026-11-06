@@ -36,6 +36,7 @@ class History final {
         betting::Phase phase=betting::Phase::decision;
         std::uint8_t next_street=0,actor=0;
         bool reveal=false;
+        std::uint8_t incoming_edge=0;
     };
     Limits limits_;
     mutable Receipt receipt_{};
@@ -83,6 +84,8 @@ public:
     struct DecisionKey {
         std::size_t ordinal,source,depth,actor,actions;
     };
+    using DecisionPath = std::array<std::uint8_t,17>;
+    static constexpr std::uint64_t decision_path_work=32;
 private:
     const Occurrence& validate(Cursor c) const {
         if (failed_) throw Error("compact history owner failed");
@@ -150,6 +153,7 @@ public:
                 if (path_count_>=count) throw Error("compact history occurrence census mismatch");
                 const auto& edge=node.edges[j];
                 Occurrence child;child.source=edge.child;child.parent=at;child.depth=paths_[at].depth+1;
+                child.incoming_edge=static_cast<std::uint8_t>(j);
                 child.reveal=node.state.phase==betting::Phase::reveal;
                 child.visible=child.reveal?node.state.next_street:paths_[at].visible;
                 if (child.reveal) {
@@ -184,10 +188,28 @@ public:
         charge(24);
         return encoded_ordinal(c);
     }
-    [[nodiscard]] DecisionKey decision_key(Cursor c) const {
+    [[nodiscard]] DecisionKey decision_key(Cursor c,DecisionPath* order=nullptr) const {
         const auto& p=validate(c);
         if (p.phase!=betting::Phase::decision) throw Error("compact history cursor is not a decision");
         charge(24);
+        if (order) {
+            if (p.depth>15) throw Error("ordered registration path depth exceeded");
+            charge(decision_path_work);
+            // A flop contributes three cards in place of one reveal edge.
+            // Turn and river each contribute one card. Zero pads shorter paths.
+            auto position=p.depth+(p.visible?2:0);
+            std::fill_n(order->data()+position,order->size()-position,std::uint8_t{0});
+            for (auto at=c.path_;at;at=paths_[at].parent) {
+                const auto& child=paths_[at];
+                if (child.reveal) {
+                    const auto first=paths_[child.parent].visible;
+                    for (auto i=child.visible;i>first;--i)
+                        (*order)[--position]=static_cast<std::uint8_t>(1+c.board_[i-1]);
+                } else {
+                    (*order)[--position]=static_cast<std::uint8_t>(1+child.incoming_edge);
+                }
+            }
+        }
         return {encoded_ordinal(c),p.source,p.depth,p.actor,p.count};
     }
     // The returned views borrow the immutable occurrence records from History.

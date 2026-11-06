@@ -31,7 +31,7 @@ inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
-    ten_card_buffered, ten_card_virtual_zero
+    ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -265,6 +265,8 @@ struct Plan {
     paging::Limits page_limits{};
     std::uint64_t paging_work=0;
     std::uint64_t directory_work=0;
+    std::uint64_t registration_path_work=0;
+    bool ordered_state=false;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -486,7 +488,8 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero;
+        plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state;
+        const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
         if (profile==StrategyProfile::ten_card || buffered) plan_.fixture=&proof10;
         if (buffered) plan_.page_limits.write_requests=virtual_zero?18836:19560;
@@ -576,6 +579,10 @@ public:
             const auto catalog_objects=template_receipt.nodes+template_receipt.edges;
             if (catalog_objects>S) registration_work+=16*(catalog_objects-S);
         }
+        if (plan_.ordered_state) {
+            plan_.registration_path_work=history::History::decision_path_work*R;
+            plan_.history_work+=plan_.registration_path_work;
+        }
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
             sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
             (4*words(value_bits)+4)*S+20*R+4*S;
@@ -656,7 +663,7 @@ public:
                 {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
-                plan_.compact_directory);
+                plan_.compact_directory,plan_.ordered_state);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1175,7 +1182,7 @@ public:
             {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
-                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory}}:std::nullopt);
+                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

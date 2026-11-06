@@ -17,7 +17,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
                   admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split,
                   admit_ten, train_ten, admit_ten_buffered, train_ten_buffered,
-                  admit_ten_virtual_zero, train_ten_virtual_zero };
+                  admit_ten_virtual_zero, train_ten_virtual_zero, admit_ten_ordered_state, train_ten_ordered_state };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -58,6 +58,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_BUFFERED") return Mode::train_ten_buffered;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_VIRTUAL_ZERO") return Mode::admit_ten_virtual_zero;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO") return Mode::train_ten_virtual_zero;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_ORDERED_STATE") return Mode::admit_ten_ordered_state;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE") return Mode::train_ten_ordered_state;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -95,7 +97,10 @@ void admit(const training::Driver& driver) {
     if (plan.compact_directory)
         std::cout<<",\"directory_work\":"<<plan.directory_work
             <<",\"directory_record_bytes\":"<<training::state::State::compact_record_bytes
-            <<",\"directory_index_slots\":"<<training::state::State::compact_index_slots(plan.shape.rows);
+            <<",\"directory_index_slots\":"<<(plan.ordered_state?0:training::state::State::compact_index_slots(plan.shape.rows));
+    if (plan.ordered_state)
+        std::cout<<",\"ordered_registration\":true,\"export_workspace_reused\":true,\"registration_path_work\":"
+            <<plan.registration_path_work;
     if (plan.rank_board_sets)
         std::cout<<",\"rank_cache_planes\":"<<plan.rank_planes
             <<",\"rank_lookup_work_per_query\":"
@@ -161,13 +166,15 @@ int main(int argc,char* argv[]) {
         const auto mode=request();
         const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
-            mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero;
+            mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_ten_virtual_zero || mode==Mode::train_ten_virtual_zero)
+        if (mode==Mode::admit_ten_ordered_state || mode==Mode::train_ten_ordered_state)
+            profile=training::StrategyProfile::ten_card_ordered_state;
+        else if (mode==Mode::admit_ten_virtual_zero || mode==Mode::train_ten_virtual_zero)
             profile=training::StrategyProfile::ten_card_virtual_zero;
         else if (mode==Mode::admit_ten_buffered || mode==Mode::train_ten_buffered)
             profile=training::StrategyProfile::ten_card_buffered;
@@ -186,10 +193,10 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
-            mode==Mode::admit_ten_virtual_zero) admit(driver);
+            mode==Mode::admit_ten_virtual_zero || mode==Mode::admit_ten_ordered_state) admit(driver);
         else {
             const auto paging=driver.train(std::cout,scratch);
-            if (paging) save_paging(scratch,*paging,mode==Mode::train_ten_virtual_zero);
+            if (paging) save_paging(scratch,*paging,driver.plan().page_limits.virtual_initial_zero);
         }
         return 0;
     } catch (const std::exception& error) {

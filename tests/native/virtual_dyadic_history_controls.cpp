@@ -1,5 +1,7 @@
 #include "../../native/virtual_dyadic_history.hpp"
+#include <algorithm>
 #include <functional>
+#include <vector>
 #include <iostream>
 #include <string_view>
 #include <type_traits>
@@ -51,6 +53,58 @@ int main() {
         const auto& rec=history.receipt();
         std::cout<<"RECEIPT "<<rec.work<<' '<<rec.nodes<<' '<<rec.entries<<' '<<rec.owned_bytes
             <<' '<<rec.max_depth<<' '<<rec.peak_scratch_entries<<' '<<rec.peak_total_bytes<<'\n';
+        // A separate owner preserves the original output and receipt. Build
+        // the expected byte path from raw action indices and board cards;
+        // never derive it from History's encoded ordinal or occurrence data.
+        {
+            h::History ordered(source,physical);
+            h::History::DecisionPath previous{};
+            bool have_previous=false;
+            std::size_t checked=0;
+            std::function<void(h::History::Cursor,std::vector<std::uint8_t>,std::vector<std::size_t>)> check;
+            check=[&](auto cursor,auto expected,auto selected) {
+                const auto id=ordered.source_node(cursor);
+                const auto& node=source.nodes().at(id);
+                if (node.state.phase==b::Phase::decision) {
+                    h::History::DecisionPath actual{};
+                    actual.fill(255); // verifies zero padding is written
+                    const auto plain=ordered.decision_key(cursor);
+                    const auto keyed=ordered.decision_key(cursor,&actual);
+                    if (plain.ordinal!=keyed.ordinal || plain.source!=keyed.source ||
+                        plain.depth!=keyed.depth || plain.actor!=keyed.actor || plain.actions!=keyed.actions ||
+                        expected.size()>actual.size() ||
+                        !std::equal(expected.begin(),expected.end(),actual.begin()) ||
+                        !std::all_of(actual.begin()+expected.size(),actual.end(),[](auto v){return v==0;}))
+                        throw std::runtime_error("independent decision path mismatch");
+                    if (have_previous && !(previous<actual))
+                        throw std::runtime_error("decision paths are not strictly canonical");
+                    previous=actual;have_previous=true;++checked;
+                    for (std::size_t j=0;j<node.edges.size();++j) {
+                        auto next=expected;next.push_back(static_cast<std::uint8_t>(1+j));
+                        check(ordered.append_action(cursor,j),std::move(next),selected);
+                    }
+                } else if (node.state.phase==b::Phase::reveal) {
+                    const auto prior=ordered.visible_size(cursor);
+                    const auto next=static_cast<std::size_t>(node.state.next_street);
+                    std::sort(selected.begin(),selected.end(),[&](auto a,auto b){
+                        return std::lexicographical_compare(boards[a].begin(),boards[a].begin()+next,
+                                                            boards[b].begin(),boards[b].begin()+next);
+                    });
+                    for (std::size_t i=0;i<selected.size();) {
+                        const auto chosen=selected[i];std::size_t end=i+1;
+                        while (end<selected.size() &&
+                               std::equal(boards[chosen].begin(),boards[chosen].begin()+next,boards[selected[end]].begin())) ++end;
+                        auto path=expected;
+                        for (auto k=prior;k<next;++k) path.push_back(static_cast<std::uint8_t>(1+boards[chosen][k]));
+                        check(ordered.append_reveal(cursor,{boards[chosen].data(),next}),std::move(path),
+                              std::vector<std::size_t>(selected.begin()+i,selected.begin()+end));
+                        i=end;
+                    }
+                }
+            };
+            check(ordered.root(),{}, {0,1,2,3,4});
+            if (checked<1000) throw std::runtime_error("decision path coverage incomplete");
+        }
         rejected("raised_work",[&]{h::Limits l;l.work=500000001;h::History x(source,physical,l);});
         rejected("literal_nodes",[&]{h::Limits l;l.nodes=1;h::History x(source,physical,l);});
         rejected("literal_entries",[&]{h::Limits l;l.entries=32;h::History x(source,physical,l);});

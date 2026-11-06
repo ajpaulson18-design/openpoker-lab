@@ -823,6 +823,55 @@ void compact_directory_controls(h::History& history,const b::Template& source,
     try { (void)guard.register_sealed_row(foreign.root(),0,shift,shift); } catch (const h::Error&) {rejected=true;}
     require(rejected && guard.failed() && guard.row_count()==0,"compact directory accepted a foreign cursor");
     std::cout<<"PAGED_IMAGE compact_directory\n";
+
+    s::State ordered(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"ordered",pages,true,true});
+    s::State indexed(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"indexed-compare",pages,true});
+    for (auto* state : {&ordered,&indexed}) {
+        require(state->register_sealed_row(root,0,shift,shift)==0 &&
+            state->register_sealed_row(root,1,shift,shift)==1 &&
+            state->register_sealed_row(call,0,shift,shift)==2,"ordered registration differs from canonical rows");
+        state->freeze();
+    }
+    const std::uint64_t* last_units=nullptr;
+    for (std::size_t sweep=0;sweep<2;++sweep) {
+        for (auto* state : {&ordered,&indexed}) {
+            state->begin_sweep();
+            if (state==&ordered) last_units=state->policy_units(0).data();
+            for (std::size_t row=0;row<3;++row) {
+                const auto menu_size=state->row_at(row).actions.size();
+                std::array<Integer,20> values{},increments{};
+                if (row==0) increments[0]=Integer(1)<<shift;
+                (void)state->stage_row(row,std::span(values).first(menu_size),
+                    std::span(increments).first(menu_size));
+            }
+            state->commit_sweep();
+        }
+    }
+    const auto actual=ordered.export_average(false),expected=indexed.export_average(false);
+    require(actual.units.get()==last_units && actual.rows==3 && actual.slots==slots &&
+        std::equal(actual.units.get(),actual.units.get()+slots,expected.units.get()) &&
+        std::equal(actual.uniform_fallback.get(),actual.uniform_fallback.get()+3,expected.uniform_fallback.get()) &&
+        actual.uniform_fallback[0]==0 && actual.uniform_fallback[1]==1 &&
+        ordered.receipt().reserved_entries<indexed.receipt().reserved_entries,
+        "ordered export did not reuse the sweep workspace exactly");
+
+    for (const auto& [initial,later] : {std::pair{root,root},std::pair{call,root}}) {
+        s::State invalid(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"invalid-order",pages,true,true});
+        (void)invalid.register_sealed_row(initial,1,shift,shift);
+        if (history.ordinal(initial)==history.ordinal(later))
+            (void)invalid.register_sealed_row(call,0,shift,shift);
+        bool order_rejected=false;
+        try { (void)invalid.register_sealed_row(later,1,shift,shift); }
+        catch (const s::Error& error) {order_rejected=error.code()==ErrorCode::invalid_row;}
+        require(order_rejected && invalid.failed(),"ordered directory accepted a repeated or backward key");
+    }
+    s::State reversed(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"reversed-holding",pages,true,true});
+    (void)reversed.register_sealed_row(root,1,shift,shift);
+    bool holding_rejected=false;
+    try { (void)reversed.register_sealed_row(root,0,shift,shift); }
+    catch (const s::Error& error) {holding_rejected=error.code()==ErrorCode::invalid_row;}
+    require(holding_rejected && reversed.failed(),"ordered directory accepted a backward holding");
+    std::cout<<"PAGED_IMAGE ordered_directory\n";
 }
 } // namespace
 
