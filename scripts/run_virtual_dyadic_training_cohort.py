@@ -40,7 +40,7 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_ten_admission(receipt, *, buffered=False):
+def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False):
     expected={
         'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
         'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,
@@ -67,14 +67,17 @@ def validate_ten_admission(receipt, *, buffered=False):
                            value_add=49_700_420,terminal_scale=150_196_888,average=116_524_928,
                            route=299_862_360,output=15_790_772),
     }
-    if buffered:
-        extra_work=23_982_922
-        expected.update(page_stage_split_words=1_295_812,page_write_request_limit=19_560,
+    if buffered or virtual_zero:
+        extra_work=23_982_922-(127_424 if virtual_zero else 0)
+        expected.update(page_stage_split_words=1_295_812,page_write_request_limit=18_836 if virtual_zero else 19_560,
                         page_resident_bytes=961_349,entries=1_559_639)
         expected['paging_work']+=extra_work
         expected['parent_work']['route']+=extra_work
         expected['component_work']['parent']+=extra_work
         expected['planned_total_work']+=extra_work
+    if virtual_zero:
+        expected.update(page_virtual_initial_zero=True,page_write_word_limit=5_925_444,
+                        page_read_word_limit=6_130_244)
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
             'ten-card admission differs from the independent fixed census')
@@ -84,9 +87,9 @@ def validate_ten_admission(receipt, *, buffered=False):
 
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-                       directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False):
-    if ten_card or ten_buffered:
-        return validate_ten_admission(receipt,buffered=ten_buffered)
+                       directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False):
+    if ten_card or ten_buffered or ten_virtual_zero:
+        return validate_ten_admission(receipt,buffered=ten_buffered,virtual_zero=ten_virtual_zero)
     require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
@@ -303,6 +306,17 @@ def verify_paging(directory,admission,stage=None):
                 'independent buffered write schedule differs from admission')
         fixed.update(stage_calls=stage['per_sweep_stage_calls']*stage['sweeps'],
                      write_words=stage['written_words'],physical_write_requests=stage['batched_write_calls'])
+    if admission.get('page_virtual_initial_zero',False):
+        require(stage is not None and not stage['initialization_calls']
+                and stage['physical_read_words']==admission['page_read_word_limit']
+                and stage['written_words']==admission['page_write_word_limit']
+                and stage['logical_read_calls']+fixed['stage_calls']==admission['page_request_limit'],
+                'independent virtual-zero pager schedule differs from admission')
+        fixed.update(read_calls=stage['logical_read_calls'],logical_read_words=stage['logical_read_words'],
+                     synthetic_read_calls=stage['virtual_read_calls'],synthetic_read_words=stage['virtual_read_words'],
+                     read_words=stage['physical_read_words'],physical_read_requests=stage['cache_misses'],
+                     cache_hits=stage['cache_hits'],cache_misses=stage['cache_misses'])
+        page_references=stage['cache_hits']+stage['cache_misses']
     counts=('read_words','physical_read_requests','cache_hits','cache_misses')
     require(type(receipt) is dict and set(receipt)==set(fixed)|set(counts)
             and all(type(receipt[key]) is int and receipt[key]==value for key,value in fixed.items())
@@ -320,23 +334,26 @@ def verify_paging(directory,admission,stage=None):
     return {'counts':receipt,'images':files}
 
 
-def compare_buffered_ten(path,source,paging,images):
-    directory='benchmarks/results/native-dyadic-ten-card-accepted-v1'
+def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
+    variant='buffered-ten-card' if virtual_zero else 'ten-card'
+    directory=f'benchmarks/results/native-dyadic-{variant}-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
     require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
             'ten-card baseline manifest source drift')
     baseline=exact_json(raw)
     operator=baseline['operator']
-    require(baseline['status']=='accepted_ten_card_training_and_replay' and
-            baseline['source_head']=='bb46feb27a6a92f3a1cefbc8ad152ffaedead86d' and
+    status='accepted_buffered_ten_card_training_and_replay' if virtual_zero else 'accepted_ten_card_training_and_replay'
+    head='753b6583fd282393fb7272126d4c391399123710' if virtual_zero else 'bb46feb27a6a92f3a1cefbc8ad152ffaedead86d'
+    require(baseline['status']==status and baseline['source_head']==head and
             baseline['training_invocations']==1 and operator['actual_exit_observed'] and
-            operator['returncode']==0 and operator['raw_source_stable'],'accepted direct-write baseline required')
-    original=baseline['comparison']
-    old_counts=original['paging']
+            operator['returncode']==0 and operator['raw_source_stable'],'accepted ten-card baseline required')
+    old_counts=baseline['paging']['counts'] if virtual_zero else baseline['comparison']['paging']
     new_counts=paging['counts']
+    invariant=('read_calls','logical_read_words','stage_calls','completed_sweeps') if virtual_zero else (
+        key for key in new_counts if key!='physical_write_requests')
     require(images==baseline['saved_replay']['checkpoint_images'] and
-            all(old_counts[key]==value for key,value in new_counts.items() if key!='physical_write_requests'),
+            all(old_counts[key]==new_counts[key] for key in invariant),
             'buffered checkpoint or paging parity differs')
     archive_name=f'{directory}/evidence.zip'
     archive=ROOT/archive_name
@@ -344,7 +361,7 @@ def compare_buffered_ten(path,source,paging,images):
     require(identity['path']=='evidence.zip' and 0<archive.stat().st_size==identity['bytes']<=50<<20 and
             sha(archive)==identity['sha256']==source['files'][archive_name]['raw_sha256'],
             'ten-card baseline archive identity differs')
-    member='cohort/train_ten/stdout.bin'
+    member='cohort/train_ten_buffered/stdout.bin' if virtual_zero else 'cohort/train_ten/stdout.bin'
     footer_bytes=8+64*8
     numeric_bytes=TEN_CARD_SPLIT_BYTES-footer_bytes
     numeric_hash=hashlib.sha256()
@@ -365,23 +382,29 @@ def compare_buffered_ten(path,source,paging,images):
             original_hash.update(footer)
     digest=original_hash.hexdigest()
     require(digest==baseline['saved_replay']['saved_output_sha256'],'ten-card baseline stream SHA-256 differs')
+    if virtual_zero:
+        return {'baseline_source_head':head,'baseline_stream_sha256':digest,
+                'numeric_bytes':numeric_bytes,'numeric_sha256':numeric_hash.hexdigest(),
+                'exact_checkpoint_images':images,'baseline_paging':old_counts,'virtual_zero_paging':new_counts,
+                'baseline_native_observation':baseline['buffered_comparison']['buffered_native_observation']}
     return {'direct_source_head':baseline['source_head'],'direct_stream_sha256':digest,
             'numeric_bytes':numeric_bytes,'numeric_sha256':numeric_hash.hexdigest(),
             'exact_checkpoint_images':images,'direct_write_calls':old_counts['physical_write_requests'],
             'buffered_write_calls':new_counts['physical_write_requests'],
-            'direct_native_observation':original['native_observation']}
+            'direct_native_observation':baseline['comparison']['native_observation']}
 
 
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False):
+        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered)
+    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
-                                                 '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED')) if flag),'')
+                                                 '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
+                                                 '_TEN_VIRTUAL_ZERO')) if flag),'')
     paired=any(modes)
-    ten_card=ten_card or ten_buffered
+    ten_card=ten_card or ten_buffered or ten_virtual_zero
     split=split or ten_card
     uses_paging=paged or directory or rank_sets or split
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
@@ -426,7 +449,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admitted,_=observed('ADMIT'+suffix)
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
-            rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered)
+            rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -434,7 +457,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 'scope':'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
-            schedule=stage_schedule(ten_card=True) if ten_buffered else None
+            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero) if ten_buffered or ten_virtual_zero else None
             entered=1
             trained,process=observed('TRAIN'+suffix)
             raw=trained/'stdout.bin'
@@ -463,11 +486,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
-                if ten_buffered:
-                    comparison=compare_buffered_ten(raw,source,paging,images)
-                    comparison['buffered_native_observation']={'duration_seconds':process['duration_seconds'],
-                                                               'memory':process.get('memory')}
-                    result['buffered_comparison']=comparison
+                if ten_buffered or ten_virtual_zero:
+                    comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
+                    label='virtual_zero' if ten_virtual_zero else 'buffered'
+                    comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
+                                                             'memory':process.get('memory')}
+                    result[label+'_comparison']=comparison
                     result['independent_stage_schedule']=schedule
                 command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
@@ -544,12 +568,13 @@ def main():
     modes.add_argument('--split-checkpoint',action='store_true')
     modes.add_argument('--ten-card',action='store_true')
     modes.add_argument('--ten-buffered',action='store_true')
+    modes.add_argument('--ten-virtual-zero',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
         rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
-        ten_buffered=args.ten_buffered),sort_keys=True))
+        ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero),sort_keys=True))
 
 
 if __name__=='__main__':main()

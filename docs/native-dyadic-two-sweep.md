@@ -288,3 +288,24 @@ and both best responses using only the packed images and that stream.
 The study made zero native training calls. The byte comparison measures
 files ready for replay. The historical ZIP remains the archival bundle.
 [Packed ten-card evidence](../benchmarks/results/native-dyadic-packed-ten-card-accepted-v1/manifest.json)
+
+## Virtual initial image
+
+The explicit `--ten-virtual-zero` cohort uses `ADMIT_TEN_VIRTUAL_ZERO`
+and `TRAIN_TEN_VIRTUAL_ZERO` with the ten-card buffered pager. Both
+files start empty. Before the first commit, reads return zeros after
+the same range, bank, and logical request checks. Those calls and
+words are reported separately from cache and file traffic.
+
+The first successful sweep commit switches the read view to the
+materialized image. Subsequent reads require the full physical
+extent. The write-once coverage, dirty-run flush, and commit checks
+apply to both sweeps. A failed sweep preserves the previous read
+view. The retained files still contain sweep 1 and sweep 2 in their
+original order.
+
+Admission keeps the 3,091,726 logical request cap and reserves
+6,130,244 read words, 5,925,444 write words, and 18,836 write calls.
+The work plan retains the per-word charge for synthesized reads and
+removes the initialization and write-call allowances that this mode
+does not need.

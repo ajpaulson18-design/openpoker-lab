@@ -725,6 +725,68 @@ void paged_image_controls(const std::filesystem::path& scratch) {
     require(word_capped.receipt().write_words==words && word_capped.receipt().stage_calls==1,
         "pending staged word escaped write admission");
     std::cout<<"PAGED_IMAGE buffered_transaction\n";
+
+    pages::Limits zero{words,page,2,4*words,2*words,30,2,pages::Profile::legacy,split,8,true};
+    const auto virtual_dir=scratch/"virtual-zero";
+    pages::Image virtual_image(virtual_dir,zero);
+    require(std::filesystem::file_size(virtual_dir/"committed.bin")==0 &&
+        std::filesystem::file_size(virtual_dir/"staged.bin")==0 &&
+        virtual_image.receipt().physical_write_requests==0,"virtual image was initialized on disk");
+    stage(virtual_image);
+    require(virtual_image.receipt().synthetic_read_calls==1 && virtual_image.receipt().synthetic_read_words==4 &&
+        virtual_image.receipt().physical_read_requests==0,"zero epoch touched the read cache or disk");
+    virtual_image.commit_sweep();
+    virtual_image.read(page-2,values,1);
+    require(values==first && virtual_image.receipt().synthetic_read_calls==1 &&
+        virtual_image.receipt().physical_read_requests==2,"first commit did not switch to physical reads");
+    virtual_image.begin_sweep();
+    virtual_image.stage(page-2,second);
+    virtual_image.stage(split+1,tail);
+    virtual_image.stage(0,head);
+    virtual_image.stage(split,tail);
+    virtual_image.stage(split+2,tail);
+    virtual_image.commit_sweep();
+    virtual_image.read(page-2,values,1);
+    require(values==second && virtual_image.receipt().physical_write_requests==8 &&
+        virtual_image.receipt().write_words==2*words && virtual_image.receipt().completed_sweeps==2,
+        "virtual image lost the second committed sweep");
+
+    zero.write_requests=3;
+    pages::Image failed_zero(scratch/"failed-virtual-first",zero);
+    stage(failed_zero);
+    check_rejection.operator()<std::length_error>([&] {failed_zero.commit_sweep();});
+    check_rejection.operator()<std::logic_error>([&] {failed_zero.commit_sweep();});
+    failed_zero.read(page-2,values,1);
+    require(values==std::array<std::uint64_t,4>{} && failed_zero.receipt().physical_write_requests==3 &&
+        failed_zero.receipt().completed_sweeps==0,"failed first commit ended the virtual epoch");
+
+    zero.write_requests=5;
+    pages::Image failed_later(scratch/"failed-virtual-second",zero);
+    stage(failed_later);
+    failed_later.commit_sweep();
+    failed_later.begin_sweep();
+    failed_later.stage(page-2,second);
+    check_rejection.operator()<std::length_error>([&] {failed_later.stage(0,head);});
+    check_rejection.operator()<std::logic_error>([&] {failed_later.commit_sweep();});
+    failed_later.read(page-2,values,1);
+    require(values==first && failed_later.receipt().completed_sweeps==1,
+        "failed second sweep exposed staged words or restored virtual zeros");
+
+    zero.requests=2;
+    zero.read_words=0;
+    pages::Image logical_capped(scratch/"virtual-logical-limit",zero);
+    values.fill(99);
+    check_rejection.operator()<std::out_of_range>([&] {logical_capped.read(words,values);});
+    check_rejection.operator()<std::out_of_range>([&] {logical_capped.read(0,values,2);});
+    require(values==std::array<std::uint64_t,4>{99,99,99,99} &&
+        logical_capped.receipt().synthetic_read_calls==0,"invalid virtual read mutated output or receipt");
+    logical_capped.read(0,values);
+    logical_capped.read(words,{});
+    check_rejection.operator()<std::length_error>([&] {logical_capped.read(0,values);});
+    require(values==std::array<std::uint64_t,4>{} && logical_capped.receipt().read_calls==2 &&
+        logical_capped.receipt().synthetic_read_calls==2 && logical_capped.receipt().logical_read_words==4,
+        "virtual reads escaped logical admission");
+    std::cout<<"PAGED_IMAGE virtual_initial_epoch\n";
 }
 
 void compact_directory_controls(h::History& history,const b::Template& source,

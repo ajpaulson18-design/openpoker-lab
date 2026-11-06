@@ -41,6 +41,7 @@ struct Limits {
     Profile profile = Profile::legacy;
     std::size_t stage_split_words = 0; // nonzero enables a write buffer for each field
     std::uint64_t write_requests = 0;
+    bool virtual_initial_zero = false;
 };
 
 struct Receipt {
@@ -54,6 +55,8 @@ struct Receipt {
     std::uint64_t cache_hits = 0;
     std::uint64_t cache_misses = 0;           // includes page loads
     std::uint64_t completed_sweeps = 0;
+    std::uint64_t synthetic_read_calls = 0;
+    std::uint64_t synthetic_read_words = 0;
 };
 
 class Image {
@@ -90,6 +93,7 @@ public:
         files_[0].open(fresh_directory / "committed.bin", std::ios::binary | std::ios::in | std::ios::out | std::ios::trunc);
         files_[1].open(fresh_directory / "staged.bin", std::ios::binary | std::ios::in | std::ios::out | std::ios::trunc);
         if (!files_[0] || !files_[1]) throw std::runtime_error("cannot create private image files");
+        if (limits_.virtual_initial_zero) return;
         for (std::size_t at=0; at<limits_.image_words;) {
             const auto n=std::min(limits_.image_words-at,limits_.page_words);
             record_write(files_[0],at,{cache_.data(),n});
@@ -115,6 +119,14 @@ public:
         if (bank >= limits_.cache_banks) throw std::out_of_range("cache bank outside bounds");
         check_range(offset, output.size());
         check_request_admission(1);
+        if (limits_.virtual_initial_zero && receipt_.completed_sweeps==0) {
+            std::fill(output.begin(),output.end(),std::uint64_t{0});
+            receipt_.logical_read_words+=output.size();
+            ++receipt_.read_calls;
+            receipt_.synthetic_read_words+=output.size();
+            ++receipt_.synthetic_read_calls;
+            return;
+        }
         if (output.empty()) { ++receipt_.read_calls; return; }
         const auto miss_words = predicted_read_words(offset, output.size(), bank);
         if (receipt_.read_words > limits_.read_words || miss_words > limits_.read_words - receipt_.read_words)
@@ -150,8 +162,9 @@ public:
             if (bit_is_set(offset + i)) throw std::invalid_argument("overlapping staged range");
         if (input.size() > limits_.image_words - staged_words_)
             throw std::invalid_argument("staged image overflow");
-        // Include the initial image and every accepted word, even if it is still buffered.
-        const auto reserved=(1+receipt_.completed_sweeps)*limits_.image_words+staged_words_;
+        // Reserve every accepted word, including buffered words and any physical initialization.
+        const auto images=receipt_.completed_sweeps+static_cast<std::uint64_t>(!limits_.virtual_initial_zero);
+        const auto reserved=images*limits_.image_words+staged_words_;
         if (reserved > limits_.write_words || input.size() > limits_.write_words-reserved)
             throw std::length_error("write word limit exceeded");
         if (!input.empty()) {
@@ -224,11 +237,12 @@ private:
         if (l.image_words > static_cast<std::size_t>(std::numeric_limits<std::streamoff>::max()) / 8)
             throw std::overflow_error("image byte size exceeds stream range");
         if (l.stage_split_words) {
-            const auto initialization=(l.image_words+l.page_words-1)/l.page_words;
+            const auto initialization=l.virtual_initial_zero?1:(l.image_words+l.page_words-1)/l.page_words;
             if (l.page_words!=default_page_words || l.stage_split_words>=l.image_words ||
                 l.write_requests<initialization || l.write_requests>l.write_words)
                 throw std::invalid_argument("invalid buffered stage limits");
-        } else if (l.write_requests) throw std::invalid_argument("write request cap requires buffered staging");
+        } else if (l.write_requests || l.virtual_initial_zero)
+            throw std::invalid_argument("write request cap and virtual initialization require buffered staging");
     }
     void check_range(std::size_t offset, std::size_t count) const {
         if (offset > limits_.image_words || count > limits_.image_words - offset || count>limits_.page_words)

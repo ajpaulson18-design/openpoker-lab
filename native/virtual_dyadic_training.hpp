@@ -31,7 +31,7 @@ inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
-    ten_card_buffered
+    ten_card_buffered, ten_card_virtual_zero
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -486,9 +486,11 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        const bool buffered=profile==StrategyProfile::ten_card_buffered;
+        const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero;
+        const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
         if (profile==StrategyProfile::ten_card || buffered) plan_.fixture=&proof10;
-        if (buffered) plan_.page_limits.write_requests=19560;
+        if (buffered) plan_.page_limits.write_requests=virtual_zero?18836:19560;
+        plan_.page_limits.virtual_initial_zero=virtual_zero;
         plan_.packed_averages=profile!=StrategyProfile::dense;
         plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card();
         require(!plan_.split_checkpoint || sweeps==2,"split checkpoint requires exactly two retained sweeps");
@@ -609,15 +611,18 @@ public:
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
             const auto requests=(plan_.split_checkpoint?11:15)*S;
-            const auto read_words=plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
+            const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
+            const auto read_words=virtual_zero?6130244u:
+                plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
             const auto write_requests=plan_.page_limits.write_requests;
-            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,3*L,requests,2,
+            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,(virtual_zero?2:3)*L,requests,2,
                 plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
-                write_requests?static_cast<std::size_t>(A):0,write_requests};
+                write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
-            plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*((L+4095)/4096)+8*((L+63)/64);
+            const auto initialization_chunks=virtual_zero?0:(L+4095)/4096;
+            plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*initialization_chunks+8*((L+63)/64);
             if (write_requests) {
                 // Up to two page fragments per staged extent, one copy and
                 // mark per staged word, and at most 64 bitmap words to scan

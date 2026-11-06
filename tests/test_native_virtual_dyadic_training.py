@@ -192,7 +192,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 ADMIT',b'DYADIC_T2_V1 ADMIT\nDYADIC_T2_V1 TRAIN\n',
                 b'DYADIC_T2_V1 TRAIN_PAGED\n',b'DYADIC_T2_V1 TRAIN_DIRECTORY\n',
                 b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',
-                b'DYADIC_T2_V1 TRAIN_TEN\n',b'DYADIC_T2_V1 TRAIN_TEN_BUFFERED\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_TEN\n',b'DYADIC_T2_V1 TRAIN_TEN_BUFFERED\n',
+                b'DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
@@ -213,6 +214,18 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             validate_admission(receipt,ten_card=True)
         with self.assertRaisesRegex(ValueError,'independent fixed census'):
             validate_admission(dict(receipt,page_write_request_limit=19_559),ten_buffered=True)
+
+    def test_virtual_zero_ten_admission_reserves_physical_and_logical_work(self):
+        directory,process=self.observe('admit_ten_virtual_zero',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_VIRTUAL_ZERO',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_virtual_zero=True)
+        self.assertEqual(plan['planned_total_work'],2_126_045_678)
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        with self.assertRaisesRegex(ValueError,'independent fixed census'):
+            validate_admission(receipt,ten_buffered=True)
 
 
 if __name__=='__main__':unittest.main()

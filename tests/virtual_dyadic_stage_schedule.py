@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False):
+def stage_schedule(*, ten_card=False, virtual_zero=False):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -53,6 +53,7 @@ def stage_schedule(*, ten_card=False):
     value_bits = 644 if ten_card else 642
     average_words = regret_words = rows = slots = 0
     postorder = []
+    preorder = []
 
     def visit(node_id, board, past):
         nonlocal average_words, regret_words, rows, slots
@@ -79,7 +80,9 @@ def stage_schedule(*, ten_card=False):
         regret_stride = (value_bits - regret_shift + 63) // 64
         current = []
         for _ in support(board)[actor]:
-            current.append((average_words, regret_words, avg_stride, regret_stride, menu))
+            record = (average_words, regret_words, avg_stride, regret_stride, menu)
+            current.append(record)
+            preorder.append(record)
             average_words += menu * avg_stride
             regret_words += menu * regret_stride
             rows += 1
@@ -146,14 +149,75 @@ def stage_schedule(*, ten_card=False):
         raise ValueError('coverage gap')
     if seen[-1] != (1 << ((image_words - 1) % 8 + 1)) - 1:
         raise ValueError('coverage gap or padding mark')
-    initial_calls = (image_words + PAGE_WORDS - 1) // PAGE_WORDS
+    initial_calls = 0 if virtual_zero else (image_words + PAGE_WORDS - 1) // PAGE_WORDS
     result = {'rows': rows, 'slots': slots, 'average_words': average_words,
               'regret_words': regret_words, 'image_words': image_words,
               'initialization_calls': initial_calls, 'per_sweep_stage_calls': stage_calls,
               'per_sweep_dirty_runs': runs, 'direct_write_calls': initial_calls + 2 * stage_calls,
               'batched_write_calls': initial_calls + 2 * runs,
-              'written_words': 3 * image_words, 'sweeps': 2}
-    expected_calls = (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190)
+              'written_words': (2 if virtual_zero else 3) * image_words, 'sweeps': 2}
+    expected_calls = ((1124264, 18836, 5925444) if ten_card else
+                      (232656, 3954, 1213460)) if virtual_zero else (
+                      (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190))
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
         raise ValueError('independent stage schedule differs from fixed fixture')
+    if virtual_zero:
+        # Two eight-page direct-mapped banks; zero-image accesses are logical
+        # reads but do not populate or touch the physical cache. Both commits
+        # invalidate all tags, including before the export phase.
+        tags = [None] * 16
+        logical_reads = logical_words = virtual_reads = virtual_words = 0
+        misses = hits = physical_words = 0
+        epochs = []
+
+        def epoch(name, records, fields, zero=False):
+            nonlocal logical_reads, logical_words, virtual_reads, virtual_words
+            nonlocal misses, hits, physical_words
+            before = (logical_reads, logical_words, virtual_reads, virtual_words,
+                      hits, misses, physical_words)
+            for avg_offset, regret_offset, avg_stride, regret_stride, menu in records:
+                for action in range(menu):
+                    for field in fields:
+                        if field == 0:
+                            offset, count = avg_offset + action * avg_stride, avg_stride
+                        else:
+                            offset = average_words + regret_offset + action * regret_stride
+                            count = regret_stride
+                        logical_reads += 1
+                        logical_words += count
+                        if zero:
+                            virtual_reads += 1
+                            virtual_words += count
+                            continue
+                        end = offset + count
+                        while offset < end:
+                            page, at = divmod(offset, PAGE_WORDS)
+                            slot = field * 8 + page % 8
+                            if tags[slot] == page:
+                                hits += 1
+                            else:
+                                misses += 1
+                                tags[slot] = page
+                                physical_words += min(PAGE_WORDS, image_words - page * PAGE_WORDS)
+                            offset += min(end - offset, PAGE_WORDS - at)
+            after = (logical_reads, logical_words, virtual_reads, virtual_words,
+                     hits, misses, physical_words)
+            epochs.append(dict(zip(('name','logical_reads','logical_words','virtual_reads',
+                                    'virtual_words','cache_hits','cache_misses','physical_words'),
+                                   (name, *(a - b for a, b in zip(after, before))))))
+
+        for sweep in (1, 2):
+            epoch(f'sweep_{sweep}_policy', preorder, (1,), zero=sweep == 1)
+            epoch(f'sweep_{sweep}_stage', postorder, (1, 0), zero=sweep == 1)
+            tags[:] = [None] * 16
+        epoch('export_average', preorder, (0,))
+        result.update({'read_epochs': epochs, 'logical_read_calls': logical_reads,
+                       'logical_read_words': logical_words, 'virtual_read_calls': virtual_reads,
+                       'virtual_read_words': virtual_words, 'cache_hits': hits,
+                       'cache_misses': misses, 'physical_read_words': physical_words})
+        expected_reads = ((1967462, 10555076, 843198, 4629632, 1498, 6130244)
+                          if ten_card else (407148, 2168226, 174492, 954766, 306, 1242654))
+        actual_reads = (logical_reads, logical_words, virtual_reads, virtual_words, misses, physical_words)
+        if actual_reads != expected_reads:
+            raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result
