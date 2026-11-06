@@ -198,3 +198,22 @@ The profile admits 644-bit values, a 9,833,076-byte stream, and two
 work units inside a dedicated 2,150,000,000-unit allowance. State,
 quantizer and pager enforce their own ten-card bounds. The earlier
 nine-card modes retain their existing limits.
+
+The frozen run at `bb46feb` trained 119,196 full-history rows and 281,066
+action slots over two sweeps. The independent verifier enumerated 360
+physical private-pair and runout combinations and checked both saved
+updates, the final average policy, and both best responses. The native
+trainer walked ordered chance and contracted reaches and payoffs on
+demand. Its rank cache recorded 17 misses and 42 hand ranks.
+
+The split packet retained 57,236,628 bytes across all three files.
+The pager read 87,696,448 stream bytes and wrote 71,105,328, including
+initialization. Its 2,679 page loads matched the independent schedule.
+The run charged 1,575,076,849 work units. The Windows trainer process
+took 14.0 seconds and reached a 13,660,160-byte working set in this
+observation. The separate saved-only replay took 63.1 seconds.
+
+The verified final exploitability was 2.9843 big blinds for the bounded
+fixture after two sweeps. This is an exactness and capacity result for
+the configured game. Longer-run convergence remains open.
+[Ten-card run evidence](../benchmarks/results/native-dyadic-ten-card-accepted-v1/manifest.json)
