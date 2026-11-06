@@ -213,7 +213,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_PAGED\n',b'DYADIC_T2_V1 TRAIN_DIRECTORY\n',
                 b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',
                 b'DYADIC_T2_V1 TRAIN_TEN\n',b'DYADIC_T2_V1 TRAIN_TEN_BUFFERED\n',
-                b'DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO\n',b'DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO\n',b'DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE\n',
+                b'DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
@@ -259,6 +260,19 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
         with self.assertRaisesRegex(ValueError,'independent fixed census'):
             validate_admission(receipt,ten_virtual_zero=True)
+
+    def test_row_coverage_admission_removes_only_the_pager_bitmap_budget(self):
+        directory,process=self.observe('admit_ten_row_coverage',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_ROW_COVERAGE',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_row_coverage=True)
+        self.assertEqual(plan['planned_total_work'],2_129_489_606)
+        self.assertEqual((plan['entries'],plan['page_resident_bytes']), (1_113_089,591_008))
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        with self.assertRaisesRegex(ValueError,'independent fixed census'):
+            validate_admission(receipt,ten_ordered_state=True)
 
 
 if __name__=='__main__':unittest.main()

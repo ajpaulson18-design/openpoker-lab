@@ -17,7 +17,8 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
                   admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split,
                   admit_ten, train_ten, admit_ten_buffered, train_ten_buffered,
-                  admit_ten_virtual_zero, train_ten_virtual_zero, admit_ten_ordered_state, train_ten_ordered_state };
+                  admit_ten_virtual_zero, train_ten_virtual_zero, admit_ten_ordered_state, train_ten_ordered_state,
+                  admit_ten_row_coverage, train_ten_row_coverage };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -60,6 +61,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO") return Mode::train_ten_virtual_zero;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_ORDERED_STATE") return Mode::admit_ten_ordered_state;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE") return Mode::train_ten_ordered_state;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_ROW_COVERAGE") return Mode::admit_ten_row_coverage;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE") return Mode::train_ten_row_coverage;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -88,11 +91,12 @@ void admit(const training::Driver& driver) {
             <<",\"page_words\":"<<pages.page_words<<",\"page_cache_pages\":"<<pages.cache_pages
             <<",\"page_cache_banks\":"<<pages.cache_banks<<",\"page_read_word_limit\":"<<pages.read_words
             <<",\"page_write_word_limit\":"<<pages.write_words<<",\"page_request_limit\":"<<pages.requests
-            <<",\"page_resident_bytes\":"<<training::paging::Image::resident_bytes(pages);
+            <<",\"page_resident_bytes\":"<<training::state::State::pager_resident_bytes(pages,plan.row_coverage);
         if (pages.stage_split_words)
             std::cout<<",\"page_stage_split_words\":"<<pages.stage_split_words
                 <<",\"page_write_request_limit\":"<<pages.write_requests;
         if (pages.virtual_initial_zero) std::cout<<",\"page_virtual_initial_zero\":true";
+        if (plan.row_coverage) std::cout<<",\"page_state_row_coverage\":true";
     }
     if (plan.compact_directory)
         std::cout<<",\"directory_work\":"<<plan.directory_work
@@ -166,13 +170,16 @@ int main(int argc,char* argv[]) {
         const auto mode=request();
         const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
-            mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state;
+            mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
+            mode==Mode::train_ten_row_coverage;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_ten_ordered_state || mode==Mode::train_ten_ordered_state)
+        if (mode==Mode::admit_ten_row_coverage || mode==Mode::train_ten_row_coverage)
+            profile=training::StrategyProfile::ten_card_row_coverage;
+        else if (mode==Mode::admit_ten_ordered_state || mode==Mode::train_ten_ordered_state)
             profile=training::StrategyProfile::ten_card_ordered_state;
         else if (mode==Mode::admit_ten_virtual_zero || mode==Mode::train_ten_virtual_zero)
             profile=training::StrategyProfile::ten_card_virtual_zero;
@@ -193,7 +200,8 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
-            mode==Mode::admit_ten_virtual_zero || mode==Mode::admit_ten_ordered_state) admit(driver);
+            mode==Mode::admit_ten_virtual_zero || mode==Mode::admit_ten_ordered_state ||
+            mode==Mode::admit_ten_row_coverage) admit(driver);
         else {
             const auto paging=driver.train(std::cout,scratch);
             if (paging) save_paging(scratch,*paging,driver.plan().page_limits.virtual_initial_zero);

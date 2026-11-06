@@ -40,7 +40,8 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, ordered_state=False):
+def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, ordered_state=False,row_coverage=False):
+    ordered_state=ordered_state or row_coverage
     virtual_zero=virtual_zero or ordered_state
     expected={
         'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
@@ -86,6 +87,13 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
         expected['component_work']['history']+=path_work
         expected['planned_total_work']+=path_work
         expected['parent_allowance']-=path_work
+    if row_coverage:
+        bitmap_reset=370_344
+        expected.update(page_state_row_coverage=True,page_resident_bytes=591_008,entries=1_113_089)
+        expected['paging_work']-=bitmap_reset
+        expected['parent_work']['route']-=bitmap_reset
+        expected['component_work']['parent']-=bitmap_reset
+        expected['planned_total_work']-=bitmap_reset
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
             'ten-card admission differs from the independent fixed census')
@@ -96,10 +104,10 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
-                       ten_virtual_zero=False,ten_ordered_state=False):
-    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state:
+                       ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False):
+    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage:
         return validate_ten_admission(receipt,buffered=ten_buffered,virtual_zero=ten_virtual_zero,
-                                      ordered_state=ten_ordered_state)
+                                      ordered_state=ten_ordered_state,row_coverage=ten_row_coverage)
     require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
@@ -407,16 +415,17 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
 
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
-        ten_ordered_state=False):
+        ten_ordered_state=False,ten_row_coverage=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state)
+           ten_ordered_state,ten_row_coverage)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
-                                                 '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE')) if flag),'')
+                                                 '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE')) if flag),'')
     paired=any(modes)
+    ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
     ten_card=ten_card or ten_buffered or ten_virtual_zero
     split=split or ten_card
@@ -464,7 +473,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
-            ten_ordered_state=ten_ordered_state)
+            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -503,7 +512,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered'
+                    label='row_coverage' if ten_row_coverage else (
+                        'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
                     result[label+'_comparison']=comparison
@@ -585,13 +595,14 @@ def main():
     modes.add_argument('--ten-buffered',action='store_true')
     modes.add_argument('--ten-virtual-zero',action='store_true')
     modes.add_argument('--ten-ordered-state',action='store_true')
+    modes.add_argument('--ten-row-coverage',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
         rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
-        ten_ordered_state=args.ten_ordered_state),sort_keys=True))
+        ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage),sort_keys=True))
 
 
 if __name__=='__main__':main()

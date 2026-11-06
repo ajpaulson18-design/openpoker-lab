@@ -1,7 +1,9 @@
 #include "../../native/virtual_dyadic_state.hpp"
 #include <algorithm>
 #include <array>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <type_traits>
 
@@ -873,6 +875,115 @@ void compact_directory_controls(h::History& history,const b::Template& source,
     require(holding_rejected && reversed.failed(),"ordered directory accepted a backward holding");
     std::cout<<"PAGED_IMAGE ordered_directory\n";
 }
+
+void row_coverage_controls(h::History& history,const b::Template& source,
+                           const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const auto root=history.root();
+    const auto menu_size=history.decision_key(root).actions;
+    const auto slots=2*menu_size;
+    constexpr std::size_t shift=190;
+    const s::Forecast plan=forecast(2,slots);
+    const s::PackedAverageCapacity packed{2*slots,2*slots};
+    const s::ActionCatalogCapacity catalog{source.nodes().size(),menu_size,true};
+    const pages::Limits limits{4*slots,pages::default_page_words,2,1000,8*slots,500,2,
+        pages::Profile::legacy,2*slots,4,true};
+    const auto register_rows=[&](s::State& state) {
+        require(state.register_sealed_row(root,0,shift,shift)==0 &&
+            state.register_sealed_row(root,1,shift,shift)==1,"row coverage order changed");
+        state.freeze();
+    };
+    std::array<Integer,20> zero{},increments{};
+    const auto actions=std::span<const Integer>(zero).first(menu_size);
+    const auto stage=[&](s::State& state,std::size_t row) {
+        (void)state.stage_row(row,actions,std::span<const Integer>(increments).first(menu_size));
+    };
+    const auto file_bytes=[](const std::filesystem::path& path) {
+        std::ifstream input(path,std::ios::binary);
+        require(bool(input),"cannot inspect coverage control image");
+        return std::string(std::istreambuf_iterator<char>(input),std::istreambuf_iterator<char>());
+    };
+    const auto covered=scratch/"covered",checked=scratch/"checked-words";
+    s::State a(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{covered,limits,true,true,true});
+    s::State b(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{checked,limits,true,true});
+    require(pages::Image::resident_bytes(limits)-s::State::pager_resident_bytes(limits,true)==(4*slots+7)/8,
+        "row coverage residency retained the word bitmap");
+    for (auto* state:{&a,&b}) {
+        register_rows(*state);
+        for (std::size_t sweep=0;sweep<2;++sweep) {
+            state->begin_sweep();
+            increments[0]=Integer(sweep+1)<<shift;
+            stage(*state,1);
+            stage(*state,0);
+            state->commit_sweep();
+        }
+    }
+    for (const auto* name:{"committed.bin","staged.bin"}) {
+        const auto bytes=file_bytes(covered/name);
+        require(bytes.size()==32*slots && bytes==file_bytes(checked/name),"covered image differs from word guard");
+    }
+    require(a.paged_receipt()->write_words==8*slots && a.paged_receipt()->physical_write_requests==4,
+        "covered pager word or request count differs");
+
+    const auto reject_state=[&](s::State& state,ErrorCode code,auto operation) {
+        bool rejected=false;
+        try {operation();} catch (const s::Error& error) {rejected=error.code()==code;}
+        require(rejected && state.failed(),"invalid row coverage was accepted");
+    };
+    for (const bool duplicate:{false,true}) {
+        s::State state(history,{2,2},1,plan,{},catalog,packed,
+            s::PagedStrategy{scratch/(duplicate?"covered-duplicate":"covered-missing"),limits,true,true,true});
+        register_rows(state);
+        state.begin_sweep();
+        stage(state,0);
+        if (duplicate) reject_state(state,ErrorCode::invalid_row,[&] {stage(state,0);});
+        else reject_state(state,ErrorCode::phase,[&] {state.commit_sweep();});
+        require(state.paged_receipt()->completed_sweeps==0,"incomplete covered image was committed");
+    }
+    bool bad_split=false;
+    auto invalid=limits;
+    ++invalid.stage_split_words;
+    try { (void)s::State::storage_forecast(plan,catalog,packed,invalid,true,true,true); }
+    catch (const s::Error& error) {bad_split=error.code()==ErrorCode::invalid_forecast;}
+    require(bad_split,"row coverage accepted a foreign field partition");
+
+    const auto partial=scratch/"covered-partial";
+    s::State state(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{partial,limits,true,true,true});
+    register_rows(state);
+    state.begin_sweep();
+    increments[1]=((Integer(1)<<(plan.value_bits-shift))-1)<<shift;
+    stage(state,0);
+    increments[1]=0;
+    stage(state,1);
+    state.commit_sweep();
+    const auto previous=file_bytes(partial/"staged.bin");
+    state.begin_sweep();
+    increments[1]=Integer(1)<<shift;
+    const auto calls=state.paged_receipt()->stage_calls;
+    reject_state(state,ErrorCode::integer_width,[&] {stage(state,0);});
+    require(state.paged_receipt()->stage_calls>calls && state.paged_receipt()->completed_sweeps==1 &&
+        file_bytes(partial/"staged.bin")==previous,"partially staged row changed the prior committed image");
+
+    auto limited=limits;
+    limited.write_requests=3;
+    const auto failed_flush=scratch/"covered-failed-flush";
+    s::State capped(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{failed_flush,limited,true,true,true});
+    register_rows(capped);
+    increments[1]=0;
+    for (std::size_t sweep=0;sweep<2;++sweep) {
+        capped.begin_sweep();
+        stage(capped,0);
+        stage(capped,1);
+        if (!sweep) capped.commit_sweep();
+    }
+    const auto prior=file_bytes(failed_flush/"staged.bin");
+    bool flush_rejected=false;
+    try {capped.commit_sweep();} catch (const std::length_error&) {flush_rejected=true;}
+    require(flush_rejected && capped.failed() && capped.paged_receipt()->completed_sweeps==1 &&
+        capped.paged_receipt()->physical_write_requests==3 && file_bytes(failed_flush/"staged.bin")==prior,
+        "covered flush failure replaced the committed image");
+    std::cout<<"PAGED_IMAGE row_coverage\n";
+}
 } // namespace
 
 int main(int argc,char** argv) {
@@ -889,6 +1000,7 @@ int main(int argc,char** argv) {
         if (argc==2) {
             paged_image_controls(argv[1]);
             compact_directory_controls(history,source,argv[1]);
+            row_coverage_controls(history,source,argv[1]);
         }
         std::cout<<"END\n";
         return 0;

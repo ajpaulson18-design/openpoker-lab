@@ -142,7 +142,8 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],
                          ['PAGED_IMAGE exact_transaction', 'PAGED_IMAGE buffered_transaction',
                           'PAGED_IMAGE virtual_initial_epoch',
-                          'PAGED_IMAGE compact_directory', 'PAGED_IMAGE ordered_directory'])
+                          'PAGED_IMAGE compact_directory', 'PAGED_IMAGE ordered_directory',
+                          'PAGED_IMAGE row_coverage'])
 
     def test_packed_average_matches_dense_feedback(self):
         self.assertEqual([line for line in self.lines if line.startswith('PACKED_AVERAGE ')],

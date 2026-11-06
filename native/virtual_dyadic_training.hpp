@@ -31,7 +31,7 @@ inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
-    ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state
+    ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -267,6 +267,7 @@ struct Plan {
     std::uint64_t directory_work=0;
     std::uint64_t registration_path_work=0;
     bool ordered_state=false;
+    bool row_coverage=false;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -488,7 +489,8 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state;
+        plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage;
+        plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
         const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
         if (profile==StrategyProfile::ten_card || buffered) plan_.fixture=&proof10;
@@ -629,7 +631,8 @@ public:
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
             const auto initialization_chunks=virtual_zero?0:(L+4095)/4096;
-            plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*initialization_chunks+8*((L+63)/64);
+            const auto coverage_reset_work=plan_.row_coverage?0:8*((L+63)/64);
+            plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*initialization_chunks+coverage_reset_work;
             if (write_requests) {
                 // Up to two page fragments per staged extent, one copy and
                 // mark per staged word, and at most 64 bitmap words to scan
@@ -663,7 +666,7 @@ public:
                 {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
-                plan_.compact_directory,plan_.ordered_state);
+                plan_.compact_directory,plan_.ordered_state,plan_.row_coverage);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1182,7 +1185,7 @@ public:
             {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
-                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state}}:std::nullopt);
+                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

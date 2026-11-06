@@ -62,6 +62,7 @@ struct PagedStrategy {
     virtual_dyadic_paged_image::Limits limits;
     bool compact_rows=false;
     bool ordered_rows=false;
+    bool row_coverage=false;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -221,7 +222,8 @@ class State final {
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
-                                              paged && paged->compact_rows,paged && paged->ordered_rows);
+                                              paged && paged->compact_rows,paged && paged->ordered_rows,
+                                              paged && paged->row_coverage);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -305,7 +307,11 @@ class State final {
         if (raw.sign() || used>bytes) fail(ErrorCode::arithmetic,label);
         std::memcpy(first,raw.limbs(),used);
         std::memset(reinterpret_cast<unsigned char*>(first)+used,0,bytes-used);
-        if (paged_image_) paged_image_->stage(page_base(field)+index,std::span(scratch).first(stride));
+        if (paged_image_) {
+            const auto extent=std::span(scratch).first(stride);
+            if (paged_->row_coverage) paged_image_->stage_row_extent(page_base(field)+index,extent);
+            else paged_image_->stage(page_base(field)+index,extent);
+        }
     }
     void healthy() const { if (failed_) fail(ErrorCode::failed_owner,"state owner already failed"); }
     void charge(std::uint64_t work) {
@@ -363,10 +369,15 @@ public:
         if (!rows || rows>2'000'000) fail(ErrorCode::invalid_forecast,"invalid compact row count");
         return std::bit_ceil(4*rows);
     }
+    [[nodiscard]] static std::size_t pager_resident_bytes(const virtual_dyadic_paged_image::Limits& limits,
+                                                         bool row_coverage=false) {
+        using Image = virtual_dyadic_paged_image::Image;
+        return Image::resident_bytes(limits,row_coverage?Image::Coverage::state_rows:Image::Coverage::words);
+    }
     static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
                                              PackedAverageCapacity packed={},
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
-                                             bool compact_rows=false,bool ordered_rows=false) {
+                                             bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -383,6 +394,9 @@ public:
         if (compact_rows && (!paged || catalog.keys>std::size_t{UINT16_MAX}+1 || f.slots>UINT32_MAX ||
             packed.limb_count>UINT32_MAX || packed.regret_limbs>UINT32_MAX))
             fail(ErrorCode::invalid_forecast,"invalid compact row layout dimensions");
+        if (row_coverage && (!ordered_rows || !packed.limb_count || !packed.regret_limbs ||
+            paged->stage_split_words!=packed.limb_count))
+            fail(ErrorCode::invalid_forecast,"row coverage requires ordered disjoint packed fields");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation across all modes.
@@ -418,7 +432,7 @@ public:
             }
             const auto packed_credit=times(packed.regret_limbs?5:3,times(f.slots,width_with_scratch));
             if (paged) {
-                const auto resident_bytes=plus(virtual_dyadic_paged_image::Image::resident_bytes(*paged),
+                const auto resident_bytes=plus(pager_resident_bytes(*paged,row_coverage),
                                                times(sizeof(std::uint64_t),page_codec_words));
                 entries=plus(entries,plus(resident_bytes,7)/8);
                 packed_bits=plus(packed_bits,times(8,resident_bytes));
@@ -799,8 +813,12 @@ public:
             }
             units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
-            if (paged_)
-                paged_image_=std::make_unique<virtual_dyadic_paged_image::Image>(paged_->scratch,paged_->limits);
+            if (paged_) {
+                using Image = virtual_dyadic_paged_image::Image;
+                if (paged_->row_coverage)
+                    paged_image_.reset(new Image(paged_->scratch,paged_->limits,Image::Coverage::state_rows));
+                else paged_image_=std::make_unique<Image>(paged_->scratch,paged_->limits);
+            }
             phase_=Phase::closed;
         } catch (...) { failed_=true;throw; }
     }
@@ -916,7 +934,10 @@ public:
             for (std::size_t row=0;row<receipt_.rows;++row)
                 if (!seen_[row]) fail(ErrorCode::phase,"state missing staged row");
             if (paged_image_) {
-                paged_image_->commit_sweep();
+                // Successful State rows cover the two disjoint, fully
+                // registered fields exactly once. The pager checks word count.
+                if (paged_->row_coverage) paged_image_->commit_covered_rows();
+                else paged_image_->commit_sweep();
             } else {
                 if (packed_regrets()) packed_regrets_.swap(staged_packed_regrets_);
                 else regrets_.swap(staged_regrets_);

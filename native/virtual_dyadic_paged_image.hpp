@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+namespace openpoker::virtual_dyadic_state { class State; }
+
 namespace openpoker::virtual_dyadic_paged_image {
 
 inline constexpr std::size_t n9_image_words = 606730;
@@ -60,6 +62,8 @@ struct Receipt {
 };
 
 class Image {
+    friend class virtual_dyadic_state::State;
+    enum class Coverage { words, state_rows };
     static constexpr std::size_t no_page = std::numeric_limits<std::size_t>::max();
     struct DirtyPage {
         std::array<std::uint64_t,default_page_words> words{};
@@ -71,21 +75,34 @@ class Image {
 public:
     // This forecast performs checked arithmetic and validation only; it allocates nothing.
     [[nodiscard]] static std::size_t resident_bytes(const Limits& limits) {
+        return resident_bytes(limits,Coverage::words);
+    }
+
+    Image(const std::filesystem::path& fresh_directory, Limits limits)
+        : Image(fresh_directory,limits,Coverage::words) {}
+
+private:
+    [[nodiscard]] static std::size_t bitmap_bytes(const Limits& limits,Coverage coverage) noexcept {
+        return coverage==Coverage::words ? limits.image_words/8+(limits.image_words%8!=0) : 0;
+    }
+
+    [[nodiscard]] static std::size_t resident_bytes(const Limits& limits,Coverage coverage) {
         validate(limits);
+        if (coverage==Coverage::state_rows && !limits.stage_split_words)
+            throw std::invalid_argument("State row coverage requires a buffered field split");
         const auto cached_words = checked_mul(limits.page_words, limits.cache_pages);
         const auto word_bytes = checked_mul(cached_words, sizeof(std::uint64_t));
-        const auto bitmap_bytes = limits.image_words / 8 + (limits.image_words % 8 != 0);
         const auto tag_bytes = checked_mul(limits.cache_pages, sizeof(std::size_t));
-        auto total = checked_add(checked_add(checked_add(word_bytes, limits.cache_pages), tag_bytes), bitmap_bytes);
+        auto total = checked_add(checked_add(checked_add(word_bytes, limits.cache_pages), tag_bytes), bitmap_bytes(limits,coverage));
         if (limits.stage_split_words) total=checked_add(total,sizeof(WriteBuffers));
         if (total > maximum_resident_bytes) throw std::invalid_argument("resident image budget exceeded");
         return total;
     }
 
-    Image(const std::filesystem::path& fresh_directory, Limits limits)
-        : limits_(limits), resident_bytes_(resident_bytes(limits)), cache_(limits.cache_pages * limits.page_words),
+    Image(const std::filesystem::path& fresh_directory, Limits limits,Coverage coverage)
+        : limits_(limits), resident_bytes_(resident_bytes(limits,coverage)), cache_(limits.cache_pages * limits.page_words),
           cache_valid_(limits.cache_pages, 0), cache_tags_(limits.cache_pages, 0),
-          staged_bits_(limits.image_words / 8 + (limits.image_words % 8 != 0), 0),
+          staged_bits_(bitmap_bytes(limits,coverage), 0),
           write_buffers_(limits.stage_split_words ? std::make_unique<WriteBuffers>() : nullptr) {
         std::error_code ec;
         if (!std::filesystem::create_directory(fresh_directory, ec) || ec)
@@ -103,6 +120,7 @@ public:
         if (!files_[0]) throw std::runtime_error("cannot initialize committed image");
     }
 
+public:
     Image(const Image&) = delete;
     Image& operator=(const Image&) = delete;
     Image(Image&&) = delete;
@@ -153,13 +171,38 @@ public:
     }
 
     void stage(std::size_t offset, std::span<const std::uint64_t> input) {
+        if (staged_bits_.empty()) throw std::logic_error("State row coverage requires its owning writer");
+        stage_impl(offset,input);
+    }
+
+    void commit_sweep() {
+        if (staged_bits_.empty()) throw std::logic_error("State row coverage requires its owning commit");
+        commit_impl();
+    }
+
+    [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
+    [[nodiscard]] std::size_t resident_reservation_bytes() const noexcept { return resident_bytes_; }
+
+private:
+    void stage_row_extent(std::size_t offset,std::span<const std::uint64_t> input) {
+        if (!staged_bits_.empty()) throw std::logic_error("row extent requires State row coverage");
+        stage_impl(offset,input);
+    }
+
+    void commit_covered_rows() {
+        if (!staged_bits_.empty()) throw std::logic_error("covered commit requires State row coverage");
+        commit_impl();
+    }
+
+    void stage_impl(std::size_t offset, std::span<const std::uint64_t> input) {
         if (failed_ || !sweep_open_) throw std::logic_error("stage requires a usable open sweep");
         check_range(offset, input.size());
         check_request_admission(1);
         if (write_buffers_ && offset<limits_.stage_split_words && input.size()>limits_.stage_split_words-offset)
             throw std::invalid_argument("staged range crosses the field boundary");
-        for (std::size_t i = 0; i < input.size(); ++i)
-            if (bit_is_set(offset + i)) throw std::invalid_argument("overlapping staged range");
+        if (!staged_bits_.empty())
+            for (std::size_t i = 0; i < input.size(); ++i)
+                if (bit_is_set(offset + i)) throw std::invalid_argument("overlapping staged range");
         if (input.size() > limits_.image_words - staged_words_)
             throw std::invalid_argument("staged image overflow");
         // Reserve every accepted word, including buffered words and any physical initialization.
@@ -172,22 +215,29 @@ public:
                 if (write_buffers_) buffer_stage(offset,input);
                 else record_write(files_[1-committed_],offset,input);
             } catch (...) { failed_=true; throw; }
-            for (std::size_t i = 0; i < input.size(); ++i) set_bit(offset + i);
+            if (!staged_bits_.empty())
+                for (std::size_t i = 0; i < input.size(); ++i) set_bit(offset + i);
             staged_words_ += input.size();
         }
         ++receipt_.stage_calls;
     }
 
-    void commit_sweep() {
+    void commit_impl() {
         if (failed_ || !sweep_open_) throw std::logic_error("commit requires a usable open sweep");
         if (staged_words_ != limits_.image_words) throw std::logic_error("incomplete staged image");
-        // The exact word count and overlap guard prove complete coverage.
+        // This count composes with either the word overlap guard or State's
+        // disjoint row extents and complete successful-row check.
         try {
             if (write_buffers_)
                 for (auto& buffer:*write_buffers_) flush_dirty(buffer);
             auto& staged=files_[1-committed_];
             staged.flush();
             if (!staged) throw std::runtime_error("cannot flush staged image");
+            if (staged_bits_.empty()) {
+                const auto images=receipt_.completed_sweeps+1+static_cast<std::uint64_t>(!limits_.virtual_initial_zero);
+                if (receipt_.write_words!=images*limits_.image_words)
+                    throw std::runtime_error("covered rows did not flush the complete image");
+            }
         } catch (...) { failed_=true; throw; }
         committed_=1-committed_;
         ++receipt_.completed_sweeps;
@@ -195,10 +245,6 @@ public:
         std::fill(cache_valid_.begin(), cache_valid_.end(), static_cast<unsigned char>(0));
     }
 
-    [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
-    [[nodiscard]] std::size_t resident_reservation_bytes() const noexcept { return resident_bytes_; }
-
-private:
     Limits limits_;
     std::size_t resident_bytes_;
     std::vector<std::uint64_t> cache_;
