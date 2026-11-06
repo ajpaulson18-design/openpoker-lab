@@ -1060,3 +1060,15 @@ The lifetime fix establishes prompt release, not causation of either peak.
 Both complete studies, probes and failures remain immutable in the same receipt.
 Native DAG traversal must avoid rebuilding expanded node/dense-hand maps; strategy
 history/output and pair-scan growth remain independent limits. Overall goal active.
+
+## Buffered staging on the ten-card native path
+
+The [native dyadic trainer](native-dyadic-two-sweep.md#buffered-staging)
+now batches staged writes in a separate bounded ten-card mode. One page
+buffer per strategy field preserves the committed read view. The
+independent stage schedule and frozen run agree on 19,560 stream write
+calls, down from 1,124,988 for direct staging. Both sweep images and the
+numerical stream match the direct run, and independent saved-policy replay
+passes. The checkpoint footprint and two-sweep exploitability are unchanged.
+The local controls cover cap-induced partial flush failure. The native
+component checks pass on optimized Ubuntu, Windows, and sanitizer builds.

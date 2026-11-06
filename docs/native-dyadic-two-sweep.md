@@ -237,3 +237,15 @@ The cohort checks the write schedule, unchanged read counts, both
 checkpoint digests, and numerical stream bytes against the accepted
 direct baseline. It then replays both sweeps and best responses from
 the saved packet.
+
+The frozen buffered run at `753b658` matched both checkpoint images and
+all 9,832,556 numerical stream bytes. Saved-only replay reproduced both
+sweeps and the final 2.9843-big-blind exploitability. The pager retained
+the same 57,236,628-byte packet and transferred the same stream byte
+counts. It reduced write calls by 98.3%.
+
+The single Windows process observations were 14.00 seconds direct and
+7.71 seconds buffered, with peak working sets of 13,660,160 and
+13,742,080 bytes. These are observations for this fixture and toolchain.
+The write counts measure calls made by the pager to its file stream.
+[Buffered ten-card evidence](../benchmarks/results/native-dyadic-buffered-ten-card-accepted-v1/manifest.json)
