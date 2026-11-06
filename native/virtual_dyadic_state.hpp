@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
 #include <limits>
 #include <map>
 #include <memory>
@@ -63,6 +64,7 @@ struct PagedStrategy {
     bool compact_rows=false;
     bool ordered_rows=false;
     bool row_coverage=false;
+    bool shared_policy=false;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -94,6 +96,11 @@ struct ScaledAverageIncrements {
     std::span<const Integer> values;
     std::size_t shift = 0;
 };
+struct PolicySpillSweep {
+    std::size_t uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0;
+    std::size_t write_words=0,read_calls=0,mixed_read_calls=0,read_words=0;
+};
+using PolicySpillReceipt = std::array<PolicySpillSweep,2>;
 
 class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
@@ -106,9 +113,113 @@ class State final {
         std::uint64_t history;
         std::uint32_t offset, average_offset, regret_offset;
         std::uint16_t source, average_shift, regret_shift;
-        std::uint8_t actor, holding;
+        std::uint8_t actor, holding, policy_tag=0;
     };
     static_assert(sizeof(CompactRow)==32);
+    class PolicySpill {
+        static constexpr std::uint8_t uniform_tag=1,mixed_tag=22;
+        const std::size_t rows_,words_;
+        std::fstream file_;
+        PolicySpillReceipt receipt_{};
+        std::size_t sweeps_=0,next_word_=0;
+        bool ready_=false;
+
+        static std::uint64_t uniform(std::size_t count,std::size_t action) noexcept {
+            const auto q=dyadic_policy::grid_units;
+            return q/count+static_cast<std::uint64_t>(action<q%count);
+        }
+    public:
+        PolicySpill(std::size_t rows,std::size_t words):rows_(rows),words_(words) {}
+
+        void begin(const std::filesystem::path& path) {
+            if (sweeps_==receipt_.size() || (sweeps_ && !ready_))
+                throw std::logic_error("invalid policy spill generation");
+            if (file_.is_open()) {
+                file_.close();
+                if (!file_) throw std::runtime_error("cannot close policy spill");
+            }
+            file_.open(path,std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);
+            if (!file_) throw std::runtime_error("cannot open policy spill");
+            ++sweeps_;
+            next_word_=0;
+            ready_=false;
+        }
+
+        [[nodiscard]] std::uint8_t append(std::size_t offset,std::span<const std::uint64_t> units) {
+            if (!sweeps_ || ready_ || units.size()<2 || units.size()>20 || offset!=next_word_ ||
+                units.size()-1>words_-next_word_)
+                throw std::logic_error("invalid policy spill row extent");
+            auto& census=receipt_[sweeps_-1];
+            if (census.uniform_rows+census.pure_rows+census.mixed_rows>=rows_)
+                throw std::length_error("policy spill row cap");
+            next_word_+=units.size()-1;
+            bool is_uniform=true;
+            std::uint8_t pure=0;
+            std::uint64_t sum=0;
+            const auto q=dyadic_policy::grid_units;
+            for (std::size_t action=0;action<units.size();++action) {
+                const auto unit=units[action];
+                if (unit>q-sum) throw std::logic_error("policy spill grid sum overflow");
+                sum+=unit;
+                if (unit==q) pure=static_cast<std::uint8_t>(2+action);
+                is_uniform=is_uniform && unit==uniform(units.size(),action);
+            }
+            if (sum!=q) throw std::logic_error("policy spill grid sum differs");
+            if (is_uniform) {++census.uniform_rows;return uniform_tag;}
+            if (pure) {++census.pure_rows;return pure;}
+            const auto words=units.first(units.size()-1);
+            file_.seekp(static_cast<std::streamoff>(8*offset));
+            file_.write(reinterpret_cast<const char*>(words.data()),static_cast<std::streamsize>(words.size_bytes()));
+            if (!file_) throw std::runtime_error("cannot write policy spill row");
+            ++census.mixed_rows;
+            census.write_words+=words.size();
+            census.extent_words=next_word_;
+            return mixed_tag;
+        }
+
+        void finish() {
+            if (!sweeps_ || ready_) throw std::logic_error("policy spill finish requires active build");
+            const auto& counts=receipt_[sweeps_-1];
+            if (next_word_!=words_ || counts.uniform_rows+counts.pure_rows+counts.mixed_rows!=rows_)
+                throw std::logic_error("incomplete policy spill build");
+            file_.flush();
+            if (!file_) throw std::runtime_error("cannot flush policy spill");
+            ready_=true;
+        }
+
+        void load(std::uint8_t tag,std::size_t offset,std::span<std::uint64_t> output) {
+            if (!ready_ || output.size()<2 || output.size()>20 || offset>words_ || output.size()-1>words_-offset)
+                throw std::logic_error("invalid frozen policy spill extent");
+            auto& counts=receipt_[sweeps_-1];
+            if (counts.read_calls>=3*rows_) throw std::length_error("policy spill read request cap");
+            if (tag==uniform_tag) {
+                for (std::size_t action=0;action<output.size();++action) output[action]=uniform(output.size(),action);
+            } else if (tag>=2 && tag<2+output.size()) {
+                std::fill(output.begin(),output.end(),std::uint64_t{0});
+                output[tag-2]=dyadic_policy::grid_units;
+            } else if (tag==mixed_tag) {
+                const auto words=output.first(output.size()-1);
+                if (offset+words.size()>counts.extent_words || words.size()>3*words_-counts.read_words)
+                    throw std::length_error("policy spill physical read bound");
+                file_.seekg(static_cast<std::streamoff>(8*offset));
+                file_.read(reinterpret_cast<char*>(words.data()),static_cast<std::streamsize>(words.size_bytes()));
+                if (!file_) throw std::runtime_error("short frozen policy spill read");
+                auto left=dyadic_policy::grid_units;
+                for (const auto unit:words) {
+                    if (unit>left) throw std::runtime_error("invalid frozen policy spill grid");
+                    left-=unit;
+                }
+                output.back()=left;
+                ++counts.mixed_read_calls;
+                counts.read_words+=words.size();
+            } else throw std::logic_error("unknown frozen policy tag");
+            ++counts.read_calls;
+        }
+
+        [[nodiscard]] const PolicySpillReceipt& receipt() const noexcept {return receipt_;}
+    };
+    static constexpr std::size_t policy_spill_entries=128;
+    static_assert(sizeof(PolicySpill)+20*sizeof(std::uint64_t)<=8*policy_spill_entries);
     enum class Phase { building, closed, sweeping };
     enum class PackedField { average, regret };
     static constexpr std::size_t page_codec_words=11;
@@ -143,6 +254,7 @@ class State final {
     std::size_t packed_words_registered_ = 0, packed_regret_words_registered_ = 0;
     std::unique_ptr<std::uint64_t[]> units_;
     std::unique_ptr<unsigned char[]> seen_;
+    std::unique_ptr<PolicySpill> policy_spill_;
     Phase phase_ = Phase::building;
     bool failed_ = false, exported_ = false;
 
@@ -223,7 +335,7 @@ class State final {
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
-                                              paged && paged->row_coverage);
+                                              paged && paged->row_coverage,paged && paged->shared_policy);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -377,7 +489,8 @@ public:
     static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
                                              PackedAverageCapacity packed={},
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
-                                             bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false) {
+                                             bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false,
+                                             bool shared_policy=false) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -397,6 +510,8 @@ public:
         if (row_coverage && (!ordered_rows || !packed.limb_count || !packed.regret_limbs ||
             paged->stage_split_words!=packed.limb_count))
             fail(ErrorCode::invalid_forecast,"row coverage requires ordered disjoint packed fields");
+        if (shared_policy && (!row_coverage || f.sweeps!=2 || f.slots<2*f.rows))
+            fail(ErrorCode::invalid_forecast,"shared policy requires the two-sweep ordered State path");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation across all modes.
@@ -440,7 +555,8 @@ public:
                     const auto order_entries=ordered_rows?(sizeof(last_registration_)+7)/8:0;
                     const auto common=plus(1056+order_entries,plus(4*f.rows,plus(3*catalog.token_slots,2*catalog.keys)));
                     const auto build=ordered_rows?common:plus(common,compact_index_slots(f.rows));
-                    const auto policies=times(ordered_rows?1:2,plus(f.rows,f.slots));
+                    const auto policies=shared_policy?plus(f.rows,policy_spill_entries):
+                        times(ordered_rows?1:2,plus(f.rows,f.slots));
                     const auto frozen=plus(common,plus(policies,plus(resident_bytes,7)/8));
                     entries=std::max(build,frozen);
                 }
@@ -513,6 +629,10 @@ public:
     [[nodiscard]] std::optional<virtual_dyadic_paged_image::Receipt> paged_receipt() const {
         if (!paged_image_) return std::nullopt;
         return paged_image_->receipt();
+    }
+    [[nodiscard]] std::optional<PolicySpillReceipt> policy_spill_receipt() const {
+        if (!policy_spill_) return std::nullopt;
+        return policy_spill_->receipt();
     }
     [[nodiscard]] std::span<const Row> rows() const {
         if (compact_rows_) fail(ErrorCode::phase,"compact row directory has no contiguous Row view");
@@ -611,6 +731,8 @@ public:
             if (info.actor>1 || holding>=hand_counts_[info.actor] || info.actions==0 || info.actions>20 ||
                 info.source>=catalog_.keys || info.depth>forecast_.max_history_depth)
                 fail(ErrorCode::invalid_row,"sealed history decision key outside admitted range");
+            if (paged_ && paged_->shared_policy && info.actions<2)
+                fail(ErrorCode::invalid_row,"shared policy requires at least two actions");
             if (average_shift>=forecast_.value_bits || regret_shift>=forecast_.value_bits ||
                 !packed() || !packed_regrets())
                 fail(ErrorCode::invalid_row,"sealed packed row shifts or mode");
@@ -811,7 +933,9 @@ public:
                 averages_=std::make_unique<Integer[]>(forecast_.slots);
                 staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
             }
-            units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
+            if (paged_ && paged_->shared_policy)
+                policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows);
+            else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
             if (paged_) {
                 using Image = virtual_dyadic_paged_image::Image;
@@ -830,6 +954,7 @@ public:
             charge(times(4,forecast_.rows));
             std::fill_n(seen_.get(),forecast_.rows,static_cast<unsigned char>(0));
             receipt_.staged_rows=0;
+            if (policy_spill_) policy_spill_->begin(paged_->scratch/"policy.bin");
             if (paged_image_) paged_image_->begin_sweep();
             std::optional<std::array<Integer,20>> decoded;
             if (packed_regrets()) decoded.emplace();
@@ -844,8 +969,11 @@ public:
                     values={decoded->data(),row.actions.size()};
                 } else values={regrets_.get()+row.offset,row.actions.size()};
                 const auto policy=quantizer_.regret_policy(values);
-                std::copy(policy.units().begin(),policy.units().end(),units_.get()+row.offset);
+                if (policy_spill_)
+                    compact_rows_[row_index].policy_tag=policy_spill_->append(row.offset-row_index,policy.units());
+                else std::copy(policy.units().begin(),policy.units().end(),units_.get()+row.offset);
             }
+            if (policy_spill_) policy_spill_->finish();
             phase_=Phase::sweeping;
         } catch (...) { failed_=true;throw; }
     }
@@ -853,7 +981,18 @@ public:
     [[nodiscard]] std::span<const std::uint64_t> policy_units(std::size_t row) const {
         healthy();index_bound(row);
         if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state policy requires an active frozen sweep");
+        if (policy_spill_) fail(ErrorCode::phase,"shared policy requires caller-owned row storage");
         const auto r=row_at(row);return {units_.get()+r.offset,r.actions.size()};
+    }
+    void copy_policy_units(std::size_t row,std::span<std::uint64_t> output) {
+        healthy();
+        try {
+            if (phase_!=Phase::sweeping || !policy_spill_)
+                fail(ErrorCode::phase,"policy copy requires an active shared sweep");
+            const auto record=row_at(row);
+            if (output.size()!=record.actions.size()) fail(ErrorCode::invalid_row,"policy copy extent differs");
+            policy_spill_->load(compact_rows_[row].policy_tag,record.offset-row,output);
+        } catch (...) {failed_=true;throw;}
     }
 private:
     // The returned exact mixed numerator belongs to the enclosing traversal.
@@ -887,7 +1026,11 @@ private:
             charge(times(16*count+8,words(temp_bits)));
             receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,temp_bits);
             Integer mixed=0;
-            for (std::size_t a=0;a<count;++a) mixed+=action_values[a]*units_[r.offset+a];
+            std::array<std::uint64_t,20> copied{};
+            if (policy_spill_) policy_spill_->load(compact_rows_[row].policy_tag,r.offset-row,
+                std::span(copied).first(count));
+            const auto* policy=policy_spill_?copied.data():units_.get()+r.offset;
+            for (std::size_t a=0;a<count;++a) mixed+=action_values[a]*policy[a];
             if (mixed%dyadic_policy::grid_units!=0)
                 fail(ErrorCode::arithmetic,"state mixed value is outside fixed denominator grid");
             mixed>>=dyadic_policy::grid_bits;
@@ -947,13 +1090,53 @@ public:
             ++receipt_.completed_sweeps;phase_=Phase::closed;
         } catch (...) { failed_=true;throw; }
     }
+private:
+    void admit_export() {
+        if (phase_!=Phase::closed || receipt_.completed_sweeps!=forecast_.sweeps || exported_)
+            fail(ErrorCode::phase,"state average export requires all requested sweeps once");
+        charge(plus(times(4*words(forecast_.value_bits)+4,forecast_.slots),times(4,forecast_.rows)));
+        exported_=true;
+    }
+    template<class Emit>
+    void average_rows(Emit&& emit) {
+        std::optional<std::array<Integer,20>> decoded;
+        if (packed()) decoded.emplace();
+        for (std::size_t i=0;i<forecast_.rows;++i) {
+            const auto row=row_at(i);charge(16+4*row.actions.size());
+            const Integer* masses;
+            if (decoded) {
+                const auto average_row=average_record(i);
+                for (std::size_t a=0;a<row.actions.size();++a)
+                    (*decoded)[a]=packed_regrets()
+                        ?load_compact(PackedField::average,average_row.limb_offset,average_row.shift,a)
+                        :load_average(average_row,a);
+                masses=decoded->data();
+            } else masses=averages_.get()+row.offset;
+            const auto policy=quantizer_.average_export({masses,row.actions.size()});
+            emit(i,row.offset,policy.units(),static_cast<unsigned char>(policy.uniform_fallback()));
+            healthy();
+        }
+    }
+public:
+    template<class Emit>
+    [[nodiscard]] std::span<const unsigned char> stream_average(Emit&& emit) {
+        healthy();
+        try {
+            if (!policy_spill_) fail(ErrorCode::phase,"streamed average requires shared policy mode");
+            admit_export();
+            average_rows([&](std::size_t row,std::size_t,std::span<const std::uint64_t> units,unsigned char fallback) {
+                emit(units);
+                seen_[row]=fallback;
+            });
+            return {seen_.get(),forecast_.rows};
+        } catch (...) {failed_=true;throw;}
+    }
     [[nodiscard]] AverageExport export_average(bool include_raw=true) {
         healthy();
         try {
-            if (phase_!=Phase::closed || receipt_.completed_sweeps!=forecast_.sweeps || exported_)
-                fail(ErrorCode::phase,"state average export requires all requested sweeps once");
+            if (policy_spill_) fail(ErrorCode::phase,"shared policy requires streamed average export");
             if (packed() && include_raw) fail(ErrorCode::phase,"state packed export requires policy-only mode");
-            charge(plus(times(4*words(forecast_.value_bits)+4,forecast_.slots),times(4,forecast_.rows)));
+            admit_export();
             AverageExport image;
             image.rows=forecast_.rows;
             image.slots=forecast_.slots;
@@ -969,24 +1152,11 @@ public:
                 image.raw_masses=std::make_unique<Integer[]>(image.slots);
                 std::copy_n(averages_.get(),image.slots,image.raw_masses.get());
             }
-            std::optional<std::array<Integer,20>> decoded;
-            if (packed()) decoded.emplace();
-            for (std::size_t i=0;i<image.rows;++i) {
-                const auto row=row_at(i);charge(16+4*row.actions.size());
-                const Integer* masses;
-                if (decoded) {
-                    const auto average_row=average_record(i);
-                    for (std::size_t a=0;a<row.actions.size();++a)
-                        (*decoded)[a]=packed_regrets()
-                            ?load_compact(PackedField::average,average_row.limb_offset,average_row.shift,a)
-                            :load_average(average_row,a);
-                    masses=decoded->data();
-                } else masses=averages_.get()+row.offset;
-                const auto policy=quantizer_.average_export({masses,row.actions.size()});
-                image.uniform_fallback[i]=static_cast<unsigned char>(policy.uniform_fallback());
-                std::copy(policy.units().begin(),policy.units().end(),image.units.get()+row.offset);
-            }
-            exported_=true;return image;
+            average_rows([&](std::size_t row,std::size_t offset,std::span<const std::uint64_t> units,unsigned char fallback) {
+                image.uniform_fallback[row]=fallback;
+                std::copy(units.begin(),units.end(),image.units.get()+offset);
+            });
+            return image;
         } catch (...) { failed_=true;throw; }
     }
 };

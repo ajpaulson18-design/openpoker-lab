@@ -31,7 +31,7 @@ inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
-    ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage
+    ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -268,6 +268,9 @@ struct Plan {
     std::uint64_t registration_path_work=0;
     bool ordered_state=false;
     bool row_coverage=false;
+    bool shared_policy=false;
+    std::uint64_t policy_spill_work=0;
+    static constexpr std::size_t policy_frame_entries=136;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -489,7 +492,8 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
-        plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage;
+        plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy;
+        plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage || plan_.shared_policy;
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
         const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
@@ -641,6 +645,11 @@ public:
             }
             w[work_index(Work::route)]+=plan_.paging_work;
         }
+        if (plan_.shared_policy) {
+            // One build and three read passes. Every row can require spill.
+            plan_.policy_spill_work=sweeps*(32*R+16*(S-R)+4*S)+64;
+            w[work_index(Work::route)]+=plan_.policy_spill_work;
+        }
         if (plan_.compact_directory) {
             // Table initialization plus compact row encode/decode across both
             // sweeps and checkpoint export. Probes use the existing lookup budget.
@@ -666,12 +675,12 @@ public:
                 {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
-                plan_.compact_directory,plan_.ordered_state,plan_.row_coverage);
+                plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
         plan_.entries=plan_.state_entries+template_receipt.entries+template_receipt.peak_scratch_entries+
-            chance_entries+32*literal_count+1+parent_entries;
+            chance_entries+32*literal_count+1+parent_entries+(plan_.shared_policy?Plan::policy_frame_entries:0);
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
         plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint);
         require(plan_.template_work<=template_cap && plan_.chance_work<=game.chance_limit && plan_.history_work<=game.history_limit &&
@@ -919,6 +928,7 @@ template<bool Paired> class Walk final {
         }
         const auto key=history_.ordinal(cursor);
         std::array<std::size_t,2> row_ids{};
+        std::array<std::array<std::uint64_t,4>,2> policy_copies{};
         std::array<std::span<const std::uint64_t>,2> policy{};
         for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
             meter_.charge(Work::route,16);
@@ -935,7 +945,11 @@ template<bool Paired> class Walk final {
                 require(state_.regret_row_shift(row)==row_regret_shift,"packed regret row depth changed");
             shape_.slots+=menu;
             row_ids[holding]=row;
-            policy[holding]=state_.policy_units(row);
+            if (plan_.shared_policy) {
+                const auto units=std::span(policy_copies[holding]).first(menu);
+                state_.copy_policy_units(row,units);
+                policy[holding]=units;
+            } else policy[holding]=state_.policy_units(row);
         }
         LaneValues result{};
         std::array<std::array<Integer,4>,2> action_values{};
@@ -1028,6 +1042,11 @@ public:
     }
 };
 
+struct TrainingIO {
+    std::optional<paging::Receipt> paging;
+    std::optional<state::PolicySpillReceipt> policy;
+};
+
 class Driver final {
     betting::Template source_{configuration(),template_limits()};
     Meter meter_;
@@ -1076,10 +1095,18 @@ class Driver final {
             out.u64(row.offset);
         }
     }
-    static std::uint64_t profile(Binary& out,const state::State& state,std::size_t sweep) {
+    static std::uint64_t profile(Binary& out,state::State& state,std::size_t sweep,bool shared_policy) {
         std::uint64_t changed=0;
         for (std::size_t row=0;row<state.row_count();++row) {
-            const auto units=state.policy_units(row);
+            std::array<std::uint64_t,4> copied{};
+            std::span<const std::uint64_t> units;
+            if (shared_policy) {
+                const auto menu=state.row_at(row).actions.size();
+                require(menu<=copied.size(),"shared policy menu exceeds stream scratch");
+                const auto target=std::span(copied).first(menu);
+                state.copy_policy_units(row,target);
+                units=target;
+            } else units=state.policy_units(row);
             bool distinct=false;
             for (std::size_t action=0;action<units.size();++action) {
                 distinct=distinct || units[action]!=uniform_unit(units.size(),action);
@@ -1146,7 +1173,7 @@ public:
     [[nodiscard]] const Plan& plan() const noexcept { return plan_; }
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
-    std::optional<paging::Receipt> train(std::ostream& stream,const std::filesystem::path& page_scratch={}) {
+    TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={}) {
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
@@ -1176,6 +1203,7 @@ public:
         if (p.packed_averages) meter_.charge(Work::average,p.packed_average_work);
         if (p.packed_regrets) meter_.charge(Work::route,p.packed_regret_work);
         if (p.paged_strategy) meter_.charge(Work::route,p.paging_work);
+        if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
@@ -1185,7 +1213,8 @@ public:
             {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
-                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage}}:std::nullopt);
+                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
+                    p.shared_policy}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1201,7 +1230,7 @@ public:
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<sweeps;++sweep) {
             state.begin_sweep();
-            feedback=profile(out,state,sweep);
+            feedback=profile(out,state,sweep,p.shared_policy);
             std::array<Values,targets> roots{};
             if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0).run(root);
             else {
@@ -1214,14 +1243,22 @@ public:
             if (!p.split_checkpoint) wide_checkpoint(out,state);
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
         }
-        const auto image=state.export_average(!p.packed_averages);
-        require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
-            "fixed export policy image changed");
-        for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);
-        out.bytes(image.uniform_fallback.get(),image.rows);
+        if (p.shared_policy) {
+            const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
+                for (const auto unit:units) out.u64(unit);
+            });
+            require(flags.size()==p.shape.rows,"streamed export row count changed");
+            out.bytes(flags.data(),flags.size());
+        } else {
+            const auto image=state.export_average(!p.packed_averages);
+            require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
+                "fixed export policy image changed");
+            for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);
+            out.bytes(image.uniform_fallback.get(),image.rows);
+        }
         footer(out,chance.receipt(),history.receipt(),state.receipt(),feedback);
         out.finish();
-        return state.paged_receipt();
+        return {state.paged_receipt(),state.policy_spill_receipt()};
     }
 };
 } // namespace openpoker::virtual_dyadic_training

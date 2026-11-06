@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import struct
 import time
 import traceback
 from zipfile import ZipFile
@@ -40,7 +41,9 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, ordered_state=False,row_coverage=False):
+def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, ordered_state=False,row_coverage=False,
+                           shared_policy=False):
+    row_coverage=row_coverage or shared_policy
     ordered_state=ordered_state or row_coverage
     virtual_zero=virtual_zero or ordered_state
     expected={
@@ -94,6 +97,14 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
         expected['parent_work']['route']-=bitmap_reset
         expected['component_work']['parent']-=bitmap_reset
         expected['planned_total_work']-=bitmap_reset
+    if shared_policy:
+        spill_work=15_056_976
+        expected.update(shared_policy=True,streamed_average=True,export_workspace_reused=False,entries=832_287,
+                        policy_spill_work=spill_work,policy_spill_word_limit=161_870,
+                        policy_spill_read_call_limit=357_588)
+        expected['parent_work']['route']+=spill_work
+        expected['component_work']['parent']+=spill_work
+        expected['planned_total_work']+=spill_work
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
             'ten-card admission differs from the independent fixed census')
@@ -104,10 +115,11 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
-                       ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False):
-    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage:
+                       ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False):
+    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage or ten_shared_policy:
         return validate_ten_admission(receipt,buffered=ten_buffered,virtual_zero=ten_virtual_zero,
-                                      ordered_state=ten_ordered_state,row_coverage=ten_row_coverage)
+                                      ordered_state=ten_ordered_state,row_coverage=ten_row_coverage,
+                                      shared_policy=ten_shared_policy)
     require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
@@ -348,8 +360,68 @@ def verify_paging(directory,admission,stage=None):
         image=unlinked_path(directory/name)
         require(image.is_file() and image.stat().st_size==8*admission['page_image_words'], 'paged file extent differs')
         files[name]={'bytes':image.stat().st_size,'sha256':sha(image)}
-    require(set(item.name for item in directory.iterdir())==set(files)|{'paging.json'},'unexpected paging artifact')
+    names=set(files)|{'paging.json'}
+    if admission.get('shared_policy',False):
+        names|={'policy.bin','policy.json'}
+    require(set(item.name for item in directory.iterdir())==names,'unexpected paging artifact')
     return {'counts':receipt,'images':files}
+
+
+def verify_policy_spill(directory,stream,admission):
+    require(stream.stat().st_size==TEN_CARD_SPLIT_BYTES,'policy spill scaffold byte bound')
+    with stream.open('rb') as saved:
+        raw=saved.read(TEN_CARD_SPLIT_BYTES+1)
+    require(len(raw)==TEN_CARD_SPLIT_BYTES and raw[:8]==b'OPLDTP01','policy spill scaffold differs')
+    rows,slots=admission['rows'],admission['slots']
+    at=8+16*8+11*8+96*1105
+    menus=[]
+    slot=0
+    for _ in range(rows):
+        _,flags,offset=struct.unpack_from('<3Q',raw,at)
+        menu=(flags>>16)&255
+        require(2<=menu<=4 and offset==slot,'policy spill row extent differs')
+        menus.append(menu)
+        slot+=menu
+        at+=24
+    require(slot==slots,'policy spill slot count differs')
+    policy=unlinked_path(directory/'policy.bin')
+    receipt=unlinked_path(directory/'policy.json')
+    size=policy.stat().st_size
+    require(policy.is_file() and receipt.is_file() and receipt.stat().st_size<=65536
+            and size<=8*admission['policy_spill_word_limit'],
+            'policy spill artifact bound')
+    expected=[]
+    Q=1<<52
+    with policy.open('rb') as spilled:
+        for sweep in range(2):
+            counts=dict(uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0,write_words=0,
+                        read_calls=3*rows,mixed_read_calls=0,read_words=0)
+            offset=0
+            for menu in menus:
+                units=struct.unpack_from(f'<{menu}Q',raw,at)
+                require(sum(units)==Q,'policy spill grid total differs')
+                base,remainder=divmod(Q,menu)
+                if all(unit==base+(action<remainder) for action,unit in enumerate(units)):
+                    counts['uniform_rows']+=1
+                elif Q in units:
+                    counts['pure_rows']+=1
+                else:
+                    counts['mixed_rows']+=1
+                    counts['extent_words']=offset+menu-1
+                    counts['write_words']+=menu-1
+                    if sweep==1:
+                        spilled.seek(8*offset)
+                        require(spilled.read(8*(menu-1))==raw[at:at+8*(menu-1)],'policy spill word bytes differ')
+                offset+=menu-1
+                at+=8*menu
+            counts['mixed_read_calls']=3*counts['mixed_rows']
+            counts['read_words']=3*counts['write_words']
+            expected.append(counts)
+            at+=4*(1+11)*8
+    require(expected==exact_json(receipt.read_bytes()) and size==8*expected[-1]['extent_words']
+            and 3*rows==admission['policy_spill_read_call_limit']
+            and slots-rows==admission['policy_spill_word_limit'],'policy spill receipt differs from saved grids')
+    return {'sweeps':expected,'retained_extent_bytes':size,'sha256':sha(policy)}
 
 
 def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
@@ -415,16 +487,18 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
 
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
-        ten_ordered_state=False,ten_row_coverage=False):
+        ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
-                                                 '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE')) if flag),'')
+                                                 '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
+                                                 '_TEN_SHARED_POLICY')) if flag),'')
     paired=any(modes)
+    ten_row_coverage=ten_row_coverage or ten_shared_policy
     ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
     ten_card=ten_card or ten_buffered or ten_virtual_zero
@@ -473,7 +547,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
-            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage)
+            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -506,13 +580,15 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission,schedule)
+                if ten_shared_policy:
+                    result['policy_spill']=verify_policy_spill(pages,raw,admission)
                 images=[{'name':name,**paging['images'][name]} for name in SPLIT_IMAGE_NAMES]
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='row_coverage' if ten_row_coverage else (
+                    label='shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -537,6 +613,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                           training_stdout_sha256=digest,quality_gate=None)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
+            if ten_shared_policy:
+                require(result['policy_spill']==verify_policy_spill(output/'page-images',raw,admission),
+                        'policy spill bytes changed after independent replay')
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
@@ -596,13 +675,15 @@ def main():
     modes.add_argument('--ten-virtual-zero',action='store_true')
     modes.add_argument('--ten-ordered-state',action='store_true')
     modes.add_argument('--ten-row-coverage',action='store_true')
+    modes.add_argument('--ten-shared-policy',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
         rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
-        ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage),sort_keys=True))
+        ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
+        ten_shared_policy=args.ten_shared_policy),sort_keys=True))
 
 
 if __name__=='__main__':main()

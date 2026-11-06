@@ -983,6 +983,56 @@ void row_coverage_controls(h::History& history,const b::Template& source,
         capped.paged_receipt()->physical_write_requests==3 && file_bytes(failed_flush/"staged.bin")==prior,
         "covered flush failure replaced the committed image");
     std::cout<<"PAGED_IMAGE row_coverage\n";
+
+    require(menu_size>=3,"shared policy fixture needs two positive regret actions");
+    const auto shared_path=scratch/"shared-policy",dense_path=scratch/"dense-policy";
+    s::State shared(history,{2,2},1,plan,{},catalog,packed,
+        s::PagedStrategy{shared_path,limits,true,true,true,true});
+    s::State dense(history,{2,2},1,plan,{},catalog,packed,
+        s::PagedStrategy{dense_path,limits,true,true,true});
+    register_rows(shared);
+    register_rows(dense);
+    std::array<Integer,20> mixed_values{};
+    mixed_values[menu_size-2]=Integer(5)<<(shift+52);
+    mixed_values[menu_size-1]=Integer(6)<<(shift+52);
+    const auto all_mixed=std::span<const Integer>(mixed_values).first(menu_size);
+    for (std::size_t sweep=0;sweep<2;++sweep) {
+        shared.begin_sweep();
+        dense.begin_sweep();
+        std::array<std::array<std::uint64_t,20>,2> copies{};
+        for (std::size_t row=0;row<2;++row) {
+            auto units=std::span(copies[row]).first(menu_size);
+            shared.copy_policy_units(row,units);
+            shared.copy_policy_units(row,units);
+        }
+        for (std::size_t row=0;row<2;++row) {
+            const auto expected=dense.policy_units(row);
+            require(std::equal(expected.begin(),expected.end(),copies[row].begin()),"copied policy units differ");
+            increments[0]=row==0?Integer(1)<<shift:Integer(0);
+            const auto masses=std::span<const Integer>(increments).first(menu_size);
+            require(shared.stage_row(row,all_mixed,masses)==dense.stage_row(row,all_mixed,masses),
+                "shared-policy mixed value differs");
+        }
+        shared.commit_sweep();
+        dense.commit_sweep();
+    }
+    const auto spill=shared.policy_spill_receipt();
+    require(spill && (*spill)[0].uniform_rows==2 && (*spill)[0].write_words==0 &&
+        (*spill)[1].mixed_rows==2 && (*spill)[1].write_words==slots-2 &&
+        (*spill)[1].extent_words==slots-2 && (*spill)[1].read_calls==6 &&
+        (*spill)[1].mixed_read_calls==6 && (*spill)[1].read_words==3*(slots-2),
+        "all-mixed fallback did not use its exact word and request bounds");
+    for (const auto* name:{"committed.bin","staged.bin"})
+        require(file_bytes(shared_path/name)==file_bytes(dense_path/name),"shared policy changed checkpoint bytes");
+    std::vector<std::uint64_t> streamed;
+    const auto flags=shared.stream_average([&](std::span<const std::uint64_t> units) {
+        streamed.insert(streamed.end(),units.begin(),units.end());
+    });
+    const auto legacy=dense.export_average(false);
+    require(streamed.size()==slots && std::equal(streamed.begin(),streamed.end(),legacy.units.get()) &&
+        flags.size()==2 && std::equal(flags.begin(),flags.end(),legacy.uniform_fallback.get()) &&
+        flags[0]==0 && flags[1]==1,"shared average stream or fallback flags changed");
+    std::cout<<"PAGED_IMAGE shared_policy\n";
 }
 } // namespace
 

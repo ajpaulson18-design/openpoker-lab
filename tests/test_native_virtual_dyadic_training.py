@@ -214,7 +214,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',
                 b'DYADIC_T2_V1 TRAIN_TEN\n',b'DYADIC_T2_V1 TRAIN_TEN_BUFFERED\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO\n',b'DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE\n',
-                b'DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE\n',b'DYADIC_T2_V1 TRAIN_TEN_SHARED_POLICY\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
@@ -273,6 +273,20 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
         with self.assertRaisesRegex(ValueError,'independent fixed census'):
             validate_admission(receipt,ten_ordered_state=True)
+
+    def test_shared_policy_admission_covers_an_all_mixed_sweep(self):
+        directory,process=self.observe('admit_ten_shared_policy',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_SHARED_POLICY',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_shared_policy=True)
+        self.assertEqual((plan['planned_total_work'],plan['entries']), (2_144_546_582,832_287))
+        self.assertEqual(plan['policy_spill_word_limit'],plan['slots']-plan['rows'])
+        self.assertEqual(plan['policy_spill_read_call_limit'],3*plan['rows'])
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        with self.assertRaisesRegex(ValueError,'independent fixed census'):
+            validate_admission(receipt,ten_row_coverage=True)
 
 
 if __name__=='__main__':unittest.main()

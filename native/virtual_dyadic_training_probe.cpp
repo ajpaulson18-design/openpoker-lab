@@ -18,7 +18,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split,
                   admit_ten, train_ten, admit_ten_buffered, train_ten_buffered,
                   admit_ten_virtual_zero, train_ten_virtual_zero, admit_ten_ordered_state, train_ten_ordered_state,
-                  admit_ten_row_coverage, train_ten_row_coverage };
+                  admit_ten_row_coverage, train_ten_row_coverage, admit_ten_shared_policy, train_ten_shared_policy };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -63,6 +63,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE") return Mode::train_ten_ordered_state;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_ROW_COVERAGE") return Mode::admit_ten_row_coverage;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE") return Mode::train_ten_row_coverage;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_SHARED_POLICY") return Mode::admit_ten_shared_policy;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_SHARED_POLICY") return Mode::train_ten_shared_policy;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -103,8 +105,13 @@ void admit(const training::Driver& driver) {
             <<",\"directory_record_bytes\":"<<training::state::State::compact_record_bytes
             <<",\"directory_index_slots\":"<<(plan.ordered_state?0:training::state::State::compact_index_slots(plan.shape.rows));
     if (plan.ordered_state)
-        std::cout<<",\"ordered_registration\":true,\"export_workspace_reused\":true,\"registration_path_work\":"
+        std::cout<<",\"ordered_registration\":true,\"export_workspace_reused\":"
+            <<(plan.shared_policy?"false":"true")<<",\"registration_path_work\":"
             <<plan.registration_path_work;
+    if (plan.shared_policy)
+        std::cout<<",\"shared_policy\":true,\"streamed_average\":true,\"policy_spill_work\":"<<plan.policy_spill_work
+            <<",\"policy_spill_word_limit\":"<<counts.slots-counts.rows
+            <<",\"policy_spill_read_call_limit\":"<<3*counts.rows;
     if (plan.rank_board_sets)
         std::cout<<",\"rank_cache_planes\":"<<plan.rank_planes
             <<",\"rank_lookup_work_per_query\":"
@@ -158,6 +165,22 @@ void save_paging(const std::filesystem::path& scratch,const training::paging::Re
     stream.close();
     training::require(bool(stream),"paged receipt write failed");
 }
+void save_policy(const std::filesystem::path& scratch,const training::state::PolicySpillReceipt& receipt) {
+    std::ofstream stream(scratch/"policy.json",std::ios::binary);
+    training::require(bool(stream),"policy receipt open failed");
+    stream<<'[';
+    for (std::size_t sweep=0;sweep<receipt.size();++sweep) {
+        if (sweep) stream<<',';
+        const auto& counts=receipt[sweep];
+        stream<<"{\"uniform_rows\":"<<counts.uniform_rows<<",\"pure_rows\":"<<counts.pure_rows
+            <<",\"mixed_rows\":"<<counts.mixed_rows<<",\"extent_words\":"<<counts.extent_words
+            <<",\"write_words\":"<<counts.write_words<<",\"read_calls\":"<<counts.read_calls
+            <<",\"mixed_read_calls\":"<<counts.mixed_read_calls<<",\"read_words\":"<<counts.read_words<<'}';
+    }
+    stream<<"]\n";
+    stream.close();
+    training::require(bool(stream),"policy receipt write failed");
+}
 } // namespace
 
 int main(int argc,char* argv[]) {
@@ -171,13 +194,15 @@ int main(int argc,char* argv[]) {
         const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
-            mode==Mode::train_ten_row_coverage;
+            mode==Mode::train_ten_row_coverage || mode==Mode::train_ten_shared_policy;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_ten_row_coverage || mode==Mode::train_ten_row_coverage)
+        if (mode==Mode::admit_ten_shared_policy || mode==Mode::train_ten_shared_policy)
+            profile=training::StrategyProfile::ten_card_shared_policy;
+        else if (mode==Mode::admit_ten_row_coverage || mode==Mode::train_ten_row_coverage)
             profile=training::StrategyProfile::ten_card_row_coverage;
         else if (mode==Mode::admit_ten_ordered_state || mode==Mode::train_ten_ordered_state)
             profile=training::StrategyProfile::ten_card_ordered_state;
@@ -201,10 +226,11 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
             mode==Mode::admit_ten_virtual_zero || mode==Mode::admit_ten_ordered_state ||
-            mode==Mode::admit_ten_row_coverage) admit(driver);
+            mode==Mode::admit_ten_row_coverage || mode==Mode::admit_ten_shared_policy) admit(driver);
         else {
-            const auto paging=driver.train(std::cout,scratch);
-            if (paging) save_paging(scratch,*paging,driver.plan().page_limits.virtual_initial_zero);
+            const auto io=driver.train(std::cout,scratch);
+            if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
+            if (io.policy) save_policy(scratch,*io.policy);
         }
         return 0;
     } catch (const std::exception& error) {
