@@ -677,6 +677,42 @@ void paged_image_controls(const std::filesystem::path& scratch) {
         "colliding boundary pages exceeded read admission");
     std::cout<<"PAGED_IMAGE exact_transaction\n";
 }
+
+void compact_directory_controls(h::History& history,const b::Template& source,
+                                const std::filesystem::path& scratch) {
+    const auto root=history.root(),call=history.append_action(root,1);
+    const auto first=history.decision_key(root),next=history.decision_key(call);
+    const auto slots=2*first.actions+next.actions;
+    const auto plan=forecast(3,slots);
+    constexpr std::size_t shift=190;
+    const s::PackedAverageCapacity packed{2*slots,2*slots};
+    const s::ActionCatalogCapacity catalog{source.nodes().size(),first.actions+next.actions,true};
+    const openpoker::virtual_dyadic_paged_image::Limits pages{4*slots,4,2,500,12*slots,500,2};
+    s::State compact(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"directory",pages,true});
+    require(compact.register_sealed_row(root,1,shift,shift)==0 &&
+        compact.register_sealed_row(call,0,shift,shift)==1 &&
+        compact.register_sealed_row(root,0,shift,shift)==2 &&
+        compact.register_sealed_row(root,1,shift,shift)==0,"compact directory aliased or repeated a full row key");
+    require(compact.find_row(root,0)==2 && compact.find_row(call,0)==1 &&
+        compact.row_at(2).history_ordinal==first.ordinal && compact.row_at(1).history_ordinal==next.ordinal &&
+        compact.row_at(1).offset==first.actions && compact.row_at(2).offset==first.actions+next.actions &&
+        compact.row_at(0).actions.data()==compact.row_at(2).actions.data(),
+        "compact directory route or shared menu differs");
+    compact.freeze();
+    compact.begin_sweep();
+    require(compact.policy_units(0).size()==first.actions && compact.average_row_shift(1)==shift &&
+        compact.regret_row_shift(2)==shift,"compact row unavailable after construction lookup release");
+    bool closed=false;
+    try { (void)compact.find_row(root,0); } catch (const s::Error& error) {closed=error.code()==ErrorCode::phase;}
+    require(closed && compact.failed(),"compact construction index still accessible after freeze");
+
+    h::History foreign(source,c::DeckDefinition::reduced(deck));
+    s::State guard(history,{2,2},1,plan,{},catalog,packed,s::PagedStrategy{scratch/"foreign",pages,true});
+    bool rejected=false;
+    try { (void)guard.register_sealed_row(foreign.root(),0,shift,shift); } catch (const h::Error&) {rejected=true;}
+    require(rejected && guard.failed() && guard.row_count()==0,"compact directory accepted a foreign cursor");
+    std::cout<<"PAGED_IMAGE compact_directory\n";
+}
 } // namespace
 
 int main(int argc,char** argv) {
@@ -690,7 +726,10 @@ int main(int argc,char** argv) {
         sealed_catalog_controls(history,source);
         packed_average_controls(history);
         packed_dual_controls(history);
-        if (argc==2) paged_image_controls(argv[1]);
+        if (argc==2) {
+            paged_image_controls(argv[1]);
+            compact_directory_controls(history,source,argv[1]);
+        }
         std::cout<<"END\n";
         return 0;
     } catch (const std::exception& error) {

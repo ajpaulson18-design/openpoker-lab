@@ -113,3 +113,8 @@ files under a fresh run directory. Select this profile with
 `--paged-strategy`. The [paging comparison](native-dyadic-storage-census.md#paging-the-compact-strategy)
 records exact parity, stream traffic, and the measured memory and runtime
 tradeoff on the nine-card fixture.
+
+`ADMIT_DIRECTORY` and `TRAIN_DIRECTORY` use the same paged strategy with
+compact row records and a construction-only lookup array. Select this
+profile with `--compact-directory`. The request still covers the frozen
+nine-card, two-sweep fixture.

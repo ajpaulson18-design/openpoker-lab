@@ -140,7 +140,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
 
     def test_paged_images_preserve_the_committed_sweep_until_complete(self):
         self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],
-                         ['PAGED_IMAGE exact_transaction'])
+                         ['PAGED_IMAGE exact_transaction', 'PAGED_IMAGE compact_directory'])
 
     def test_packed_average_matches_dense_feedback(self):
         self.assertEqual([line for line in self.lines if line.startswith('PACKED_AVERAGE ')],

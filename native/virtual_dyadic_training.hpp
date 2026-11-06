@@ -29,7 +29,7 @@ using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
-enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged };
+enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
@@ -224,6 +224,7 @@ struct Plan {
     bool scaled_averages=false;
     bool sealed_menus=false;
     bool paged_strategy=false;
+    bool compact_directory=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -238,6 +239,7 @@ struct Plan {
     std::uint64_t sealed_menu_count=0,sealed_token_count=0;
     paging::Limits page_limits{};
     std::uint64_t paging_work=0;
+    std::uint64_t directory_work=0;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -447,7 +449,8 @@ public:
             "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.paged_strategy=profile==StrategyProfile::paged;
+        plan_.compact_directory=profile==StrategyProfile::directory;
+        plan_.paged_strategy=profile==StrategyProfile::paged || plan_.compact_directory;
         plan_.sealed_menus=profile==StrategyProfile::sealed || plan_.paged_strategy;
         plan_.scaled_averages=profile==StrategyProfile::scaled || plan_.sealed_menus;
         plan_.packed_regrets=profile==StrategyProfile::compact || plan_.scaled_averages;
@@ -559,6 +562,12 @@ public:
             plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*((L+4095)/4096)+8*((L+63)/64);
             w[work_index(Work::route)]+=plan_.paging_work;
         }
+        if (plan_.compact_directory) {
+            // Table initialization plus compact row encode/decode across both
+            // sweeps and checkpoint export. Probes use the existing lookup budget.
+            plan_.directory_work=96*R;
+            w[work_index(Work::route)]+=plan_.directory_work;
+        }
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
         w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
@@ -576,7 +585,8 @@ public:
                  plan_.state_work,plan_.quantizer_work},
                 {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
-                plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt);
+                plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
+                plan_.compact_directory);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -811,7 +821,7 @@ template<bool Paired> class Walk final {
                 else if (plan_.packed_averages)
                     row=state_.register_catalog_row(cursor,actor,holding,id,actions,row_shift);
                 else row=state_.register_catalog_row(cursor,actor,holding,id,actions);
-                require(row==shape_.rows && state_.rows()[row].offset==shape_.slots,"catalog row order changed");
+                require(row==shape_.rows && state_.row_at(row).offset==shape_.slots,"catalog row order changed");
                 ++shape_.rows;
                 shape_.slots+=menu;
             }
@@ -827,9 +837,9 @@ template<bool Paired> class Walk final {
         std::array<std::span<const std::uint64_t>,2> policy{};
         for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
             meter_.charge(Work::route,16);
-            require(shape_.rows<state_.rows().size(),"dense policy row overflow");
+            require(shape_.rows<state_.row_count(),"dense policy row overflow");
             const auto row=static_cast<std::size_t>(shape_.rows++);
-            const auto& record=state_.rows()[row];
+            const auto record=state_.row_at(row);
             // Menus come from the same immutable source used at registration.
             // Check the complete identity and packed extent before policy access.
             require(record.history_ordinal==key && record.actor==actor && record.holding_index==holding &&
@@ -971,7 +981,8 @@ class Driver final {
             p.normalizer,chance_divisors[3]}) out.u64(word);
         out.wide(denominator);
         skeleton(out);
-        for (const auto& row:state.rows()) {
+        for (std::size_t i=0;i<state.row_count();++i) {
+            const auto row=state.row_at(i);
             out.u64(row.history_ordinal);
             out.u64(row.actor|(row.holding_index<<8)|(row.actions.size()<<16));
             out.u64(row.offset);
@@ -979,7 +990,7 @@ class Driver final {
     }
     static std::uint64_t profile(Binary& out,const state::State& state,std::size_t sweep) {
         std::uint64_t changed=0;
-        for (std::size_t row=0;row<state.rows().size();++row) {
+        for (std::size_t row=0;row<state.row_count();++row) {
             const auto units=state.policy_units(row);
             bool distinct=false;
             for (std::size_t action=0;action<units.size();++action) {
@@ -1056,6 +1067,7 @@ public:
         if (p.packed_averages) meter_.charge(Work::average,p.packed_average_work);
         if (p.packed_regrets) meter_.charge(Work::route,p.packed_regret_work);
         if (p.paged_strategy) meter_.charge(Work::route,p.paging_work);
+        if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
@@ -1063,7 +1075,8 @@ public:
              static_cast<std::size_t>(p.state_payload)},
             {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
              static_cast<std::size_t>(p.packed_regret_limbs)},
-            p.paged_strategy?std::optional<state::PagedStrategy>{state::PagedStrategy{page_scratch,p.page_limits}}:std::nullopt);
+            p.paged_strategy?std::optional<state::PagedStrategy>{
+                state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1090,15 +1103,15 @@ public:
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
             state.commit_sweep();
             if (p.packed_regrets) {
-                for (std::size_t row=0;row<state.rows().size();++row)
-                    for (std::size_t action=0;action<state.rows()[row].actions.size();++action)
+                for (std::size_t row=0;row<state.row_count();++row)
+                    for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
                         out.wide(state.regret_numerator(row,action));
             } else {
                 for (const auto& value:state.regrets()) out.wide(value);
             }
             if (p.packed_averages) {
-                for (std::size_t row=0;row<state.rows().size();++row)
-                    for (std::size_t action=0;action<state.rows()[row].actions.size();++action)
+                for (std::size_t row=0;row<state.row_count();++row)
+                    for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
                         out.wide(state.average_numerator(row,action));
             } else {
                 for (const auto& value:state.averages()) out.wide(value);

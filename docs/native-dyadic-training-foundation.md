@@ -111,6 +111,15 @@ the cache. The image roles live in the training process. The files do not
 provide a crash-recovery checkpoint. Admission caps file size, read words,
 write words, and logical operations for the frozen two-sweep fixture.
 
+The opt-in compact directory keeps each paged row in a 32-byte record.
+It stores the full history ordinal, actor, holding, source menu index, slot
+offset, packed offsets, and both scales. During construction, a fixed
+array of row references resolves duplicates through a bounded probe and
+a complete key comparison. The history owner authenticates the actor and
+menu. The construction array is released before policy and page allocation.
+Admission takes the larger of the construction and frozen storage bounds.
+The full integer and text payload allowance remains conservative.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

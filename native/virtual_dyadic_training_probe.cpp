@@ -14,7 +14,8 @@
 namespace training=openpoker::virtual_dyadic_training;
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
-                  admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged };
+                  admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
+                  admit_directory, train_directory };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -43,6 +44,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_SEALED") return Mode::train_sealed;
     if (line=="DYADIC_T2_V1 ADMIT_PAGED") return Mode::admit_paged;
     if (line=="DYADIC_T2_V1 TRAIN_PAGED") return Mode::train_paged;
+    if (line=="DYADIC_T2_V1 ADMIT_DIRECTORY") return Mode::admit_directory;
+    if (line=="DYADIC_T2_V1 TRAIN_DIRECTORY") return Mode::train_directory;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -73,6 +76,10 @@ void admit(const training::Driver& driver) {
             <<",\"page_write_word_limit\":"<<pages.write_words<<",\"page_request_limit\":"<<pages.requests
             <<",\"page_resident_bytes\":"<<training::paging::Image::resident_bytes(pages);
     }
+    if (plan.compact_directory)
+        std::cout<<",\"directory_work\":"<<plan.directory_work
+            <<",\"directory_record_bytes\":"<<training::state::State::compact_record_bytes
+            <<",\"directory_index_slots\":"<<training::state::State::compact_index_slots(plan.shape.rows);
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<training::value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<training::chance_divisors[3]<<",\"entries\":"<<plan.entries
@@ -126,13 +133,14 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool paged_train=mode==Mode::train_paged;
+        const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_paged || paged_train) profile=training::StrategyProfile::paged;
+        if (mode==Mode::admit_directory || mode==Mode::train_directory) profile=training::StrategyProfile::directory;
+        else if (mode==Mode::admit_paged || paged_train) profile=training::StrategyProfile::paged;
         else if (mode==Mode::admit_sealed || mode==Mode::train_sealed) profile=training::StrategyProfile::sealed;
         else if (mode==Mode::admit_scaled || mode==Mode::train_scaled) profile=training::StrategyProfile::scaled;
         else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
@@ -141,7 +149,7 @@ int main(int argc,char* argv[]) {
         training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
         if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
-            mode==Mode::admit_paged) admit(driver);
+            mode==Mode::admit_paged || mode==Mode::admit_directory) admit(driver);
         else {
             const auto paging=driver.train(std::cout,scratch);
             if (paging) save_paging(scratch,*paging);
