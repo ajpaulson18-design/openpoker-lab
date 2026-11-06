@@ -1072,3 +1072,11 @@ numerical stream match the direct run, and independent saved-policy replay
 passes. The checkpoint footprint and two-sweep exploitability are unchanged.
 The local controls cover cap-induced partial flush failure. The native
 component checks pass on optimized Ubuntu, Windows, and sanitizer builds.
+
+The [packed checkpoint transport](native-dyadic-two-sweep.md#packed-checkpoint-transport)
+uses independently decodable pages for immutable replay inputs. The
+source-frozen ten-card check reduces the ready-to-replay packet from
+57,236,628 to 12,022,405 bytes and reproduces the exact saved-policy replay
+using zero native producer calls. The trainer's mutable page store has
+its existing layout and admission. Working-state I/O remains a separate
+scaling target.

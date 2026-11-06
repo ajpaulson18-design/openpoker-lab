@@ -249,3 +249,42 @@ The single Windows process observations were 14.00 seconds direct and
 13,742,080 bytes. These are observations for this fixture and toolchain.
 The write counts measure calls made by the pager to its file stream.
 [Buffered ten-card evidence](../benchmarks/results/native-dyadic-buffered-ten-card-accepted-v1/manifest.json)
+
+## Packed checkpoint transport
+
+The saved split images can be converted by
+`python -m scripts.pack_virtual_dyadic_checkpoints`. The command
+requires the original image directory, both published decoded hashes,
+and a fresh output directory. Add `--ten-card` for the ten-card
+fixture. It verifies the encoded round trip before emitting the packet
+receipt.
+
+Each `OPLPGZ01` file starts with an eight-byte magic and a little-endian
+64-bit decoded byte count. An array of absolute 64-bit offsets follows,
+with one offset per 32 KiB page and a final end offset. A frame with the
+same length as its decoded page is raw. A shorter frame is raw DEFLATE.
+The final page uses its actual decoded extent. The decoder checks the
+directory before reading frames and bounds each decompression to one page.
+Random page lookup uses the offset table and a single decoded-page cache.
+
+Run the saved verifier with `--packed-page-images` and
+`--packed-sweep-image-sha256` instead of the raw image directory flag.
+Supply the original decoded hashes through `--sweep-image-sha256`.
+Both sets are in the packed result manifest. Use the original numerical
+stream and its existing hash. The buffered ten-card evidence archive
+stores that stream at `cohort/train_ten_buffered/stdout.bin`; the raw
+checkpoint images can stay in the archive.
+
+The verifier authenticates the stored and decoded hashes before
+mathematical replay, checks the decoded stream again as it compares every
+checkpoint word, and rehashes the packed file before accepting the result.
+The native trainer continues to use its existing mutable page store.
+
+The frozen ten-card conversion at `0cde4ed` produced 2,189,329 bytes of
+packed pages from 47,403,552 raw image bytes. Including the original
+numerical stream, the replay packet fell from 57,236,628 to 12,022,405
+bytes. Independent replay matched both sweep updates, the final policy,
+and both best responses using only the packed images and that stream.
+The study made zero native training calls. The byte comparison measures
+files ready for replay. The historical ZIP remains the archival bundle.
+[Packed ten-card evidence](../benchmarks/results/native-dyadic-packed-ten-card-accepted-v1/manifest.json)

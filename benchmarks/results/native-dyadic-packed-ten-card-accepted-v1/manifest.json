@@ -1,0 +1,288 @@
+{
+  "baseline_manifest_sha256": "464c190c1103d481d36b157af620ef37efbcc49dde3ce0fb9e0954d2d21ba156",
+  "baseline_publication": "69dc7b4c7b4cd3221fc85eef565b894db71ea0e9",
+  "checkpoint_inputs": {
+    "stream": {
+      "bytes": 9833076,
+      "sha256": "ee196241624f74ef12b54decf85e5f115e58097bc7c632d7b42ba3358f78782e"
+    },
+    "sweep_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ]
+  },
+  "head": "0cde4ed9daa1742685f9e4835118f1ee757a6024",
+  "native_producer_calls": 0,
+  "observations": {
+    "pack": {
+      "actual_exit_observed": true,
+      "compiled_sources": 28,
+      "elapsed_seconds": 3.34756019996712,
+      "failures": [],
+      "returncode": 0
+    },
+    "replay": {
+      "actual_exit_observed": true,
+      "compiled_sources": 27,
+      "elapsed_seconds": 127.64248609996866,
+      "failures": [],
+      "returncode": 0
+    }
+  },
+  "packed_image_bytes": 2189329,
+  "packed_packet_bytes": 12022405,
+  "packet": {
+    "duration_seconds": 1.9222910000244156,
+    "format": "OPLPGZ01",
+    "images": [
+      {
+        "packed": {
+          "bytes": 1049777,
+          "name": "staged.pgi",
+          "sha256": "145c203e7df6e719f569b4e17a8556c9f0c355da821c70fee8b12ebca8fdec43"
+        },
+        "pages": 724,
+        "raw": {
+          "bytes": 23701776,
+          "name": "staged.bin",
+          "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+        }
+      },
+      {
+        "packed": {
+          "bytes": 1139552,
+          "name": "committed.pgi",
+          "sha256": "94609cab465846c2acb98106d3fec2eefd030b216fadf1ab38079bfc22ed75b3"
+        },
+        "pages": 724,
+        "raw": {
+          "bytes": 23701776,
+          "name": "committed.bin",
+          "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+        }
+      }
+    ],
+    "ten_card": true
+  },
+  "raw_image_bytes": 47403552,
+  "raw_source_stable": true,
+  "saved_only_replay": {
+    "bytes": 9833076,
+    "chance_actual": {
+      "cache_evictions": 0,
+      "cache_hits": 412063,
+      "cache_lookup_work": 2172250,
+      "cache_misses": 17,
+      "completed_contractions": 797344,
+      "contraction_work": 175270614,
+      "input_work": 31487948,
+      "peak_integer_bits": 261,
+      "peak_integer_payload_bits": 111499,
+      "peak_live_entries": 6396,
+      "prior_work": 21504,
+      "rank_calls": 42,
+      "rank_work": 172032,
+      "setup_work": 261,
+      "sort_work": 8704
+    },
+    "changed_current_rows": 119164,
+    "checkpoint_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ],
+    "duration_seconds": 125.25666950002778,
+    "hidden_completion_candidates_per_pass": 70912,
+    "native_producer_calls": 0,
+    "packed_checkpoint_images": [
+      {
+        "bytes": 1049777,
+        "name": "staged.pgi",
+        "sha256": "145c203e7df6e719f569b4e17a8556c9f0c355da821c70fee8b12ebca8fdec43"
+      },
+      {
+        "bytes": 1139552,
+        "name": "committed.pgi",
+        "sha256": "94609cab465846c2acb98106d3fec2eefd030b216fadf1ab38079bfc22ed75b3"
+      }
+    ],
+    "parent_work_actual": {
+      "average": 116524928,
+      "geometry": 1507688,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 323732214,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "parent_work_plan": {
+      "average": 116524928,
+      "geometry": 3000000,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 323845282,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "planned_entries": 1559639,
+    "planned_payload_bits": 1182148028,
+    "profile_and_br": {
+      "best_responses": [
+        {
+          "approx": 5.096599233555614,
+          "denominator": "2098731617426356042052224103282468329840518472064735223215168710143425474723840",
+          "numerator": "10696393952814100278849904840247185778761660125864206344978244758072287343172789"
+        },
+        {
+          "approx": 0.8720364735888296,
+          "denominator": "14912385050723429757029408216925988951406043782304317511596769280",
+          "numerator": "13004143672431640059623839840972080687516047349001653656640966541"
+        }
+      ],
+      "exploitability": {
+        "approx": 2.9843178535722217,
+        "denominator": "144740111546645244279463731260859884816587480832050705049321980009891412049920",
+        "numerator": "431950499016688293634459451154687436409272726758119326237447189567296472767353"
+      },
+      "gains": [
+        {
+          "approx": 4.218492036690442,
+          "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+          "numerator": "2050326498095245657032721644652910999602763790117619979658873595808233559052088971960554268539070232236387439358284129947408883294027751962503197453058789889"
+        },
+        {
+          "approx": 1.7501436704540012,
+          "denominator": "97206607492083828971911681236992384424225402199294851988495820466982789218033215581813588661710049850752730971852023868689715650386612632111643955294109696",
+          "numerator": "170125528828577004662356938997797237612442571475337364674845963518515097012036843637909525317886571208605549021481573651739507581189073816272208252263631155"
+        }
+      ],
+      "profile_bb": {
+        "approx": -0.8781071968651716,
+        "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+        "numerator": "-426789108108233578121372239473034145435239216886532707966048053313880339400899543905949995206108117348645013054527040961866876451114222147730446321747013119"
+      },
+      "profile_sb": {
+        "approx": 0.8781071968651716,
+        "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+        "numerator": "426789108108233578121372239473034145435239216886532707966048053313880339400899543905949995206108117348645013054527040961866876451114222147730446321747013119"
+      }
+    },
+    "public_walks_per_sweep": 1,
+    "quality_gate": null,
+    "saved_output_sha256": "ee196241624f74ef12b54decf85e5f115e58097bc7c632d7b42ba3358f78782e",
+    "scope": "named ten-card fixture only; saved grid quality, no wider game or target pass",
+    "shape": {
+      "actions": 270487,
+      "candidates": 49182,
+      "folds": 77857,
+      "reveals": 18458,
+      "rows": 119196,
+      "showdowns": 88290,
+      "slots": 281066,
+      "visits": 288946
+    },
+    "showdown_contractions_per_pass": 103020,
+    "source_and_observed_producer_exit": "separate mandatory acceptance checks",
+    "status": "saved_two_sweep_exact_replay_pass",
+    "sweeps": [
+      {
+        "average_comparisons": 281066,
+        "regret_comparisons": 281066,
+        "root_holding_values": [
+          {
+            "approx": -0.42358876783844335,
+            "denominator": "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568",
+            "numerator": "-259854739695077962866728994162694616845887081251541857800580943486981117584899179785280655472890520233022920763984961880383699"
+          },
+          {
+            "approx": 1.2921704239563563,
+            "denominator": "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568",
+            "numerator": "792694789506133919858351723942847416402324348260475406788618705366208550648563325657293919922165682174995615121193673063768727"
+          },
+          {
+            "approx": -1.4707670560894663,
+            "denominator": "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696",
+            "numerator": "-112782083570848470120327178837140874344099166256548079543229692777144059643474748077049537371297341304535479153809418290328991"
+          },
+          {
+            "approx": 0.6021853999715534,
+            "denominator": "153364984759337674956844351463602881240189886447713242874038520503662143566824232231443896822013946084641161189805419126587392",
+            "numerator": "92354154688932950992748675229243548799089015760862771839449945084481261021033459686095758630275892123577784718316658784811725"
+          }
+        ],
+        "row_count": 119196,
+        "sweep": 1
+      },
+      {
+        "average_comparisons": 281066,
+        "regret_comparisons": 281066,
+        "root_holding_values": [
+          {
+            "approx": -0.4323717466385158,
+            "denominator": "65302194596872192",
+            "numerator": "-28234823937177879"
+          },
+          {
+            "approx": 1.0673621007796612,
+            "denominator": "1293443221514776142209071659813604967346864128",
+            "numerator": "1380572274155224148117341001136898838538033969"
+          },
+          {
+            "approx": -1.086104065042901,
+            "denominator": "1293443221514776142209071659813604967346864128",
+            "numerator": "-1404813940789383906758181607201763067070061361"
+          },
+          {
+            "approx": 0.45111371090175567,
+            "denominator": "8162774324609024",
+            "numerator": "3682339416827949"
+          }
+        ],
+        "row_count": 119196,
+        "sweep": 2
+      }
+    ],
+    "work_actual": {
+      "chance": 209133313,
+      "history": 66011392,
+      "parent": 736070418,
+      "quantizer": 255655680,
+      "state": 289632424,
+      "template": 42556544
+    },
+    "work_plan": {
+      "chance": 447066576,
+      "history": 95940344,
+      "parent": 737675798,
+      "quantizer": 513301416,
+      "state": 289632424,
+      "template": 42556544
+    }
+  },
+  "status": "saved_packed_ten_card_exact_replay_pass",
+  "verification_archive": {
+    "bytes": 253684,
+    "name": "verification.zip",
+    "sha256": "93c9ef633e6975a64ae8c4db225204e7662feef090c91094e0acc630c6c0ee8a"
+  },
+  "zlib_runtime": "1.3.2"
+}
