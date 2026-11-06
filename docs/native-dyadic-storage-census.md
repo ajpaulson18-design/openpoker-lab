@@ -243,3 +243,24 @@ one-bit-per-word staging coverage bitmap alone would occupy
 1,215,526 bytes. That exceeds the 1 MiB pager-resident cap before
 the cache and write buffers. The same independent calculation
 reproduces the retained nine- and ten-card limb counts.
+
+State-owned row coverage removes the global word bitmap from
+this layout. Keeping the existing page geometry would project
+591,008 pager bytes for eleven cards before any expansion-specific
+changes. The frozen State entry and work limits still apply.
+
+### Saved policy row forms
+
+An independent census of the accepted ten-card policy grids found
+119,196 canonical uniform rows in sweep 1. Sweep 2 had 32 uniform,
+98,846 pure, and 20,318 mixed rows. The mixed rows used 68,436
+action slots. The final average had 114,350 uniform and 4,846
+mixed rows with 12,560 mixed slots. All final fallback flags were
+zero. The comparison uses the exact grid, including action-order
+remainder allocation in a uniform row.
+
+With shared uniform and pure rows, the largest observed mixed
+pool would store 547,488 bytes of units versus 2,248,528 bytes
+for the dense array, before row tags and any spill storage. These
+counts describe the saved two-sweep fixture.
+[Policy census](../benchmarks/results/native-dyadic-row-coverage-ten-card-accepted-v1/manifest.json)

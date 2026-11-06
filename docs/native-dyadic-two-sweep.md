@@ -361,3 +361,33 @@ seconds. These are paired-fixture observations from separate
 runs. The admission ledger and measured working set describe
 different quantities.
 [Ordered State evidence](../benchmarks/results/native-dyadic-ordered-state-ten-card-accepted-v1/manifest.json)
+
+## State-owned pager coverage
+
+The explicit `--ten-row-coverage` profile uses a pager write
+interface private to State. During registration, State lays out
+consecutive, disjoint row extents in each of the packed average
+and regret fields. The fields meet at the authenticated split.
+Freeze verifies both complete limb counts.
+
+Before staging any row, State checks that the row is still
+unmarked and every action has its required input. It marks the
+row only after both fields have been staged. A partial failure
+poisons the owner. Commit verifies all row marks and the pager's
+exact accepted and flushed word counts before switching the
+committed image. Standalone pager calls keep their word overlap
+check. Dirty-page marks still select the runs written to disk.
+
+For ten cards, this removes 370,341 pager bytes and 46,293
+composed entries. The work ledger removes 370,344 units of
+bitmap reset allowance and retains the other paging charges.
+
+The frozen run at `782d235` used 591,008 reserved pager bytes
+and 1,113,089 composed entries. It matched both ordered-State
+images, all 9,832,556 numerical payload bytes, and all pager
+traffic counters. Independent replay reproduced the two
+updates, final policy and best responses. The single Windows
+observations measured 11.04 MB peak working set and 5.58 seconds
+with row coverage, versus 11.33 MB and 8.22 seconds with the
+word bitmap.
+[State-owned coverage evidence](../benchmarks/results/native-dyadic-row-coverage-ten-card-accepted-v1/manifest.json)

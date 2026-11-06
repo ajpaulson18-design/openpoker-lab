@@ -1097,3 +1097,10 @@ the ten-card profile. The exact saved replay matches the prior
 policy and checkpoints. The composed admission falls to 1,159,382
 entries. The eleven-card projection still exceeds the frozen State
 and pager-resident limits independently.
+
+[State-owned pager coverage](native-dyadic-two-sweep.md#state-owned-pager-coverage)
+eliminates the global staging bitmap on the ordered ten-card
+path. It preserves both checkpoint images and exact independent
+replay. The eleven-card pager projection fits the current
+resident cap with the same cache geometry. Larger-fixture
+admission still needs separate frozen State and work changes.
