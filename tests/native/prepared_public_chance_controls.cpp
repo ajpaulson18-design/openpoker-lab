@@ -218,6 +218,72 @@ int snapshot() {
     for (const auto& n:out.numerators) std::cout<<' '<<hex(n);
     std::cout<<'\n'; return 0;
 }
+
+int board_set_controls() {
+    const std::array<std::uint8_t,10> nested{0,16,17,24,32,33,35,37,43,48};
+    const auto kind=chance::TerminalKind::showdown;
+    for (const auto size:{std::size_t{9},std::size_t{10}}) {
+        const auto cards=std::span(nested).last(size);
+        const auto capacity=size==9?3u:17u;
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(cards),{},capacity,
+                                             prepared::RankCacheKey::board_set);
+        const auto mask=[](chance::Hand h) { return (UINT64_C(1)<<h.first)|(UINT64_C(1)<<h.second); };
+        std::size_t count=0;
+        std::array<std::uint8_t,5> last{};
+        for (std::size_t a=0;a<size;++a) for (std::size_t b=a+1;b<size;++b)
+        for (std::size_t c=b+1;c<size;++c) for (std::size_t t=0;t<size;++t)
+        for (std::size_t r=0;r<size;++r) {
+            if (t==a || t==b || t==c || r==a || r==b || r==c || r==t) continue;
+            const std::array<std::uint8_t,5> board{cards[a],cards[b],cards[c],cards[t],cards[r]};
+            std::uint64_t blocked=0;
+            for (const auto card:board) blocked|=UINT64_C(1)<<card;
+            bool supported=false;
+            for (const auto& x:sb) for (const auto& y:bb) {
+                const auto first=mask(x.hand),second=mask(y.hand);
+                supported=supported || (!(first&second) && !((first|second)&blocked));
+            }
+            if (!supported) continue;
+            last=board;
+            for (std::size_t player=0;player<2;++player) {
+                // Warm the first plane with zero reach and vary later hits.
+                const auto selector=count==0 && player==0?2:static_cast<int>((count+player)%2);
+                const auto reach=fixture(selector);
+                const auto value=owner.contraction(player,board,kind,reach.n,reach.exponent);
+                std::cout<<"BOARD_SET "<<size<<' '<<player<<' '<<selector;
+                for (const auto card:board) std::cout<<' '<<static_cast<unsigned>(card);
+                std::cout<<' '<<value.prefix_divisor<<' '<<value.reach_exponent;
+                for (const auto& n:value.numerators) std::cout<<' '<<hex(n);
+                std::cout<<'\n';
+            }
+            ++count;
+        }
+        const auto before=owner.receipt();
+        const auto wanted=size==9?60u:340u;
+        const auto ranks=size==9?7u:42u;
+        if (count!=wanted || before.rank_calls!=ranks || before.cache_misses!=capacity ||
+            before.cache_hits!=2*count-capacity || before.cache_evictions || !ledger(before))
+            throw std::runtime_error("rank board-set census differs");
+        std::swap(last[0],last[1]);
+        bool rejected=false;
+        try { (void)owner.contraction(0,last,kind,fixture(4).n,0); }
+        catch (const chance::KernelError& error) { rejected=error.code()==chance::ErrorCode::invalid_query; }
+        const auto& after=owner.receipt();
+        if (!rejected || !owner.failed() || after.cache_lookup_work!=before.cache_lookup_work ||
+            after.rank_calls!=before.rank_calls || after.query_array_admissions!=before.query_array_admissions)
+            throw std::runtime_error("invalid ordered flop reached a warm board-set cache");
+        std::cout<<"BOARD_SET_END "<<size<<' '<<count<<' '<<before.rank_calls<<' '<<before.cache_misses
+            <<' '<<before.cache_hits<<' '<<before.cache_evictions<<'\n';
+    }
+    prepared::PreparedPublicChance evict(sb,bb,chance::DeckDefinition::reduced(deck),{},1,
+                                         prepared::RankCacheKey::board_set);
+    const auto reach=fixture(0);
+    const auto first=evict.contraction(0,board_a,kind,reach.n,reach.exponent);
+    (void)evict.contraction(0,board_c,kind,reach.n,reach.exponent);
+    const auto reloaded=evict.contraction(0,board_b,kind,reach.n,reach.exponent);
+    if (first.numerators!=reloaded.numerators || evict.receipt().cache_misses!=3 || evict.receipt().cache_evictions!=2)
+        throw std::runtime_error("rank board-set eviction changed the reloaded contraction");
+    return 0;
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
@@ -229,6 +295,7 @@ int main(int argc,char** argv) {
             if (mode=="setup") return setup_guards();
             if (mode=="same") return same_fixture();
             if (mode=="snapshot") return snapshot();
+            if (mode=="board-sets") return board_set_controls();
         }
         if (argc!=4) throw std::runtime_error("three fixed prepared fixture selectors required");
         const int profile=digit(argv[1],5),player=digit(argv[2],1),mode=digit(argv[3],1);

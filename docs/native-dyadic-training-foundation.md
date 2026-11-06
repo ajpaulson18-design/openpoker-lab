@@ -16,13 +16,21 @@ retain both calculations and the exact source inputs. Neither ceiling was lifted
 integer prior. Exact powers of two cancel from both range factors and the shared
 normalizer, preserving the global law. It returns unscaled integer contractions
 and the chance divisor/reach exponent. Visible-prefix folds need no ranker. A
-bounded cache holds up to 64 ordered-board rank planes with original holding
+bounded cache defaults to up to 64 ordered-board rank planes with original holding
 indices; it contains no private pair matrix, reach, payoff or world coefficients.
 On a miss, rank all unblocked rows regardless of current reach. On a hit, reuse
 the ranks and repeat only dynamic blocker/rank mass arithmetic. Validate every
 opponent numerator, including blocked ones, against its common power of two.
 Constructor, cache and arithmetic charges share one owner. The parent supplies
 signed money and the fixed game scale, and admits any retained query outputs.
+
+The opt-in board-set key uses the validated final five-card mask for the
+rank plane. The query still checks the ordered flop and every card before
+probing the cache. Ranks, unblocked holdings, and stable holding-index order
+depend on that mask and the owner's immutable ranges. Each query recomputes
+the contraction from its own reach. The trainer still enumerates every
+ordered reveal and routes every ordered history separately. The profile
+admits the distinct board sets and their ranks before constructing the cache.
 
 `History` snapshots 1,105 literal symbolic path occurrences for the reference
 template. A key combines the literal occurrence ordinal with the complete ordered

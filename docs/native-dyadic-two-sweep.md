@@ -120,3 +120,8 @@ profile with `--compact-directory`. The request still covers the frozen
 nine-card, two-sweep fixture. See the
 [directory measurements](native-dyadic-storage-census.md#compact-row-directory)
 for the separate construction and training budgets.
+
+`ADMIT_RANK_SETS` and `TRAIN_RANK_SETS` use the compact directory with
+one rank cache entry per validated final board set. Select this profile
+with `--rank-sets`. The training artifact retains the same ordered
+histories, exact policy format, and two-sweep nine-card scope.

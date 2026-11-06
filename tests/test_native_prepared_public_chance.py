@@ -239,6 +239,29 @@ class NativePreparedChanceTests(unittest.TestCase):
     def test_ordered_key_lru_cache_hits_and_zero_reach_ranks(self):
         self.assertEqual(self.invoke('cache',['cache'],65536),['CACHE_ORDERED_LRU_ZERO_REACH PASS'])
 
+    def test_board_set_key_matches_literal_contractions_across_reveal_orders(self):
+        records = iter(self.invoke('board-sets',['board-sets'],65536))
+        private = [set(a) | set(b) for a,_ in RANGES[0] for b,_ in RANGES[1] if set(a).isdisjoint(b)]
+        for cards,misses,rank_calls in ((DECK,3,7),((0,*DECK),17,42)):
+            size = len(cards)
+            boards = [(*flop,turn,river) for flop in combinations(cards,3)
+                      for turn in cards if turn not in flop
+                      for river in cards if river not in (*flop,turn)
+                      if any(pair.isdisjoint((*flop,turn,river)) for pair in private)]
+            self.assertEqual(len(boards),20*misses)
+            for index,board in enumerate(boards):
+                for player in (0,1):
+                    fields = next(records).split()
+                    selector = 2 if index == player == 0 else (index+player)%2
+                    reach,exponent = fixture(selector)
+                    self.assertEqual(fields[0],'BOARD_SET')
+                    self.assertEqual(tuple(map(int,fields[1:11])),
+                                     (size,player,selector,*board,comb(size-4,3)*(size-7)*(size-8),exponent))
+                    self.assertEqual([int(n,16) for n in fields[11:]],literal(player,board,True,reach))
+            self.assertEqual(next(records),f'BOARD_SET_END {size} {len(boards)} {rank_calls} '
+                             f'{misses} {2*len(boards)-misses} 0')
+        self.assertIsNone(next(records,None))
+
     def test_owner_aggregates_prior_setup_and_dynamic_work_until_poisoned(self):
         lines = self.invoke('cumulative',['cumulative'],65536)
         self.assertEqual(len(lines),1)

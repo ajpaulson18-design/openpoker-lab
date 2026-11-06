@@ -29,7 +29,7 @@ using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
-enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory };
+enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
@@ -225,11 +225,13 @@ struct Plan {
     bool sealed_menus=false;
     bool paged_strategy=false;
     bool compact_directory=false;
+    bool rank_board_sets=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
     std::array<std::uint8_t,template_count> suffix_decisions{};
     std::uint64_t normalizer=0,denominator_base=0,expected_rank_calls=0;
+    std::size_t rank_planes=0;
     std::uint64_t showdown_contractions=0,hidden_candidates=0;
     std::uint64_t template_work=0,chance_work=0,history_work=0,state_work=0,quantizer_work=0,total_work=0;
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
@@ -269,6 +271,7 @@ class Forecast final {
     std::size_t literals_=0;
     std::uint64_t payoff_ceiling_=0;
     std::uint64_t contractions_=0;
+    std::array<std::uint64_t,64> rank_sets_{};
 
     void prefixes(const Prefix& prefix,Support support) {
         meter_.charge(Work::geometry,64);
@@ -281,6 +284,14 @@ class Forecast final {
         }
         ++row.unblocked[unblocked[0]][unblocked[1]];
         if (prefix.size==5) {
+            if (plan_.rank_board_sets) {
+                const auto end=rank_sets_.begin()+plan_.rank_planes;
+                meter_.charge(Work::geometry,2*(plan_.rank_planes+1));
+                if (std::find(rank_sets_.begin(),end,prefix.mask)!=end) return;
+                require(plan_.rank_planes<rank_sets_.size(),"rank board-set census exceeds cache capacity");
+                rank_sets_[plan_.rank_planes]=prefix.mask;
+            }
+            ++plan_.rank_planes;
             plan_.expected_rank_calls+=unblocked[0]+unblocked[1];
             return;
         }
@@ -315,6 +326,7 @@ class Forecast final {
     }
     std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,std::size_t exp) {
         const auto& population=plan_.prefixes[street_index(size)].unblocked;
+        const auto lookup=plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
         std::uint64_t sum=0;
         for (std::size_t sb=0;sb<3;++sb) for (std::size_t bb=0;bb<3;++bb) {
             meter_.charge(Work::geometry,8);
@@ -329,9 +341,8 @@ class Forecast final {
             const auto dynamic=12+opp*mul_cost(4,reach)+53*bucket_count+
                 (showdown?9:3)*opp*add_cost(bucket)+
                 own*((showdown?12:3)*add_cost(bucket)+mul_cost(4,bucket)+copy_cost(out)+2*words(bucket))+128;
-            // A full lookup checks at most 64 ordered boards. Miss construction
-            // has its own upper bound below and no board is evicted in PROOF9.
-            sum+=population[sb][bb]*(input+dynamic+(showdown?6*64:0));
+            // This is the full lookup bound. Miss construction is admitted separately.
+            sum+=population[sb][bb]*(input+dynamic+(showdown?lookup:0));
         }
         return sum;
     }
@@ -449,7 +460,8 @@ public:
             "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.compact_directory=profile==StrategyProfile::directory;
+        plan_.rank_board_sets=profile==StrategyProfile::rank_sets;
+        plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
         plan_.paged_strategy=profile==StrategyProfile::paged || plan_.compact_directory;
         plan_.sealed_menus=profile==StrategyProfile::sealed || plan_.paged_strategy;
         plan_.scaled_averages=profile==StrategyProfile::scaled || plan_.sealed_menus;
@@ -466,6 +478,8 @@ public:
         prefixes(Prefix{},physical_support(0));
         const auto& p=plan_.prefixes;
         require(p[0].count==1 && p[1].count==25 && p[2].count==56 && p[3].count==60,"pinned physical prefix census changed");
+        require(plan_.rank_board_sets?(plan_.rank_planes==3 && plan_.expected_rank_calls==7):
+            (plan_.rank_planes==60 && plan_.expected_rank_calls==140),"pinned rank-plane census changed");
         for (const auto& node:source_.nodes()) if (node.state.phase==betting::Phase::fold || node.state.phase==betting::Phase::showdown) {
             const auto money=stake(node.state);
             require(money.power>=-1 && money.power<=3 && money.significand<=16,"pinned terminal money range changed");
@@ -508,7 +522,9 @@ public:
         // Setup bound covers the existing 21,504-unit prior constructor and
         // fixed four-holding copies/normalization. At most 60 misses retain
         // every physically supported ordered board in the 64-plane owner.
-        plan_.chance_work=chance_setup_bound+contractions_+p[3].count*(4*4096+512+64+4*64);
+        plan_.chance_work=chance_setup_bound+contractions_+
+            (plan_.rank_board_sets?4096*plan_.expected_rank_calls+plan_.rank_planes*(512+64+4*plan_.rank_planes):
+                p[3].count*(4*4096+512+64+4*64));
         const auto public_walks=plan_.public_walks;
         plan_.history_work=4096*literal_count+1280+(public_walks+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
         const auto lookup=16*logceil(static_cast<std::size_t>(R+1));
@@ -1011,7 +1027,7 @@ class Driver final {
             state.state_work,state.quantizer_work,meter_.total()};
         for (std::size_t i=0;i<actual.size();++i) require(actual[i]<=forecast[i],"child component exceeded composed forecast");
         require(chance.completed_contractions==seat_passes*(p.shape.folds+p.showdown_contractions+p.shape.reveals+1) &&
-            chance.rank_calls==p.expected_rank_calls && chance.cache_misses==p.prefixes[3].count &&
+            chance.rank_calls==p.expected_rank_calls && chance.cache_misses==p.rank_planes &&
             chance.cache_hits+chance.cache_misses==seat_passes*p.showdown_contractions && !chance.cache_evictions &&
             chance.peak_live_entries<=chance_entries && chance.peak_integer_payload_bits<=chance_payload &&
             state.completed_sweeps==sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
@@ -1053,7 +1069,9 @@ public:
         chance_limits.max_modeled_work=p.chance_work;
         chance_limits.max_storage_entries=chance_entries;
         chance_limits.max_integer_payload_bits=chance_payload;
-        prepared::PreparedPublicChance chance(ranges[0],ranges[1],deck,chance_limits,64);
+        prepared::PreparedPublicChance chance(ranges[0],ranges[1],deck,chance_limits,
+            p.rank_board_sets?p.rank_planes:64,
+            p.rank_board_sets?prepared::RankCacheKey::board_set:prepared::RankCacheKey::ordered_prefix);
         require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=chance_setup_bound,
             "prepared prior differs from admitted source prior");
         history::Limits history_limits;

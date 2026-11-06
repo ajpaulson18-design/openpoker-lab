@@ -60,9 +60,10 @@ class Reader:
         return -magnitude if sign else magnitude
 
 
-def replay(path,expected_sha256,*,paired=False):
+def replay(path,expected_sha256,*,paired=False,rank_sets=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
+    require(not rank_sets or paired,'rank-set replay requires paired training')
     path=unlinked_path(path)
     require(path.is_file() and path.stat().st_size==TOTAL_BYTES,'saved output path/byte count')
     require(len(expected_sha256)==64 and all(c in '0123456789abcdef' for c in expected_sha256),'expected retained sha256')
@@ -152,12 +153,19 @@ def replay(path,expected_sha256,*,paired=False):
     require(sum(chance[k] for k in CHANCE[:7])==actual['chance'],'saved chance category composition')
     ranges=scaled_proof9_ranges()
     boards={w.board for w in fixture.worlds}
+    if rank_sets:
+        boards={frozenset(board) for board in boards}
     ranks=sum(set(hand).isdisjoint(board) for board in boards for side in ranges for hand,_ in side)
     ranked,hidden=fixture.terminal_completion_counts()
     require((ranked,hidden)==EXPECTED_TERMINAL_COMPLETIONS,'independent all-in completion census')
     require(chance['rank_calls']==expected_rank_calls==ranks and chance['cache_misses']==len(boards)
             and chance['cache_evictions']==0 and chance['cache_hits']+chance['cache_misses']==4*ranked,
             'saved rank-plane reuse accounting')
+    if rank_sets:
+        planes=len(boards)
+        require(chance['rank_work']==4096*ranks and chance['sort_work']==512*planes and
+                chance['cache_lookup_work']<=2*planes*4*ranked+planes*(4*planes+64),
+                'saved rank-set work exceeds cache accounting')
     require(chance['completed_contractions']==4*(shape[4]+ranked+shape[2]+1),'saved terminal and marginal call accounting')
     require(0<history_bytes<=32<<20 and 0<chance['peak_integer_bits']<=65536
             and 0<history_entries+state_entries+chance['peak_live_entries']<=entries<=2_000_000
@@ -184,8 +192,9 @@ def main():
     parser.add_argument('--saved',type=Path,required=True)
     parser.add_argument('--sha256',required=True)
     parser.add_argument('--paired',action='store_true')
+    parser.add_argument('--rank-sets',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(replay(args.saved,args.sha256,paired=args.paired),sort_keys=True))
+    print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets),sort_keys=True))
 
 
 if __name__=='__main__':main()

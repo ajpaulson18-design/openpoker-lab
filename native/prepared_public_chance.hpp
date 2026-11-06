@@ -2,6 +2,7 @@
 // Prepared q=1 integer contractions only. The parent owns money, fixed-game
 // scaling, output lifetime and complete training admission. No pair/world table.
 #include "full_deck_public_chance.hpp"
+#include <bit>
 #include <memory>
 
 namespace openpoker::prepared_public_chance {
@@ -15,6 +16,8 @@ using chance::KernelError;
 using chance::ErrorCode;
 using chance::Limits;
 using chance::DeckDefinition;
+
+enum class RankCacheKey { ordered_prefix, board_set };
 
 struct Contraction {
     std::vector<Integer> numerators;
@@ -35,7 +38,7 @@ struct Receipt {
 class PreparedPublicChance final {
     struct Bucket { Integer total = 0; std::array<Integer,52> cards{}; };
     struct Plane {
-        std::array<std::uint8_t,5> board{};
+        std::array<std::uint8_t,sizeof(std::uint64_t)> board_key{};
         std::array<std::vector<detail::Rank>,2> ranks;
         std::array<std::vector<std::size_t>,2> order;
         std::array<std::vector<unsigned char>,2> unblocked;
@@ -123,11 +126,15 @@ class PreparedPublicChance final {
         std::make_heap(order.begin(),order.end(),less);
         std::sort_heap(order.begin(),order.end(),less);
     }
-    std::size_t find_plane(std::span<const std::uint8_t> board) {
+    std::size_t find_plane(std::span<const std::uint8_t> board,std::uint64_t blocked) {
         const auto matches=[&](std::size_t i) {
+            if (rank_cache_key_==RankCacheKey::board_set) {
+                charge(board_set_probe_work,receipt_.cache_lookup_work);
+                return cache_[i].valid && std::bit_cast<std::uint64_t>(cache_[i].board_key)==blocked;
+            }
             // One valid flag plus all five ordered public-card comparisons.
             charge(6,receipt_.cache_lookup_work);
-            return cache_[i].valid && std::equal(board.begin(),board.end(),cache_[i].board.begin());
+            return cache_[i].valid && std::equal(board.begin(),board.end(),cache_[i].board_key.begin());
         };
         if (recent_!=missing && matches(recent_)) return recent_;
         for (std::size_t i=0;i<cache_.size();++i)
@@ -145,7 +152,9 @@ class PreparedPublicChance final {
     void fill_plane(std::size_t slot,std::span<const std::uint8_t> board,std::uint64_t blocked) {
         auto& plane=cache_[slot];
         if (plane.valid) ++receipt_.cache_evictions;
-        std::copy(board.begin(),board.end(),plane.board.begin());
+        if (rank_cache_key_==RankCacheKey::board_set)
+            plane.board_key=std::bit_cast<decltype(plane.board_key)>(blocked);
+        else std::copy(board.begin(),board.end(),plane.board_key.begin());
         for (std::size_t p=0;p<2;++p) {
             const auto n=source_[p].size();
             plane.ranks[p].resize(n); plane.unblocked[p].resize(n);
@@ -205,7 +214,7 @@ class PreparedPublicChance final {
         std::size_t slot=missing,cache_add=0;
         std::uint64_t rank_work=0,sort_work=0,cache_work=0;
         if (kind==TerminalKind::showdown) {
-            slot=find_plane(prefix);
+            slot=find_plane(prefix,blocked);
             if (slot==missing) {
                 // LRU search, plane metadata/copies/zero initialization are
                 // separate from rank evaluation and sort comparisons/moves.
@@ -310,15 +319,18 @@ class PreparedPublicChance final {
         ++receipt_.completed_contractions; return out;
     }
 public:
+    static constexpr std::uint64_t board_set_probe_work=2;
     PreparedPublicChance(std::span<const WeightedHand> sb,std::span<const WeightedHand> bb,
                          DeckDefinition deck=DeckDefinition::full52(),Limits limits={},
-                         std::size_t cache_capacity=64):limits_(limits),deck_(deck) {
+                         std::size_t cache_capacity=64,RankCacheKey rank_cache_key=RankCacheKey::ordered_prefix)
+        :limits_(limits),deck_(deck),rank_cache_key_(rank_cache_key) {
         if (!limits.max_hands_per_side || limits.max_hands_per_side>1326 ||
             !limits.max_integer_bits || limits.max_integer_bits>65536 ||
             !limits.max_modeled_work || limits.max_modeled_work>500'000'000 ||
             !limits.max_storage_entries || limits.max_storage_entries>2'000'000 ||
             !limits.max_integer_payload_bits || limits.max_integer_payload_bits>(std::size_t{1}<<30) ||
-            !cache_capacity || cache_capacity>64)
+            !cache_capacity || cache_capacity>64 ||
+            (rank_cache_key_!=RankCacheKey::ordered_prefix && rank_cache_key_!=RankCacheKey::board_set))
             fail(ErrorCode::invalid_limits,"invalid prepared reduce-only limits");
         charge(16,receipt_.setup_work);
         if (sb.empty() || bb.empty() || sb.size()>limits.max_hands_per_side || bb.size()>limits.max_hands_per_side)
@@ -402,6 +414,7 @@ public:
     [[nodiscard]] bool failed() const noexcept { return failed_; }
 private:
     Limits limits_{}; DeckDefinition deck_{};
+    const RankCacheKey rank_cache_key_;
     Receipt receipt_{}; bool failed_=false;
     std::uint64_t deck_mask_=0,clock_=0;
     std::array<std::vector<WeightedHand>,2> source_;
