@@ -150,5 +150,36 @@ staged write bytes, plus 2,248,528 bytes for the resident frozen policy. These
 are payload projections for the current traversal order. The archived census
 records their phase, metadata, checkpoint, and filesystem assumptions.
 
+## Paging the compact strategy
+
+The paged profile reserves 600,274 bytes for cache payload, cache tags, and
+staging coverage, plus 88 bytes of strategy codec scratch. Each of the two
+backing files holds 4,853,840 bytes. Composed admission fell from 1,980,339
+to 841,925 entries. The admission ledger charges 30,508,644 additional work
+units for paging, for 369,353,688 charged units across the run.
+
+The two-sweep run at `28e4171` matched all 22,587,236 numerical bytes from
+the sealed profile. Saved-only replay independently checked both sweeps
+and the final policy's best responses. A second verifier reconstructed
+both backing files byte-for-byte from the full-width checkpoints. The
+rank-free trace matched all 848 page loads and 27,558,528 bytes read by the
+pager. The two files received 14,561,520 stream bytes, including initialization.
+The single-bank layout at the same cache size projects 726,655,456 read
+bytes. Stream counts describe application I/O, with filesystem caching
+left to the operating system.
+
+In one Windows run per profile, paging reduced peak working set from
+17,010,688 to 8,151,040 bytes and peak commit from 14,249,984 to 5,312,512
+bytes. Native process time increased from 1.254 to 3.235 seconds.
+[Paged strategy evidence](../benchmarks/results/native-dyadic-paged-strategy-accepted-v1/manifest.json)
+
+With the nine-card width and two-sweep schedule held fixed, the separate
+rank-free ten-card projection covers 119,196 rows and 281,066 slots.
+At the same cache size, the layout projects 135,165,536 stream bytes read
+and 71,105,328 written, including initialization and checkpoint reads in
+the schedule. Substituting the projected page reservation into the existing
+State ledger leaves 3,060,972 entries. Ten-card training and convergence
+remain open.
+
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)

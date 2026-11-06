@@ -107,3 +107,9 @@ uses the same independently replayed game and full checkpoint format.
 the row lookup index before training. Select the profile with `--sealed-menus`.
 The [sealed-menu comparison](native-dyadic-storage-census.md#reusing-history-owned-action-menus)
 records the measured work, memory, and runtime on the same fixture.
+
+`ADMIT_PAGED` and `TRAIN_PAGED` keep the compact strategy in two bounded
+files under a fresh run directory. Select this profile with
+`--paged-strategy`. The [paging comparison](native-dyadic-storage-census.md#paging-the-compact-strategy)
+records exact parity, stream traffic, and the measured memory and runtime
+tradeoff on the nine-card fixture.
