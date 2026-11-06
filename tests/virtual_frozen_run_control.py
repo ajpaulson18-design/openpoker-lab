@@ -90,15 +90,17 @@ def run_bounded_dyadic_probe(command,mode,directory):
     if type(mode) is not str or mode not in ('ADMIT','TRAIN','ADMIT_PAIRED','TRAIN_PAIRED','ADMIT_PACKED','TRAIN_PACKED',
                                              'ADMIT_COMPACT','TRAIN_COMPACT','ADMIT_SCALED','TRAIN_SCALED',
                                              'ADMIT_SEALED','TRAIN_SEALED','ADMIT_PAGED','TRAIN_PAGED',
-                                             'ADMIT_DIRECTORY','TRAIN_DIRECTORY','ADMIT_RANK_SETS','TRAIN_RANK_SETS'):
+                                             'ADMIT_DIRECTORY','TRAIN_DIRECTORY','ADMIT_RANK_SETS','TRAIN_RANK_SETS',
+                                             'ADMIT_SPLIT','TRAIN_SPLIT'):
         raise ValueError('invalid fixed dyadic probe transport mode')
     request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
     training=mode.startswith('TRAIN')
-    ceiling=_DYADIC_T2_STDOUT if training else 2135476
-    return _run_streamed_child(command,request,directory,stdout_limit=ceiling if training else 65536,
+    ceiling=_DYADIC_T2_STDOUT if training and mode!='TRAIN_SPLIT' else 2135476
+    limit=2_114_028 if mode=='TRAIN_SPLIT' else ceiling if training else 65536
+    return _run_streamed_child(command,request,directory,stdout_limit=limit,
         stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=ceiling,
         measure_peak_memory=mode in ('TRAIN_PAIRED','TRAIN_PACKED','TRAIN_COMPACT','TRAIN_SCALED',
-                                     'TRAIN_SEALED','TRAIN_PAGED','TRAIN_DIRECTORY','TRAIN_RANK_SETS'))
+                                     'TRAIN_SEALED','TRAIN_PAGED','TRAIN_DIRECTORY','TRAIN_RANK_SETS','TRAIN_SPLIT'))
 
 
 def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,

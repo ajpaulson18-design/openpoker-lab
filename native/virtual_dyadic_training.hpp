@@ -29,7 +29,7 @@ using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
-enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets };
+enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
@@ -226,6 +226,7 @@ struct Plan {
     bool paged_strategy=false;
     bool compact_directory=false;
     bool rank_board_sets=false;
+    bool split_checkpoint=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -256,9 +257,10 @@ inline std::size_t regret_shift(std::size_t horizon,std::size_t opponent_past,st
 }
 inline constexpr std::size_t header_words=16, literal_bytes=96, row_bytes=24;
 inline constexpr std::size_t footer_words=64;
-inline std::uint64_t artifact_bytes(const Counts& c) {
+inline std::uint64_t artifact_bytes(const Counts& c,bool split) {
+    const auto checkpoint_words=split?0:2*integer_words;
     return 8+8*header_words+8*integer_words+literal_count*literal_bytes+c.rows*row_bytes+
-        sweeps*(8*c.slots*(1+2*integer_words)+4*8*(integer_words+1))+
+        sweeps*(8*c.slots*(1+checkpoint_words)+4*8*(integer_words+1))+
         8*c.slots+c.rows+8+8*footer_words;
 }
 
@@ -460,7 +462,9 @@ public:
             "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.rank_board_sets=profile==StrategyProfile::rank_sets;
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint;
+        require(!plan_.split_checkpoint || sweeps==2,"split checkpoint requires exactly two retained sweeps");
+        plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
         plan_.paged_strategy=profile==StrategyProfile::paged || plan_.compact_directory;
         plan_.sealed_menus=profile==StrategyProfile::sealed || plan_.paged_strategy;
@@ -570,8 +574,11 @@ public:
         }
         if (plan_.paged_strategy) {
             const auto A=plan_.packed_average_limbs,G=plan_.packed_regret_limbs,L=A+G;
-            const auto requests=15*S;
-            plan_.page_limits={static_cast<std::size_t>(L),4096,16,3500000,3*L,requests,2};
+            // The two page files retain sweep 1 and sweep 2. The split
+            // stream skips both fields of both checkpoint scans.
+            const auto requests=(plan_.split_checkpoint?11:15)*S;
+            const auto read_words=plan_.split_checkpoint?2250000u:3500000u;
+            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,3*L,requests,2};
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
@@ -586,7 +593,8 @@ public:
         }
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
-        w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
+        const auto wide_output=plan_.split_checkpoint?0:4*S*(4+2*integer_words);
+        w[work_index(Work::output)]=wide_output+3*S*2+24*R+
             sweeps*(6*S+32*R)+160*literal_count+65536;
         const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
             plan_.state_work+plan_.quantizer_work;
@@ -609,7 +617,7 @@ public:
         plan_.entries=plan_.state_entries+template_receipt.entries+template_receipt.peak_scratch_entries+
             chance_entries+32*literal_count+1+parent_entries;
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
-        plan_.output_bytes=artifact_bytes(g);
+        plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint);
         require(plan_.template_work<=template_cap && plan_.chance_work<=chance_cap && plan_.history_work<=history_cap &&
             plan_.state_work<=state_cap && plan_.quantizer_work<=quantizer_cap && sum_work(w)<=plan_.parent_allowance &&
             plan_.total_work<=work_cap && plan_.entries<=entries_cap && plan_.payload_bits<=payload_cap &&
@@ -991,7 +999,7 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text("OPLDYA01");
+        out.text(p.split_checkpoint?"OPLDSP01":"OPLDYA01");
         for (const auto word:std::array<std::uint64_t,header_words>{1,grid_bits,integer_words,p.shape.rows,
             p.shape.slots,literal_count,sweeps,p.H,p.M,p.denominator_bits,value_bits,p.output_bytes,2,2,
             p.normalizer,chance_divisors[3]}) out.u64(word);
@@ -1018,6 +1026,22 @@ class Driver final {
         }
         return changed;
     }
+    void wide_checkpoint(Binary& out,const state::State& state) const {
+        if (plan_.packed_regrets) {
+            for (std::size_t row=0;row<state.row_count();++row)
+                for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
+                    out.wide(state.regret_numerator(row,action));
+        } else {
+            for (const auto& value:state.regrets()) out.wide(value);
+        }
+        if (plan_.packed_averages) {
+            for (std::size_t row=0;row<state.row_count();++row)
+                for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
+                    out.wide(state.average_numerator(row,action));
+        } else {
+            for (const auto& value:state.averages()) out.wide(value);
+        }
+    }
     void footer(Binary& out,const prepared::Receipt& chance,const history::Receipt& history,
                 const state::Receipt& state,std::uint64_t feedback) const {
         const auto& p=plan_;
@@ -1033,7 +1057,7 @@ class Driver final {
             state.completed_sweeps==sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
-        out.text(p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
+        out.text(p.split_checkpoint?"OPLDSP02":p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
         for (const auto word:p.parent) out.u64(word);
@@ -1120,20 +1144,7 @@ public:
             }
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
             state.commit_sweep();
-            if (p.packed_regrets) {
-                for (std::size_t row=0;row<state.row_count();++row)
-                    for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
-                        out.wide(state.regret_numerator(row,action));
-            } else {
-                for (const auto& value:state.regrets()) out.wide(value);
-            }
-            if (p.packed_averages) {
-                for (std::size_t row=0;row<state.row_count();++row)
-                    for (std::size_t action=0,count=state.row_at(row).actions.size();action<count;++action)
-                        out.wide(state.average_numerator(row,action));
-            } else {
-                for (const auto& value:state.averages()) out.wide(value);
-            }
+            if (!p.split_checkpoint) wide_checkpoint(out,state);
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
         }
         const auto image=state.export_average(!p.packed_averages);

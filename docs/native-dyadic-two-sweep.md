@@ -153,3 +153,18 @@ checkpoint from 2,114,028 bytes of metadata and policy data plus its two
 compact page files. The same split projects 9,833,076 stream bytes and
 47,403,552 page bytes on the ten-card geometry. This is a format
 feasibility result from saved data and a structural projection.
+
+## Split checkpoint format
+
+`ADMIT_SPLIT` and `TRAIN_SPLIT` select the bounded nine-card format
+through `--split-checkpoint`. The stream begins with `OPLDSP01` and
+uses an `OPLDSP02` footer. It carries the literal skeleton, row keys,
+both current policy grids and root values, the final policy, and the work
+ledger. The stream has a separate 2,114,028-byte transport ceiling.
+
+After the two commits, `staged.bin` contains sweep 1 and
+`committed.bin` contains sweep 2. Each file contains compact average
+words followed by compact regret words. The controller records the
+stream and image digests in `checkpoint-inputs.json`. Saved-only replay
+authenticates all three inputs, derives row scales from the reference
+tree, and checks both images exhaustively against independent updates.

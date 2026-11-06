@@ -7,9 +7,11 @@ import subprocess
 import sys
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
 from scripts.run_virtual_dyadic_training_cohort import exact_json, validate_admission
 from scripts.run_virtual_frozen_source_only import source_only_command
+from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, replay
 from tests.test_native_exact_reach import authenticate, sha
 from tests.virtual_frozen_run_control import run_bounded_child, run_bounded_dyadic_probe
 
@@ -19,6 +21,22 @@ ENV='OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE'
 
 
 class DyadicTrainingHarnessControls(unittest.TestCase):
+    def test_split_replay_rejects_incomplete_or_unauthenticated_inputs_before_math(self):
+        with TemporaryDirectory(dir=ROOT.parent) as temporary:
+            root=Path(temporary)
+            stream,first,second=(root/name for name in ('stdout.bin','staged.bin','committed.bin'))
+            stream.write_bytes(bytes(SPLIT_BYTES))
+            first.write_bytes(bytes(SPLIT_IMAGE_BYTES))
+            second.write_bytes(b'')
+            ordered=((first,sha(first)),(second,sha(second)))
+            with patch('scripts.verify_virtual_dyadic_training.Fixture',side_effect=AssertionError('early replay')):
+                with self.assertRaisesRegex(ValueError,'ordered pair'):
+                    replay(stream,sha(stream),paired=True,rank_sets=True,images=ordered[::-1])
+                with self.assertRaisesRegex(ValueError,'input byte count'):
+                    replay(stream,sha(stream),paired=True,rank_sets=True,images=ordered)
+                with self.assertRaisesRegex(ValueError,'input sha256'):
+                    replay(stream,sha(stream),paired=True,rank_sets=True,images=((first,'0'*64),ordered[1]))
+
     def test_large_training_stream_is_only_available_to_fixed_transport(self):
         command=[sys.executable,'-B','-c',
                  'import sys;request=sys.stdin.buffer.read();sys.stdout.buffer.write(request+b"x"*3000000)']
@@ -90,7 +108,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
     def test_admission_covers_all_in_hidden_payoffs_without_training(self):
         plans=[]
         for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED','ADMIT_COMPACT','ADMIT_SCALED','ADMIT_SEALED','ADMIT_PAGED',
-                     'ADMIT_DIRECTORY','ADMIT_RANK_SETS'):
+                     'ADMIT_DIRECTORY','ADMIT_RANK_SETS','ADMIT_SPLIT'):
             with self.subTest(mode=mode):
                 directory,process=self.observe(mode.lower(),lambda p:run_bounded_dyadic_probe([str(self.exe)],mode,p))
                 self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
@@ -98,12 +116,12 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),
                     paired=mode=='ADMIT_PAIRED',packed=mode=='ADMIT_PACKED',compact=mode=='ADMIT_COMPACT',
                     scaled=mode=='ADMIT_SCALED',sealed=mode=='ADMIT_SEALED',paged=mode=='ADMIT_PAGED',
-                    directory=mode=='ADMIT_DIRECTORY',rank_sets=mode=='ADMIT_RANK_SETS')
+                    directory=mode=='ADMIT_DIRECTORY',rank_sets=mode=='ADMIT_RANK_SETS',split=mode=='ADMIT_SPLIT')
                 self.assertEqual(plan['training_invocations'],0)
                 self.assertEqual(plan['rank_calls'],0)
                 self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
                 plans.append(plan)
-        legacy,paired,packed,compact,scaled,sealed,paged,directory,rank_sets=plans
+        legacy,paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split=plans
         self.assertLess(paired['planned_total_work'],legacy['planned_total_work'])
         self.assertEqual(packed['planned_total_work']-paired['planned_total_work'],packed['packed_average_work'])
         self.assertEqual(packed['parent_work']['average']-paired['parent_work']['average'],packed['packed_average_work'])
@@ -140,12 +158,18 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(directory['parent_work'],rank_sets['parent_work'])
         self.assertEqual(directory['entries'],rank_sets['entries'])
         self.assertEqual(rank_sets['expected_rank_calls'],7)
+        self.assertEqual(rank_sets['planned_total_work']-split['planned_total_work'],9_771_552)
+        self.assertEqual(rank_sets['parent_work']['route']-split['parent_work']['route'],3_722_496)
+        self.assertEqual(rank_sets['parent_work']['output']-split['parent_work']['output'],6_049_056)
+        self.assertEqual(rank_sets['actual_admission_work'],split['actual_admission_work'])
+        self.assertEqual(split['output_bytes'],SPLIT_BYTES)
+        self.assertEqual(split['checkpoint_image_bytes'],SPLIT_IMAGE_BYTES)
 
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',
                 b'DYADIC_T2_V1 ADMIT',b'DYADIC_T2_V1 ADMIT\nDYADIC_T2_V1 TRAIN\n',
                 b'DYADIC_T2_V1 TRAIN_PAGED\n',b'DYADIC_T2_V1 TRAIN_DIRECTORY\n',
-                b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
