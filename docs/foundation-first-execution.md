@@ -1080,3 +1080,13 @@ source-frozen ten-card check reduces the ready-to-replay packet from
 using zero native producer calls. The trainer's mutable page store has
 its existing layout and admission. Working-state I/O remains a separate
 scaling target.
+
+The [virtual initial image](native-dyadic-two-sweep.md#virtual-initial-image)
+removes 62,356,272 bytes of measured pager traffic from the bounded
+ten-card run while keeping the prior logical request count and both
+checkpoint images. The original native process exited successfully,
+and the recorded comparison failure was recovered through independent
+saved-only replay of that same output. The
+[eleven-card census](native-dyadic-storage-census.md#eleven-card-admission-boundary)
+projects more than four million frozen State entries before the pager
+reservation under the current layout.

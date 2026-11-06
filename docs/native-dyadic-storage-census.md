@@ -213,3 +213,19 @@ or training.
 
 Run `python -m scripts.census_virtual_dyadic_storage` to reproduce the counts.
 [Raw census receipt](../benchmarks/results/native-dyadic-storage-census-v1/geometry.json)
+
+### Eleven-card admission boundary
+
+Extending the ten-card deck by card ID 1 gives 1,260 ordered joint
+worlds, 380,172 supported rows, and 892,910 action slots under the
+same ranges and betting template. The inclusion-exclusion census
+reproduces this projection with the nested deck sizes set to
+`(9, 10, 11, 12, 13)`.
+
+Applying the current compact State formula to those counts gives
+3,620,902 build entries and 4,069,914 frozen entries before the pager
+reservation. The cap is 2,000,000 entries. The 56 distinct final
+board masks fit the current 64-plane cache. The row directory and
+frozen policy layout therefore need their own scaling work before
+an eleven-card run can be admitted under the existing entry cap.
+This is a rank-free capacity projection for a named deck.

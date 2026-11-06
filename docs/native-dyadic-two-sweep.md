@@ -309,3 +309,19 @@ Admission keeps the 3,091,726 logical request cap and reserves
 The work plan retains the per-word charge for synthesized reads and
 removes the initialization and write-call allowances that this mode
 does not need.
+
+The frozen native run recorded 843,198 synthesized reads and matched
+the independent schedule exactly. It used 1,498 page loads and 18,836
+write calls, compared with 2,679 and 19,560 in the buffered baseline.
+The difference was 62,356,272 bytes of file-stream traffic. The
+single Windows process observations were 7.71 seconds buffered and
+5.78 seconds with virtual initialization.
+
+Both images and all 9,832,556 numerical payload bytes matched the
+buffered baseline. The native run exited successfully. Its controller
+then stopped at a baseline manifest-key error. The corrected
+comparison has a regression test against the published manifest.
+Separate saved-only recovery reauthenticated the original build and
+packets and reproduced both exact updates and best responses without
+rerunning the trainer.
+[Virtual initial image evidence](../benchmarks/results/native-dyadic-virtual-zero-ten-card-accepted-v1/manifest.json)
