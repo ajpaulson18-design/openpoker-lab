@@ -168,3 +168,18 @@ words followed by compact regret words. The controller records the
 stream and image digests in `checkpoint-inputs.json`. Saved-only replay
 authenticates all three inputs, derives row scales from the reference
 tree, and checks both images exhaustively against independent updates.
+
+The source-frozen run at `df04bcb` retained 11,821,708 numerical packet
+bytes across the stream and two images. Restoring the wide stream from
+those files matched all 22,587,236 numerical bytes of the rank-set
+baseline. The verifier also rejected the two images in reversed sweep
+order when given valid hashes for the supplied files.
+
+The trainer read 17,785,312 page bytes, down from 27,558,528. The
+independent access trace matched all 548 physical page loads. Both
+planned and charged work fell by 9,771,552 units, covering the skipped
+checkpoint emission and request charges. The single Windows process
+times were 2.660 seconds for the rank-set run and 2.681 seconds for
+the split run. The data supports the output and pager reductions at
+this scope.
+[Split checkpoint evidence](../benchmarks/results/native-dyadic-split-checkpoint-accepted-v1/manifest.json)
