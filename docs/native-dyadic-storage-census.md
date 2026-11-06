@@ -229,3 +229,17 @@ board masks fit the current 64-plane cache. The row directory and
 frozen policy layout therefore need their own scaling work before
 an eleven-card run can be admitted under the existing entry cap.
 This is a rank-free capacity projection for a named deck.
+
+The ordered registration and export reuse layout reduces the
+eleven-card projection to 1,523,755 build entries and 2,796,837
+frozen entries before pager reservation. The frozen row directory
+and policy workspace together still exceed the entry cap. The
+ten-card profile measures the allocation change in isolation from
+deck expansion.
+
+At the projected 646-bit width, one eleven-card image requires
+4,188,150 packed average words and 5,536,052 regret words. The
+one-bit-per-word staging coverage bitmap alone would occupy
+1,215,526 bytes. That exceeds the 1 MiB pager-resident cap before
+the cache and write buffers. The same independent calculation
+reproduces the retained nine- and ten-card limb counts.

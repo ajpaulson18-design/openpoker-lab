@@ -325,3 +325,39 @@ Separate saved-only recovery reauthenticated the original build and
 packets and reproduced both exact updates and best responses without
 rerunning the trainer.
 [Virtual initial image evidence](../benchmarks/results/native-dyadic-virtual-zero-ten-card-accepted-v1/manifest.json)
+
+## Ordered row registration and export reuse
+
+The explicit `--ten-ordered-state` cohort uses the ten-card virtual
+initial image. Its State accepts rows in canonical traversal order.
+History reconstructs a bounded path of action-edge indices and
+ordered reveal cards from each authenticated cursor. A fixed
+17-digit path uses nonzero event digits and zero padding. This
+places ancestors before descendants. Holding index breaks ties
+between rows at one decision. A duplicate or backward row fails
+before insertion. The stored full-history ordinal and the per-row
+menu, holding and packed extents keep their existing meanings.
+
+This profile skips the build hash. After the final commit, the
+export takes ownership of the sweep policy and staging-mark arrays.
+It overwrites every policy unit and fallback flag in the existing
+wire order. All stage and row coverage checks still apply.
+
+The ten-card admission removes the 524,288-slot hash and reserves
+1,159,382 composed entries, down from 1,559,639. The History budget
+adds 3,814,272 units for deriving paths. The per-row charge of 32
+covers up to 15 occurrence visits and 17 digit or padding writes.
+The existing State and quantizer work allowances stay in the plan.
+
+The frozen run at `a249872` matched both prior sweep images and
+all 9,832,556 numerical payload bytes. Independent replay reproduced
+both updates, the final policy, and both best responses. The pager
+traffic matched the virtual initial image baseline.
+
+The single Windows observations measured a peak working set of
+11,329,536 bytes with ordered State and 13,774,848 bytes in the
+baseline. The corresponding process times were 8.22 and 5.78
+seconds. These are paired-fixture observations from separate
+runs. The admission ledger and measured working set describe
+different quantities.
+[Ordered State evidence](../benchmarks/results/native-dyadic-ordered-state-ten-card-accepted-v1/manifest.json)

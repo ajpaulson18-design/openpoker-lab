@@ -1090,3 +1090,10 @@ saved-only replay of that same output. The
 [eleven-card census](native-dyadic-storage-census.md#eleven-card-admission-boundary)
 projects more than four million frozen State entries before the pager
 reservation under the current layout.
+
+[Ordered registration and export reuse](native-dyadic-two-sweep.md#ordered-row-registration-and-export-reuse)
+remove the build hash and the duplicate policy export workspace in
+the ten-card profile. The exact saved replay matches the prior
+policy and checkpoints. The composed admission falls to 1,159,382
+entries. The eleven-card projection still exceeds the frozen State
+and pager-resident limits independently.
