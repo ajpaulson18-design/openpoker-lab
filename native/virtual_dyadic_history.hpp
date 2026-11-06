@@ -221,11 +221,16 @@ public:
     [[nodiscard]] Cursor append_reveal(Cursor c,std::span<const std::uint8_t> prefix) {
         try {
             const auto& p=validate(c);charge(64);
-            if (p.phase!=betting::Phase::reveal || prefix.size()!=p.next_street)
+            std::array<std::uint8_t,5> board{};
+            if (p.phase!=betting::Phase::reveal || prefix.size()!=p.next_street ||
+                prefix.size()>board.size() || c.size_>prefix.size())
                 throw Error("compact history invalid reveal phase");
             (void)board_code(prefix);
-            for (std::size_t i=0;i<c.size_;++i) if (prefix[i]!=c.board_[i]) throw Error("compact history changed past card");
-            std::array<std::uint8_t,5> board{};std::copy(prefix.begin(),prefix.end(),board.begin());
+            for (std::size_t i=0;i<prefix.size();++i) {
+                const auto card=prefix[i];
+                if (i<c.size_ && card!=c.board_[i]) throw Error("compact history changed past card");
+                board[i]=card;
+            }
             return Cursor(this,generation_,p.children[0],prefix.size(),board);
         } catch (...) {failed_=true;throw;}
     }
