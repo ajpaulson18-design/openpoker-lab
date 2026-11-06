@@ -87,7 +87,8 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--module',choices=['scripts.run_virtual_frozen_update_study','scripts.verify_virtual_frozen_update_study',
         'scripts.run_native_exact_reach_conformance','scripts.run_virtual_dyadic_training_cohort',
-        'scripts.verify_virtual_dyadic_training','scripts.build_native_exact_four_street','unittest'],required=True)
+        'scripts.verify_virtual_dyadic_training','scripts.pack_virtual_dyadic_checkpoints',
+        'scripts.build_native_exact_four_street','unittest'],required=True)
     parser.add_argument('--receipt',type=Path,required=True)
     parser.add_argument('arguments',nargs=argparse.REMAINDER)
     args=parser.parse_args();root=Path(__file__).resolve().parents[1]

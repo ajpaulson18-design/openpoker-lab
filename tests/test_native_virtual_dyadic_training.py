@@ -62,7 +62,7 @@ class DyadicTrainingHarnessControls(unittest.TestCase):
             self.assertEqual((target/'request.bin').read_bytes(),b'DYADIC_T2_V1 TRAIN\n')
             self.assertEqual((target/'stdout.bin').stat().st_size,3_000_019)
 
-    def test_source_only_launcher_accepts_both_named_dyadic_entries(self):
+    def test_source_only_launcher_accepts_named_dyadic_entries(self):
         with TemporaryDirectory(dir=ROOT.parent) as temporary:
             root=Path(temporary)
             scripts=root/'scripts'
@@ -70,7 +70,8 @@ class DyadicTrainingHarnessControls(unittest.TestCase):
             (scripts/'__init__.py').touch()
             script=scripts/'run_virtual_frozen_source_only.py'
             script.write_bytes((ROOT/'scripts'/script.name).read_bytes())
-            for module in ('scripts.run_virtual_dyadic_training_cohort','scripts.verify_virtual_dyadic_training'):
+            for module in ('scripts.run_virtual_dyadic_training_cohort','scripts.verify_virtual_dyadic_training',
+                           'scripts.pack_virtual_dyadic_checkpoints'):
                 with self.subTest(module=module):
                     name=module.replace('.','/')+'.py'
                     entry=root/name

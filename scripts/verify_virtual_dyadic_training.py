@@ -10,6 +10,7 @@ import stat
 import struct
 import time
 
+from scripts.dyadic_checkpoint_transport import PageReader, packed_ceiling
 from tests.virtual_dyadic_training_reference import D, OCCURRENCES, Q, ROWS, SLOTS, Fixture, require
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_update_reference import scaled_proof9_ranges
@@ -36,6 +37,7 @@ TEN_CARD_TERMINAL_COMPLETIONS = (103020,70912)
 TEN_CARD_WORK_LIMIT = 2_150_000_000
 TEN_CARD_PAYLOAD_LIMIT = 1_200_000_000
 SPLIT_IMAGE_NAMES = ('staged.bin','committed.bin')
+PACKED_IMAGE_NAMES = ('staged.pgi','committed.pgi')
 SPLIT_IMAGE_BYTES = 606_730*8
 TOTAL_BYTES = (8+16*8+INT_WORDS*8+96*OCCURRENCES+24*ROWS
                +2*(8*SLOTS+2*INT_WORDS*8*SLOTS+4*(1+INT_WORDS)*8)
@@ -86,25 +88,46 @@ class Reader:
         require(self.digest.hexdigest()==expected_sha256,'saved parsed digest differs')
 
 
+def check_digest(stream,expected_sha256,extent):
+    stream.seek(0)
+    digest=hashlib.sha256()
+    remaining=extent
+    while remaining:
+        block=stream.read(min(1<<20,remaining))
+        require(bool(block),'saved hash read truncation')
+        remaining-=len(block);digest.update(block)
+    require(not stream.read(1) and digest.hexdigest()==expected_sha256,'saved input sha256 differs')
+    stream.seek(0)
+
+
 @contextmanager
-def authenticated_reader(path,expected_sha256,limit,*,private=False,value_bits=VALUE_BITS):
+def authenticated_file(path,expected_sha256,limit,*,private=False,exact=True):
     path=unlinked_path(path)
     require(path.is_file(),'saved input must be a regular file')
     require(type(expected_sha256) is str and len(expected_sha256)==64
             and all(c in '0123456789abcdef' for c in expected_sha256),'expected retained sha256')
     with path.open('rb') as stream:
         info=os.fstat(stream.fileno())
-        require(stat.S_ISREG(info.st_mode) and info.st_size==limit,'saved input byte count')
+        require(stat.S_ISREG(info.st_mode) and (info.st_size==limit if exact else 0<info.st_size<=limit),
+                'saved input byte count')
         require(not private or info.st_nlink==1,'split input must have one link')
-        digest=hashlib.sha256()
-        remaining=limit
-        while remaining:
-            block=stream.read(min(1<<20,remaining))
-            require(bool(block),'saved hash read truncation')
-            remaining-=len(block);digest.update(block)
-        require(not stream.read(1) and digest.hexdigest()==expected_sha256,'saved input sha256 differs')
-        stream.seek(0)
+        check_digest(stream,expected_sha256,info.st_size)
+        yield stream,info
+
+
+@contextmanager
+def authenticated_reader(path,expected_sha256,limit,*,private=False,value_bits=VALUE_BITS):
+    with authenticated_file(path,expected_sha256,limit,private=private) as (stream,info):
         yield Reader(stream,limit,value_bits),(info.st_dev,info.st_ino)
+
+
+@contextmanager
+def authenticated_packed_reader(path,packed_sha256,decoded_sha256,raw_bytes,value_bits):
+    with authenticated_file(path,packed_sha256,packed_ceiling(raw_bytes),private=True,exact=False) as (stream,info):
+        pages=PageReader(stream,raw_bytes,info.st_size)
+        require(pages.decoded_sha256()==decoded_sha256,'saved decoded checkpoint sha256 differs')
+        yield (Reader(pages,raw_bytes,value_bits),(info.st_dev,info.st_ino),info.st_size)
+        check_digest(stream,packed_sha256,info.st_size)
 
 
 def compact_scales(fixture):
@@ -141,15 +164,20 @@ def check_compact_checkpoint(reader,ordered,row_scales,regrets,average,sweep,val
                     f'saved split {family} mismatch sweep {sweep}: {key}')
 
 
-def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,ten_card=False):
+def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,ten_card=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
-    split=images is not None
-    if split:
-        images=tuple(images)
+    require(images is None or packed_images is None,'choose one checkpoint transport')
+    split=images is not None or packed_images is not None
+    images=tuple(images) if images is not None else ()
+    packed_images=tuple(packed_images) if packed_images is not None else None
     require(not rank_sets or paired,'rank-set replay requires paired training')
-    require(not split or (rank_sets and tuple(Path(p).name for p,_ in images)==SPLIT_IMAGE_NAMES),
-            'split replay requires the ordered pair of rank-set sweep images')
+    if packed_images is not None:
+        require(rank_sets and tuple(Path(p).name for p,_,_ in packed_images)==PACKED_IMAGE_NAMES,
+                'split replay requires the ordered pair of packed rank-set sweep images')
+    else:
+        require(not split or (rank_sets and tuple(Path(p).name for p,_ in images)==SPLIT_IMAGE_NAMES),
+                'split replay requires the ordered pair of rank-set sweep images')
     require(not ten_card or (paired and rank_sets and split),
             'ten-card replay requires paired rank-set training and split images')
     rows = TEN_CARD_ROWS if ten_card else ROWS
@@ -158,15 +186,23 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,ten_c
     denominator = TEN_CARD_DENOMINATOR if ten_card else D
     image_bytes = TEN_CARD_IMAGE_BYTES if ten_card else SPLIT_IMAGE_BYTES
     size = TEN_CARD_SPLIT_BYTES if ten_card else (SPLIT_BYTES if split else TOTAL_BYTES)
+    packed_details=[]
     with ExitStack() as stack:
         r,identity=stack.enter_context(authenticated_reader(path,expected_sha256,size,private=split,value_bits=bits))
         checkpoints=[]
         identities={identity}
-        for page,digest in images or ():
+        for page,digest in images:
             reader,identity=stack.enter_context(authenticated_reader(page,digest,image_bytes,private=True,value_bits=bits))
             require(identity not in identities,'split inputs alias')
             identities.add(identity)
             checkpoints.append((reader,digest))
+        for page,encoded,digest in packed_images or ():
+            reader,identity,extent=stack.enter_context(
+                authenticated_packed_reader(page,encoded,digest,image_bytes,bits))
+            require(identity not in identities,'split inputs alias')
+            identities.add(identity)
+            checkpoints.append((reader,digest))
+            packed_details.append({'name':Path(page).name,'sha256':encoded,'bytes':extent})
         require(r.read(8)==(TEN_CARD_SPLIT_MAGIC if ten_card else SPLIT_MAGIC if split else MAGIC),'saved training magic')
         require(r.words(16)==(1,52,INT_WORDS,rows,slots,OCCURRENCES,2,12,1,637 if ten_card else 635,bits,size,2,2,29,120 if ten_card else 20),
                 'saved fixed fixture or integer contract')
@@ -279,8 +315,10 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,ten_c
             'public_walks_per_sweep':passes//completed,
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
     if split:
-        result['checkpoint_images']=[{'name':Path(p).name,'sha256':sha,'bytes':image_bytes}
-                                     for p,sha in images]
+        result['checkpoint_images']=[{'name':name,'sha256':digest,'bytes':image_bytes}
+                                     for name,(_,digest) in zip(SPLIT_IMAGE_NAMES,checkpoints,strict=True)]
+    if packed_images is not None:
+        result['packed_checkpoint_images']=packed_details
     return result
 
 
@@ -295,14 +333,22 @@ def main():
     parser.add_argument('--paired',action='store_true')
     parser.add_argument('--ten-card',action='store_true')
     parser.add_argument('--rank-sets',action='store_true')
-    parser.add_argument('--page-images',type=Path)
+    transport=parser.add_mutually_exclusive_group()
+    transport.add_argument('--page-images',type=Path)
+    transport.add_argument('--packed-page-images',type=Path)
     parser.add_argument('--sweep-image-sha256',nargs=2,metavar=('SWEEP1','SWEEP2'))
+    parser.add_argument('--packed-sweep-image-sha256',nargs=2,metavar=('PACKED1','PACKED2'))
     args=parser.parse_args()
-    if (args.page_images is None)!=(args.sweep_image_sha256 is None):
-        parser.error('page image directory and both sweep digests are required together')
+    if ((args.page_images is None and args.packed_page_images is None)!=(args.sweep_image_sha256 is None)
+            or (args.packed_page_images is None)!=(args.packed_sweep_image_sha256 is None)):
+        parser.error('the selected image directory and its sweep digests are required together')
     images=tuple((args.page_images/name,digest) for name,digest in
                  zip(SPLIT_IMAGE_NAMES,args.sweep_image_sha256,strict=True)) if args.page_images is not None else None
-    print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,ten_card=args.ten_card),sort_keys=True))
+    packed_images=tuple((args.packed_page_images/name,encoded,digest) for name,encoded,digest in
+                        zip(PACKED_IMAGE_NAMES,args.packed_sweep_image_sha256,args.sweep_image_sha256,strict=True)
+                        ) if args.packed_page_images is not None else None
+    print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
+                            packed_images=packed_images,ten_card=args.ten_card),sort_keys=True))
 
 
 if __name__=='__main__':main()
