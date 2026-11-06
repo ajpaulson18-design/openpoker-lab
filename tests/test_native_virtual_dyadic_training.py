@@ -13,6 +13,7 @@ from scripts.run_virtual_dyadic_training_cohort import exact_json, validate_admi
 from scripts.run_virtual_frozen_source_only import source_only_command
 from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, replay
 from tests.test_native_exact_reach import authenticate, sha
+from tests.virtual_dyadic_training_reference import Fixture
 from tests.virtual_frozen_run_control import run_bounded_child, run_bounded_dyadic_probe
 
 
@@ -21,6 +22,13 @@ ENV='OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE'
 
 
 class DyadicTrainingHarnessControls(unittest.TestCase):
+    def test_ten_card_reference_preserves_ordered_physical_support(self):
+        fixture=Fixture(ten_card=True)
+        self.assertEqual(len(fixture.worlds),360)
+        self.assertEqual(len({world.board for world in fixture.worlds}),340)
+        self.assertEqual(fixture.terminal_completion_counts(),(103_020,70_912))
+        self.assertEqual(sum(1 for _ in fixture.ordered_rows()),119_196)
+
     def test_split_replay_rejects_incomplete_or_unauthenticated_inputs_before_math(self):
         with TemporaryDirectory(dir=ROOT.parent) as temporary:
             root=Path(temporary)
@@ -165,11 +173,25 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(split['output_bytes'],SPLIT_BYTES)
         self.assertEqual(split['checkpoint_image_bytes'],SPLIT_IMAGE_BYTES)
 
+    def test_ten_card_admission_is_rank_free_and_profile_specific(self):
+        directory,process=self.observe('admit_ten',lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_card=True)
+        self.assertEqual(plan['planned_total_work'],2_102_190_180)
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        with self.assertRaisesRegex(ValueError,'earlier profile'):
+            validate_admission(receipt,split=True)
+        with self.assertRaisesRegex(ValueError,'independent fixed census'):
+            validate_admission(dict(receipt,page_request_limit=3_091_727),ten_card=True)
+
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',
                 b'DYADIC_T2_V1 ADMIT',b'DYADIC_T2_V1 ADMIT\nDYADIC_T2_V1 TRAIN\n',
                 b'DYADIC_T2_V1 TRAIN_PAGED\n',b'DYADIC_T2_V1 TRAIN_DIRECTORY\n',
-                b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_RANK_SETS\n',b'DYADIC_T2_V1 TRAIN_SPLIT\n',
+                b'DYADIC_T2_V1 TRAIN_TEN\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))

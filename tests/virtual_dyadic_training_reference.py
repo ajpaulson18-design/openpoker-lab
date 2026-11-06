@@ -36,7 +36,14 @@ class World:
 
 
 class Fixture:
-    def __init__(self):
+    def __init__(self, *, ten_card=False):
+        self.deck = tuple(sorted((*PROOF9, 0))) if ten_card else PROOF9
+        require(len(set(self.deck)) == (10 if ten_card else 9), 'reference deck geometry')
+        self.denominator = (3480 << 625) if ten_card else D
+        self.value_bits = 644 if ten_card else 642
+        self.row_count = 119_196 if ten_card else ROWS
+        self.slot_count = 281_066 if ten_card else SLOTS
+        self.runouts = 120 if ten_card else 20
         self.template = build_reference_template(_template_case())
         self.nodes = self.template.nodes
         require(len(self.nodes) == 388, 'reference shared state geometry')
@@ -61,20 +68,20 @@ class Fixture:
         normalizer = sum(x[-1] for x in raw)
         worlds = []
         for i,j,h0,h1,w in raw:
-            left = tuple(c for c in PROOF9 if c not in (*h0,*h1))
+            left = tuple(c for c in self.deck if c not in (*h0,*h1))
             for flop in combinations(left,3):
                 for turn,river in permutations(tuple(c for c in left if c not in flop),2):
                     board = (*flop,turn,river)
                     rank = [independent_rank(tuple(card_name(c) for c in (*hand,*board)))
                             for hand in (h0,h1)]
-                    worlds.append(World((i,j),board,w/(20*normalizer),(rank[0]>rank[1])-(rank[0]<rank[1])))
-        require(len(worlds)==60 and sum(w.mass for w in worlds)==1 and {w.sign for w in worlds}=={-1,0,1},
+                    worlds.append(World((i,j),board,w/(self.runouts*normalizer),(rank[0]>rank[1])-(rank[0]<rank[1])))
+        require(len(worlds)==3*self.runouts and sum(w.mass for w in worlds)==1 and {w.sign for w in worlds}=={-1,0,1},
                 'reference literal physical support')
         self.worlds = tuple(worlds)
         self.menus = {}
         for world in self.worlds:
             self._register(self.template.root,(),world)
-        require(len(self.menus)==ROWS and sum(map(len,self.menus.values()))==SLOTS,'reference exact row/slot census')
+        require(len(self.menus)==self.row_count and sum(map(len,self.menus.values()))==self.slot_count,'reference exact row/slot census')
 
     def _register(self, node_id, history, world):
         node = self.nodes[node_id]
@@ -94,7 +101,7 @@ class Fixture:
         require(occurrence<len(self.paths) and length in (0,3,4,5),'compact key path/prefix')
         require(value & (((1<<30)-1) ^ ((1<<(6*length))-1))==0,'compact key unused card bits')
         board=tuple((value>>(6*i))&63 for i in range(length))
-        require(len(set(board))==length and set(board)<=set(PROOF9) and (length<3 or tuple(sorted(board[:3]))==board[:3]),
+        require(len(set(board))==length and set(board)<=set(self.deck) and (length<3 or tuple(sorted(board[:3]))==board[:3]),
                 'compact key physical grammar')
         _,_,_,street,_=self.paths[occurrence]
         require(street==length,'compact key visible street')
@@ -128,7 +135,7 @@ class Fixture:
         """Unseen completions in all-in payoff queries, never decision rows."""
         streets=(0,3,4,5)
         positive={k:len({w.board[:k] for w in self.worlds}) for k in streets}
-        candidates={0:84,3:6,4:5}
+        candidates={0:len(self.deck)*(len(self.deck)-1)*(len(self.deck)-2)//6,3:len(self.deck)-3,4:len(self.deck)-4}
         ranked=hidden=0
         for node_id,_,_,street,_ in self.paths:
             if self.nodes[node_id].phase=='showdown':
@@ -185,8 +192,8 @@ class Fixture:
             root_values[w.holdings[0]]+=value
             root_values[2+w.holdings[1]]-=value
         def numerator(x):
-            q,r=divmod(x.numerator*D,x.denominator)
-            require(r==0 and abs(q).bit_length()<=642,'reference numerator outside admitted fixed grid')
+            q,r=divmod(x.numerator*self.denominator,x.denominator)
+            require(r==0 and abs(q).bit_length()<=self.value_bits,'reference numerator outside admitted fixed grid')
             return q
         regrets={};raw_average={}
         for k,menu in self.menus.items():

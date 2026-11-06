@@ -14,6 +14,7 @@ from scripts.run_native_exact_reach_conformance import bind_build, save, sha
 from scripts.run_virtual_frozen_source_only import FIRST_STAGE, source_only_command, scan_project_caches
 from scripts.verify_virtual_dyadic_training import EXPECTED_SHAPE, EXPECTED_TERMINAL_COMPLETIONS, FAMILIES, PARENT, SHAPE, TOTAL_BYTES, require
 from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, SPLIT_IMAGE_NAMES
+from scripts.verify_virtual_dyadic_training import TEN_CARD_IMAGE_BYTES, TEN_CARD_SHAPE, TEN_CARD_SPLIT_BYTES
 from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
@@ -38,8 +39,46 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
+def validate_ten_admission(receipt):
+    expected={
+        'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
+        'completed_sweeps':0,'rank_calls':0,'literal_nodes':1105,'requested_sweeps':2,
+        'H':12,'M':1,'D_bits':637,'value_bits':644,'normalizer':29,'d5':120,
+        'output_bytes':TEN_CARD_SPLIT_BYTES,'checkpoint_image_bytes':TEN_CARD_IMAGE_BYTES,
+        'split_checkpoint':True,'ten_card':True,'expected_rank_calls':42,
+        'first_uniform_exponent':420,'max_actor_depth':[6,7],
+        'prefix_counts':[1,46,156,340],'prefix_supported_rows':[[2,2],[56,50],[176,160],[360,340]],
+        'showdown_contractions_per_pass':103_020,'hidden_completion_candidates_per_pass':70_912,
+        'public_walks_per_sweep':1,**dict(zip(SHAPE,TEN_CARD_SHAPE)),
+        'packed_average_limbs':1_295_812,'packed_average_work':88_688_480,
+        'packed_regret_limbs':1_666_910,'packed_regret_work':151_359_736,
+        'scaled_average_build_work':26_064_384,'sealed_menu_count':146,'sealed_token_count':371,
+        'paging_work':130_214_136,'page_image_words':2_962_722,'page_words':4096,
+        'page_cache_pages':16,'page_cache_banks':2,'page_read_word_limit':11_000_000,
+        'page_write_word_limit':8_888_166,'page_request_limit':3_091_726,'page_resident_bytes':894_773,
+        'directory_work':11_442_816,'directory_record_bytes':32,'directory_index_slots':524_288,
+        'rank_cache_planes':17,'rank_lookup_work_per_query':34,
+        'entries':1_551_317,'payload_bits':1_182_148_028,'parent_allowance':761_502_696,
+        'planned_total_work':2_102_190_180,'quantizer_terms':[51_633_888,178_125_664,283_541_864],
+        'component_work':dict(template=42_556_544,chance=447_066_576,history=95_940_344,
+                              state=289_632_424,quantizer=513_301_416,parent=713_692_876),
+        'parent_work':dict(geometry=3_000_000,visit=9_246_272,support=18_519_680,reach=50_851_556,
+                           value_add=49_700_420,terminal_scale=150_196_888,average=116_524_928,
+                           route=299_862_360,output=15_790_772),
+    }
+    require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
+            all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
+            'ten-card admission differs from the independent fixed census')
+    actual=receipt['actual_admission_work']
+    require(type(actual) is int and 42_556_544<=actual<=45_556_544,'ten-card admission geometry work')
+    return receipt
+
+
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-                       directory=False,rank_sets=False,split=False):
+                       directory=False,rank_sets=False,split=False,ten_card=False):
+    if ten_card:
+        return validate_ten_admission(receipt)
+    require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
     paged=paged or directory
@@ -243,13 +282,18 @@ def verify_paging(directory,admission):
     split=admission.get('split_checkpoint',False)
     if split:
         fixed.update(read_calls=407_148,logical_read_words=2_168_226)
+    page_references=407_565 if split else 640_455
+    if admission.get('ten_card',False):
+        fixed.update(read_calls=1_967_462,stage_calls=1_124_264,logical_read_words=10_555_076,
+                     write_words=8_888_166,physical_write_requests=1_124_988)
+        page_references=1_969_550
     counts=('read_words','physical_read_requests','cache_hits','cache_misses')
     require(type(receipt) is dict and set(receipt)==set(fixed)|set(counts)
             and all(type(receipt[key]) is int and receipt[key]==value for key,value in fixed.items())
             and all(type(receipt[key]) is int and receipt[key]>=0 for key in counts), 'paged lifecycle receipt differs')
     require(0<receipt['read_words']<=admission['page_read_word_limit']
             and receipt['physical_read_requests']==receipt['cache_misses']
-            and receipt['cache_hits']+receipt['cache_misses']==(407_565 if split else 640_455),
+            and receipt['cache_hits']+receipt['cache_misses']==page_references,
             'paged physical reads or cache counts differ')
     files={}
     for name in ('committed.bin','staged.bin'):
@@ -261,14 +305,15 @@ def verify_paging(directory,admission):
 
 
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
-        directory=False,rank_sets=False,split=False):
+        directory=False,rank_sets=False,split=False,ten_card=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split)
+    modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
-                                                 '_DIRECTORY','_RANK_SETS','_SPLIT')) if flag),'')
+                                                 '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN')) if flag),'')
     paired=any(modes)
+    split=split or ten_card
     uses_paging=paged or directory or rank_sets or split
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
@@ -312,11 +357,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admitted,_=observed('ADMIT'+suffix)
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
-            rank_sets=rank_sets,split=split)
+            rank_sets=rank_sets,split=split,ten_card=ten_card)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
-                'training_invocations':0,'fixed_proof_gate':gate,'scope':'fixed reduced PROOF9/T2 only',
+                'training_invocations':0,'fixed_proof_gate':gate,
+                'scope':'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
             entered=1
@@ -338,11 +384,14 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--paired')
             if rank_sets or split:
                 command.append('--rank-sets')
+            if ten_card:
+                command.append('--ten-card')
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission)
                 images=[{'name':name,**paging['images'][name]} for name in SPLIT_IMAGE_NAMES]
-                result['checkpoint_inputs']={'stream':{'bytes':SPLIT_BYTES,'sha256':digest},'sweep_images':images}
+                result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
+                                             'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
@@ -417,11 +466,12 @@ def main():
     modes.add_argument('--compact-directory',action='store_true')
     modes.add_argument('--rank-sets',action='store_true')
     modes.add_argument('--split-checkpoint',action='store_true')
+    modes.add_argument('--ten-card',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
-        rank_sets=args.rank_sets,split=args.split_checkpoint),sort_keys=True))
+        rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card),sort_keys=True))
 
 
 if __name__=='__main__':main()

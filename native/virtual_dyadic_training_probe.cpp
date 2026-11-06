@@ -15,7 +15,8 @@ namespace training=openpoker::virtual_dyadic_training;
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
-                  admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split };
+                  admit_directory, train_directory, admit_rank_sets, train_rank_sets, admit_split, train_split,
+                  admit_ten, train_ten };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -50,6 +51,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_RANK_SETS") return Mode::train_rank_sets;
     if (line=="DYADIC_T2_V1 ADMIT_SPLIT") return Mode::admit_split;
     if (line=="DYADIC_T2_V1 TRAIN_SPLIT") return Mode::train_split;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN") return Mode::admit_ten;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN") return Mode::train_ten;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -90,9 +93,10 @@ void admit(const training::Driver& driver) {
             <<training::prepared::PreparedPublicChance::board_set_probe_work*plan.rank_planes;
     if (plan.split_checkpoint)
         std::cout<<",\"split_checkpoint\":true,\"checkpoint_image_bytes\":"<<8*plan.page_limits.image_words;
+    if (plan.ten_card()) std::cout<<",\"ten_card\":true";
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
-        <<",\"value_bits\":"<<training::value_bits<<",\"normalizer\":"<<plan.normalizer
-        <<",\"d5\":"<<training::chance_divisors[3]<<",\"entries\":"<<plan.entries
+        <<",\"value_bits\":"<<plan.game().value_bits<<",\"normalizer\":"<<plan.normalizer
+        <<",\"d5\":"<<plan.game().divisors[3]<<",\"entries\":"<<plan.entries
         <<",\"payload_bits\":"<<plan.payload_bits<<",\"output_bytes\":"<<plan.output_bytes
         <<",\"expected_rank_calls\":"<<plan.expected_rank_calls
         <<",\"first_uniform_exponent\":"<<plan.max_first_exponent
@@ -144,13 +148,14 @@ int main(int argc,char* argv[]) {
         std::ios::sync_with_stdio(false);
         const auto mode=request();
         const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
-            mode==Mode::train_rank_sets || mode==Mode::train_split;
+            mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_split || mode==Mode::train_split) profile=training::StrategyProfile::split_checkpoint;
+        if (mode==Mode::admit_ten || mode==Mode::train_ten) profile=training::StrategyProfile::ten_card;
+        else if (mode==Mode::admit_split || mode==Mode::train_split) profile=training::StrategyProfile::split_checkpoint;
         else if (mode==Mode::admit_rank_sets || mode==Mode::train_rank_sets) profile=training::StrategyProfile::rank_sets;
         else if (mode==Mode::admit_directory || mode==Mode::train_directory) profile=training::StrategyProfile::directory;
         else if (mode==Mode::admit_paged || paged_train) profile=training::StrategyProfile::paged;
@@ -163,7 +168,7 @@ int main(int argc,char* argv[]) {
         if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
-            mode==Mode::admit_split) admit(driver);
+            mode==Mode::admit_split || mode==Mode::admit_ten) admit(driver);
         else {
             const auto paging=driver.train(std::cout,scratch);
             if (paging) save_paging(scratch,*paging);

@@ -1,5 +1,5 @@
 #pragma once
-// Fixed PROOF9, q=1, two simultaneous CFR+ sweeps. No board, world, reach,
+// Fixed PROOF9 and PROOF10, q=1, two simultaneous CFR+ sweeps. No board, world, reach,
 // or payoff table is retained. This front door has no general solver dispatch.
 #include "prepared_public_chance.hpp"
 #include "virtual_dyadic_state.hpp"
@@ -29,13 +29,15 @@ using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
-enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint };
+enum class StrategyProfile {
+    dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card
+};
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
 }
 inline constexpr std::size_t literal_count=1105, template_count=388;
-inline constexpr std::size_t integer_words=11, value_bits=642;
+inline constexpr std::size_t integer_words=11;
 inline constexpr std::uint64_t grid=dyadic_policy::grid_units;
 inline constexpr auto grid_bits=dyadic_policy::grid_bits;
 inline constexpr std::size_t reach_operand_bits=7*grid_bits+1;
@@ -48,8 +50,8 @@ inline constexpr std::size_t entries_cap=2000000, payload_cap=std::size_t{1}<<30
 inline constexpr std::uint64_t chance_setup_bound=65536;
 static_assert(template_cap+chance_cap+history_cap+state_cap+quantizer_cap+parent_cap<=work_cap);
 // At most 16 visible frames plus three hidden reveal levels. Even 64
-// simultaneous 700-bit integer objects per level fit the parent reservation.
-static_assert(19*64*(value_bits+58)<parent_payload);
+// simultaneous 702-bit integer objects per level fit the parent reservation.
+static_assert(19*64*(644+58)<parent_payload);
 
 class Error final : public std::runtime_error {
 public:
@@ -58,6 +60,7 @@ public:
 inline void require(bool condition,const char* message) { if (!condition) throw Error(message); }
 
 inline constexpr std::array<std::uint8_t,9> deck_cards{16,17,24,32,33,35,37,43,48};
+inline constexpr std::array<std::uint8_t,10> ten_cards{0,16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::array<chance::WeightedHand,2>,2> ranges{
     std::array{chance::WeightedHand{{43,48},std::bit_cast<std::uint64_t>(.125)},
                chance::WeightedHand{{32,43},std::bit_cast<std::uint64_t>(.75)}},
@@ -156,23 +159,23 @@ inline Support physical_support(std::uint64_t blocked) {
     }
     return result;
 }
-inline std::size_t candidate_count(std::size_t size) {
-    if (size==0) return deck_cards.size()*(deck_cards.size()-1)*(deck_cards.size()-2)/6;
+inline std::size_t candidate_count(std::size_t deck_size,std::size_t size) {
+    if (size==0) return deck_size*(deck_size-1)*(deck_size-2)/6;
     require(size==3 || size==4,"invalid physical reveal predecessor");
-    return deck_cards.size()-size;
+    return deck_size-size;
 }
-template<class F> void reveal(const Prefix& prefix,F&& visit) {
+template<class F> void reveal(std::span<const std::uint8_t> deck,const Prefix& prefix,F&& visit) {
     if (!prefix.size) {
-        for (std::size_t a=0;a<deck_cards.size();++a)
-            for (std::size_t b=a+1;b<deck_cards.size();++b)
-                for (std::size_t c=b+1;c<deck_cards.size();++c) {
-                    const auto x=deck_cards[a],y=deck_cards[b],z=deck_cards[c];
+        for (std::size_t a=0;a<deck.size();++a)
+            for (std::size_t b=a+1;b<deck.size();++b)
+                for (std::size_t c=b+1;c<deck.size();++c) {
+                    const auto x=deck[a],y=deck[b],z=deck[c];
                     visit(Prefix{{x,y,z,0,0},3,(std::uint64_t{1}<<x)|(std::uint64_t{1}<<y)|(std::uint64_t{1}<<z)});
                 }
         return;
     }
     require(prefix.size==3 || prefix.size==4,"invalid ordered physical reveal");
-    for (const auto card:deck_cards) {
+    for (const auto card:deck) {
         const auto bit=std::uint64_t{1}<<card;
         if (prefix.mask&bit) continue;
         auto next=prefix;
@@ -185,7 +188,6 @@ inline std::size_t street_index(std::size_t size) {
     require(size==0 || size==3 || size==4 || size==5,"invalid pinned street");
     return size?size-2:0;
 }
-inline constexpr std::array<std::uint64_t,4> chance_divisors{1,10,20,20};
 struct Money { std::uint64_t significand=0; int power=0; };
 inline Money stake(const betting::State& node) {
     const auto matched=std::min(node.committed[0],node.committed[1]);
@@ -207,13 +209,32 @@ struct Counts {
     std::uint64_t visits=0,actions=0,reveals=0,candidates=0,folds=0,showdowns=0,rows=0,slots=0;
     friend bool operator==(const Counts&,const Counts&)=default;
 };
-inline constexpr Counts expected_counts{61099,57363,3735,15662,16631,17356,24420,58164};
+struct Fixture {
+    std::span<const std::uint8_t> deck;
+    std::array<std::uint64_t,4> divisors, prefix_counts;
+    Counts shape;
+    std::size_t value_bits, denominator_bits, rank_planes, rank_calls;
+    std::uint64_t showdown_completions, hidden_candidates;
+    std::uint64_t work_limit, chance_limit, history_limit, state_limit, quantizer_limit;
+    std::uint64_t payload_limit, output_limit;
+};
+inline constexpr Fixture proof9{
+    deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
+    642,635,3,7,18180,22168,work_cap,chance_cap,history_cap,state_cap,quantizer_cap,payload_cap,22662720
+};
+inline constexpr Fixture proof10{
+    ten_cards,{1,20,60,120},{1,46,156,340},{288946,270487,18458,49182,77857,88290,119196,281066},
+    644,637,17,42,103020,70912,2150000000,450000000,100000000,300000000,520000000,1200000000,9833076
+};
 struct PrefixStats {
     std::uint64_t count=0;
     std::array<std::uint64_t,2> supported{};
     std::array<std::array<std::uint64_t,3>,3> unblocked{};
 };
 struct Plan {
+    const Fixture* fixture=&proof9;
+    [[nodiscard]] const Fixture& game() const noexcept { return *fixture; }
+    [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
     Counts shape;
     std::array<PrefixStats,4> prefixes{};
     std::array<std::uint64_t,3> quantizer_terms{};
@@ -297,8 +318,9 @@ class Forecast final {
             plan_.expected_rank_calls+=unblocked[0]+unblocked[1];
             return;
         }
-        meter_.charge(Work::geometry,64*candidate_count(prefix.size));
-        reveal(prefix,[&](const Prefix& next) {
+        const auto deck=plan_.game().deck;
+        meter_.charge(Work::geometry,64*candidate_count(deck.size(),prefix.size));
+        reveal(deck,prefix,[&](const Prefix& next) {
             const auto live=physical_support(next.mask);
             if (live[0]) prefixes(next,live);
         });
@@ -348,7 +370,7 @@ class Forecast final {
         }
         return sum;
     }
-    static std::uint64_t quantizer_cost(std::size_t n,std::size_t effective) {
+    static std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) {
         const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
         return 64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
@@ -358,6 +380,7 @@ class Forecast final {
         meter_.charge(Work::geometry,256);
         require(++literals_<=literal_count && id<source_.nodes().size(),"pinned literal census changed");
         const auto& node=source_.nodes()[id];
+        const auto value_bits=plan_.game().value_bits,deck_size=plan_.game().deck.size();
         const auto k=static_cast<std::size_t>(node.state.street);
         const auto population=plan_.prefixes[street_index(k)];
         const auto m=node.edges.size(),np=population.count;
@@ -384,8 +407,8 @@ class Forecast final {
                 plan_.packed_regret_limbs+=slots*words(value_bits-shift);
             }
             plan_.quantizer_terms[0]+=rows*(320+48*m);
-            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E);
-            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA);
+            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
+            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA,value_bits);
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=sweeps*np*m*2*add_cost(value_bits);
@@ -403,7 +426,7 @@ class Forecast final {
             require(m==1 && next==(k?k+1:3),"pinned reveal census");
             const auto child=plan_.prefixes[street_index(next)].count;
             shape.reveals+=child;
-            shape.candidates+=np*candidate_count(k);
+            shape.candidates+=np*candidate_count(deck_size,k);
             work[work_index(Work::value_add)]+=seat_passes*child*2*add_cost(value_bits);
             for (std::size_t target=0;target<2;++target) contractions_+=sweeps*chance_cost(false,next,target,0);
         } else {
@@ -416,7 +439,7 @@ class Forecast final {
                 if (k<5) {
                     constexpr std::array<std::size_t,3> visible{0,3,4};
                     for (auto street=street_index(k);street<visible.size();++street)
-                        plan_.hidden_candidates+=plan_.prefixes[street].count*candidate_count(visible[street]);
+                        plan_.hidden_candidates+=plan_.prefixes[street].count*candidate_count(deck_size,visible[street]);
                     work[work_index(Work::value_add)]+=seat_passes*full*2*add_cost(value_bits);
                 }
             }
@@ -449,11 +472,12 @@ class Forecast final {
         }
         for (std::size_t sb=0;sb<2;++sb) for (std::size_t bb=0;bb<2;++bb)
             if (!(hand_masks[0][sb]&hand_masks[1][bb])) plan_.normalizer+=weights[0][sb]*weights[1][bb];
-        const auto remaining=deck_cards.size()-4;
+        const auto& game=plan_.game();
+        const auto remaining=game.deck.size()-4;
         const auto flop=remaining*(remaining-1)*(remaining-2)/6;
-        require(chance_divisors==std::array<std::uint64_t,4>{1,flop,flop*(remaining-3),flop*(remaining-3)*(remaining-4)},"pinned chance divisor drift");
-        plan_.denominator_base=plan_.normalizer*chance_divisors[3];
-        require(plan_.normalizer==29 && plan_.denominator_base==580,"pinned root prior changed");
+        require(game.divisors==std::array<std::uint64_t,4>{1,flop,flop*(remaining-3),flop*(remaining-3)*(remaining-4)},"pinned chance divisor drift");
+        plan_.denominator_base=plan_.normalizer*game.divisors[3];
+        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.ten_card()?3480u:580u),"pinned root prior changed");
     }
 public:
     Forecast(const betting::Template& source,Meter& meter,Traversal mode,StrategyProfile profile)
@@ -461,8 +485,9 @@ public:
         require(profile==StrategyProfile::dense || mode==Traversal::paired,
             "invalid packed training profile");
         plan_.traversal=mode;
+        if (profile==StrategyProfile::ten_card) plan_.fixture=&proof10;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint;
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card();
         require(!plan_.split_checkpoint || sweeps==2,"split checkpoint requires exactly two retained sweeps");
         plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
@@ -473,6 +498,8 @@ public:
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
+        const auto& game=plan_.game();
+        const auto value_bits=game.value_bits;
         const auto& template_receipt=source_.receipt();
         require(template_receipt.nodes==template_count && template_receipt.edges==410 &&
             template_receipt.logical_occurrences==literal_count && template_receipt.max_depth==15 &&
@@ -481,8 +508,9 @@ public:
         prior_geometry();
         prefixes(Prefix{},physical_support(0));
         const auto& p=plan_.prefixes;
-        require(p[0].count==1 && p[1].count==25 && p[2].count==56 && p[3].count==60,"pinned physical prefix census changed");
-        require(plan_.rank_board_sets?(plan_.rank_planes==3 && plan_.expected_rank_calls==7):
+        for (std::size_t i=0;i<p.size();++i)
+            require(p[i].count==game.prefix_counts[i],"pinned physical prefix census changed");
+        require(plan_.rank_board_sets?(plan_.rank_planes==game.rank_planes && plan_.expected_rank_calls==game.rank_calls):
             (plan_.rank_planes==60 && plan_.expected_rank_calls==140),"pinned rank-plane census changed");
         for (const auto& node:source_.nodes()) if (node.state.phase==betting::Phase::fold || node.state.phase==betting::Phase::showdown) {
             const auto money=stake(node.state);
@@ -498,7 +526,8 @@ public:
         plan_.shift=grid_bits*plan_.H+plan_.M;
         plan_.denominator_bits=width(plan_.denominator_base)+plan_.shift;
         require(plan_.H==12 && plan_.M==1 && payoff_ceiling_==8 && plan_.max_first_exponent==420 &&
-            plan_.denominator_bits==635 && plan_.denominator_bits+width(payoff_ceiling_)+3==value_bits,"pinned fixed denominator bounds changed");
+            plan_.denominator_bits==game.denominator_bits && plan_.denominator_bits+width(payoff_ceiling_)+3==value_bits,
+            "pinned fixed denominator bounds changed");
         if (plan_.packed_regrets) {
             for (std::size_t id=0;id<source_.nodes().size();++id) {
                 meter_.charge(Work::geometry,8);
@@ -515,8 +544,8 @@ public:
             }
         }
         literal(source_.root(),{},{});
-        require(literals_==literal_count && plan_.shape==expected_counts && plan_.max_actor_depth==std::array<std::size_t,2>{6,7} &&
-            plan_.showdown_contractions==18180 && plan_.hidden_candidates==22168,
+        require(literals_==literal_count && plan_.shape==game.shape && plan_.max_actor_depth==std::array<std::size_t,2>{6,7} &&
+            plan_.showdown_contractions==game.showdown_completions && plan_.hidden_candidates==game.hidden_candidates,
             "pinned complete geometry changed");
         for (std::size_t target=0;target<2;++target) contractions_+=sweeps*chance_cost(false,0,target,0);
 
@@ -577,8 +606,9 @@ public:
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
             const auto requests=(plan_.split_checkpoint?11:15)*S;
-            const auto read_words=plan_.split_checkpoint?2250000u:3500000u;
-            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,3*L,requests,2};
+            const auto read_words=plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
+            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,3*L,requests,2,
+                plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy};
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
@@ -598,8 +628,8 @@ public:
             sweeps*(6*S+32*R)+160*literal_count+65536;
         const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
             plan_.state_work+plan_.quantizer_work;
-        require(other_work<=work_cap,"fixed non-parent work exceeds aggregate cap");
-        if (plan_.packed_regrets) plan_.parent_allowance=work_cap-other_work;
+        require(other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
+        if (plan_.packed_regrets) plan_.parent_allowance=game.work_limit-other_work;
         plan_.total_work=other_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
@@ -618,10 +648,10 @@ public:
             chance_entries+32*literal_count+1+parent_entries;
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
         plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint);
-        require(plan_.template_work<=template_cap && plan_.chance_work<=chance_cap && plan_.history_work<=history_cap &&
-            plan_.state_work<=state_cap && plan_.quantizer_work<=quantizer_cap && sum_work(w)<=plan_.parent_allowance &&
-            plan_.total_work<=work_cap && plan_.entries<=entries_cap && plan_.payload_bits<=payload_cap &&
-            value_bits+58<=65536 && plan_.output_bytes<=22662720,"pinned complete training forecast exceeds original caps");
+        require(plan_.template_work<=template_cap && plan_.chance_work<=game.chance_limit && plan_.history_work<=game.history_limit &&
+            plan_.state_work<=game.state_limit && plan_.quantizer_work<=game.quantizer_limit && sum_work(w)<=plan_.parent_allowance &&
+            plan_.total_work<=game.work_limit && plan_.entries<=entries_cap && plan_.payload_bits<=game.payload_limit &&
+            value_bits+58<=65536 && plan_.output_bytes<=game.output_limit,"pinned complete training forecast exceeds fixture caps");
         meter_.seal(w,plan_.parent_allowance);
         return plan_;
     }
@@ -649,7 +679,7 @@ template<bool Paired> class Walk final {
     static const Reach& opposite(std::size_t player,const Reach& sb,const Reach& bb) { return player?sb:bb; }
 
     void add_values(Values& total,const Values& child) {
-        meter_.charge(Work::value_add,2*add_cost(value_bits));
+        meter_.charge(Work::value_add,2*add_cost(plan_.game().value_bits));
         for (std::size_t holding=0;holding<2;++holding) total[holding]+=child[holding];
     }
     void add_lanes(LaneValues& total,const LaneValues& child) {
@@ -658,7 +688,7 @@ template<bool Paired> class Walk final {
     prepared::Contraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
         auto result=chance_.contraction(target,prefix.view(),kind,reach.numerators,reach.exponent);
         require(result.numerators.size()==2 && result.reach_exponent==reach.exponent &&
-            result.prefix_divisor==chance_divisors[street_index(prefix.size)],"prepared contraction identity changed");
+            result.prefix_divisor==plan_.game().divisors[street_index(prefix.size)],"prepared contraction identity changed");
         return result;
     }
     Marginals marginal(const Prefix& prefix,Support support) {
@@ -668,7 +698,7 @@ template<bool Paired> class Walk final {
             const auto target=seat(lane);
             auto result=contraction(target,prefix,chance::TerminalKind::fold,Reach{});
             auto& mass=masses[lane];
-            mass.scale=chance_divisors[3]/result.prefix_divisor;
+            mass.scale=plan_.game().divisors[3]/result.prefix_divisor;
             for (std::size_t holding=0;holding<2;++holding) {
                 const auto& value=result.numerators[holding];
                 require(value>=0 && (value>0)==bool(support[target]&(1U<<holding)),"prior own marginal support changed");
@@ -692,15 +722,18 @@ template<bool Paired> class Walk final {
             add_lanes(sum,ranked(prefix,sb,bb));
             return;
         }
-        const auto candidates=candidate_count(prefix.size);
+        const auto deck=plan_.game().deck;
+        const auto candidates=candidate_count(deck.size(),prefix.size);
         meter_.charge(Work::support,64*candidates);
         hidden_candidates_+=candidates;
         require(hidden_candidates_<=plan_.hidden_candidates,"hidden runout candidate census changed");
-        reveal(prefix,[&](const Prefix& next) {
+        reveal(deck,prefix,[&](const Prefix& next) {
             if (physical_support(next.mask)[0]) hidden_completions(next,sb,bb,sum);
         });
     }
     LaneValues terminal(const betting::State& node,const Prefix& prefix,const Reach& sb,const Reach& bb) {
+        const auto& game=plan_.game();
+        const auto value_bits=game.value_bits;
         meter_.charge(Work::terminal_scale,lanes*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits)));
         const bool showdown=node.phase==betting::Phase::showdown;
         const auto money=stake(node);
@@ -713,14 +746,14 @@ template<bool Paired> class Walk final {
             shifts[lane]=static_cast<unsigned>(shift);
         }
         LaneValues result{};
-        std::uint64_t divisor=chance_divisors[3];
+        std::uint64_t divisor=game.divisors[3];
         if (showdown) {
             if (prefix.size==5) result=ranked(prefix,sb,bb);
             // An all-in has no later information sets. Integrate completions
             // as raw full-board numerators on one scale, with no History reveal.
             else hidden_completions(prefix,sb,bb,result);
         } else {
-            divisor=chance_divisors[street_index(prefix.size)];
+            divisor=game.divisors[street_index(prefix.size)];
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
                 auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
@@ -730,7 +763,7 @@ template<bool Paired> class Walk final {
         for (std::size_t lane=0;lane<lanes;++lane)
             for (auto& value:result[lane]) {
                 value*=money.significand;
-                value*=chance_divisors[3]/divisor;
+                value*=game.divisors[3]/divisor;
                 value<<=shifts[lane];
                 if (!showdown && node.winner!=seat(lane)) value=-value;
             }
@@ -766,6 +799,7 @@ template<bool Paired> class Walk final {
         const auto scale=plan_.shift-own.exponent;
         require(scale>=grid_bits && prior.scale,"average outside fixed game scale");
         for (std::size_t action=0;action<out.size();++action) {
+            const auto value_bits=plan_.game().value_bits;
             meter_.charge(Work::average,16+3*mul_cost(value_bits,53)+copy_cost(value_bits));
             // Equal sweep weights. Keep the raw sum of own reach times the
             // frozen policy, including zeros, on the fixed game denominator.
@@ -801,11 +835,12 @@ template<bool Paired> class Walk final {
         require(node.state.street==prefix.size,"dense visible street changed");
         if (node.state.phase==betting::Phase::reveal) {
             LaneValues result{};
-            const auto candidates=candidate_count(prefix.size);
+            const auto deck=plan_.game().deck;
+            const auto candidates=candidate_count(deck.size(),prefix.size);
             meter_.charge(Work::support,64*candidates);
             shape_.candidates+=candidates;
             require(shape_.candidates<=plan_.shape.candidates && node.edges.size()==1,"dense reveal candidate census changed");
-            reveal(prefix,[&](const Prefix& next) {
+            reveal(deck,prefix,[&](const Prefix& next) {
                 const auto live=physical_support(next.mask);
                 if (!live[0]) return; // prior physical support only
                 require(++shape_.reveals<=plan_.shape.reveals,"dense positive reveal count changed");
@@ -928,9 +963,12 @@ public:
 class Binary final {
     std::ostream& out_;
     std::uint64_t capacity_,written_=0;
+    std::size_t value_bits_;
 public:
-    Binary(std::ostream& out,std::uint64_t capacity):out_(out),capacity_(capacity) {
-        static_assert(std::endian::native==std::endian::little,"fixed PROOF9 binary producer requires little endian");
+    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits)
+        :out_(out),capacity_(capacity),value_bits_(value_bits) {
+        static_assert(std::endian::native==std::endian::little,"fixed binary producer requires little endian");
+        require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits,"unsupported fixed output width");
     }
     void bytes(const void* data,std::size_t size) {
         require(size<=capacity_-written_,"fixed training output exceeds byte admission");
@@ -946,8 +984,8 @@ public:
         constexpr auto limb_bits=std::numeric_limits<Limb>::digits;
         static_assert((limb_bits==32 || limb_bits==64) && limb_bits==8*sizeof(Limb),"unsupported fixed proof limb layout");
         constexpr auto wire_bytes=integer_words*sizeof(std::uint64_t);
-        constexpr auto value_limbs=(value_bits+limb_bits-1)/limb_bits;
-        constexpr auto top_mask=1ULL<<(value_bits%limb_bits);
+        const auto value_limbs=(value_bits_+limb_bits-1)/limb_bits;
+        const auto top_mask=1ULL<<(value_bits_%limb_bits);
         const auto used=static_cast<std::size_t>(raw.size());
         require(used && used<=value_limbs && (used<value_limbs || raw.limbs()[value_limbs-1]<top_mask),
             "fixed output integer width exceeded");
@@ -999,10 +1037,10 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text(p.split_checkpoint?"OPLDSP01":"OPLDYA01");
+        out.text(p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
         for (const auto word:std::array<std::uint64_t,header_words>{1,grid_bits,integer_words,p.shape.rows,
-            p.shape.slots,literal_count,sweeps,p.H,p.M,p.denominator_bits,value_bits,p.output_bytes,2,2,
-            p.normalizer,chance_divisors[3]}) out.u64(word);
+            p.shape.slots,literal_count,sweeps,p.H,p.M,p.denominator_bits,p.game().value_bits,p.output_bytes,2,2,
+            p.normalizer,p.game().divisors[3]}) out.u64(word);
         out.wide(denominator);
         skeleton(out);
         for (std::size_t i=0;i<state.row_count();++i) {
@@ -1057,7 +1095,8 @@ class Driver final {
             state.completed_sweeps==sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
-        out.text(p.split_checkpoint?"OPLDSP02":p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
+        out.text(p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
+            p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
         for (const auto word:p.parent) out.u64(word);
@@ -1085,8 +1124,10 @@ public:
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
+        const auto& game=p.game();
+        const auto value_bits=game.value_bits;
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
-        const auto deck=chance::DeckDefinition::reduced(deck_cards);
+        const auto deck=chance::DeckDefinition::reduced(game.deck);
         chance::Limits chance_limits;
         chance_limits.max_hands_per_side=2;
         chance_limits.max_integer_bits=value_bits+58;
@@ -1129,7 +1170,7 @@ public:
         }
 
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
-        Binary out(stream,p.output_bytes);
+        Binary out(stream,p.output_bytes,value_bits);
         prelude(out,state,denominator);
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<sweeps;++sweep) {

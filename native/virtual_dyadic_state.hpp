@@ -38,6 +38,8 @@ struct Limits {
     std::size_t integer_bits = 65536, entries = 2000000;
     std::size_t integer_payload_bits = std::size_t{1} << 30;
 };
+inline constexpr std::uint64_t proof10_work_cap = 810000000;
+inline constexpr std::size_t proof10_payload_cap = 1200000000;
 struct Forecast {
     std::size_t rows = 0, slots = 0, sweeps = 0, max_history_depth = 0;
     std::size_t value_bits = 0;
@@ -160,22 +162,33 @@ class State final {
                 exact_binary64::ErrorCode::input_bit_limit); }
         catch (const exact_binary64::ConversionError&) { fail(ErrorCode::integer_width,"state source integer width"); }
     }
-    static Forecast admit(Forecast f, Limits limits, std::array<std::size_t,2> hands) {
-        if (!limits.work || limits.work>500000000 || !limits.integer_bits || limits.integer_bits>65536 ||
+    static bool proof10(const std::optional<PagedStrategy>& paged) {
+        return paged && paged->limits.profile==virtual_dyadic_paged_image::Profile::proof10;
+    }
+    static Forecast admit(Forecast f, Limits limits, std::array<std::size_t,2> hands,
+                          const std::optional<PagedStrategy>& paged) {
+        const bool expanded=proof10(paged);
+        if (!limits.work || limits.work>(expanded?proof10_work_cap:500000000) || !limits.integer_bits ||
+            limits.integer_bits>(expanded?dyadic_policy::proof10_integer_bits:65536) ||
             !limits.entries || limits.entries>2000000 || !limits.integer_payload_bits ||
-            limits.integer_payload_bits>(std::size_t{1}<<30))
+            limits.integer_payload_bits>(expanded?proof10_payload_cap:(std::size_t{1}<<30)))
             fail(ErrorCode::invalid_limits,"invalid reduce-only state limits");
         if (!hands[0] || !hands[1] || hands[0]>1326 || hands[1]>1326 || !f.rows || !f.slots ||
             f.slots<f.rows || f.slots>times(20,f.rows) || !f.sweeps || !f.max_history_depth ||
             f.max_history_depth>64 || !f.value_bits || f.value_bits>limits.integer_bits ||
             plus(f.value_bits,58)>limits.integer_bits || !f.own_work || !f.quantizer_work ||
-            plus(f.own_work,f.quantizer_work)>limits.work)
+            plus(f.own_work,f.quantizer_work)>limits.work ||
+            (expanded && (hands!=std::array<std::size_t,2>{2,2} ||
+                          f.quantizer_work>dyadic_policy::proof10_work_cap)))
             fail(ErrorCode::invalid_forecast,"invalid state dimensions or work partition");
         return f;
     }
-    static dyadic_policy::Limits policy_limits(const Forecast& f, const Limits& limits) {
+    static dyadic_policy::Limits policy_limits(const Forecast& f, const Limits& limits,
+                                              const std::optional<PagedStrategy>& paged) {
         // Maximum menu20: 32 retained + (12*20+64) scratch logical entries.
-        return {f.quantizer_work,limits.integer_bits,336,limits.integer_payload_bits};
+        return {f.quantizer_work,limits.integer_bits,336,
+            std::min(limits.integer_payload_bits,std::size_t{1}<<30),
+            proof10(paged)?dyadic_policy::Profile::proof10:dyadic_policy::Profile::legacy};
     }
     static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
         if (!capacity.keys && !capacity.token_slots) {
@@ -354,7 +367,12 @@ public:
         (void)admit_catalog(f,catalog);
         if (catalog.sealed && (!packed.limb_count || !packed.regret_limbs))
             fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
-        if (paged && (!catalog.sealed || f.value_bits>642 || paged->page_words<words(f.value_bits) ||
+        const bool expanded=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof10;
+        if (expanded && (!compact_rows || f.rows!=119196 || f.slots!=281066 || f.sweeps!=2 ||
+            f.max_history_depth!=15 || f.value_bits!=644 ||
+            packed.limb_count!=1295812 || packed.regret_limbs!=1666910))
+            fail(ErrorCode::invalid_forecast,"invalid ten-card strategy census");
+        if (paged && (!catalog.sealed || (!expanded && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
             paged->image_words!=plus(packed.limb_count,packed.regret_limbs)))
             fail(ErrorCode::invalid_forecast,"invalid paged state profile, width or image word census");
         if (compact_rows && (!paged || catalog.keys>std::size_t{UINT16_MAX}+1 || f.slots>UINT32_MAX ||
@@ -429,10 +447,10 @@ public:
     State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
           Forecast forecast,Limits limits,ActionCatalogCapacity catalog,PackedAverageCapacity packed,
           std::optional<PagedStrategy> paged={})
-        : history_(&history),hand_counts_(hands),forecast_(admit(forecast,limits,hands)),
+        : history_(&history),hand_counts_(hands),forecast_(admit(forecast,limits,hands,paged)),
           limits_(limits),catalog_(catalog),packed_(packed),paged_(std::move(paged)),
           storage_(admit_storage(forecast_,limits_,catalog_,packed_,paged_)),
-          quantizer_(policy_limits(forecast_,limits_)) {
+          quantizer_(policy_limits(forecast_,limits_,paged_)) {
         if (denominator<=0) fail(ErrorCode::invalid_scale,"state fixed game denominator must be positive");
         input_width(denominator);
         receipt_.reserved_entries=storage_.entries;

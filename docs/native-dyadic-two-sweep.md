@@ -183,3 +183,18 @@ times were 2.660 seconds for the rank-set run and 2.681 seconds for
 the split run. The data supports the output and pager reductions at
 this scope.
 [Split checkpoint evidence](../benchmarks/results/native-dyadic-split-checkpoint-accepted-v1/manifest.json)
+
+## Ten-card proof fixture
+
+The separate `--ten-card` profile adds card 0 to the reduced deck and
+keeps the same private ranges and betting template. `ADMIT_TEN` and
+`TRAIN_TEN` select the two-sweep split format with `OPLDTP01` and
+`OPLDTP02` framing. The denominator uses 120 ordered runouts per
+compatible private pair. The full visible history still records each
+ordered reveal and each holding.
+
+The profile admits 644-bit values, a 9,833,076-byte stream, and two
+23,701,776-byte images. The rank-free forecast reserves 2,102,190,180
+work units inside a dedicated 2,150,000,000-unit allowance. State,
+quantizer and pager enforce their own ten-card bounds. The earlier
+nine-card modes retain their existing limits.

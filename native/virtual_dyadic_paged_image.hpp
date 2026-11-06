@@ -17,12 +17,17 @@
 namespace openpoker::virtual_dyadic_paged_image {
 
 inline constexpr std::size_t n9_image_words = 606730;
+inline constexpr std::size_t n10_image_words = 2962722;
 inline constexpr std::size_t default_page_words = 4096;
 inline constexpr std::size_t default_cache_pages = 16;
 inline constexpr std::size_t maximum_resident_bytes = 1024 * 1024;
 inline constexpr std::uint64_t maximum_read_words = 16777216;
 inline constexpr std::uint64_t maximum_write_words = 3ULL * n9_image_words;
 inline constexpr std::uint64_t maximum_logical_requests = 1000000;
+inline constexpr std::uint64_t n10_read_words = 11000000;
+inline constexpr std::uint64_t n10_write_words = 3ULL * n10_image_words;
+inline constexpr std::uint64_t n10_logical_requests = 3091726;
+enum class Profile { legacy, proof10 };
 
 struct Limits {
     std::size_t image_words = n9_image_words;
@@ -32,6 +37,7 @@ struct Limits {
     std::uint64_t write_words = maximum_write_words;
     std::uint64_t requests = maximum_logical_requests;
     std::size_t cache_banks = 1; // appended; cache_pages is the total across banks
+    Profile profile = Profile::legacy;
 };
 
 struct Receipt {
@@ -181,12 +187,18 @@ private:
         return a + b;
     }
     static void validate(const Limits& l) {
+        const bool proof10=l.profile==Profile::proof10;
+        if (proof10 && (l.image_words!=n10_image_words || l.page_words!=default_page_words ||
+            l.cache_pages!=default_cache_pages || l.cache_banks!=2))
+            throw std::invalid_argument("invalid ten-card image geometry");
         if (std::endian::native!=std::endian::little || !l.image_words || !l.page_words || !l.cache_pages ||
             !l.cache_banks || l.cache_banks > 2 ||
-            l.cache_pages % l.cache_banks != 0 || l.image_words > n9_image_words ||
-            l.page_words > 8192 || l.cache_pages > 16 ||
-            l.read_words > maximum_read_words || l.write_words > maximum_write_words ||
-            l.write_words < l.image_words || l.requests > maximum_logical_requests)
+            l.cache_pages % l.cache_banks != 0 ||
+            (l.profile!=Profile::legacy && !proof10) ||
+            (!proof10 && l.image_words > n9_image_words) || l.page_words > 8192 || l.cache_pages > 16 ||
+            l.read_words > (proof10?n10_read_words:maximum_read_words) ||
+            l.write_words > (proof10?n10_write_words:maximum_write_words) ||
+            l.write_words < l.image_words || l.requests > (proof10?n10_logical_requests:maximum_logical_requests))
             throw std::invalid_argument("invalid image limits");
         if (l.image_words > static_cast<std::size_t>(std::numeric_limits<std::streamoff>::max()) / 8)
             throw std::overflow_error("image byte size exceeds stream range");
