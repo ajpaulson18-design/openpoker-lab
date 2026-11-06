@@ -631,9 +631,55 @@ void packed_dual_controls(h::History& history) {
         require_poisoned(packed);
     }
 }
+void paged_image_controls(const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const pages::Limits limits{9,4,2,100,27,30,2};
+    const auto check_rejection=[]<class Error>(auto&& action) {
+        try { action(); } catch (const Error&) { return; }
+        throw std::runtime_error("invalid image operation was accepted");
+    };
+    require(std::filesystem::create_directory(scratch),"could not reserve paging control directory");
+    const auto target=scratch/"transaction";
+    pages::Image image(target,limits);
+    check_rejection.operator()<std::runtime_error>([&] {pages::Image duplicate(target,limits);});
+    const std::array<std::uint64_t,4> first{11,12,13,14},second{21,22,23,24};
+    const std::array<std::uint64_t,1> tail{9};
+    std::array<std::uint64_t,4> values{};
+    image.begin_sweep();
+    image.stage(0,first);
+    check_rejection.operator()<std::logic_error>([&] {image.commit_sweep();});
+    check_rejection.operator()<std::invalid_argument>([&] {image.stage(3,first);});
+    image.read(3,values);
+    require(values==std::array<std::uint64_t,4>{},"partial image exposed staged values");
+    image.stage(4,first);
+    image.stage(8,tail);
+    image.commit_sweep();
+    image.read(3,values,1);
+    require(values==std::array<std::uint64_t,4>{14,11,12,13},"first commit or boundary read failed");
+    image.begin_sweep();
+    image.stage(4,second);
+    image.read(3,values,1);
+    require(values==std::array<std::uint64_t,4>{14,11,12,13},"second stage altered committed values");
+    image.stage(0,second);
+    image.stage(8,tail);
+    image.commit_sweep();
+    image.read(3,values,1);
+    require(values==std::array<std::uint64_t,4>{24,21,22,23},"second commit retained a stale cache page");
+    const auto& receipt=image.receipt();
+    require(receipt.completed_sweeps==2 && receipt.stage_calls==6 && receipt.write_words==27,
+        "transaction counters disagree");
+
+    pages::Image capped(scratch/"read-limit",{8,4,1,8,8,3,1});
+    std::array<std::uint64_t,2> boundary{99,99};
+    capped.read(4,values);
+    check_rejection.operator()<std::length_error>([&] {capped.read(3,boundary);});
+    require(boundary==std::array<std::uint64_t,2>{99,99} && capped.receipt().read_words==4,
+        "colliding boundary pages exceeded read admission");
+    std::cout<<"PAGED_IMAGE exact_transaction\n";
+}
 } // namespace
 
-int main() {
+int main(int argc,char** argv) {
     try {
         const b::Template source(configuration());
         h::History history(source,c::DeckDefinition::reduced(deck));
@@ -644,6 +690,7 @@ int main() {
         sealed_catalog_controls(history,source);
         packed_average_controls(history);
         packed_dual_controls(history);
+        if (argc==2) paged_image_controls(argv[1]);
         std::cout<<"END\n";
         return 0;
     } catch (const std::exception& error) {

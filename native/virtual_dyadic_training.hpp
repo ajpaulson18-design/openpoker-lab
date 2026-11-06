@@ -7,7 +7,9 @@
 #include <array>
 #include <bit>
 #include <cstdint>
+#include <filesystem>
 #include <limits>
+#include <optional>
 #include <ostream>
 #include <span>
 #include <stdexcept>
@@ -21,12 +23,13 @@ namespace chance=full_deck_public_chance;
 namespace prepared=prepared_public_chance;
 namespace history=virtual_dyadic_history;
 namespace state=virtual_dyadic_state;
+namespace paging=virtual_dyadic_paged_image;
 using chance::Integer;
 using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
 inline constexpr std::size_t sweeps=2, targets=2, seat_passes=sweeps*targets;
 enum class Traversal { by_seat, paired };
-enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed };
+enum class StrategyProfile { dense, packed_averages, compact, scaled, sealed, paged };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
     return mode==Traversal::paired?12:8;
@@ -220,6 +223,7 @@ struct Plan {
     bool packed_regrets=false;
     bool scaled_averages=false;
     bool sealed_menus=false;
+    bool paged_strategy=false;
     std::size_t public_walks=seat_passes;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
     std::array<std::size_t,2> max_actor_depth{};
@@ -232,6 +236,8 @@ struct Plan {
     std::uint64_t packed_regret_limbs=0,packed_regret_work=0;
     std::uint64_t scaled_average_build_work=0;
     std::uint64_t sealed_menu_count=0,sealed_token_count=0;
+    paging::Limits page_limits{};
+    std::uint64_t paging_work=0;
     std::uint64_t parent_allowance=parent_cap;
 };
 inline std::size_t average_shift(std::size_t denominator_shift,std::size_t past_actions) {
@@ -441,9 +447,10 @@ public:
             "invalid packed training profile");
         plan_.traversal=mode;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.packed_regrets=profile==StrategyProfile::compact || profile==StrategyProfile::scaled || profile==StrategyProfile::sealed;
-        plan_.scaled_averages=profile==StrategyProfile::scaled || profile==StrategyProfile::sealed;
-        plan_.sealed_menus=profile==StrategyProfile::sealed;
+        plan_.paged_strategy=profile==StrategyProfile::paged;
+        plan_.sealed_menus=profile==StrategyProfile::sealed || plan_.paged_strategy;
+        plan_.scaled_averages=profile==StrategyProfile::scaled || plan_.sealed_menus;
+        plan_.packed_regrets=profile==StrategyProfile::compact || plan_.scaled_averages;
         plan_.public_walks=mode==Traversal::paired?sweeps:seat_passes;
     }
     Plan make() {
@@ -542,6 +549,16 @@ public:
             plan_.packed_regret_work=32*R+44*plan_.packed_regret_limbs+(16*words(value_bits)+88)*S;
             w[work_index(Work::route)]+=plan_.packed_regret_work;
         }
+        if (plan_.paged_strategy) {
+            const auto A=plan_.packed_average_limbs,G=plan_.packed_regret_limbs,L=A+G;
+            const auto requests=15*S;
+            plan_.page_limits={static_cast<std::size_t>(L),4096,16,3500000,3*L,requests,2};
+            // Arithmetic bookkeeping for bounded requests, scratch copies,
+            // write-once bits, initialization chunks and bitmap resets.
+            // Physical file traffic has its own independent word ceilings.
+            plan_.paging_work=16*requests+2*(5*A+6*G)+16*L+16*((L+4095)/4096)+8*((L+63)/64);
+            w[work_index(Work::route)]+=plan_.paging_work;
+        }
         // Fixed-width limb emission, two policy-image checks, literal BFS
         // records, and the bounded header/footer. No per-row history rendering.
         w[work_index(Work::output)]=4*S*(4+2*integer_words)+3*S*2+24*R+
@@ -558,7 +575,8 @@ public:
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),sweeps,15,value_bits,
                  plan_.state_work,plan_.quantizer_work},
                 {template_receipt.nodes,template_receipt.edges,plan_.sealed_menus},{static_cast<std::size_t>(plan_.packed_average_limbs),
-                 static_cast<std::size_t>(plan_.packed_regret_limbs)});
+                 static_cast<std::size_t>(plan_.packed_regret_limbs)},
+                plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1012,10 +1030,11 @@ public:
     [[nodiscard]] const Plan& plan() const noexcept { return plan_; }
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
-    void train(std::ostream& stream) {
+    std::optional<paging::Receipt> train(std::ostream& stream,const std::filesystem::path& page_scratch={}) {
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
+        require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
         const auto deck=chance::DeckDefinition::reduced(deck_cards);
         chance::Limits chance_limits;
         chance_limits.max_hands_per_side=2;
@@ -1036,13 +1055,15 @@ public:
         const Integer denominator=Integer(p.denominator_base)<<p.shift;
         if (p.packed_averages) meter_.charge(Work::average,p.packed_average_work);
         if (p.packed_regrets) meter_.charge(Work::route,p.packed_regret_work);
+        if (p.paged_strategy) meter_.charge(Work::route,p.paging_work);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
             {p.state_work+p.quantizer_work,value_bits+58,static_cast<std::size_t>(p.state_entries),
              static_cast<std::size_t>(p.state_payload)},
             {source_.nodes().size(),source_.receipt().edges,p.sealed_menus},{static_cast<std::size_t>(p.packed_average_limbs),
-             static_cast<std::size_t>(p.packed_regret_limbs)});
+             static_cast<std::size_t>(p.packed_regret_limbs)},
+            p.paged_strategy?std::optional<state::PagedStrategy>{state::PagedStrategy{page_scratch,p.page_limits}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1091,6 +1112,7 @@ public:
         out.bytes(image.uniform_fallback.get(),image.rows);
         footer(out,chance.receipt(),history.receipt(),state.receipt(),feedback);
         out.finish();
+        return state.paged_receipt();
     }
 };
 } // namespace openpoker::virtual_dyadic_training

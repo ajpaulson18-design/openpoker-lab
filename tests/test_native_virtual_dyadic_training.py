@@ -89,19 +89,19 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
 
     def test_admission_covers_all_in_hidden_payoffs_without_training(self):
         plans=[]
-        for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED','ADMIT_COMPACT','ADMIT_SCALED','ADMIT_SEALED'):
+        for mode in ('ADMIT','ADMIT_PAIRED','ADMIT_PACKED','ADMIT_COMPACT','ADMIT_SCALED','ADMIT_SEALED','ADMIT_PAGED'):
             with self.subTest(mode=mode):
                 directory,process=self.observe(mode.lower(),lambda p:run_bounded_dyadic_probe([str(self.exe)],mode,p))
                 self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
                 self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
                 plan=validate_admission(exact_json((directory/'stdout.bin').read_bytes()),
                     paired=mode=='ADMIT_PAIRED',packed=mode=='ADMIT_PACKED',compact=mode=='ADMIT_COMPACT',
-                    scaled=mode=='ADMIT_SCALED',sealed=mode=='ADMIT_SEALED')
+                    scaled=mode=='ADMIT_SCALED',sealed=mode=='ADMIT_SEALED',paged=mode=='ADMIT_PAGED')
                 self.assertEqual(plan['training_invocations'],0)
                 self.assertEqual(plan['rank_calls'],0)
                 self.assertGreater(plan['showdown_contractions_per_pass'],plan['showdowns'])
                 plans.append(plan)
-        legacy,paired,packed,compact,scaled,sealed=plans
+        legacy,paired,packed,compact,scaled,sealed,paged=plans
         self.assertLess(paired['planned_total_work'],legacy['planned_total_work'])
         self.assertEqual(packed['planned_total_work']-paired['planned_total_work'],packed['packed_average_work'])
         self.assertEqual(packed['parent_work']['average']-paired['parent_work']['average'],packed['packed_average_work'])
@@ -126,10 +126,15 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(sealed['entries'],scaled['entries'])
         with self.assertRaisesRegex(ValueError,'fixed admission census'):
             validate_admission(dict(sealed,sealed_token_count=370),sealed=True)
+        self.assertEqual(paged['planned_total_work']-sealed['planned_total_work'],30_508_644)
+        self.assertEqual(paged['parent_work']['route']-sealed['parent_work']['route'],30_508_644)
+        self.assertEqual(paged['actual_admission_work'],sealed['actual_admission_work'])
+        self.assertEqual(paged['entries'],841_925)
 
     def test_foreign_unframed_and_multirecord_requests_fail_closed(self):
         for index,raw in enumerate((b'DYADIC_T2_V1 TRAIN 3\n',b'DYADIC_T2_V1 ADMIT\r\n',
-                b'DYADIC_T2_V1 ADMIT',b'DYADIC_T2_V1 ADMIT\nDYADIC_T2_V1 TRAIN\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 ADMIT',b'DYADIC_T2_V1 ADMIT\nDYADIC_T2_V1 TRAIN\n',
+                b'DYADIC_T2_V1 TRAIN_PAGED\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))

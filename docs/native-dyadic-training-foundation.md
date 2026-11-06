@@ -101,6 +101,16 @@ index is cleared after the complete row, slot, and limb checks and before the
 strategy arrays are allocated. Training uses the authenticated dense row order.
 Earlier profiles retain their original catalog and lookup behavior.
 
+The opt-in paged strategy profile uses the same compact offsets and fixed
+row order. It stores two little-endian images in a fresh run directory. A
+bounded read cache keeps separate banks for committed regrets and averages.
+Each update writes directly to the staging image, and a write-once bitmap
+tracks complete coverage. A successful flush and complete coverage are
+required before the process switches its committed image and invalidates
+the cache. The image roles live in the training process. The files do not
+provide a crash-recovery checkpoint. Admission caps file size, read words,
+write words, and logical operations for the frozen two-sweep fixture.
+
 Strict MSVC builds and independent checks passed normally and optimized:
 67,548 prepared contractions and cache/owner guards; 5,525 literal path records
 over five ordered board variants and 14 rejection guards; and 24 synthetic

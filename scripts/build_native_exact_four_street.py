@@ -72,6 +72,7 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
     "virtual-dyadic-training": ("native-virtual-dyadic-training-probe", (
         "native/virtual_dyadic_training_probe.cpp", "native/virtual_dyadic_training.hpp",
         "native/prepared_public_chance.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_dyadic_state.hpp",
+        "native/virtual_dyadic_paged_image.hpp",
         "native/dyadic_policy.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
@@ -80,6 +81,7 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
         "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
+        "native/virtual_dyadic_paged_image.hpp",
         "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (

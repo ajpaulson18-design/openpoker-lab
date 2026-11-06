@@ -47,7 +47,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
             target = Path(temporary.name) / 'observed'
         output = Path(target)
         before = sha(exe)
-        observed = run_bounded_child([str(exe)], b'', output, stdout_limit=2_100_000)
+        observed = run_bounded_child([str(exe),str(output/'page-controls')], b'', output, stdout_limit=2_100_000)
         after = sha(exe)
         (output/'native-identity.json').write_text(json.dumps({
             'before_sha256': before, 'after_sha256': after,
@@ -69,7 +69,8 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         holdings = (0, 1, 0, 0)
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
-        separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ', 'SCALED_AVERAGE ')
+        separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
+                             'SCALED_AVERAGE ', 'PAGED_IMAGE ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
@@ -136,6 +137,10 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
 
     def test_guard_inventory_and_closed_partial_updates(self):
         self.assertEqual([line.split()[1] for line in self.lines if line.startswith('REJECT ')], list(GUARDS))
+
+    def test_paged_images_preserve_the_committed_sweep_until_complete(self):
+        self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],
+                         ['PAGED_IMAGE exact_transaction'])
 
     def test_packed_average_matches_dense_feedback(self):
         self.assertEqual([line for line in self.lines if line.startswith('PACKED_AVERAGE ')],

@@ -37,7 +37,8 @@ def exact_json(data):
     return json.loads(data,object_pairs_hook=pairs)
 
 
-def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False):
+def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False):
+    sealed=sealed or paged
     scaled=scaled or sealed
     compact=compact or scaled
     fixed={'protocol':'DYADIC_T2_V1','status':'ADMITTED','training_invocations':0,'target_passes':0,
@@ -53,7 +54,7 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
     if packed or compact:
         fixed['packed_average_limbs']=258_694
         fixed['packed_average_work']=18_004_728 if scaled else 23_123_160
-        fixed['entries']=1_980_339 if compact else 1_351_755
+        fixed['entries']=841_925 if paged else (1_980_339 if compact else 1_351_755)
     if compact:
         fixed['packed_regret_limbs']=348_036
         fixed['packed_regret_work']=31_450_320
@@ -62,6 +63,10 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
     if sealed:
         fixed['sealed_menu_count']=146
         fixed['sealed_token_count']=371
+    if paged:
+        fixed.update(paging_work=30_508_644,page_image_words=606_730,page_words=4096,page_cache_pages=16,
+            page_cache_banks=2,page_read_word_limit=3_500_000,page_write_word_limit=1_820_190,
+            page_request_limit=872_460,page_resident_bytes=600_274)
     require(type(receipt) is dict and all(type(receipt.get(k)) is type(v) and receipt[k]==v for k,v in fixed.items()),
             'fixed admission census or zero-call receipt mismatch')
     for name,keys in [('component_work',FAMILIES),('parent_work',PARENT)]:
@@ -85,6 +90,11 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
     if not sealed:
         require(not {'sealed_menu_count','sealed_token_count'} & receipt.keys(),
                 'sealed menu receipt for earlier storage profile')
+    if paged:
+        require(receipt['paging_work']<=receipt['parent_work']['route'],'paged bookkeeping work missing')
+    else:
+        require(not any(key=='paging_work' or key.startswith('page_') for key in receipt),
+                'paged receipt for earlier storage profile')
     if compact:
         allowance=receipt.get('parent_allowance')
         non_parent=sum(value for name,value in component.items() if name!='parent')
@@ -198,12 +208,34 @@ def check_verifier_bootstrap(path,source):
     return len(compiled)
 
 
-def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False):
+def verify_paging(directory,admission):
+    path=unlinked_path(directory/'paging.json')
+    require(path.is_file() and path.stat().st_size<=65536,'paged training receipt path or size')
+    receipt=exact_json(path.read_bytes())
+    fixed={'read_calls':639_804,'stage_calls':232_656,'logical_read_words':3_381_686,
+           'write_words':1_820_190,'physical_write_requests':232_805,'completed_sweeps':2}
+    counts=('read_words','physical_read_requests','cache_hits','cache_misses')
+    require(type(receipt) is dict and set(receipt)==set(fixed)|set(counts)
+            and all(type(receipt[key]) is int and receipt[key]==value for key,value in fixed.items())
+            and all(type(receipt[key]) is int and receipt[key]>=0 for key in counts), 'paged lifecycle receipt differs')
+    require(0<receipt['read_words']<=admission['page_read_word_limit']
+            and receipt['physical_read_requests']==receipt['cache_misses']
+            and receipt['cache_hits']+receipt['cache_misses']==640_455, 'paged physical reads or cache counts differ')
+    files={}
+    for name in ('committed.bin','staged.bin'):
+        image=unlinked_path(directory/name)
+        require(image.is_file() and image.stat().st_size==8*admission['page_image_words'], 'paged file extent differs')
+        files[name]={'bytes':image.stat().st_size,'sha256':sha(image)}
+    require(set(item.name for item in directory.iterdir())==set(files)|{'paging.json'},'unexpected paging artifact')
+    return {'counts':receipt,'images':files}
+
+
+def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
-    modes=(paired,packed,compact,scaled,sealed)
+    modes=(paired,packed,compact,scaled,sealed,paged)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
-    suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED')) if flag),'')
+    suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED')) if flag),'')
     paired=any(modes)
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
@@ -232,7 +264,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             require(sha(build_path)==build_hash,'fixed build manifest changed before probe')
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             directory=output/mode.lower()
-            receipt=run_bounded_dyadic_probe([str(executable)],mode,directory)
+            command=[str(executable)]
+            if mode=='TRAIN_PAGED':
+                scratch=output/'page-images'
+                require(str(scratch).isascii() and not scratch.exists(),'fresh ASCII paged image directory required')
+                command.append(str(scratch))
+            receipt=run_bounded_dyadic_probe(command,mode,directory)
             save(directory/'binary-identity.json',{'before_sha256':manifest['executable_sha256'],
                 'after_sha256':sha(executable),'build_manifest_sha256':sha(build_path)})
             require_exit(receipt,directory)
@@ -241,7 +278,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             return directory,receipt
         admitted,_=observed('ADMIT'+suffix)
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
-            packed=packed,compact=compact,scaled=scaled,sealed=sealed)
+            packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -279,13 +316,15 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     'saved replay result differs from admitted producer')
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
+            if paged:
+                result['paging']=verify_paging(output/'page-images',admission)
             if paired:
                 original=sum(baseline['saved_replay']['work_actual'].values())
                 actual=sum(numeric['work_actual'].values())
-                require(numeric['public_walks_per_sweep']==1 and (compact or scaled or sealed or actual<original),
+                require(numeric['public_walks_per_sweep']==1 and (compact or scaled or sealed or paged or actual<original),
                         'paired traversal or mode-specific work comparison differs')
                 comparison.update(baseline_work=original,paired_work=actual)
-                if compact or scaled or sealed:
+                if compact or scaled or sealed or paged:
                     comparison['modeled_work_delta_from_two_pass']=actual-original
                 else:
                     comparison['modeled_work_saved']=original-actual
@@ -325,10 +364,11 @@ def main():
     modes.add_argument('--compact-strategy',action='store_true')
     modes.add_argument('--scaled-averages',action='store_true')
     modes.add_argument('--sealed-menus',action='store_true')
+    modes.add_argument('--paged-strategy',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
-        sealed=args.sealed_menus),sort_keys=True))
+        sealed=args.sealed_menus,paged=args.paged_strategy),sort_keys=True))
 
 
 if __name__=='__main__':main()

@@ -3,12 +3,14 @@
 // physical support and the common fixed game denominator before calling this owner.
 #include "dyadic_policy.hpp"
 #include "virtual_dyadic_history.hpp"
+#include "virtual_dyadic_paged_image.hpp"
 #include <algorithm>
 #include <array>
 #include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <filesystem>
 #include <limits>
 #include <map>
 #include <memory>
@@ -53,6 +55,10 @@ struct PackedAverageCapacity {
     std::size_t limb_count = 0;
     std::size_t regret_limbs = 0;
 };
+struct PagedStrategy {
+    std::filesystem::path scratch;
+    virtual_dyadic_paged_image::Limits limits;
+};
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
     std::size_t token_slots, catalog_keys, stored_tokens, stored_menus;
@@ -91,12 +97,15 @@ class State final {
     struct PackedRow { std::size_t limb_offset = 0, shift = 0; };
     struct PackedRegretRow { std::size_t limb_offset = 0, shift = 0; };
     enum class Phase { building, closed, sweeping };
+    enum class PackedField { average, regret };
+    static constexpr std::size_t page_codec_words=11;
     const History* history_;
     std::array<std::size_t,2> hand_counts_;
     Forecast forecast_;
     Limits limits_;
     const ActionCatalogCapacity catalog_;
     const PackedAverageCapacity packed_;
+    const std::optional<PagedStrategy> paged_;
     const StorageForecast storage_;
     dyadic_policy::Quantizer quantizer_;
     Receipt receipt_{};
@@ -112,6 +121,7 @@ class State final {
     std::unique_ptr<PackedRegretRow[]> packed_regret_rows_;
     std::unique_ptr<std::uint64_t[]> packed_averages_, staged_packed_averages_;
     std::unique_ptr<std::uint64_t[]> packed_regrets_, staged_packed_regrets_;
+    std::unique_ptr<virtual_dyadic_paged_image::Image> paged_image_;
     std::size_t packed_words_registered_ = 0, packed_regret_words_registered_ = 0;
     std::unique_ptr<std::uint64_t[]> units_;
     std::unique_ptr<unsigned char[]> seen_;
@@ -178,8 +188,11 @@ class State final {
     [[nodiscard]] bool packed() const noexcept { return packed_.limb_count!=0; }
     [[nodiscard]] bool packed_regrets() const noexcept { return packed_.regret_limbs!=0; }
     static StorageForecast admit_storage(const Forecast& f,const Limits& limits,
-                                         ActionCatalogCapacity catalog,PackedAverageCapacity packed) {
-        const auto footprint=storage_forecast(f,catalog,packed);
+                                         ActionCatalogCapacity catalog,PackedAverageCapacity packed,
+                                         const std::optional<PagedStrategy>& paged) {
+        if (paged && paged->scratch.empty())
+            fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
+        const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -187,64 +200,83 @@ class State final {
     [[nodiscard]] std::size_t packed_stride(std::size_t shift) const noexcept {
         return static_cast<std::size_t>(words(forecast_.value_bits-shift));
     }
-    [[nodiscard]] Integer load_compact(const std::uint64_t* image,std::size_t offset,
+    [[nodiscard]] std::size_t page_base(PackedField field) const noexcept {
+        return field==PackedField::regret?packed_.limb_count:0;
+    }
+    [[nodiscard]] Integer load_compact(PackedField field,std::size_t offset,
                                        std::size_t shift,std::size_t action) const {
         const auto stride=packed_stride(shift);
-        const auto* first=image+offset+action*stride;
-        Integer result;
+        const auto index=offset+action*stride;
+        std::array<std::uint64_t,page_codec_words> scratch;
+        const std::uint64_t* first=scratch.data();
+        if (paged_image_) {
+            const auto bank=field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u;
+            paged_image_->read(page_base(field)+index,std::span(scratch).first(stride),bank);
+        } else {
+            const auto* image=field==PackedField::regret?packed_regrets_.get():packed_averages_.get();
+            first=image+index;
+        }
         // A native little-endian uint64_t pointer selects Boost's bounded copy
         // and normalize path. Packed mode admits this layout before allocation.
+        Integer result;
         boost::multiprecision::import_bits(result,first,first+stride,64,false);
         return result;
     }
     [[nodiscard]] Integer load_average(const PackedRow& row,std::size_t action) const {
-        Integer result=load_compact(packed_averages_.get(),row.limb_offset,row.shift,action);
+        Integer result=load_compact(PackedField::average,row.limb_offset,row.shift,action);
         result<<=row.shift;
         return result;
     }
     void stage_compact(const PackedRow& row,std::size_t action,const Integer& increment) {
         if (increment!=0 && boost::multiprecision::lsb(increment)<row.shift)
             fail(ErrorCode::arithmetic,"state average increment is outside certified packed scale");
-        Integer value=load_compact(packed_averages_.get(),row.limb_offset,row.shift,action);
+        Integer value=load_compact(PackedField::average,row.limb_offset,row.shift,action);
         value+=increment>>row.shift;
         if (width(value)>forecast_.value_bits-row.shift)
             fail(ErrorCode::integer_width,"state retained average exceeds packed admission");
-        store_compact(staged_packed_averages_.get(),row.limb_offset,row.shift,action,value,
+        store_compact(PackedField::average,row.limb_offset,row.shift,action,value,
                       "state packed average encoding width changed");
     }
     void stage_compact_scaled(const PackedRow& row,std::size_t action,const Integer& increment) {
-        Integer value=load_compact(packed_averages_.get(),row.limb_offset,row.shift,action);
+        Integer value=load_compact(PackedField::average,row.limb_offset,row.shift,action);
         value+=increment;
         if (width(value)>forecast_.value_bits-row.shift)
             fail(ErrorCode::integer_width,"state retained average exceeds packed admission");
-        store_compact(staged_packed_averages_.get(),row.limb_offset,row.shift,action,value,
+        store_compact(PackedField::average,row.limb_offset,row.shift,action,value,
                       "state packed average encoding width changed");
     }
-    void stage_compact_image(const std::uint64_t* committed,std::uint64_t* staged,std::size_t offset,
+    void stage_compact_image(PackedField field,std::size_t offset,
                              std::size_t shift,std::size_t action,const Integer& increment,const char* label) {
         std::optional<Integer> negative_magnitude;
         const Integer* magnitude=&increment;
         if (increment<0) { negative_magnitude.emplace(-increment);magnitude=&*negative_magnitude; }
         if (*magnitude!=0 && boost::multiprecision::lsb(*magnitude)<shift)
             fail(ErrorCode::arithmetic,"state packed delta is outside certified scale");
-        Integer value=load_compact(committed,offset,shift,action);
+        Integer value=load_compact(field,offset,shift,action);
         const Integer quotient=*magnitude>>shift;
         if (increment<0) value-=quotient; else value+=quotient;
         if (value<0) value=0;
         if (width(value)>forecast_.value_bits-shift)
             fail(ErrorCode::integer_width,label);
-        store_compact(staged,offset,shift,action,value,label);
+        store_compact(field,offset,shift,action,value,label);
     }
-    void store_compact(std::uint64_t* staged,std::size_t offset,std::size_t shift,
+    void store_compact(PackedField field,std::size_t offset,std::size_t shift,
                        std::size_t action,const Integer& value,const char* label) {
         const auto stride=packed_stride(shift);
-        auto* first=staged+offset+action*stride;
+        const auto index=offset+action*stride;
+        std::array<std::uint64_t,page_codec_words> scratch;
+        auto* first=scratch.data();
+        if (!paged_image_) {
+            auto* staged=field==PackedField::regret?staged_packed_regrets_.get():staged_packed_averages_.get();
+            first=staged+index;
+        }
         const auto& raw=value.backend();
         const auto used=raw.size()*sizeof(*raw.limbs());
         const auto bytes=stride*sizeof(*first);
         if (raw.sign() || used>bytes) fail(ErrorCode::arithmetic,label);
         std::memcpy(first,raw.limbs(),used);
         std::memset(reinterpret_cast<unsigned char*>(first)+used,0,bytes-used);
+        if (paged_image_) paged_image_->stage(page_base(field)+index,std::span(scratch).first(stride));
     }
     void healthy() const { if (failed_) fail(ErrorCode::failed_owner,"state owner already failed"); }
     void charge(std::uint64_t work) {
@@ -273,13 +305,17 @@ class State final {
     }
 public:
     static StorageForecast storage_forecast(const Forecast& f,ActionCatalogCapacity catalog={},
-                                             PackedAverageCapacity packed={}) {
+                                             PackedAverageCapacity packed={},
+                                             std::optional<virtual_dyadic_paged_image::Limits> paged={}) {
         (void)admit_catalog(f,catalog);
         if (catalog.sealed && (!packed.limb_count || !packed.regret_limbs))
             fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
+        if (paged && (!catalog.sealed || f.value_bits>642 || paged->page_words<words(f.value_bits) ||
+            paged->image_words!=plus(packed.limb_count,packed.regret_limbs)))
+            fail(ErrorCode::invalid_forecast,"invalid paged state profile, width or image word census");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
-        // Preserve the original integer/text reservation in both modes.
+        // Preserve the original integer/text reservation across all modes.
         auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
             plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
         if (catalog.sealed) {
@@ -293,26 +329,37 @@ public:
                 packed.limb_count<f.slots || packed.limb_count>times(f.slots,words(f.value_bits)))
                 fail(ErrorCode::invalid_forecast,"invalid packed average dimensions or platform");
             // Replace the dense committed/staged/export average arrays and,
-            // when used, the original per-row menu reservation. Count each
-            // retained packed word as an entry, plus metadata and one decoder.
+            // when used, the original per-row menu reservation. Keep metadata
+            // and one decoder regardless of the backing used for packed words.
             entries-=times(3,f.slots);
             if (catalog.keys) {
                 entries-=times(3,f.slots);
                 entries=plus(entries,plus(times(3,catalog.token_slots),times(2,catalog.keys)));
             }
-            entries=plus(entries,plus(times(2,packed.limb_count),plus(times(2,f.rows),32)));
-            auto packed_bits=plus(times(128,packed.limb_count),plus(times(8*sizeof(PackedRow),f.rows),
-                times(std::min<std::size_t>(20,f.slots)+4,width_with_scratch)));
+            entries=plus(entries,plus(times(2,f.rows),32));
+            auto packed_bits=plus(times(8*sizeof(PackedRow),f.rows),
+                times(std::min<std::size_t>(20,f.slots)+4,width_with_scratch));
             if (packed.regret_limbs) {
                 if (packed.regret_limbs<f.slots || packed.regret_limbs>times(f.slots,words(f.value_bits)))
                     fail(ErrorCode::invalid_forecast,"invalid packed regret dimensions");
                 entries-=times(2,f.slots);
-                entries=plus(entries,plus(times(2,packed.regret_limbs),times(2,f.rows)));
-                packed_bits=plus(packed_bits,plus(times(128,packed.regret_limbs),
-                    times(8*sizeof(PackedRegretRow),f.rows)));
+                entries=plus(entries,times(2,f.rows));
+                packed_bits=plus(packed_bits,times(8*sizeof(PackedRegretRow),f.rows));
             }
-            if (packed_bits>times(packed.regret_limbs?5:3,times(f.slots,width_with_scratch)))
-                fail(ErrorCode::capacity,"packed average exceeds original integer payload reservation");
+            const auto packed_credit=times(packed.regret_limbs?5:3,times(f.slots,width_with_scratch));
+            if (paged) {
+                const auto resident_bytes=plus(virtual_dyadic_paged_image::Image::resident_bytes(*paged),
+                                               times(sizeof(std::uint64_t),page_codec_words));
+                entries=plus(entries,plus(resident_bytes,7)/8);
+                packed_bits=plus(packed_bits,times(8,resident_bytes));
+                if (packed_bits>packed_credit) payload=plus(payload,packed_bits-packed_credit);
+            } else {
+                const auto image_words=plus(packed.limb_count,packed.regret_limbs);
+                entries=plus(entries,times(2,image_words));
+                packed_bits=plus(packed_bits,times(128,image_words));
+                if (packed_bits>packed_credit)
+                    fail(ErrorCode::capacity,"packed average exceeds original integer payload reservation");
+            }
         } else if (packed.regret_limbs) fail(ErrorCode::invalid_forecast,"packed regrets require packed averages");
         if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
             fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
@@ -327,9 +374,11 @@ public:
           Forecast forecast,Limits limits,ActionCatalogCapacity catalog)
         : State(history,hands,denominator,forecast,limits,catalog,{}) {}
     State(const History& history,std::array<std::size_t,2> hands,const Integer& denominator,
-          Forecast forecast,Limits limits,ActionCatalogCapacity catalog,PackedAverageCapacity packed)
+          Forecast forecast,Limits limits,ActionCatalogCapacity catalog,PackedAverageCapacity packed,
+          std::optional<PagedStrategy> paged={})
         : history_(&history),hand_counts_(hands),forecast_(admit(forecast,limits,hands)),
-          limits_(limits),catalog_(catalog),packed_(packed),storage_(admit_storage(forecast_,limits_,catalog_,packed_)),
+          limits_(limits),catalog_(catalog),packed_(packed),paged_(std::move(paged)),
+          storage_(admit_storage(forecast_,limits_,catalog_,packed_,paged_)),
           quantizer_(policy_limits(forecast_,limits_)) {
         if (denominator<=0) fail(ErrorCode::invalid_scale,"state fixed game denominator must be positive");
         input_width(denominator);
@@ -360,6 +409,10 @@ public:
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }
+    [[nodiscard]] std::optional<virtual_dyadic_paged_image::Receipt> paged_receipt() const {
+        if (!paged_image_) return std::nullopt;
+        return paged_image_->receipt();
+    }
     [[nodiscard]] std::span<const Row> rows() const noexcept { return {rows_.get(),receipt_.rows}; }
     [[nodiscard]] ActionStorage action_storage() const noexcept {
         return {token_capacity(),catalog_.keys,catalog_.keys?stored_tokens_:receipt_.slots,
@@ -388,7 +441,7 @@ public:
         index_bound(row);
         if (action>=rows_[row].actions.size()) fail(ErrorCode::invalid_row,"state regret action index");
         if (!packed_regrets()) return regrets_[rows_[row].offset+action];
-        Integer result=load_compact(packed_regrets_.get(),packed_regret_rows_[row].limb_offset,
+        Integer result=load_compact(PackedField::regret,packed_regret_rows_[row].limb_offset,
                                     packed_regret_rows_[row].shift,action);
         result<<=packed_regret_rows_[row].shift;
         return result;
@@ -604,19 +657,21 @@ public:
                 regrets_=std::make_unique<Integer[]>(forecast_.slots);
                 staged_regrets_=std::make_unique<Integer[]>(forecast_.slots);
             }
-            if (packed()) {
+            if (packed() && !paged_) {
                 packed_averages_=std::make_unique<std::uint64_t[]>(packed_.limb_count);
                 staged_packed_averages_=std::make_unique<std::uint64_t[]>(packed_.limb_count);
                 if (packed_regrets()) {
                     packed_regrets_=std::make_unique<std::uint64_t[]>(packed_.regret_limbs);
                     staged_packed_regrets_=std::make_unique<std::uint64_t[]>(packed_.regret_limbs);
                 }
-            } else {
+            } else if (!packed()) {
                 averages_=std::make_unique<Integer[]>(forecast_.slots);
                 staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
             }
             units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
+            if (paged_)
+                paged_image_=std::make_unique<virtual_dyadic_paged_image::Image>(paged_->scratch,paged_->limits);
             phase_=Phase::closed;
         } catch (...) { failed_=true;throw; }
     }
@@ -628,6 +683,7 @@ public:
             charge(times(4,forecast_.rows));
             std::fill_n(seen_.get(),forecast_.rows,static_cast<unsigned char>(0));
             receipt_.staged_rows=0;
+            if (paged_image_) paged_image_->begin_sweep();
             std::optional<std::array<Integer,20>> decoded;
             if (packed_regrets()) decoded.emplace();
             for (const auto& row:rows()) {
@@ -637,7 +693,7 @@ public:
                     const auto row_index=static_cast<std::size_t>(&row-rows_.get());
                     const auto& packed_row=packed_regret_rows_[row_index];
                     for (std::size_t a=0;a<row.actions.size();++a)
-                        (*decoded)[a]=load_compact(packed_regrets_.get(),packed_row.limb_offset,packed_row.shift,a);
+                        (*decoded)[a]=load_compact(PackedField::regret,packed_row.limb_offset,packed_row.shift,a);
                     values={decoded->data(),row.actions.size()};
                 } else values={regrets_.get()+row.offset,row.actions.size()};
                 const auto policy=quantizer_.regret_policy(values);
@@ -691,7 +747,7 @@ private:
                 const Integer delta=action_values[a]-mixed;
                 if (packed_regrets()) {
                     const auto& packed_row=packed_regret_rows_[row];
-                    stage_compact_image(packed_regrets_.get(),staged_packed_regrets_.get(),
+                    stage_compact_image(PackedField::regret,
                         packed_row.limb_offset,packed_row.shift,a,delta,
                         "state retained regret exceeds packed admission");
                 } else {
@@ -729,10 +785,14 @@ public:
             charge(times(4,receipt_.rows));
             for (std::size_t row=0;row<receipt_.rows;++row)
                 if (!seen_[row]) fail(ErrorCode::phase,"state missing staged row");
-            if (packed_regrets()) packed_regrets_.swap(staged_packed_regrets_);
-            else regrets_.swap(staged_regrets_);
-            if (packed()) packed_averages_.swap(staged_packed_averages_);
-            else averages_.swap(staged_averages_);
+            if (paged_image_) {
+                paged_image_->commit_sweep();
+            } else {
+                if (packed_regrets()) packed_regrets_.swap(staged_packed_regrets_);
+                else regrets_.swap(staged_regrets_);
+                if (packed()) packed_averages_.swap(staged_packed_averages_);
+                else averages_.swap(staged_averages_);
+            }
             ++receipt_.completed_sweeps;phase_=Phase::closed;
         } catch (...) { failed_=true;throw; }
     }
@@ -760,7 +820,7 @@ public:
                 if (decoded) {
                     for (std::size_t a=0;a<row.actions.size();++a)
                         (*decoded)[a]=packed_regrets()
-                            ?load_compact(packed_averages_.get(),packed_rows_[i].limb_offset,packed_rows_[i].shift,a)
+                            ?load_compact(PackedField::average,packed_rows_[i].limb_offset,packed_rows_[i].shift,a)
                             :load_average(packed_rows_[i],a);
                     masses=decoded->data();
                 } else masses=averages_.get()+row.offset;

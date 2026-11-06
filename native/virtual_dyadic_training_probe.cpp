@@ -1,6 +1,8 @@
 #include "virtual_dyadic_training.hpp"
 #include <array>
 #include <cstdio>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string_view>
 
@@ -12,7 +14,7 @@
 namespace training=openpoker::virtual_dyadic_training;
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
-                  admit_scaled, train_scaled, admit_sealed, train_sealed };
+                  admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -39,6 +41,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_SCALED") return Mode::train_scaled;
     if (line=="DYADIC_T2_V1 ADMIT_SEALED") return Mode::admit_sealed;
     if (line=="DYADIC_T2_V1 TRAIN_SEALED") return Mode::train_sealed;
+    if (line=="DYADIC_T2_V1 ADMIT_PAGED") return Mode::admit_paged;
+    if (line=="DYADIC_T2_V1 TRAIN_PAGED") return Mode::train_paged;
     throw training::Error("unsupported fixed dyadic request");
 }
 
@@ -61,6 +65,14 @@ void admit(const training::Driver& driver) {
     if (plan.scaled_averages) std::cout<<",\"scaled_average_build_work\":"<<plan.scaled_average_build_work;
     if (plan.sealed_menus) std::cout<<",\"sealed_menu_count\":"<<plan.sealed_menu_count
         <<",\"sealed_token_count\":"<<plan.sealed_token_count;
+    if (plan.paged_strategy) {
+        const auto& pages=plan.page_limits;
+        std::cout<<",\"paging_work\":"<<plan.paging_work<<",\"page_image_words\":"<<pages.image_words
+            <<",\"page_words\":"<<pages.page_words<<",\"page_cache_pages\":"<<pages.cache_pages
+            <<",\"page_cache_banks\":"<<pages.cache_banks<<",\"page_read_word_limit\":"<<pages.read_words
+            <<",\"page_write_word_limit\":"<<pages.write_words<<",\"page_request_limit\":"<<pages.requests
+            <<",\"page_resident_bytes\":"<<training::paging::Image::resident_bytes(pages);
+    }
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<training::value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<training::chance_divisors[3]<<",\"entries\":"<<plan.entries
@@ -92,9 +104,21 @@ void admit(const training::Driver& driver) {
     std::cout.flush();
     training::require(bool(std::cout),"dyadic admission output failed");
 }
+
+void save_paging(const std::filesystem::path& scratch,const training::paging::Receipt& receipt) {
+    std::ofstream stream(scratch/"paging.json",std::ios::binary);
+    training::require(bool(stream),"paged receipt open failed");
+    stream<<"{\"read_words\":"<<receipt.read_words<<",\"logical_read_words\":"<<receipt.logical_read_words
+        <<",\"write_words\":"<<receipt.write_words<<",\"read_calls\":"<<receipt.read_calls
+        <<",\"stage_calls\":"<<receipt.stage_calls<<",\"physical_read_requests\":"<<receipt.physical_read_requests
+        <<",\"physical_write_requests\":"<<receipt.physical_write_requests<<",\"cache_hits\":"<<receipt.cache_hits
+        <<",\"cache_misses\":"<<receipt.cache_misses<<",\"completed_sweeps\":"<<receipt.completed_sweeps<<"}\n";
+    stream.close();
+    training::require(bool(stream),"paged receipt write failed");
+}
 } // namespace
 
-int main() {
+int main(int argc,char* argv[]) {
     try {
 #ifdef _WIN32
         training::require(_setmode(_fileno(stdin),_O_BINARY)!=-1 && _setmode(_fileno(stdout),_O_BINARY)!=-1,
@@ -102,16 +126,26 @@ int main() {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
+        const bool paged_train=mode==Mode::train_paged;
+        training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
+        const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
+        if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
+            "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_sealed || mode==Mode::train_sealed) profile=training::StrategyProfile::sealed;
+        if (mode==Mode::admit_paged || paged_train) profile=training::StrategyProfile::paged;
+        else if (mode==Mode::admit_sealed || mode==Mode::train_sealed) profile=training::StrategyProfile::sealed;
         else if (mode==Mode::admit_scaled || mode==Mode::train_scaled) profile=training::StrategyProfile::scaled;
         else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
         else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
         const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
         training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
         if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
-            mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed) admit(driver);
-        else driver.train(std::cout);
+            mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
+            mode==Mode::admit_paged) admit(driver);
+        else {
+            const auto paging=driver.train(std::cout,scratch);
+            if (paging) save_paging(scratch,*paging);
+        }
         return 0;
     } catch (const std::exception& error) {
         std::cerr<<"DYADIC_T2_V1 ERROR "<<error.what()<<'\n';
