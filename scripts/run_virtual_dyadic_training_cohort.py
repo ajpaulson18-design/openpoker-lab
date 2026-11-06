@@ -348,11 +348,12 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
     require(baseline['status']==status and baseline['source_head']==head and
             baseline['training_invocations']==1 and operator['actual_exit_observed'] and
             operator['returncode']==0 and operator['raw_source_stable'],'accepted ten-card baseline required')
+    replay=baseline['saved_only_replay'] if virtual_zero else baseline['saved_replay']
     old_counts=baseline['paging']['counts'] if virtual_zero else baseline['comparison']['paging']
     new_counts=paging['counts']
     invariant=('read_calls','logical_read_words','stage_calls','completed_sweeps') if virtual_zero else (
         key for key in new_counts if key!='physical_write_requests')
-    require(images==baseline['saved_replay']['checkpoint_images'] and
+    require(images==replay['checkpoint_images'] and
             all(old_counts[key]==new_counts[key] for key in invariant),
             'buffered checkpoint or paging parity differs')
     archive_name=f'{directory}/evidence.zip'
@@ -381,7 +382,7 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
                     'ten-card baseline stream footer differs')
             original_hash.update(footer)
     digest=original_hash.hexdigest()
-    require(digest==baseline['saved_replay']['saved_output_sha256'],'ten-card baseline stream SHA-256 differs')
+    require(digest==replay['saved_output_sha256'],'ten-card baseline stream SHA-256 differs')
     if virtual_zero:
         return {'baseline_source_head':head,'baseline_stream_sha256':digest,
                 'numeric_bytes':numeric_bytes,'numeric_sha256':numeric_hash.hexdigest(),

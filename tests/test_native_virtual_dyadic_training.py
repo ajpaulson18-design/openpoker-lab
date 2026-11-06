@@ -3,13 +3,15 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
+from zipfile import ZipFile
 
-from scripts.run_virtual_dyadic_training_cohort import exact_json, validate_admission
+from scripts.run_virtual_dyadic_training_cohort import compare_buffered_ten, exact_json, validate_admission
 from scripts.run_virtual_frozen_source_only import source_only_command
 from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, replay
 from tests.test_native_exact_reach import authenticate, sha
@@ -22,6 +24,24 @@ ENV='OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE'
 
 
 class DyadicTrainingHarnessControls(unittest.TestCase):
+    def test_virtual_zero_comparison_consumes_the_published_buffered_schema(self):
+        baseline=ROOT/'benchmarks/results/native-dyadic-buffered-ten-card-accepted-v1'
+        manifest,archive=(baseline/name for name in ('manifest.json','evidence.zip'))
+        binding={'files':{path.relative_to(ROOT).as_posix():{'raw_sha256':sha(path)}
+                          for path in (manifest,archive)}}
+        accepted=exact_json(manifest.read_bytes())
+        images=accepted['checkpoint_inputs']['sweep_images']
+        paging=dict(accepted['paging']['counts'],physical_read_requests=1498,physical_write_requests=18836)
+        with TemporaryDirectory(dir=ROOT.parent) as temporary:
+            stream=Path(temporary)/'stdout.bin'
+            with ZipFile(archive) as bundle, bundle.open('cohort/train_ten_buffered/stdout.bin') as saved:
+                with stream.open('xb') as copied:
+                    shutil.copyfileobj(saved,copied)
+            comparison=compare_buffered_ten(stream,binding,{'counts':paging},images,virtual_zero=True)
+        self.assertEqual(comparison['exact_checkpoint_images'],images)
+        self.assertEqual(comparison['numeric_sha256'],accepted['buffered_comparison']['numeric_sha256'])
+        self.assertEqual(comparison['baseline_stream_sha256'],accepted['checkpoint_inputs']['stream']['sha256'])
+
     def test_ten_card_reference_preserves_ordered_physical_support(self):
         fixture=Fixture(ten_card=True)
         self.assertEqual(len(fixture.worlds),360)
