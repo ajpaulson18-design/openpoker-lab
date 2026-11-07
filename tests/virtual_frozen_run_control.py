@@ -97,9 +97,15 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_ORDERED_STATE','TRAIN_TEN_ORDERED_STATE',
                                              'ADMIT_TEN_ROW_COVERAGE','TRAIN_TEN_ROW_COVERAGE',
                                              'ADMIT_TEN_SHARED_POLICY','TRAIN_TEN_SHARED_POLICY',
-                                             'ADMIT_TEN_PAGED_DIRECTORY','TRAIN_TEN_PAGED_DIRECTORY'):
+                                             'ADMIT_TEN_PAGED_DIRECTORY','TRAIN_TEN_PAGED_DIRECTORY',
+                                             'ADMIT_TEN_SWEEP_STREAM','TRAIN_TEN_SWEEP_STREAM'):
         raise ValueError('invalid fixed dyadic probe transport mode')
     request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
+    if mode=='TRAIN_TEN_SWEEP_STREAM':
+        from tests.virtual_dyadic_sweep_capture import SweepCapture, WIRE_BYTES
+        return _run_streamed_child(command,request,directory,stdout_limit=WIRE_BYTES,
+            stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=WIRE_BYTES,
+            measure_peak_memory=True,sweep_capture=SweepCapture())
     training=mode.startswith('TRAIN')
     ceiling=_DYADIC_T2_STDOUT if training and mode!='TRAIN_SPLIT' else 2135476
     limit={'TRAIN_SPLIT':2_114_028,'TRAIN_TEN':9_833_076,'TRAIN_TEN_BUFFERED':9_833_076,
@@ -117,12 +123,18 @@ def run_bounded_dyadic_probe(command,mode,directory):
 
 
 def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,
-                        stdout_ceiling=2135476,measure_peak_memory=False):
+                        stdout_ceiling=2135476,measure_peak_memory=False,sweep_capture=None):
     if (type(command) is not list or not 1<=len(command)<=64 or
             any(type(a) is not str or not a or len(a)>4096 for a in command)):
         raise ValueError('bounded child command')
     if type(request) is not bytes or len(request)>request_limit:raise ValueError('bounded child request')
-    if (stdout_ceiling not in (2135476,_DYADIC_T2_STDOUT) or
+    ceilings=(2135476,_DYADIC_T2_STDOUT)
+    if sweep_capture is not None:
+        from tests.virtual_dyadic_sweep_capture import SweepCapture, WIRE_BYTES
+        if type(sweep_capture) is not SweepCapture or stdout_limit!=WIRE_BYTES:
+            raise ValueError('invalid sweep checkpoint capture bound')
+        ceilings=(WIRE_BYTES,)
+    if (stdout_ceiling not in ceilings or
             type(stdout_limit) is not int or not 0<stdout_limit<=stdout_ceiling or
             type(stderr_limit) is not int or not 0<stderr_limit<=65536 or
             type(timeout) not in (int,float) or not 0<timeout<=300):
@@ -133,23 +145,39 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
     records=[{'observed_bytes':0,'saved_bytes':0,'sha256':hashlib.sha256()},
              {'observed_bytes':0,'saved_bytes':0,'sha256':hashlib.sha256()}]
     failures=[];process=None;started=time.perf_counter();returncode=None;timed_out=False
+    captured=None
     def stop():
         if process is not None and process.poll() is None:
             try:process.kill()
             except ProcessLookupError:pass
     def drain(pipe,output,index,limit):
+        nonlocal captured
+        capture=sweep_capture if index==0 else None
         try:
             while True:
                 chunk=pipe.read(65536)
                 if not chunk:break
-                record=records[index];record['observed_bytes']+=len(chunk)
-                kept=chunk[:max(0,limit-record['saved_bytes'])]
-                output.write(kept);record['sha256'].update(kept);record['saved_bytes']+=len(kept)
+                record=records[index]
+                kept=chunk[:max(0,limit-record['observed_bytes'])]
+                record['observed_bytes']+=len(chunk)
+                if capture is None:
+                    output.write(kept);record['sha256'].update(kept);record['saved_bytes']+=len(kept)
+                else:
+                    capture.feed(kept,output)
                 if len(kept)!=len(chunk):
                     failures.append('stdout_limit' if index==0 else 'stderr_limit');stop();break
+            if capture is not None:
+                captured=capture.finish()
         except BaseException as error:
-            failures.append(type(error).__name__);stop()
+            failures.append(type(error).__name__)
+            if capture is not None:
+                records[index]['capture_error']=str(error)[:256]
+            stop()
         finally:
+            if capture is not None:
+                records[index]['saved_bytes']=capture.retained
+                records[index]['sha256']=capture.numeric_hash
+                records[index]['wire_sha256']=capture.wire_hash.hexdigest()
             pipe.close();output.close()
     with (directory/'request.bin').open('rb') as input_file:
         try:
@@ -173,6 +201,8 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
              'actual_exit_observed':process is not None and process.poll() is not None,
              'duration_seconds':time.perf_counter()-started,'streams':records,'failures':failures,
              'request_sha256':hashlib.sha256(request).hexdigest(),'automatic_retries':0}
+    if captured is not None:
+        receipt['sweep_capture']=captured
     if measure_peak_memory and os.name=='nt' and receipt['actual_exit_observed']:
         try:
             receipt['memory']=_windows_peak_memory(process)
