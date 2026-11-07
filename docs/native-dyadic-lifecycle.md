@@ -48,8 +48,12 @@ for one, two, three, four and eight sweeps, with six failure cases after
 two successful commits. The failed-flush case accepts one third-generation
 field write before the cumulative physical-request cap stops commit;
 the current committed image remains unchanged and epoch access rejects.
-Twenty-six focused tests pass normally and optimized, including the
-unchanged whole-game admission and independent wire guards. Committed
-source-only acceptance and cross-platform CI remain separate gates.
+The committed source-only cohort at `95ddf64` passed all twenty-six
+focused tests normally and optimized, including the unchanged whole-game
+admission and independent wire guards. Both outer exits were zero, with
+no skipped tests and all 2,518 tracked files unchanged. The
+[component evidence](../benchmarks/results/native-dyadic-bounded-lifecycle-v1/manifest.json)
+retains the original compilation, fixture-admission and pre-import cache
+rejections. Cross-platform CI remains a separate gate.
 These component results do not establish a longer whole-game training
 run or a convergence result.

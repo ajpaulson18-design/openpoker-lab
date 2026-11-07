@@ -1,0 +1,61 @@
+{
+  "archive": {
+    "bytes": 654243,
+    "members": 635,
+    "name": "verification.zip",
+    "sha256": "7fcb684f08b26506aec3a1713e270ccdc45ca6a84da9f8a17afa83234cd35b66"
+  },
+  "controls": {
+    "builds": {
+      "dyl-source-state-build2": {
+        "executable_sha256": "fd2362659475387cb50a40b69758e2847cb44f9cd7fc376221dffa4ae4d16609",
+        "manifest_sha256": "2de1a699285a6ea026d6d54b09015e4817adff23c8d5ad5dc94298bc231de6af"
+      },
+      "dyl-source-trainer-build2": {
+        "executable_sha256": "5e83448de24401fe65fb093cd7893a50d43d1ec8652788b92241f9fce268b1d0",
+        "manifest_sha256": "02a8da7e0d4aeb96e60307e1da1b93bb413f343ac5173cd6caeae332c431506c"
+      }
+    },
+    "exits": {
+      "normal": {
+        "actual_exit_observed": true,
+        "failures": [],
+        "returncode": 0
+      },
+      "optimized": {
+        "actual_exit_observed": true,
+        "failures": [],
+        "returncode": 0
+      }
+    },
+    "files": 2518,
+    "head": "95ddf64ec29273cc6314410665aeb1d1103409d8",
+    "raw_source_stable": true,
+    "skips": 0,
+    "tests_per_mode": 26,
+    "whole_game_training_invocations": 0
+  },
+  "failure_scenarios": [
+    "io-cap",
+    "flush-cap",
+    "missing-row",
+    "early-export",
+    "max-sweeps",
+    "second-export"
+  ],
+  "preserved_failures": [
+    "strict nodiscard test compilation",
+    "tiny fixture catalog admission",
+    "source-only cached bytecode pre-import rejection"
+  ],
+  "scope": "synthetic State recurrence; no longer whole-game training or convergence result",
+  "source_head": "95ddf64ec29273cc6314410665aeb1d1103409d8",
+  "status": "accepted_bounded_state_component_only",
+  "sweep_counts": [
+    1,
+    2,
+    3,
+    4,
+    8
+  ]
+}
