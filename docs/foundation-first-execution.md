@@ -1,5 +1,36 @@
 # Foundation-first execution record
 
+## Integrated training and paged row storage
+
+The [two-sweep unified native path](native-dyadic-two-sweep.md) now has
+independent saved-policy/update and best-response replay for the declared
+nine- and ten-card games. Its traversal streams exact probability, reach
+and payoff calculations without retaining complete private-hand/board
+worlds. Strategy state remains a separately admitted owner with packed
+integer fields, private files and immutable ordered history identities.
+
+The latest source-frozen ten-card run at `56a27a2` uses a paged row
+directory with a 32 KiB cache and copied decision descriptors. Native,
+saved-only verifier and outer controller exited zero; the complete
+2,515-file captured source inventory remained unchanged. Both checkpoint
+images, all numerical payload bytes, policy-spill values and pager
+traffic match the prior shared-policy run. An independent physical-support
+trace matched every directory traffic counter, and the independent wire
+verifier checked every record before and after replay.
+
+Twenty-five focused tests pass normally and optimized. Composed reserved
+entries fall from 832,287 to 360,303. Single Windows observations measured
+5.04 MB peak working set and 6.81 seconds, versus 8.81 MB and 3.88 seconds.
+The [published evidence packet](../benchmarks/results/native-dyadic-paged-directory-ten-card-accepted-v1/manifest.json)
+preserves the scoped tradeoff. Integration PR #285 and its final CI/merge
+remain separate acceptance gates. Exploitability remains approximately
+2.9843 big blinds after two sweeps; the quality gate is null.
+
+The next prerequisite for a quality study is versioned longer recurrence,
+work/precision admission and saved-only replay. Existing two-sweep owners
+and evidence must remain unchanged. Eleven-card support and unrestricted
+full-deck solving are still unestablished.
+
 ## Committed exact-reach component (November 4)
 
 The [exact reach boundary](native-exact-reach.md) passed a source-frozen

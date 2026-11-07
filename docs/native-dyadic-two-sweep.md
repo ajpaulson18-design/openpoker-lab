@@ -459,5 +459,26 @@ An independent physical-support traversal predicts 1,191,960 frozen
 row reads, 7,656 page misses and 31,333,376 bytes read. Buffered
 construction writes 3,814,272 bytes in 932 requests. These counts
 describe application requests, not operating-system disk traffic.
-Source compilation and rank-free admission do not establish a
-completed training or memory result; frozen-run acceptance is separate.
+The frozen run at `56a27a2` matched those traffic counts, both prior
+checkpoint images and all 9,832,556 numerical payload bytes.
+Independent saved-only replay reproduced both updates, the final
+policy and both best responses. The native child, verifier and outer
+controller exited zero, with all 2,515 captured source files unchanged.
+
+The single Windows observations measured 5,038,080 bytes peak working
+set and 6.81 seconds with the paged directory, versus 8,810,496 bytes
+and 3.88 seconds with resident shared-policy rows. The memory gain
+has a runtime cost on this fixture. These are separate single runs;
+they do not establish a general speed or disk-I/O result.
+[Paged directory evidence](../benchmarks/results/native-dyadic-paged-directory-ten-card-accepted-v1/manifest.json)
+
+Longer recurrence is the next quality prerequisite. Fixed-two-sweep
+assumptions remain in quantizer forecasts, policy-spill receipts,
+checkpoint roles and replay. Keeping only a subset of the current
+per-sweep charges adds at least 263,039,242 modeled units per extra
+sweep, putting a conditional T3 lower bound at 2,392,452,768, above
+the unchanged 2,150,000,000 cap. This omits extra chance, quantization,
+value addition, averages and directory/paging work, plus any wider
+integer costs. It is a capacity barrier, not an admitted forecast.
+Versioned longer-run accounting and independent replay are required
+before a convergence study; changing the sweep constant is insufficient.

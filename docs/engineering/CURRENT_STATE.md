@@ -1,5 +1,34 @@
 # Current engineering state
 
+## Unified solver foundation in development
+
+The explicit [two-sweep native trainer](../native-dyadic-two-sweep.md)
+now connects exact chance, reach and payoff operators to changing-policy
+four-street CFR+ training. Its production traversal does not retain complete
+private-hand/board worlds. Independent saved-only replay reconstructs the
+same reduced-deck mathematical games, every update, exported policy and
+visible-information best response. Accepted nine- and ten-card evidence is
+linked from that specification. These results supersede the unfinished
+training status in the earlier component records below.
+
+Ten-card strategy storage now uses packed exact integers, private checkpoint
+files, shared uniform/pure policy rows and bounded mixed-policy spill.
+The latest paged row-directory profile passes compiled failure controls,
+rank-free admission and independent replay of one frozen training study.
+It retains full ordered histories while replacing the resident row-record
+table with a fixed cache and immutable file. Its 360,303 composed-entry
+reserve and 5.04 MB observed peak working set describe different quantities;
+the measured 6.81-second run was slower than the resident-row baseline.
+
+These are opt-in development profiles with preserved defaults and resource
+caps. The two-sweep policies remain early checkpoints with measured quality;
+they do not establish convergence or unrestricted full-deck NLHE support.
+Larger-game work, integer/payload admission and scalable independent
+verification remain open. PR #285 is the integration review; development
+publication and merge acceptance are separate gates.
+
+## Earlier component records
+
 The [exact sequence-reach transport](../native-exact-reach.md) is implemented in
 development. All 120,960 independent terminal vectors and 10,464 raw active-
 baseline compatibility requests pass in each mode, together with 13 rejection
