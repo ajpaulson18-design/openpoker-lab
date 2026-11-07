@@ -391,3 +391,43 @@ observations measured 11.04 MB peak working set and 5.58 seconds
 with row coverage, versus 11.33 MB and 8.22 seconds with the
 word bitmap.
 [State-owned coverage evidence](../benchmarks/results/native-dyadic-row-coverage-ten-card-accepted-v1/manifest.json)
+
+## Shared policy rows
+
+The explicit `--ten-shared-policy` profile keeps a one-byte tag in
+each compact row record. Uniform and pure rows reconstruct their
+exact grid values from the menu and tag. A mixed row writes its
+first `menu_size - 1` units to a fixed address in a sweep-local
+spill file. The last unit is the grid total minus the stored sum.
+
+The spill build follows the registered row order and flushes before
+the sweep opens. Every possible mixed row fits the admitted file
+extent. The binary profile output, paired walk, and State staging
+each read the same frozen policy once per row. Recursive decisions
+hold their own copies. Final average export emits every policy unit
+in wire order, then the fallback flags. A uniform grid and a
+zero-mass fallback retain separate meanings.
+
+Ten-card admission reserves 832,287 composed entries and a maximum
+of 161,870 spill words per sweep. The work plan adds 15,056,976 units
+for a build and three reads per row in both sweeps. It uses the
+all-mixed case to set the bounds.
+
+The frozen ten-card run at `154b40a` reproduced both previous
+checkpoint images and all 9,832,556 numerical payload bytes.
+Independent replay reproduced both updates, the final policy
+and both best responses. Pager traffic retained the previous
+counts. The spill receipt matched an independent scan of the
+saved policy grids, including every retained mixed-policy word.
+
+Sweep 1 used shared uniform rows throughout. Sweep 2 wrote
+48,118 words for its mixed rows and read 144,354 words across
+the three consumers. The final spill extent was 161,830 words
+within the 161,870-word worst-case bound.
+
+The single Windows observations measured 8.81 MB peak working
+set and 3.88 seconds with shared policy, versus 11.04 MB and
+5.58 seconds in the row-coverage baseline. The file-backed
+mixed policy and streamed export removed the resident
+slot-sized unit array.
+[Shared policy evidence](../benchmarks/results/native-dyadic-shared-policy-ten-card-accepted-v1/manifest.json)

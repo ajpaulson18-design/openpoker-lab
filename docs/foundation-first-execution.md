@@ -1104,3 +1104,11 @@ path. It preserves both checkpoint images and exact independent
 replay. The eleven-card pager projection fits the current
 resident cap with the same cache geometry. Larger-fixture
 admission still needs separate frozen State and work changes.
+
+[Shared policy rows](native-dyadic-two-sweep.md#shared-policy-rows)
+replace the resident sweep unit array with exact uniform and pure
+tags plus a bounded mixed-policy spill. Final average export
+streams the existing wire order. The ten-card source-frozen
+study preserves the prior checkpoints and independent replay,
+with 832,287 composed entries. Its admission covers the
+all-mixed case separately from the observed sparse policy.

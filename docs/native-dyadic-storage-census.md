@@ -264,3 +264,12 @@ pool would store 547,488 bytes of units versus 2,248,528 bytes
 for the dense array, before row tags and any spill storage. These
 counts describe the saved two-sweep fixture.
 [Policy census](../benchmarks/results/native-dyadic-row-coverage-ten-card-accepted-v1/manifest.json)
+
+The shared-policy layout uses a mixed-file bound of
+`slots - rows` words rather than observed mixed occupancy.
+For eleven cards that is 512,738 words or 4,101,904 bytes.
+Its projected frozen State reserve is 1,904,055 entries
+before pager reservation and 1,977,942 with the current
+cache geometry. The 35,361 required History entries alone
+would then put the composed total above two million.
+Other owners and work remain separate admission terms.
