@@ -68,8 +68,8 @@ copies the flushed image from the pager's open committed handle before
 the next sweep can reuse that slot.
 
 Admission reserves 47,403,552 image bytes across both frames, a 32 KiB
-buffer and 32-byte header, and 11,943,624 modeled copy units. The complete
-reservation is 2,141,357,150 work units. The native stream carries 57,236,692
+buffer and 32-byte header, and 11,943,624 modeled copy units. The native
+work reservation is 2,141,357,150 units. The stream carries 57,236,692
 bytes. The bounded controller retains the 9,833,076-byte numerical stream
 and an ordered SHA-256 digest for each image. It also records the full
 transient stream digest and checks frame positions, slot parity and extent.
@@ -80,3 +80,16 @@ order and compares each sweep's digest. It also verifies the policy grids,
 root values, final average and visible-information best responses from the
 retained numerical stream. The current transport is scoped to two sweeps.
 Longer requests still require separate work, precision and I/O admission.
+
+The source-frozen run at `83d143d` matched both prior image hashes and the
+entire numerical stream. Independent digest replay reproduced both updates,
+the exported policy and both best responses. The controller and verifier
+exited zero, with all 2,523 tracked source files unchanged. Reconstruction
+from retained numerical bytes, headers and the two final image slots matched
+the complete transient wire digest. The evidence packet retains the numerical
+stream and digest receipts and references the existing identical packed images.
+
+The single Windows run took 7.43 seconds with a 5.10 MB peak working set.
+The preceding paged-directory run measured 6.81 seconds and 5.04 MB. These
+observations quantify the added checkpoint transport on this fixture.
+[Streamed checkpoint evidence](../benchmarks/results/native-dyadic-sweep-stream-ten-card-accepted-v1/manifest.json)
