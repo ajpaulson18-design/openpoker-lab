@@ -49,11 +49,51 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "tests/native/exact_public_history_index_controls.cpp", "native/exact_public_history_index.hpp",
         "tests/native/exact_history_index_schedule_controls.cpp",
         "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-frozen-update-controls": ("native-virtual-frozen-update-controls", (
+        "native/virtual_frozen_update_controls.cpp", "native/virtual_frozen_update.hpp",
+        "native/virtual_frozen_walk.hpp", "native/virtual_frozen_game.hpp",
+        "native/virtual_frozen_history.hpp", "native/virtual_frozen_policy.hpp",
+        "native/virtual_frozen_proposal.hpp", "native/virtual_frozen_common_denominator.hpp",
+        "native/full_deck_public_chance.hpp", "native/virtual_betting_template.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-frozen-update": ("native-virtual-frozen-update-probe", (
+        "native/virtual_frozen_update_probe.cpp", "native/virtual_frozen_update.hpp",
+        "native/virtual_frozen_walk.hpp", "native/virtual_frozen_game.hpp",
+        "native/virtual_frozen_history.hpp", "native/virtual_frozen_policy.hpp",
+        "native/virtual_frozen_proposal.hpp", "native/virtual_frozen_common_denominator.hpp",
+        "native/full_deck_public_chance.hpp", "native/virtual_betting_template.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-betting-template-controls": ("native-virtual-betting-template-controls", (
         "tests/native/virtual_betting_template_controls.cpp", "native/virtual_betting_template.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-betting-template": ("native-virtual-betting-template-probe", (
         "native/virtual_betting_template_probe.cpp", "native/virtual_betting_template.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-dyadic-training": ("native-virtual-dyadic-training-probe", (
+        "native/virtual_dyadic_training_probe.cpp", "native/virtual_dyadic_training.hpp",
+        "native/prepared_public_chance.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_dyadic_state.hpp",
+        "native/virtual_dyadic_paged_image.hpp",
+        "native/dyadic_policy.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
+        "tests/native/virtual_dyadic_history_controls.cpp", "native/virtual_dyadic_history.hpp",
+        "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
+        "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
+        "native/virtual_dyadic_paged_image.hpp",
+        "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (
+        "tests/native/prepared_public_chance_controls.cpp", "native/prepared_public_chance.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "dyadic-policy-controls": ("native-dyadic-policy-controls", (
+        "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/exact_binary64.hpp")),
+    "full-deck-prefix-fold-controls": ("native-full-deck-prefix-fold-controls", (
+        "tests/native/full_deck_prefix_fold_controls.cpp", "native/full_deck_public_chance.hpp",
+        "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "full-deck-exact-reach-controls": ("native-full-deck-exact-reach-controls", (
+        "tests/native/full_deck_exact_reach_controls.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "full-deck-chance": ("native-full-deck-public-chance-probe", (
         "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
@@ -154,6 +194,7 @@ def build(output_directory, *, target="converter", sanitize=False):
     if compiler is None:
         raise RuntimeError("Installed C++20 compiler unavailable; no automatic installation")
     compiler = str(Path(compiler).resolve())
+    compiler_sha256 = _hash(_bounded_read(Path(compiler),64 * 1024 * 1024))
     helper, sources = TARGETS[target]
     source_names = (*sources, "scripts/build_native_exact_four_street.py",
         "third_party/boost-multiprecision-1.92.0/manifest.json",
@@ -198,6 +239,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         raise RuntimeError("Native exact compilation failed; preserved build.log and build-failure.json")
     _need(all(_bounded_read(ROOT / name, 2 * 1024 * 1024) == raw for name, raw in raw_sources.items()),
           "Native exact source changed during compilation")
+    _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
+          "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
         "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
@@ -208,14 +251,25 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "active-routing" else "Exact fold-class callback/coupled trainer conformance helper; no public protocol or capacity acceptance."
                   if target == "fold-classes" else "Full-deck public-chance exact probability probe only; no sampler, trainer, or whole-game acceptance."
                   if target == "full-deck-chance" else "Full-deck public-chance preflight controls only; no numerical-kernel or solver acceptance."
-                  if target == "full-deck-chance-preflight" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
+                  if target == "full-deck-chance-preflight" else "Exact rational opponent-reach component controls only; no sampler, changing-policy trainer or whole-game acceptance."
+                  if target == "full-deck-exact-reach-controls" else "Exact visible-prefix fold payoff controls only; changing-policy training and quality remain open."
+                  if target == "full-deck-prefix-fold-controls" else "Prepared q=1 public-chance contraction controls only; no cumulative whole-game training or quality admission."
+                  if target == "prepared-public-chance-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
+                  if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
+                  if target == "virtual-dyadic-state-controls" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
+                  if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
-                  if target == "virtual-betting-template-controls" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
+                  if target == "virtual-betting-template-controls" else "PROOF9/v1 exact frozen-update preflight and value probe only; no RNG, training, generic solver backend or quality acceptance."
+                  if target == "virtual-frozen-update" else "Frozen-update arithmetic, admission, ownership and bounded zero-target controls; no full-game acceptance."
+                  if target == "virtual-frozen-update-controls" else "Explicit native exact four-street engine candidate; acceptance requires whole-game policy proof."),
         "source_sha256": {name: _hash(raw) for name, raw in raw_sources.items()},
         "source_lf_sha256": {name: _hash(raw.replace(b"\r\n", b"\n")) for name, raw in raw_sources.items() if not name.endswith(".zip")},
         "dependency_commit": dependency["commit"], "dependency_archive_sha256": HEADER_ARCHIVE_SHA256,
         "dependency_manifest_sha256": DEPENDENCY_MANIFEST_SHA256, "dependency_headers": len(headers),
-        "license": "BSL-1.0", "compiler": compiler,
+        "license": "BSL-1.0", "compiler": compiler, "compiler_sha256": compiler_sha256,
+        "system_build_inputs": "SDK/standard headers, linker/libraries/runtime are environmental inputs, not exhaustively byte-attested; bit reproducibility unproven",
+        "toolchain_environment": {key: environment[key] for key in ("INCLUDE", "LIB", "LIBPATH", "VCINSTALLDIR", "VCToolsInstallDir", "WindowsSdkDir", "WindowsSDKVersion") if key in environment},
         "compiler_version": (version.stdout + version.stderr).decode(errors="replace"),
         "flags": flags, "platform": platform.platform(), "command": command,
         "executable": str(executable), "executable_sha256": _hash(executable.read_bytes())}

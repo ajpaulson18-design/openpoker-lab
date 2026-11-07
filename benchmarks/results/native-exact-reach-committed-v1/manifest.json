@@ -1,0 +1,77 @@
+{
+  "active_baseline_head": "9dbf1ef9f42c0e63be96c4391f7084b8444e009f",
+  "archive": {
+    "bytes": 23667942,
+    "members": 6476,
+    "path": "evidence.zip",
+    "sha256": "adec24fe344ecab9ef042c0f590d918f7d344843dec93a9f2564d4fcf6bc0725"
+  },
+  "candidate_head": "a44087b8a0608a61985ae593de69d8aec20f5808",
+  "component_result": {
+    "active_baseline_head": "9dbf1ef9f42c0e63be96c4391f7084b8444e009f",
+    "artifact_bytes": 837466113,
+    "baseline_source_final": {
+      "bytes": 359546664,
+      "files": 2399,
+      "head": "9dbf1ef9f42c0e63be96c4391f7084b8444e009f",
+      "raw_bytes_identical": true
+    },
+    "candidate_source_final": {
+      "bytes": 361979320,
+      "files": 2406,
+      "head": "a44087b8a0608a61985ae593de69d8aec20f5808",
+      "raw_bytes_identical": true
+    },
+    "controls": [
+      {
+        "actual_exit_observed": true,
+        "compiled_sources": 28,
+        "mode": "normal",
+        "returncode": 0,
+        "skips": 0,
+        "tests": 34
+      },
+      {
+        "actual_exit_observed": true,
+        "compiled_sources": 28,
+        "mode": "optimized",
+        "returncode": 0,
+        "skips": 0,
+        "tests": 34
+      }
+    ],
+    "duration_seconds": 442.8008436000091,
+    "head": "a44087b8a0608a61985ae593de69d8aec20f5808",
+    "outer_exit_and_final_bootstrap": "required separately",
+    "scope": "exact terminal reach and old API compatibility; training/quality gates remain open",
+    "status": "committed_exact_reach_component_controls_pass"
+  },
+  "legacy_raw_requests_per_mode": 10464,
+  "outer_completion": {
+    "head": "a44087b8a0608a61985ae593de69d8aec20f5808",
+    "raw_source_stable": true,
+    "runs": [
+      {
+        "actual_exit_observed": true,
+        "compiled_project_files": 21,
+        "failures": [],
+        "mode": "component",
+        "returncode": 0
+      }
+    ],
+    "scope": "outer observed committed exact-reach conformance; inspect component result and final bootstrap"
+  },
+  "quality_gate": null,
+  "rejection_guards_per_mode": 13,
+  "scope": "exact terminal reach and old API compatibility; training/quality gates remain open",
+  "source_snapshot_packaging": {
+    "included": "all source/build/control/operator bytes except prior benchmark result trees",
+    "inventories": "included-inventory.json and omitted-prior-evidence.json inside archive",
+    "omission_scope": "existing benchmarks/results under both source snapshots; full raw committed inventories are included and complete snapshots remain locally retained; restore old evidence from pinned Git commits",
+    "omitted_bytes": 684646357,
+    "omitted_files": 2254
+  },
+  "terminal_vectors_per_mode": 120960,
+  "training_calls": 0,
+  "version": "native-exact-reach-committed-v1"
+}

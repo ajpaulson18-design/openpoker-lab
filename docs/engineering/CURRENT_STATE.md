@@ -1,5 +1,66 @@
 # Current engineering state
 
+## Unified solver foundation in development
+
+The explicit [two-sweep native trainer](../native-dyadic-two-sweep.md)
+now connects exact chance, reach and payoff operators to changing-policy
+four-street CFR+ training. Its production traversal does not retain complete
+private-hand/board worlds. Independent saved-only replay reconstructs the
+same reduced-deck mathematical games, every update, exported policy and
+visible-information best response. Accepted nine- and ten-card evidence is
+linked from that specification. These results supersede the unfinished
+training status in the earlier component records below.
+
+Ten-card strategy storage now uses packed exact integers, private checkpoint
+files, shared uniform/pure policy rows and bounded mixed-policy spill.
+The latest paged row-directory profile passes compiled failure controls,
+rank-free admission and independent replay of one frozen training study.
+It retains full ordered histories while replacing the resident row-record
+table with a fixed cache and immutable file. Its 360,303 composed-entry
+reserve and 5.04 MB observed peak working set describe different quantities;
+the measured 6.81-second run was slower than the resident-row baseline.
+
+These are opt-in development profiles with preserved defaults and resource
+caps. The two-sweep policies remain early checkpoints with measured quality;
+they do not establish convergence or unrestricted full-deck NLHE support.
+Larger-game work, integer/payload admission and scalable independent
+verification remain open. PR #285 is the integration review; development
+publication and merge acceptance are separate gates.
+
+## Earlier component records
+
+The [exact sequence-reach transport](../native-exact-reach.md) is implemented in
+development. All 120,960 independent terminal vectors and 10,464 raw active-
+baseline compatibility requests pass in each mode, together with 13 rejection
+guards and the existing component checks (22 tests total per mode). Source-only
+development receipts show stable raw project bytes and observed exits 0. A
+committed component cohort and final CI remain pending. Whole-game training,
+persistent strategy storage and quality remain unfinished; the original
+fixed-profile producer and its queued saved review continue unchanged.
+
+The complete frozen-update producer started once at `174b666`, following 67
+source-only controls in each mode with observed exits and full raw-source
+stability. It is still running; no complete identity result is claimed.
+The [saved-only acceptance path](../virtual-frozen-saved-review.md) now checks
+original requests, exits, source/build/bootstrap receipts, every exact row and
+both whole-law expectations. Seventeen verifier/mutation controls pass in each
+mode, following an earlier 82-control combined development run in each mode; three real
+saved-native corruption witnesses were detected. Full replay and the q-free
+terminal witness remain pending. The frozen producer checkout is unchanged.
+The separate verifier freeze `6b49057` now passes all 84 source-only controls in
+each mode with stable raw source, final bootstrap receipts and observed exits 0.
+
+Development under the [frozen-update contract](../virtual-frozen-update.md) now
+has exact saved-row comparison, per-law integer expectation accumulation and
+streaming exact-reference artifacts. Native component checks pass on Windows,
+Linux and ASan/UBSan at `b0fa38e`; these are bounded controls, not all-outcome
+update equivalence. The [whole-study resource plan](../virtual-frozen-whole-study.md)
+composes all 5,040 EVAL requests and two native admission scopes, while keeping
+source/build authentication and an enforcing controller as separate gates.
+Reference preparation now shares one numeric meter across all of its builds;
+old default helper behavior and all native game limits remain unchanged. The
+complete study, evolving-policy training and quality milestone remain unfinished.
+
 The [card-free betting template](../virtual-betting-template.md) is the next
 structural candidate after two preserved 60-board dry-census failures. Native
 numeric continuations, symbolic reveals and full-path multiplicity counts have
@@ -8,9 +69,13 @@ development parity against independent rules and a bounded literal tree. The
 fails from a concurrent documentation edit; this failure is preserved. A separate
 committed-source run at `94b4f5f` passes all 16 tests in both modes, with no skips,
 stable 2,281-file source closure, both original native builds and observed outer
-exit 0. Frozen-head Windows/Linux/sanitizer jobs pass; final publication checks
-remain pending in PR #283. There is no strategy/history arena,
-sampling, update estimator, new trainer or full-deck quality result.
+exit 0. All 15 final workflow groups pass; PR #283 is merged as `7e5efbf`,
+with tested tree `1962013c` and tested-head ancestry verified on fetched main.
+The component itself has no policy or trainer. The next integration is the
+[experimental frozen update](../virtual-frozen-update.md): owned visible-history
+keys, exact staged regrets/averages and independent reference controls are
+implemented in development. Complete per-board equivalence and the two-law
+expectation study remain unfinished; evolving-policy training and quality remain open.
 
 The [new native public-chance boundary](../native-full-deck-public-chance.md)
 is an engineering candidate for full-deck prefix mass and exact single-board

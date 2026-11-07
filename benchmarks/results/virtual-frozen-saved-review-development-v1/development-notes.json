@@ -1,0 +1,17 @@
+{
+  "scope": "development evidence only; complete numerical producer is in progress and full saved replay/q-free terminal witness are not run",
+  "preserved_development_errors": [
+    {
+      "stage": "first 8-control run",
+      "error": "AttributeError: SimpleNamespace has no attribute key in the incomplete-q-free test fixture",
+      "resolution": "capture row.key before converting the fixture row; corrected 8-control run passed"
+    },
+    {
+      "stage": "first expanded 10-control run",
+      "error": "NameError: call is not defined after the stderr test tail was inserted into the next test",
+      "resolution": "restore the tail to its original test; corrected 10-control run passed"
+    }
+  ],
+  "raw_error_stream_status": "early errors are summarized from observed tool output; no fabricated raw failure logs",
+  "review": "Sol source review identified missing linked-artifact checks and build-process observation replay. Both were fixed and tested. Final source inspection found no further concrete replay/mutation blocker. Formal execution remains separate."
+}

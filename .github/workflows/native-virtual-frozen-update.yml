@@ -1,0 +1,64 @@
+name: Native experimental frozen update
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  compiled-controls:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            tag: windows
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: linux
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: sanitized
+            sanitize: --sanitize
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build probe and bounded native controls
+        shell: bash
+        run: |
+          for spec in virtual-frozen-update:probe virtual-frozen-update-controls:controls; do
+            target=${spec%%:*}; output=${spec##*:}
+            if ! python -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/frozen-update/$output" ${{ matrix.sanitize }}; then
+              python - "$RUNNER_TEMP/frozen-update/$output/build.log" <<'PY'
+          import pathlib, sys
+          path = pathlib.Path(sys.argv[1])
+          if path.exists():
+              text = path.read_text(errors='replace')
+              print(text[-60000:])
+              diagnostics = [line for line in text.splitlines() if 'error:' in line or 'error C' in line or 'warning:' in line]
+              for line in diagnostics[:20]:
+                  safe = line[:2000].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  print('::error::' + safe)
+          PY
+              exit 1
+            fi
+          done
+      - name: Run primitive, ownership and failure controls
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          "$RUNNER_TEMP/frozen-update/controls/native-virtual-frozen-update-controls$suffix" > "$RUNNER_TEMP/frozen-update/controls.stdout.log" 2> "$RUNNER_TEMP/frozen-update/controls.stderr.log"
+      - name: Preserve first failure and build identities
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experimental-frozen-update-${{ matrix.tag }}
+          path: |
+            ${{ runner.temp }}/frozen-update/**/*.log
+            ${{ runner.temp }}/frozen-update/**/*.json

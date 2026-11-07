@@ -166,6 +166,12 @@ regret-update estimator, full-game policy, convergence, speed or measured RSS.
 
 ## Next integration gates
 
+The [exact opponent-reach entry point](native-exact-reach.md) is implemented in
+development, sharing this kernel's blocker/rank evaluator. It carries arbitrary
+admitted rational sequence reaches without a binary64 round trip. Its direct
+controls and raw old-API compatibility pass; complete training admission remains
+open. The older committed component result above retains its original scope.
+
 The [card-free betting template](virtual-betting-template.md) addresses two
 subsequent reference dry-census failures before the full update proof. Neither
 failed reference constructed its public model. Structural template counts are

@@ -1,0 +1,50 @@
+[
+  {
+    "path": "scripts/build_native_exact_four_street.py",
+    "tested_sha256": "4f1afdd22d77115e700f3e57eb28f6ca73697228349aea951c1591210869b3a4",
+    "final_sha256": "b14affd970c63433df036babc5c50de04c6a64c31ef87e0c2511b94c4546bbba",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "scripts/run_virtual_frozen_update_study.py",
+    "tested_sha256": "865dbad1458f863aafe08760a5684f21e6897a0a02b1177ba4d14c2c2b9c5a2a",
+    "final_sha256": "b22abaffd203ec2975785f6fa3e7bd837909d9c0f20f7ca1e06fe12977d1e22d",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "scripts/run_virtual_frozen_source_only.py",
+    "tested_sha256": "70b300bbd0b42c4ad12e94f91adc51a72b4b15ece85dec05beb21127bb4086d5",
+    "final_sha256": "38ba603883358d857ce231c5dbffc303e9d284f776b2c722e39fb8bd0d0ff6af",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_source_guard.py",
+    "tested_sha256": "e2e5497573124d6a0e63d00ebf674cf9ebc8050e2bcd5e4bd40920110640652e",
+    "final_sha256": "54421cbc7c9f1e52a9f838e27cc9c8e74df7b7b4811ffab9d966c0801dadcac1",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_build_guard.py",
+    "tested_sha256": "2db485f8c42c97e42e04e16ff0eba743502dad7cb521b952f846cf03a2776865",
+    "final_sha256": "34e6ab4b7217f35a593bab06deee38c133da865c6a57a5757298f3507aa8db43",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_controller.py",
+    "tested_sha256": "19551987a7eb07c65f4f5cd7de762acf9b7c09f4399225c4acf0aee7bae48131",
+    "final_sha256": "4d9ff42dd8fbb14c2c6913e8957047fbc0b914b444c84d60a27454676b0f9f79",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_execution_closure.py",
+    "tested_sha256": "ecf103cec5907844c30ee4c808ef79af3f4d00c324ca9c0a7dd9ebf8805e4373",
+    "final_sha256": "6e0121fd6461e68a8095df425cbf4abde95e6b193fb3a36bfeaeec11b7d650ab",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_bootstrap.py",
+    "tested_sha256": "95df63fa3803a3c8dc1b37ea6452746d65f388c7f49e5ae5a503a50dc2d92744",
+    "final_sha256": "9cc71b2b4876c4ef150777257eddb7ecef6b024780c65a7bc16477a8e55f0d42",
+    "change": "trailing newline only"
+  }
+]

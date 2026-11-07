@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "native_calls": 0,
+  "head": "2628a0eff7c38d148906518817fa16db456a7b83",
+  "files": 2373,
+  "bytes": 358262859,
+  "raw_recheck": true,
+  "duration_seconds": 117.57543480000459,
+  "archive_sha256": "80f7cc8a8b824ef01728a8e1a3b95fc958c96601d60598236316032fd00f9fa4",
+  "members": 4,
+  "scope": "actual full-tree committed/raw authentication and recheck at pinned HEAD; no native update, reference computation, build/dependency acceptance or full-study execution",
+  "copied_source_bytes": false,
+  "source_receipt_only": true
+}

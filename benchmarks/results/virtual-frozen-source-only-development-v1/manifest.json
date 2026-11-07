@@ -1,0 +1,17 @@
+{
+  "status": "source-only remediation and independent review; full numerical producer unrun",
+  "archive_sha256": "722d8254031fc5459a923799edac20ca39193026f6c4dadb8f3d8cb4b9490a17",
+  "members": 38,
+  "normal_current_tests": 22,
+  "optimized_current_tests": 22,
+  "old_8b_cohort_controls_per_mode": 61,
+  "old_cohort_limitation": "retains initial review finding; not accepted execution provenance or numerical producer",
+  "native_eval_calls": 0,
+  "acceptance_requires": [
+    "new clean committed source-only cohort",
+    "operator verified one-buffer first-stage launch",
+    "authoritative outer exit and final bootstrap receipt",
+    "complete numerical production",
+    "saved-only replay and mutation witnesses"
+  ]
+}

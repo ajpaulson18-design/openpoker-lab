@@ -1,0 +1,28 @@
+{
+  "status": "bounded semantic artifact development controls; no full update study",
+  "archive_sha256": "da45d9511ac747bd9b2800a2e8192570ada25519b1fae7096e5c6fc14da744f7",
+  "members": 18,
+  "normal_tests": 7,
+  "optimized_tests": 7,
+  "producer_calls": 0,
+  "expected_artifact_allowance": {
+    "bytes": 350817920,
+    "row_bytes": 32768,
+    "scalar_fields": 140748,
+    "work": 355321856,
+    "entries": 3236240,
+    "retained_integer_payload_bits": 1153007616,
+    "row_scratch_integer_and_text_bits": 524288,
+    "scope": "bounded framing/model entries and integer payload, not CPU/RSS"
+  },
+  "reference_export_family": {
+    "sampled_law_bytes_upper": 2293952240,
+    "q_free_bytes_upper": 350817920,
+    "all_reference_artifact_bytes_upper": 4938722400,
+    "one_export_or_read_named_work_upper": 5004904416,
+    "scope": "semantic rows only; native stdout/stderr, requests, receipts, source/build closure and outer logs require separate admission",
+    "full_study_admission": false
+  },
+  "preserved_failure": "initial test compared different dataclass types; corrected to semantic fields and separate exact comparison",
+  "scope": "semantic row artifacts only; all-experiment source/build/log/request admission and positive full-stream proof still outstanding"
+}

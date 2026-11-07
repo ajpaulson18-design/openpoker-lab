@@ -1,5 +1,49 @@
 # Foundation-first execution record
 
+## Integrated training and paged row storage
+
+The [two-sweep unified native path](native-dyadic-two-sweep.md) now has
+independent saved-policy/update and best-response replay for the declared
+nine- and ten-card games. Its traversal streams exact probability, reach
+and payoff calculations without retaining complete private-hand/board
+worlds. Strategy state remains a separately admitted owner with packed
+integer fields, private files and immutable ordered history identities.
+
+The latest source-frozen ten-card run at `56a27a2` uses a paged row
+directory with a 32 KiB cache and copied decision descriptors. Native,
+saved-only verifier and outer controller exited zero; the complete
+2,515-file captured source inventory remained unchanged. Both checkpoint
+images, all numerical payload bytes, policy-spill values and pager
+traffic match the prior shared-policy run. An independent physical-support
+trace matched every directory traffic counter, and the independent wire
+verifier checked every record before and after replay.
+
+Twenty-five focused tests pass normally and optimized. Composed reserved
+entries fall from 832,287 to 360,303. Single Windows observations measured
+5.04 MB peak working set and 6.81 seconds, versus 8.81 MB and 3.88 seconds.
+The [published evidence packet](../benchmarks/results/native-dyadic-paged-directory-ten-card-accepted-v1/manifest.json)
+preserves the scoped tradeoff. Integration PR #285 and its final CI/merge
+remain separate acceptance gates. Exploitability remains approximately
+2.9843 big blinds after two sweeps; the quality gate is null.
+
+The next prerequisite for a quality study is versioned longer recurrence,
+work/precision admission and saved-only replay. Existing two-sweep owners
+and evidence must remain unchanged. Eleven-card support and unrestricted
+full-deck solving are still unestablished.
+
+## Committed exact-reach component (November 4)
+
+The [exact reach boundary](native-exact-reach.md) passed a source-frozen
+component cohort at `a44087b8a0608a61985ae593de69d8aec20f5808`: 34 controls
+normally and optimized, no skips, actual outer exit 0 and final source-only
+receipts. Each mode verifies 120,960 exact terminal vectors, 13 rejection
+guards and 10,464 byte-identical legacy requests against active `9dbf1ef`.
+All 15 CI workflow groups at that source commit succeeded. The
+[raw archive and manifest](../benchmarks/results/native-exact-reach-committed-v1/manifest.json)
+preserve component acceptance separately from the live frozen full-update
+study. No changing-policy training, whole-game resource admission or saved-policy
+quality result follows from these component checks.
+
 ## Virtual-chance structural barrier (November 1)
 
 The exact native [chance component](native-full-deck-public-chance.md) is merged
@@ -23,6 +67,20 @@ root observes outer exit 0. The [frozen record](../benchmarks/results/virtual-be
 retains original artifacts without replaying stopped producers. Windows/Linux/
 sanitizer component jobs pass; final PR #283 publication checks are pending.
 No admitted full-game, update estimator, trainer or quality result is recorded.
+
+## Complete frozen-profile update identity (November 4)
+
+The producer at `174b66645a05d5f050d4361ce81b06ea9a4e5ac3` completed all 5,040
+evaluations, and the separate saved-only verifier at
+`6b49057bc62a6599bfc23086ecda52576d755908` replayed all of them without a new
+numerical producer call. Both uniform and river-weighted expectations match the
+saved q-free oracle on 24,420 rows, 58,164 slots and 140,748 exact scalar values
+per law. All four parser-valid corruption witnesses were detected. Both outer
+operators observed actual exit 0 and stable whole-source inventories, with final
+compiled-byte receipts. The [accepted archive](../benchmarks/results/virtual-frozen-complete-v1/manifest.json)
+preserves the original calls, receipts, source/build evidence and mutations. This
+establishes fixed-profile update identity for the declared reduced deck only.
+Actual changing-policy training and independent saved-policy quality are open.
 
 ## Frozen independent saved-policy certificate (October 31)
 
@@ -1033,3 +1091,55 @@ The lifetime fix establishes prompt release, not causation of either peak.
 Both complete studies, probes and failures remain immutable in the same receipt.
 Native DAG traversal must avoid rebuilding expanded node/dense-hand maps; strategy
 history/output and pair-scan growth remain independent limits. Overall goal active.
+
+## Buffered staging on the ten-card native path
+
+The [native dyadic trainer](native-dyadic-two-sweep.md#buffered-staging)
+now batches staged writes in a separate bounded ten-card mode. One page
+buffer per strategy field preserves the committed read view. The
+independent stage schedule and frozen run agree on 19,560 stream write
+calls, down from 1,124,988 for direct staging. Both sweep images and the
+numerical stream match the direct run, and independent saved-policy replay
+passes. The checkpoint footprint and two-sweep exploitability are unchanged.
+The local controls cover cap-induced partial flush failure. The native
+component checks pass on optimized Ubuntu, Windows, and sanitizer builds.
+
+The [packed checkpoint transport](native-dyadic-two-sweep.md#packed-checkpoint-transport)
+uses independently decodable pages for immutable replay inputs. The
+source-frozen ten-card check reduces the ready-to-replay packet from
+57,236,628 to 12,022,405 bytes and reproduces the exact saved-policy replay
+using zero native producer calls. The trainer's mutable page store has
+its existing layout and admission. Working-state I/O remains a separate
+scaling target.
+
+The [virtual initial image](native-dyadic-two-sweep.md#virtual-initial-image)
+removes 62,356,272 bytes of measured pager traffic from the bounded
+ten-card run while keeping the prior logical request count and both
+checkpoint images. The original native process exited successfully,
+and the recorded comparison failure was recovered through independent
+saved-only replay of that same output. The
+[eleven-card census](native-dyadic-storage-census.md#eleven-card-admission-boundary)
+projects more than four million frozen State entries before the pager
+reservation under the current layout.
+
+[Ordered registration and export reuse](native-dyadic-two-sweep.md#ordered-row-registration-and-export-reuse)
+remove the build hash and the duplicate policy export workspace in
+the ten-card profile. The exact saved replay matches the prior
+policy and checkpoints. The composed admission falls to 1,159,382
+entries. The eleven-card projection still exceeds the frozen State
+and pager-resident limits independently.
+
+[State-owned pager coverage](native-dyadic-two-sweep.md#state-owned-pager-coverage)
+eliminates the global staging bitmap on the ordered ten-card
+path. It preserves both checkpoint images and exact independent
+replay. The eleven-card pager projection fits the current
+resident cap with the same cache geometry. Larger-fixture
+admission still needs separate frozen State and work changes.
+
+[Shared policy rows](native-dyadic-two-sweep.md#shared-policy-rows)
+replace the resident sweep unit array with exact uniform and pure
+tags plus a bounded mixed-policy spill. Final average export
+streams the existing wire order. The ten-card source-frozen
+study preserves the prior checkpoints and independent replay,
+with 832,287 composed entries. Its admission covers the
+all-mixed case separately from the observed sparse policy.

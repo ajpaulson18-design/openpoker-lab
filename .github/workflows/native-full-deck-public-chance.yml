@@ -5,6 +5,7 @@ permissions:
 jobs:
   compiled-component:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -19,15 +20,64 @@ jobs:
       - name: Build explicit component probe
         shell: bash
         run: |
-          python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance"
+          build_probe() {
+            local module="$1" out="$2" label="$3"
+            shift 3
+            if python -m "$module" --output-dir "$out" "$@"; then return 0; fi
+            python - "$out" "$label" <<'PY'
+          from pathlib import Path
+          import os, sys
+          log = Path(sys.argv[1]) / 'build.log'
+          details = 'No compiler log was created; inspect the build step.'
+          if log.is_file():
+              with log.open('rb') as source:
+                  source.seek(max(0, log.stat().st_size - 6000), os.SEEK_SET)
+                  details = source.read(6000).decode('utf-8', 'replace').strip() or details
+          details = details.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print(f'::error title=Native build failed ({sys.argv[2]})::{details}')
+          PY
+            return 1
+          }
+          base="$RUNNER_TEMP/native-full-deck-chance"
+          build_probe scripts.build_native_full_deck_public_chance "$base" full-deck-chance
+          build_probe scripts.build_native_exact_four_street "$base/exact-reach" full-deck-exact-reach-controls --target full-deck-exact-reach-controls
+          build_probe scripts.build_native_exact_four_street "$base/prefix-fold" full-deck-prefix-fold-controls --target full-deck-prefix-fold-controls
+          build_probe scripts.build_native_exact_four_street "$base/policy" dyadic-policy-controls --target dyadic-policy-controls
+          build_probe scripts.build_native_exact_four_street "$base/prepared" prepared-public-chance-controls --target prepared-public-chance-controls
+          build_probe scripts.build_native_exact_four_street "$base/history" virtual-dyadic-history-controls --target virtual-dyadic-history-controls
+          build_probe scripts.build_native_exact_four_street "$base/state" virtual-dyadic-state-controls --target virtual-dyadic-state-controls
+          build_probe scripts.build_native_exact_four_street "$base/training" virtual-dyadic-training --target virtual-dyadic-training
+          git fetch --no-tags --depth=1 origin 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
+          git worktree add --detach "$RUNNER_TEMP/exact-reach-baseline" 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
+          (cd "$RUNNER_TEMP/exact-reach-baseline" && build_probe scripts.build_native_full_deck_public_chance "$base/baseline" active-baseline)
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_FULL_DECK_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance/native-full-deck-public-chance-probe$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_EXE=$RUNNER_TEMP/native-full-deck-chance/exact-reach/native-full-deck-exact-reach-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_PREFIX_FOLD_EXECUTABLE=$RUNNER_TEMP/native-full-deck-chance/prefix-fold/native-full-deck-prefix-fold-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_DYADIC_POLICY_EXE=$RUNNER_TEMP/native-full-deck-chance/policy/native-dyadic-policy-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_PREPARED_PUBLIC_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance/prepared/native-prepared-public-chance-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_HISTORY_EXE=$RUNNER_TEMP/native-full-deck-chance/history/native-virtual-dyadic-history-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_STATE_EXE=$RUNNER_TEMP/native-full-deck-chance/state/native-virtual-dyadic-state-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE=$RUNNER_TEMP/native-full-deck-chance/training/native-virtual-dyadic-training-probe$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_BASELINE_EXE=$RUNNER_TEMP/native-full-deck-chance/baseline/native-full-deck-public-chance-probe$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_BASELINE_REPO=$RUNNER_TEMP/exact-reach-baseline" >> "$GITHUB_ENV"
       - name: Independent physical and preflight controls
         shell: bash
         env:
           OPENPOKER_NATIVE_FULL_DECK_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/controls
+          OPENPOKER_NATIVE_EXACT_REACH_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/exact-reach-controls
+          OPENPOKER_NATIVE_PREFIX_FOLD_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/prefix-fold-controls
+          OPENPOKER_NATIVE_DYADIC_POLICY_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/policy-controls
+          OPENPOKER_NATIVE_PREPARED_PUBLIC_CHANCE_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/prepared-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_HISTORY_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/history-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_STATE_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/state-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance/training-controls
         run: |
           python -O -m unittest tests.test_build_native_full_deck_public_chance tests.test_native_full_deck_public_chance -v > "$RUNNER_TEMP/native-full-deck-chance/tests.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/tests.stderr.log"
+          python -O -m unittest tests.test_native_exact_reach -v > "$RUNNER_TEMP/native-full-deck-chance/exact-reach.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/exact-reach.stderr.log"
+          python -O -m unittest tests.test_native_prefix_fold tests.test_native_dyadic_policy -v > "$RUNNER_TEMP/native-full-deck-chance/prerequisites.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/prerequisites.stderr.log"
+          python -O -m unittest tests.test_native_prepared_public_chance tests.test_native_virtual_dyadic_history tests.test_native_virtual_dyadic_state -v > "$RUNNER_TEMP/native-full-deck-chance/integration-components.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/integration-components.stderr.log"
+          python -O -m unittest tests.test_native_virtual_dyadic_training -v > "$RUNNER_TEMP/native-full-deck-chance/training-admission.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance/training-admission.stderr.log"
       - name: Preserve compiler and first failure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,6 +87,7 @@ jobs:
             ${{ runner.temp }}/native-full-deck-chance/**/*.log
             ${{ runner.temp }}/native-full-deck-chance/**/*.json
             ${{ runner.temp }}/native-full-deck-chance/**/*.txt
+            ${{ runner.temp }}/native-full-deck-chance/**/*.bin
   sanitized-component:
     runs-on: ubuntu-latest
     steps:
@@ -48,15 +99,45 @@ jobs:
         shell: bash
         run: |
           python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized" --sanitize
+          python -m scripts.build_native_exact_four_street --target full-deck-exact-reach-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/exact-reach" --sanitize
+          python -m scripts.build_native_exact_four_street --target full-deck-prefix-fold-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/prefix-fold" --sanitize
+          python -m scripts.build_native_exact_four_street --target dyadic-policy-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/policy" --sanitize
+          python -m scripts.build_native_exact_four_street --target prepared-public-chance-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/prepared" --sanitize
+          python -m scripts.build_native_exact_four_street --target virtual-dyadic-history-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/history" --sanitize
+          python -m scripts.build_native_exact_four_street --target virtual-dyadic-state-controls --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/state" --sanitize
+          python -m scripts.build_native_exact_four_street --target virtual-dyadic-training --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/training" --sanitize
+          git fetch --no-tags --depth=1 origin 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
+          git worktree add --detach "$RUNNER_TEMP/exact-reach-baseline-sanitized" 9dbf1ef9f42c0e63be96c4391f7084b8444e009f
+          (cd "$RUNNER_TEMP/exact-reach-baseline-sanitized" && python -m scripts.build_native_full_deck_public_chance --output-dir "$RUNNER_TEMP/native-full-deck-chance-sanitized/baseline" --sanitize)
           echo "OPENPOKER_NATIVE_FULL_DECK_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/native-full-deck-public-chance-probe" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/exact-reach/native-full-deck-exact-reach-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_PREFIX_FOLD_EXECUTABLE=$RUNNER_TEMP/native-full-deck-chance-sanitized/prefix-fold/native-full-deck-prefix-fold-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_DYADIC_POLICY_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/policy/native-dyadic-policy-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_PREPARED_PUBLIC_CHANCE_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/prepared/native-prepared-public-chance-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_HISTORY_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/history/native-virtual-dyadic-history-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_STATE_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/state/native-virtual-dyadic-state-controls" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/training/native-virtual-dyadic-training-probe" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_BASELINE_EXE=$RUNNER_TEMP/native-full-deck-chance-sanitized/baseline/native-full-deck-public-chance-probe" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_EXACT_REACH_BASELINE_REPO=$RUNNER_TEMP/exact-reach-baseline-sanitized" >> "$GITHUB_ENV"
       - name: Sanitized physical component controls
         shell: bash
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
           OPENPOKER_NATIVE_FULL_DECK_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/controls
+          OPENPOKER_NATIVE_EXACT_REACH_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/exact-reach-controls
+          OPENPOKER_NATIVE_PREFIX_FOLD_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/prefix-fold-controls
+          OPENPOKER_NATIVE_DYADIC_POLICY_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/policy-controls
+          OPENPOKER_NATIVE_PREPARED_PUBLIC_CHANCE_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/prepared-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_HISTORY_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/history-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_STATE_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/state-controls
+          OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_CONTROL_DIR: ${{ runner.temp }}/native-full-deck-chance-sanitized/training-controls
         run: |
           python -m unittest tests.test_build_native_full_deck_public_chance tests.test_native_full_deck_public_chance -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/tests.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/tests.stderr.log"
+          python -m unittest tests.test_native_exact_reach -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/exact-reach.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/exact-reach.stderr.log"
+          python -m unittest tests.test_native_prefix_fold tests.test_native_dyadic_policy -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/prerequisites.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/prerequisites.stderr.log"
+          python -m unittest tests.test_native_prepared_public_chance tests.test_native_virtual_dyadic_history tests.test_native_virtual_dyadic_state -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/integration-components.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/integration-components.stderr.log"
+          python -m unittest tests.test_native_virtual_dyadic_training -v > "$RUNNER_TEMP/native-full-deck-chance-sanitized/training-admission.stdout.log" 2> "$RUNNER_TEMP/native-full-deck-chance-sanitized/training-admission.stderr.log"
       - name: Preserve sanitizer and first failure evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,3 +147,4 @@ jobs:
             ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.log
             ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.json
             ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.txt
+            ${{ runner.temp }}/native-full-deck-chance-sanitized/**/*.bin

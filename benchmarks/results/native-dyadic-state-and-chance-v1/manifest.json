@@ -1,0 +1,86 @@
+{
+  "archive": {
+    "bytes": 5743043,
+    "members": 1171,
+    "path": "development.zip",
+    "sha256": "d6cb065671691f3ef985d008604d494585022b89c3d104bed4be23b4fa39037d"
+  },
+  "builds": {
+    "dyadic-history-dev1": {
+      "executable_sha256": "6169b0399586263c30d5f2034805c10de5005edb601d7c7e9409f74cece77312",
+      "manifest_sha256": "fccc5fb5b416e07ffbc8e00e02dcf1d9cb20f501c8a5a6c0f4cdccfaf505122c",
+      "target": "virtual-dyadic-history-controls"
+    },
+    "dyadic-state-dev2": {
+      "executable_sha256": "8ebeb48dd78f467f07fe6221ff2d06419c5ddb4807528b8881300081da0c2830",
+      "manifest_sha256": "bd6451458c9820c6c497e349f2f2062b6e9722b21ad89a980560fd30abd80e6b",
+      "target": "virtual-dyadic-state-controls"
+    },
+    "prepared-chance-dev1": {
+      "executable_sha256": "edd5dbc5fd9f798ddb50fef15c929c8f573b16549ad722461bd12d78ae08fb9d",
+      "manifest_sha256": "6aa3fd75fc711252191801fbd4a9e704321d5d08ed966c3ecc2f7cf7ca3f18f0",
+      "target": "prepared-public-chance-controls"
+    }
+  },
+  "controls_per_mode": {
+    "literal_history": {
+      "records": 5525,
+      "rejection_guards": 14,
+      "tests": 1
+    },
+    "persistent_state": {
+      "rejection_guards": 27,
+      "row_updates": 24,
+      "tests": 2
+    },
+    "prepared_chance": {
+      "tests": 7,
+      "vectors": 67548
+    }
+  },
+  "design_census": {
+    "compact_output_and_ordered_routing_design_total": 471158660,
+    "compact_output_upper_bytes": 22662720,
+    "counts": {
+      "folds": 16631,
+      "live_public_node_visits": 61099,
+      "positive_action_edges": 57363,
+      "positive_reveal_edges": 3735,
+      "reveal_candidates": 15662,
+      "rows": 24420,
+      "showdowns": 17356,
+      "slots": 58164
+    },
+    "decision_depth": 12,
+    "max_widths": {
+      "maximum_average_effective_bits": 376,
+      "maximum_first_regret_effective_bits": 437
+    },
+    "money_shift_reduced": 1
+  },
+  "preserved_failure": "first state control build /WX rejected test constant name zero shadowing a Boost symbol; candidate header unchanged by name correction",
+  "quality_gate": null,
+  "scope": "component development and design census, no native training or whole-game admission",
+  "source_closure": {
+    "native/dyadic_policy.hpp": "ff0b6ad4245ee198ca3af0e6cf45afe27928ee93622fdbf8e4d3a63379e19a6b",
+    "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+    "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+    "native/full_deck_public_chance.hpp": "a11727920fdd6a668ff8454fb9cbbd4cb70d26c510d2af07ca6381334a43eb0a",
+    "native/prepared_public_chance.hpp": "b5238786a2f8b7614cc9d494b426d8f2c353330762d5ad6a58cca6f23a8c4ab5",
+    "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+    "native/virtual_dyadic_history.hpp": "298aaab23a8cc6d25d66f9dd6251a3134df1035777748a8ac35a27c1e7f1e738",
+    "native/virtual_dyadic_state.hpp": "ba21171d26b85f8c6b14cbedc3613ff6c04fcc36289493fbfa02ed5206ea44f0",
+    "scripts/build_native_exact_four_street.py": "a4c1c3aabbb3de366c3e24747d27fe7abfa135b33f0f79130ff33cb9919b3b51",
+    "tests/native/prepared_public_chance_controls.cpp": "9d87ad0c0a5af06c6f3e221f3837efad957c48b6369fd3945d51e6f10ca7efec",
+    "tests/native/virtual_dyadic_history_controls.cpp": "89bc4d5040403a7559619c18163c7cf6b26a5a76d47348f70107fd5a6f9799e3",
+    "tests/native/virtual_dyadic_state_controls.cpp": "e814719d9dd7309eeb03dc4412bcbaa0b0861f0856bb9394a742f11ee2dc4039",
+    "tests/test_native_prepared_public_chance.py": "219ca8cf6cfd8fe47dcd68f49f3aeb9ac39dd0a27fedc452eee3db443825dce8",
+    "tests/test_native_virtual_dyadic_history.py": "5080c89d09d423e7c4f354e0ea1584ad795bc88d94ead0f8983ce96cc20d60d8",
+    "tests/test_native_virtual_dyadic_state.py": "26d6de9114eb9b00c3e42ae16e7a8faf07fe88579606cb03ee7b41b5174f8d62",
+    "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+    "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+    "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+  },
+  "training_calls": 0,
+  "version": "native-dyadic-state-and-chance-development-v1"
+}

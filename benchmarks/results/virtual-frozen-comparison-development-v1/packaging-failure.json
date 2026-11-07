@@ -1,0 +1,6 @@
+{
+  "error": "ModuleNotFoundError: No module named tests",
+  "stage": "packager import after archive and CI snapshot were already saved",
+  "source": "observed shell tool output; complete raw stderr file was not separately captured",
+  "correction": "use current repository on import path; reuse saved archive and CI snapshot; no producer rerun"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "development-only; complete update proof unrun",
+  "zip_sha256": "4f0293b8727b1ef93700850e5448f32040e9e923f037fe72d1a2dad57b6c344b",
+  "bytes": 97167,
+  "members": 141,
+  "omitted": "native binaries/objects, extracted Boost headers; source-bound manifests retained. Older external single-board and primitive development evidence are not a complete source cohort in this archive.",
+  "passing": "sampled-reference 6 normal/-O; parser3 normal/-O; saved10admissionframes; root compiled primitive/admission/identity/zero-target control exit0",
+  "failures": "sample firstzero fixture; nativecontrol same-player zero-action witness absent in 2-chip fixture at both early/river blocked boards; corrected 4-chip bounded control passes. These test fixtures do not alter PROOF9/v1 study configuration."
+}

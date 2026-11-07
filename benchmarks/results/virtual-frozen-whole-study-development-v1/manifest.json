@@ -1,0 +1,17 @@
+{
+  "status": "resource composition and shared preparation development controls; full update study unrun",
+  "archive_sha256": "eda8497db3b3d10a5500c1a54609eae610307a21ec19ef6e33197c7187d49bde",
+  "members": 17,
+  "resource_plan_sha256": "58a23298fa3e46670555ac89af6fcc22b7fbb9945501f42e8c728c33fb1fcfae",
+  "normal_tests": 28,
+  "optimized_tests": 28,
+  "settled_test_source_stable": true,
+  "preserved_misses": [
+    "first message compatibility assertion",
+    "second controller source drift despite unit success"
+  ],
+  "rankfree_plan_generation_native_calls": 0,
+  "controls_execute_qfree_reference": true,
+  "ready_for_producer": false,
+  "scope": "preparation and resource plan only; no full update equivalence, training or quality acceptance"
+}

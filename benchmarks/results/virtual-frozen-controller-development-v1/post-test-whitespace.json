@@ -1,0 +1,50 @@
+[
+  {
+    "path": "scripts/build_native_exact_four_street.py",
+    "tested_sha256": "610892de4d00fcf6578baecb9ceff3e30dfd6ed15f0c7d02ca8fb3fe00182d3b",
+    "final_sha256": "e03aae84674204943b797c19fef1d12580f28c5da59c9d4a5202c77721f18ecb",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "scripts/run_virtual_frozen_update_study.py",
+    "tested_sha256": "4dcb8b10d16f25a6dc349820dda532075941cb111f26a8ce4481fb950a8ceac6",
+    "final_sha256": "4d6f35f7d9d7eb8b3b7f1b38f8c449ce80af28e943813d641f0a8a3e1898810e",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_source_guard.py",
+    "tested_sha256": "c6d8a3c08e19e649b660db880dbb723c8b83e8337b9b2112abfd9f7934694bc5",
+    "final_sha256": "fd8605f126159a3e264b74b1a0777c36da7f9754166d6bc9b2b30153e776fb1a",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_build_guard.py",
+    "tested_sha256": "6204c69f6cecf8c49990e169364573f69b11226535fd2d0a2893d2c7af0f8b29",
+    "final_sha256": "28fa6f1baea604c9b3786a899f95a43f554ac4f6f249b827112d5b50e172574a",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_run_control.py",
+    "tested_sha256": "874349ef3d88dccf618ef8251523e3b5831adeccedfa2c2b60b12104e8303b42",
+    "final_sha256": "ccd87c675dedbe5a44df8eeea084b6eccd1801882f2d98a034765adc060d43b3",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_run_control.py",
+    "tested_sha256": "49895dbbada4317ac227e3ae44911bb63a26f714a267ddf68dba53a4181b5baf",
+    "final_sha256": "26a0ef4c55f7a13be665ce32118c1a7ee865b9c65f74f9a01b095098b6913deb",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_controller.py",
+    "tested_sha256": "121ad21ddf0e9b152fd72f2a85ed2c2614de95881f35cc70c3861dddca7c8dab",
+    "final_sha256": "289bc76612cb12cc480b326048ce44412e32b87d27e66f9be1549c2837d52ca2",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_execution_closure.py",
+    "tested_sha256": "562b253f6cb6963b337aef7ff125ddc94d001bcbac6bafabea5c955594a20f72",
+    "final_sha256": "f511c9545884270eaaced8b0900ef5776130965d3be52e8f597f7968cdda19de",
+    "change": "trailing newline only"
+  }
+]

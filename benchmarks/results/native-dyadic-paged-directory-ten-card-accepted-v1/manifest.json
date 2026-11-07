@@ -1,0 +1,803 @@
+{
+  "admission": {
+    "D_bits": 637,
+    "H": 12,
+    "M": 1,
+    "actions": 270487,
+    "actual_admission_work": 44064232,
+    "candidates": 49182,
+    "checkpoint_image_bytes": 23701776,
+    "completed_sweeps": 0,
+    "component_work": {
+      "chance": 447066576,
+      "history": 99754616,
+      "parent": 765708990,
+      "quantizer": 513301416,
+      "state": 261025384,
+      "template": 42556544
+    },
+    "d5": 120,
+    "directory_index_slots": 0,
+    "directory_record_bytes": 32,
+    "directory_work": 24916800,
+    "entries": 360303,
+    "expected_rank_calls": 42,
+    "export_workspace_reused": false,
+    "first_uniform_exponent": 420,
+    "folds": 77857,
+    "hidden_completion_candidates_per_pass": 70912,
+    "literal_nodes": 1105,
+    "max_actor_depth": [
+      6,
+      7
+    ],
+    "normalizer": 29,
+    "ordered_registration": true,
+    "output_bytes": 9833076,
+    "packed_average_limbs": 1295812,
+    "packed_average_work": 88688480,
+    "packed_regret_limbs": 1666910,
+    "packed_regret_work": 151359736,
+    "page_cache_banks": 2,
+    "page_cache_pages": 16,
+    "page_image_words": 2962722,
+    "page_read_word_limit": 6130244,
+    "page_request_limit": 3091726,
+    "page_resident_bytes": 591008,
+    "page_stage_split_words": 1295812,
+    "page_state_row_coverage": true,
+    "page_virtual_initial_zero": true,
+    "page_words": 4096,
+    "page_write_request_limit": 18836,
+    "page_write_word_limit": 5925444,
+    "paged_row_directory": true,
+    "paging_work": 153699290,
+    "parent_allowance": 786295464,
+    "parent_work": {
+      "average": 116524928,
+      "geometry": 3000000,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 351878474,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "payload_bits": 1182148028,
+    "planned_total_work": 2129413526,
+    "policy_spill_read_call_limit": 357588,
+    "policy_spill_word_limit": 161870,
+    "policy_spill_work": 15056976,
+    "prefix_counts": [
+      1,
+      46,
+      156,
+      340
+    ],
+    "prefix_supported_rows": [
+      [
+        2,
+        2
+      ],
+      [
+        56,
+        50
+      ],
+      [
+        176,
+        160
+      ],
+      [
+        360,
+        340
+      ]
+    ],
+    "protocol": "DYADIC_T2_V1",
+    "public_walks_per_sweep": 1,
+    "quantizer_terms": [
+      51633888,
+      178125664,
+      283541864
+    ],
+    "rank_cache_planes": 17,
+    "rank_calls": 0,
+    "rank_lookup_work_per_query": 34,
+    "registration_path_work": 3814272,
+    "requested_sweeps": 2,
+    "reveals": 18458,
+    "row_directory_entries": 4608,
+    "row_directory_page_limit": 7656,
+    "row_directory_read_call_limit": 1191960,
+    "rows": 119196,
+    "scaled_average_build_work": 26064384,
+    "sealed_menu_count": 146,
+    "sealed_token_count": 371,
+    "shared_policy": true,
+    "showdown_contractions_per_pass": 103020,
+    "showdowns": 88290,
+    "slots": 281066,
+    "split_checkpoint": true,
+    "status": "ADMITTED",
+    "streamed_average": true,
+    "target_passes": 0,
+    "ten_card": true,
+    "training_invocations": 0,
+    "value_bits": 644,
+    "visits": 288946
+  },
+  "archive": {
+    "bytes": 2816897,
+    "members": 508,
+    "name": "verification.zip",
+    "sha256": "59325ad48171f738bb5e915839ade22f67529b437ed1e6ac3b49952993012136"
+  },
+  "baseline_publication": "f905e2f2e976a953d2aeec027af51508d13e4c94",
+  "checkpoint_inputs": {
+    "stream": {
+      "bytes": 9833076,
+      "sha256": "174554b4417dfa031294caec8b57a8ab10824ae825a71c8094e6d9136384a1f8"
+    },
+    "sweep_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ]
+  },
+  "independent_capacity_projection": [
+    {
+      "average_words": 258694,
+      "cards": 9,
+      "deck_ids": [
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "image_bytes": 4853840,
+      "image_words": 606730,
+      "old_build_entries": 231814,
+      "old_frozen_entries_excluding_pager": 265910,
+      "ordered_build_entries": 100747,
+      "ordered_frozen_entries_excluding_pager": 183331,
+      "regret_words": 348036,
+      "rows": 24420,
+      "slots": 58164,
+      "staging_bitmap_bytes": 75842,
+      "value_bits": 642
+    },
+    {
+      "average_words": 1295812,
+      "cards": 10,
+      "deck_ids": [
+        0,
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "image_bytes": 23701776,
+      "image_words": 2962722,
+      "old_build_entries": 1004134,
+      "old_frozen_entries_excluding_pager": 1280370,
+      "ordered_build_entries": 479851,
+      "ordered_frozen_entries_excluding_pager": 880113,
+      "regret_words": 1666910,
+      "rows": 119196,
+      "slots": 281066,
+      "staging_bitmap_bytes": 370341,
+      "value_bits": 644
+    },
+    {
+      "average_words": 4188150,
+      "cards": 11,
+      "deck_ids": [
+        0,
+        1,
+        16,
+        17,
+        24,
+        32,
+        33,
+        35,
+        37,
+        43,
+        48
+      ],
+      "image_bytes": 77793616,
+      "image_words": 9724202,
+      "old_build_entries": 3620902,
+      "old_frozen_entries_excluding_pager": 4069914,
+      "ordered_build_entries": 1523755,
+      "ordered_frozen_entries_excluding_pager": 2796837,
+      "regret_words": 5536052,
+      "rows": 380172,
+      "slots": 892910,
+      "staging_bitmap_bytes": 1215526,
+      "value_bits": 646
+    }
+  ],
+  "independent_stage_schedule": {
+    "average_words": 1295812,
+    "batched_write_calls": 18836,
+    "cache_hits": 1123934,
+    "cache_misses": 1498,
+    "direct_write_calls": 1124264,
+    "image_words": 2962722,
+    "initialization_calls": 0,
+    "logical_read_calls": 1967462,
+    "logical_read_words": 10555076,
+    "per_sweep_dirty_runs": 9418,
+    "per_sweep_stage_calls": 562132,
+    "physical_read_words": 6130244,
+    "read_epochs": [
+      {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "logical_reads": 281066,
+        "logical_words": 1666910,
+        "name": "sweep_1_policy",
+        "physical_words": 0,
+        "virtual_reads": 281066,
+        "virtual_words": 1666910
+      },
+      {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "logical_reads": 562132,
+        "logical_words": 2962722,
+        "name": "sweep_1_stage",
+        "physical_words": 0,
+        "virtual_reads": 562132,
+        "virtual_words": 2962722
+      },
+      {
+        "cache_hits": 280994,
+        "cache_misses": 408,
+        "logical_reads": 281066,
+        "logical_words": 1666910,
+        "name": "sweep_2_policy",
+        "physical_words": 1668386,
+        "virtual_reads": 0,
+        "virtual_words": 0
+      },
+      {
+        "cache_hits": 561943,
+        "cache_misses": 773,
+        "logical_reads": 562132,
+        "logical_words": 2962722,
+        "name": "sweep_2_stage",
+        "physical_words": 3163426,
+        "virtual_reads": 0,
+        "virtual_words": 0
+      },
+      {
+        "cache_hits": 280997,
+        "cache_misses": 317,
+        "logical_reads": 281066,
+        "logical_words": 1295812,
+        "name": "export_average",
+        "physical_words": 1298432,
+        "virtual_reads": 0,
+        "virtual_words": 0
+      }
+    ],
+    "regret_words": 1666910,
+    "rows": 119196,
+    "slots": 281066,
+    "sweeps": 2,
+    "virtual_read_calls": 843198,
+    "virtual_read_words": 4629632,
+    "written_words": 5925444
+  },
+  "observations": {
+    "paged_directory": {
+      "duration_seconds": 6.806843500002287,
+      "memory": {
+        "peak_commit_bytes": 1986560,
+        "peak_working_set_bytes": 5038080,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    },
+    "shared_policy": {
+      "duration_seconds": 3.877681499987375,
+      "memory": {
+        "peak_commit_bytes": 5795840,
+        "peak_working_set_bytes": 8810496,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    }
+  },
+  "operator": {
+    "actual_exit_observed": true,
+    "compiled_project_sources": 31,
+    "failures": [],
+    "head": "56a27a2262012d775d2cb524c8e93cf8a616534b",
+    "mode": "train_ten_paged_directory",
+    "raw_source_stable": true,
+    "returncode": 0
+  },
+  "packed_replay_images": {
+    "images": [
+      {
+        "packed": {
+          "bytes": 1049777,
+          "name": "staged.pgi",
+          "sha256": "145c203e7df6e719f569b4e17a8556c9f0c355da821c70fee8b12ebca8fdec43"
+        },
+        "pages": 724,
+        "raw": {
+          "bytes": 23701776,
+          "name": "staged.bin",
+          "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+        }
+      },
+      {
+        "packed": {
+          "bytes": 1139552,
+          "name": "committed.pgi",
+          "sha256": "94609cab465846c2acb98106d3fec2eefd030b216fadf1ab38079bfc22ed75b3"
+        },
+        "pages": 724,
+        "raw": {
+          "bytes": 23701776,
+          "name": "committed.bin",
+          "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+        }
+      }
+    ],
+    "manifest": "benchmarks/results/native-dyadic-packed-ten-card-accepted-v1/manifest.json",
+    "publication": "e1010bf51d52cc4b621004f7e64a8b02fb2924ee"
+  },
+  "paged_directory_comparison": {
+    "baseline_native_observation": {
+      "duration_seconds": 7.7133719000266865,
+      "memory": {
+        "peak_commit_bytes": 10727424,
+        "peak_working_set_bytes": 13742080,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    },
+    "baseline_paging": {
+      "cache_hits": 1966871,
+      "cache_misses": 2679,
+      "completed_sweeps": 2,
+      "logical_read_words": 10555076,
+      "physical_read_requests": 2679,
+      "physical_write_requests": 19560,
+      "read_calls": 1967462,
+      "read_words": 10962056,
+      "stage_calls": 1124264,
+      "write_words": 8888166
+    },
+    "baseline_source_head": "753b6583fd282393fb7272126d4c391399123710",
+    "baseline_stream_sha256": "ee196241624f74ef12b54decf85e5f115e58097bc7c632d7b42ba3358f78782e",
+    "exact_checkpoint_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ],
+    "numeric_bytes": 9832556,
+    "numeric_sha256": "2673127737a800362b5d043625f5bc76b66b95443bed4af7720adc3b7b54021f",
+    "paged_directory_native_observation": {
+      "duration_seconds": 6.806843500002287,
+      "memory": {
+        "peak_commit_bytes": 1986560,
+        "peak_working_set_bytes": 5038080,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    },
+    "virtual_zero_paging": {
+      "cache_hits": 1123934,
+      "cache_misses": 1498,
+      "completed_sweeps": 2,
+      "logical_read_words": 10555076,
+      "physical_read_requests": 1498,
+      "physical_write_requests": 18836,
+      "read_calls": 1967462,
+      "read_words": 6130244,
+      "stage_calls": 1124264,
+      "synthetic_read_calls": 843198,
+      "synthetic_read_words": 4629632,
+      "write_words": 5925444
+    }
+  },
+  "paging": {
+    "counts": {
+      "cache_hits": 1123934,
+      "cache_misses": 1498,
+      "completed_sweeps": 2,
+      "logical_read_words": 10555076,
+      "physical_read_requests": 1498,
+      "physical_write_requests": 18836,
+      "read_calls": 1967462,
+      "read_words": 6130244,
+      "stage_calls": 1124264,
+      "synthetic_read_calls": 843198,
+      "synthetic_read_words": 4629632,
+      "write_words": 5925444
+    },
+    "images": {
+      "committed.bin": {
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      },
+      "staged.bin": {
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      }
+    }
+  },
+  "policy_spill": {
+    "retained_extent_bytes": 1294640,
+    "sha256": "020f6878fc6fede39a3fb05b512a4cf739126c392ce2636929f6ab15bab8ea3c",
+    "sweeps": [
+      {
+        "extent_words": 0,
+        "mixed_read_calls": 0,
+        "mixed_rows": 0,
+        "pure_rows": 0,
+        "read_calls": 357588,
+        "read_words": 0,
+        "uniform_rows": 119196,
+        "write_words": 0
+      },
+      {
+        "extent_words": 161830,
+        "mixed_read_calls": 60954,
+        "mixed_rows": 20318,
+        "pure_rows": 98846,
+        "read_calls": 357588,
+        "read_words": 144354,
+        "uniform_rows": 32,
+        "write_words": 48118
+      }
+    ]
+  },
+  "quality_gate": null,
+  "row_directory": {
+    "independent_trace": {
+      "append_bytes": 3814272,
+      "append_calls": 119196,
+      "cache_pages": 8,
+      "hits": 1184304,
+      "logical_reads": 1191960,
+      "misses": 7656,
+      "page_count": 932,
+      "page_rows": 128,
+      "phases": [
+        {
+          "hits": 118264,
+          "logical_reads": 119196,
+          "misses": 932,
+          "phase": "prelude",
+          "read_bytes": 3814272
+        },
+        {
+          "hits": 118264,
+          "logical_reads": 119196,
+          "misses": 932,
+          "phase": "sweep_1_begin",
+          "read_bytes": 3814272
+        },
+        {
+          "hits": 118264,
+          "logical_reads": 119196,
+          "misses": 932,
+          "phase": "sweep_1_profile",
+          "read_bytes": 3814272
+        },
+        {
+          "hits": 237359,
+          "logical_reads": 238392,
+          "misses": 1033,
+          "phase": "sweep_1_walk",
+          "read_bytes": 4227968
+        },
+        {
+          "hits": 118265,
+          "logical_reads": 119196,
+          "misses": 931,
+          "phase": "sweep_2_begin",
+          "read_bytes": 3810176
+        },
+        {
+          "hits": 118264,
+          "logical_reads": 119196,
+          "misses": 932,
+          "phase": "sweep_2_profile",
+          "read_bytes": 3814272
+        },
+        {
+          "hits": 237359,
+          "logical_reads": 238392,
+          "misses": 1033,
+          "phase": "sweep_2_walk",
+          "read_bytes": 4227968
+        },
+        {
+          "hits": 118265,
+          "logical_reads": 119196,
+          "misses": 931,
+          "phase": "export",
+          "read_bytes": 3810176
+        }
+      ],
+      "read_bytes": 31333376,
+      "record_bytes": 32,
+      "rows": 119196,
+      "slots": 281066,
+      "write_calls": 932,
+      "written_rows": 119196
+    },
+    "receipt": {
+      "appended_rows": 119196,
+      "build_snapshots": 119196,
+      "cache_hits": 1184304,
+      "page_reads": 7656,
+      "read_calls": 1191960,
+      "read_rows": 979168,
+      "write_calls": 932,
+      "written_rows": 119196
+    },
+    "receipt_sha256": "d9ce7290d1dc54fd3912a471d3193459909f6c8368e2d1c4f60d0f4d4a0b0929",
+    "rows_bytes": 3814272,
+    "rows_sha256": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625"
+  },
+  "saved_only_replay": {
+    "bytes": 9833076,
+    "chance_actual": {
+      "cache_evictions": 0,
+      "cache_hits": 412063,
+      "cache_lookup_work": 2172250,
+      "cache_misses": 17,
+      "completed_contractions": 797344,
+      "contraction_work": 175270614,
+      "input_work": 31487948,
+      "peak_integer_bits": 261,
+      "peak_integer_payload_bits": 111499,
+      "peak_live_entries": 6396,
+      "prior_work": 21504,
+      "rank_calls": 42,
+      "rank_work": 172032,
+      "setup_work": 261,
+      "sort_work": 8704
+    },
+    "changed_current_rows": 119164,
+    "checkpoint_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ],
+    "duration_seconds": 65.68260989995906,
+    "hidden_completion_candidates_per_pass": 70912,
+    "native_producer_calls": 0,
+    "parent_work_actual": {
+      "average": 116524928,
+      "geometry": 1507688,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 351765406,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "parent_work_plan": {
+      "average": 116524928,
+      "geometry": 3000000,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 351878474,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "planned_entries": 360303,
+    "planned_payload_bits": 1182148028,
+    "profile_and_br": {
+      "best_responses": [
+        {
+          "approx": 5.096599233555614,
+          "denominator": "2098731617426356042052224103282468329840518472064735223215168710143425474723840",
+          "numerator": "10696393952814100278849904840247185778761660125864206344978244758072287343172789"
+        },
+        {
+          "approx": 0.8720364735888296,
+          "denominator": "14912385050723429757029408216925988951406043782304317511596769280",
+          "numerator": "13004143672431640059623839840972080687516047349001653656640966541"
+        }
+      ],
+      "exploitability": {
+        "approx": 2.9843178535722217,
+        "denominator": "144740111546645244279463731260859884816587480832050705049321980009891412049920",
+        "numerator": "431950499016688293634459451154687436409272726758119326237447189567296472767353"
+      },
+      "gains": [
+        {
+          "approx": 4.218492036690442,
+          "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+          "numerator": "2050326498095245657032721644652910999602763790117619979658873595808233559052088971960554268539070232236387439358284129947408883294027751962503197453058789889"
+        },
+        {
+          "approx": 1.7501436704540012,
+          "denominator": "97206607492083828971911681236992384424225402199294851988495820466982789218033215581813588661710049850752730971852023868689715650386612632111643955294109696",
+          "numerator": "170125528828577004662356938997797237612442571475337364674845963518515097012036843637909525317886571208605549021481573651739507581189073816272208252263631155"
+        }
+      ],
+      "profile_bb": {
+        "approx": -0.8781071968651716,
+        "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+        "numerator": "-426789108108233578121372239473034145435239216886532707966048053313880339400899543905949995206108117348645013054527040961866876451114222147730446321747013119"
+      },
+      "profile_sb": {
+        "approx": 0.8781071968651716,
+        "denominator": "486033037460419144859558406184961922121127010996474259942479102334913946090166077909067943308550249253763654859260119343448578251933063160558219776470548480",
+        "numerator": "426789108108233578121372239473034145435239216886532707966048053313880339400899543905949995206108117348645013054527040961866876451114222147730446321747013119"
+      }
+    },
+    "public_walks_per_sweep": 1,
+    "quality_gate": null,
+    "saved_output_sha256": "174554b4417dfa031294caec8b57a8ab10824ae825a71c8094e6d9136384a1f8",
+    "scope": "named ten-card fixture only; saved grid quality, no wider game or target pass",
+    "shape": {
+      "actions": 270487,
+      "candidates": 49182,
+      "folds": 77857,
+      "reveals": 18458,
+      "rows": 119196,
+      "showdowns": 88290,
+      "slots": 281066,
+      "visits": 288946
+    },
+    "showdown_contractions_per_pass": 103020,
+    "source_and_observed_producer_exit": "separate mandatory acceptance checks",
+    "status": "saved_two_sweep_exact_replay_pass",
+    "sweeps": [
+      {
+        "average_comparisons": 281066,
+        "regret_comparisons": 281066,
+        "root_holding_values": [
+          {
+            "approx": -0.42358876783844335,
+            "denominator": "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568",
+            "numerator": "-259854739695077962866728994162694616845887081251541857800580943486981117584899179785280655472890520233022920763984961880383699"
+          },
+          {
+            "approx": 1.2921704239563563,
+            "denominator": "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568",
+            "numerator": "792694789506133919858351723942847416402324348260475406788618705366208550648563325657293919922165682174995615121193673063768727"
+          },
+          {
+            "approx": -1.4707670560894663,
+            "denominator": "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696",
+            "numerator": "-112782083570848470120327178837140874344099166256548079543229692777144059643474748077049537371297341304535479153809418290328991"
+          },
+          {
+            "approx": 0.6021853999715534,
+            "denominator": "153364984759337674956844351463602881240189886447713242874038520503662143566824232231443896822013946084641161189805419126587392",
+            "numerator": "92354154688932950992748675229243548799089015760862771839449945084481261021033459686095758630275892123577784718316658784811725"
+          }
+        ],
+        "row_count": 119196,
+        "sweep": 1
+      },
+      {
+        "average_comparisons": 281066,
+        "regret_comparisons": 281066,
+        "root_holding_values": [
+          {
+            "approx": -0.4323717466385158,
+            "denominator": "65302194596872192",
+            "numerator": "-28234823937177879"
+          },
+          {
+            "approx": 1.0673621007796612,
+            "denominator": "1293443221514776142209071659813604967346864128",
+            "numerator": "1380572274155224148117341001136898838538033969"
+          },
+          {
+            "approx": -1.086104065042901,
+            "denominator": "1293443221514776142209071659813604967346864128",
+            "numerator": "-1404813940789383906758181607201763067070061361"
+          },
+          {
+            "approx": 0.45111371090175567,
+            "denominator": "8162774324609024",
+            "numerator": "3682339416827949"
+          }
+        ],
+        "row_count": 119196,
+        "sweep": 2
+      }
+    ],
+    "work_actual": {
+      "chance": 209133313,
+      "history": 69825664,
+      "parent": 764103610,
+      "quantizer": 255655680,
+      "state": 261025384,
+      "template": 42556544
+    },
+    "work_plan": {
+      "chance": 447066576,
+      "history": 99754616,
+      "parent": 765708990,
+      "quantizer": 513301416,
+      "state": 261025384,
+      "template": 42556544
+    }
+  },
+  "saved_policy_form_census": {
+    "average_fallback_rows": 0,
+    "dense_policy_bytes": 2248528,
+    "forms": [
+      {
+        "mixed": 0,
+        "mixed_nonzero_slots": 0,
+        "mixed_slots": 0,
+        "name": "sweep_1",
+        "pure": 0,
+        "uniform": 119196
+      },
+      {
+        "mixed": 20318,
+        "mixed_nonzero_slots": 44600,
+        "mixed_slots": 68436,
+        "name": "sweep_2",
+        "pure": 98846,
+        "uniform": 32
+      },
+      {
+        "mixed": 4846,
+        "mixed_nonzero_slots": 12560,
+        "mixed_slots": 12560,
+        "name": "average_export",
+        "pure": 0,
+        "uniform": 114350
+      }
+    ],
+    "maximum_observed_mixed_pool_bytes": 547488,
+    "native_producer_calls": 0,
+    "scope": "saved two-sweep ten-card stream only",
+    "stream": {
+      "bytes": 9833076,
+      "sha256": "7338075f3147b69a9299a9bf100b27878bccc03f53919277787282b460b72f82"
+    }
+  },
+  "source_head": "56a27a2262012d775d2cb524c8e93cf8a616534b",
+  "status": "accepted_paged_directory_ten_card_training_and_replay",
+  "training_invocations": 1
+}

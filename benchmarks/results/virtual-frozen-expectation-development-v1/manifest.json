@@ -1,0 +1,19 @@
+{
+  "status": "partial-stream development controls; full expectation proof unrun",
+  "archive_sha256": "c2676d6d879ecb9464109d406a8588da86bceff4af509853a5646ce4a2f753a0",
+  "bytes": 6447,
+  "members": 12,
+  "normal_tests": 4,
+  "optimized_tests": 4,
+  "producer_calls": 0,
+  "full_stream_positive_gate": false,
+  "law_owner_forecast": {
+    "work": 129293664,
+    "entries": 2273752,
+    "created_bits": 10635294144,
+    "integer_bits": 8192
+  },
+  "both_laws_work_upper": 258587328,
+  "both_laws_created_bits_upper": 21270588288,
+  "scope": "saved synthetic partial streams; no accepted complete expectation, training or quality result"
+}

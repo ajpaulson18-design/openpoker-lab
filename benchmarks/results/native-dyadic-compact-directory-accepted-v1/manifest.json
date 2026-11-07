@@ -1,0 +1,517 @@
+{
+  "admission": {
+    "D_bits": 635,
+    "H": 12,
+    "M": 1,
+    "actions": 57363,
+    "actual_admission_work": 43740464,
+    "candidates": 15662,
+    "completed_sweeps": 0,
+    "component_work": {
+      "chance": 107949016,
+      "history": 23760416,
+      "parent": 161391152,
+      "quantizer": 104260272,
+      "state": 58971552,
+      "template": 42556544
+    },
+    "d5": 20,
+    "directory_index_slots": 131072,
+    "directory_record_bytes": 32,
+    "directory_work": 2344320,
+    "entries": 500045,
+    "expected_rank_calls": 140,
+    "first_uniform_exponent": 420,
+    "folds": 16631,
+    "hidden_completion_candidates_per_pass": 22168,
+    "literal_nodes": 1105,
+    "max_actor_depth": [
+      6,
+      7
+    ],
+    "normalizer": 29,
+    "output_bytes": 22587756,
+    "packed_average_limbs": 258694,
+    "packed_average_work": 18004728,
+    "packed_regret_limbs": 348036,
+    "packed_regret_work": 31450320,
+    "page_cache_banks": 2,
+    "page_cache_pages": 16,
+    "page_image_words": 606730,
+    "page_read_word_limit": 3500000,
+    "page_request_limit": 872460,
+    "page_resident_bytes": 600274,
+    "page_words": 4096,
+    "page_write_word_limit": 1820190,
+    "paging_work": 30508644,
+    "parent_allowance": 162502200,
+    "parent_work": {
+      "average": 23634860,
+      "geometry": 3000000,
+      "output": 9487304,
+      "reach": 10784244,
+      "route": 65708100,
+      "support": 5844608,
+      "terminal_scale": 30724248,
+      "value_add": 10252620,
+      "visit": 1955168
+    },
+    "payload_bits": 255006160,
+    "planned_total_work": 498888952,
+    "prefix_counts": [
+      1,
+      25,
+      56,
+      60
+    ],
+    "prefix_supported_rows": [
+      [
+        2,
+        2
+      ],
+      [
+        29,
+        26
+      ],
+      [
+        60,
+        56
+      ],
+      [
+        60,
+        60
+      ]
+    ],
+    "protocol": "DYADIC_T2_V1",
+    "public_walks_per_sweep": 1,
+    "quantizer_terms": [
+      10606272,
+      36784800,
+      56869200
+    ],
+    "rank_calls": 0,
+    "requested_sweeps": 2,
+    "reveals": 3735,
+    "rows": 24420,
+    "scaled_average_build_work": 5271476,
+    "sealed_menu_count": 146,
+    "sealed_token_count": 371,
+    "showdown_contractions_per_pass": 18180,
+    "showdowns": 17356,
+    "slots": 58164,
+    "status": "ADMITTED",
+    "target_passes": 0,
+    "training_invocations": 0,
+    "value_bits": 642,
+    "visits": 61099
+  },
+  "archive": {
+    "bytes": 10098511,
+    "members": 1722,
+    "path": "evidence.zip",
+    "sha256": "bbbc3605b70cc0d629a1b508c17be36439157b184d2d2794d5c43ecd244c121b"
+  },
+  "comparison": {
+    "backing_images": {
+      "committed.bin": {
+        "bytes": 4853840,
+        "sha256": "6969cf7c191395f75fdf49f75bd0b07e114593d6175ffe26b2dce166512c55fc",
+        "sweep": 2
+      },
+      "staged.bin": {
+        "bytes": 4853840,
+        "sha256": "c403a48f30487cdf49768bf3cdd3b12ccaa136e23a763f22f0aa0ef0ef1b2488",
+        "sweep": 1
+      }
+    },
+    "charged_total_work_added": 2344320,
+    "directory_census": {
+      "nine_card": {
+        "average_words": 258694,
+        "build_state_entries": 231814,
+        "compact_checkpoint_projection_bytes": 11821708,
+        "composed_entries": 500045,
+        "composed_payload_bits": 255006160,
+        "deck": [
+          16,
+          17,
+          24,
+          32,
+          33,
+          35,
+          37,
+          43,
+          48
+        ],
+        "denominator_base": 580,
+        "frozen_state_entries": 340956,
+        "history_work": 23760416,
+        "index_slots": 131072,
+        "max_probes": 10,
+        "output_bytes": 22587756,
+        "partial_modeled_work_floor": 155647420,
+        "probe_histogram": {
+          "1": 22178,
+          "10": 1,
+          "2": 1825,
+          "3": 313,
+          "4": 69,
+          "5": 26,
+          "6": 6,
+          "7": 2
+        },
+        "probe_limit": 30,
+        "rank_cache_key_projection": {
+          "ordered_holding_ranks": 140,
+          "ordered_planes": 60,
+          "unordered_holding_ranks": 7,
+          "unordered_rank_only_planes": 3
+        },
+        "rank_calls": 0,
+        "regret_words": 348036,
+        "route_and_codec_work": {
+          "average_codec": 18004728,
+          "directory": 2344320,
+          "paging": 30508644,
+          "regret_codec": 31450320
+        },
+        "rows": 24420,
+        "shape": {
+          "actions": 57363,
+          "fold": 16631,
+          "reveals": 3735,
+          "showdown": 17356,
+          "visits": 61099
+        },
+        "slots": 58164,
+        "state_entries": 340956,
+        "state_work_lower_bound": 49578992,
+        "training_invocations": 0,
+        "value_bits": 642,
+        "visible_prefix_counts": [
+          1,
+          25,
+          56,
+          60
+        ]
+      },
+      "saved_baseline_sha256": "49875f1ed6e6b3462ed1675c5b8a5b93076ca0113cf7011a3d061876e8fdffec",
+      "ten_card_projection": {
+        "average_words": 1295812,
+        "build_state_entries": 1004134,
+        "compact_checkpoint_projection_bytes": 57236628,
+        "composed_entries": 1551317,
+        "composed_payload_bits": 1182148028,
+        "deck": [
+          0,
+          16,
+          17,
+          24,
+          32,
+          33,
+          35,
+          37,
+          43,
+          48
+        ],
+        "denominator_base": 3480,
+        "frozen_state_entries": 1392228,
+        "history_work": 95940344,
+        "index_slots": 524288,
+        "max_probes": 13,
+        "output_bytes": 108768308,
+        "partial_modeled_work_floor": 735665344,
+        "probe_histogram": {
+          "1": 105526,
+          "11": 1,
+          "13": 1,
+          "2": 10764,
+          "3": 2170,
+          "4": 514,
+          "5": 153,
+          "6": 45,
+          "7": 12,
+          "8": 10
+        },
+        "probe_limit": 34,
+        "rank_cache_key_projection": {
+          "ordered_holding_ranks": 840,
+          "ordered_planes": 340,
+          "unordered_holding_ranks": 42,
+          "unordered_rank_only_planes": 17
+        },
+        "rank_calls": 0,
+        "regret_words": 1666910,
+        "route_and_codec_work": {
+          "average_codec": 88688480,
+          "directory": 11442816,
+          "paging": 148202360,
+          "regret_codec": 151359736
+        },
+        "rows": 119196,
+        "shape": {
+          "actions": 270487,
+          "fold": 77857,
+          "reveals": 18458,
+          "showdown": 88290,
+          "visits": 288946
+        },
+        "slots": 281066,
+        "state_entries": 1392228,
+        "state_work_lower_bound": 240031608,
+        "training_invocations": 0,
+        "value_bits": 644,
+        "visible_prefix_counts": [
+          1,
+          46,
+          156,
+          340
+        ]
+      }
+    },
+    "identical_numeric_bytes": 22587236,
+    "numeric_sha256": "f735422415757cca8ee1b8b9bdc6653ff46f40f3d108f7777b45145a10d64528",
+    "observations": {
+      "directory": {
+        "duration_seconds": 3.3650050000287592,
+        "memory": {
+          "peak_commit_bytes": 3579904,
+          "peak_working_set_bytes": 6598656,
+          "source": "windows.K32GetProcessMemoryInfo"
+        }
+      },
+      "paged": {
+        "duration_seconds": 3.235105800034944,
+        "memory": {
+          "peak_commit_bytes": 5312512,
+          "peak_working_set_bytes": 8151040,
+          "source": "windows.K32GetProcessMemoryInfo"
+        }
+      }
+    },
+    "paged_source_head": "28e417178d8b3bac93787ba22d6409945413dfe8",
+    "paging": {
+      "cache_hits": 639607,
+      "cache_misses": 848,
+      "completed_sweeps": 2,
+      "logical_read_words": 3381686,
+      "physical_read_requests": 848,
+      "physical_write_requests": 232805,
+      "read_calls": 639804,
+      "read_words": 3444816,
+      "stage_calls": 232656,
+      "write_words": 1820190
+    },
+    "planned_entries_after": 500045,
+    "planned_entries_before": 841925
+  },
+  "fixed_proof_gate": {
+    "manifest_sha256": "73cb3faebf8ae7b99b11e7882c96bf4ed2383b46e959b6ccf77a8ecfe4899311",
+    "producer": "174b66645a05d5f050d4361ce81b06ea9a4e5ac3",
+    "verifier": "6b49057bc62a6599bfc23086ecda52576d755908"
+  },
+  "operator": {
+    "actual_exit_observed": true,
+    "compiled_project_sources": 28,
+    "failures": [],
+    "head": "36806b45b14fedaeaa8f89970927ed9dc06d6172",
+    "mode": "train_directory",
+    "raw_source_stable": true,
+    "returncode": 0
+  },
+  "quality_gate": null,
+  "saved_replay": {
+    "bytes": 22587756,
+    "chance_actual": {
+      "cache_evictions": 0,
+      "cache_hits": 72660,
+      "cache_lookup_work": 1265970,
+      "cache_misses": 60,
+      "completed_contractions": 154188,
+      "contraction_work": 32361515,
+      "input_work": 6070422,
+      "peak_integer_bits": 261,
+      "peak_integer_payload_bits": 111499,
+      "peak_live_entries": 6396,
+      "prior_work": 21504,
+      "rank_calls": 140,
+      "rank_work": 573440,
+      "setup_work": 261,
+      "sort_work": 30720
+    },
+    "changed_current_rows": 24420,
+    "duration_seconds": 11.565380099986214,
+    "hidden_completion_candidates_per_pass": 22168,
+    "native_producer_calls": 0,
+    "parent_work_actual": {
+      "average": 23634860,
+      "geometry": 1183920,
+      "output": 9487304,
+      "reach": 10784244,
+      "route": 65699808,
+      "support": 5844608,
+      "terminal_scale": 30724248,
+      "value_add": 10252620,
+      "visit": 1955168
+    },
+    "parent_work_plan": {
+      "average": 23634860,
+      "geometry": 3000000,
+      "output": 9487304,
+      "reach": 10784244,
+      "route": 65708100,
+      "support": 5844608,
+      "terminal_scale": 30724248,
+      "value_add": 10252620,
+      "visit": 1955168
+    },
+    "planned_entries": 500045,
+    "planned_payload_bits": 255006160,
+    "profile_and_br": {
+      "best_responses": [
+        {
+          "approx": 4.685309905810984,
+          "denominator": "1049365808713178021026112051641234164920259236032367611607584355071712737361920",
+          "numerator": "4916604018383206466098252528648550888784390632104829368699641862244332284945901"
+        },
+        {
+          "approx": 0.8080811217772215,
+          "denominator": "14912385050723429757029408216925988951406043782304317511596769280",
+          "numerator": "12050416840162456725366498881598910973652516271415254544512645133"
+        }
+      ],
+      "exploitability": {
+        "approx": 2.7466955137941023,
+        "denominator": "2098731617426356042052224103282468329840518472064735223215168710143425474723840",
+        "numerator": "5764576718242812559307268706279584623068524213786884584282008575767549821855213"
+      },
+      "gains": [
+        {
+          "approx": 3.8731948873903708,
+          "denominator": "243016518730209572429779203092480961060563505498237129971239551167456973045083038954533971654275124626881827429630059671724289125966531580279109888235274240",
+          "numerator": "941250337897253940690790298373503535382886434359284959661202062640590147556822852048750887295947120870034021128436894893687635415567731558130088693505291981"
+        },
+        {
+          "approx": 1.6201961401978342,
+          "denominator": "48603303746041914485955840618496192212112701099647425994247910233491394609016607790906794330855024925376365485926011934344857825193306316055821977647054848",
+          "numerator": "78746885130200048053163475429983718136052876440048414227887399723279868300933040772291627340751362071749689983692934504831532435452629081190815297384776151"
+        }
+      ],
+      "profile_bb": {
+        "approx": -0.8121150184206127,
+        "denominator": "243016518730209572429779203092480961060563505498237129971239551167456973045083038954533971654275124626881827429630059671724289125966531580279109888235274240",
+        "numerator": "-197357364585097337858745215506155891516093575489037977465003225391627423455984271370632820503999737996929290896573074114211036550917208061899306773232912691"
+      },
+      "profile_sb": {
+        "approx": 0.8121150184206127,
+        "denominator": "243016518730209572429779203092480961060563505498237129971239551167456973045083038954533971654275124626881827429630059671724289125966531580279109888235274240",
+        "numerator": "197357364585097337858745215506155891516093575489037977465003225391627423455984271370632820503999737996929290896573074114211036550917208061899306773232912691"
+      }
+    },
+    "public_walks_per_sweep": 1,
+    "quality_gate": null,
+    "saved_output_sha256": "1844b17c5cf9db4a502a469ff97417c5add0dce050f38f0f2774dfa6de699c92",
+    "scope": "PROOF9 only; saved grid quality, no wider game or target pass",
+    "shape": {
+      "actions": 57363,
+      "candidates": 15662,
+      "folds": 16631,
+      "reveals": 3735,
+      "rows": 24420,
+      "showdowns": 17356,
+      "slots": 58164,
+      "visits": 61099
+    },
+    "showdown_contractions_per_pass": 18180,
+    "source_and_observed_producer_exit": "separate mandatory acceptance checks",
+    "status": "saved_two_sweep_exact_replay_pass",
+    "sweeps": [
+      {
+        "average_comparisons": 58164,
+        "regret_comparisons": 58164,
+        "root_holding_values": [
+          {
+            "approx": -0.60741429380319,
+            "denominator": "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136",
+            "numerator": "-745248671293840714454720460687339144190958258351450431343338027408203887925057312741694053667260028144823018970475979611749933"
+          },
+          {
+            "approx": 1.2921704239563563,
+            "denominator": "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568",
+            "numerator": "792694789506133919858351723942847416402324348260475406788618705366208550648563325657293919922165682174995615121193673063768727"
+          },
+          {
+            "approx": -1.2869415301247198,
+            "denominator": "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136",
+            "numerator": "-1578974145229890733203972389032304079006402564256402556949498944000063301540337016061659855219278473193790489018444636794281321"
+          },
+          {
+            "approx": 0.6021853999715534,
+            "denominator": "153364984759337674956844351463602881240189886447713242874038520503662143566824232231443896822013946084641161189805419126587392",
+            "numerator": "92354154688932950992748675229243548799089015760862771839449945084481261021033459686095758630275892123577784718316658784811725"
+          }
+        ],
+        "row_count": 24420,
+        "sweep": 1
+      },
+      {
+        "average_comparisons": 58164,
+        "regret_comparisons": 58164,
+        "root_holding_values": [
+          {
+            "approx": -0.38126703386753874,
+            "denominator": "261208778387488768",
+            "numerator": "-99590296155961103"
+          },
+          {
+            "approx": 1.0723470769530516,
+            "denominator": "5173772886059104568836286639254419869387456512",
+            "numerator": "5548080231184434709268781436427837449021391499"
+          },
+          {
+            "approx": -1.0762521891214918,
+            "denominator": "5173772886059104568836286639254419869387456512",
+            "numerator": "-5568284394638529359811993329291139143521763979"
+          },
+          {
+            "approx": 0.3851721460359788,
+            "denominator": "32651097298436096",
+            "numerator": "12576293216868181"
+          }
+        ],
+        "row_count": 24420,
+        "sweep": 2
+      }
+    ],
+    "work_actual": {
+      "chance": 40323832,
+      "history": 17483848,
+      "parent": 159566780,
+      "quantizer": 52795452,
+      "state": 58971552,
+      "template": 42556544
+    },
+    "work_plan": {
+      "chance": 107949016,
+      "history": 23760416,
+      "parent": 161391152,
+      "quantizer": 104260272,
+      "state": 58971552,
+      "template": 42556544
+    }
+  },
+  "source_final": {
+    "bytes": 534441859,
+    "files": 2486,
+    "head": "36806b45b14fedaeaa8f89970927ed9dc06d6172",
+    "raw_bytes_identical": true
+  },
+  "source_head": "36806b45b14fedaeaa8f89970927ed9dc06d6172",
+  "source_snapshot_omissions": {
+    "files": 1181,
+    "scope": "Prior benchmark artifacts"
+  },
+  "status": "accepted_compact_directory_training_and_replay",
+  "training_invocations": 1,
+  "version": "native-dyadic-compact-directory-accepted-v1"
+}

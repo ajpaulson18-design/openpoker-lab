@@ -1,0 +1,26 @@
+[
+  {
+    "path": "tests/virtual_frozen_source_guard.py",
+    "tested_sha256": "242431a844561f59d4d0ae0d1766b5887e54eb78bd24d0efd3d1fd08f3ffa893",
+    "final_sha256": "fa66e84ad4b2bbeb9a631ab4db118328275950fff98f0b7246e3f3a1fa060f26",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_source_guard.py",
+    "tested_sha256": "6d5f11c17c3ea606dc4422182d52fce33eaa63f18f1f8299990be0aaeee7dbd5",
+    "final_sha256": "5796d76ea874fa558cea5c37fdf081ddf9621810ea70e2ac039412fcb31da9bd",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/virtual_frozen_run_control.py",
+    "tested_sha256": "5b7e9cb2883bf89a734ecad2292f6db3de16ee25b7e06adb523c7609d421e154",
+    "final_sha256": "93984a55c87ba06882bc04f1abc2270d98c9d515b98430f20559bf81ecde3378",
+    "change": "trailing newline only"
+  },
+  {
+    "path": "tests/test_virtual_frozen_run_control.py",
+    "tested_sha256": "76f058c8533cc693ce69f48d1b747218609fe3e03feb550296387950b769044b",
+    "final_sha256": "611709925d6ebf760c6c448132a78f9ed276aea9a39d7a02090cbfbf4277991d",
+    "change": "trailing newline only"
+  }
+]

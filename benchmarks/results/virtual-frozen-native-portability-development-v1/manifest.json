@@ -1,0 +1,14 @@
+{
+  "status": "portability development; remote corrected-source CI pending",
+  "archive_sha256": "9bda31249c40b0f416e3c5ffe83208a1b8d8e204958447ac1b673d10d83dddd5",
+  "members": 75,
+  "original_ci_run": 41841038943,
+  "original_windows": "success",
+  "original_linux": "compile failure",
+  "original_sanitizer": "compile failure",
+  "raw_remote_logs": "403 unauthenticated; annotations retain failure status only",
+  "local_first_error": "incorrect removal of used prefix-index variable caused undeclared identifier; restored before publication",
+  "final_native_changes": "pure whitespace, checked over all nine files against pre-edit originals",
+  "local_controls": "MSVC rebuild and control run exit0, source/dependency/executable stable; final EOF whitespace cleanup happened afterward",
+  "full_update_study": "unrun"
+}

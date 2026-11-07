@@ -1,0 +1,26 @@
+from pathlib import Path
+import hashlib,json,zipfile,urllib.request
+repo=Path.cwd();work=repo.parent;out=repo/'benchmarks/results/virtual-frozen-comparison-development-v1';out.mkdir(parents=True,exist_ok=False)
+items=[p for p in (work/'virtual-frozen-comparison-controls-root-v1').rglob('*') if p.is_file()];items.append(work/'check-virtual-frozen-comparison-root-v1.py')
+with zipfile.ZipFile(out/'evidence.zip','w',zipfile.ZIP_DEFLATED) as z:
+    for p in items:z.write(p,p.relative_to(work).as_posix())
+raw=(out/'evidence.zip').read_bytes()
+u='https://api.github.com/repos/ajpaulson18-design/openpoker-lab/actions/runs/41842295851/jobs'
+with urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'OpenPoker-Lab-evidence-check'}),timeout=25) as r:jobs=json.load(r)
+(out/'native-ci-jobs.json').write_text(json.dumps(jobs,indent=2)+'\n',encoding='utf-8')
+if len(jobs['jobs'])!=3 or any(j['conclusion']!='success' for j in jobs['jobs']):raise RuntimeError('native CI scope not successful')
+from tests.virtual_frozen_update_comparison import FORECAST
+receipt={'status':'synthetic saved-only comparison development; no full update study','archive_sha256':hashlib.sha256(raw).hexdigest(),'native_ci_jobs_sha256':hashlib.sha256((out/'native-ci-jobs.json').read_bytes()).hexdigest(),'native_tested_head':'b0fa38e1bf5f4b3c2e14a8523f80222e281f792f','native_run':41842295851,'native_jobs':'Windows, Linux, ASan/UBSan all successful; probe builds and bounded primitive/ownership controls, no all-outcome updates','tests_normal':3,'tests_optimized':3,'comparison_forecast':FORECAST,'all5040_comparison_work_upper':5040*FORECAST['work'],'all5040_comparison_created_bits_upper':5040*FORECAST['created_bits'],'synthetic_mutations':6,'actual_native_vs_reference_full_rows':'not yet evaluated','goal':'active'}
+(out/'manifest.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
+p=repo/'docs/virtual-frozen-update.md';s=p.read_text(encoding='utf-8');s=s.replace('corrected-source Linux/sanitizer acceptance remains pending.', 'at source `b0fa38e`, all three native jobs now pass: Windows, Linux and\nASan/UBSan. Both the probe and bounded controls compile, and the controls run\nsuccessfully. These jobs do not run the all-proposal numerical proof.');s=s.replace('## Remaining acceptance','''The saved-only exact comparator now checks every complete physical key, ordered
+menu, policy exponent and regret/average rational against the independent sampled
+reference snapshot. Equivalent unreduced fractions are accepted. Six synthetic
+mutations pass wire invariants but fail semantic comparison. Three controls
+pass normally and optimized; no native or reference producer executes during
+these controls. The [comparison development receipt](../benchmarks/results/virtual-frozen-comparison-development-v1/manifest.json)
+pins raw test streams, comparison allowances and the successful three-job native
+CI observation. Real full-row equivalence and mutation witnesses remain open.
+
+## Remaining acceptance''');p.write_text(s,encoding='utf-8')
+p=repo/'docs/virtual-frozen-update-study.md';s=p.read_text(encoding='utf-8');s=s.replace('Those last admission components remain unfinished.', 'The per-call full-row comparator is now implemented with a pre-admitted\n34,760,384-work, 131,272-entry, 164,634,624-created-bit envelope and 8,192-bit\nmaximum intermediate width. Reference scalar inputs are bounded to 4,096 bits\nand native inputs to the 384-bit wire cap. Across 5,040 calls its allowances\nare separately summed; these are named logical accounting, not CPU/RSS bounds.\nThe q-free oracle, aggregation and total export admission remain unfinished.');p.write_text(s,encoding='utf-8')
+print(json.dumps(receipt))

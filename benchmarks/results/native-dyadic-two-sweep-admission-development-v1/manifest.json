@@ -1,0 +1,108 @@
+{
+  "admission": {
+    "D_bits": 635,
+    "H": 12,
+    "M": 1,
+    "actions": 57363,
+    "actual_admission_work": 43734256,
+    "candidates": 15662,
+    "completed_sweeps": 0,
+    "component_work": {
+      "chance": 107949016,
+      "history": 36892320,
+      "parent": 108157580,
+      "quantizer": 104260272,
+      "state": 73455536,
+      "template": 42556544
+    },
+    "d5": 20,
+    "entries": 1132473,
+    "expected_rank_calls": 140,
+    "first_uniform_exponent": 420,
+    "folds": 16631,
+    "hidden_completion_candidates_per_pass": 22168,
+    "literal_nodes": 1105,
+    "max_actor_depth": [
+      6,
+      7
+    ],
+    "normalizer": 29,
+    "output_bytes": 22587756,
+    "parent_work": {
+      "average": 17807856,
+      "geometry": 3000000,
+      "output": 9487304,
+      "reach": 21568488,
+      "route": 2186256,
+      "support": 10686848,
+      "terminal_scale": 30724248,
+      "value_add": 10252620,
+      "visit": 2443960
+    },
+    "payload_bits": 255006160,
+    "planned_total_work": 473271268,
+    "prefix_counts": [
+      1,
+      25,
+      56,
+      60
+    ],
+    "prefix_supported_rows": [
+      [
+        2,
+        2
+      ],
+      [
+        29,
+        26
+      ],
+      [
+        60,
+        56
+      ],
+      [
+        60,
+        60
+      ]
+    ],
+    "protocol": "DYADIC_T2_V1",
+    "quantizer_terms": [
+      10606272,
+      36784800,
+      56869200
+    ],
+    "rank_calls": 0,
+    "requested_sweeps": 2,
+    "reveals": 3735,
+    "rows": 24420,
+    "showdown_contractions_per_pass": 18180,
+    "showdowns": 17356,
+    "slots": 58164,
+    "status": "ADMITTED",
+    "target_passes": 0,
+    "training_invocations": 0,
+    "value_bits": 642,
+    "visits": 61099
+  },
+  "archive": {
+    "bytes": 6024851,
+    "members": 1152,
+    "path": "development.zip",
+    "sha256": "51ce70c42b6fee6d7a74976a79dfe94c2a2cc5e2c556e4e5ba27ef4427f8d2b3"
+  },
+  "compiled_build_sha256": "215d363380841e165520231dc912838b81b7dcfc4136e17737b9d48fcd1e881d",
+  "controls": {
+    "compiled_admission_and_framing_tests_per_mode": 2,
+    "normal_and_optimized": true,
+    "reference_and_process_tests_per_mode": 9
+  },
+  "executable_sha256": "a240138fbd2978f0ab574b288ed94c9b5771037a4f12fd78f18752ca949a9439",
+  "preserved_first_failures": [
+    "initial development strict build controls",
+    "dev3 admission missing pre-river all-in hidden completions"
+  ],
+  "quality_gate": null,
+  "scope": "strict compiled development ADMIT and independent reference controls; no native training",
+  "training_invocations": 0,
+  "version": "native-dyadic-two-sweep-admission-development-v1"
+}

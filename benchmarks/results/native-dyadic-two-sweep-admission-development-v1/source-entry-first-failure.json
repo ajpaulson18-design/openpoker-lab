@@ -1,0 +1,13 @@
+{
+  "scope": "outer bootstrap argument rejection before any cohort claim, compiler or numerical child",
+  "head": "f9b8af56283c2f04ea5eaa1d6f6a7ad14aa6456a",
+  "observed_exit": {
+    "actual_exit_observed": true,
+    "returncode": 2,
+    "failures": []
+  },
+  "stderr_sha256": "2488ea334b1aa8d20acdab40bf6c7347f93e39c7290395febd32a4079d1de4a7",
+  "stderr": "usage: run_virtual_frozen_source_only.py [-h] --module\r\n                                         {scripts.run_virtual_frozen_update_study,scripts.verify_virtual_frozen_update_study,scripts.run_native_exact_reach_conformance,scripts.build_native_exact_four_street,unittest}\r\n                                         --receipt RECEIPT\r\n                                         ...\r\nrun_virtual_frozen_source_only.py: error: argument --module: invalid choice: 'scripts.run_virtual_dyadic_training_cohort' (choose from scripts.run_virtual_frozen_update_study, scripts.verify_virtual_frozen_update_study, scripts.run_native_exact_reach_conformance, scripts.build_native_exact_four_street, unittest)\r\n",
+  "training_invocations": 0,
+  "correction": "explicitly allow the named source-only T2 controller and verifier; smoke both real entries with --help"
+}

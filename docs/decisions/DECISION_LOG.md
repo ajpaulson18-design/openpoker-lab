@@ -36,6 +36,71 @@ as if it described today's complete solver or coach.
 
 ## Adding a decision
 
+### D080: Carry exact sequence reaches toward finite-grid training (November 4, 2026)
+
+Engineering direction under the unchanged unified foundation goal. Add an
+explicit common-denominator rational reach entry to the existing public-chance
+kernel, retaining original holding identities, global prior and shared blocker/
+rank semantics. Preserve every old API limit/default and require raw response/
+receipt parity to the active pre-change baseline. Direct component conformance
+is separate from full update identity and changing-policy training.
+
+For the next deterministic whole-game trainer, prefer exact dyadic policy units
+on a declared 2^52 grid and cumulative integer regret/average masses. Normalizing
+arbitrary binary64 rows by different exact odd sums can cause future-value
+denominator explosion across branches. Largest-remainder quantization has
+measurable numerical effects, including possible zeroing of small action weights;
+saved policy/visible-information best-response quality remains mandatory.
+Exhaustive reveal summation uses q=1 and visible-prefix fold values; prune only
+zero prior physical prefix mass. Keep full histories, zero-policy actions and
+all physically supported counterfactual rows. Admit full history depth, bit
+width, work and persistent storage before training. The complete frozen-update
+identity and its saved-only acceptance remain the gate before training runs.
+See the [implemented boundary and unresolved gates](../native-exact-reach.md).
+
+The [finite-grid and prefix-fold prerequisites](../native-dyadic-prerequisites.md)
+now have independent development controls. Quantize both current regrets and
+exported average masses to the declared grid, preserving the raw masses and
+distinct image kinds. A grid export is an approximation to the raw average;
+certify the saved image itself. The quantizer owner cannot be copied or reset.
+Visible-prefix folds use d_k with q=1 and the unchanged global prior. Persistent
+row ownership and cumulative full-game admission remain separate unfinished work.
+
+### D079: Prove complete frozen updates before evolving-policy training (November 4, 2026)
+
+Engineering direction under the unchanged scalable-foundation goal. Join the
+owned native chance kernel and card-free template using collision-safe full
+visible-history keys and a detached exact staged update. Keep the complete
+original betting fixture and unequal weighted holdings. The first procedural
+profile uses exact power-of-two action probabilities, including zeros, so every
+nonzero reach is representable by the existing binary64 chance interface.
+This deliberately restricted profile does not establish exact reach transport
+for arbitrary evolving policies.
+
+Use a separate independent scalar-world regret oracle and visible-prefix own-
+reach averaging oracle. Compare every row/action for all 2,520 proposal boards
+under each of two positive proposal laws, including zero-target outcomes, then
+compare both proposal-weighted expectations with a q-free world reference.
+A source review or a successful admission is insufficient. Preserve initial
+forecast rejection, all test/build errors and single-board development evidence.
+Freeze complete source and admit the entire study before running that batch;
+never rerun a frozen producer to repair packaging or verification.
+
+See the [development contract and status](../virtual-frozen-update.md). Actual
+sampling, persistent strategy storage, changing-policy arithmetic, convergence,
+policy exports and independent best responses remain subsequent obligations.
+Root continues integration when worker model quotas prevent completion; completed
+worker inspection is distinct from unavailable further review.
+
+The complete producer started once at committed source `174b666` after the
+source-only 67-control cohort passed in both modes. The separate
+[saved-only verifier](../virtual-frozen-saved-review.md) checks the original full
+outputs and four real corruption lanes without invoking numerical producers.
+Partial progress and three development detection witnesses are not complete
+numerical acceptance. Final outer exits/bootstrap receipts remain required;
+never restart the frozen producer to repair a verifier or packaging defect.
+
+
 ### D078: Compile card-free betting continuations before virtual history expansion (November 1, 2026)
 
 Engineering direction under the owner's scalable unified-solver goal. Two
@@ -54,9 +119,10 @@ Require pre-operation reduce-only admission and explicit overflow rejection.
 
 Committed freeze `94b4f5f` passes all 16 controls normally/optimized with no skips,
 stable complete project source/build identity and observed outer exit 0.
-Frozen-head Windows/Linux/sanitizer component jobs pass; final publication
-checks remain pending in PR #283. Physical supported
-row census, lazy persistent storage, sampling/update proof, whole-game training
+All 15 final workflow groups pass; PR #283 is merged as `7e5efbf`, with
+tested tree `1962013c` and tested-head ancestry verified. The subsequent
+independent supported-row census counts 24,420 rows and 58,164 action slots.
+Lazy persistent storage, complete sampling/update proof, whole-game training
 and independent quality remain open. The existing native chance component is
 merged in PR #281; no full-deck solve follows from either component.
 
