@@ -164,18 +164,49 @@ def check_compact_checkpoint(reader,ordered,row_scales,regrets,average,sweep,val
                     f'saved split {family} mismatch sweep {sweep}: {key}')
 
 
-def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,ten_card=False):
+def digest_compact_checkpoint(ordered,row_scales,regrets,average,expected_bytes,*,value_bits=VALUE_BITS):
+    """Hash independently reconstructed fixed-width compact image without retaining it."""
+    digest=hashlib.sha256()
+    written=0
+    for field,values in enumerate((average,regrets)):
+        for (key,menu),scales in zip(ordered,row_scales,strict=True):
+            shift=scales[field]
+            require(type(shift) is int and 0<=shift<value_bits,'split reference compact shift')
+            width=8*((value_bits-shift+63)//64)
+            mask=(1<<shift)-1
+            row=values[key]
+            require(len(row)==menu,'independent compact menu extent')
+            for value in row:
+                require(type(value) is int and value>=0 and value.bit_length()<=value_bits
+                        and (value & mask)==0,'independent compact value outside certified scale')
+                compact=value>>shift
+                require(width<=expected_bytes-written,'independent compact byte allowance')
+                digest.update(compact.to_bytes(width,'little'))
+                written+=width
+    require(written==expected_bytes,'independent compact byte count')
+    return digest.hexdigest()
+
+
+def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
-    require(images is None or packed_images is None,'choose one checkpoint transport')
-    split=images is not None or packed_images is not None
+    require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
+            'choose one checkpoint transport')
+    if checkpoint_digests is not None:
+        require(type(checkpoint_digests) in (list,tuple) and len(checkpoint_digests)==2 and
+                all(type(d) is str and len(d)==64 and
+                all(c in '0123456789abcdef' for c in d) for d in checkpoint_digests),
+                'two ordered lowercase checkpoint SHA-256 digests required')
+        checkpoint_digests=tuple(checkpoint_digests)
+        require(paired and rank_sets,'checkpoint digest replay requires paired rank-set training')
+    split=images is not None or packed_images is not None or checkpoint_digests is not None
     images=tuple(images) if images is not None else ()
     packed_images=tuple(packed_images) if packed_images is not None else None
     require(not rank_sets or paired,'rank-set replay requires paired training')
     if packed_images is not None:
         require(rank_sets and tuple(Path(p).name for p,_,_ in packed_images)==PACKED_IMAGE_NAMES,
                 'split replay requires the ordered pair of packed rank-set sweep images')
-    else:
+    elif checkpoint_digests is None:
         require(not split or (rank_sets and tuple(Path(p).name for p,_ in images)==SPLIT_IMAGE_NAMES),
                 'split replay requires the ordered pair of rank-set sweep images')
     require(not ten_card or (paired and rank_sets and split),
@@ -247,9 +278,13 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             else:changes=sum(first[k]!=policy[k] for k in first)
             regrets,average,root=fixture.sweep(policy,regrets,average,root_holding_values=True)
             if split:
-                page,digest=checkpoints[t-1]
-                check_compact_checkpoint(page,ordered,row_scales,regrets,average,t,bits)
-                page.finish(digest)
+                if checkpoint_digests is not None:
+                    digest=digest_compact_checkpoint(ordered,row_scales,regrets,average,image_bytes,value_bits=bits)
+                    require(digest==checkpoint_digests[t-1],f'independent compact digest mismatch sweep {t}')
+                else:
+                    page,digest=checkpoints[t-1]
+                    check_compact_checkpoint(page,ordered,row_scales,regrets,average,t,bits)
+                    page.finish(digest)
             else:
                 for family,values in [('regret',regrets),('average',average)]:
                     for key,menu in ordered:
@@ -315,8 +350,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'public_walks_per_sweep':passes//completed,
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
     if split:
+        digests=checkpoint_digests if checkpoint_digests is not None else tuple(d for _,d in checkpoints)
         result['checkpoint_images']=[{'name':name,'sha256':digest,'bytes':image_bytes}
-                                     for name,(_,digest) in zip(SPLIT_IMAGE_NAMES,checkpoints,strict=True)]
+                                     for name,digest in zip(SPLIT_IMAGE_NAMES,digests,strict=True)]
+        if checkpoint_digests is not None:
+            result['checkpoint_verification']='independent_compact_digest'
     if packed_images is not None:
         result['packed_checkpoint_images']=packed_details
     return result
@@ -336,6 +374,7 @@ def main():
     transport=parser.add_mutually_exclusive_group()
     transport.add_argument('--page-images',type=Path)
     transport.add_argument('--packed-page-images',type=Path)
+    transport.add_argument('--sweep-checkpoint-digest',nargs=2,metavar=('SWEEP1','SWEEP2'))
     parser.add_argument('--sweep-image-sha256',nargs=2,metavar=('SWEEP1','SWEEP2'))
     parser.add_argument('--packed-sweep-image-sha256',nargs=2,metavar=('PACKED1','PACKED2'))
     args=parser.parse_args()
@@ -348,7 +387,7 @@ def main():
                         zip(PACKED_IMAGE_NAMES,args.packed_sweep_image_sha256,args.sweep_image_sha256,strict=True)
                         ) if args.packed_page_images is not None else None
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
-                            packed_images=packed_images,ten_card=args.ten_card),sort_keys=True))
+                            packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card),sort_keys=True))
 
 
 if __name__=='__main__':main()

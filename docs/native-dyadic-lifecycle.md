@@ -57,3 +57,26 @@ retains the original compilation, fixture-admission and pre-import cache
 rejections. Cross-platform CI remains a separate gate.
 These component results do not establish a longer whole-game training
 run or a convergence result.
+
+## Streamed checkpoint evidence
+
+The opt-in `--ten-sweep-stream` runs the accepted ten-card two-sweep
+game with a separate checkpoint transport. After each commit and root
+value record, the driver emits an `OPLCPG01` frame with three little-endian
+64-bit fields for the sweep number, committed slot and image length. It
+copies the flushed image from the pager's open committed handle before
+the next sweep can reuse that slot.
+
+Admission reserves 47,403,552 image bytes across both frames, a 32 KiB
+buffer and 32-byte header, and 11,943,624 modeled copy units. The complete
+reservation is 2,141,357,150 work units. The native stream carries 57,236,692
+bytes. The bounded controller retains the 9,833,076-byte numerical stream
+and an ordered SHA-256 digest for each image. It also records the full
+transient stream digest and checks frame positions, slot parity and extent.
+
+The saved-only verifier reconstructs every compact average and regret
+word from its own exact training replay. It hashes those words in file
+order and compares each sweep's digest. It also verifies the policy grids,
+root values, final average and visible-information best responses from the
+retained numerical stream. The current transport is scoped to two sweeps.
+Longer requests still require separate work, precision and I/O admission.

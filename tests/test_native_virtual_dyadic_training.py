@@ -215,7 +215,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_TEN\n',b'DYADIC_T2_V1 TRAIN_TEN_BUFFERED\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_VIRTUAL_ZERO\n',b'DYADIC_T2_V1 TRAIN_TEN_ORDERED_STATE\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE\n',b'DYADIC_T2_V1 TRAIN_TEN_SHARED_POLICY\n',
-                b'DYADIC_T2_V1 TRAIN_TEN_PAGED_DIRECTORY\n',b'x'*65+b'\n')):
+                b'DYADIC_T2_V1 TRAIN_TEN_PAGED_DIRECTORY\n',b'DYADIC_T2_V1 TRAIN_TEN_SWEEP_STREAM\n',
+                b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
@@ -310,6 +311,25 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 validate_admission(altered,ten_paged_directory=True)
         with self.assertRaisesRegex(ValueError,'independent fixed census'):
             validate_admission(receipt,ten_shared_policy=True)
+
+    def test_sweep_stream_admits_both_frames_and_transport_work_without_training(self):
+        directory,process=self.observe('admit_ten_sweep_stream',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_SWEEP_STREAM',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_sweep_stream=True)
+        stream=plan['sweep_stream']
+        self.assertEqual((stream['wire_bytes'],stream['retained_bytes'],stream['read_bytes']),
+                         (57_236_692,9_833_076,47_403_552))
+        self.assertEqual(plan['planned_total_work']+stream['copy_work'],2_141_357_150)
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        for field in ('wire_bytes','copy_work','image_bytes','frames'):
+            altered=dict(stream,**{field:stream[field]-1})
+            with self.assertRaisesRegex(ValueError,'independent fixed census'):
+                validate_admission(dict(receipt,sweep_stream=altered),ten_sweep_stream=True)
+        with self.assertRaisesRegex(ValueError,'independent fixed census'):
+            validate_admission(receipt,ten_paged_directory=True)
 
 
 if __name__=='__main__':unittest.main()

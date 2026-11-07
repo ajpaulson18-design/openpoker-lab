@@ -1060,6 +1060,22 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
 };
 
+inline constexpr std::uint64_t sweep_stream_frames=sweeps;
+inline constexpr std::uint64_t sweep_stream_header_bytes=32;
+inline constexpr std::uint64_t sweep_stream_scratch_bytes=paging::maximum_checkpoint_stream_scratch_bytes;
+inline constexpr std::uint64_t sweep_stream_entries=(sweep_stream_scratch_bytes+sweep_stream_header_bytes+7)/8;
+inline constexpr std::uint64_t sweep_stream_payload_bits=8*(sweep_stream_scratch_bytes+sweep_stream_header_bytes);
+inline constexpr std::uint64_t sweep_stream_image_bytes=8ULL*paging::n10_image_words;
+inline constexpr std::uint64_t sweep_stream_retained_bytes=9833076;
+inline constexpr std::uint64_t sweep_stream_read_bytes=sweep_stream_frames*sweep_stream_image_bytes;
+inline constexpr std::uint64_t sweep_stream_wire_bytes=sweep_stream_retained_bytes+sweep_stream_read_bytes+
+    sweep_stream_frames*sweep_stream_header_bytes;
+inline constexpr std::uint64_t sweep_stream_blocks=(sweep_stream_image_bytes+sweep_stream_scratch_bytes-1)/
+    sweep_stream_scratch_bytes;
+// One read and one write per word, plus bounded block and header bookkeeping.
+inline constexpr std::uint64_t sweep_stream_copy_work=sweep_stream_frames*
+    (2*paging::n10_image_words+64*sweep_stream_blocks+sweep_stream_header_bytes);
+
 class Driver final {
     betting::Template source_{configuration(),template_limits()};
     Meter meter_;
@@ -1177,6 +1193,26 @@ class Driver final {
             state.completed_sweeps,p.public_walks,1,history.entries,history.owned_bytes,state.reserved_entries,
             state.reserved_integer_and_text_payload_bits}) out.u64(word);
     }
+    static void emit_sweep_checkpoint(std::ostream& stream,state::State& state,
+                                      std::span<char> scratch,std::size_t sweep) {
+        constexpr std::array<char,8> magic{'O','P','L','C','P','G','0','1'};
+        std::array<char,sweep_stream_header_bytes> header{};
+        std::copy(magic.begin(),magic.end(),header.begin());
+        const auto put_u64=[&](std::size_t offset,std::uint64_t value) {
+            for (unsigned byte=0;byte<8;++byte)
+                header[offset+byte]=static_cast<char>((value>>(8*byte))&0xff);
+        };
+        const auto slot=sweep%2;
+        put_u64(8,sweep);
+        put_u64(16,slot);
+        put_u64(24,sweep_stream_image_bytes);
+        stream.write(header.data(),static_cast<std::streamsize>(header.size()));
+        require(bool(stream),"sweep checkpoint frame header write failed");
+        const auto copied=state.stream_committed_checkpoint(stream,scratch,sweep,slot);
+        require(copied==sweep_stream_image_bytes,"sweep checkpoint image byte count differs");
+        stream.flush();
+        require(bool(stream),"sweep checkpoint frame flush failed");
+    }
 public:
     explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense)
         :plan_(Forecast(source_,meter_,mode,profile).make()) {}
@@ -1187,12 +1223,32 @@ public:
     [[nodiscard]] const Plan& plan() const noexcept { return plan_; }
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
-    TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={}) {
+    void validate_sweep_stream() const {
+        const auto& p=plan_;
+        const auto& game=p.game();
+        require(p.ten_card() && p.paged_directory && p.split_checkpoint && sweeps==2 &&
+            p.shape.rows==119196 && p.shape.slots==281066 &&
+            p.page_limits.profile==paging::Profile::proof10 &&
+            p.page_limits.image_words==paging::n10_image_words &&
+            p.output_bytes==sweep_stream_retained_bytes &&
+            p.page_limits.image_words<=std::numeric_limits<std::uint64_t>::max()/8 &&
+            8*static_cast<std::uint64_t>(p.page_limits.image_words)==sweep_stream_image_bytes,
+            "sweep streaming is restricted to the fixed ten-card paged-directory profile");
+        require(p.entries<=entries_cap && sweep_stream_entries<=entries_cap-p.entries &&
+            p.payload_bits<=game.payload_limit && sweep_stream_payload_bits<=game.payload_limit-p.payload_bits,
+            "sweep streaming scratch exceeds existing storage admission");
+        require(p.total_work<=game.work_limit && sweep_stream_copy_work<=game.work_limit-p.total_work,
+            "sweep streaming copy work exceeds transport work cap");
+    }
+
+    TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
+                     bool streamed_checkpoints=false) {
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
         const auto& game=p.game();
         const auto value_bits=game.value_bits;
+        if (streamed_checkpoints) validate_sweep_stream();
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
         const auto deck=chance::DeckDefinition::reduced(game.deck);
         chance::Limits chance_limits;
@@ -1256,6 +1312,13 @@ public:
             state.commit_sweep();
             if (!p.split_checkpoint) wide_checkpoint(out,state);
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
+            if (streamed_checkpoints) {
+                const auto receipt=state.paged_receipt();
+                require(receipt && receipt->completed_sweeps==sweep+1,
+                    "pager generation did not advance exactly once before frame stream");
+                std::array<char,sweep_stream_scratch_bytes> scratch;
+                emit_sweep_checkpoint(stream,state,scratch,sweep+1);
+            }
         }
         if (p.shared_policy) {
             const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
