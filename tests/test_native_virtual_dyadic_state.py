@@ -140,7 +140,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
         separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
-                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ')
+                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
@@ -207,6 +207,10 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
 
     def test_guard_inventory_and_closed_partial_updates(self):
         self.assertEqual([line.split()[1] for line in self.lines if line.startswith('REJECT ')], list(GUARDS))
+
+    def test_proof9_t4_pager_profile_and_storage_delta(self):
+        self.assertEqual([line for line in self.lines if line.startswith('PROOF9_T4_GUARDS ')],
+                         ['PROOF9_T4_GUARDS 7 2 8 512'])
 
     def test_paged_images_preserve_the_committed_sweep_until_complete(self):
         self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],

@@ -51,5 +51,20 @@ class CheckpointDigestTests(unittest.TestCase):
 
 
 
+    def test_t4_requires_exact_mode_and_four_lowercase_digests_before_file_access(self):
+        d='1'*64
+        cases=(dict(proof9_t4=True),
+               dict(proof9_t4=True,paired=True,rank_sets=True,checkpoint_digests=(d,d,d)),
+               dict(proof9_t4=True,paired=True,rank_sets=True,checkpoint_digests=(d,d,d,'A'*64)),
+               dict(proof9_t4=True,proof9_t3=True,paired=True,rank_sets=True,checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,ten_card=True,paired=True,rank_sets=True,checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,paired=True,rank_sets=True,images=(),checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,paired=True,rank_sets=True,packed_images=(),checkpoint_digests=(d,)*4))
+        with patch('scripts.verify_virtual_dyadic_training.authenticated_reader',side_effect=AssertionError('file opened')):
+            for case in cases:
+                with self.subTest(case=case), self.assertRaises(ValueError):
+                    replay('absent','0'*64,**case)
+
+
 if __name__=='__main__':
     unittest.main()

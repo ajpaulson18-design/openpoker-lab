@@ -127,3 +127,24 @@ average policy decreased from 2.746696 after two sweeps to 2.474053 after
 three. The study had no quality threshold. One Windows native invocation
 took 2.37 seconds and used a 4.94 MB peak working set.
 [Three-sweep evidence](../benchmarks/results/native-dyadic-proof9-three-sweep-accepted-v1/manifest.json)
+
+## Nine-card four-sweep profile
+
+The named `--proof9-t4` mode extends the same finite game and simultaneous
+CFR+ update to four sweeps. The 642-bit representation covers the 641-bit
+regret and 637-bit average bounds. The full request reserves 930,843,628
+modeled work units, including 4,892,112 for checkpoint transport, within
+the named 950-million-unit cap.
+
+The four-sweep pager profile admits 1,221,444 logical requests, 2,426,920
+written words, 7,908 buffered writes and 3,203,674 read words. The 591,008-byte
+resident pager geometry and legacy profile limits are unchanged. Admission
+also reserves the fourth State receipt and its copied transport receipt.
+The independent directory trace covers 439,560 lookups and 2,702 page reads.
+
+The versioned numerical stream occupies 3,045,420 bytes. The complete
+22,460,908-byte transport includes four raw checkpoint frames in slots
+one, zero, one, zero. The controller binds the first three numerical
+sweeps and digests to the published three-sweep study. Independent replay
+reconstructs all four generations. The final file checks bind `staged.bin`
+to sweep three and `committed.bin` to sweep four.

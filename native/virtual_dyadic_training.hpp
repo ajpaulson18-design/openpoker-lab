@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <ostream>
 #include <span>
@@ -32,7 +33,7 @@ enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
-    ten_card_paged_directory, proof9_three_sweep
+    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -59,6 +60,14 @@ inline constexpr std::uint64_t proof9_t3_sweep_stream_retained_bytes=2579724;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_read_bytes=14561520;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_wire_bytes=17141340;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_frames=3;
+inline constexpr std::uint64_t proof9_t4_parent_cap=340111558;
+inline constexpr std::uint64_t proof9_t4_general_quantizer_expected=2*proof9_t3_general_quantizer_expected;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_copy_work=4892112;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_image_bytes=4853840;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_retained_bytes=3045420;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_read_bytes=4*proof9_t4_sweep_stream_image_bytes;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_wire_bytes=22460908;
+inline constexpr std::uint64_t proof9_t4_sweep_stream_frames=4;
 inline constexpr std::uint64_t sweep_stream_header_bytes=32;
 inline constexpr std::uint64_t sweep_stream_scratch_bytes=paging::maximum_checkpoint_stream_scratch_bytes;
 inline constexpr std::uint64_t sweep_stream_entries=(sweep_stream_scratch_bytes+sweep_stream_header_bytes+7)/8;
@@ -251,6 +260,11 @@ inline constexpr Fixture proof9_t3{
     642,635,3,7,18180,22168,750000000,125000000,32000000,77000000,184000000,
     payload_cap,2579724,3
 };
+inline constexpr Fixture proof9_t4{
+    deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
+    642,635,3,7,18180,22168,950000000,171000000,38000000,99000000,262000000,
+    payload_cap,3045420,4
+};
 struct PrefixStats {
     std::uint64_t count=0;
     std::array<std::uint64_t,2> supported{};
@@ -261,6 +275,8 @@ struct Plan {
     [[nodiscard]] const Fixture& game() const noexcept { return *fixture; }
     [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
     [[nodiscard]] bool proof9_three_sweep() const noexcept { return fixture==&proof9_t3; }
+    [[nodiscard]] bool proof9_four_sweep() const noexcept { return fixture==&proof9_t4; }
+    [[nodiscard]] bool bounded_proof9() const noexcept { return proof9_three_sweep() || proof9_four_sweep(); }
     Counts shape;
     std::array<PrefixStats,4> prefixes{};
     std::array<std::uint64_t,3> quantizer_terms{};
@@ -447,7 +463,7 @@ class Forecast final {
             plan_.quantizer_terms[0]+=rows*(320+48*m);
             plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA,value_bits);
-            if (plan_.proof9_three_sweep()) {
+            for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
                 plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits);
             }
@@ -488,7 +504,7 @@ class Forecast final {
             for (std::size_t target=0;target<2;++target) {
                 contractions_+=chance_cost(showdown,showdown?5:k,target,first[1-target]);
                 contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
-                if (plan_.proof9_three_sweep())
+                for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep)
                     contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
             }
             work[work_index(Work::terminal_scale)]+=plan_.seat_passes*np*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits));
@@ -530,24 +546,26 @@ public:
             "invalid packed training profile");
         plan_.traversal=mode;
         const bool t3=profile==StrategyProfile::proof9_three_sweep;
-        if (t3) {
-            plan_.fixture=&proof9_t3;
-            plan_.requested_sweeps=proof9_t3.requested_sweeps;
+        const bool t4=profile==StrategyProfile::proof9_four_sweep;
+        const bool bounded=t3||t4;
+        if (bounded) {
+            plan_.fixture=t3?&proof9_t3:&proof9_t4;
+            plan_.requested_sweeps=plan_.fixture->requested_sweeps;
             plan_.seat_passes=targets*plan_.requested_sweeps;
-            meter_.bootstrap_ceiling(proof9_t3_parent_cap);
+            meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || t3;
+        plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded;
         plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy || plan_.paged_directory;
         plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage || plan_.shared_policy;
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
-        const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state || t3;
+        const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state || bounded;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
-        if (profile==StrategyProfile::ten_card || (buffered && !t3)) plan_.fixture=&proof10;
-        if (buffered) plan_.page_limits.write_requests=t3?5931:virtual_zero?18836:19560;
+        if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
+        if (buffered) plan_.page_limits.write_requests=t3?5931:t4?paging::n9_t4_write_requests:virtual_zero?18836:19560;
         plan_.page_limits.virtual_initial_zero=virtual_zero;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || t3;
-        require(!plan_.split_checkpoint || plan_.requested_sweeps<=3,"split checkpoint sweep count exceeds fixed receipt");
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded;
+        require(!plan_.split_checkpoint || plan_.requested_sweeps<=4,"split checkpoint sweep count exceeds fixed receipt");
         plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
         plan_.paged_strategy=profile==StrategyProfile::paged || plan_.compact_directory;
@@ -558,6 +576,8 @@ public:
     }
     Plan make() {
         const bool t3=plan_.proof9_three_sweep();
+        const bool t4=plan_.proof9_four_sweep();
+        const bool bounded=t3||t4;
         const auto& game=plan_.game();
         const auto value_bits=game.value_bits;
         const auto& template_receipt=source_.receipt();
@@ -655,7 +675,7 @@ public:
             // checkpoint still expands twice and the export decodes once.
             const auto wide_word_factor=plan_.scaled_averages?6:14;
             plan_.packed_average_work=32*R+36*plan_.packed_average_limbs+(wide_word_factor*words(value_bits)+70)*S;
-            if (t3) plan_.packed_average_work=(3*plan_.packed_average_work+1)/2;
+            if (bounded) plan_.packed_average_work=(plan_.requested_sweeps*plan_.packed_average_work+1)/2;
             w[work_index(Work::average)]+=plan_.packed_average_work;
         }
         if (plan_.packed_regrets) {
@@ -665,7 +685,7 @@ public:
             // reads, two compact policy decodes, layout and routing. The
             // original state charge still covers mix and update arithmetic.
             plan_.packed_regret_work=32*R+44*plan_.packed_regret_limbs+(16*words(value_bits)+88)*S;
-            if (t3) plan_.packed_regret_work=(3*plan_.packed_regret_work+1)/2;
+            if (bounded) plan_.packed_regret_work=(plan_.requested_sweeps*plan_.packed_regret_work+1)/2;
             w[work_index(Work::route)]+=plan_.packed_regret_work;
         }
         if (plan_.paged_strategy) {
@@ -674,21 +694,25 @@ public:
             // stream skips both fields of both checkpoint scans.
             const auto requests=(plan_.split_checkpoint?11:15)*S;
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
-            const auto read_words=t3?2223164u:virtual_zero?6130244u:
+            const auto read_words=t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
-            const auto write_requests=plan_.page_limits.write_requests;
-            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,t3?1820190u:(virtual_zero?2:3)*L,
-                t3?930624u:requests,2,
-                plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
-                write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
+            const auto write_requests=t4?paging::n9_t4_write_requests:plan_.page_limits.write_requests;
+            plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,
+                t4?paging::n9_t4_write_words:t3?1820190u:(virtual_zero?2:3)*L,
+                t4?paging::n9_t4_logical_requests:t3?930624u:requests,2,
+                t4?paging::Profile::proof9_t4:plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
+                t4?paging::n9_t4_stage_split_words:write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
-            if (t3) plan_.page_limits.write_requests=5931;
             const auto initialization_chunks=virtual_zero?0:(L+4095)/4096;
             const auto coverage_reset_work=plan_.row_coverage?0:8*((L+63)/64);
-            if (t3) plan_.page_limits.stage_split_words=static_cast<std::size_t>(A);
-            plan_.paging_work=t3?16*plan_.page_limits.requests+3*(5*A+6*G)+24*L:
+            if (t3) {
+                plan_.page_limits.stage_split_words=static_cast<std::size_t>(A);
+                plan_.page_limits.write_requests=5931;
+            }
+            plan_.paging_work=bounded?16*plan_.page_limits.requests+plan_.requested_sweeps*(5*A+6*G)+
+                    8*plan_.requested_sweeps*L:
                 16*requests+2*(5*A+6*G)+16*L+16*initialization_chunks+coverage_reset_work;
             if (write_requests) {
                 // Up to two page fragments per staged extent, one copy and
@@ -706,13 +730,14 @@ public:
         if (plan_.compact_directory) {
             // Table initialization plus compact row encode/decode across both
             // sweeps and checkpoint export. Probes use the existing lookup budget.
-            if (t3) {
+            if (bounded) {
                 plan_.admitted_directory_page_limit=proof9_t3_directory_page_limit;
-                plan_.admitted_directory_read_rows=proof9_t3_directory_page_limit*128;
+                if (t4) plan_.admitted_directory_page_limit=state::proof9_t4_directory_page_limit;
+                plan_.admitted_directory_read_rows=plan_.admitted_directory_page_limit*128;
             }
             plan_.directory_work=plan_.paged_directory?
                 4*state::State::row_directory_resident_entries+16*R+
-                    16*(t3?(2+4*plan_.requested_sweeps):10)*R+4*plan_.admitted_directory_read_rows:96*R;
+                    16*(bounded?(2+4*plan_.requested_sweeps):10)*R+4*plan_.admitted_directory_read_rows:96*R;
             w[work_index(Work::route)]+=plan_.directory_work;
         }
         // Fixed-width limb emission, two policy-image checks, literal BFS
@@ -735,7 +760,7 @@ public:
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
                 plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy,plan_.paged_directory,
-                t3?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep);
+                bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -744,15 +769,21 @@ public:
             (plan_.paged_directory?Plan::directory_frame_entries:0);
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
         plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint,plan_.requested_sweeps);
-        if (t3) {
+        if (bounded) {
             plan_.entries+=sweep_stream_entries;
             plan_.payload_bits+=sweep_stream_payload_bits;
-            require(plan_.general_quantizer_work==proof9_t3_general_quantizer_expected,
-                "three-sweep general quantizer forecast changed");
+            if (t4) {
+                // Driver returns a bounded copy of the per-sweep sidecar in
+                // addition to State's own generation receipts.
+                plan_.entries+=8;
+                plan_.payload_bits+=512;
+            }
+            require(plan_.general_quantizer_work==(t4?proof9_t4_general_quantizer_expected:
+                proof9_t3_general_quantizer_expected),"bounded PROOF9 general quantizer forecast changed");
             require(plan_.denominator_bits+width(2*payoff_ceiling_*plan_.requested_sweeps)<=value_bits,
-                "three-sweep retained value width exceeds fixed integer");
+                "bounded PROOF9 retained value width exceeds fixed integer");
             require(plan_.parent_allowance==game.work_limit-other_work,
-                "three-sweep parent allowance setup changed");
+                "bounded PROOF9 parent allowance setup changed");
         }
         require(plan_.template_work<=template_cap,"pinned template forecast exceeds fixture cap");
         require(plan_.chance_work<=game.chance_limit,"pinned chance forecast exceeds fixture cap");
@@ -1091,7 +1122,8 @@ public:
     Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits)
         :out_(out),capacity_(capacity),value_bits_(value_bits) {
         static_assert(std::endian::native==std::endian::little,"fixed binary producer requires little endian");
-        require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits || value_bits_==proof9_t3.value_bits,"unsupported fixed output width");
+        require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits || value_bits_==proof9_t3.value_bits ||
+            value_bits_==proof9_t4.value_bits,"unsupported fixed output width");
     }
     void bytes(const void* data,std::size_t size) {
         require(size<=capacity_-written_,"fixed training output exceeds byte admission");
@@ -1129,7 +1161,8 @@ struct TrainingIO {
     std::optional<paging::Receipt> paging;
     std::optional<state::PolicySpillReceipt> policy;
     std::optional<state::RowDirectoryReceipt> directory;
-    std::optional<std::array<state::PolicySpillSweep,3>> proof9_t3_policy;
+    std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
+    std::size_t bounded_policy_count=0;
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1151,6 +1184,13 @@ inline constexpr std::uint64_t proof9_t3_sweep_stream_blocks=(proof9_t3_sweep_st
     sweep_stream_scratch_bytes;
 static_assert(proof9_t3_sweep_stream_copy_work==proof9_t3_sweep_stream_frames*
     (2ULL*paging::n9_image_words+64*proof9_t3_sweep_stream_blocks+sweep_stream_header_bytes));
+inline constexpr std::uint64_t proof9_t4_sweep_stream_blocks=(proof9_t4_sweep_stream_image_bytes+sweep_stream_scratch_bytes-1)/
+    sweep_stream_scratch_bytes;
+static_assert(proof9_t4_sweep_stream_read_bytes==proof9_t4_sweep_stream_frames*proof9_t4_sweep_stream_image_bytes);
+static_assert(proof9_t4_sweep_stream_wire_bytes==proof9_t4_sweep_stream_retained_bytes+
+    proof9_t4_sweep_stream_read_bytes+proof9_t4_sweep_stream_frames*sweep_stream_header_bytes);
+static_assert(proof9_t4_sweep_stream_copy_work==proof9_t4_sweep_stream_frames*
+    (2ULL*paging::n9_image_words+64*proof9_t4_sweep_stream_blocks+sweep_stream_header_bytes));
 
 class Driver final {
     betting::Template source_{configuration(),template_limits()};
@@ -1187,8 +1227,8 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text(p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
-        for (const auto word:std::array<std::uint64_t,header_words>{p.proof9_three_sweep()?3ULL:1ULL,grid_bits,integer_words,p.shape.rows,
+        out.text(p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
+        for (const auto word:std::array<std::uint64_t,header_words>{p.bounded_proof9()?p.requested_sweeps:1ULL,grid_bits,integer_words,p.shape.rows,
             p.shape.slots,literal_count,p.requested_sweeps,p.H,p.M,p.denominator_bits,p.game().value_bits,p.output_bytes,2,2,
             p.normalizer,p.game().divisors[3]}) out.u64(word);
         out.wide(denominator);
@@ -1254,7 +1294,7 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
-        out.text(p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
+        out.text(p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
@@ -1302,6 +1342,26 @@ public:
     void validate_sweep_stream() const {
         const auto& p=plan_;
         const auto& game=p.game();
+        if (p.proof9_four_sweep()) {
+            require(p.paged_directory && p.split_checkpoint && p.requested_sweeps==4 &&
+                p.shape.rows==24420 && p.shape.slots==58164 &&
+                p.page_limits.profile==paging::Profile::proof9_t4 &&
+                p.page_limits.image_words==paging::n9_image_words &&
+                p.page_limits.read_words==paging::n9_t4_read_words &&
+                p.page_limits.write_words==paging::n9_t4_write_words &&
+                p.page_limits.write_requests==paging::n9_t4_write_requests &&
+                p.page_limits.requests==paging::n9_t4_logical_requests &&
+                p.page_limits.stage_split_words==paging::n9_t4_stage_split_words &&
+                p.admitted_directory_page_limit==state::proof9_t4_directory_page_limit &&
+                p.output_bytes==proof9_t4_sweep_stream_retained_bytes &&
+                proof9_t4_sweep_stream_image_bytes==8ULL*p.page_limits.image_words,
+                "sweep streaming is restricted to the fixed PROOF9 T4 profile");
+            require(p.entries<=entries_cap && p.payload_bits<=game.payload_limit,
+                "T4 sweep streaming scratch exceeds existing storage admission");
+            require(p.total_work<=game.work_limit && proof9_t4_sweep_stream_copy_work<=game.work_limit-p.total_work,
+                "T4 sweep streaming copy work exceeds transport work cap");
+            return;
+        }
         if (p.proof9_three_sweep()) {
             require(p.paged_directory && p.split_checkpoint && p.requested_sweeps==3 &&
                 p.shape.rows==24420 && p.shape.slots==58164 &&
@@ -1340,8 +1400,8 @@ public:
         const auto& p=plan_;
         const auto& game=p.game();
         const auto value_bits=game.value_bits;
-        require(!p.proof9_three_sweep() || streamed_checkpoints,
-            "PROOF9 T3 requires explicit sweep checkpoint streaming");
+        require(!p.bounded_proof9() || streamed_checkpoints,
+            "bounded PROOF9 requires explicit sweep checkpoint streaming");
         if (streamed_checkpoints) validate_sweep_stream();
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
         const auto deck=chance::DeckDefinition::reduced(game.deck);
@@ -1379,7 +1439,7 @@ public:
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
-                    p.proof9_three_sweep()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep}}:std::nullopt);
+                    p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1413,7 +1473,7 @@ public:
                     "pager generation did not advance exactly once before frame stream");
                 std::array<char,sweep_stream_scratch_bytes> scratch;
             emit_sweep_checkpoint(stream,state,scratch,sweep+1,
-                p.proof9_three_sweep()?proof9_t3_sweep_stream_image_bytes:sweep_stream_image_bytes);
+                p.bounded_proof9()?proof9_t3_sweep_stream_image_bytes:sweep_stream_image_bytes);
             }
         }
         if (p.shared_policy) {
@@ -1433,12 +1493,12 @@ public:
         out.finish();
         TrainingIO result;
         result.paging=state.paged_receipt();
-        if (p.proof9_three_sweep()) {
+        if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();
-            require(receipts.size()==3,"T3 policy sweep receipt length changed");
-            std::array<state::PolicySpillSweep,3> copy{};
-            std::copy(receipts.begin(),receipts.end(),copy.begin());
-            result.proof9_t3_policy=copy;
+            require(receipts.size()==p.requested_sweeps,"bounded policy sweep receipt length changed");
+            result.bounded_policy=std::make_unique<state::PolicySpillSweep[]>(receipts.size());
+            result.bounded_policy_count=receipts.size();
+            std::copy(receipts.begin(),receipts.end(),result.bounded_policy.get());
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         return result;

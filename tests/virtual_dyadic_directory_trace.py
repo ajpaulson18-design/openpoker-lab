@@ -14,7 +14,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 
 def directory_trace(*, ten_card=True, sweeps=2):
     """Return the named directory append and exact direct-mapped read schedule."""
-    if (ten_card, sweeps) not in ((True, 2), (False, 3)):
+    if (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)):
         raise ValueError('unsupported directory trace profile')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
     if len(set(deck)) != (10 if ten_card else 9):

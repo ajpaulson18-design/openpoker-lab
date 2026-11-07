@@ -70,9 +70,14 @@ class SweepCaptureTests(unittest.TestCase):
                         require_exit(result, output)
 
 
-class ThreeSweepCaptureTests(unittest.TestCase):
-    def test_reused_slot_keeps_first_generation_digest(self):
-        reader = capture.SweepCapture(proof9_t3=True)
+class BoundedProof9CaptureTests(unittest.TestCase):
+    def test_reused_slots_keep_all_generation_digests(self):
+        for sweeps, retained, wire in ((3,2_579_724,17_141_340),(4,3_045_420,22_460_908)):
+            with self.subTest(sweeps=sweeps):
+                self.check_reused_slots(sweeps,retained,wire)
+
+    def check_reused_slots(self, sweeps, retained, wire):
+        reader = capture.SweepCapture(proof9_sweeps=sweeps)
         output = io.BytesIO()
         hashes = []
         for kind, extent in reader.segments:
@@ -91,11 +96,11 @@ class ThreeSweepCaptureTests(unittest.TestCase):
             if kind=='image':
                 hashes.append(digest.hexdigest())
         receipt = reader.finish()
-        self.assertEqual([frame['slot'] for frame in receipt['frames']], [1,0,1])
+        self.assertEqual([frame['slot'] for frame in receipt['frames']], [epoch%2 for epoch in range(1,sweeps+1)])
         self.assertEqual([frame['sha256'] for frame in receipt['frames']], hashes)
-        self.assertEqual(len(output.getvalue()), 2_579_724)
-        images = [{'bytes': reader.image_bytes,'sha256': digest} for digest in hashes[1:]]
-        process = {'sweep_capture':receipt,'streams':[{'observed_bytes':17_141_340,'saved_bytes':2_579_724,
+        self.assertEqual(len(output.getvalue()), retained)
+        images = [{'bytes': reader.image_bytes,'sha256': digest} for digest in hashes[-2:]]
+        process = {'sweep_capture':receipt,'streams':[{'observed_bytes':wire,'saved_bytes':retained,
                    'sha256':receipt['retained_sha256'],'wire_sha256':receipt['wire_sha256']}]}
         admission = {'sweep_stream':reader.contract}
         self.assertEqual(verify_sweep_capture(process,admission,images,receipt['retained_sha256']),receipt)

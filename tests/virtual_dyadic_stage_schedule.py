@@ -1,7 +1,7 @@
 """Independent, rank-free packed-stage write schedule for the named fixtures.
 
 This models write calls, not operating-system I/O. It imports no native producer
-or its pager. One invocation covers initialization and both complete sweeps.
+or its pager. One invocation covers initialization and all requested sweeps.
 """
 from functools import lru_cache
 from itertools import combinations
@@ -21,7 +21,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
-    if sweeps!=2 and (sweeps!=3 or ten_card or not virtual_zero):
+    if sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
     if len(set(deck)) != (10 if ten_card else 9):
@@ -163,11 +163,13 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
                       (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190))
     if sweeps==3:
         expected_calls = (348984, 5931, 1820190)
+    elif sweeps==4:
+        expected_calls = (465312, 7908, 2426920)
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
         raise ValueError('independent stage schedule differs from fixed fixture')
     if virtual_zero:
         # Two eight-page direct-mapped banks; zero-image accesses are logical
-        # reads but do not populate or touch the physical cache. Both commits
+        # reads but do not populate or touch the physical cache. Commits
         # invalidate all tags, including before the export phase.
         tags = [None] * 16
         logical_reads = logical_words = virtual_reads = virtual_words = 0
@@ -224,6 +226,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
         actual_reads = (logical_reads, logical_words, virtual_reads, virtual_words, misses, physical_words)
         if sweeps==3:
             expected_reads = (581640,3122992,174492,954766,548,2223164)
+        elif sweeps==4:
+            expected_reads = (756132,4077758,174492,954766,790,3203674)
         if actual_reads != expected_reads:
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result

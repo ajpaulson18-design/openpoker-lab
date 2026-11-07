@@ -31,8 +31,13 @@ inline constexpr std::uint64_t maximum_logical_requests = 1000000;
 inline constexpr std::uint64_t n10_read_words = 11000000;
 inline constexpr std::uint64_t n10_write_words = 3ULL * n10_image_words;
 inline constexpr std::uint64_t n10_logical_requests = 3091726;
+inline constexpr std::uint64_t n9_t4_read_words = 3203674;
+inline constexpr std::uint64_t n9_t4_write_words = 4ULL * n9_image_words;
+inline constexpr std::uint64_t n9_t4_logical_requests = 1221444;
+inline constexpr std::uint64_t n9_t4_write_requests = 7908;
+inline constexpr std::size_t n9_t4_stage_split_words = 258694;
 inline constexpr std::size_t maximum_checkpoint_stream_scratch_bytes = 32768;
-enum class Profile { legacy, proof10 };
+enum class Profile { legacy, proof10, proof9_t4 };
 
 struct Limits {
     std::size_t image_words = n9_image_words;
@@ -302,17 +307,24 @@ private:
     }
     static void validate(const Limits& l) {
         const bool proof10=l.profile==Profile::proof10;
+        const bool proof9_t4=l.profile==Profile::proof9_t4;
         if (proof10 && (l.image_words!=n10_image_words || l.page_words!=default_page_words ||
             l.cache_pages!=default_cache_pages || l.cache_banks!=2))
             throw std::invalid_argument("invalid ten-card image geometry");
+        if (proof9_t4 && (l.image_words!=n9_image_words || l.page_words!=default_page_words ||
+            l.cache_pages!=default_cache_pages || l.cache_banks!=2 ||
+            l.stage_split_words!=n9_t4_stage_split_words || !l.virtual_initial_zero ||
+            l.write_requests>n9_t4_write_requests))
+            throw std::invalid_argument("invalid nine-card four-sweep image geometry");
         if (std::endian::native!=std::endian::little || !l.image_words || !l.page_words || !l.cache_pages ||
             !l.cache_banks || l.cache_banks > 2 ||
             l.cache_pages % l.cache_banks != 0 ||
-            (l.profile!=Profile::legacy && !proof10) ||
+            (l.profile!=Profile::legacy && !proof10 && !proof9_t4) ||
             (!proof10 && l.image_words > n9_image_words) || l.page_words > 8192 || l.cache_pages > 16 ||
-            l.read_words > (proof10?n10_read_words:maximum_read_words) ||
-            l.write_words > (proof10?n10_write_words:maximum_write_words) ||
-            l.write_words < l.image_words || l.requests > (proof10?n10_logical_requests:maximum_logical_requests))
+            l.read_words > (proof9_t4?n9_t4_read_words:proof10?n10_read_words:maximum_read_words) ||
+            l.write_words > (proof9_t4?n9_t4_write_words:proof10?n10_write_words:maximum_write_words) ||
+            l.write_words < l.image_words ||
+            l.requests > (proof9_t4?n9_t4_logical_requests:proof10?n10_logical_requests:maximum_logical_requests))
             throw std::invalid_argument("invalid image limits");
         if (l.image_words > static_cast<std::size_t>(std::numeric_limits<std::streamoff>::max()) / 8)
             throw std::overflow_error("image byte size exceeds stream range");
