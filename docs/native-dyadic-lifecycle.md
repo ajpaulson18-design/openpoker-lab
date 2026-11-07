@@ -4,8 +4,8 @@ The explicit `Lifecycle::bounded_v1` is a prerequisite for longer
 [unified training](native-dyadic-two-sweep.md). It permits one through
 eight requested sweeps for the existing ordered, shared-policy,
 row-covered and paged State components under their legacy resource caps.
-It does not add a whole-game training mode or admit longer ten-card runs.
-The existing two-sweep lifecycle remains the default.
+The existing two-sweep lifecycle remains the default. The named nine-card
+three-sweep trainer below uses the bounded lifecycle.
 
 The owner admits the complete requested horizon before allocation.
 Per-sweep spill receipts use a bounded array sized for that horizon,
@@ -32,7 +32,7 @@ current file slot and previous sweep/slot. Slot zero is `committed.bin`
 and slot one is `staged.bin`; the first commit selects slot one. These
 files retain the final two generations and can be overwritten by later
 sweeps. An epoch is metadata, not an immutable snapshot or an integrity
-certificate. A future training sink must authenticate each generation
+certificate. A checkpoint sink must authenticate each generation
 before reuse and retain the grids required for independent update replay.
 At the first commit, previous sweep zero denotes the initial image.
 `previous_is_virtual` identifies a virtual-zero initial image whose file
@@ -78,8 +78,8 @@ The saved-only verifier reconstructs every compact average and regret
 word from its own exact training replay. It hashes those words in file
 order and compares each sweep's digest. It also verifies the policy grids,
 root values, final average and visible-information best responses from the
-retained numerical stream. The current transport is scoped to two sweeps.
-Longer requests still require separate work, precision and I/O admission.
+retained numerical stream. The ten-card transport profile is scoped to
+two sweeps.
 
 The source-frozen run at `83d143d` matched both prior image hashes and the
 entire numerical stream. Independent digest replay reproduced both updates,
@@ -93,3 +93,24 @@ The single Windows run took 7.43 seconds with a 5.10 MB peak working set.
 The preceding paged-directory run measured 6.81 seconds and 5.04 MB. These
 observations quantify the added checkpoint transport on this fixture.
 [Streamed checkpoint evidence](../benchmarks/results/native-dyadic-sweep-stream-ten-card-accepted-v1/manifest.json)
+
+## Nine-card three-sweep profile
+
+The named `--proof9-t3` mode runs three simultaneous CFR+ sweeps of the
+fixed nine-card four-street game with paired traversal, virtual initial
+zero, row-covered paging and the shared policy spill. It admits the
+entire run before training. The 642-bit representation covers the
+three-sweep regret and average bounds. The forecast separately charges
+the third sweep's general regret quantization and reserves 3,669,084
+copy units for checkpoint transport. Together the numerical work and
+transport reserve 700,169,489 units within the 750-million-unit cap.
+
+The pager schedule uses 930,624 logical requests and writes 1,820,190
+words across the three generations, reaching the legacy word limit.
+The transport emits 17,141,340 bytes. The controller retains the
+2,579,724-byte numerical stream and all three ordered image digests.
+The independent verifier regenerates all three compact images, including
+the first image whose slot is reused in sweep three. The final file
+checks bind `committed.bin` to sweep two and `staged.bin` to sweep three.
+The first two numerical updates and image digests must match the
+previously accepted nine-card split-checkpoint run.

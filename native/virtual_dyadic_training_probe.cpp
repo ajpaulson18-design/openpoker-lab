@@ -20,7 +20,8 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_virtual_zero, train_ten_virtual_zero, admit_ten_ordered_state, train_ten_ordered_state,
                   admit_ten_row_coverage, train_ten_row_coverage, admit_ten_shared_policy, train_ten_shared_policy,
                   admit_ten_paged_directory, train_ten_paged_directory,
-                  admit_ten_sweep_stream, train_ten_sweep_stream };
+                  admit_ten_sweep_stream, train_ten_sweep_stream,
+                  admit_proof9_t3, train_proof9_t3 };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -71,21 +72,23 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_PAGED_DIRECTORY") return Mode::train_ten_paged_directory;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_SWEEP_STREAM") return Mode::admit_ten_sweep_stream;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_SWEEP_STREAM") return Mode::train_ten_sweep_stream;
+    if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
+    if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     throw training::Error("unsupported fixed dyadic request");
 }
 
-void admit(const training::Driver& driver,bool sweep_stream=false) {
+void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false) {
     if (sweep_stream) driver.validate_sweep_stream();
     const auto& plan=driver.plan();
     const auto& counts=plan.shape;
-    std::cout<<"{\"protocol\":\"DYADIC_T2_V1\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
+    std::cout<<"{\"protocol\":\""<<(proof9_t3?"DYADIC_T3_V1":"DYADIC_T2_V1")<<"\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
         "\"target_passes\":0,\"completed_sweeps\":0,\"rank_calls\":0,\"rows\":"<<counts.rows
         <<",\"slots\":"<<counts.slots<<",\"visits\":"<<counts.visits<<",\"actions\":"<<counts.actions
         <<",\"reveals\":"<<counts.reveals<<",\"candidates\":"<<counts.candidates
         <<",\"folds\":"<<counts.folds<<",\"showdowns\":"<<counts.showdowns
         <<",\"showdown_contractions_per_pass\":"<<plan.showdown_contractions
         <<",\"hidden_completion_candidates_per_pass\":"<<plan.hidden_candidates
-        <<",\"literal_nodes\":"<<training::literal_count<<",\"requested_sweeps\":"<<training::sweeps;
+        <<",\"literal_nodes\":"<<training::literal_count<<",\"requested_sweeps\":"<<plan.requested_sweeps;
     if (plan.traversal==training::Traversal::paired) std::cout<<",\"public_walks_per_sweep\":1";
     if (plan.packed_averages) std::cout<<",\"packed_average_limbs\":"<<plan.packed_average_limbs
         <<",\"packed_average_work\":"<<plan.packed_average_work;
@@ -122,8 +125,8 @@ void admit(const training::Driver& driver,bool sweep_stream=false) {
     if (plan.paged_directory)
         std::cout<<",\"paged_row_directory\":true,\"row_directory_entries\":"
             <<training::state::State::row_directory_resident_entries
-            <<",\"row_directory_page_limit\":"<<training::Plan::directory_page_limit
-            <<",\"row_directory_read_call_limit\":"<<10*counts.rows;
+            <<",\"row_directory_page_limit\":"<<plan.admitted_directory_page_limit
+            <<",\"row_directory_read_call_limit\":"<<(plan.proof9_three_sweep()?2+4*plan.requested_sweeps:10)*counts.rows;
     if (plan.rank_board_sets)
         std::cout<<",\"rank_cache_planes\":"<<plan.rank_planes
             <<",\"rank_lookup_work_per_query\":"
@@ -159,14 +162,16 @@ void admit(const training::Driver& driver,bool sweep_stream=false) {
         std::cout<<'"'<<training::work_names[i]<<"\":"<<plan.parent[i];
     }
     std::cout<<"},\"actual_admission_work\":"<<plan.template_work+driver.admission_work();
-    if (sweep_stream) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
-        <<training::sweep_stream_frames<<",\"frame_header_bytes\":"<<training::sweep_stream_header_bytes
-        <<",\"image_bytes\":"<<training::sweep_stream_image_bytes
-        <<",\"wire_bytes\":"<<training::sweep_stream_wire_bytes
-        <<",\"retained_bytes\":"<<training::sweep_stream_retained_bytes
-        <<",\"read_bytes\":"<<training::sweep_stream_read_bytes
+    if (proof9_t3) std::cout<<",\"proof9_t3\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
+    if (sweep_stream || proof9_t3) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
+        <<(proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
+        <<",\"frame_header_bytes\":"<<training::sweep_stream_header_bytes
+        <<",\"image_bytes\":"<<(proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
+        <<",\"wire_bytes\":"<<(proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:training::sweep_stream_wire_bytes)
+        <<",\"retained_bytes\":"<<(proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:training::sweep_stream_retained_bytes)
+        <<",\"read_bytes\":"<<(proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
         <<",\"scratch_bytes\":"<<training::sweep_stream_scratch_bytes
-        <<",\"copy_work\":"<<training::sweep_stream_copy_work<<'}';
+        <<",\"copy_work\":"<<(proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
     std::cout<<"}\n";
     std::cout.flush();
     training::require(bool(std::cout),"dyadic admission output failed");
@@ -186,7 +191,8 @@ void save_paging(const std::filesystem::path& scratch,const training::paging::Re
     stream.close();
     training::require(bool(stream),"paged receipt write failed");
 }
-void save_policy(const std::filesystem::path& scratch,const training::state::PolicySpillReceipt& receipt) {
+template<std::size_t N>
+void save_policy(const std::filesystem::path& scratch,const std::array<training::state::PolicySpillSweep,N>& receipt) {
     std::ofstream stream(scratch/"policy.json",std::ios::binary);
     training::require(bool(stream),"policy receipt open failed");
     stream<<'[';
@@ -227,13 +233,15 @@ int main(int argc,char* argv[]) {
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
             mode==Mode::train_ten_row_coverage || mode==Mode::train_ten_shared_policy ||
-            mode==Mode::train_ten_paged_directory || mode==Mode::train_ten_sweep_stream;
+            mode==Mode::train_ten_paged_directory || mode==Mode::train_ten_sweep_stream || mode==Mode::train_proof9_t3;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_ten_paged_directory || mode==Mode::train_ten_paged_directory ||
+        if (mode==Mode::admit_proof9_t3 || mode==Mode::train_proof9_t3)
+            profile=training::StrategyProfile::proof9_three_sweep;
+        else if (mode==Mode::admit_ten_paged_directory || mode==Mode::train_ten_paged_directory ||
             mode==Mode::admit_ten_sweep_stream || mode==Mode::train_ten_sweep_stream)
             profile=training::StrategyProfile::ten_card_paged_directory;
         else if (mode==Mode::admit_ten_shared_policy || mode==Mode::train_ten_shared_policy)
@@ -263,12 +271,13 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
             mode==Mode::admit_ten_virtual_zero || mode==Mode::admit_ten_ordered_state ||
             mode==Mode::admit_ten_row_coverage || mode==Mode::admit_ten_shared_policy ||
-            mode==Mode::admit_ten_paged_directory || mode==Mode::admit_ten_sweep_stream)
-            admit(driver,mode==Mode::admit_ten_sweep_stream);
+            mode==Mode::admit_ten_paged_directory || mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3)
+            admit(driver,mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t3);
         else {
-            const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream);
+            const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream || mode==Mode::train_proof9_t3);
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
+            if (io.proof9_t3_policy) save_policy(scratch,*io.proof9_t3_policy);
             if (io.directory) save_directory(scratch,*io.directory);
         }
         return 0;

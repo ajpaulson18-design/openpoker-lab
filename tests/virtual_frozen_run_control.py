@@ -98,14 +98,19 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_ROW_COVERAGE','TRAIN_TEN_ROW_COVERAGE',
                                              'ADMIT_TEN_SHARED_POLICY','TRAIN_TEN_SHARED_POLICY',
                                              'ADMIT_TEN_PAGED_DIRECTORY','TRAIN_TEN_PAGED_DIRECTORY',
-                                             'ADMIT_TEN_SWEEP_STREAM','TRAIN_TEN_SWEEP_STREAM'):
+                                             'ADMIT_TEN_SWEEP_STREAM','TRAIN_TEN_SWEEP_STREAM',
+                                             'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3'):
         raise ValueError('invalid fixed dyadic probe transport mode')
-    request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
-    if mode=='TRAIN_TEN_SWEEP_STREAM':
-        from tests.virtual_dyadic_sweep_capture import SweepCapture, WIRE_BYTES
-        return _run_streamed_child(command,request,directory,stdout_limit=WIRE_BYTES,
-            stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=WIRE_BYTES,
-            measure_peak_memory=True,sweep_capture=SweepCapture())
+    proof9_t3=mode in ('ADMIT_PROOF9_T3','TRAIN_PROOF9_T3')
+    protocol='DYADIC_T3_V1' if proof9_t3 else 'DYADIC_T2_V1'
+    request=(protocol+' '+mode+'\n').encode('ascii')
+    if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_PROOF9_T3'):
+        from tests.virtual_dyadic_sweep_capture import SweepCapture
+        capture=SweepCapture(proof9_t3=proof9_t3)
+        wire_bytes=capture.contract['wire_bytes']
+        return _run_streamed_child(command,request,directory,stdout_limit=wire_bytes,
+            stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=wire_bytes,
+            measure_peak_memory=True,sweep_capture=capture)
     training=mode.startswith('TRAIN')
     ceiling=_DYADIC_T2_STDOUT if training and mode!='TRAIN_SPLIT' else 2135476
     limit={'TRAIN_SPLIT':2_114_028,'TRAIN_TEN':9_833_076,'TRAIN_TEN_BUFFERED':9_833_076,
@@ -130,10 +135,11 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
     if type(request) is not bytes or len(request)>request_limit:raise ValueError('bounded child request')
     ceilings=(2135476,_DYADIC_T2_STDOUT)
     if sweep_capture is not None:
-        from tests.virtual_dyadic_sweep_capture import SweepCapture, WIRE_BYTES
-        if type(sweep_capture) is not SweepCapture or stdout_limit!=WIRE_BYTES:
+        from tests.virtual_dyadic_sweep_capture import SweepCapture, sweep_stream_contract
+        ceilings=tuple(sweep_stream_contract(proof9_t3=mode)['wire_bytes'] for mode in (False,True))
+        if (type(sweep_capture) is not SweepCapture or stdout_limit!=stdout_ceiling or
+                stdout_limit!=sweep_capture.contract['wire_bytes']):
             raise ValueError('invalid sweep checkpoint capture bound')
-        ceilings=(WIRE_BYTES,)
     if (stdout_ceiling not in ceilings or
             type(stdout_limit) is not int or not 0<stdout_limit<=stdout_ceiling or
             type(stderr_limit) is not int or not 0<stderr_limit<=65536 or
