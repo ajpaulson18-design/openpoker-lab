@@ -20,6 +20,9 @@ from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bo
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
 from tests.virtual_dyadic_stage_schedule import stage_schedule
+from tests.virtual_dyadic_directory_trace import directory_trace
+from tests.virtual_dyadic_training_reference import Fixture
+from scripts.verify_virtual_dyadic_training import compact_scales
 
 ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
@@ -42,7 +45,8 @@ def exact_json(data):
 
 
 def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, ordered_state=False,row_coverage=False,
-                           shared_policy=False):
+                           shared_policy=False, paged_directory=False):
+    shared_policy=shared_policy or paged_directory
     row_coverage=row_coverage or shared_policy
     ordered_state=ordered_state or row_coverage
     virtual_zero=virtual_zero or ordered_state
@@ -105,6 +109,20 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
         expected['parent_work']['route']+=spill_work
         expected['component_work']['parent']+=spill_work
         expected['planned_total_work']+=spill_work
+    if paged_directory:
+        # Values independently pinned by the fixture-level forecast; preserve
+        # every existing shared-policy field while changing only this profile.
+        old_state=expected['component_work']['state']
+        old_directory=expected['directory_work']
+        expected.update(paged_row_directory=True,row_directory_entries=4608,
+                        row_directory_page_limit=7656,row_directory_read_call_limit=1_191_960,
+                        entries=360_303,directory_work=24_916_800)
+        expected['component_work']['state']=261_025_384
+        expected['parent_work']['route']+=24_916_800-old_directory
+        expected['component_work']['parent']+=24_916_800-old_directory
+        expected['planned_total_work']+=261_025_384-old_state+24_916_800-old_directory
+        expected['parent_allowance']+=old_state-261_025_384
+        require(expected['planned_total_work']==2_129_413_526,'paged directory work composition')
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
             'ten-card admission differs from the independent fixed census')
@@ -115,11 +133,12 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
-                       ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False):
-    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage or ten_shared_policy:
+                       ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
+                       ten_paged_directory=False):
+    if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage or ten_shared_policy or ten_paged_directory:
         return validate_ten_admission(receipt,buffered=ten_buffered,virtual_zero=ten_virtual_zero,
                                       ordered_state=ten_ordered_state,row_coverage=ten_row_coverage,
-                                      shared_policy=ten_shared_policy)
+                                      shared_policy=ten_shared_policy,paged_directory=ten_paged_directory)
     require(type(receipt) is dict and 'ten_card' not in receipt,'ten-card receipt for earlier profile')
     rank_sets=rank_sets or split
     directory=directory or rank_sets
@@ -424,6 +443,69 @@ def verify_policy_spill(directory,stream,admission):
     return {'sweeps':expected,'retained_extent_bytes':size,'sha256':sha(policy)}
 
 
+def verify_row_directory(directory, stream, admission):
+    """Authenticate every immutable directory record against independent rows."""
+    directory=unlinked_path(directory)
+    require(directory.is_dir(),'row directory is missing')
+    receipt_path=unlinked_path(directory/'rows.json')
+    rows_path=unlinked_path(directory/'rows.bin')
+    require(receipt_path.is_file() and receipt_path.stat().st_nlink==1 and
+            0<receipt_path.stat().st_size<=65536,'row directory receipt must be private and bounded')
+    receipt=exact_json(receipt_path.read_bytes())
+    trace=directory_trace()
+    rows,slots=admission['rows'],admission['slots']
+    require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
+            and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
+            and trace['logical_reads']==admission['row_directory_read_call_limit'],
+            'independent row directory census differs from admission')
+    expected=dict(appended_rows=rows,build_snapshots=rows,read_calls=trace['logical_reads'],
+                  cache_hits=trace['hits'],page_reads=trace['misses'],
+                  read_rows=trace['read_bytes']//32,write_calls=trace['write_calls'],written_rows=rows)
+    require(type(receipt) is dict and receipt==expected and
+            all(type(value) is int for value in receipt.values()),'row directory receipt differs from independent trace')
+    require(rows_path.is_file() and rows_path.stat().st_nlink==1 and rows_path.stat().st_size==32*rows,
+            'row directory must be a private fixed-size file')
+    data=rows_path.read_bytes()
+    require(len(data)==32*rows,'row directory length changed')
+    digest=hashlib.sha256(data).hexdigest()
+    fixture=Fixture(ten_card=True)
+    scales=compact_scales(fixture)
+    source_map={}
+    reverse_map={}
+    avg=reg=offset=0
+    with unlinked_path(stream).open('rb') as saved:
+        saved.seek(8+16*8+11*8+1105*96)
+        for row,key in enumerate(fixture.ordered_rows()):
+            require(row<rows,'independent directory row overflow')
+            header=saved.read(24)
+            require(len(header)==24,'truncated saved directory prelude')
+            history,packed,at=struct.unpack('<3Q',header)
+            actor,holding,menu=packed&255,(packed>>8)&255,(packed>>16)&255
+            require(packed>>24==0 and at==offset and menu==len(fixture.menus[key])
+                    and fixture.compact_key(history,actor,holding)==key,
+                    'saved prelude differs from independent directory order')
+            w0,w1,w2,w3=struct.unpack_from('<4Q',data,row*32)
+            avg_shift,reg_shift=scales[history>>33]
+            source=(w2>>32)&0xffff
+            source_ref=fixture.paths[history>>33][0]
+            require(source<388 and source_map.setdefault(source_ref,source)==source
+                    and reverse_map.setdefault(source,source_ref)==source_ref,
+                    'row source identity is out of range or inconsistent')
+            require(w0==history and w1==(offset|(avg<<32))
+                    and w2==(reg|(source<<32)|(avg_shift<<48))
+                    and w3==(reg_shift|(actor<<16)|(holding<<24)),
+                    'row directory record differs from independent packed geometry')
+            offset+=menu
+            avg+=menu*((644-avg_shift+63)//64)
+            reg+=menu*((644-reg_shift+63)//64)
+    require((row+1,offset,avg,reg)==(rows,slots,admission['packed_average_limbs'],admission['packed_regret_limbs']),
+            'row directory complete extent differs')
+    require(sha(rows_path)==digest and exact_json(receipt_path.read_bytes())==receipt,
+            'row directory changed during verification')
+    return {'receipt':receipt,'rows_bytes':len(data),'rows_sha256':digest,
+            'receipt_sha256':sha(receipt_path),'independent_trace':trace}
+
+
 def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
     variant='buffered-ten-card' if virtual_zero else 'ten-card'
     directory=f'benchmarks/results/native-dyadic-{variant}-accepted-v1'
@@ -487,17 +569,18 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
 
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
-        ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False):
+        ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
-                                                 '_TEN_SHARED_POLICY')) if flag),'')
+                                                 '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY')) if flag),'')
     paired=any(modes)
+    ten_shared_policy=ten_shared_policy or ten_paged_directory
     ten_row_coverage=ten_row_coverage or ten_shared_policy
     ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
@@ -547,7 +630,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
-            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy)
+            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
+            ten_paged_directory=ten_paged_directory)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -556,6 +640,11 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
             schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero) if ten_buffered or ten_virtual_zero else None
+            if ten_paged_directory:
+                trace=directory_trace()
+                require(trace['misses']==admission['row_directory_page_limit'] and
+                        trace['logical_reads']==admission['row_directory_read_call_limit'],
+                        'independent row directory trace differs before training')
             entered=1
             trained,process=observed('TRAIN'+suffix)
             raw=trained/'stdout.bin'
@@ -582,13 +671,15 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 paging=verify_paging(pages,admission,schedule)
                 if ten_shared_policy:
                     result['policy_spill']=verify_policy_spill(pages,raw,admission)
+                if ten_paged_directory:
+                    result['row_directory']=verify_row_directory(output/'page-images-rows',raw,admission)
                 images=[{'name':name,**paging['images'][name]} for name in SPLIT_IMAGE_NAMES]
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    label='paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -616,6 +707,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if ten_shared_policy:
                 require(result['policy_spill']==verify_policy_spill(output/'page-images',raw,admission),
                         'policy spill bytes changed after independent replay')
+            if ten_paged_directory:
+                require(result['row_directory']==verify_row_directory(output/'page-images-rows',raw,admission),
+                        'row directory changed after independent replay')
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
@@ -676,6 +770,7 @@ def main():
     modes.add_argument('--ten-ordered-state',action='store_true')
     modes.add_argument('--ten-row-coverage',action='store_true')
     modes.add_argument('--ten-shared-policy',action='store_true')
+    modes.add_argument('--ten-paged-directory',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
@@ -683,7 +778,7 @@ def main():
         rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
-        ten_shared_policy=args.ten_shared_policy),sort_keys=True))
+        ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory),sort_keys=True))
 
 
 if __name__=='__main__':main()

@@ -96,14 +96,16 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_VIRTUAL_ZERO','TRAIN_TEN_VIRTUAL_ZERO',
                                              'ADMIT_TEN_ORDERED_STATE','TRAIN_TEN_ORDERED_STATE',
                                              'ADMIT_TEN_ROW_COVERAGE','TRAIN_TEN_ROW_COVERAGE',
-                                             'ADMIT_TEN_SHARED_POLICY','TRAIN_TEN_SHARED_POLICY'):
+                                             'ADMIT_TEN_SHARED_POLICY','TRAIN_TEN_SHARED_POLICY',
+                                             'ADMIT_TEN_PAGED_DIRECTORY','TRAIN_TEN_PAGED_DIRECTORY'):
         raise ValueError('invalid fixed dyadic probe transport mode')
     request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
     training=mode.startswith('TRAIN')
     ceiling=_DYADIC_T2_STDOUT if training and mode!='TRAIN_SPLIT' else 2135476
     limit={'TRAIN_SPLIT':2_114_028,'TRAIN_TEN':9_833_076,'TRAIN_TEN_BUFFERED':9_833_076,
            'TRAIN_TEN_VIRTUAL_ZERO':9_833_076,'TRAIN_TEN_ORDERED_STATE':9_833_076,
-           'TRAIN_TEN_ROW_COVERAGE':9_833_076,'TRAIN_TEN_SHARED_POLICY':9_833_076}.get(
+           'TRAIN_TEN_ROW_COVERAGE':9_833_076,'TRAIN_TEN_SHARED_POLICY':9_833_076,
+           'TRAIN_TEN_PAGED_DIRECTORY':9_833_076}.get(
         mode,ceiling if training else 65536)
     return _run_streamed_child(command,request,directory,stdout_limit=limit,
         stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=ceiling,
@@ -111,7 +113,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                      'TRAIN_SEALED','TRAIN_PAGED','TRAIN_DIRECTORY','TRAIN_RANK_SETS','TRAIN_SPLIT',
                                      'TRAIN_TEN','TRAIN_TEN_BUFFERED','TRAIN_TEN_VIRTUAL_ZERO',
                                      'TRAIN_TEN_ORDERED_STATE','TRAIN_TEN_ROW_COVERAGE',
-                                     'TRAIN_TEN_SHARED_POLICY'))
+                                     'TRAIN_TEN_SHARED_POLICY','TRAIN_TEN_PAGED_DIRECTORY'))
 
 
 def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,

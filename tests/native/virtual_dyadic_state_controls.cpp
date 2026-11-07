@@ -2,10 +2,12 @@
 #include <algorithm>
 #include <array>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 namespace s=openpoker::virtual_dyadic_state;
 namespace h=openpoker::virtual_dyadic_history;
@@ -876,6 +878,193 @@ void compact_directory_controls(h::History& history,const b::Template& source,
     std::cout<<"PAGED_IMAGE ordered_directory\n";
 }
 
+void paged_directory_controls(h::History& history,const b::Template& source,
+                              const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const auto root=history.root();
+    const auto menu_size=history.decision_key(root).actions;
+    const auto slots=2*menu_size;
+    constexpr std::size_t shift=190;
+    const s::Forecast small_plan=forecast(2,slots);
+    const s::PackedAverageCapacity small_packed{2*slots,2*slots};
+    const s::ActionCatalogCapacity small_catalog{source.nodes().size(),menu_size,true};
+    const pages::Limits small_limits{4*slots,pages::default_page_words,2,1000,8*slots,500,2,
+        pages::Profile::legacy,2*slots,4,true};
+    const s::PagedStrategy shared_strategy{scratch/"directory-shared",small_limits,true,true,true,true};
+    const s::PagedStrategy directory_strategy{scratch/"directory-snapshots",small_limits,true,true,true,true,true,20};
+    s::State shared(history,{2,2},1,small_plan,{},small_catalog,small_packed,shared_strategy);
+    s::State directory(history,{2,2},1,small_plan,{},small_catalog,small_packed,directory_strategy);
+    const auto register_rows=[&](s::State& state) {
+        require(state.register_sealed_row(root,0,shift,shift)==0 &&
+            state.register_sealed_row(root,1,shift,shift)==1,"paged directory row order changed");
+        state.freeze();
+    };
+    register_rows(shared);
+    register_rows(directory);
+    static_assert(std::is_copy_constructible_v<s::PolicySnapshot>);
+    static_assert(std::is_same_v<decltype(std::declval<s::State&>().copy_policy_snapshot(
+        std::size_t{},std::span<std::uint64_t>{})),s::PolicySnapshot>);
+    std::array<Integer,20> mixed_values{},increments{};
+    mixed_values[menu_size-2]=Integer(5)<<(shift+52);
+    mixed_values[menu_size-1]=Integer(6)<<(shift+52);
+    const auto value_span=std::span<const Integer>(mixed_values).first(menu_size);
+    for (std::size_t sweep=0;sweep<2;++sweep) {
+        shared.begin_sweep();
+        directory.begin_sweep();
+        std::array<std::array<std::uint64_t,20>,2> saved{};
+        std::array<s::PolicySnapshot,2> snapshots{};
+        for (std::size_t row=0;row<2;++row) {
+            std::array<std::uint64_t,20> expected{};
+            const auto before=directory.row_directory_receipt();
+            snapshots[row]=directory.copy_policy_snapshot(row,std::span(saved[row]).first(menu_size));
+            const auto after=directory.row_directory_receipt();
+            require(before && after && after->read_calls==before->read_calls+1,
+                "policy snapshot did not perform exactly one directory metadata lookup");
+            const auto& snapshot=snapshots[row];
+            const auto expected_row=shared.row_at(row);
+            require(snapshot.descriptor.row.history_ordinal==expected_row.history_ordinal &&
+                snapshot.descriptor.row.actor==expected_row.actor &&
+                snapshot.descriptor.row.holding_index==expected_row.holding_index &&
+                snapshot.descriptor.row.offset==expected_row.offset &&
+                snapshot.descriptor.average_shift==shared.average_row_shift(row) &&
+                snapshot.descriptor.regret_shift==shared.regret_row_shift(row) &&
+                snapshot.descriptor.row.actions.size()==menu_size &&
+                snapshot.units.data()==saved[row].data() && snapshot.units.size()==menu_size &&
+                std::equal(snapshot.units.begin(),snapshot.units.end(),saved[row].begin()),
+                "policy snapshot descriptor or caller-owned units differ");
+            shared.copy_policy_units(row,std::span(expected).first(menu_size));
+            require(std::equal(saved[row].begin(),saved[row].begin()+menu_size,expected.begin()),
+                "paged snapshot policy differs from shared policy output");
+            increments.fill(0);
+            if (row==0) increments[0]=Integer(1)<<shift;
+            const auto mass_span=std::span<const Integer>(increments).first(menu_size);
+            require(directory.stage_row(row,value_span,mass_span)==shared.stage_row(row,value_span,mass_span),
+                "paged directory mixed value differs from shared state");
+        }
+        require(snapshots[0].units.data()==saved[0].data() &&
+            std::equal(snapshots[0].units.begin(),snapshots[0].units.end(),saved[0].begin()) &&
+            snapshots[0].descriptor.row.holding_index==0,
+            "later metadata lookup changed an earlier value snapshot");
+        directory.commit_sweep();
+        shared.commit_sweep();
+    }
+    const auto directory_receipt=directory.row_directory_receipt();
+    const auto directory_spill=directory.policy_spill_receipt();
+    const auto shared_spill=shared.policy_spill_receipt();
+    require(directory_receipt && directory_receipt->appended_rows==2 &&
+        directory_receipt->written_rows==2 && directory_receipt->read_calls==12 &&
+        directory_spill && shared_spill &&
+        (*directory_spill)[0].uniform_rows==(*shared_spill)[0].uniform_rows &&
+        (*directory_spill)[0].write_words==(*shared_spill)[0].write_words &&
+        (*directory_spill)[1].mixed_rows==(*shared_spill)[1].mixed_rows &&
+        (*directory_spill)[1].write_words==(*shared_spill)[1].write_words &&
+        (*directory_spill)[1].extent_words==(*shared_spill)[1].extent_words &&
+        (*directory_spill)[1].read_calls==(*shared_spill)[1].read_calls &&
+        (*directory_spill)[1].read_words==(*shared_spill)[1].read_words,
+        "paged directory or shared policy receipt differs");
+    for (const auto* name:{"committed.bin","staged.bin"}) {
+        std::ifstream a(directory_strategy.scratch/name,std::ios::binary);
+        std::ifstream b(shared_strategy.scratch/name,std::ios::binary);
+        require(bool(a) && bool(b) && std::string(std::istreambuf_iterator<char>(a),{})==
+            std::string(std::istreambuf_iterator<char>(b),{}),"paged directory changed checkpoint image bytes");
+    }
+    std::vector<std::uint64_t> directory_export,shared_export;
+    const auto directory_flags=directory.stream_average([&](std::span<const std::uint64_t> units) {
+        directory_export.insert(directory_export.end(),units.begin(),units.end());
+    });
+    const auto shared_flags=shared.stream_average([&](std::span<const std::uint64_t> units) {
+        shared_export.insert(shared_export.end(),units.begin(),units.end());
+    });
+    const auto export_receipt=directory.row_directory_receipt();
+    require(directory_export==shared_export && directory_flags.size()==shared_flags.size() &&
+        std::equal(directory_flags.begin(),directory_flags.end(),shared_flags.begin()) &&
+        export_receipt && export_receipt->read_calls==14,
+        "paged directory streamed export differs from prior shared state or read cap");
+    std::cout<<"PAGED_IMAGE paged_directory\n";
+
+    // A non-multiple of the fixed 128-row page size must write and read the exact short tail.
+    constexpr std::size_t many_rows=129;
+    std::vector<h::History::Cursor> decisions;
+    constexpr std::array<std::uint8_t,5> board{16,17,24,32,33};
+    std::function<void(h::History::Cursor)> walk=[&](h::History::Cursor cursor) {
+        if (decisions.size()>=many_rows) return;
+        const auto node_id=history.source_node(cursor);
+        const auto& node=source.nodes()[node_id];
+        if (node.state.phase==b::Phase::decision) decisions.push_back(cursor);
+        if (decisions.size()>=many_rows) return;
+        if (node.state.phase==b::Phase::reveal) {
+            walk(history.append_reveal(cursor,{board.data(),node.state.next_street}));
+        } else if (node.state.phase==b::Phase::decision) {
+            for (std::size_t edge=0;edge<node.edges.size() && decisions.size()<many_rows;++edge)
+                walk(history.append_action(cursor,edge));
+        }
+    };
+    walk(history.root());
+    require(decisions.size()==many_rows,"fixed-board DFS did not find 129 ordered decisions");
+    std::size_t many_slots=0;
+    for (const auto cursor:decisions) many_slots+=history.decision_key(cursor).actions;
+    const s::Forecast many_plan=forecast(many_rows,many_slots);
+    const s::PackedAverageCapacity many_packed{2*many_slots,2*many_slots};
+    const s::ActionCatalogCapacity many_catalog{source.nodes().size(),many_slots,true};
+    const pages::Limits many_limits{4*many_slots,pages::default_page_words,2,1000,8*many_slots,500,2,
+        pages::Profile::legacy,2*many_slots,4,true};
+    const auto register_many=[&](s::State& state) {
+        for (std::size_t row=0;row<many_rows;++row)
+            require(state.register_sealed_row(decisions[row],0,shift,shift)==row,
+                "many-row directory registration changed order");
+        state.freeze();
+    };
+    const auto tail_path=scratch/"directory-short-tail";
+    s::State tail(history,{2,2},1,many_plan,{},many_catalog,many_packed,
+        s::PagedStrategy{tail_path,many_limits,true,true,true,true,true,10*many_rows});
+    register_many(tail);
+    require(std::filesystem::file_size(std::filesystem::path(tail_path.string()+"-rows")/"rows.bin")==32*many_rows,
+        "directory final short page extent differs");
+    require(tail.row_at(many_rows-1).history_ordinal==history.ordinal(decisions.back()),
+        "directory final short-page row differs");
+    const auto tail_receipt=tail.row_directory_receipt();
+    require(tail_receipt && tail_receipt->page_reads==1 && tail_receipt->read_rows==1,
+        "directory did not account for its one-row final page");
+
+    const auto capped_path=scratch/"directory-page-cap";
+    s::State capped(history,{2,2},1,many_plan,{},many_catalog,many_packed,
+        s::PagedStrategy{capped_path,many_limits,true,true,true,true,true,1});
+    register_many(capped);
+    (void)capped.row_at(0);
+    bool page_rejected=false;
+    try { (void)capped.row_at(128); }
+    catch (const std::length_error&) {page_rejected=true;}
+    if (page_rejected) require_poisoned(capped);
+    const auto capped_receipt=capped.row_directory_receipt();
+    require(page_rejected && capped.failed() && capped_receipt && capped_receipt->page_reads==1 &&
+        capped_receipt->read_calls==1 && capped_receipt->read_rows==128,
+        "directory page-read cap did not poison at the exact admitted count");
+
+    const auto short_path=scratch/"directory-short-read";
+    s::State short_read(history,{2,2},1,many_plan,{},many_catalog,many_packed,
+        s::PagedStrategy{short_path,many_limits,true,true,true,true,true,10*many_rows});
+    register_many(short_read);
+    const auto file=std::filesystem::path(short_path.string()+"-rows")/"rows.bin";
+    std::filesystem::resize_file(file,32*128);
+    bool short_rejected=false;
+    try { (void)short_read.row_at(128); }
+    catch (const std::runtime_error&) {short_rejected=true;}
+    if (short_rejected) require_poisoned(short_read);
+    const auto short_receipt=short_read.row_directory_receipt();
+    require(short_rejected && short_read.failed() && short_receipt &&
+        short_receipt->page_reads==0 && short_receipt->read_calls==0,
+        "short row-directory read did not poison without crediting a page");
+
+    const auto invalid_path=scratch/"directory-invalid-bounds";
+    bool bounds_rejected=false;
+    try {
+        s::State invalid(history,{2,2},1,small_plan,{},small_catalog,small_packed,
+            s::PagedStrategy{invalid_path,small_limits,true,true,true,true,true,21});
+    } catch (const s::Error& error) {bounds_rejected=error.code()==ErrorCode::invalid_forecast;}
+    require(bounds_rejected && !std::filesystem::exists(invalid_path.string()+"-rows"),
+        "invalid row-directory page bound reached directory allocation");
+}
+
 void row_coverage_controls(h::History& history,const b::Template& source,
                            const std::filesystem::path& scratch) {
     namespace pages=openpoker::virtual_dyadic_paged_image;
@@ -1050,6 +1239,7 @@ int main(int argc,char** argv) {
         if (argc==2) {
             paged_image_controls(argv[1]);
             compact_directory_controls(history,source,argv[1]);
+            paged_directory_controls(history,source,argv[1]);
             row_coverage_controls(history,source,argv[1]);
         }
         std::cout<<"END\n";

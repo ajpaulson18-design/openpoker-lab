@@ -431,3 +431,33 @@ set and 3.88 seconds with shared policy, versus 11.04 MB and
 mixed policy and streamed export removed the resident
 slot-sized unit array.
 [Shared policy evidence](../benchmarks/results/native-dyadic-shared-policy-ten-card-accepted-v1/manifest.json)
+
+## Paged immutable row directory
+
+The explicit `--ten-paged-directory` profile appends each row's
+identity, source menu, offsets and exact scales to a private file.
+Freeze flushes and checks the complete 32-byte-per-row extent.
+Subsequent reads use eight direct-mapped pages of 128 records.
+Callers receive value snapshots; action views refer to the sealed
+menu catalog. The directory remains unchanged throughout training.
+
+The existing byte per row holds the five-bit policy tag and a
+staging mark. A successful row marks completion only after both
+packed fields are staged. Final export replaces the byte with its
+fallback flag after all policy units have been emitted. Directory
+read failures poison State and prevent later sweep operations.
+
+For ten cards, the composed reservation is 360,303 entries, down
+from 832,287 with shared policy. The directory object reserves
+4,608 eight-byte entries, including its 32 KiB cache; copied
+decision descriptors add 192 frame entries. Sequential registration
+also removes an obsolete per-row lookup allowance. Directory append,
+lookup and page-read work remain separately charged. The resulting
+plan is 2,129,413,526 modeled work units within the existing cap.
+
+An independent physical-support traversal predicts 1,191,960 frozen
+row reads, 7,656 page misses and 31,333,376 bytes read. Buffered
+construction writes 3,814,272 bytes in 932 requests. These counts
+describe application requests, not operating-system disk traffic.
+Source compilation and rank-free admission do not establish a
+completed training or memory result; frozen-run acceptance is separate.

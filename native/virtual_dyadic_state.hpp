@@ -65,6 +65,8 @@ struct PagedStrategy {
     bool ordered_rows=false;
     bool row_coverage=false;
     bool shared_policy=false;
+    bool paged_directory=false;
+    std::size_t directory_page_limit=0;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -84,6 +86,18 @@ struct Row {
     std::size_t history_ordinal = 0, actor = 0, holding_index = 0;
     std::size_t offset = 0;
     std::span<const std::string_view> actions;
+};
+struct RowDescriptor {
+    Row row;
+    std::size_t average_offset=0,average_shift=0,regret_offset=0,regret_shift=0;
+};
+struct PolicySnapshot {
+    RowDescriptor descriptor;
+    std::span<const std::uint64_t> units;
+};
+struct RowDirectoryReceipt {
+    std::size_t appended_rows=0,build_snapshots=0,read_calls=0,cache_hits=0,page_reads=0,
+                read_rows=0,write_calls=0,written_rows=0;
 };
 struct AverageExport {
     dyadic_policy::ImageKind kind = dyadic_policy::ImageKind::exported_average;
@@ -116,6 +130,98 @@ class State final {
         std::uint8_t actor, holding, policy_tag=0;
     };
     static_assert(sizeof(CompactRow)==32);
+    class RowDirectory {
+        using Wire = std::array<std::uint64_t,4>;
+        static constexpr std::size_t page_rows=128,cache_pages=8;
+        const std::size_t rows_,page_limit_;
+        std::fstream file_;
+        std::array<Wire,page_rows*cache_pages> cache_{};
+        std::array<std::size_t,cache_pages> tags_{};
+        std::array<bool,cache_pages> valid_{};
+        Wire last_{};
+        RowDirectoryReceipt receipt_{};
+        bool ready_=false,failed_=false;
+
+        void flush_build(std::size_t count) {
+            file_.write(reinterpret_cast<const char*>(cache_.data()),static_cast<std::streamsize>(count*sizeof(Wire)));
+            if (!file_) throw std::runtime_error("cannot append row directory");
+            ++receipt_.write_calls;
+            receipt_.written_rows+=count;
+        }
+        static CompactRow decode(const Wire& words) {
+            if (words[3]>>32) throw std::runtime_error("row directory reserved bits differ");
+            return {words[0],static_cast<std::uint32_t>(words[1]),static_cast<std::uint32_t>(words[1]>>32),
+                static_cast<std::uint32_t>(words[2]),static_cast<std::uint16_t>(words[2]>>32),
+                static_cast<std::uint16_t>(words[2]>>48),static_cast<std::uint16_t>(words[3]),
+                static_cast<std::uint8_t>(words[3]>>16),static_cast<std::uint8_t>(words[3]>>24)};
+        }
+    public:
+        RowDirectory(std::filesystem::path scratch,std::size_t rows,std::size_t page_limit)
+            :rows_(rows),page_limit_(page_limit) {
+            if (!rows || !page_limit || page_limit>10*rows)
+                throw std::invalid_argument("invalid row directory bounds");
+            scratch+="-rows";
+            std::error_code error;
+            if (!std::filesystem::create_directory(scratch,error) || error)
+                throw std::runtime_error("fresh row directory could not be reserved");
+            file_.open(scratch/"rows.bin",std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);
+            if (!file_) throw std::runtime_error("cannot open row directory");
+        }
+        void append(const CompactRow& row) {
+            try {
+                if (failed_ || ready_ || receipt_.appended_rows>=rows_ || row.policy_tag)
+                    throw std::logic_error("invalid ordered directory append");
+                last_={row.history,static_cast<std::uint64_t>(row.offset)|(static_cast<std::uint64_t>(row.average_offset)<<32),
+                    row.regret_offset|(static_cast<std::uint64_t>(row.source)<<32)|(static_cast<std::uint64_t>(row.average_shift)<<48),
+                    row.regret_shift|(static_cast<std::uint64_t>(row.actor)<<16)|(static_cast<std::uint64_t>(row.holding)<<24)};
+                cache_[receipt_.appended_rows%page_rows]=last_;
+                ++receipt_.appended_rows;
+                if (receipt_.appended_rows%page_rows==0) flush_build(page_rows);
+            } catch (...) {failed_=true;throw;}
+        }
+        void freeze() {
+            try {
+                if (failed_ || ready_ || receipt_.appended_rows!=rows_)
+                    throw std::logic_error("row directory build is incomplete");
+                const auto remaining=rows_%page_rows;
+                if (remaining) flush_build(remaining);
+                file_.flush();
+                if (!file_ || receipt_.written_rows!=rows_ || file_.tellp()!=static_cast<std::streamoff>(32*rows_))
+                    throw std::runtime_error("row directory extent differs");
+                ready_=true;
+            } catch (...) {failed_=true;throw;}
+        }
+        CompactRow get(std::size_t row) {
+            try {
+                if (failed_ || row>=receipt_.appended_rows) throw std::out_of_range("row directory index");
+                if (!ready_) {
+                    if (row+1!=receipt_.appended_rows || receipt_.build_snapshots>=rows_)
+                        throw std::logic_error("building directory exposes only its last append");
+                    ++receipt_.build_snapshots;
+                    return decode(last_);
+                }
+                if (receipt_.read_calls>=10*rows_) throw std::length_error("row directory lookup cap");
+                const auto page=row/page_rows,slot=page%cache_pages;
+                if (!valid_[slot] || tags_[slot]!=page) {
+                    if (receipt_.page_reads>=page_limit_) throw std::length_error("row directory page-read cap");
+                    const auto count=std::min(page_rows,rows_-page*page_rows);
+                    valid_[slot]=false;
+                    file_.seekg(static_cast<std::streamoff>(32*page*page_rows));
+                    file_.read(reinterpret_cast<char*>(cache_.data()+slot*page_rows),
+                        static_cast<std::streamsize>(count*sizeof(Wire)));
+                    if (!file_) throw std::runtime_error("short row directory page");
+                    tags_[slot]=page;valid_[slot]=true;
+                    ++receipt_.page_reads;receipt_.read_rows+=count;
+                } else ++receipt_.cache_hits;
+                ++receipt_.read_calls;
+                return decode(cache_[slot*page_rows+row%page_rows]);
+            } catch (...) {failed_=true;throw;}
+        }
+        bool failed() const noexcept {return failed_;}
+        const RowDirectoryReceipt& receipt() const noexcept {return receipt_;}
+    };
+    static constexpr std::size_t row_directory_entries=4608;
+    static_assert(sizeof(RowDirectory)<=8*row_directory_entries);
     class PolicySpill {
         static constexpr std::uint8_t uniform_tag=1,mixed_tag=22;
         const std::size_t rows_,words_;
@@ -236,6 +342,7 @@ class State final {
     Integer denominator_;
     std::unique_ptr<Row[]> rows_;
     std::unique_ptr<CompactRow[]> compact_rows_;
+    std::unique_ptr<RowDirectory> row_directory_;
     std::unique_ptr<std::uint32_t[]> compact_index_;
     std::size_t compact_index_slots_=0;
     std::size_t compact_probe_limit_=0;
@@ -256,7 +363,8 @@ class State final {
     std::unique_ptr<unsigned char[]> seen_;
     std::unique_ptr<PolicySpill> policy_spill_;
     Phase phase_ = Phase::building;
-    bool failed_ = false, exported_ = false;
+    mutable bool failed_ = false;
+    bool exported_ = false;
 
     [[noreturn]] static void fail(ErrorCode code, const char* message) { throw Error(code,message); }
     static std::uint64_t plus(std::uint64_t a,std::uint64_t b) {
@@ -328,14 +436,53 @@ class State final {
     }
     [[nodiscard]] bool packed() const noexcept { return packed_.limb_count!=0; }
     [[nodiscard]] bool packed_regrets() const noexcept { return packed_.regret_limbs!=0; }
+    [[nodiscard]] bool compact() const noexcept {return paged_ && paged_->compact_rows;}
+    [[nodiscard]] bool disk_rows() const noexcept {return paged_ && paged_->paged_directory;}
+    CompactRow compact_record(std::size_t row) const {
+        const auto record=row_directory_?row_directory_->get(row):compact_rows_[row];
+        if (row_directory_) {
+            try {
+                if (record.source>=catalog_.keys || record.actor>1 || record.holding>=hand_counts_[record.actor] ||
+                    record.average_shift>=forecast_.value_bits || record.regret_shift>=forecast_.value_bits)
+                    fail(ErrorCode::invalid_row,"invalid directory row identity");
+                const auto menu=action_catalog_[record.source].size();
+                if (!menu || record.offset>forecast_.slots || menu>forecast_.slots-record.offset ||
+                    record.average_offset>packed_.limb_count ||
+                    menu*packed_stride(record.average_shift)>packed_.limb_count-record.average_offset ||
+                    record.regret_offset>packed_.regret_limbs ||
+                    menu*packed_stride(record.regret_shift)>packed_.regret_limbs-record.regret_offset)
+                    fail(ErrorCode::invalid_row,"invalid directory row extent");
+            } catch (...) {failed_=true;throw;}
+        }
+        return record;
+    }
+    RowDescriptor describe_row(std::size_t row) const {
+        index_bound(row);
+        if (compact()) {
+            const auto info=compact_record(row);
+            return {{info.history,info.actor,info.holding,info.offset,action_catalog_[info.source]},
+                info.average_offset,info.average_shift,info.regret_offset,info.regret_shift};
+        }
+        const auto average=packed()?packed_rows_[row]:PackedRow{};
+        const auto regret=packed_regrets()?packed_regret_rows_[row]:PackedRegretRow{};
+        return {rows_[row],average.limb_offset,average.shift,regret.limb_offset,regret.shift};
+    }
+    std::uint8_t policy_tag(std::size_t row) const noexcept {
+        return disk_rows()?static_cast<std::uint8_t>(seen_[row]&31):compact_rows_[row].policy_tag;
+    }
+    bool row_seen(std::size_t row) const noexcept {return disk_rows()?(seen_[row]&128)!=0:seen_[row]!=0;}
     static StorageForecast admit_storage(const Forecast& f,const Limits& limits,
                                          ActionCatalogCapacity catalog,PackedAverageCapacity packed,
                                          const std::optional<PagedStrategy>& paged) {
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
+        if (paged && paged->paged_directory &&
+            (!paged->directory_page_limit || paged->directory_page_limit>10*f.rows))
+            fail(ErrorCode::invalid_forecast,"invalid paged row directory read bound");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
-                                              paged && paged->row_coverage,paged && paged->shared_policy);
+                                              paged && paged->row_coverage,paged && paged->shared_policy,
+                                              paged && paged->paged_directory);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -425,7 +572,10 @@ class State final {
             else paged_image_->stage(page_base(field)+index,extent);
         }
     }
-    void healthy() const { if (failed_) fail(ErrorCode::failed_owner,"state owner already failed"); }
+    void healthy() const {
+        if (failed_ || (row_directory_ && row_directory_->failed()))
+            fail(ErrorCode::failed_owner,"state owner already failed");
+    }
     void charge(std::uint64_t work) {
         if (work>forecast_.own_work-receipt_.state_work) fail(ErrorCode::work_limit,"state cumulative work allowance exceeded");
         receipt_.state_work+=work;
@@ -450,14 +600,14 @@ class State final {
     void index_bound(std::size_t row) const {
         if (row>=receipt_.rows) fail(ErrorCode::invalid_row,"state row index");
     }
-    [[nodiscard]] PackedRow average_record(std::size_t row) const noexcept {
-        if (!compact_rows_) return packed_rows_[row];
-        const auto& info=compact_rows_[row];
+    [[nodiscard]] PackedRow average_record(std::size_t row) const {
+        if (!compact()) return packed_rows_[row];
+        const auto info=compact_record(row);
         return {info.average_offset,info.average_shift};
     }
-    [[nodiscard]] PackedRegretRow regret_record(std::size_t row) const noexcept {
-        if (!compact_rows_) return packed_regret_rows_[row];
-        const auto& info=compact_rows_[row];
+    [[nodiscard]] PackedRegretRow regret_record(std::size_t row) const {
+        if (!compact()) return packed_regret_rows_[row];
+        const auto info=compact_record(row);
         return {info.regret_offset,info.regret_shift};
     }
     [[nodiscard]] std::size_t compact_slot(std::uint64_t history,std::size_t holding) const {
@@ -477,6 +627,7 @@ class State final {
     }
 public:
     static constexpr std::size_t compact_record_bytes=sizeof(CompactRow);
+    static constexpr std::size_t row_directory_resident_entries=row_directory_entries;
     [[nodiscard]] static std::size_t compact_index_slots(std::size_t rows) {
         if (!rows || rows>2'000'000) fail(ErrorCode::invalid_forecast,"invalid compact row count");
         return std::bit_ceil(4*rows);
@@ -490,7 +641,7 @@ public:
                                              PackedAverageCapacity packed={},
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
                                              bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false,
-                                             bool shared_policy=false) {
+                                             bool shared_policy=false,bool paged_directory=false) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -512,6 +663,8 @@ public:
             fail(ErrorCode::invalid_forecast,"row coverage requires ordered disjoint packed fields");
         if (shared_policy && (!row_coverage || f.sweeps!=2 || f.slots<2*f.rows))
             fail(ErrorCode::invalid_forecast,"shared policy requires the two-sweep ordered State path");
+        if (paged_directory && !shared_policy)
+            fail(ErrorCode::invalid_forecast,"paged directory requires shared ordered policy");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation across all modes.
@@ -553,7 +706,8 @@ public:
                 packed_bits=plus(packed_bits,times(8,resident_bytes));
                 if (compact_rows) {
                     const auto order_entries=ordered_rows?(sizeof(last_registration_)+7)/8:0;
-                    const auto common=plus(1056+order_entries,plus(4*f.rows,plus(3*catalog.token_slots,2*catalog.keys)));
+                    const auto records=paged_directory?row_directory_entries:4*f.rows;
+                    const auto common=plus(1056+order_entries,plus(records,plus(3*catalog.token_slots,2*catalog.keys)));
                     const auto build=ordered_rows?common:plus(common,compact_index_slots(f.rows));
                     const auto policies=shared_policy?plus(f.rows,policy_spill_entries):
                         times(ordered_rows?1:2,plus(f.rows,f.slots));
@@ -601,7 +755,9 @@ public:
         if (paged_ && paged_->compact_rows) {
             if (hands[0]>2 || hands[1]>2)
                 fail(ErrorCode::invalid_forecast,"compact rows support at most two holdings per seat");
-            compact_rows_=std::make_unique<CompactRow[]>(forecast_.rows);
+            if (paged_->paged_directory)
+                row_directory_=std::make_unique<RowDirectory>(paged_->scratch,forecast_.rows,paged_->directory_page_limit);
+            else compact_rows_=std::make_unique<CompactRow[]>(forecast_.rows);
             if (!paged_->ordered_rows) {
                 compact_index_slots_=compact_index_slots(forecast_.rows);
                 compact_probe_limit_=2*logceil(forecast_.rows+1);
@@ -611,14 +767,14 @@ public:
         if (!catalog_.sealed) action_text_=std::make_unique<ActionText[]>(token_capacity());
         action_views_=std::make_unique<std::string_view[]>(token_capacity());
         if (catalog_.keys) action_catalog_=std::make_unique<Menu[]>(catalog_.keys);
-        if (!compact_rows_ && this->packed()) packed_rows_=std::make_unique<PackedRow[]>(forecast_.rows);
-        if (!compact_rows_ && packed_regrets()) packed_regret_rows_=std::make_unique<PackedRegretRow[]>(forecast_.rows);
+        if (!compact() && this->packed()) packed_rows_=std::make_unique<PackedRow[]>(forecast_.rows);
+        if (!compact() && packed_regrets()) packed_regret_rows_=std::make_unique<PackedRegretRow[]>(forecast_.rows);
     }
     State(const State&)=delete;
     State& operator=(const State&)=delete;
     State(State&&)=delete;
     State& operator=(State&&)=delete;
-    [[nodiscard]] bool failed() const noexcept { return failed_; }
+    [[nodiscard]] bool failed() const noexcept { return failed_ || (row_directory_ && row_directory_->failed()); }
     [[nodiscard]] const Integer& denominator() const noexcept { return denominator_; }
     [[nodiscard]] Receipt receipt() const noexcept {
         auto answer=receipt_;
@@ -634,16 +790,17 @@ public:
         if (!policy_spill_) return std::nullopt;
         return policy_spill_->receipt();
     }
+    [[nodiscard]] std::optional<RowDirectoryReceipt> row_directory_receipt() const {
+        if (!row_directory_) return std::nullopt;
+        return row_directory_->receipt();
+    }
     [[nodiscard]] std::span<const Row> rows() const {
-        if (compact_rows_) fail(ErrorCode::phase,"compact row directory has no contiguous Row view");
+        if (compact()) fail(ErrorCode::phase,"compact row directory has no contiguous Row view");
         return {rows_.get(),receipt_.rows};
     }
     [[nodiscard]] std::size_t row_count() const noexcept { return receipt_.rows; }
     [[nodiscard]] Row row_at(std::size_t row) const {
-        index_bound(row);
-        if (!compact_rows_) return rows_[row];
-        const auto& info=compact_rows_[row];
-        return {info.history,info.actor,info.holding,info.offset,action_catalog_[info.source]};
+        return describe_row(row).row;
     }
     [[nodiscard]] ActionStorage action_storage() const noexcept {
         return {token_capacity(),catalog_.keys,catalog_.keys?stored_tokens_:receipt_.slots,
@@ -736,7 +893,7 @@ public:
             if (average_shift>=forecast_.value_bits || regret_shift>=forecast_.value_bits ||
                 !packed() || !packed_regrets())
                 fail(ErrorCode::invalid_row,"sealed packed row shifts or mode");
-            charge(plus(128,times(16,logceil(forecast_.rows+1))));
+            charge(plus(128,disk_rows()?32:times(16,logceil(forecast_.rows+1))));
             const Key identity{info.ordinal,info.actor,holding};
             std::size_t slot=0,existing=receipt_.rows;
             if (ordered) {
@@ -777,12 +934,14 @@ public:
                 action_catalog_[info.source]=owned;stored_tokens_+=info.actions;++stored_menus_;
             } else if (owned.size()!=info.actions) fail(ErrorCode::changed_menu,"sealed source menu changed");
             const auto number=receipt_.rows,offset=receipt_.slots;
-            if (compact_rows_) {
-                compact_rows_[number]={info.ordinal,static_cast<std::uint32_t>(offset),
+            if (compact()) {
+                const CompactRow record{info.ordinal,static_cast<std::uint32_t>(offset),
                     static_cast<std::uint32_t>(packed_words_registered_),static_cast<std::uint32_t>(packed_regret_words_registered_),
                     static_cast<std::uint16_t>(info.source),static_cast<std::uint16_t>(average_shift),
                     static_cast<std::uint16_t>(regret_shift),static_cast<std::uint8_t>(info.actor),
                     static_cast<std::uint8_t>(holding)};
+                if (row_directory_) row_directory_->append(record);
+                else compact_rows_[number]=record;
                 if (ordered) last_registration_.emplace(path,holding);
                 else compact_index_[slot]=static_cast<std::uint32_t>(number+1);
             } else {
@@ -915,7 +1074,7 @@ public:
             charge(plus(times(8,forecast_.slots),times(2,forecast_.rows)));
             if (catalog_.sealed) {
                 charge(times(16,forecast_.rows));
-                if (compact_rows_) compact_index_.reset();
+                if (compact()) compact_index_.reset();
                 else index_.clear();
             }
             if (!packed_regrets()) {
@@ -937,6 +1096,7 @@ public:
                 policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows);
             else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
+            if (row_directory_) row_directory_->freeze();
             if (paged_) {
                 using Image = virtual_dyadic_paged_image::Image;
                 if (paged_->row_coverage)
@@ -959,18 +1119,22 @@ public:
             std::optional<std::array<Integer,20>> decoded;
             if (packed_regrets()) decoded.emplace();
             for (std::size_t row_index=0;row_index<row_count();++row_index) {
-                const auto row=row_at(row_index);
+                const auto descriptor=describe_row(row_index);
+                const auto row=descriptor.row;
                 charge(16+4*row.actions.size());
                 std::span<const Integer> values;
                 if (packed_regrets()) {
-                    const auto packed_row=regret_record(row_index);
+                    const PackedRegretRow packed_row{descriptor.regret_offset,descriptor.regret_shift};
                     for (std::size_t a=0;a<row.actions.size();++a)
                         (*decoded)[a]=load_compact(PackedField::regret,packed_row.limb_offset,packed_row.shift,a);
                     values={decoded->data(),row.actions.size()};
                 } else values={regrets_.get()+row.offset,row.actions.size()};
                 const auto policy=quantizer_.regret_policy(values);
-                if (policy_spill_)
-                    compact_rows_[row_index].policy_tag=policy_spill_->append(row.offset-row_index,policy.units());
+                if (policy_spill_) {
+                    const auto tag=policy_spill_->append(row.offset-row_index,policy.units());
+                    if (row_directory_) seen_[row_index]=tag;
+                    else compact_rows_[row_index].policy_tag=tag;
+                }
                 else std::copy(policy.units().begin(),policy.units().end(),units_.get()+row.offset);
             }
             if (policy_spill_) policy_spill_->finish();
@@ -991,7 +1155,20 @@ public:
                 fail(ErrorCode::phase,"policy copy requires an active shared sweep");
             const auto record=row_at(row);
             if (output.size()!=record.actions.size()) fail(ErrorCode::invalid_row,"policy copy extent differs");
-            policy_spill_->load(compact_rows_[row].policy_tag,record.offset-row,output);
+            policy_spill_->load(policy_tag(row),record.offset-row,output);
+        } catch (...) {failed_=true;throw;}
+    }
+    [[nodiscard]] PolicySnapshot copy_policy_snapshot(std::size_t row,std::span<std::uint64_t> storage) {
+        healthy();
+        try {
+            if (phase_!=Phase::sweeping || !row_directory_ || !policy_spill_)
+                fail(ErrorCode::phase,"policy snapshot requires frozen paged rows");
+            const auto descriptor=describe_row(row);
+            const auto count=descriptor.row.actions.size();
+            if (count>storage.size()) fail(ErrorCode::invalid_row,"policy snapshot storage is too short");
+            const auto units=storage.first(count);
+            policy_spill_->load(policy_tag(row),descriptor.row.offset-row,units);
+            return {descriptor,units};
         } catch (...) {failed_=true;throw;}
     }
 private:
@@ -1002,11 +1179,12 @@ private:
         healthy();
         try {
             if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state staging requires active sweep");
-            const auto r=row_at(row);const auto count=r.actions.size();
-            if (seen_[row] || action_values.size()!=count || average_action_increments.size()!=count)
+            const auto descriptor=describe_row(row);
+            const auto r=descriptor.row;const auto count=r.actions.size();
+            if (row_seen(row) || action_values.size()!=count || average_action_increments.size()!=count)
                 fail(ErrorCode::invalid_row,"state duplicate or incomplete staged row");
-            const auto average_row=packed()?average_record(row):PackedRow{};
-            const auto regret_row=packed_regrets()?regret_record(row):PackedRegretRow{};
+            const PackedRow average_row{descriptor.average_offset,descriptor.average_shift};
+            const PackedRegretRow regret_row{descriptor.regret_offset,descriptor.regret_shift};
             if (scaled_shift && (!packed() || *scaled_shift!=average_row.shift))
                 fail(ErrorCode::invalid_row,"state scaled average requires matching packed row shift");
             // Constant bounded backend width inspection/sign checks precede
@@ -1027,7 +1205,7 @@ private:
             receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,temp_bits);
             Integer mixed=0;
             std::array<std::uint64_t,20> copied{};
-            if (policy_spill_) policy_spill_->load(compact_rows_[row].policy_tag,r.offset-row,
+            if (policy_spill_) policy_spill_->load(policy_tag(row),r.offset-row,
                 std::span(copied).first(count));
             const auto* policy=policy_spill_?copied.data():units_.get()+r.offset;
             for (std::size_t a=0;a<count;++a) mixed+=action_values[a]*policy[a];
@@ -1055,7 +1233,9 @@ private:
                     staged_averages_[at]=std::move(average);
                 }
             }
-            seen_[row]=1;++receipt_.staged_rows;
+            if (row_directory_) seen_[row]|=128;
+            else seen_[row]=1;
+            ++receipt_.staged_rows;
             return mixed;
         } catch (...) { failed_=true;throw; }
     }
@@ -1075,7 +1255,7 @@ public:
                 fail(ErrorCode::phase,"state cannot commit incomplete sweep");
             charge(times(4,receipt_.rows));
             for (std::size_t row=0;row<receipt_.rows;++row)
-                if (!seen_[row]) fail(ErrorCode::phase,"state missing staged row");
+                if (!row_seen(row)) fail(ErrorCode::phase,"state missing staged row");
             if (paged_image_) {
                 // Successful State rows cover the two disjoint, fully
                 // registered fields exactly once. The pager checks word count.
@@ -1102,10 +1282,11 @@ private:
         std::optional<std::array<Integer,20>> decoded;
         if (packed()) decoded.emplace();
         for (std::size_t i=0;i<forecast_.rows;++i) {
-            const auto row=row_at(i);charge(16+4*row.actions.size());
+            const auto descriptor=describe_row(i);
+            const auto row=descriptor.row;charge(16+4*row.actions.size());
             const Integer* masses;
             if (decoded) {
-                const auto average_row=average_record(i);
+                const PackedRow average_row{descriptor.average_offset,descriptor.average_shift};
                 for (std::size_t a=0;a<row.actions.size();++a)
                     (*decoded)[a]=packed_regrets()
                         ?load_compact(PackedField::average,average_row.limb_offset,average_row.shift,a)
