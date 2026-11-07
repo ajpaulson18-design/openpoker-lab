@@ -187,16 +187,21 @@ def digest_compact_checkpoint(ordered,row_scales,regrets,average,expected_bytes,
     return digest.hexdigest()
 
 
-def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False):
+def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
+    require(type(proof9_t3) is bool and (not proof9_t3 or
+            (paired and rank_sets and not ten_card and checkpoint_digests is not None
+             and images is None and packed_images is None)),
+            'PROOF9 T3 requires paired rank-set digest-only checkpoints')
+    sweep_count=3 if proof9_t3 else 2
     require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
             'choose one checkpoint transport')
     if checkpoint_digests is not None:
-        require(type(checkpoint_digests) in (list,tuple) and len(checkpoint_digests)==2 and
+        require(type(checkpoint_digests) in (list,tuple) and len(checkpoint_digests)==sweep_count and
                 all(type(d) is str and len(d)==64 and
                 all(c in '0123456789abcdef' for c in d) for d in checkpoint_digests),
-                'two ordered lowercase checkpoint SHA-256 digests required')
+                'ordered lowercase checkpoint SHA-256 digests required')
         checkpoint_digests=tuple(checkpoint_digests)
         require(paired and rank_sets,'checkpoint digest replay requires paired rank-set training')
     split=images is not None or packed_images is not None or checkpoint_digests is not None
@@ -216,7 +221,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     bits = TEN_CARD_VALUE_BITS if ten_card else VALUE_BITS
     denominator = TEN_CARD_DENOMINATOR if ten_card else D
     image_bytes = TEN_CARD_IMAGE_BYTES if ten_card else SPLIT_IMAGE_BYTES
-    size = TEN_CARD_SPLIT_BYTES if ten_card else (SPLIT_BYTES if split else TOTAL_BYTES)
+    size = 2_579_724 if proof9_t3 else TEN_CARD_SPLIT_BYTES if ten_card else (SPLIT_BYTES if split else TOTAL_BYTES)
     packed_details=[]
     with ExitStack() as stack:
         r,identity=stack.enter_context(authenticated_reader(path,expected_sha256,size,private=split,value_bits=bits))
@@ -234,8 +239,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             identities.add(identity)
             checkpoints.append((reader,digest))
             packed_details.append({'name':Path(page).name,'sha256':encoded,'bytes':extent})
-        require(r.read(8)==(TEN_CARD_SPLIT_MAGIC if ten_card else SPLIT_MAGIC if split else MAGIC),'saved training magic')
-        require(r.words(16)==(1,52,INT_WORDS,rows,slots,OCCURRENCES,2,12,1,637 if ten_card else 635,bits,size,2,2,29,120 if ten_card else 20),
+        require(r.read(8)==(b'OPLDST31' if proof9_t3 else TEN_CARD_SPLIT_MAGIC if ten_card else SPLIT_MAGIC if split else MAGIC),'saved training magic')
+        require(r.words(16)==(3 if proof9_t3 else 1,52,INT_WORDS,rows,slots,OCCURRENCES,sweep_count,12,1,637 if ten_card else 635,bits,size,2,2,29,120 if ten_card else 20),
                 'saved fixed fixture or integer contract')
         require(r.natural()==denominator,'saved fixed game denominator')
         fixture=Fixture(ten_card=ten_card)
@@ -267,7 +272,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         regrets=average=first=None
         changes=0
         sweeps=[]
-        for t in (1,2):
+        for t in range(1,sweep_count+1):
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -301,7 +306,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             require(units==expected[key],f'saved exported average grid mismatch: {key}')
             saved[key]=units
         require(r.read(rows)==bytes(not any(average[key]) for key,_ in ordered),'saved average fallback flags')
-        require(r.read(8)==(TEN_CARD_SPLIT_END if ten_card else SPLIT_END if split else b'OPLDEND2' if paired else END),'saved complete footer magic')
+        require(r.read(8)==(b'OPLDST32' if proof9_t3 else TEN_CARD_SPLIT_END if ten_card else SPLIT_END if split else b'OPLDEND2' if paired else END),'saved complete footer magic')
         plan=dict(zip(FAMILIES,r.words(6)));actual=dict(zip(FAMILIES,r.words(6)))
         parent_plan=dict(zip(PARENT,r.words(9)));parent_actual=dict(zip(PARENT,r.words(9)))
         shape=r.words(8)
@@ -310,10 +315,10 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         feedback,=r.words(1)
         completed,passes,invocations,history_entries,history_bytes,state_entries,state_payload=r.words(7)
         r.finish(expected_sha256)
-    require(shape==(TEN_CARD_SHAPE if ten_card else EXPECTED_SHAPE) and (completed,passes,invocations)==(2,2 if paired else 4,1),
+    require(shape==(TEN_CARD_SHAPE if ten_card else EXPECTED_SHAPE) and (completed,passes,invocations)==(sweep_count,sweep_count if paired else 2*sweep_count,1),
             'saved run shape/iteration counters')
     require(feedback==changes,'saved feedback receipt differs')
-    work_limit=TEN_CARD_WORK_LIMIT if ten_card else 500_000_000
+    work_limit=750_000_000 if proof9_t3 else TEN_CARD_WORK_LIMIT if ten_card else 500_000_000
     payload_limit=TEN_CARD_PAYLOAD_LIMIT if ten_card else 1<<30
     require(sum(plan.values())<=work_limit and all(0<actual[k]<=plan[k] for k in plan),'saved composed work receipt')
     require(sum(parent_plan.values())==plan['parent'] and sum(parent_actual.values())==actual['parent']
@@ -327,19 +332,19 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     ranked,hidden=fixture.terminal_completion_counts()
     require((ranked,hidden)==(TEN_CARD_TERMINAL_COMPLETIONS if ten_card else EXPECTED_TERMINAL_COMPLETIONS),'independent all-in completion census')
     require(chance['rank_calls']==expected_rank_calls==ranks and chance['cache_misses']==len(boards)
-            and chance['cache_evictions']==0 and chance['cache_hits']+chance['cache_misses']==4*ranked,
+            and chance['cache_evictions']==0 and chance['cache_hits']+chance['cache_misses']==2*sweep_count*ranked,
             'saved rank-plane reuse accounting')
     if rank_sets:
         planes=len(boards)
         require(chance['rank_work']==4096*ranks and chance['sort_work']==512*planes and
-                chance['cache_lookup_work']<=2*planes*4*ranked+planes*(4*planes+64),
+                chance['cache_lookup_work']<=2*planes*2*sweep_count*ranked+planes*(4*planes+64),
                 'saved rank-set work exceeds cache accounting')
-    require(chance['completed_contractions']==4*(shape[4]+ranked+shape[2]+1),'saved terminal and marginal call accounting')
+    require(chance['completed_contractions']==2*sweep_count*(shape[4]+ranked+shape[2]+1),'saved terminal and marginal call accounting')
     require(0<history_bytes<=32<<20 and 0<chance['peak_integer_bits']<=65536
             and 0<history_entries+state_entries+chance['peak_live_entries']<=entries<=2_000_000
             and 0<state_payload+chance['peak_integer_payload_bits']<=payload<=payload_limit,'saved composed storage receipt')
     quality=fixture.quality(saved)
-    result={'status':'saved_two_sweep_exact_replay_pass','scope':('named ten-card fixture' if ten_card else 'PROOF9')+' only; saved grid quality, no wider game or target pass',
+    result={'status':'saved_three_sweep_exact_replay_pass' if proof9_t3 else 'saved_two_sweep_exact_replay_pass','scope':('named ten-card fixture' if ten_card else 'PROOF9')+' only; saved grid quality, no wider game or target pass',
             'saved_output_sha256':expected_sha256,'bytes':size,'sweeps':sweeps,'changed_current_rows':changes,
             'profile_and_br':{k:[fraction(x) for x in v] if isinstance(v,tuple) else fraction(v) for k,v in quality.items()},
             'shape':dict(zip(SHAPE,shape)),'work_plan':plan,'work_actual':actual,'chance_actual':chance,
@@ -351,8 +356,14 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
     if split:
         digests=checkpoint_digests if checkpoint_digests is not None else tuple(d for _,d in checkpoints)
-        result['checkpoint_images']=[{'name':name,'sha256':digest,'bytes':image_bytes}
-                                     for name,digest in zip(SPLIT_IMAGE_NAMES,digests,strict=True)]
+        if proof9_t3:
+            result['checkpoint_epochs']=[{'sweep':i+1,'slot':(i+1)%2,'bytes':image_bytes,'sha256':digest}
+                                         for i,digest in enumerate(digests)]
+            result['checkpoint_images']=[{'name':'committed.bin','sha256':digests[1],'bytes':image_bytes},
+                                         {'name':'staged.bin','sha256':digests[2],'bytes':image_bytes}]
+        else:
+            result['checkpoint_images']=[{'name':name,'sha256':digest,'bytes':image_bytes}
+                                         for name,digest in zip(SPLIT_IMAGE_NAMES,digests,strict=True)]
         if checkpoint_digests is not None:
             result['checkpoint_verification']='independent_compact_digest'
     if packed_images is not None:
@@ -370,11 +381,12 @@ def main():
     parser.add_argument('--sha256',required=True)
     parser.add_argument('--paired',action='store_true')
     parser.add_argument('--ten-card',action='store_true')
+    parser.add_argument('--proof9-t3',action='store_true')
     parser.add_argument('--rank-sets',action='store_true')
     transport=parser.add_mutually_exclusive_group()
     transport.add_argument('--page-images',type=Path)
     transport.add_argument('--packed-page-images',type=Path)
-    transport.add_argument('--sweep-checkpoint-digest',nargs=2,metavar=('SWEEP1','SWEEP2'))
+    transport.add_argument('--sweep-checkpoint-digest',nargs='+',metavar='SHA256')
     parser.add_argument('--sweep-image-sha256',nargs=2,metavar=('SWEEP1','SWEEP2'))
     parser.add_argument('--packed-sweep-image-sha256',nargs=2,metavar=('PACKED1','PACKED2'))
     args=parser.parse_args()
@@ -387,7 +399,7 @@ def main():
                         zip(PACKED_IMAGE_NAMES,args.packed_sweep_image_sha256,args.sweep_image_sha256,strict=True)
                         ) if args.packed_page_images is not None else None
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
-                            packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card),sort_keys=True))
+                            packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3),sort_keys=True))
 
 
 if __name__=='__main__':main()

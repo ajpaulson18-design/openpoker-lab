@@ -36,6 +36,20 @@ class CheckpointDigestTests(unittest.TestCase):
                 with self.subTest(case=case), self.assertRaises(ValueError):
                     replay('absent','0'*64,**case)
 
+    def test_t3_requires_exactly_three_ordered_digest_inputs_before_file_access(self):
+        d='1'*64
+        cases=(dict(proof9_t3=True),
+               dict(proof9_t3=True,paired=True,rank_sets=True,checkpoint_digests=(d,d)),
+               dict(proof9_t3=True,paired=True,rank_sets=True,checkpoint_digests=(d,d,'A'*64)),
+               dict(proof9_t3=True,paired=True,rank_sets=True,ten_card=True,checkpoint_digests=(d,d,d)),
+               dict(proof9_t3=True,paired=True,rank_sets=True,images=(),checkpoint_digests=(d,d,d)),
+               dict(proof9_t3=True,paired=True,rank_sets=True,packed_images=(),checkpoint_digests=(d,d,d)))
+        with patch('scripts.verify_virtual_dyadic_training.authenticated_reader',side_effect=AssertionError('file opened')):
+            for case in cases:
+                with self.subTest(case=case), self.assertRaises(ValueError):
+                    replay('absent','0'*64,**case)
+
+
 
 if __name__=='__main__':
     unittest.main()

@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
-from scripts.run_virtual_dyadic_training_cohort import require_exit
+from scripts.run_virtual_dyadic_training_cohort import require_exit, verify_sweep_capture
 from tests import virtual_dyadic_sweep_capture as capture
 from tests.virtual_frozen_run_control import run_bounded_dyadic_probe
 
@@ -68,3 +68,36 @@ class SweepCaptureTests(unittest.TestCase):
                 else:
                     with self.assertRaises(ValueError):
                         require_exit(result, output)
+
+
+class ThreeSweepCaptureTests(unittest.TestCase):
+    def test_reused_slot_keeps_first_generation_digest(self):
+        reader = capture.SweepCapture(proof9_t3=True)
+        output = io.BytesIO()
+        hashes = []
+        for kind, extent in reader.segments:
+            if kind == 'header':
+                sweep = len(hashes)+1
+                reader.feed(capture.FRAME.pack(capture.MAGIC,sweep,sweep%2,reader.image_bytes),output)
+                continue
+            byte = bytes([65+len(hashes)]) if kind=='image' else b'N'
+            digest = hashlib.sha256()
+            remaining = extent
+            while remaining:
+                chunk = byte*min(32768,remaining)
+                reader.feed(chunk,output)
+                digest.update(chunk)
+                remaining -= len(chunk)
+            if kind=='image':
+                hashes.append(digest.hexdigest())
+        receipt = reader.finish()
+        self.assertEqual([frame['slot'] for frame in receipt['frames']], [1,0,1])
+        self.assertEqual([frame['sha256'] for frame in receipt['frames']], hashes)
+        self.assertEqual(len(output.getvalue()), 2_579_724)
+        images = [{'bytes': reader.image_bytes,'sha256': digest} for digest in hashes[1:]]
+        process = {'sweep_capture':receipt,'streams':[{'observed_bytes':17_141_340,'saved_bytes':2_579_724,
+                   'sha256':receipt['retained_sha256'],'wire_sha256':receipt['wire_sha256']}]}
+        admission = {'sweep_stream':reader.contract}
+        self.assertEqual(verify_sweep_capture(process,admission,images,receipt['retained_sha256']),receipt)
+        with self.assertRaisesRegex(ValueError,'checkpoint bytes or order'):
+            verify_sweep_capture(process,admission,images[::-1],receipt['retained_sha256'])

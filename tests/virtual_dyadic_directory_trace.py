@@ -1,4 +1,4 @@
-"""Independent N10 immutable row-directory access and traffic projection.
+"""Independent immutable row-directory access and traffic for named fixtures.
 
 The trace uses only the physical range/template reference, not native code,
 training, or a saved producer policy. Counts describe the specified serial
@@ -12,11 +12,13 @@ from tests.virtual_betting_template_reference import build_reference_template
 from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_ranges
 
 
-def directory_trace():
-    """Return the N10 directory append and exact direct-mapped read schedule."""
-    deck = tuple(sorted((*PROOF9, 0)))
-    if len(set(deck)) != 10:
-        raise ValueError('unexpected ten-card fixture')
+def directory_trace(*, ten_card=True, sweeps=2):
+    """Return the named directory append and exact direct-mapped read schedule."""
+    if (ten_card, sweeps) not in ((True, 2), (False, 3)):
+        raise ValueError('unsupported directory trace profile')
+    deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
+    if len(set(deck)) != (10 if ten_card else 9):
+        raise ValueError('unexpected named deck')
     template = build_reference_template(_template_case())
     ranges = scaled_proof9_ranges()
     pairs = tuple((i, j, frozenset(a + b))
@@ -66,8 +68,9 @@ def directory_trace():
         events.extend(own_rows)  # staging in postorder
 
     visit(template.root, ())
-    if (rows, slots, len(events)) != (119196, 281066, 2 * 119196):
-        raise ValueError('independent N10 row/slot/trace census differs')
+    expected_rows, expected_slots = (119196, 281066) if ten_card else (24420, 58164)
+    if (rows, slots, len(events)) != (expected_rows, expected_slots, 2*expected_rows):
+        raise ValueError('independent row/slot/trace census differs')
     page_rows, cache_pages, row_bytes = 128, 8, 32
     pages = (rows + page_rows - 1) // page_rows
     cache = [None] * cache_pages  # invalidated after freeze
@@ -91,7 +94,7 @@ def directory_trace():
                        'misses': misses, 'read_bytes': read_bytes})
 
     phase('prelude', range(rows))
-    for sweep in (1, 2):
+    for sweep in range(1, sweeps+1):
         phase(f'sweep_{sweep}_begin', range(rows))
         phase(f'sweep_{sweep}_profile', range(rows))
         phase(f'sweep_{sweep}_walk', events)
@@ -104,6 +107,7 @@ def directory_trace():
               'hits': sum(p['hits'] for p in phases),
               'misses': sum(p['misses'] for p in phases),
               'read_bytes': sum(p['read_bytes'] for p in phases)}
-    if result['logical_reads'] != 10 * rows or result['hits'] + result['misses'] != 10 * rows:
+    calls = (2+4*sweeps)*rows
+    if result['logical_reads'] != calls or result['hits'] + result['misses'] != calls:
         raise ValueError('directory trace count differs')
     return result

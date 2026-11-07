@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, virtual_zero=False):
+def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -21,6 +21,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False):
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
+    if sweeps!=2 and (sweeps!=3 or ten_card or not virtual_zero):
+        raise ValueError('unsupported staged sweep schedule')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
     if len(set(deck)) != (10 if ten_card else 9):
         raise ValueError('unexpected named deck')
@@ -153,12 +155,14 @@ def stage_schedule(*, ten_card=False, virtual_zero=False):
     result = {'rows': rows, 'slots': slots, 'average_words': average_words,
               'regret_words': regret_words, 'image_words': image_words,
               'initialization_calls': initial_calls, 'per_sweep_stage_calls': stage_calls,
-              'per_sweep_dirty_runs': runs, 'direct_write_calls': initial_calls + 2 * stage_calls,
-              'batched_write_calls': initial_calls + 2 * runs,
-              'written_words': (2 if virtual_zero else 3) * image_words, 'sweeps': 2}
+              'per_sweep_dirty_runs': runs, 'direct_write_calls': initial_calls + sweeps*stage_calls,
+              'batched_write_calls': initial_calls + sweeps*runs,
+              'written_words': (sweeps+int(not virtual_zero))*image_words, 'sweeps': sweeps}
     expected_calls = ((1124264, 18836, 5925444) if ten_card else
                       (232656, 3954, 1213460)) if virtual_zero else (
                       (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190))
+    if sweeps==3:
+        expected_calls = (348984, 5931, 1820190)
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
         raise ValueError('independent stage schedule differs from fixed fixture')
     if virtual_zero:
@@ -206,7 +210,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False):
                                     'virtual_words','cache_hits','cache_misses','physical_words'),
                                    (name, *(a - b for a, b in zip(after, before))))))
 
-        for sweep in (1, 2):
+        for sweep in range(1, sweeps+1):
             epoch(f'sweep_{sweep}_policy', preorder, (1,), zero=sweep == 1)
             epoch(f'sweep_{sweep}_stage', postorder, (1, 0), zero=sweep == 1)
             tags[:] = [None] * 16
@@ -218,6 +222,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False):
         expected_reads = ((1967462, 10555076, 843198, 4629632, 1498, 6130244)
                           if ten_card else (407148, 2168226, 174492, 954766, 306, 1242654))
         actual_reads = (logical_reads, logical_words, virtual_reads, virtual_words, misses, physical_words)
+        if sweeps==3:
+            expected_reads = (581640,3122992,174492,954766,548,2223164)
         if actual_reads != expected_reads:
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result
