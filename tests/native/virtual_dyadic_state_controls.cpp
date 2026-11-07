@@ -1223,6 +1223,165 @@ void row_coverage_controls(h::History& history,const b::Template& source,
         flags[0]==0 && flags[1]==1,"shared average stream or fallback flags changed");
     std::cout<<"PAGED_IMAGE shared_policy\n";
 }
+void bounded_lifecycle_controls(h::History& history,const b::Template& source,
+                                const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    constexpr std::size_t shift=190;
+    const auto root=history.root(),call=history.append_action(root,1);
+    const std::array<h::History::Cursor,4> cursors{root,root,call,call};
+    std::size_t slots=0;
+    for (auto cursor:cursors) slots+=history.decision_key(cursor).actions;
+    {
+        auto invalid_plan=forecast(4,slots);invalid_plan.sweeps=9;
+        const auto invalid_path=scratch/"bounded-invalid-nine";
+        const pages::Limits invalid_limits{4*slots,pages::default_page_words,2,100000,36*slots,
+            10000,2,pages::Profile::legacy,2*slots,36,true};
+        bool rejected=false;
+        try {s::State invalid(history,{2,2},1,invalid_plan,{},
+            {source.nodes().size(),slots,true},{2*slots,2*slots},
+            s::PagedStrategy{invalid_path,invalid_limits,true,true,true,true,true,100,
+                             s::Lifecycle::bounded_v1});}
+        catch (const s::Error&) {rejected=true;}
+        require(rejected && !std::filesystem::exists(invalid_path) &&
+            !std::filesystem::exists(invalid_path.string()+"-rows"),"invalid lifecycle allocated files");
+    }
+    // Separate owners ensure every phase guard is tested without recovery from
+    // a poisoned owner. Two successful commits precede every failure below.
+    for (const std::string scenario:{"io-cap","flush-cap","missing-row","early-export","max-sweeps","second-export"}) {
+        auto plan=forecast(4,slots);plan.sweeps=3;
+        const auto path=scratch/("bounded-guard-"+scenario);
+        const auto image_words=4*slots;
+        const pages::Limits limits{image_words,pages::default_page_words,2,100000,
+            (scenario=="io-cap"?2:3)*image_words,10000,2,pages::Profile::legacy,2*slots,
+            scenario=="flush-cap"?5u:12u,true};
+        s::State state(history,{2,2},1,plan,{},
+            {source.nodes().size(),slots,true},{2*slots,2*slots},
+            s::PagedStrategy{path,limits,true,true,true,true,true,56,s::Lifecycle::bounded_v1});
+        for (std::size_t row=0;row<4;++row)
+            require(state.register_sealed_row(cursors[row],row%2,shift,shift)==row,"guard row order");
+        state.freeze();
+        const auto stage=[&](std::size_t row) {
+            const auto n=history.decision_key(cursors[row]).actions;
+            std::array<Integer,20> values{},increments{};
+            for (std::size_t action=0;action<n;++action) increments[action]=row+action+1;
+            (void)state.stage_scaled_row(row,std::span<const Integer>(values).first(n),
+                                         {std::span<const Integer>(increments).first(n),shift});
+        };
+        for (std::size_t sweep=0;sweep<2;++sweep) {
+            state.begin_sweep();
+            for (std::size_t row=0;row<4;++row) stage(row);
+            state.commit_sweep();
+        }
+        const auto prior_epoch=state.checkpoint_epoch();
+        const auto current=path/(prior_epoch.current_slot?"staged.bin":"committed.bin");
+        const auto read_file=[](const std::filesystem::path& file) {
+            std::ifstream in(file,std::ios::binary);
+            require(bool(in),"guard checkpoint missing");
+            return std::string(std::istreambuf_iterator<char>(in),{});
+        };
+        const auto before=read_file(current);
+        bool rejected=false;
+        try {
+            if (scenario=="early-export") {
+                (void)state.stream_average([](std::span<const std::uint64_t>){});
+            } else {
+                state.begin_sweep();
+                if (scenario=="io-cap") stage(0);
+                else if (scenario=="missing-row") {stage(0);state.commit_sweep();}
+                else {
+                    for (std::size_t row=0;row<4;++row) stage(row);
+                    state.commit_sweep();
+                    if (scenario=="max-sweeps") state.begin_sweep();
+                    else {
+                        (void)state.stream_average([](std::span<const std::uint64_t>){});
+                        (void)state.stream_average([](std::span<const std::uint64_t>){});
+                    }
+                }
+            }
+        } catch (const std::exception&) {rejected=true;}
+        require(rejected && state.failed(),"bounded lifecycle failure was not poisoned");
+        const bool before_third_commit=scenario=="io-cap" || scenario=="flush-cap" ||
+            scenario=="missing-row" || scenario=="early-export";
+        if (before_third_commit) {
+            require(state.receipt().completed_sweeps==2 && read_file(current)==before,
+                "failed third generation changed committed checkpoint");
+            if (scenario!="early-export")
+                require(state.policy_sweep_receipts().size()==3,"opened third spill receipt lost");
+            if (scenario=="flush-cap")
+                require(state.paged_receipt()->physical_write_requests==5,
+                    "third commit did not stop after the admitted partial flush");
+        } else require(state.receipt().completed_sweeps==3,"completed third generation lost");
+        bool epoch_rejected=false;
+        try {(void)state.checkpoint_epoch();} catch(const s::Error&) {epoch_rejected=true;}
+        require(epoch_rejected,"poisoned owner exposed checkpoint epoch");
+        std::cout<<"LIFECYCLE GUARD "<<scenario<<'\n';
+    }
+    for (const std::size_t count:{1,2,3,4,8}) {
+        auto plan=forecast(4,slots);plan.sweeps=count;
+        const auto name=scratch/("bounded-"+std::to_string(count));
+        const s::PackedAverageCapacity packed{2*slots,2*slots};
+        const s::ActionCatalogCapacity catalog{source.nodes().size(),slots,true};
+        const pages::Limits limits{4*slots,pages::default_page_words,2,100000,4*slots*count,
+            10000,2,pages::Profile::legacy,2*slots,4*count,true};
+        s::State state(history,{2,2},1,plan,{},catalog,packed,
+            s::PagedStrategy{name,limits,true,true,true,true,true,(2+4*count)*4,s::Lifecycle::bounded_v1});
+        for (std::size_t row=0;row<4;++row)
+            require(state.register_sealed_row(cursors[row],row%2,shift,shift)==row,"bounded row order");
+        state.freeze();
+        for (std::size_t sweep=0;sweep<count;++sweep) {
+            state.begin_sweep();
+            for (std::size_t row=0;row<4;++row) {
+                const auto menu_size=history.decision_key(cursors[row]).actions;
+                std::array<std::uint64_t,20> policy{};
+                (void)state.copy_policy_snapshot(row,std::span(policy).first(menu_size));
+                std::array<Integer,20> values{},average{};
+                std::cout<<"LIFECYCLE ROW "<<count<<' '<<sweep<<' '<<row<<' '<<menu_size;
+                for (std::size_t action=0;action<menu_size;++action) {
+                    const int coefficient=static_cast<int>((3*action+2*row+5*sweep)%11)-5;
+                    values[action]=(Integer(1)<<(shift+52))*coefficient;
+                    average[action]=Integer(policy[action]);
+                    std::cout<<' '<<policy[action]<<' '<<coefficient;
+                }
+                const auto mixed=state.stage_scaled_row(row,std::span<const Integer>(values).first(menu_size),
+                    {std::span<const Integer>(average).first(menu_size),shift});
+                std::cout<<' '<<mixed<<'\n';
+            }
+            state.commit_sweep();
+            const auto epoch=state.checkpoint_epoch();
+            require(epoch.sweep==sweep+1 && epoch.current_slot==(sweep%2?0:1) &&
+                epoch.previous_sweep==sweep && epoch.previous_slot==(sweep%2?1:0) &&
+                epoch.image_words==4*slots && epoch.previous_is_virtual==(sweep==0),"bounded checkpoint epoch differs");
+            const auto image=name/((sweep%2)?"committed.bin":"staged.bin");
+            std::ifstream in(image,std::ios::binary);
+            require(bool(in),"bounded image missing");
+            std::vector<std::uint64_t> words(4*slots);
+            in.read(reinterpret_cast<char*>(words.data()),static_cast<std::streamsize>(words.size()*8));
+            require(bool(in) && in.peek()==std::char_traits<char>::eof(),"bounded image extent");
+            std::cout<<"LIFECYCLE IMAGE "<<count<<' '<<sweep<<' '<<words.size();
+            for (const auto word:words) std::cout<<' '<<word;
+            std::cout<<'\n';
+        }
+        require(state.policy_sweep_receipts().size()==count,"bounded policy receipt count");
+        for (std::size_t i=0;i<count;++i) {
+            const auto& r=state.policy_sweep_receipts()[i];
+            std::cout<<"LIFECYCLE SPILL "<<count<<' '<<i<<' '<<r.uniform_rows<<' '<<r.pure_rows
+                <<' '<<r.mixed_rows<<' '<<r.extent_words<<' '<<r.write_words<<' '<<r.read_calls
+                <<' '<<r.mixed_read_calls<<' '<<r.read_words<<'\n';
+        }
+        const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
+            std::cout<<"LIFECYCLE EXPORT "<<count<<' '<<units.size();
+            for (auto unit:units) std::cout<<' '<<unit;
+            std::cout<<'\n';
+        });
+        std::cout<<"LIFECYCLE FLAGS "<<count;
+        for (auto flag:flags) std::cout<<' '<<static_cast<unsigned>(flag);
+        std::cout<<'\n';
+        bool legacy_rejected=false;
+        try {(void)state.policy_spill_receipt();} catch (const s::Error&) {legacy_rejected=true;}
+        require(legacy_rejected,"legacy receipt truncated bounded lifecycle");
+        std::cout<<"LIFECYCLE DONE "<<count<<'\n';
+    }
+}
 } // namespace
 
 int main(int argc,char** argv) {
@@ -1241,6 +1400,7 @@ int main(int argc,char** argv) {
             compact_directory_controls(history,source,argv[1]);
             paged_directory_controls(history,source,argv[1]);
             row_coverage_controls(history,source,argv[1]);
+            bounded_lifecycle_controls(history,source,argv[1]);
         }
         std::cout<<"END\n";
         return 0;

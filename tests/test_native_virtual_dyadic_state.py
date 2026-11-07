@@ -62,6 +62,76 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
             raise AssertionError(f'state controls process failed: {stderr!r}')
         cls.lines = (output/'stdout.bin').read_text(encoding='ascii').splitlines()
 
+    def test_bounded_lifecycle_integer_oracle(self):
+        lifecycle = [line.split() for line in self.lines if line.startswith('LIFECYCLE ')]
+        self.assertEqual([x[2] for x in lifecycle if x[1]=='GUARD'],
+                         ['io-cap','flush-cap','missing-row','early-export','max-sweeps','second-export'])
+        lines = iter(x for x in lifecycle if x[1]!='GUARD')
+        for total in (1, 2, 3, 4, 8):
+            regrets = [None] * 4
+            averages = [None] * 4
+            profiles = []
+            for sweep in range(total):
+                profiles.append([])
+                for row in range(4):
+                    tag, kind, n, generation, index, count, *payload = next(lines)
+                    count = int(count)
+                    self.assertEqual((tag, kind, int(n), int(generation), int(index)),
+                                     ('LIFECYCLE', 'ROW', total, sweep, row))
+                    units = list(map(int, payload[:-1:2]))
+                    coefficients = list(map(int, payload[1:-1:2]))
+                    if regrets[row] is None:
+                        regrets[row] = [0] * count
+                        averages[row] = [0] * count
+                    self.assertEqual(units, allocation(regrets[row])[0])
+                    profiles[-1].append(units)
+                    self.assertEqual(coefficients, [(3*a+2*row+5*sweep)%11-5 for a in range(count)])
+                    values = [coefficient << (190+52) for coefficient in coefficients]
+                    mixed = sum(unit * value for unit, value in zip(units, values)) // Q
+                    self.assertEqual(int(payload[-1]), mixed)
+                    regrets[row] = [max(0, old+value-mixed) for old,value in zip(regrets[row],values)]
+                    averages[row] = [old+(unit<<190) for old,unit in zip(averages[row],units)]
+                tag, kind, n, generation, count, *words = next(lines)
+                self.assertEqual((tag,kind,int(n),int(generation)), ('LIFECYCLE','IMAGE',total,sweep))
+                words = list(map(int, words))
+                self.assertEqual(len(words), int(count))
+                expected = []
+                for family in (averages, regrets):
+                    for row_values in family:
+                        for value in row_values:
+                            compact = value >> 190
+                            expected.extend((compact & ((1<<64)-1), compact >> 64))
+                self.assertEqual(words, expected)
+            for sweep, profile in enumerate(profiles):
+                tag, kind, n, generation, *fields = next(lines)
+                self.assertEqual((tag,kind,int(n),int(generation)), ('LIFECYCLE','SPILL',total,sweep))
+                uniform = pure = mixed = extent = mixed_words = written = offset = 0
+                for units in profile:
+                    size = len(units)
+                    canonical = [Q//size + (i < Q%size) for i in range(size)]
+                    offset += size - 1
+                    if units == canonical:
+                        uniform += 1
+                    elif Q in units:
+                        pure += 1
+                    else:
+                        mixed += 1
+                        extent = offset
+                        written += size - 1
+                        mixed_words += 2 * (size - 1)
+                self.assertEqual(list(map(int, fields)),
+                                 [uniform,pure,mixed,extent,written,8,2*mixed,mixed_words])
+            for row in range(4):
+                tag, kind, n, count, *units = next(lines)
+                expected, _ = allocation(averages[row], average=True)
+                self.assertEqual((tag,kind,int(n),int(count),list(map(int,units))),
+                                 ('LIFECYCLE','EXPORT',total,len(expected),expected))
+            tag,kind,n,*flags = next(lines)
+            self.assertEqual((tag,kind,int(n),list(map(int,flags))),
+                             ('LIFECYCLE','FLAGS',total,[int(not any(x)) for x in averages]))
+            self.assertEqual(next(lines), ['LIFECYCLE','DONE',str(total)])
+        self.assertEqual(list(lines), [])
+
     def test_two_sweeps_exact_mix_committed_masses_and_tagged_export(self):
         reference = build_reference_template(_template_case())
         root = reference.nodes[reference.root]
@@ -70,7 +140,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
         separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
-                             'SCALED_AVERAGE ', 'PAGED_IMAGE ')
+                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)

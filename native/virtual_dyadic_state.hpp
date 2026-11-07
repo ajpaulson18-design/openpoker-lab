@@ -58,6 +58,7 @@ struct PackedAverageCapacity {
     std::size_t limb_count = 0;
     std::size_t regret_limbs = 0;
 };
+enum class Lifecycle { fixed_two_sweep, bounded_v1 };
 struct PagedStrategy {
     std::filesystem::path scratch;
     virtual_dyadic_paged_image::Limits limits;
@@ -67,6 +68,7 @@ struct PagedStrategy {
     bool shared_policy=false;
     bool paged_directory=false;
     std::size_t directory_page_limit=0;
+    Lifecycle lifecycle=Lifecycle::fixed_two_sweep;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -115,6 +117,10 @@ struct PolicySpillSweep {
     std::size_t write_words=0,read_calls=0,mixed_read_calls=0,read_words=0;
 };
 using PolicySpillReceipt = std::array<PolicySpillSweep,2>;
+struct CheckpointEpoch {
+    std::size_t sweep=0,current_slot=0,previous_sweep=0,previous_slot=0,image_words=0;
+    bool previous_is_virtual=false;
+};
 
 class State final {
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
@@ -133,7 +139,7 @@ class State final {
     class RowDirectory {
         using Wire = std::array<std::uint64_t,4>;
         static constexpr std::size_t page_rows=128,cache_pages=8;
-        const std::size_t rows_,page_limit_;
+        const std::size_t rows_,page_limit_,read_limit_;
         std::fstream file_;
         std::array<Wire,page_rows*cache_pages> cache_{};
         std::array<std::size_t,cache_pages> tags_{};
@@ -156,9 +162,9 @@ class State final {
                 static_cast<std::uint8_t>(words[3]>>16),static_cast<std::uint8_t>(words[3]>>24)};
         }
     public:
-        RowDirectory(std::filesystem::path scratch,std::size_t rows,std::size_t page_limit)
-            :rows_(rows),page_limit_(page_limit) {
-            if (!rows || !page_limit || page_limit>10*rows)
+        RowDirectory(std::filesystem::path scratch,std::size_t rows,std::size_t page_limit,std::size_t read_limit)
+            :rows_(rows),page_limit_(page_limit),read_limit_(read_limit) {
+            if (!rows || !page_limit || !read_limit || page_limit>read_limit)
                 throw std::invalid_argument("invalid row directory bounds");
             scratch+="-rows";
             std::error_code error;
@@ -200,7 +206,7 @@ class State final {
                     ++receipt_.build_snapshots;
                     return decode(last_);
                 }
-                if (receipt_.read_calls>=10*rows_) throw std::length_error("row directory lookup cap");
+                if (receipt_.read_calls>=read_limit_) throw std::length_error("row directory lookup cap");
                 const auto page=row/page_rows,slot=page%cache_pages;
                 if (!valid_[slot] || tags_[slot]!=page) {
                     if (receipt_.page_reads>=page_limit_) throw std::length_error("row directory page-read cap");
@@ -225,8 +231,10 @@ class State final {
     class PolicySpill {
         static constexpr std::uint8_t uniform_tag=1,mixed_tag=22;
         const std::size_t rows_,words_;
+        const std::size_t generations_;
         std::fstream file_;
         PolicySpillReceipt receipt_{};
+        std::unique_ptr<PolicySpillSweep[]> bounded_receipt_;
         std::size_t sweeps_=0,next_word_=0;
         bool ready_=false;
 
@@ -235,10 +243,21 @@ class State final {
             return q/count+static_cast<std::uint64_t>(action<q%count);
         }
     public:
-        PolicySpill(std::size_t rows,std::size_t words):rows_(rows),words_(words) {}
+        PolicySpill(std::size_t rows,std::size_t words,std::size_t generations=2,bool bounded_lifecycle=false)
+            :rows_(rows),words_(words),generations_(generations) {
+            if (!generations_ || generations_>8) throw std::invalid_argument("invalid policy spill generation bound");
+            if (bounded_lifecycle) bounded_receipt_=std::make_unique<PolicySpillSweep[]>(generations_);
+        }
+
+        PolicySpillSweep& current_receipt() noexcept {
+            return bounded_receipt_?bounded_receipt_[sweeps_-1]:receipt_[sweeps_-1];
+        }
+        const PolicySpillSweep& current_receipt() const noexcept {
+            return bounded_receipt_?bounded_receipt_[sweeps_-1]:receipt_[sweeps_-1];
+        }
 
         void begin(const std::filesystem::path& path) {
-            if (sweeps_==receipt_.size() || (sweeps_ && !ready_))
+            if (sweeps_==generations_ || (sweeps_ && !ready_))
                 throw std::logic_error("invalid policy spill generation");
             if (file_.is_open()) {
                 file_.close();
@@ -247,6 +266,7 @@ class State final {
             file_.open(path,std::ios::binary|std::ios::in|std::ios::out|std::ios::trunc);
             if (!file_) throw std::runtime_error("cannot open policy spill");
             ++sweeps_;
+            if (bounded_receipt_) bounded_receipt_[sweeps_-1]=PolicySpillSweep{};
             next_word_=0;
             ready_=false;
         }
@@ -255,7 +275,7 @@ class State final {
             if (!sweeps_ || ready_ || units.size()<2 || units.size()>20 || offset!=next_word_ ||
                 units.size()-1>words_-next_word_)
                 throw std::logic_error("invalid policy spill row extent");
-            auto& census=receipt_[sweeps_-1];
+            auto& census=current_receipt();
             if (census.uniform_rows+census.pure_rows+census.mixed_rows>=rows_)
                 throw std::length_error("policy spill row cap");
             next_word_+=units.size()-1;
@@ -285,7 +305,7 @@ class State final {
 
         void finish() {
             if (!sweeps_ || ready_) throw std::logic_error("policy spill finish requires active build");
-            const auto& counts=receipt_[sweeps_-1];
+            const auto& counts=current_receipt();
             if (next_word_!=words_ || counts.uniform_rows+counts.pure_rows+counts.mixed_rows!=rows_)
                 throw std::logic_error("incomplete policy spill build");
             file_.flush();
@@ -296,7 +316,7 @@ class State final {
         void load(std::uint8_t tag,std::size_t offset,std::span<std::uint64_t> output) {
             if (!ready_ || output.size()<2 || output.size()>20 || offset>words_ || output.size()-1>words_-offset)
                 throw std::logic_error("invalid frozen policy spill extent");
-            auto& counts=receipt_[sweeps_-1];
+            auto& counts=current_receipt();
             if (counts.read_calls>=3*rows_) throw std::length_error("policy spill read request cap");
             if (tag==uniform_tag) {
                 for (std::size_t action=0;action<output.size();++action) output[action]=uniform(output.size(),action);
@@ -323,6 +343,11 @@ class State final {
         }
 
         [[nodiscard]] const PolicySpillReceipt& receipt() const noexcept {return receipt_;}
+        [[nodiscard]] std::span<const PolicySpillSweep> receipts() const noexcept {
+            return bounded_receipt_?std::span<const PolicySpillSweep>(bounded_receipt_.get(),sweeps_):
+                std::span<const PolicySpillSweep>(receipt_.data(),sweeps_);
+        }
+        [[nodiscard]] bool bounded() const noexcept {return bounded_receipt_!=nullptr;}
     };
     static constexpr std::size_t policy_spill_entries=128;
     static_assert(sizeof(PolicySpill)+20*sizeof(std::uint64_t)<=8*policy_spill_entries);
@@ -476,16 +501,23 @@ class State final {
                                          const std::optional<PagedStrategy>& paged) {
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
+        const auto lifecycle=paged?paged->lifecycle:Lifecycle::fixed_two_sweep;
+        const auto directory_read_limit=paged_directory_read_limit(f,lifecycle);
         if (paged && paged->paged_directory &&
-            (!paged->directory_page_limit || paged->directory_page_limit>10*f.rows))
+            (!paged->directory_page_limit || paged->directory_page_limit>directory_read_limit))
             fail(ErrorCode::invalid_forecast,"invalid paged row directory read bound");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
                                               paged && paged->row_coverage,paged && paged->shared_policy,
-                                              paged && paged->paged_directory);
+                                              paged && paged->paged_directory,lifecycle);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
+    }
+    static std::size_t paged_directory_read_limit(const Forecast& f,Lifecycle lifecycle) {
+        if (lifecycle==Lifecycle::fixed_two_sweep) return times(10,f.rows);
+        if (lifecycle==Lifecycle::bounded_v1) return times(plus(2,times(4,f.sweeps)),f.rows);
+        fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
     }
     [[nodiscard]] std::size_t packed_stride(std::size_t shift) const noexcept {
         return static_cast<std::size_t>(words(forecast_.value_bits-shift));
@@ -641,7 +673,8 @@ public:
                                              PackedAverageCapacity packed={},
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
                                              bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false,
-                                             bool shared_policy=false,bool paged_directory=false) {
+                                             bool shared_policy=false,bool paged_directory=false,
+                                             Lifecycle lifecycle=Lifecycle::fixed_two_sweep) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -661,15 +694,26 @@ public:
         if (row_coverage && (!ordered_rows || !packed.limb_count || !packed.regret_limbs ||
             paged->stage_split_words!=packed.limb_count))
             fail(ErrorCode::invalid_forecast,"row coverage requires ordered disjoint packed fields");
-        if (shared_policy && (!row_coverage || f.sweeps!=2 || f.slots<2*f.rows))
-            fail(ErrorCode::invalid_forecast,"shared policy requires the two-sweep ordered State path");
+        if (shared_policy && (!row_coverage || f.slots<2*f.rows ||
+            (lifecycle==Lifecycle::fixed_two_sweep && f.sweeps!=2) ||
+            (lifecycle==Lifecycle::bounded_v1 && (f.sweeps<1 || f.sweeps>8))))
+            fail(ErrorCode::invalid_forecast,"shared policy sweep geometry does not match lifecycle");
         if (paged_directory && !shared_policy)
             fail(ErrorCode::invalid_forecast,"paged directory requires shared ordered policy");
+        if (lifecycle==Lifecycle::bounded_v1 &&
+            (!paged || paged->profile!=virtual_dyadic_paged_image::Profile::legacy || !compact_rows ||
+             !ordered_rows || !row_coverage || !shared_policy || !paged_directory ||
+             f.sweeps<1 || f.sweeps>8))
+            fail(ErrorCode::invalid_forecast,"bounded lifecycle requires legacy pager and all shared ordered row features");
+        if (lifecycle!=Lifecycle::fixed_two_sweep && lifecycle!=Lifecycle::bounded_v1)
+            fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation across all modes.
         auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
             plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
+        if (lifecycle==Lifecycle::bounded_v1)
+            payload=plus(payload,times(8,times(sizeof(PolicySpillSweep),f.sweeps)));
         if (catalog.sealed) {
             const auto menu_bits=plus(times(8*sizeof(std::string_view),catalog.token_slots),
                 times(8*sizeof(Menu),catalog.keys));
@@ -709,8 +753,10 @@ public:
                     const auto records=paged_directory?row_directory_entries:4*f.rows;
                     const auto common=plus(1056+order_entries,plus(records,plus(3*catalog.token_slots,2*catalog.keys)));
                     const auto build=ordered_rows?common:plus(common,compact_index_slots(f.rows));
-                    const auto policies=shared_policy?plus(f.rows,policy_spill_entries):
+                    auto policies=shared_policy?plus(f.rows,policy_spill_entries):
                         times(ordered_rows?1:2,plus(f.rows,f.slots));
+                    if (shared_policy && lifecycle==Lifecycle::bounded_v1)
+                        policies=plus(policies,plus(times(sizeof(PolicySpillSweep),f.sweeps),7)/8);
                     const auto frozen=plus(common,plus(policies,plus(resident_bytes,7)/8));
                     entries=std::max(build,frozen);
                 }
@@ -756,7 +802,8 @@ public:
             if (hands[0]>2 || hands[1]>2)
                 fail(ErrorCode::invalid_forecast,"compact rows support at most two holdings per seat");
             if (paged_->paged_directory)
-                row_directory_=std::make_unique<RowDirectory>(paged_->scratch,forecast_.rows,paged_->directory_page_limit);
+                row_directory_=std::make_unique<RowDirectory>(paged_->scratch,forecast_.rows,
+                    paged_->directory_page_limit,paged_directory_read_limit(forecast_,paged_->lifecycle));
             else compact_rows_=std::make_unique<CompactRow[]>(forecast_.rows);
             if (!paged_->ordered_rows) {
                 compact_index_slots_=compact_index_slots(forecast_.rows);
@@ -788,7 +835,24 @@ public:
     }
     [[nodiscard]] std::optional<PolicySpillReceipt> policy_spill_receipt() const {
         if (!policy_spill_) return std::nullopt;
+        if (paged_ && paged_->lifecycle==Lifecycle::bounded_v1)
+            fail(ErrorCode::phase,"bounded lifecycle uses policy_sweep_receipts");
         return policy_spill_->receipt();
+    }
+    [[nodiscard]] std::span<const PolicySpillSweep> policy_sweep_receipts() const noexcept {
+        if (!policy_spill_) return {};
+        return policy_spill_->receipts();
+    }
+    // Metadata only; this does not claim immutability or persist an external checkpoint.
+    [[nodiscard]] CheckpointEpoch checkpoint_epoch() const {
+        healthy();
+        if (!paged_ || paged_->lifecycle!=Lifecycle::bounded_v1 || !paged_image_ ||
+            phase_!=Phase::closed || !receipt_.completed_sweeps)
+            fail(ErrorCode::phase,"checkpoint epoch requires a committed bounded lifecycle");
+        const auto sweep=receipt_.completed_sweeps;
+        const auto slot=sweep%2;
+        return {sweep,slot,sweep-1,slot^1,paged_->limits.image_words,
+            sweep==1 && paged_->limits.virtual_initial_zero};
     }
     [[nodiscard]] std::optional<RowDirectoryReceipt> row_directory_receipt() const {
         if (!row_directory_) return std::nullopt;
@@ -1093,7 +1157,9 @@ public:
                 staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
             }
             if (paged_ && paged_->shared_policy)
-                policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows);
+                policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows,
+                    paged_->lifecycle==Lifecycle::bounded_v1?forecast_.sweeps:2,
+                    paged_->lifecycle==Lifecycle::bounded_v1);
             else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
             if (row_directory_) row_directory_->freeze();

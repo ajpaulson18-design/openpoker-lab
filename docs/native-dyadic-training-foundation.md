@@ -48,6 +48,11 @@ Average export retains the raw masses and produces a distinct grid policy. The
 enclosing trainer authenticates row menus and prior support, and admits the state
 and its one cumulative quantizer together with all other work and storage.
 
+The explicit [bounded State lifecycle](native-dyadic-lifecycle.md) is the
+component boundary for later multi-sweep training. Its admission, receipt
+storage and checkpoint epochs remain separate from the accepted fixed
+two-sweep whole-game driver.
+
 The fixed trainer stores one ordered action menu per registered card-free
 template node. The state owner copies each menu on first use and checks all
 ordered token bytes on reuse. Every physical history and original holding
