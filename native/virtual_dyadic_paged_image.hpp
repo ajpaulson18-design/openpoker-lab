@@ -10,6 +10,7 @@
 #include <fstream>
 #include <limits>
 #include <memory>
+#include <ostream>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -30,6 +31,7 @@ inline constexpr std::uint64_t maximum_logical_requests = 1000000;
 inline constexpr std::uint64_t n10_read_words = 11000000;
 inline constexpr std::uint64_t n10_write_words = 3ULL * n10_image_words;
 inline constexpr std::uint64_t n10_logical_requests = 3091726;
+inline constexpr std::size_t maximum_checkpoint_stream_scratch_bytes = 32768;
 enum class Profile { legacy, proof10 };
 
 struct Limits {
@@ -192,6 +194,38 @@ private:
     void commit_covered_rows() {
         if (!staged_bits_.empty()) throw std::logic_error("covered commit requires State row coverage");
         commit_impl();
+    }
+
+    std::size_t stream_committed(std::ostream& output,std::span<char> scratch,std::size_t expected_slot) {
+        if (failed_ || sweep_open_ || !receipt_.completed_sweeps || scratch.empty() ||
+            scratch.size()>maximum_checkpoint_stream_scratch_bytes || expected_slot!=committed_)
+            throw std::logic_error("invalid committed checkpoint stream request");
+        const auto expected_bytes=checked_mul(limits_.image_words,sizeof(std::uint64_t));
+        auto& source=files_[committed_];
+        source.clear();
+        source.seekg(0,std::ios::end);
+        const auto end=static_cast<std::streamoff>(source.tellg());
+        if (end<0 || static_cast<std::uintmax_t>(end)!=expected_bytes)
+            throw std::runtime_error("committed checkpoint extent differs");
+        source.clear();
+        source.seekg(0,std::ios::beg);
+        std::size_t copied=0;
+        while (copied<expected_bytes) {
+            const auto count=std::min(scratch.size(),expected_bytes-copied);
+            source.read(scratch.data(),static_cast<std::streamsize>(count));
+            if (!source || source.gcount()!=static_cast<std::streamsize>(count)) {
+                source.clear();
+                throw std::runtime_error("short committed checkpoint read");
+            }
+            output.write(scratch.data(),static_cast<std::streamsize>(count));
+            if (!output) {
+                source.clear();
+                throw std::runtime_error("checkpoint transport write failed");
+            }
+            copied+=count;
+        }
+        source.clear();
+        return copied;
     }
 
     void stage_impl(std::size_t offset, std::span<const std::uint64_t> input) {

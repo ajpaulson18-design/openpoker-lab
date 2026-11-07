@@ -21,6 +21,7 @@ from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
 from tests.virtual_dyadic_stage_schedule import stage_schedule
 from tests.virtual_dyadic_directory_trace import directory_trace
+from tests.virtual_dyadic_sweep_capture import sweep_stream_contract
 from tests.virtual_dyadic_training_reference import Fixture
 from scripts.verify_virtual_dyadic_training import compact_scales
 
@@ -134,7 +135,22 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
-                       ten_paged_directory=False):
+                       ten_paged_directory=False,ten_sweep_stream=False):
+    if ten_sweep_stream:
+        contract=sweep_stream_contract()
+        require(type(receipt) is dict and receipt.get('sweep_stream')==contract and
+                all(type(value) is int for value in receipt['sweep_stream'].values()),
+                'sweep stream admission differs from independent fixed census')
+        numeric={key:value for key,value in receipt.items() if key!='sweep_stream'}
+        validate_ten_admission(numeric,paged_directory=True)
+        scratch=contract['scratch_bytes']+contract['frame_header_bytes']
+        require(numeric['output_bytes']==contract['retained_bytes'] and
+                numeric['checkpoint_image_bytes']==contract['image_bytes'] and
+                numeric['planned_total_work']+contract['copy_work']<=2_150_000_000 and
+                numeric['entries']+(scratch+7)//8<=2_000_000 and
+                numeric['payload_bits']+8*scratch<=1_200_000_000,
+                'sweep stream exceeds composed fixture caps')
+        return receipt
     if ten_card or ten_buffered or ten_virtual_zero or ten_ordered_state or ten_row_coverage or ten_shared_policy or ten_paged_directory:
         return validate_ten_admission(receipt,buffered=ten_buffered,virtual_zero=ten_virtual_zero,
                                       ordered_state=ten_ordered_state,row_coverage=ten_row_coverage,
@@ -567,19 +583,36 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
             'direct_native_observation':baseline['comparison']['native_observation']}
 
 
+def verify_sweep_capture(process,admission,images,digest):
+    contract=admission['sweep_stream']
+    capture=process.get('sweep_capture',{})
+    stdout=process['streams'][0]
+    expected_frames=[{'sweep':sweep,'slot':sweep%2,'bytes':image['bytes'],'sha256':image['sha256']}
+                     for sweep,image in enumerate(images,1)]
+    wire_hash=stdout.get('wire_sha256')
+    require(type(wire_hash) is str and len(wire_hash)==64 and all(c in '0123456789abcdef' for c in wire_hash)
+            and stdout['observed_bytes']==contract['wire_bytes'] and
+            stdout['saved_bytes']==contract['retained_bytes'] and stdout['sha256']==digest and
+            capture=={'contract':contract,'frames':expected_frames,'wire_sha256':wire_hash,'retained_sha256':digest},
+            'captured sweep checkpoint bytes or order differ')
+    return capture
+
+
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
-        ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False):
+        ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
+        ten_sweep_stream=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
-                                                 '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY')) if flag),'')
+                                                 '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM')) if flag),'')
     paired=any(modes)
+    ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
     ten_row_coverage=ten_row_coverage or ten_shared_policy
     ten_ordered_state=ten_ordered_state or ten_row_coverage
@@ -631,7 +664,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
-            ten_paged_directory=ten_paged_directory)
+            ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -674,18 +707,27 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 if ten_paged_directory:
                     result['row_directory']=verify_row_directory(output/'page-images-rows',raw,admission)
                 images=[{'name':name,**paging['images'][name]} for name in SPLIT_IMAGE_NAMES]
+                if ten_sweep_stream:
+                    result['sweep_capture']=verify_sweep_capture(process,admission,images,digest)
+                    capture_process=(trained/'process.json').read_bytes()
+                    require(exact_json(capture_process)==process,'saved sweep process receipt differs')
+                    capture_process_hash=hashlib.sha256(capture_process).hexdigest()
+                    result['sweep_capture_process_sha256']=capture_process_hash
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    label='sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
                     result[label+'_comparison']=comparison
                     result['independent_stage_schedule']=schedule
-                command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
+                if ten_sweep_stream:
+                    command.extend(['--sweep-checkpoint-digest',*(frame['sha256'] for frame in result['sweep_capture']['frames'])])
+                else:
+                    command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
             replay_dir=output/'saved-review'
             observed_replay=run_bounded_child(command,b'',replay_dir,stdout_limit=65536)
@@ -713,6 +755,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
+            if ten_sweep_stream:
+                require(numeric.get('checkpoint_verification')=='independent_compact_digest' and
+                        sha(trained/'process.json')==capture_process_hash,
+                        'captured checkpoint evidence changed after digest replay')
             if paired and not split:
                 original=sum(baseline['saved_replay']['work_actual'].values())
                 actual=sum(numeric['work_actual'].values())
@@ -771,6 +817,7 @@ def main():
     modes.add_argument('--ten-row-coverage',action='store_true')
     modes.add_argument('--ten-shared-policy',action='store_true')
     modes.add_argument('--ten-paged-directory',action='store_true')
+    modes.add_argument('--ten-sweep-stream',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
@@ -778,7 +825,8 @@ def main():
         rank_sets=args.rank_sets,split=args.split_checkpoint,ten_card=args.ten_card,
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
-        ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory),sort_keys=True))
+        ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
+        ten_sweep_stream=args.ten_sweep_stream),sort_keys=True))
 
 
 if __name__=='__main__':main()

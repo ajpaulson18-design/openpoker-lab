@@ -22,6 +22,7 @@
 #include <tuple>
 #include <utility>
 
+namespace openpoker::virtual_dyadic_training { class Driver; }
 namespace openpoker::virtual_dyadic_state {
 using Integer = exact_binary64::Integer;
 using History = virtual_dyadic_history::History;
@@ -123,6 +124,7 @@ struct CheckpointEpoch {
 };
 
 class State final {
+    friend class virtual_dyadic_training::Driver;
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
     using RegistrationOrder = std::pair<History::DecisionPath,std::size_t>;
     using ActionText = std::array<char,64>;
@@ -854,6 +856,23 @@ public:
         return {sweep,slot,sweep-1,slot^1,paged_->limits.image_words,
             sweep==1 && paged_->limits.virtual_initial_zero};
     }
+private:
+    // Raw checkpoint transport is available only after a complete paged commit.
+    // The driver opts into this path explicitly; pager read telemetry is unchanged.
+    [[nodiscard]] std::size_t stream_committed_checkpoint(std::ostream& output,std::span<char> scratch,
+                                                          std::size_t expected_sweep,
+                                                          std::size_t expected_slot) {
+        healthy();
+        try {
+            if (!paged_ || !paged_->paged_directory || !paged_->row_coverage || !paged_->shared_policy ||
+                !paged_image_ || phase_!=Phase::closed || !expected_sweep ||
+                receipt_.completed_sweeps!=expected_sweep ||
+                paged_image_->receipt().completed_sweeps!=expected_sweep || expected_slot!=expected_sweep%2)
+                fail(ErrorCode::phase,"committed checkpoint transport requires a completed paged sweep");
+            return paged_image_->stream_committed(output,scratch,expected_slot);
+        } catch (...) { failed_=true;throw; }
+    }
+public:
     [[nodiscard]] std::optional<RowDirectoryReceipt> row_directory_receipt() const {
         if (!row_directory_) return std::nullopt;
         return row_directory_->receipt();
