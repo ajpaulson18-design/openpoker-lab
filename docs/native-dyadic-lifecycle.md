@@ -114,3 +114,16 @@ the first image whose slot is reused in sweep three. The final file
 checks bind `committed.bin` to sweep two and `staged.bin` to sweep three.
 The first two numerical updates and image digests must match the
 previously accepted nine-card split-checkpoint run.
+
+The source-frozen run at `66f4b3e` matched that prefix and passed replay
+for all three sweeps. The native process, replay and outer controller
+exited zero, with all 2,525 tracked files unchanged. The evidence packet
+retains the third image and references the first two in the prior archive.
+Rebuilding the full stream from those images and the saved numerical bytes
+matched the transient SHA-256.
+
+On this fixture, the independently measured exploitability of the saved
+average policy decreased from 2.746696 after two sweeps to 2.474053 after
+three. The study had no quality threshold. One Windows native invocation
+took 2.37 seconds and used a 4.94 MB peak working set.
+[Three-sweep evidence](../benchmarks/results/native-dyadic-proof9-three-sweep-accepted-v1/manifest.json)
