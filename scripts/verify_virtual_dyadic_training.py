@@ -195,12 +195,25 @@ def bounded_checkpoint_records(digests,image_bytes):
     return epochs,images
 
 
-def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False):
+def division_count(values_by_row):
+    count=0
+    for values in values_by_row.values():
+        positives=sum(value>0 for value in values)
+        if positives>1:
+            count+=positives
+    return count
+
+
+def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
+           count_policy_divisions=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and not (proof9_t3 and proof9_t4),
             'select at most one named PROOF9 lifecycle')
     extended=proof9_t3 or proof9_t4
+    require(type(count_policy_divisions) is bool and
+            (not count_policy_divisions or ten_card and checkpoint_digests is not None),
+            'counted policy divisions require ten-card digest replay')
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
@@ -281,8 +294,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         require(len(ordered)==rows and offset==slots,'saved complete ordered row inventory')
         regrets=average=first=None
         changes=0
+        divisions=0
         sweeps=[]
         for t in range(1,sweep_count+1):
+            if count_policy_divisions and regrets is not None:
+                divisions+=division_count(regrets)
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -309,6 +325,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             sweeps.append({'sweep':t,'root_holding_values':[fraction(x) for x in root],
                            'row_count':rows,'regret_comparisons':slots,'average_comparisons':slots})
         require(changes>0,'saved T2 feedback missing')
+        if count_policy_divisions:
+            divisions+=division_count(average)
         expected=fixture.grid(average,average=True)
         saved={}
         for key,menu in ordered:
@@ -375,6 +393,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             result['checkpoint_verification']='independent_compact_digest'
     if packed_images is not None:
         result['packed_checkpoint_images']=packed_details
+    if count_policy_divisions:
+        result['combined_divisions']=divisions
     return result
 
 
@@ -388,6 +408,7 @@ def main():
     parser.add_argument('--sha256',required=True)
     parser.add_argument('--paired',action='store_true')
     parser.add_argument('--ten-card',action='store_true')
+    parser.add_argument('--count-policy-divisions',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -408,7 +429,8 @@ def main():
                         zip(PACKED_IMAGE_NAMES,args.packed_sweep_image_sha256,args.sweep_image_sha256,strict=True)
                         ) if args.packed_page_images is not None else None
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
-                            packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4),sort_keys=True))
+                            packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
+                            count_policy_divisions=args.count_policy_divisions),sort_keys=True))
 
 
 if __name__=='__main__':main()

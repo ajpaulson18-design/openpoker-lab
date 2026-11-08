@@ -96,6 +96,51 @@ bool guards() {
     std::cout<<"GUARDS_END "<<(ok ? "PASS" : "FAIL")<<'\n';
     return ok;
 }
+bool combined_controls() {
+    grid::Limits limits{};
+    limits.profile=grid::Profile::proof10;
+    limits.integer_bits=702;
+    limits.entries=336;
+    limits.division_kernel=grid::DivisionKernel::combined;
+    auto separate_limits=limits;separate_limits.division_kernel=grid::DivisionKernel::separate;
+    grid::Quantizer combined(limits),separate(separate_limits);
+    std::size_t rows=0,divisions=0;
+    for (std::size_t actions=1;actions<=4;++actions)
+    for (int profile=0;profile<11;++profile)
+    for (int kind=0;kind<2;++kind) {
+        if (kind==1 && (profile==1 || profile==2)) continue;
+        auto input=fixture(actions,profile==10?0:profile);
+        if (profile==7) for (std::size_t i=0;i<actions;++i) input[i]=Integer(i+1)<<590;
+        if (profile==8) for (std::size_t i=0;i<actions;++i) input[i]=(Integer(1)<<(600+7*i))+(2*i+3)*11;
+        if (profile==9) {input.assign(actions,0);input[0]=1;if (actions>1) input[1]=(Integer(1)<<640)-1;}
+        if (profile==10) {
+            input.assign(actions,0);
+            input[0]=Integer("1393796574908165155322327656701986271657982");
+            if (actions>1) input[1]=Integer("696898287454081973172991196020261454725646");
+        }
+        const auto positives=std::count_if(input.begin(),input.end(),[](const Integer& x){return x>0;});
+        if (positives>1) divisions+=static_cast<std::size_t>(positives);
+        const auto original=input;
+        const auto a=kind?separate.average_export(input):separate.regret_policy(input);
+        const auto b=kind?combined.average_export(input):combined.regret_policy(input);
+        if (input!=original || a.kind()!=b.kind() || a.uniform_fallback()!=b.uniform_fallback() ||
+            !std::equal(a.units().begin(),a.units().end(),b.units().begin(),b.units().end()))
+            throw std::runtime_error("combined division policy differs");
+        std::cout<<"COMBINED "<<kind<<' '<<profile<<' '<<actions<<' '<<b.uniform_fallback();
+        for (std::size_t i=0;i<actions;++i) std::cout<<' '<<hex(input[i])<<' '<<b.units()[i];
+        std::cout<<'\n';++rows;
+    }
+    auto bad=limits;bad.integer_bits=128;
+    bool width=failed_row("combined_width",bad,{(Integer(1)<<100)+1,1},grid::ErrorCode::integer_width);
+    bad=limits;
+    bool intermediate=failed_row("combined_intermediate_width",bad,{(Integer(1)<<650)+1,1},grid::ErrorCode::integer_width);
+    bad=limits;bad.work=128;
+    bool work=failed_row("combined_work",bad,{1,2},grid::ErrorCode::work_limit);
+    const bool counts=combined.receipt().combined_divisions==divisions && separate.receipt().combined_divisions==0;
+    std::cout<<"COMBINED_END "<<rows<<' '<<combined.receipt().combined_divisions<<' '
+        <<(width && intermediate && work && counts ? "PASS":"FAIL")<<'\n';
+    return rows==80 && width && intermediate && work && counts;
+}
 } // namespace
 
 int main() {
@@ -130,7 +175,8 @@ int main() {
         if (count!=360 || owner.receipt().rows!=360)
             throw std::runtime_error("policy fixed coverage incomplete");
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
-        return guards() ? 0 : 1;
+        const bool legacy=guards();
+        return combined_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

@@ -1,6 +1,7 @@
 #pragma once
 // Finite-grid policy images, independent of poker row/history routing.
 #include "exact_binary64.hpp"
+#include <boost/multiprecision/integer.hpp>
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -17,6 +18,7 @@ inline constexpr std::uint64_t grid_units = std::uint64_t{1} << grid_bits;
 inline constexpr std::size_t maximum_actions = 20;
 enum class ImageKind { current_regret, exported_average };
 enum class Profile { legacy, proof10 };
+enum class DivisionKernel { separate, combined };
 inline constexpr std::uint64_t proof10_work_cap = 520000000;
 inline constexpr std::size_t proof10_integer_bits = 702;
 
@@ -34,12 +36,14 @@ struct Limits {
     std::size_t entries = 2000000;
     std::size_t integer_payload_bits = std::size_t{1} << 30;
     Profile profile = Profile::legacy;
+    DivisionKernel division_kernel = DivisionKernel::separate;
 };
 struct Receipt {
     std::uint64_t work = 0, rows = 0;
     std::size_t max_input_bits = 0, peak_forecast_bits = 0;
     std::size_t retained_entries = 32, peak_scratch_entries = 0;
     std::size_t peak_integer_payload_bits = 0;
+    std::uint64_t combined_divisions = 0;
 };
 class Quantizer;
 class Policy final {
@@ -134,6 +138,9 @@ public:
     explicit Quantizer(Limits limits = {}) : limits_(limits) {
         const bool proof10=limits.profile==Profile::proof10;
         if ((limits.profile!=Profile::legacy && !proof10) ||
+                (limits.division_kernel!=DivisionKernel::separate &&
+                 limits.division_kernel!=DivisionKernel::combined) ||
+                (limits.division_kernel==DivisionKernel::combined && !proof10) ||
                 !limits.work || limits.work > (proof10?proof10_work_cap:500000000) || !limits.integer_bits ||
                 limits.integer_bits > (proof10?proof10_integer_bits:65536) ||
                 limits.entries < receipt_.retained_entries ||
@@ -202,8 +209,11 @@ private:
             const auto scaled_bits = effective+grid_bits;
             const auto bits = std::max({sum_bits,scaled_bits,std::size_t{53}});
             const auto division = mul(words(scaled_bits),words(sum_bits));
+            // The combined ledger counts one eval_qr invocation per positive
+            // action. It does not bound backend CPU or its internal iterations.
+            const auto division_factor=limits_.division_kernel==DivisionKernel::combined?1U:2U;
             const auto work = add(256,add(mul(16*count,add(words(bits),1)),
-                add(mul(8*positives,add(mul(2,division),add(mul(4,words(bits)),8))),
+                add(mul(8*positives,add(mul(division_factor,division),add(mul(4,words(bits)),8))),
                     mul(4*count*count,add(words(sum_bits),1)))));
             admit(count,bits,work);
             Integer sum = 0;
@@ -216,8 +226,14 @@ private:
                 order[i] = i;
                 if (regrets[i] <= 0) continue;
                 const Integer scaled = (regrets[i] >> common) << grid_bits;
-                const Integer quotient = scaled/sum;
-                remainders[i] = scaled%sum;
+                Integer quotient=0;
+                if (limits_.division_kernel==DivisionKernel::combined) {
+                    boost::multiprecision::divide_qr(scaled,sum,quotient,remainders[i]);
+                    ++receipt_.combined_divisions;
+                } else {
+                    quotient=scaled/sum;
+                    remainders[i]=scaled%sum;
+                }
                 if (quotient < 0 || quotient > grid_units)
                     fail(ErrorCode::arithmetic, "dyadic policy quotient outside unit grid");
                 policy.units_[i] = quotient.convert_to<std::uint64_t>();

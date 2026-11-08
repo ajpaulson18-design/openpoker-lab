@@ -519,3 +519,36 @@ peak working set for buckets, and 6.41 seconds and 5.03 MB for sparse
 pairs. These observations cover the named ten-card fixture and its
 two-holding ranges.
 [Sparse chance evidence](../benchmarks/results/native-dyadic-sparse-chance-ten-card-accepted-v1/manifest.json)
+
+## Combined quotient and remainder
+
+The named `--ten-single-division` profile keeps sparse chance, the
+ten-card game and the two-sweep wire format. For each positive action
+in a row with at least two positive weights, the quantizer requests
+the exact quotient and remainder together from the bundled integer
+backend. The existing power-of-two cancellation, action-order ties,
+zero and pure shortcuts, and exact grid partition remain unchanged.
+
+The proof10 quantizer keeps its width and scratch limits. The work
+ledger charges one weighted division-helper invocation per qualifying
+action. The helper can make several internal correction steps. These
+units describe the invocation model rather than a count of backend
+limb operations. The forecast reserves 433,472,328 quantizer units,
+down from 513,301,416, and 1,742,254,630 total units including transport.
+Saved-only replay counts qualifying actions from its own exact regrets
+and average masses and checks the native invocation receipt.
+
+The frozen run at `56dd735` reproduced both checkpoint images and all
+9,832,556 numerical bytes before the work footer. Independent replay
+reproduced the saved policy and both best responses with zero native
+calls. The native counter, saved replay and a separate rank-free
+checkpoint scan all counted 325,666 qualifying actions. The separate
+path calls its division helper twice on those same actions, for 651,332
+calls.
+
+Charged quantizer work was 241,704,336 units with combined outputs,
+compared with 255,655,680 with separate outputs. The single Windows
+native observations were 5.92 seconds and 5.04 MB peak working set for
+combined outputs, and 6.41 seconds and 5.03 MB for separate outputs.
+The quality threshold was unset for this fixed fixture.
+[Combined division evidence](../benchmarks/results/native-dyadic-single-division-ten-card-accepted-v1/manifest.json)

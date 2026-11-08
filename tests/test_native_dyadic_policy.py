@@ -121,16 +121,39 @@ class NativeDyadicPolicyTests(unittest.TestCase):
         self.assertEqual(self.lines[361],f'END 360 {previous_work}')
 
     def test_rejected_rows_limits_and_cumulative_exhaustion(self):
-        guards = self.lines[362:-1]
+        end = self.lines.index('GUARDS_END PASS')
+        guards = self.lines[362:end]
         self.assertEqual(len(guards),24)
         for line in guards:
             fields = line.split()
             self.assertEqual(len(fields),3)
             self.assertEqual(fields[0],'GUARD')
             self.assertEqual(fields[2],'PASS',line)
-        self.assertEqual(self.lines[-1],'GUARDS_END PASS')
+        self.assertEqual(self.lines[end],'GUARDS_END PASS')
         self.assertTrue(self.observed['actual_exit_observed'])
         self.assertEqual(self.observed['automatic_retries'],0)
+
+    def test_combined_division_matches_independent_fraction_oracle(self):
+        rows=[line.split() for line in self.lines if line.startswith('COMBINED ')]
+        self.assertEqual(len(rows),80)
+        divisions=0
+        for fields in rows:
+            kind,profile,count,fallback=map(int,fields[1:5])
+            self.assertIn(count,range(1,5))
+            self.assertIn(profile,range(11))
+            self.assertEqual(len(fields),5+2*count)
+            values=[int(x,16) for x in fields[5::2]]
+            positives=sum(value>0 for value in values)
+            if positives>1:
+                divisions+=positives
+            units=list(map(int,fields[6::2]))
+            expected,total=allocation(values,average=bool(kind))
+            self.assertEqual(units,expected,(kind,profile,count))
+            self.assertEqual(bool(fallback),not total)
+            self.assertEqual(sum(units),Q)
+        self.assertEqual(self.lines[-1],f'COMBINED_END 80 {divisions} PASS')
+        for label in ('combined_width','combined_intermediate_width','combined_work'):
+            self.assertIn('GUARD '+label+' PASS',self.lines)
 
 
 if __name__ == '__main__':

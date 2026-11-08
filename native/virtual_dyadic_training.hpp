@@ -33,7 +33,7 @@ enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
-    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance
+    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -291,6 +291,7 @@ struct Plan {
     bool compact_directory=false;
     bool rank_board_sets=false;
     bool sparse_chance=false;
+    bool single_division=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -429,11 +430,11 @@ class Forecast final {
         }
         return sum;
     }
-    static std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) {
+    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) const {
         const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
         return 64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
-            8*n*(2*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
+            8*n*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
     }
     void literal(std::size_t id,std::array<std::size_t,2> past,std::array<std::size_t,2> first) {
         meter_.charge(Work::geometry,256);
@@ -559,7 +560,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance;
+        plan_.single_division=profile==StrategyProfile::ten_card_single_division;
+        plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance || plan_.single_division;
         plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded || plan_.sparse_chance;
         plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy || plan_.paged_directory;
         plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage || plan_.shared_policy;
@@ -1169,6 +1171,7 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
+    std::uint64_t combined_divisions=0;
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1449,7 +1452,8 @@ public:
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
-                    p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep}}:std::nullopt);
+                    p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
+                    p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1499,7 +1503,9 @@ public:
             for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);
             out.bytes(image.uniform_fallback.get(),image.rows);
         }
-        footer(out,chance.receipt(),history.receipt(),state.receipt(),feedback);
+        const auto& state_receipt=state.receipt();
+        require((state_receipt.combined_divisions>0)==p.single_division,"combined division execution receipt differs");
+        footer(out,chance.receipt(),history.receipt(),state_receipt,feedback);
         out.finish();
         TrainingIO result;
         result.paging=state.paged_receipt();
@@ -1511,6 +1517,7 @@ public:
             std::copy(receipts.begin(),receipts.end(),result.bounded_policy.get());
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
+        result.combined_divisions=state_receipt.combined_divisions;
         return result;
     }
 };
