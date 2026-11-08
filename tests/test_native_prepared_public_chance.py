@@ -192,12 +192,21 @@ class NativePreparedChanceTests(unittest.TestCase):
         return (directory/'stdout.bin').read_text(encoding='ascii').splitlines()
 
     def test_every_full_board_and_prefix_fold_six_exact_dyadic_reaches_both_seats(self):
+        self.check_literal_cases()
+
+    def test_sparse_pairs_match_every_literal_case(self):
+        self.check_literal_cases(sparse=True)
+
+    def check_literal_cases(self, *, sparse=False):
         count = 0
         for profile in range(6):
             reach,e = fixture(profile)
             for player in (0,1):
                 for mode in (0,1):
-                    lines = self.invoke(f'p{profile}-seat{player}-mode{mode}',list(map(str,(profile,player,mode))))
+                    selectors=list(map(str,(profile,player,mode)))
+                    if sparse:
+                        selectors.append('sparse')
+                    lines = self.invoke(f'{"sparse-" if sparse else ""}p{profile}-seat{player}-mode{mode}',selectors)
                     self.assertEqual(lines[0],f'PREPARED_CASES_V1 {profile} {player} {mode} 1d')
                     boards = [p for p in prefixes() if not mode or len(p)==5]
                     self.assertEqual(len(lines),len(boards)+2)
@@ -240,7 +249,13 @@ class NativePreparedChanceTests(unittest.TestCase):
         self.assertEqual(self.invoke('cache',['cache'],65536),['CACHE_ORDERED_LRU_ZERO_REACH PASS'])
 
     def test_board_set_key_matches_literal_contractions_across_reveal_orders(self):
-        records = iter(self.invoke('board-sets',['board-sets'],65536))
+        self.check_board_sets('board-sets')
+
+    def test_sparse_board_set_key_preserves_results_and_reduces_contraction_work(self):
+        self.check_board_sets('sparse-board-sets')
+
+    def check_board_sets(self, mode):
+        records = iter(self.invoke(mode,[mode],65536))
         private = [set(a) | set(b) for a,_ in RANGES[0] for b,_ in RANGES[1] if set(a).isdisjoint(b)]
         for cards,misses,rank_calls in ((DECK,3,7),((0,*DECK),17,42)):
             size = len(cards)
@@ -260,10 +275,28 @@ class NativePreparedChanceTests(unittest.TestCase):
                     self.assertEqual([int(n,16) for n in fields[11:]],literal(player,board,True,reach))
             self.assertEqual(next(records),f'BOARD_SET_END {size} {len(boards)} {rank_calls} '
                              f'{misses} {2*len(boards)-misses} 0')
+            if mode=='sparse-board-sets':
+                tag, *numbers = next(records).split()
+                actual_size, bucket_work, sparse_work, bucket_total, sparse_total, *_ = map(int,numbers)
+                self.assertEqual((tag,actual_size),('SPARSE_WORK',size))
+                self.assertTrue(0 < sparse_work < bucket_work)
+                self.assertEqual(bucket_total-sparse_total,bucket_work-sparse_work)
         self.assertIsNone(next(records,None))
 
     def test_owner_aggregates_prior_setup_and_dynamic_work_until_poisoned(self):
-        lines = self.invoke('cumulative',['cumulative'],65536)
+        self.check_cumulative('cumulative')
+
+    def test_sparse_owner_rejects_oversized_ranges_and_poisoned_queries(self):
+        lines=self.invoke('sparse-guards',['sparse-guards'],65536)
+        self.assertEqual(lines[-1],'SPARSE_WIDE PASS')
+        guards=[line.split() for line in lines[:-1]]
+        self.assertEqual([fields[:3] for fields in guards],
+                         [['GUARD','sparse_blocked_negative','PASS'],['GUARD','sparse_work','PASS']])
+        self.assertEqual([fields[-2:] for fields in guards],[['0','0']]*2)
+        self.check_cumulative('sparse-cumulative')
+
+    def check_cumulative(self, mode):
+        lines = self.invoke(mode,[mode],65536)
         self.assertEqual(len(lines),1)
         fields = lines[0].split()
         self.assertEqual(fields[:2],['CUMULATIVE_POISON','PASS'])

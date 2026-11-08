@@ -99,13 +99,14 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_SHARED_POLICY','TRAIN_TEN_SHARED_POLICY',
                                              'ADMIT_TEN_PAGED_DIRECTORY','TRAIN_TEN_PAGED_DIRECTORY',
                                              'ADMIT_TEN_SWEEP_STREAM','TRAIN_TEN_SWEEP_STREAM',
+                                             'ADMIT_TEN_SPARSE_CHANCE','TRAIN_TEN_SPARSE_CHANCE',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
                                              'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4'):
         raise ValueError('invalid fixed dyadic probe transport mode')
     proof9_sweeps=int(mode[-1]) if mode.endswith(('_PROOF9_T3','_PROOF9_T4')) else 0
     protocol=f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
-    if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_PROOF9_T3','TRAIN_PROOF9_T4'):
+    if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_PROOF9_T3','TRAIN_PROOF9_T4'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
         capture=SweepCapture(proof9_sweeps=proof9_sweeps)
         wire_bytes=capture.contract['wire_bytes']

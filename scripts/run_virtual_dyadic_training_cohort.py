@@ -195,17 +195,33 @@ def validate_bounded_proof9_admission(receipt,sweeps):
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
-                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False):
+                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
+                       ten_sparse_chance=False):
     if proof9_t3 or proof9_t4:
         require(proof9_t3!=proof9_t4,'select one bounded PROOF9 admission')
         return validate_bounded_proof9_admission(receipt,4 if proof9_t4 else 3)
-    if ten_sweep_stream:
+    if ten_sweep_stream or ten_sparse_chance:
         contract=sweep_stream_contract()
         require(type(receipt) is dict and receipt.get('sweep_stream')==contract and
                 all(type(value) is int for value in receipt['sweep_stream'].values()),
                 'sweep stream admission differs from independent fixed census')
         numeric={key:value for key,value in receipt.items() if key!='sweep_stream'}
-        validate_ten_admission(numeric,paged_directory=True)
+        if ten_sparse_chance:
+            require(numeric.get('sparse_chance') is True,'sparse chance profile tag missing')
+            components=numeric.get('component_work')
+            require(type(components) is dict and type(components.get('chance')) is int and
+                    components['chance']==127_793_144 and
+                    type(numeric.get('planned_total_work')) is int and numeric['planned_total_work']==1_810_140_094 and
+                    type(numeric.get('parent_allowance')) is int and numeric['parent_allowance']==1_105_568_896,
+                    'sparse chance forecast differs from independent fixed census')
+            baseline=dict(numeric)
+            del baseline['sparse_chance']
+            baseline['component_work']=dict(numeric['component_work'],chance=447_066_576)
+            baseline['planned_total_work']=2_129_413_526
+            baseline['parent_allowance']=786_295_464
+            validate_ten_admission(baseline,paged_directory=True)
+        else:
+            validate_ten_admission(numeric,paged_directory=True)
         scratch=contract['scratch_bytes']+contract['frame_header_bytes']
         require(numeric['output_bytes']==contract['retained_bytes'] and
                 numeric['checkpoint_image_bytes']==contract['image_bytes'] and
@@ -682,6 +698,30 @@ def verify_sweep_capture(process,admission,images,digest):
     return capture
 
 
+def compare_sparse_chance_work(source,replay):
+    path='benchmarks/results/native-dyadic-sweep-stream-ten-card-accepted-v1/manifest.json'
+    raw=(ROOT/path).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][path]['raw_sha256'],
+            'ten-card streamed chance baseline source drift')
+    manifest=exact_json(raw)
+    require(manifest['status']=='accepted_streamed_sweep_checkpoint_digest_replay' and
+            manifest['source_head']=='83d143d89a47528be36fe1f847e49d5568292a81' and
+            manifest['training_invocations']==1 and manifest['operator']['returncode']==0 and
+            manifest['operator']['actual_exit_observed'] and manifest['operator']['raw_source_stable'],
+            'accepted ten-card streamed chance baseline required')
+    prior=manifest['saved_only_replay']
+    require(all(replay[key]==prior[key] for key in ('sweeps','profile_and_br','checkpoint_images','shape')) and
+            all(replay['work_actual'][owner]==work for owner,work in prior['work_actual'].items() if owner!='chance') and
+            all(replay['chance_actual'][field]==prior['chance_actual'][field]
+                for field in ('input_work','cache_lookup_work','rank_work','sort_work','rank_calls','cache_hits',
+                              'cache_misses','cache_evictions','completed_contractions')),
+            'sparse chance changed a shared result or receipt category')
+    reference=prior['work_actual']['chance']
+    observed=replay['work_actual']['chance']
+    return {'baseline_actual_chance_work':reference,'actual_chance_work':observed,
+            'actual_chance_work_delta':observed-reference,'actual_chance_work_improved':observed<reference}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -758,18 +798,19 @@ def compare_proof9_t4_prefix(path,source,frames):
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
-        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False):
+        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,ten_sparse_chance)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
-                                                 '_PROOF9_T3','_PROOF9_T4')) if flag),'')
+                                                 '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE')) if flag),'')
     paired=any(modes)
+    ten_sweep_stream=ten_sweep_stream or ten_sparse_chance
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
     ten_row_coverage=ten_row_coverage or ten_shared_policy
@@ -827,7 +868,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
             ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
-            proof9_t3=proof9_t3,proof9_t4=proof9_t4)
+            proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -901,7 +942,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    label='sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -927,6 +968,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     and (not paired or numeric['public_walks_per_sweep']==1)
                     and numeric['native_producer_calls']==0,
                     'saved replay result differs from admitted producer')
+            if ten_sparse_chance:
+                result['sparse_chance_comparison'].update(compare_sparse_chance_work(source,numeric))
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
             if uses_paging:
@@ -1006,6 +1049,7 @@ def main():
     modes.add_argument('--ten-shared-policy',action='store_true')
     modes.add_argument('--ten-paged-directory',action='store_true')
     modes.add_argument('--ten-sweep-stream',action='store_true')
+    modes.add_argument('--ten-sparse-chance',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     args=parser.parse_args()
@@ -1016,7 +1060,8 @@ def main():
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
-        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4),sort_keys=True))
+        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
+        ten_sparse_chance=args.ten_sparse_chance),sort_keys=True))
 
 
 if __name__=='__main__':main()

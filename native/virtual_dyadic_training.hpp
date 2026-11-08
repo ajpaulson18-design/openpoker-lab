@@ -33,7 +33,7 @@ enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
-    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep
+    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -290,6 +290,7 @@ struct Plan {
     bool paged_strategy=false;
     bool compact_directory=false;
     bool rank_board_sets=false;
+    bool sparse_chance=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -416,7 +417,11 @@ class Forecast final {
             const auto bucket=4+reach+logceil(opp)+4, out=4+bucket;
             const auto input=12+(6+size)+2*(4+2*words(reach))+4;
             const auto bucket_count=showdown?2+own:1;
-            const auto dynamic=12+opp*mul_cost(4,reach)+53*bucket_count+
+            const auto dynamic=plan_.sparse_chance?
+                prepared::PreparedPublicChance::sparse_pairs_dynamic_cost(2,2,own,opp,
+                    opp*mul_cost(4,reach),bucket,out,4,
+                    showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold):
+                12+opp*mul_cost(4,reach)+53*bucket_count+
                 (showdown?9:3)*opp*add_cost(bucket)+
                 own*((showdown?12:3)*add_cost(bucket)+mul_cost(4,bucket)+copy_cost(out)+2*words(bucket))+128;
             // This is the full lookup bound. Miss construction is admitted separately.
@@ -554,7 +559,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded;
+        plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance;
+        plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded || plan_.sparse_chance;
         plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy || plan_.paged_directory;
         plan_.row_coverage=profile==StrategyProfile::ten_card_row_coverage || plan_.shared_policy;
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
@@ -1294,6 +1300,7 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
+        require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
         out.text(p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
@@ -1402,6 +1409,8 @@ public:
         const auto value_bits=game.value_bits;
         require(!p.bounded_proof9() || streamed_checkpoints,
             "bounded PROOF9 requires explicit sweep checkpoint streaming");
+        require(!p.sparse_chance || streamed_checkpoints,
+            "sparse chance profile requires explicit sweep checkpoint streaming");
         if (streamed_checkpoints) validate_sweep_stream();
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
         const auto deck=chance::DeckDefinition::reduced(game.deck);
@@ -1413,7 +1422,8 @@ public:
         chance_limits.max_integer_payload_bits=chance_payload;
         prepared::PreparedPublicChance chance(ranges[0],ranges[1],deck,chance_limits,
             p.rank_board_sets?p.rank_planes:64,
-            p.rank_board_sets?prepared::RankCacheKey::board_set:prepared::RankCacheKey::ordered_prefix);
+            p.rank_board_sets?prepared::RankCacheKey::board_set:prepared::RankCacheKey::ordered_prefix,
+            p.sparse_chance?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets);
         require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=chance_setup_bound,
             "prepared prior differs from admitted source prior");
         history::Limits history_limits;
