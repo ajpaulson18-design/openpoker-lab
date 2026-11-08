@@ -220,6 +220,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T4_V1 TRAIN_PROOF9_T4\n',b'DYADIC_T3_V1 ADMIT_PROOF9_T4\n',
                 b'DYADIC_T4_V1 ADMIT_PROOF9_T3\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_SPARSE_CHANCE\n',b'DYADIC_T4_V1 ADMIT_TEN_SPARSE_CHANCE\n',
+                b'DYADIC_T2_V1 TRAIN_TEN_SINGLE_DIVISION\n',b'DYADIC_T4_V1 ADMIT_TEN_SINGLE_DIVISION\n',
                 b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
@@ -357,6 +358,23 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
 
     def test_proof9_t4_admits_all_epochs_without_training(self):
         self.check_bounded_proof9_admission(4)
+
+    def test_single_division_admits_the_same_game_with_lower_quantizer_work(self):
+        directory,process=self.observe('admit_ten_single_division',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_SINGLE_DIVISION',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_single_division=True)
+        self.assertEqual((plan['component_work']['quantizer'],plan['planned_total_work'],
+                          plan['planned_total_work']+plan['sweep_stream']['copy_work']),
+                         (433_472_328,1_730_311_006,1_742_254_630))
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        altered=dict(receipt,quantizer_terms=[51_633_888,156_086_913,225_751_528])
+        with self.assertRaises(ValueError):
+            validate_admission(altered,ten_single_division=True)
+        with self.assertRaises(ValueError):
+            validate_admission(receipt,ten_sparse_chance=True)
 
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace

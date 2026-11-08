@@ -71,6 +71,7 @@ struct PagedStrategy {
     bool paged_directory=false;
     std::size_t directory_page_limit=0;
     Lifecycle lifecycle=Lifecycle::fixed_two_sweep;
+    dyadic_policy::DivisionKernel division_kernel=dyadic_policy::DivisionKernel::separate;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -85,6 +86,7 @@ struct Receipt {
     std::size_t rows = 0, slots = 0, completed_sweeps = 0, staged_rows = 0;
     std::size_t reserved_entries = 0, reserved_integer_and_text_payload_bits = 0;
     std::size_t peak_input_bits = 0, peak_arithmetic_bits = 0;
+    std::uint64_t combined_divisions=0;
 };
 struct Row {
     std::size_t history_ordinal = 0, actor = 0, holding_index = 0;
@@ -420,6 +422,11 @@ class State final {
     static Forecast admit(Forecast f, Limits limits, std::array<std::size_t,2> hands,
                           const std::optional<PagedStrategy>& paged) {
         const bool expanded=proof10(paged);
+        if (paged && (paged->division_kernel!=dyadic_policy::DivisionKernel::separate &&
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
+            fail(ErrorCode::invalid_limits,"unknown state quantizer division kernel");
+        if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded)
+            fail(ErrorCode::invalid_forecast,"combined division kernel requires the exact proof10 profile");
         if (!limits.work || limits.work>(expanded?proof10_work_cap:500000000) || !limits.integer_bits ||
             limits.integer_bits>(expanded?dyadic_policy::proof10_integer_bits:65536) ||
             !limits.entries || limits.entries>2000000 || !limits.integer_payload_bits ||
@@ -440,7 +447,8 @@ class State final {
         // Maximum menu20: 32 retained + (12*20+64) scratch logical entries.
         return {f.quantizer_work,limits.integer_bits,336,
             std::min(limits.integer_payload_bits,std::size_t{1}<<30),
-            proof10(paged)?dyadic_policy::Profile::proof10:dyadic_policy::Profile::legacy};
+            proof10(paged)?dyadic_policy::Profile::proof10:dyadic_policy::Profile::legacy,
+            paged?paged->division_kernel:dyadic_policy::DivisionKernel::separate};
     }
     static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
         if (!capacity.keys && !capacity.token_slots) {
@@ -837,6 +845,7 @@ public:
     [[nodiscard]] Receipt receipt() const noexcept {
         auto answer=receipt_;
         answer.quantizer_work=quantizer_.receipt().work;
+        answer.combined_divisions=quantizer_.receipt().combined_divisions;
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }
