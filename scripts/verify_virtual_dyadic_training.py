@@ -204,8 +204,17 @@ def division_count(values_by_row):
     return count
 
 
+def phase_payload_bits(rows,value_bits):
+    fixed_owner=16_384+36_864+1_024
+    borrowed_views=(410+388)*16
+    pager_and_codec=591_008+88
+    arithmetic=256*((value_bits+58+63)//64)*8
+    state=8*(fixed_owner+borrowed_views+pager_and_codec+rows+arithmetic)
+    return state,state+(1<<20)+8*(1<<20)+(1<<22)+32*181
+
+
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False):
+           count_policy_divisions=False,phase_payload=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and not (proof9_t3 and proof9_t4),
@@ -214,6 +223,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(type(count_policy_divisions) is bool and
             (not count_policy_divisions or ten_card and checkpoint_digests is not None),
             'counted policy divisions require ten-card digest replay')
+    require(type(phase_payload) is bool and (not phase_payload or count_policy_divisions),
+            'phase payload requires the counted ten-card digest profile')
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
@@ -371,6 +382,9 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(0<history_bytes<=32<<20 and 0<chance['peak_integer_bits']<=65536
             and 0<history_entries+state_entries+chance['peak_live_entries']<=entries<=2_000_000
             and 0<state_payload+chance['peak_integer_payload_bits']<=payload<=payload_limit,'saved composed storage receipt')
+    if phase_payload:
+        require((state_payload,payload)==phase_payload_bits(rows,bits),
+                'saved phase-specific State or composed payload differs')
     quality=fixture.quality(saved)
     result={'status':'saved_four_sweep_exact_replay_pass' if proof9_t4 else 'saved_three_sweep_exact_replay_pass' if proof9_t3 else 'saved_two_sweep_exact_replay_pass','scope':('named ten-card fixture' if ten_card else 'PROOF9')+' only; saved grid quality, no wider game or target pass',
             'saved_output_sha256':expected_sha256,'bytes':size,'sweeps':sweeps,'changed_current_rows':changes,
@@ -395,6 +409,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         result['packed_checkpoint_images']=packed_details
     if count_policy_divisions:
         result['combined_divisions']=divisions
+    if phase_payload:
+        result['state_payload_bits']=state_payload
     return result
 
 
@@ -409,6 +425,7 @@ def main():
     parser.add_argument('--paired',action='store_true')
     parser.add_argument('--ten-card',action='store_true')
     parser.add_argument('--count-policy-divisions',action='store_true')
+    parser.add_argument('--phase-payload',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -430,7 +447,7 @@ def main():
                         ) if args.packed_page_images is not None else None
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
                             packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
-                            count_policy_divisions=args.count_policy_divisions),sort_keys=True))
+                            count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload),sort_keys=True))
 
 
 if __name__=='__main__':main()

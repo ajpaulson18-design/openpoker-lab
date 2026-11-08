@@ -61,6 +61,7 @@ struct PackedAverageCapacity {
     std::size_t regret_limbs = 0;
 };
 enum class Lifecycle { fixed_two_sweep, bounded_v1 };
+enum class PayloadModel { legacy, paged_phases };
 struct PagedStrategy {
     std::filesystem::path scratch;
     virtual_dyadic_paged_image::Limits limits;
@@ -72,6 +73,7 @@ struct PagedStrategy {
     std::size_t directory_page_limit=0;
     Lifecycle lifecycle=Lifecycle::fixed_two_sweep;
     dyadic_policy::DivisionKernel division_kernel=dyadic_policy::DivisionKernel::separate;
+    PayloadModel payload_model=PayloadModel::legacy;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -359,6 +361,24 @@ class State final {
     enum class Phase { building, closed, sweeping };
     enum class PackedField { average, regret };
     static constexpr std::size_t page_codec_words=11;
+    // Named logical payload for the sealed proof10 paged phase path. This
+    // models owned data and bounded scratch, not standard-library stream
+    // buffers, allocator metadata, or OS page cache.
+    static constexpr std::size_t paged_phase_fixed_bytes=16*1024;
+    static constexpr std::size_t paged_phase_directory_bytes=36'864;
+    static constexpr std::size_t paged_phase_view_bytes=(410+388)*16;
+    static constexpr std::size_t paged_phase_pager_bytes=591'008;
+    static constexpr std::size_t paged_phase_tags_bytes=119'196;
+    static constexpr std::size_t paged_phase_spill_bytes=1'024;
+    static constexpr std::size_t paged_phase_codec_bytes=88;
+    static constexpr std::size_t paged_phase_arithmetic_bytes=256*11*8;
+    static constexpr std::size_t paged_phase_payload_bytes=paged_phase_fixed_bytes+
+        paged_phase_directory_bytes+paged_phase_view_bytes+paged_phase_pager_bytes+
+        paged_phase_tags_bytes+paged_phase_spill_bytes+paged_phase_codec_bytes+
+        paged_phase_arithmetic_bytes;
+    static constexpr std::size_t paged_phase_payload_bits=paged_phase_payload_bytes*8;
+    static_assert(paged_phase_payload_bytes==799'860);
+    static_assert(paged_phase_payload_bits==6'398'880);
     const History* history_;
     std::array<std::size_t,2> hand_counts_;
     Forecast forecast_;
@@ -512,6 +532,9 @@ class State final {
                                          const std::optional<PagedStrategy>& paged) {
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
+        if (paged && paged->payload_model==PayloadModel::paged_phases &&
+            paged->scratch.native().size()>1024)
+            fail(ErrorCode::invalid_forecast,"paged phase scratch path exceeds its modeled bound");
         const auto lifecycle=paged?paged->lifecycle:Lifecycle::fixed_two_sweep;
         const auto directory_read_limit=paged_directory_read_limit(f,lifecycle);
         if (paged && paged->paged_directory &&
@@ -522,7 +545,8 @@ class State final {
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
                                               paged && paged->row_coverage,paged && paged->shared_policy,
-                                              paged && paged->paged_directory,lifecycle);
+                                              paged && paged->paged_directory,lifecycle,
+                                              paged?paged->payload_model:PayloadModel::legacy);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -687,7 +711,8 @@ public:
                                              std::optional<virtual_dyadic_paged_image::Limits> paged={},
                                              bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false,
                                              bool shared_policy=false,bool paged_directory=false,
-                                             Lifecycle lifecycle=Lifecycle::fixed_two_sweep) {
+                                             Lifecycle lifecycle=Lifecycle::fixed_two_sweep,
+                                             PayloadModel payload_model=PayloadModel::legacy) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -704,6 +729,22 @@ public:
             f.max_history_depth!=15 || f.value_bits!=644 ||
             packed.limb_count!=1295812 || packed.regret_limbs!=1666910))
             fail(ErrorCode::invalid_forecast,"invalid ten-card strategy census");
+        if (payload_model!=PayloadModel::legacy && payload_model!=PayloadModel::paged_phases)
+            fail(ErrorCode::invalid_forecast,"unknown state payload model");
+        if (payload_model==PayloadModel::paged_phases &&
+            (!expanded || lifecycle!=Lifecycle::fixed_two_sweep || !catalog.sealed ||
+             catalog.keys!=388 || catalog.token_slots!=410 || packed.limb_count!=1295812 ||
+             packed.regret_limbs!=1666910 || !compact_rows || !ordered_rows || !row_coverage ||
+             !shared_policy || !paged_directory || f.sweeps!=2))
+            fail(ErrorCode::invalid_forecast,"phase payload model requires the sealed proof10 T2 paged path");
+        if (payload_model==PayloadModel::paged_phases &&
+            (sizeof(State)+sizeof(virtual_dyadic_paged_image::Image)+
+                 4*(1024+16)*sizeof(std::filesystem::path::value_type)+4096>paged_phase_fixed_bytes ||
+             sizeof(RowDirectory)>paged_phase_directory_bytes || sizeof(PolicySpill)>paged_phase_spill_bytes ||
+             sizeof(std::string_view)!=16 || sizeof(Menu)!=16 || page_codec_words*sizeof(std::uint64_t)!=88 ||
+             f.rows!=paged_phase_tags_bytes ||
+             pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes))
+            fail(ErrorCode::invalid_forecast,"phase payload model ABI exceeds its named envelope");
         if (paged && (!catalog.sealed || (!expanded && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
             paged->image_words!=plus(packed.limb_count,packed.regret_limbs)))
             fail(ErrorCode::invalid_forecast,"invalid paged state profile, width or image word census");
@@ -788,6 +829,11 @@ public:
                     fail(ErrorCode::capacity,"packed average exceeds original integer payload reservation");
             }
         } else if (packed.regret_limbs) fail(ErrorCode::invalid_forecast,"packed regrets require packed averages");
+        if (payload_model==PayloadModel::paged_phases) {
+            // Integer/text workspace is the exact named phase envelope. Dense
+            // export APIs are intentionally unavailable for this model.
+            payload=paged_phase_payload_bits;
+        }
         if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
             fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
         return {static_cast<std::size_t>(entries),static_cast<std::size_t>(payload)};
@@ -1418,6 +1464,8 @@ public:
     [[nodiscard]] AverageExport export_average(bool include_raw=true) {
         healthy();
         try {
+            if (paged_ && paged_->payload_model==PayloadModel::paged_phases)
+                fail(ErrorCode::phase,"phase payload model supports streamed average output only");
             if (policy_spill_) fail(ErrorCode::phase,"shared policy requires streamed average export");
             if (packed() && include_raw) fail(ErrorCode::phase,"state packed export requires policy-only mode");
             admit_export();

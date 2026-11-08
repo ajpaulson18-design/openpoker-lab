@@ -1428,6 +1428,52 @@ void bounded_lifecycle_controls(h::History& history,const b::Template& source,
         std::cout<<"LIFECYCLE DONE "<<count<<'\n';
     }
 }
+void phase_payload_controls(h::History& history,const b::Template& source,const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const s::Forecast plan{119196,281066,2,15,644,261025384,513301416};
+    const s::ActionCatalogCapacity catalog{source.nodes().size(),source.receipt().edges,true};
+    require(catalog.keys==388 && catalog.token_slots==410,"phase payload catalog census differs");
+    const s::PackedAverageCapacity packed{1295812,1666910};
+    const pages::Limits pages_limits{2962722,4096,16,6130244,5925444,3091726,2,
+        pages::Profile::proof10,1295812,18836,true};
+    const auto legacy=s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true);
+    const auto phased=s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
+        s::Lifecycle::fixed_two_sweep,s::PayloadModel::paged_phases);
+    require(phased.entries==200886 && phased.entries==legacy.entries && phased.payload_bits==6398880 &&
+        legacy.payload_bits==1168510748,"phase payload reservation or legacy parity differs");
+    const std::size_t fixed=16384,directory_bytes=36864,views=(410+388)*16,pager=591008,
+        tags=119196,spill=1024,codec=88,arithmetic=256*11*8;
+    require(8*(fixed+directory_bytes+views+pager+tags+spill+codec+arithmetic)==phased.payload_bits,
+        "independent phase payload breakdown differs");
+    std::cout<<"PHASE_PAYLOAD "<<legacy.entries<<' '<<legacy.payload_bits<<' '
+        <<phased.entries<<' '<<phased.payload_bits<<'\n';
+    const auto path=scratch/"payload-short";
+    s::Limits limits{plan.own_work+plan.quantizer_work,702,2000000,phased.payload_bits-1};
+    bool short_rejected=false;
+    try {
+        s::State state(history,{2,2},1,plan,limits,catalog,packed,
+            s::PagedStrategy{path,pages_limits,true,true,true,true,true,7656,
+                s::Lifecycle::fixed_two_sweep,p::DivisionKernel::separate,s::PayloadModel::paged_phases});
+    } catch (const s::Error& error) {short_rejected=error.code()==ErrorCode::capacity;}
+    require(short_rejected && !std::filesystem::exists(path) &&
+        !std::filesystem::exists(path.string()+"-rows"),"short payload allocated scratch or escaped admission");
+    for (int variant=0;variant<5;++variant) {
+        bool rejected=false;
+        try {
+            auto altered=plan; auto menus=catalog; auto image=packed;
+            bool compact=true,ordered=true,coverage=true,shared=true,directory=true;
+            if (variant==0) altered.sweeps=1;
+            if (variant==1) menus.sealed=false;
+            if (variant==2) shared=false;
+            if (variant==3) directory=false;
+            if (variant==4) ordered=false;
+            (void)s::State::storage_forecast(altered,menus,image,pages_limits,compact,ordered,coverage,shared,directory,
+                s::Lifecycle::fixed_two_sweep,s::PayloadModel::paged_phases);
+        } catch (const s::Error&) {rejected=true;}
+        require(rejected,"incompatible phase payload layout accepted");
+    }
+    std::cout<<"PHASE_PAYLOAD_GUARDS PASS\n";
+}
 } // namespace
 
 int main(int argc,char** argv) {
@@ -1445,6 +1491,7 @@ int main(int argc,char** argv) {
             paged_image_controls(argv[1]);
             compact_directory_controls(history,source,argv[1]);
             paged_directory_controls(history,source,argv[1]);
+            phase_payload_controls(history,source,argv[1]);
             row_coverage_controls(history,source,argv[1]);
             bounded_lifecycle_controls(history,source,argv[1]);
             proof9_t4_pager_controls();

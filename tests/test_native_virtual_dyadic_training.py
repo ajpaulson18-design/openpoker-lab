@@ -221,6 +221,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T4_V1 ADMIT_PROOF9_T3\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_SPARSE_CHANCE\n',b'DYADIC_T4_V1 ADMIT_TEN_SPARSE_CHANCE\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_SINGLE_DIVISION\n',b'DYADIC_T4_V1 ADMIT_TEN_SINGLE_DIVISION\n',
+                b'DYADIC_T2_V1 TRAIN_TEN_PHASE_PAYLOAD\n',b'DYADIC_T4_V1 ADMIT_TEN_PHASE_PAYLOAD\n',
                 b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
@@ -375,6 +376,22 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             validate_admission(altered,ten_single_division=True)
         with self.assertRaises(ValueError):
             validate_admission(receipt,ten_sparse_chance=True)
+
+    def test_phase_payload_admits_exact_paged_state_without_dense_reservations(self):
+        directory,process=self.observe('admit_ten_phase_payload',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_PHASE_PAYLOAD',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_phase_payload=True)
+        self.assertEqual((plan['state_payload_bits'],plan['payload_bits'],plan['entries']),
+                         (6_398_880,20_036_160,360_303))
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        for key in ('state_payload_bits','payload_bits'):
+            with self.assertRaisesRegex(ValueError,'phase payload differs'):
+                validate_admission(dict(receipt,**{key:receipt[key]-1}),ten_phase_payload=True)
+        with self.assertRaises(ValueError):
+            validate_admission(receipt,ten_single_division=True)
 
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
