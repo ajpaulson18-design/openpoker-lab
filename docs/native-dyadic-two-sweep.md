@@ -506,3 +506,16 @@ The independent ten-card forecast reduces the chance reservation from
 the complete reservation is 1,822,083,718 units. Independent verification
 compares the numerical payload, both checkpoint digests, exported policy
 and best responses to the streamed bucket profile.
+
+The source-frozen study at `3c33c2f` matched all 9,832,556 bytes before
+the work footer and both checkpoint images. Independent replay reproduced
+the same policy and best responses with zero native calls. The observed
+native chance charge fell from 209,133,313 to 68,478,558 modeled units.
+Contraction work accounted for the entire difference. The two runs
+recorded 797,344 contractions and 42 hand ranks each.
+
+The single Windows native observations were 7.43 seconds and 5.10 MB
+peak working set for buckets, and 6.41 seconds and 5.03 MB for sparse
+pairs. These observations cover the named ten-card fixture and its
+two-holding ranges.
+[Sparse chance evidence](../benchmarks/results/native-dyadic-sparse-chance-ten-card-accepted-v1/manifest.json)
