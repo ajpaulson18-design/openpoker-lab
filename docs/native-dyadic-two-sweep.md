@@ -537,3 +537,18 @@ limb operations. The forecast reserves 433,472,328 quantizer units,
 down from 513,301,416, and 1,742,254,630 total units including transport.
 Saved-only replay counts qualifying actions from its own exact regrets
 and average masses and checks the native invocation receipt.
+
+The frozen run at `56dd735` reproduced both checkpoint images and all
+9,832,556 numerical bytes before the work footer. Independent replay
+reproduced the saved policy and both best responses with zero native
+calls. The native counter, saved replay and a separate rank-free
+checkpoint scan all counted 325,666 qualifying actions. The separate
+path calls its division helper twice on those same actions, for 651,332
+calls.
+
+Charged quantizer work was 241,704,336 units with combined outputs,
+compared with 255,655,680 with separate outputs. The single Windows
+native observations were 5.92 seconds and 5.04 MB peak working set for
+combined outputs, and 6.41 seconds and 5.03 MB for separate outputs.
+The quality threshold was unset for this fixed fixture.
+[Combined division evidence](../benchmarks/results/native-dyadic-single-division-ten-card-accepted-v1/manifest.json)
