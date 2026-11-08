@@ -569,3 +569,11 @@ allowances carried forward from earlier layouts. These are modeled
 payload bounds. Allocator capacity, filesystem buffering and working
 set are measured separately. The named profile leaves entry and work
 limits unchanged.
+
+The frozen run at `bab69e2` matched the combined-division baseline's
+numerical payload, checkpoint images, work receipts and independently
+replayed policy and best responses. The one-bit-short State control
+rejected before creating scratch files. The two Windows runs recorded
+about 5.04 MB and 5.03 MB of peak working set for the legacy and phase
+ledgers, respectively.
+[Phase payload evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)

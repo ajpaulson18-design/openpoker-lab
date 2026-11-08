@@ -273,3 +273,22 @@ before pager reservation and 1,977,942 with the current
 cache geometry. The 35,361 required History entries alone
 would then put the composed total above two million.
 Other owners and work remain separate admission terms.
+
+### Phase payload and eleven-card work
+
+The accepted ten-card phase ledger reserves 6,398,880 State payload
+bits for the paged directory and streamed policy layout. Extending
+its formula to the named eleven-card geometry projects 8,486,688 State
+bits and 22,123,968 composed bits before transport scratch. The
+eleven-card denominator has 639 bits from `29 × 420 × 2^625`,
+and the existing width formula retains 646 bits.
+
+The independent two-sweep census projects 380,172 rows, 892,910 slots,
+9,822,010 pager requests and 5.41 billion total modeled work units under
+the prospective sparse, indexed-rank, combined-division layout. Parent
+routing, State and quantizer work are separate admission barriers. A
+row-batched pager trace projects 4,181,892 logical requests with the same
+physical read and write words. These are rank-free projections. The
+archive contains the source and traces, and the eleven-card request
+still needs its own native admission and training evidence.
+[Projection and ten-card evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)
