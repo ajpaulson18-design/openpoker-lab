@@ -3,7 +3,7 @@ import hashlib
 import unittest
 from unittest.mock import patch
 
-from scripts.verify_virtual_dyadic_training import digest_compact_checkpoint, replay
+from scripts.verify_virtual_dyadic_training import bounded_checkpoint_records, digest_compact_checkpoint, replay
 
 
 class CheckpointDigestTests(unittest.TestCase):
@@ -48,7 +48,29 @@ class CheckpointDigestTests(unittest.TestCase):
             for case in cases:
                 with self.subTest(case=case), self.assertRaises(ValueError):
                     replay('absent','0'*64,**case)
+    def test_t4_requires_exact_mode_and_four_lowercase_digests_before_file_access(self):
+        d='1'*64
+        cases=(dict(proof9_t4=True),
+               dict(proof9_t4=True,paired=True,rank_sets=True,checkpoint_digests=(d,d,d)),
+               dict(proof9_t4=True,paired=True,rank_sets=True,checkpoint_digests=(d,d,d,'A'*64)),
+               dict(proof9_t4=True,proof9_t3=True,paired=True,rank_sets=True,checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,ten_card=True,paired=True,rank_sets=True,checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,paired=True,rank_sets=True,images=(),checkpoint_digests=(d,)*4),
+               dict(proof9_t4=True,paired=True,rank_sets=True,packed_images=(),checkpoint_digests=(d,)*4))
+        with patch('scripts.verify_virtual_dyadic_training.authenticated_reader',side_effect=AssertionError('file opened')):
+            for case in cases:
+                with self.subTest(case=case), self.assertRaises(ValueError):
+                    replay('absent','0'*64,**case)
 
+    def test_report_keeps_every_epoch_and_last_two_file_roles(self):
+        digests=tuple(str(i)*64 for i in range(1,5))
+        for count,roles in ((3,('committed.bin','staged.bin')),(4,('staged.bin','committed.bin'))):
+            with self.subTest(count=count):
+                epochs,images=bounded_checkpoint_records(digests[:count],4_853_840)
+                self.assertEqual([(x['sweep'],x['slot'],x['sha256']) for x in epochs],
+                                 [(i,i%2,digest) for i,digest in enumerate(digests[:count],1)])
+                self.assertEqual([(x['name'],x['sha256']) for x in images],
+                                 list(zip(roles,digests[count-2:count],strict=True)))
 
 
 if __name__=='__main__':

@@ -1223,6 +1223,52 @@ void row_coverage_controls(h::History& history,const b::Template& source,
         flags[0]==0 && flags[1]==1,"shared average stream or fallback flags changed");
     std::cout<<"PAGED_IMAGE shared_policy\n";
 }
+void proof9_t4_pager_controls() {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const pages::Limits extended{606730,4096,16,3203674,2426920,1221444,2,
+        pages::Profile::proof9_t4,258694,7908,true};
+    auto earlier=extended;
+    earlier.profile=pages::Profile::legacy;
+    earlier.read_words=2223164;
+    earlier.write_words=1820190;
+    earlier.requests=930624;
+    earlier.write_requests=5931;
+    require(s::State::pager_resident_bytes(extended,true)==591008 &&
+            s::State::pager_resident_bytes(earlier,true)==591008,
+            "four-sweep pager altered resident geometry");
+    const auto reject_pager=[](const pages::Limits& limits) {
+        try { (void)pages::Image::resident_bytes(limits); }
+        catch (const std::invalid_argument&) { return; }
+        throw std::runtime_error("foreign four-sweep pager limits accepted");
+    };
+    auto invalid=extended; invalid.profile=pages::Profile::legacy; reject_pager(invalid);
+    invalid=extended; ++invalid.read_words; reject_pager(invalid);
+    invalid=extended; ++invalid.write_words; reject_pager(invalid);
+    invalid=extended; ++invalid.requests; reject_pager(invalid);
+    invalid=extended; ++invalid.write_requests; reject_pager(invalid);
+    invalid=extended; --invalid.stage_split_words; reject_pager(invalid);
+    invalid=extended; invalid.virtual_initial_zero=false; reject_pager(invalid);
+
+    constexpr s::ActionCatalogCapacity catalog{146,371,true};
+    constexpr s::PackedAverageCapacity packed{258694,348036};
+    const s::Forecast t3{24420,58164,3,15,642,76104624,182766664};
+    const s::Forecast t4{24420,58164,4,15,642,98317056,261273056};
+    const auto storage=[&](const s::Forecast& plan,const pages::Limits& limits,s::Lifecycle lifecycle) {
+        return s::State::storage_forecast(plan,catalog,packed,limits,true,true,true,true,true,lifecycle);
+    };
+    const auto before=storage(t3,earlier,s::Lifecycle::bounded_v1);
+    const auto after=storage(t4,extended,s::Lifecycle::bounded_v1);
+    require(after.entries==before.entries+8 && after.payload_bits==before.payload_bits+512,
+            "four-sweep State receipt storage differs");
+    for (const auto lifecycle:{s::Lifecycle::fixed_two_sweep,s::Lifecycle::bounded_v1}) {
+        bool rejected=false;
+        try { (void)storage(t3,extended,lifecycle); }
+        catch (const s::Error& error) { rejected=error.code()==ErrorCode::invalid_forecast; }
+        require(rejected,"four-sweep pager accepted an earlier State horizon");
+    }
+    std::cout<<"PROOF9_T4_GUARDS 7 2 8 512\n";
+}
+
 void bounded_lifecycle_controls(h::History& history,const b::Template& source,
                                 const std::filesystem::path& scratch) {
     namespace pages=openpoker::virtual_dyadic_paged_image;
@@ -1401,6 +1447,7 @@ int main(int argc,char** argv) {
             paged_directory_controls(history,source,argv[1]);
             row_coverage_controls(history,source,argv[1]);
             bounded_lifecycle_controls(history,source,argv[1]);
+            proof9_t4_pager_controls();
         }
         std::cout<<"END\n";
         return 0;

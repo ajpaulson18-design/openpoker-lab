@@ -14,9 +14,15 @@ FINAL_BYTES = RETAINED_BYTES - PRELUDE_BYTES - 2*PROFILE_AND_ROOT_BYTES
 SCRATCH_BYTES = 32768
 
 
-def sweep_stream_contract(*, proof9_t3=False):
-    frames, image_bytes, retained, wire = ((3, 4_853_840, 2_579_724, 17_141_340)
-                                          if proof9_t3 else (2, IMAGE_BYTES, RETAINED_BYTES, WIRE_BYTES))
+def sweep_stream_contract(*, proof9_sweeps=0):
+    if proof9_sweeps not in (0, 3, 4):
+        raise ValueError('unsupported sweep stream horizon')
+    if proof9_sweeps:
+        frames, image_bytes = proof9_sweeps, 4_853_840
+        retained = 2_114_028 + (frames-2)*(58164*8 + 4*12*8)
+        wire = retained + frames*(FRAME.size + image_bytes)
+    else:
+        frames, image_bytes, retained, wire = 2, IMAGE_BYTES, RETAINED_BYTES, WIRE_BYTES
     blocks = (image_bytes+SCRATCH_BYTES-1)//SCRATCH_BYTES
     return {'version': 1, 'frames': frames, 'frame_header_bytes': FRAME.size,
             'image_bytes': image_bytes, 'wire_bytes': wire,
@@ -27,11 +33,11 @@ def sweep_stream_contract(*, proof9_t3=False):
 
 class SweepCapture:
     """Use admitted offsets so magic bytes in image data are ordinary bytes."""
-    def __init__(self, *, proof9_t3=False):
-        self.contract = sweep_stream_contract(proof9_t3=proof9_t3)
+    def __init__(self, *, proof9_sweeps=0):
+        self.contract = sweep_stream_contract(proof9_sweeps=proof9_sweeps)
         count = self.contract['frames']
         self.image_bytes = self.contract['image_bytes']
-        if proof9_t3:
+        if proof9_sweeps:
             prelude = 8 + 16*8 + 11*8 + 1105*96 + 24420*24
             profile_and_roots = 58164*8 + 4*12*8
             final = self.contract['retained_bytes'] - prelude - count*profile_and_roots

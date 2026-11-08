@@ -42,6 +42,7 @@ struct Limits {
 };
 inline constexpr std::uint64_t proof10_work_cap = 810000000;
 inline constexpr std::size_t proof10_payload_cap = 1200000000;
+inline constexpr std::size_t proof9_t4_directory_page_limit = 2702;
 struct Forecast {
     std::size_t rows = 0, slots = 0, sweeps = 0, max_history_depth = 0;
     std::size_t value_bits = 0;
@@ -506,7 +507,9 @@ class State final {
         const auto lifecycle=paged?paged->lifecycle:Lifecycle::fixed_two_sweep;
         const auto directory_read_limit=paged_directory_read_limit(f,lifecycle);
         if (paged && paged->paged_directory &&
-            (!paged->directory_page_limit || paged->directory_page_limit>directory_read_limit))
+            (!paged->directory_page_limit || paged->directory_page_limit>directory_read_limit ||
+             (paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_t4 &&
+              paged->directory_page_limit>proof9_t4_directory_page_limit)))
             fail(ErrorCode::invalid_forecast,"invalid paged row directory read bound");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
@@ -683,6 +686,12 @@ public:
         if (catalog.sealed && (!packed.limb_count || !packed.regret_limbs))
             fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
         const bool expanded=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof10;
+        const bool proof9_t4=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof9_t4;
+        if (proof9_t4 && (lifecycle!=Lifecycle::bounded_v1 || f.rows!=24420 ||
+            f.slots!=58164 || f.sweeps!=4 || f.max_history_depth!=15 || f.value_bits!=642 ||
+            packed.limb_count!=virtual_dyadic_paged_image::n9_t4_stage_split_words ||
+            packed.regret_limbs!=348036))
+            fail(ErrorCode::invalid_forecast,"invalid nine-card four-sweep strategy census");
         if (expanded && (!compact_rows || f.rows!=119196 || f.slots!=281066 || f.sweeps!=2 ||
             f.max_history_depth!=15 || f.value_bits!=644 ||
             packed.limb_count!=1295812 || packed.regret_limbs!=1666910))
@@ -703,10 +712,10 @@ public:
         if (paged_directory && !shared_policy)
             fail(ErrorCode::invalid_forecast,"paged directory requires shared ordered policy");
         if (lifecycle==Lifecycle::bounded_v1 &&
-            (!paged || paged->profile!=virtual_dyadic_paged_image::Profile::legacy || !compact_rows ||
+            (!paged || (paged->profile!=virtual_dyadic_paged_image::Profile::legacy && !proof9_t4) || !compact_rows ||
              !ordered_rows || !row_coverage || !shared_policy || !paged_directory ||
              f.sweeps<1 || f.sweeps>8))
-            fail(ErrorCode::invalid_forecast,"bounded lifecycle requires legacy pager and all shared ordered row features");
+            fail(ErrorCode::invalid_forecast,"bounded lifecycle requires a supported pager and all shared ordered row features");
         if (lifecycle!=Lifecycle::fixed_two_sweep && lifecycle!=Lifecycle::bounded_v1)
             fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));

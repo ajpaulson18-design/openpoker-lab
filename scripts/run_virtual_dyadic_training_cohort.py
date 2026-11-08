@@ -133,9 +133,10 @@ def validate_ten_admission(receipt, *, buffered=False, virtual_zero=False, order
 
 
 PROOF9_SPLIT_BASELINE='benchmarks/results/native-dyadic-split-checkpoint-accepted-v1'
+PROOF9_T3_BASELINE='benchmarks/results/native-dyadic-proof9-three-sweep-accepted-v1'
 
 
-def validate_proof9_t3_admission(receipt):
+def validate_bounded_proof9_admission(receipt,sweeps):
     baseline=exact_json((ROOT/PROOF9_SPLIT_BASELINE/'manifest.json').read_bytes())
     expected=dict(validate_admission(baseline['admission'],split=True))
     expected.pop('actual_admission_work')
@@ -151,33 +152,53 @@ def validate_proof9_t3_admission(receipt):
         page_virtual_initial_zero=True,page_state_row_coverage=True,page_resident_bytes=591_008,
         page_stage_split_words=258_694,page_write_request_limit=5931,
         page_read_word_limit=2_223_164,page_request_limit=930_624,paging_work=46_986_096,
-        general_quantizer_work=78_506_392,sweep_stream=sweep_stream_contract(proof9_t3=True),
+        general_quantizer_work=78_506_392,sweep_stream=sweep_stream_contract(proof9_sweeps=sweeps),
         component_work=dict(template=42_556_544,chance=124_856_139,history=31_014_848,
                             state=76_104_624,quantizer=182_766_664,parent=239_201_586),
         parent_work=dict(geometry=3_000_000,visit=2_688_356,support=8_265_728,reach=16_176_366,
                          value_add=15_378_930,terminal_scale=46_086_372,average=35_452_290,
                          route=107_584_872,output=4_568_672),
         parent_allowance=292_701_181,planned_total_work=696_500_405)
+    work_limit=750_000_000
+    if sweeps==4:
+        work_limit=950_000_000
+        expected.pop('proof9_t3')
+        expected.update(protocol='DYADIC_T4_V1',proof9_t4=True,requested_sweeps=4,
+            output_bytes=3_045_420,entries=269_667,payload_bits=255_271_120,
+            packed_average_work=36_009_456,packed_regret_work=62_900_640,
+            scaled_average_build_work=10_542_952,directory_work=8_825_536,
+            row_directory_page_limit=2702,row_directory_read_call_limit=439_560,
+            policy_spill_work=6_216_064,page_write_request_limit=7908,
+            page_write_word_limit=2_426_920,page_read_word_limit=3_203_674,
+            page_request_limit=1_221_444,paging_work=62_335_146,
+            general_quantizer_work=157_012_784,
+            component_work=dict(template=42_556_544,chance=170_253_946,history=37_487_840,
+                                state=98_317_056,quantizer=261_273_056,parent=316_063_074),
+            parent_work=dict(geometry=3_000_000,visit=3_421_544,support=10_686_848,reach=21_568_488,
+                             value_add=20_505_240,terminal_scale=61_448_496,average=47_269_720,
+                             route=142_463_642,output=5_699_096),
+            parent_allowance=340_111_558,planned_total_work=925_951_516)
     require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
             all(type(receipt[key]) is type(value) and receipt[key]==value for key,value in expected.items()),
-            'PROOF9 T3 admission differs from independent fixed census')
+            f'PROOF9 T{sweeps} admission differs from independent fixed census')
     actual=receipt['actual_admission_work']
-    require(type(actual) is int and 42_556_544<=actual<=45_556_544,'PROOF9 T3 admission geometry work')
+    require(type(actual) is int and 42_556_544<=actual<=45_556_544,'bounded PROOF9 admission geometry work')
     contract=expected['sweep_stream']
     require(sum(expected['parent_work'].values())==expected['component_work']['parent'] and
             sum(expected['component_work'].values())==expected['planned_total_work'] and
-            expected['planned_total_work']+contract['copy_work']<=750_000_000 and
+            expected['planned_total_work']+contract['copy_work']<=work_limit and
             expected['entries']<=2_000_000 and
-            expected['payload_bits']<=1<<30,'PROOF9 T3 composed transport admission')
+            expected['payload_bits']<=1<<30,'bounded PROOF9 composed transport admission')
     return receipt
 
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
-                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False):
-    if proof9_t3:
-        return validate_proof9_t3_admission(receipt)
+                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False):
+    if proof9_t3 or proof9_t4:
+        require(proof9_t3!=proof9_t4,'select one bounded PROOF9 admission')
+        return validate_bounded_proof9_admission(receipt,4 if proof9_t4 else 3)
     if ten_sweep_stream:
         contract=sweep_stream_contract()
         require(type(receipt) is dict and receipt.get('sweep_stream')==contract and
@@ -446,9 +467,13 @@ def verify_paging(directory,admission,stage=None):
 
 
 def verify_policy_spill(directory,stream,admission):
-    proof9_t3=admission.get('proof9_t3',False)
-    sweeps,extent,magic=(3,2_579_724,b'OPLDST31') if proof9_t3 else (2,TEN_CARD_SPLIT_BYTES,b'OPLDTP01')
-    require(admission['requested_sweeps']==sweeps and admission['output_bytes']==extent and
+    sweeps=admission['requested_sweeps']
+    if sweeps in (3,4):
+        extent=sweep_stream_contract(proof9_sweeps=sweeps)['retained_bytes']
+        magic=f'OPLDST{sweeps}1'.encode('ascii')
+    else:
+        extent,magic=TEN_CARD_SPLIT_BYTES,b'OPLDTP01'
+    require(sweeps in (2,3,4) and admission['output_bytes']==extent and
             stream.stat().st_size==extent,'policy spill scaffold byte bound')
     with stream.open('rb') as saved:
         raw=saved.read(extent+1)
@@ -514,8 +539,9 @@ def verify_row_directory(directory, stream, admission):
     require(receipt_path.is_file() and receipt_path.stat().st_nlink==1 and
             0<receipt_path.stat().st_size<=65536,'row directory receipt must be private and bounded')
     receipt=exact_json(receipt_path.read_bytes())
-    proof9_t3=admission.get('proof9_t3',False)
-    trace=directory_trace(ten_card=False,sweeps=3) if proof9_t3 else directory_trace()
+    sweeps=admission.get('requested_sweeps',2)
+    ten_card=sweeps==2
+    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps)
     rows,slots=admission['rows'],admission['slots']
     require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
             and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
@@ -531,9 +557,9 @@ def verify_row_directory(directory, stream, admission):
     data=rows_path.read_bytes()
     require(len(data)==32*rows,'row directory length changed')
     digest=hashlib.sha256(data).hexdigest()
-    fixture=Fixture(ten_card=not proof9_t3)
+    fixture=Fixture(ten_card=ten_card)
     scales=compact_scales(fixture)
-    value_bits=642 if proof9_t3 else 644
+    value_bits=644 if ten_card else 642
     source_map={}
     reverse_map={}
     avg=reg=offset=0
@@ -691,20 +717,58 @@ def compare_proof9_t3_prefix(path,source,frames):
             'first_two_checkpoint_images':first_two,'baseline_profile_and_br':replay['profile_and_br']}
 
 
+def compare_proof9_t4_prefix(path,source,frames):
+    manifest=f'{PROOF9_T3_BASELINE}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'PROOF9 T3 manifest source drift')
+    baseline=exact_json(raw)
+    require(baseline['status']=='accepted_proof9_three_sweep_checkpoint_digest_replay' and
+            baseline['source_head']=='66f4b3e66552c2a394ad3b25edf2329cbb364594' and
+            baseline['training_invocations']==1 and baseline['operator']['returncode']==0 and
+            baseline['operator']['actual_exit_observed'] and baseline['operator']['raw_source_stable'] and
+            baseline['first_two_numerical_sweeps_match'] and baseline['independent_wire_reconstruction'],
+            'accepted PROOF9 T3 baseline required')
+    archive_name=f'{PROOF9_T3_BASELINE}/verification.zip'
+    archive=ROOT/archive_name
+    binding=baseline['archive']
+    require(binding['name']=='verification.zip' and 0<archive.stat().st_size==binding['bytes']<=50<<20 and
+            sha(archive)==binding['sha256']==source['files'][archive_name]['raw_sha256'],
+            'PROOF9 T3 baseline archive identity differs')
+    replay=baseline['saved_only_replay']
+    first_three=replay['checkpoint_epochs']
+    require(replay['status']=='saved_three_sweep_exact_replay_pass' and
+            first_three==baseline['sweep_capture']['frames']==frames[:3],
+            'first three checkpoint epochs changed')
+    header=8+16*8+11*8
+    prefix=1105*96+24*24420+3*(8*58164+4*12*8)
+    member='cohort/train_proof9_t3/stdout.bin'
+    with ZipFile(archive) as bundle, path.open('rb') as new:
+        extent=sweep_stream_contract(proof9_sweeps=3)['retained_bytes']
+        require(bundle.getinfo(member).file_size==extent,'PROOF9 T3 numerical extent differs')
+        old=bundle.read(member)
+        require(hashlib.sha256(old).hexdigest()==replay['saved_output_sha256'] and
+                len(new.read(header))==header and new.read(prefix)==old[header:header+prefix],
+                'PROOF9 T4 first three numerical sweeps differ')
+    return {'baseline_source_head':baseline['source_head'],'baseline_stream_sha256':replay['saved_output_sha256'],
+            'prefix_bytes':prefix,'prefix_sha256':hashlib.sha256(old[header:header+prefix]).hexdigest(),
+            'first_three_checkpoint_epochs':first_three,'baseline_profile_and_br':replay['profile_and_br']}
+
+
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
-        ten_sweep_stream=False,proof9_t3=False):
+        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
-                                                 '_PROOF9_T3')) if flag),'')
+                                                 '_PROOF9_T3','_PROOF9_T4')) if flag),'')
     paired=any(modes)
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
@@ -712,10 +776,11 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
     ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
     ten_card=ten_card or ten_buffered or ten_virtual_zero
-    split=split or ten_card or proof9_t3
-    shared_policy=ten_shared_policy or proof9_t3
-    paged_directory=ten_paged_directory or proof9_t3
-    capture_checkpoints=ten_sweep_stream or proof9_t3
+    proof9_sweeps=4 if proof9_t4 else 3 if proof9_t3 else 0
+    split=split or ten_card or bool(proof9_sweeps)
+    shared_policy=ten_shared_policy or bool(proof9_sweeps)
+    paged_directory=ten_paged_directory or bool(proof9_sweeps)
+    capture_checkpoints=ten_sweep_stream or bool(proof9_sweeps)
     uses_paging=paged or directory or rank_sets or split
     require(_git(ROOT,['rev-parse','HEAD']).decode().strip()==expected_head,'fixed cohort source HEAD differs')
     output=Path(output).absolute()
@@ -761,25 +826,26 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
-            ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,proof9_t3=proof9_t3)
+            ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
+            proof9_t3=proof9_t3,proof9_t4=proof9_t4)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
                 'training_invocations':0,'fixed_proof_gate':gate,
-                'scope':'fixed reduced PROOF9/T3 only' if proof9_t3 else
+                'scope':f'fixed reduced PROOF9/T{proof9_sweeps} only' if proof9_sweeps else
                     'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
             schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero) if ten_buffered or ten_virtual_zero else None
-            if proof9_t3:
-                schedule=stage_schedule(virtual_zero=True,sweeps=3)
+            if proof9_sweeps:
+                schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps)
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
-                         schedule['logical_read_calls']+3*schedule['per_sweep_stage_calls'])==
+                         schedule['logical_read_calls']+proof9_sweeps*schedule['per_sweep_stage_calls'])==
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
-                        'independent PROOF9 T3 pager schedule differs before training')
+                        'independent bounded PROOF9 pager schedule differs before training')
             if paged_directory:
-                trace=directory_trace(ten_card=False,sweeps=3) if proof9_t3 else directory_trace()
+                trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2)
                 require(trace['misses']==admission['row_directory_page_limit'] and
                         trace['logical_reads']==admission['row_directory_read_call_limit'],
                         'independent row directory trace differs before training')
@@ -804,8 +870,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--rank-sets')
             if ten_card:
                 command.append('--ten-card')
-            if proof9_t3:
-                command.append('--proof9-t3')
+            if proof9_sweeps:
+                command.append(f'--proof9-t{proof9_sweeps}')
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission,schedule)
@@ -823,12 +889,14 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     result['sweep_capture_process_sha256']=capture_process_hash
                 result['checkpoint_inputs']={'stream':{'bytes':admission['output_bytes'],'sha256':digest},
                                              'sweep_images':images}
-                if proof9_t3:
+                if proof9_sweeps:
                     frames=result['sweep_capture']['frames']
                     result['checkpoint_inputs']['sweep_epochs']=frames
-                    result['proof9_t3_comparison']=compare_proof9_t3_prefix(raw,source,frames)
-                    result['proof9_t3_comparison']['native_observation']={
+                    compare=compare_proof9_t4_prefix if proof9_t4 else compare_proof9_t3_prefix
+                    comparison=compare(raw,source,frames)
+                    comparison['native_observation']={
                         'duration_seconds':process['duration_seconds'],'memory':process.get('memory')}
+                    result[f'proof9_t{proof9_sweeps}_comparison']=comparison
                     result['independent_stage_schedule']=schedule
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
@@ -849,7 +917,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             require_exit(observed_replay,replay_dir)
             compiled=check_verifier_bootstrap(receipt_path,source)
             numeric=exact_json((replay_dir/'stdout.bin').read_bytes())
-            replay_status='saved_three_sweep_exact_replay_pass' if proof9_t3 else 'saved_two_sweep_exact_replay_pass'
+            sweep_word={0:'two',3:'three',4:'four'}[proof9_sweeps]
+            replay_status=f'saved_{sweep_word}_sweep_exact_replay_pass'
             require(numeric['status']==replay_status and numeric['saved_output_sha256']==digest
                     and numeric['work_plan']==admission['component_work'] and numeric['parent_work_plan']==admission['parent_work']
                     and numeric['planned_entries']==admission['entries'] and numeric['planned_payload_bits']==admission['payload_bits']
@@ -875,7 +944,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 require(numeric.get('checkpoint_verification')=='independent_compact_digest' and
                         sha(trained/'process.json')==capture_process_hash,
                         'captured checkpoint evidence changed after digest replay')
-            if proof9_t3:
+            if proof9_sweeps:
                 require(numeric['checkpoint_epochs']==result['sweep_capture']['frames'],
                         'independently replayed checkpoint epochs differ')
             if paired and not split:
@@ -938,6 +1007,7 @@ def main():
     modes.add_argument('--ten-paged-directory',action='store_true')
     modes.add_argument('--ten-sweep-stream',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
+    modes.add_argument('--proof9-t4',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
@@ -946,7 +1016,7 @@ def main():
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
-        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3),sort_keys=True))
+        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4),sort_keys=True))
 
 
 if __name__=='__main__':main()

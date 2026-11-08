@@ -217,6 +217,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_TEN_ROW_COVERAGE\n',b'DYADIC_T2_V1 TRAIN_TEN_SHARED_POLICY\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_PAGED_DIRECTORY\n',b'DYADIC_T2_V1 TRAIN_TEN_SWEEP_STREAM\n',
                 b'DYADIC_T3_V1 TRAIN_PROOF9_T3\n',b'DYADIC_T2_V1 ADMIT_PROOF9_T3\n',
+                b'DYADIC_T4_V1 TRAIN_PROOF9_T4\n',b'DYADIC_T3_V1 ADMIT_PROOF9_T4\n',
+                b'DYADIC_T4_V1 ADMIT_PROOF9_T3\n',
                 b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
@@ -333,24 +335,31 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             validate_admission(receipt,ten_paged_directory=True)
 
     def test_proof9_t3_admits_all_epochs_without_training(self):
+        self.check_bounded_proof9_admission(3)
+
+    def test_proof9_t4_admits_all_epochs_without_training(self):
+        self.check_bounded_proof9_admission(4)
+
+    def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule
-        directory,process=self.observe('admit_proof9_t3',
-            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_PROOF9_T3',p))
+        directory,process=self.observe(f'admit_proof9_t{sweeps}',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],f'ADMIT_PROOF9_T{sweeps}',p))
         self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
         self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
         receipt=exact_json((directory/'stdout.bin').read_bytes())
-        plan=validate_admission(receipt,proof9_t3=True)
-        self.assertEqual((plan['rank_calls'],plan['training_invocations'],plan['requested_sweeps']), (0,0,3))
-        schedule=stage_schedule(virtual_zero=True,sweeps=3)
-        trace=directory_trace(ten_card=False,sweeps=3)
-        self.assertEqual(plan['page_request_limit'],schedule['logical_read_calls']+3*schedule['per_sweep_stage_calls'])
+        flags={f'proof9_t{sweeps}':True}
+        plan=validate_admission(receipt,**flags)
+        self.assertEqual((plan['rank_calls'],plan['training_invocations'],plan['requested_sweeps']), (0,0,sweeps))
+        schedule=stage_schedule(virtual_zero=True,sweeps=sweeps)
+        trace=directory_trace(ten_card=False,sweeps=sweeps)
+        self.assertEqual(plan['page_request_limit'],schedule['logical_read_calls']+sweeps*schedule['per_sweep_stage_calls'])
         self.assertEqual(plan['page_write_word_limit'],schedule['written_words'])
         self.assertEqual((plan['row_directory_page_limit'],plan['row_directory_read_call_limit']),
                          (trace['misses'],trace['logical_reads']))
         for field in ('requested_sweeps','general_quantizer_work','page_request_limit'):
             with self.assertRaisesRegex(ValueError,'independent fixed census'):
-                validate_admission(dict(receipt,**{field:receipt[field]-1}),proof9_t3=True)
+                validate_admission(dict(receipt,**{field:receipt[field]-1}),**flags)
         with self.assertRaisesRegex(ValueError,'fixed admission census'):
             validate_admission(receipt,split=True)
 
