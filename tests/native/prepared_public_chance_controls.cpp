@@ -4,6 +4,7 @@
 #include <bit>
 #include <iostream>
 #include <limits>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -56,10 +57,16 @@ bool ledger(const prepared::Receipt& r) {
 const std::array<std::uint8_t,5> board_a{17,24,33,35,37},board_b{17,24,33,37,35},
     board_c{17,24,33,35,48};
 const std::array<std::uint8_t,0> empty{};
+chance::Limits kernel_limits(prepared::ContractionKernel kernel,chance::Limits limits={}) {
+    if (kernel==prepared::ContractionKernel::sparse_pairs) limits.max_hands_per_side=2;
+    return limits;
+}
 bool rejected(const char* name,Reach r,chance::Limits limits,chance::ErrorCode expected,
               std::span<const std::uint8_t> board=board_a,std::size_t player=0,
-              chance::TerminalKind kind=chance::TerminalKind::showdown,std::size_t count=2) {
-    prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),limits);
+              chance::TerminalKind kind=chance::TerminalKind::showdown,std::size_t count=2,
+              prepared::ContractionKernel kernel=prepared::ContractionKernel::blocker_buckets) {
+    prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),kernel_limits(kernel,limits),64,
+                                         prepared::RankCacheKey::ordered_prefix,kernel);
     try { (void)owner.contraction(player,board,kind,std::span<const Integer>(r.n.data(),count),r.exponent); }
     catch (const chance::KernelError& error) {
         const auto& receipt=owner.receipt();
@@ -145,14 +152,16 @@ int cache_control() {
     std::cout<<"CACHE_ORDERED_LRU_ZERO_REACH "<<(ok ? "PASS" : "FAIL")<<'\n';
     return ok ? 0 : 1;
 }
-int cumulative() {
-    prepared::PreparedPublicChance reference(sb,bb,chance::DeckDefinition::reduced(deck));
+int cumulative(prepared::ContractionKernel kernel=prepared::ContractionKernel::blocker_buckets) {
+    prepared::PreparedPublicChance reference(sb,bb,chance::DeckDefinition::reduced(deck),kernel_limits(kernel),64,
+                                             prepared::RankCacheKey::ordered_prefix,kernel);
     const auto initial=reference.receipt().modeled_work;
     const auto one=fixture(4);
     (void)reference.contraction(0,empty,chance::TerminalKind::fold,one.n,0);
     const auto per=reference.receipt().modeled_work-initial;
     auto limits=chance::Limits{}; limits.max_modeled_work=initial+3*per+per/2;
-    prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),limits);
+    prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),kernel_limits(kernel,limits),64,
+                                         prepared::RankCacheKey::ordered_prefix,kernel);
     for (int i=0;i<3;++i) (void)owner.contraction(0,empty,chance::TerminalKind::fold,one.n,0);
     bool ok=owner.receipt().modeled_work==initial+3*per;
     try { (void)owner.contraction(0,empty,chance::TerminalKind::fold,one.n,0); ok=false; }
@@ -219,14 +228,41 @@ int snapshot() {
     std::cout<<'\n'; return 0;
 }
 
-int board_set_controls() {
+int sparse_guards() {
+    using Kernel=prepared::ContractionKernel;
+    auto reach=fixture(0);
+    reach.n[0]=-1; // Even blocked rows must be validated before cache access.
+    bool ok=rejected("sparse_blocked_negative",reach,{},chance::ErrorCode::invalid_query,
+        board_a,0,chance::TerminalKind::showdown,2,Kernel::sparse_pairs);
+    const auto reduced=chance::DeckDefinition::reduced(deck);
+    prepared::PreparedPublicChance calibration(sb,bb,reduced,kernel_limits(Kernel::sparse_pairs),64,
+        prepared::RankCacheKey::ordered_prefix,Kernel::sparse_pairs);
+    auto limits=chance::Limits{};
+    limits.max_modeled_work=calibration.receipt().modeled_work+100;
+    ok=rejected("sparse_work",fixture(0),limits,chance::ErrorCode::modeled_work_limit,
+        board_a,0,chance::TerminalKind::showdown,2,Kernel::sparse_pairs)&&ok;
+    const std::array<chance::WeightedHand,3> wide{sb[0],sb[1],{{17,33},std::bit_cast<std::uint64_t>(0.5)}};
+    bool wide_rejected=false;
+    try { prepared::PreparedPublicChance foreign(wide,bb,reduced,kernel_limits(Kernel::sparse_pairs),64,
+        prepared::RankCacheKey::ordered_prefix,Kernel::sparse_pairs); }
+    catch (const chance::KernelError& error) { wide_rejected=error.code()==chance::ErrorCode::invalid_input; }
+    std::cout<<"SPARSE_WIDE "<<(wide_rejected?"PASS":"FAIL")<<'\n';
+    return ok && wide_rejected ? 0 : 1;
+}
+
+int board_set_controls(prepared::ContractionKernel kernel=prepared::ContractionKernel::blocker_buckets) {
     const std::array<std::uint8_t,10> nested{0,16,17,24,32,33,35,37,43,48};
     const auto kind=chance::TerminalKind::showdown;
     for (const auto size:{std::size_t{9},std::size_t{10}}) {
         const auto cards=std::span(nested).last(size);
         const auto capacity=size==9?3u:17u;
-        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(cards),{},capacity,
-                                             prepared::RankCacheKey::board_set);
+        const auto limits=kernel_limits(kernel);
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(cards),limits,capacity,
+                                             prepared::RankCacheKey::board_set,kernel);
+        std::optional<prepared::PreparedPublicChance> reference;
+        if (kernel==prepared::ContractionKernel::sparse_pairs)
+            reference.emplace(sb,bb,chance::DeckDefinition::reduced(cards),limits,capacity,
+                              prepared::RankCacheKey::board_set);
         const auto mask=[](chance::Hand h) { return (UINT64_C(1)<<h.first)|(UINT64_C(1)<<h.second); };
         std::size_t count=0;
         std::array<std::uint8_t,5> last{};
@@ -249,6 +285,12 @@ int board_set_controls() {
                 const auto selector=count==0 && player==0?2:static_cast<int>((count+player)%2);
                 const auto reach=fixture(selector);
                 const auto value=owner.contraction(player,board,kind,reach.n,reach.exponent);
+                if (reference) {
+                    const auto original=reference->contraction(player,board,kind,reach.n,reach.exponent);
+                    if (original.numerators!=value.numerators || original.prefix_divisor!=value.prefix_divisor ||
+                        original.reach_exponent!=value.reach_exponent)
+                        throw std::runtime_error("sparse board-set contraction differs from buckets");
+                }
                 std::cout<<"BOARD_SET "<<size<<' '<<player<<' '<<selector;
                 for (const auto card:board) std::cout<<' '<<static_cast<unsigned>(card);
                 std::cout<<' '<<value.prefix_divisor<<' '<<value.reach_exponent;
@@ -273,9 +315,20 @@ int board_set_controls() {
             throw std::runtime_error("invalid ordered flop reached a warm board-set cache");
         std::cout<<"BOARD_SET_END "<<size<<' '<<count<<' '<<before.rank_calls<<' '<<before.cache_misses
             <<' '<<before.cache_hits<<' '<<before.cache_evictions<<'\n';
+        if (reference) {
+            const auto& original=reference->receipt();
+            if (!ledger(original) || original.rank_calls!=before.rank_calls ||
+                original.cache_hits!=before.cache_hits || original.cache_misses!=before.cache_misses ||
+                original.cache_lookup_work!=before.cache_lookup_work || original.input_work!=before.input_work)
+                throw std::runtime_error("sparse board-set contraction changed shared receipt categories");
+            std::cout<<"SPARSE_WORK "<<size<<' '<<original.contraction_work<<' '<<before.contraction_work
+                <<' '<<original.modeled_work<<' '<<before.modeled_work<<' '
+                <<original.peak_live_entries<<' '<<before.peak_live_entries<<' '
+                <<original.peak_integer_payload_bits<<' '<<before.peak_integer_payload_bits<<'\n';
+        }
     }
-    prepared::PreparedPublicChance evict(sb,bb,chance::DeckDefinition::reduced(deck),{},1,
-                                         prepared::RankCacheKey::board_set);
+    prepared::PreparedPublicChance evict(sb,bb,chance::DeckDefinition::reduced(deck),kernel_limits(kernel),1,
+                                         prepared::RankCacheKey::board_set,kernel);
     const auto reach=fixture(0);
     const auto first=evict.contraction(0,board_a,kind,reach.n,reach.exponent);
     (void)evict.contraction(0,board_c,kind,reach.n,reach.exponent);
@@ -296,11 +349,17 @@ int main(int argc,char** argv) {
             if (mode=="same") return same_fixture();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
+            if (mode=="sparse-board-sets") return board_set_controls(prepared::ContractionKernel::sparse_pairs);
+            if (mode=="sparse-guards") return sparse_guards();
+            if (mode=="sparse-cumulative") return cumulative(prepared::ContractionKernel::sparse_pairs);
         }
-        if (argc!=4) throw std::runtime_error("three fixed prepared fixture selectors required");
+        const bool sparse=argc==5 && std::string_view(argv[4])=="sparse";
+        if (argc!=4 && !sparse) throw std::runtime_error("three fixed prepared fixture selectors required");
         const int profile=digit(argv[1],5),player=digit(argv[2],1),mode=digit(argv[3],1);
         const auto reach=fixture(profile);
-        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck));
+        const auto kernel=sparse?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets;
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),kernel_limits(kernel),64,
+            prepared::RankCacheKey::ordered_prefix,kernel);
         std::cout<<"PREPARED_CASES_V1 "<<profile<<' '<<player<<' '<<mode<<' '<<hex(owner.normalizer_integer())<<'\n';
         std::size_t index=0,bytes=0;
         auto emit=[&](std::span<const std::uint8_t> board) {

@@ -482,3 +482,40 @@ value addition, averages and directory/paging work, plus any wider
 integer costs. It is a capacity barrier, not an admitted forecast.
 Versioned longer-run accounting and independent replay are required
 before a convergence study; changing the sweep constant is insufficient.
+
+## Sparse private-pair chance
+
+The named `--ten-sparse-chance` profile keeps the ten-card game, two
+simultaneous sweeps and streamed checkpoint format. Within the prepared
+chance owner, it uses a fixed two-row scratch for live opponent weights
+times reach. Each own row streams the compatible opposite rows. Fold
+contractions sum positive mass. Showdown contractions use the sign of
+the cached rank comparison and contribute zero on ties. The owner
+preserves original row order, blocker masks, the common divisor and
+the reach exponent.
+
+The sparse kernel requires an explicit range limit of two holdings
+per side. The bucket kernel remains the default for broader ranges.
+Both share validation, rank-plane identity, cumulative admission and
+failure handling. The sparse ledger covers the possible compatible
+pair additions, weighted products and bounded live operands. It
+retains neither a private-pair table nor complete worlds.
+
+The independent ten-card forecast reduces the chance reservation from
+447,066,576 to 127,793,144 modeled units. With checkpoint transport,
+the complete reservation is 1,822,083,718 units. Independent verification
+compares the numerical payload, both checkpoint digests, exported policy
+and best responses to the streamed bucket profile.
+
+The source-frozen study at `3c33c2f` matched all 9,832,556 bytes before
+the work footer and both checkpoint images. Independent replay reproduced
+the same policy and best responses with zero native calls. The observed
+native chance charge fell from 209,133,313 to 68,478,558 modeled units.
+Contraction work accounted for the entire difference. The two runs
+recorded 797,344 contractions and 42 hand ranks each.
+
+The single Windows native observations were 7.43 seconds and 5.10 MB
+peak working set for buckets, and 6.41 seconds and 5.03 MB for sparse
+pairs. These observations cover the named ten-card fixture and its
+two-holding ranges.
+[Sparse chance evidence](../benchmarks/results/native-dyadic-sparse-chance-ten-card-accepted-v1/manifest.json)

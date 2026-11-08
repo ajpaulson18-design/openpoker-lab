@@ -18,6 +18,7 @@ using chance::Limits;
 using chance::DeckDefinition;
 
 enum class RankCacheKey { ordered_prefix, board_set };
+enum class ContractionKernel { blocker_buckets, sparse_pairs };
 
 struct Contraction {
     std::vector<Integer> numerators;
@@ -32,11 +33,16 @@ struct Receipt {
         peak_live_entries = 0, retained_integer_payload_bits = 0,
         peak_integer_payload_bits = 0, peak_integer_bits = 0,
         rank_calls = 0, cache_hits = 0, cache_misses = 0, cache_evictions = 0,
-        completed_contractions = 0, query_array_admissions = 0;
+        completed_contractions = 0, query_array_admissions = 0, sparse_pair_visits = 0;
 };
 
 class PreparedPublicChance final {
     struct Bucket { Integer total = 0; std::array<Integer,52> cards{}; };
+    struct WeightedReach { std::size_t row=0; Integer mass=0; };
+    struct SparsePairCost {
+        std::size_t scratch_entries=0;
+        std::uint64_t scratch_payload_bits=0;
+    };
     struct Plane {
         std::array<std::uint8_t,sizeof(std::uint64_t)> board_key{};
         std::array<std::vector<detail::Rank>,2> ranks;
@@ -238,7 +244,15 @@ class PreparedPublicChance final {
         auto dynamic=static_cast<std::uint64_t>(source_[opp].size()+source_[player].size()+8);
         std::size_t scratch=source_[player].size()+16;
         std::uint64_t scratch_payload=mul(source_[player].size()+8,output_bits);
-        if (!zero) {
+        const bool sparse=contraction_kernel_==ContractionKernel::sparse_pairs;
+        if (!zero && sparse) {
+            dynamic=sparse_pairs_dynamic_cost(source_[player].size(),source_[opp].size(),own_live,active,
+                products,bucket_bits,output_bits,max_weight_bits_[player],kind);
+            const auto temporary=sparse_pairs_scratch(source_[player].size(),active,
+                max_weighted_bits,bucket_bits,output_bits);
+            scratch=temporary.scratch_entries;
+            scratch_payload=temporary.scratch_payload_bits;
+        } else if (!zero) {
             const auto buckets=kind==TerminalKind::fold ? std::size_t{1} : 2+own_live;
             dynamic=add(dynamic,products);
             dynamic=add(dynamic,mul(53,buckets)); // cpp_int zero construction/reset
@@ -274,6 +288,40 @@ class PreparedPublicChance final {
         out.prefix_divisor=divisor(prefix.size()); out.reach_exponent=exponent;
         out.numerators.resize(source_[player].size());
         if (zero) { ++receipt_.completed_contractions; return out; }
+        if (sparse) {
+            std::array<WeightedReach,2> weighted{};
+            std::size_t used=0;
+            for (std::size_t j=0;j<reach.size();++j) if (!(masks_[opp][j]&blocked) && reach[j]!=0) {
+                weighted[used].row=j;
+                weighted[used].mass=weights_[opp][j]*reach[j];
+                ++used;
+            }
+            const auto live=std::span(weighted).first(used);
+            if (kind==TerminalKind::fold) {
+                for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked)) {
+                    Integer mass=0;
+                    for (const auto& row:live)
+                        if (!(masks_[player][i]&masks_[opp][row.row])) mass+=row.mass;
+                    out.numerators[i]=weights_[player][i]*mass;
+                }
+            } else {
+                const auto& plane=cache_[slot];
+                for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked)) {
+                    Integer signed_mass=0;
+                    const auto own_rank=plane.ranks[player][i];
+                    for (const auto& row:live) {
+                        if (masks_[player][i]&masks_[opp][row.row]) continue;
+                        const auto other_rank=plane.ranks[opp][row.row];
+                        if (other_rank<own_rank) signed_mass+=row.mass;
+                        else if (own_rank<other_rank) signed_mass-=row.mass;
+                    }
+                    out.numerators[i]=weights_[player][i]*signed_mass;
+                }
+            }
+            receipt_.sparse_pair_visits=add(receipt_.sparse_pair_visits,mul(own_live,active));
+            ++receipt_.completed_contractions;
+            return out;
+        }
         std::vector<Integer> weighted(source_[opp].size());
         Bucket all;
         for (std::size_t j=0;j<reach.size();++j) if (!(masks_[opp][j]&blocked) && reach[j]!=0) {
@@ -320,16 +368,52 @@ class PreparedPublicChance final {
     }
 public:
     static constexpr std::uint64_t board_set_probe_work=2;
+    // Charges every live pair for blocker/rank checks and a possible signed
+    // accumulation, plus the caller's summed weighted-product bound, one
+    // own-weight multiply per live own row, and output initialization.
+    [[nodiscard]] static std::uint64_t sparse_pairs_dynamic_cost(
+            std::size_t own_rows,std::size_t opponent_rows,std::size_t own_live,std::size_t active,
+            std::uint64_t weighted_product_work,std::size_t signed_mass_bits,
+            std::size_t output_bits,std::size_t max_own_weight_bits,TerminalKind kind) {
+        if (kind!=TerminalKind::fold && kind!=TerminalKind::showdown)
+            fail(ErrorCode::invalid_query,"invalid sparse terminal kind");
+        if (own_rows>2 || opponent_rows>2 || own_live>own_rows || active>opponent_rows ||
+            !signed_mass_bits || !output_bits || signed_mass_bits>65536 || output_bits>65536 ||
+            max_own_weight_bits>65536)
+            fail(ErrorCode::invalid_query,"invalid sparse cost dimensions");
+        auto work=add(add(own_rows,opponent_rows),8);
+        work=add(work,weighted_product_work);
+        const auto pairs=mul(own_live,active);
+        work=add(work,mul(pairs,kind==TerminalKind::showdown?16:8));
+        work=add(work,mul(pairs,add_cost(signed_mass_bits)));
+        work=add(work,mul(own_live,multiply_cost(max_own_weight_bits,signed_mass_bits)));
+        work=add(work,mul(own_rows,copy_cost(output_bits)+2));
+        return work;
+    }
+private:
+    // Bound the output, fixed two-row scratch, live operands and temporaries.
+    [[nodiscard]] static SparsePairCost sparse_pairs_scratch(
+            std::size_t own_rows,std::size_t active,std::size_t max_weighted_bits,
+            std::size_t signed_mass_bits,std::size_t output_bits) {
+        const auto bits=add(add(mul(add(own_rows,4),output_bits),mul(active,max_weighted_bits)),
+            mul(4,signed_mass_bits));
+        return {own_rows+18,bits};
+    }
+public:
     PreparedPublicChance(std::span<const WeightedHand> sb,std::span<const WeightedHand> bb,
                          DeckDefinition deck=DeckDefinition::full52(),Limits limits={},
-                         std::size_t cache_capacity=64,RankCacheKey rank_cache_key=RankCacheKey::ordered_prefix)
-        :limits_(limits),deck_(deck),rank_cache_key_(rank_cache_key) {
+                         std::size_t cache_capacity=64,RankCacheKey rank_cache_key=RankCacheKey::ordered_prefix,
+                         ContractionKernel contraction_kernel=ContractionKernel::blocker_buckets)
+        :limits_(limits),deck_(deck),rank_cache_key_(rank_cache_key),contraction_kernel_(contraction_kernel) {
         if (!limits.max_hands_per_side || limits.max_hands_per_side>1326 ||
             !limits.max_integer_bits || limits.max_integer_bits>65536 ||
             !limits.max_modeled_work || limits.max_modeled_work>500'000'000 ||
             !limits.max_storage_entries || limits.max_storage_entries>2'000'000 ||
             !limits.max_integer_payload_bits || limits.max_integer_payload_bits>(std::size_t{1}<<30) ||
             !cache_capacity || cache_capacity>64 ||
+            (contraction_kernel_!=ContractionKernel::blocker_buckets &&
+             contraction_kernel_!=ContractionKernel::sparse_pairs) ||
+            (contraction_kernel_==ContractionKernel::sparse_pairs && limits.max_hands_per_side>2) ||
             (rank_cache_key_!=RankCacheKey::ordered_prefix && rank_cache_key_!=RankCacheKey::board_set))
             fail(ErrorCode::invalid_limits,"invalid prepared reduce-only limits");
         charge(16,receipt_.setup_work);
@@ -415,6 +499,7 @@ public:
 private:
     Limits limits_{}; DeckDefinition deck_{};
     const RankCacheKey rank_cache_key_;
+    const ContractionKernel contraction_kernel_;
     Receipt receipt_{}; bool failed_=false;
     std::uint64_t deck_mask_=0,clock_=0;
     std::array<std::vector<WeightedHand>,2> source_;
