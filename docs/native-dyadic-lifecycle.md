@@ -148,3 +148,19 @@ one, zero, one, zero. The controller binds the first three numerical
 sweeps and digests to the published three-sweep study. Independent replay
 reconstructs all four generations. The final file checks bind `staged.bin`
 to sweep three and `committed.bin` to sweep four.
+
+The frozen producer at `de8b762` exited zero and matched the first three
+numerical sweeps and image digests. Its first saved verifier failed when
+writing the four-digest receipt through the legacy two-image branch.
+The corrected verifier at `bb77c10` reproduced all four epochs, the
+exported policy and both best responses from the original bytes. The
+recovery made zero native calls and revalidated both source inventories.
+The archive preserves the first failure, both source bindings and the
+original fourth checkpoint. Full wire reconstruction matched the
+original transient SHA-256.
+
+The fixed fixture's measured exploitability was 2.241987 after four
+sweeps, compared with 2.474053 after three. The quality threshold was
+unset. The single Windows native invocation took 3.90 seconds and used
+a 4.94 MB peak working set.
+[Four-sweep evidence](../benchmarks/results/native-dyadic-proof9-four-sweep-accepted-v1/manifest.json)
