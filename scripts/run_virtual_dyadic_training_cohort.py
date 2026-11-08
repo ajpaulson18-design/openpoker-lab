@@ -24,6 +24,7 @@ from tests.virtual_dyadic_directory_trace import directory_trace
 from tests.virtual_dyadic_sweep_capture import sweep_stream_contract
 from tests.virtual_dyadic_training_reference import Fixture
 from scripts.verify_virtual_dyadic_training import compact_scales
+from scripts.verify_virtual_dyadic_training import phase_payload_bits
 
 ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
@@ -196,7 +197,20 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
                        ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
-                       ten_sparse_chance=False,ten_single_division=False):
+                       ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False):
+    if ten_phase_payload:
+        state_bits,composed=phase_payload_bits(119_196,644)
+        require(type(receipt) is dict and receipt.get('phase_payload') is True and
+                type(receipt.get('state_payload_bits')) is int and receipt['state_payload_bits']==state_bits and
+                type(receipt.get('payload_bits')) is int and receipt['payload_bits']==composed,
+                'phase payload differs from independent fixed census')
+        earlier={key:value for key,value in receipt.items() if key not in ('phase_payload','state_payload_bits')}
+        earlier['payload_bits']=1_182_148_028
+        validate_admission(earlier,ten_single_division=True)
+        contract=receipt['sweep_stream']
+        require(composed+8*(contract['scratch_bytes']+contract['frame_header_bytes'])<=1_200_000_000,
+                'phase payload exceeds composed transport cap')
+        return receipt
     if proof9_t3 or proof9_t4:
         require(proof9_t3!=proof9_t4,'select one bounded PROOF9 admission')
         return validate_bounded_proof9_admission(receipt,4 if proof9_t4 else 3)
@@ -751,6 +765,26 @@ def compare_ten_card_work(source,replay,*,single_division=False):
             f'actual_{owner}_work_delta':observed-reference,f'actual_{owner}_work_improved':observed<reference}
 
 
+def compare_ten_card_payload(source,replay):
+    path='benchmarks/results/native-dyadic-single-division-ten-card-accepted-v1/manifest.json'
+    raw=(ROOT/path).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][path]['raw_sha256'],
+            'ten-card phase payload baseline source drift')
+    manifest=exact_json(raw)
+    require(manifest['status']=='accepted_ten_card_single_division_training_and_replay' and
+            manifest['source_head']=='56dd7350f5feb7c4c18893414d03e590a1e23960' and
+            manifest['training_invocations']==1 and manifest['operator']['returncode']==0 and
+            manifest['operator']['actual_exit_observed'] and manifest['operator']['raw_source_stable'],
+            'accepted ten-card single-division baseline required')
+    prior=manifest['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','work_plan','work_actual',
+            'parent_work_plan','parent_work_actual','chance_actual','planned_entries','combined_divisions')
+    require(all(replay[key]==prior[key] for key in fields),
+            'phase payload changed a shared result or work receipt')
+    return {'baseline_payload_bits':prior['planned_payload_bits'],
+            'phase_payload_bits':replay['planned_payload_bits'],'state_payload_bits':replay['state_payload_bits']}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -827,20 +861,23 @@ def compare_proof9_t4_prefix(path,source,frames):
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
-        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False):
+        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False,
+        ten_phase_payload=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
            ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,
-           ten_sparse_chance,ten_single_division)
+           ten_sparse_chance,ten_single_division,ten_phase_payload)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
-                                                 '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION')) if flag),'')
+                                                 '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
+                                                 '_TEN_PHASE_PAYLOAD')) if flag),'')
     paired=any(modes)
-    ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or ten_single_division
+    counted_divisions=ten_single_division or ten_phase_payload
+    ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or counted_divisions
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
     ten_row_coverage=ten_row_coverage or ten_shared_policy
@@ -899,7 +936,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
             ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
             proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance,
-            ten_single_division=ten_single_division)
+            ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -942,14 +979,16 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--rank-sets')
             if ten_card:
                 command.append('--ten-card')
-            if ten_single_division:
+            if counted_divisions:
                 command.append('--count-policy-divisions')
+            if ten_phase_payload:
+                command.append('--phase-payload')
             if proof9_sweeps:
                 command.append(f'--proof9-t{proof9_sweeps}')
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission,schedule)
-                if ten_single_division:
+                if counted_divisions:
                     result['quantizer']=verify_division_receipt(pages,admission)
                 if shared_policy:
                     result['policy_spill']=verify_policy_spill(pages,raw,admission)
@@ -977,7 +1016,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    label='phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -1007,6 +1046,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 result['sparse_chance_comparison'].update(compare_ten_card_work(source,numeric))
             if ten_single_division:
                 result['single_division_comparison'].update(compare_ten_card_work(source,numeric,single_division=True))
+            if ten_phase_payload:
+                result['phase_payload_comparison'].update(compare_ten_card_payload(source,numeric))
+            if counted_divisions:
                 require(numeric['combined_divisions']==result['quantizer']['combined_divisions'] and
                         result['quantizer']==verify_division_receipt(output/'page-images',admission),
                         'independent combined division count differs')
@@ -1091,6 +1133,7 @@ def main():
     modes.add_argument('--ten-sweep-stream',action='store_true')
     modes.add_argument('--ten-sparse-chance',action='store_true')
     modes.add_argument('--ten-single-division',action='store_true')
+    modes.add_argument('--ten-phase-payload',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     args=parser.parse_args()
@@ -1102,7 +1145,8 @@ def main():
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
         ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
-        ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division),sort_keys=True))
+        ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
+        ten_phase_payload=args.ten_phase_payload),sort_keys=True))
 
 
 if __name__=='__main__':main()

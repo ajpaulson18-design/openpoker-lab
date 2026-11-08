@@ -33,7 +33,8 @@ enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
-    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division
+    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
+    ten_card_phase_payload
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -292,6 +293,7 @@ struct Plan {
     bool rank_board_sets=false;
     bool sparse_chance=false;
     bool single_division=false;
+    bool phase_payload=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -560,7 +562,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.single_division=profile==StrategyProfile::ten_card_single_division;
+        plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload;
+        plan_.single_division=profile==StrategyProfile::ten_card_single_division || plan_.phase_payload;
         plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance || plan_.single_division;
         plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded || plan_.sparse_chance;
         plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy || plan_.paged_directory;
@@ -768,7 +771,8 @@ public:
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
                 plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy,plan_.paged_directory,
-                bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep);
+                bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
+                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1453,7 +1457,8 @@ public:
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
                     p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
-                    p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate}}:std::nullopt);
+                    p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate,
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

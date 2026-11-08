@@ -23,6 +23,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_sweep_stream, train_ten_sweep_stream,
                   admit_ten_sparse_chance, train_ten_sparse_chance,
                   admit_ten_single_division, train_ten_single_division,
+                  admit_ten_phase_payload, train_ten_phase_payload,
                   admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4 };
 
 Mode request() {
@@ -78,6 +79,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_SPARSE_CHANCE") return Mode::train_ten_sparse_chance;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_SINGLE_DIVISION") return Mode::admit_ten_single_division;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_SINGLE_DIVISION") return Mode::train_ten_single_division;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_PHASE_PAYLOAD") return Mode::admit_ten_phase_payload;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_PHASE_PAYLOAD") return Mode::train_ten_phase_payload;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
@@ -144,6 +147,7 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.ten_card()) std::cout<<",\"ten_card\":true";
     if (plan.sparse_chance) std::cout<<",\"sparse_chance\":true";
     if (plan.single_division) std::cout<<",\"single_division\":true";
+    if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<plan.game().value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<plan.game().divisors[3]<<",\"entries\":"<<plan.entries
@@ -252,7 +256,7 @@ int main(int argc,char* argv[]) {
             mode==Mode::train_ten_row_coverage || mode==Mode::train_ten_shared_policy ||
             mode==Mode::train_ten_paged_directory || mode==Mode::train_ten_sweep_stream ||
             mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
-            mode==Mode::train_ten_single_division;
+            mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
@@ -266,6 +270,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_phase_payload || mode==Mode::train_ten_phase_payload)
+            profile=training::StrategyProfile::ten_card_phase_payload;
         else if (mode==Mode::admit_ten_paged_directory || mode==Mode::train_ten_paged_directory ||
             mode==Mode::admit_ten_sweep_stream || mode==Mode::train_ten_sweep_stream)
             profile=training::StrategyProfile::ten_card_paged_directory;
@@ -298,14 +304,15 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_ten_row_coverage || mode==Mode::admit_ten_shared_policy ||
             mode==Mode::admit_ten_paged_directory || mode==Mode::admit_ten_sweep_stream ||
             mode==Mode::admit_proof9_t3 || mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance ||
-            mode==Mode::admit_ten_single_division)
+            mode==Mode::admit_ten_single_division || mode==Mode::admit_ten_phase_payload)
             admit(driver,mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
-                  mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division,
+                  mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division ||
+                  mode==Mode::admit_ten_phase_payload,
                 mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4);
         else {
             const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
-                mode==Mode::train_ten_single_division);
+                mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload);
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
             if (io.bounded_policy) save_policy(scratch,{io.bounded_policy.get(),io.bounded_policy_count});
