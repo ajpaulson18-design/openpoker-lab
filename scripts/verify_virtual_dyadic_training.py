@@ -187,6 +187,14 @@ def digest_compact_checkpoint(ordered,row_scales,regrets,average,expected_bytes,
     return digest.hexdigest()
 
 
+def bounded_checkpoint_records(digests,image_bytes):
+    epochs=[{'sweep':sweep,'slot':sweep%2,'bytes':image_bytes,'sha256':digest}
+            for sweep,digest in enumerate(digests,1)]
+    images=[{'name':SPLIT_IMAGE_NAMES[1-epoch['slot']],
+             'sha256':epoch['sha256'],'bytes':image_bytes} for epoch in epochs[-2:]]
+    return epochs,images
+
+
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
@@ -358,11 +366,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
     if split:
         digests=checkpoint_digests if checkpoint_digests is not None else tuple(d for _,d in checkpoints)
-        if proof9_t3:
-            result['checkpoint_epochs']=[{'sweep':i+1,'slot':(i+1)%2,'bytes':image_bytes,'sha256':digest}
-                                         for i,digest in enumerate(digests)]
-            result['checkpoint_images']=[{'name':'committed.bin','sha256':digests[1],'bytes':image_bytes},
-                                         {'name':'staged.bin','sha256':digests[2],'bytes':image_bytes}]
+        if extended:
+            result['checkpoint_epochs'],result['checkpoint_images']=bounded_checkpoint_records(digests,image_bytes)
         else:
             result['checkpoint_images']=[{'name':name,'sha256':digest,'bytes':image_bytes}
                                          for name,digest in zip(SPLIT_IMAGE_NAMES,digests,strict=True)]
