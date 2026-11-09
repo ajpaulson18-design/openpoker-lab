@@ -102,6 +102,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_SPARSE_CHANCE','TRAIN_TEN_SPARSE_CHANCE',
                                              'ADMIT_TEN_SINGLE_DIVISION','TRAIN_TEN_SINGLE_DIVISION',
                                              'ADMIT_TEN_PHASE_PAYLOAD','TRAIN_TEN_PHASE_PAYLOAD',
+                                             'ADMIT_TEN_ROW_BATCHED','TRAIN_TEN_ROW_BATCHED',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
                                              'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4'):
         raise ValueError('invalid fixed dyadic probe transport mode')
@@ -109,6 +110,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
     protocol=f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
     if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_TEN_SINGLE_DIVISION','TRAIN_TEN_PHASE_PAYLOAD',
+                'TRAIN_TEN_ROW_BATCHED',
                 'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
         capture=SweepCapture(proof9_sweeps=proof9_sweeps)

@@ -577,3 +577,23 @@ rejected before creating scratch files. The two Windows runs recorded
 about 5.04 MB and 5.03 MB of peak working set for the legacy and phase
 ledgers, respectively.
 [Phase payload evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)
+
+## Contiguous row requests
+
+The opt-in `--ten-row-batched` profile uses the same ten-card T2
+training and streamed checkpoints. Policy construction reads the compact
+regret extent once per row. Each sweep stages two complete field extents per
+row. Final policy export reads the compact average extent once per row.
+Each field keeps its original packed offsets, per-action scales and order.
+The pager splits a request when it crosses a page boundary. The staged image
+becomes committed only after the complete row coverage check and flush.
+
+The request bound is seven reads and four writes per row across both
+sweeps, including virtual zero reads. For the 119,196 rows and 281,066
+action slots in this fixture, that gives 1,311,156 logical requests
+instead of 3,091,726. The forecast preserves physical word, dirty-run,
+and read-miss ceilings. It reserves 264 extra bytes for one reusable
+44-word codec buffer. The request and fragment bookkeeping charge falls
+by 33,668,960 modeled work units. Both checkpoint digests, the numerical
+stream prefix, exact policy feedback and visible-information best responses
+are required to match the phase-payload baseline.

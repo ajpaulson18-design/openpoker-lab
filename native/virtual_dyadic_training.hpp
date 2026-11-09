@@ -34,7 +34,8 @@ enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
-    ten_card_phase_payload
+    ten_card_phase_payload,
+    ten_card_row_batched
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -294,6 +295,7 @@ struct Plan {
     bool sparse_chance=false;
     bool single_division=false;
     bool phase_payload=false;
+    bool row_batched=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -562,7 +564,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload;
+        plan_.row_batched=profile==StrategyProfile::ten_card_row_batched;
+        plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload || plan_.row_batched;
         plan_.single_division=profile==StrategyProfile::ten_card_single_division || plan_.phase_payload;
         plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance || plan_.single_division;
         plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded || plan_.sparse_chance;
@@ -703,7 +706,8 @@ public:
             const auto A=plan_.packed_average_limbs,G=plan_.packed_regret_limbs,L=A+G;
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
-            const auto requests=(plan_.split_checkpoint?11:15)*S;
+            const auto request_units=plan_.row_batched?R:S;
+            const auto requests=(plan_.split_checkpoint?11:15)*request_units;
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
             const auto read_words=t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
@@ -729,7 +733,7 @@ public:
                 // Up to two page fragments per staged extent, one copy and
                 // mark per staged word, and at most 64 bitmap words to scan
                 // and clear per nonempty flush, plus bookkeeping per run.
-                plan_.paging_work+=8*(2*plan_.requested_sweeps*S)+2*plan_.requested_sweeps*L+160*write_requests+2*(4096+64+1);
+                plan_.paging_work+=8*(2*plan_.requested_sweeps*request_units)+2*plan_.requested_sweeps*L+160*write_requests+2*(4096+64+1);
             }
             w[work_index(Work::route)]+=plan_.paging_work;
         }
@@ -772,7 +776,7 @@ public:
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
                 plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy,plan_.paged_directory,
                 bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
-                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy);
+                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,plan_.row_batched);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1458,7 +1462,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
                     p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

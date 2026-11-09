@@ -222,6 +222,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_TEN_SPARSE_CHANCE\n',b'DYADIC_T4_V1 ADMIT_TEN_SPARSE_CHANCE\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_SINGLE_DIVISION\n',b'DYADIC_T4_V1 ADMIT_TEN_SINGLE_DIVISION\n',
                 b'DYADIC_T2_V1 TRAIN_TEN_PHASE_PAYLOAD\n',b'DYADIC_T4_V1 ADMIT_TEN_PHASE_PAYLOAD\n',
+                b'DYADIC_T2_V1 TRAIN_TEN_ROW_BATCHED\n',b'DYADIC_T4_V1 ADMIT_TEN_ROW_BATCHED\n',
                 b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
@@ -392,6 +393,24 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 validate_admission(dict(receipt,**{key:receipt[key]-1}),ten_phase_payload=True)
         with self.assertRaises(ValueError):
             validate_admission(receipt,ten_single_division=True)
+
+    def test_row_batched_admission_charges_contiguous_requests_and_codec(self):
+        directory,process=self.observe('admit_ten_row_batched',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_ROW_BATCHED',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_row_batched=True)
+        self.assertEqual((plan['state_payload_bits'],plan['payload_bits'],plan['entries']),
+                         (6_400_992,20_038_272,360_336))
+        self.assertEqual((plan['page_request_limit'],plan['paging_work'],plan['planned_total_work']),
+                         (1_311_156,120_030_330,1_696_642_046))
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']), (0,0))
+        for key in ('page_request_limit','paging_work','state_payload_bits','entries'):
+            with self.assertRaisesRegex(ValueError,'row-batched admission differs'):
+                validate_admission(dict(receipt,**{key:receipt[key]-1}),ten_row_batched=True)
+        with self.assertRaises(ValueError):
+            validate_admission(receipt,ten_phase_payload=True)
 
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace

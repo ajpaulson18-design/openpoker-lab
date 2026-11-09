@@ -74,6 +74,7 @@ struct PagedStrategy {
     Lifecycle lifecycle=Lifecycle::fixed_two_sweep;
     dyadic_policy::DivisionKernel division_kernel=dyadic_policy::DivisionKernel::separate;
     PayloadModel payload_model=PayloadModel::legacy;
+    bool row_batched=false;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -361,6 +362,8 @@ class State final {
     enum class Phase { building, closed, sweeping };
     enum class PackedField { average, regret };
     static constexpr std::size_t page_codec_words=11;
+    static constexpr std::size_t row_batch_max_actions=4;
+    static constexpr std::size_t row_batch_codec_words=row_batch_max_actions*page_codec_words;
     // Named logical payload for the sealed proof10 paged phase path. This
     // models owned data and bounded scratch, not standard-library stream
     // buffers, allocator metadata, or OS page cache.
@@ -546,7 +549,8 @@ class State final {
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
                                               paged && paged->row_coverage,paged && paged->shared_policy,
                                               paged && paged->paged_directory,lifecycle,
-                                              paged?paged->payload_model:PayloadModel::legacy);
+                                              paged?paged->payload_model:PayloadModel::legacy,
+                                              paged && paged->row_batched);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -580,6 +584,80 @@ class State final {
         Integer result;
         boost::multiprecision::import_bits(result,first,first+stride,64,false);
         return result;
+    }
+    void read_compact_row(PackedField field,std::size_t offset,
+                          std::size_t shift,std::span<Integer> values) const {
+        if (!paged_ || !paged_image_ || !paged_->row_batched || values.empty() ||
+            values.size()>row_batch_max_actions)
+            fail(ErrorCode::invalid_row,"invalid batched packed row read");
+        const auto stride=packed_stride(shift);
+        if (values.size()>row_batch_codec_words/stride)
+            fail(ErrorCode::invalid_row,"batched packed row exceeds its codec bound");
+        std::array<std::uint64_t,row_batch_codec_words> scratch;
+        const auto words=values.size()*stride;
+        auto live=std::span(scratch).first(words);
+        paged_image_->read(page_base(field)+offset,live,
+            field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
+        for (std::size_t action=0;action<values.size();++action) {
+            const auto* first=scratch.data()+action*stride;
+            boost::multiprecision::import_bits(values[action],first,first+stride,64,false);
+        }
+    }
+    enum class BatchUpdate { regret_delta, average_increment, average_scaled_increment };
+    void stage_compact_row(PackedField field,std::size_t offset,std::size_t shift,
+                           std::span<const Integer> increments,BatchUpdate update,const char* label,
+                           const Integer* common_subtrahend=nullptr) {
+        if (!paged_ || !paged_image_ || !paged_->row_batched || increments.empty() ||
+            increments.size()>row_batch_max_actions)
+            fail(ErrorCode::invalid_row,"invalid batched packed row stage");
+        const auto stride=packed_stride(shift);
+        if (increments.size()>row_batch_codec_words/stride)
+            fail(ErrorCode::invalid_row,"batched packed row exceeds its codec bound");
+        std::array<std::uint64_t,row_batch_codec_words> scratch;
+        const auto words=increments.size()*stride;
+        auto live=std::span(scratch).first(words);
+        paged_image_->read(page_base(field)+offset,live,
+            field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
+        for (std::size_t action=0;action<increments.size();++action) {
+            const auto* first=scratch.data()+action*stride;
+            Integer value;
+            boost::multiprecision::import_bits(value,first,first+stride,64,false);
+            Integer adjusted;
+            const Integer* increment_ptr=&increments[action];
+            if (common_subtrahend) {
+                adjusted=increments[action]-*common_subtrahend;
+                increment_ptr=&adjusted;
+            }
+            const auto& increment=*increment_ptr;
+            if (update==BatchUpdate::regret_delta) {
+                std::optional<Integer> magnitude;
+                const Integer* source=&increment;
+                if (increment<0) {magnitude.emplace(-increment);source=&*magnitude;}
+                if (*source!=0 && boost::multiprecision::lsb(*source)<shift)
+                    fail(ErrorCode::arithmetic,"state packed delta is outside certified scale");
+                const Integer quotient=*source>>shift;
+                if (increment<0) value-=quotient; else value+=quotient;
+                if (value<0) value=0;
+            } else if (update==BatchUpdate::average_increment) {
+                if (increment<0) fail(ErrorCode::invalid_row,"state average increment must be nonnegative");
+                if (increment!=0 && boost::multiprecision::lsb(increment)<shift)
+                    fail(ErrorCode::arithmetic,"state average increment is outside certified packed scale");
+                value+=increment>>shift;
+            } else {
+                if (increment<0) fail(ErrorCode::invalid_row,"state average increment must be nonnegative");
+                value+=increment;
+            }
+            if (width(value)>forecast_.value_bits-shift)
+                fail(ErrorCode::integer_width,label);
+            const auto& raw=value.backend();
+            const auto used=raw.size()*sizeof(*raw.limbs());
+            const auto bytes=stride*sizeof(std::uint64_t);
+            auto* destination=scratch.data()+action*stride;
+            if (raw.sign() || used>bytes) fail(ErrorCode::arithmetic,label);
+            std::memcpy(destination,raw.limbs(),used);
+            std::memset(reinterpret_cast<unsigned char*>(destination)+used,0,bytes-used);
+        }
+        paged_image_->stage_row_extent(page_base(field)+offset,live);
     }
     [[nodiscard]] Integer load_average(const PackedRow& row,std::size_t action) const {
         Integer result=load_compact(PackedField::average,row.limb_offset,row.shift,action);
@@ -712,7 +790,8 @@ public:
                                              bool compact_rows=false,bool ordered_rows=false,bool row_coverage=false,
                                              bool shared_policy=false,bool paged_directory=false,
                                              Lifecycle lifecycle=Lifecycle::fixed_two_sweep,
-                                             PayloadModel payload_model=PayloadModel::legacy) {
+                                             PayloadModel payload_model=PayloadModel::legacy,
+                                             bool row_batched=false) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -731,6 +810,8 @@ public:
             fail(ErrorCode::invalid_forecast,"invalid ten-card strategy census");
         if (payload_model!=PayloadModel::legacy && payload_model!=PayloadModel::paged_phases)
             fail(ErrorCode::invalid_forecast,"unknown state payload model");
+        if (row_batched && payload_model!=PayloadModel::paged_phases)
+            fail(ErrorCode::invalid_forecast,"row batching requires the paged phase payload model");
         if (payload_model==PayloadModel::paged_phases &&
             (!expanded || lifecycle!=Lifecycle::fixed_two_sweep || !catalog.sealed ||
              catalog.keys!=388 || catalog.token_slots!=410 || packed.limb_count!=1295812 ||
@@ -743,7 +824,8 @@ public:
              sizeof(RowDirectory)>paged_phase_directory_bytes || sizeof(PolicySpill)>paged_phase_spill_bytes ||
              sizeof(std::string_view)!=16 || sizeof(Menu)!=16 || page_codec_words*sizeof(std::uint64_t)!=88 ||
              f.rows!=paged_phase_tags_bytes ||
-             pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes))
+             pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes ||
+             (row_batched && row_batch_codec_words*sizeof(std::uint64_t)!=352)))
             fail(ErrorCode::invalid_forecast,"phase payload model ABI exceeds its named envelope");
         if (paged && (!catalog.sealed || (!expanded && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
             paged->image_words!=plus(packed.limb_count,packed.regret_limbs)))
@@ -833,6 +915,10 @@ public:
             // Integer/text workspace is the exact named phase envelope. Dense
             // export APIs are intentionally unavailable for this model.
             payload=paged_phase_payload_bits;
+            if (row_batched) {
+                payload=plus(payload,times(8,(row_batch_codec_words-page_codec_words)*sizeof(std::uint64_t)));
+                entries=plus(entries,row_batch_codec_words-page_codec_words);
+            }
         }
         if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
             fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
@@ -1035,6 +1121,8 @@ public:
             if (info.actor>1 || holding>=hand_counts_[info.actor] || info.actions==0 || info.actions>20 ||
                 info.source>=catalog_.keys || info.depth>forecast_.max_history_depth)
                 fail(ErrorCode::invalid_row,"sealed history decision key outside admitted range");
+            if (paged_ && paged_->row_batched && info.actions>row_batch_max_actions)
+                fail(ErrorCode::invalid_row,"sealed menu exceeds the batched codec bound");
             if (paged_ && paged_->shared_policy && info.actions<2)
                 fail(ErrorCode::invalid_row,"shared policy requires at least two actions");
             if (average_shift>=forecast_.value_bits || regret_shift>=forecast_.value_bits ||
@@ -1274,8 +1362,15 @@ public:
                 std::span<const Integer> values;
                 if (packed_regrets()) {
                     const PackedRegretRow packed_row{descriptor.regret_offset,descriptor.regret_shift};
-                    for (std::size_t a=0;a<row.actions.size();++a)
-                        (*decoded)[a]=load_compact(PackedField::regret,packed_row.limb_offset,packed_row.shift,a);
+                    if (paged_ && paged_->row_batched) {
+                        if (row.actions.size()>row_batch_max_actions)
+                            fail(ErrorCode::invalid_row,"policy row exceeds batched menu cap");
+                        read_compact_row(PackedField::regret,packed_row.limb_offset,packed_row.shift,
+                            std::span(*decoded).first(row.actions.size()));
+                    } else {
+                        for (std::size_t a=0;a<row.actions.size();++a)
+                            (*decoded)[a]=load_compact(PackedField::regret,packed_row.limb_offset,packed_row.shift,a);
+                    }
                     values={decoded->data(),row.actions.size()};
                 } else values={regrets_.get()+row.offset,row.actions.size()};
                 const auto policy=quantizer_.regret_policy(values);
@@ -1332,6 +1427,8 @@ private:
             const auto r=descriptor.row;const auto count=r.actions.size();
             if (row_seen(row) || action_values.size()!=count || average_action_increments.size()!=count)
                 fail(ErrorCode::invalid_row,"state duplicate or incomplete staged row");
+            if (paged_ && paged_->row_batched && count>row_batch_max_actions)
+                fail(ErrorCode::invalid_row,"staged row exceeds batched menu cap");
             const PackedRow average_row{descriptor.average_offset,descriptor.average_shift};
             const PackedRegretRow regret_row{descriptor.regret_offset,descriptor.regret_shift};
             if (scaled_shift && (!packed() || *scaled_shift!=average_row.shift))
@@ -1361,7 +1458,15 @@ private:
             if (mixed%dyadic_policy::grid_units!=0)
                 fail(ErrorCode::arithmetic,"state mixed value is outside fixed denominator grid");
             mixed>>=dyadic_policy::grid_bits;
-            for (std::size_t a=0;a<count;++a) {
+            if (paged_ && paged_->row_batched) {
+                stage_compact_row(PackedField::regret,regret_row.limb_offset,regret_row.shift,
+                    action_values,BatchUpdate::regret_delta,
+                    "state retained regret exceeds packed admission",&mixed);
+                stage_compact_row(PackedField::average,average_row.limb_offset,average_row.shift,
+                    average_action_increments,scaled_shift?BatchUpdate::average_scaled_increment:
+                        BatchUpdate::average_increment,
+                    "state packed average encoding width changed");
+            } else for (std::size_t a=0;a<count;++a) {
                 const auto at=r.offset+a;
                 const Integer delta=action_values[a]-mixed;
                 if (packed_regrets()) {
@@ -1436,10 +1541,17 @@ private:
             const Integer* masses;
             if (decoded) {
                 const PackedRow average_row{descriptor.average_offset,descriptor.average_shift};
-                for (std::size_t a=0;a<row.actions.size();++a)
-                    (*decoded)[a]=packed_regrets()
-                        ?load_compact(PackedField::average,average_row.limb_offset,average_row.shift,a)
-                        :load_average(average_row,a);
+                if (paged_ && paged_->row_batched) {
+                    if (row.actions.size()>row_batch_max_actions)
+                        fail(ErrorCode::invalid_row,"average row exceeds batched menu cap");
+                    read_compact_row(PackedField::average,average_row.limb_offset,average_row.shift,
+                        std::span(*decoded).first(row.actions.size()));
+                } else {
+                    for (std::size_t a=0;a<row.actions.size();++a)
+                        (*decoded)[a]=packed_regrets()
+                            ?load_compact(PackedField::average,average_row.limb_offset,average_row.shift,a)
+                            :load_average(average_row,a);
+                }
                 masses=decoded->data();
             } else masses=averages_.get()+row.offset;
             const auto policy=quantizer_.average_export({masses,row.actions.size()});
