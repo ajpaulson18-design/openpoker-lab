@@ -1,5 +1,33 @@
 # Foundation-first execution record
 
+## Contiguous compact row requests (November 8)
+
+The named ten-card T2 row batching run at `7a85266` passed native,
+independent saved-only replay and outer-controller execution. Its full
+2,536-file source inventory stayed byte-identical. Both checkpoint
+images, numerical policy/update payload and exact best responses match
+the phase-payload baseline. The independently modeled and observed pager
+request counts fall from 3,091,726 to 1,311,156. Read misses, dirty write
+runs and physical word traffic match the baseline.
+
+The profile reserves 264 extra codec bytes and 33 extra logical entries.
+The composed payload is 20,038,272 bits before transport scratch, and
+modeled work is 1,696,642,046 before transport. Fifty focused checks pass
+normally and optimized, including a 44-word boundary read rejected one
+physical word below its required page budget and a one-bit-short State
+payload rejected before file creation. The separate native timing samples
+were 7.29 seconds with row batching and 3.59 seconds in the phase baseline.
+A controlled runtime comparison remains open.
+
+Terra supplied the independent pager trace. The final Sol implementation
+review stopped at its usage limit. The primary agent completed the source
+audit, integration and remaining controls. The
+[evidence packet](../benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1/manifest.json)
+records exact replay, process measurements, source hashes and all control
+logs. Final pull-request CI and merge remain separate publication gates.
+This finite two-sweep result retains approximately 2.9843 big blinds of
+exploitability and an unset quality threshold.
+
 ## Integrated training and paged row storage
 
 The [two-sweep unified native path](native-dyadic-two-sweep.md) now has
@@ -9,7 +37,7 @@ and payoff calculations without retaining complete private-hand/board
 worlds. Strategy state remains a separately admitted owner with packed
 integer fields, private files and immutable ordered history identities.
 
-The latest source-frozen ten-card run at `56a27a2` uses a paged row
+The source-frozen paged-directory ten-card run at `56a27a2` uses a paged row
 directory with a 32 KiB cache and copied decision descriptors. Native,
 saved-only verifier and outer controller exited zero; the complete
 2,515-file captured source inventory remained unchanged. Both checkpoint

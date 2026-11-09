@@ -597,3 +597,20 @@ and read-miss ceilings. It reserves 264 extra bytes for one reusable
 by 33,668,960 modeled work units. Both checkpoint digests, the numerical
 stream prefix, exact policy feedback and visible-information best responses
 are required to match the phase-payload baseline.
+
+The frozen run at `7a85266` passed native execution, independent replay
+and the outer source check. All 2,536 tracked files retained their captured
+raw bytes. Both checkpoint images and 9,832,556 numerical bytes matched
+the phase-payload baseline. The observed pager counts matched every field
+of the independent trace, including 1,498 read misses and 18,836 dirty
+write runs. Fifty focused controls passed normally and optimized.
+
+The composed reservation is 20,038,272 bits before stream scratch, with
+360,336 reserved entries. The modeled total work falls from 1,730,311,006
+to 1,696,642,046 before transport. The two separate Windows observations
+recorded 7.29 seconds for row batching and 3.59 seconds for the phase
+baseline, with about 5.03 MB of peak working set each. This study
+establishes a request-count reduction. It leaves runtime performance for a
+controlled comparison. The fixture still uses two sweeps and has an
+unset quality threshold.
+[Row batching evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1/manifest.json)
