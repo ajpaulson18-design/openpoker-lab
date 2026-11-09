@@ -60,7 +60,42 @@ The 72 focused controls pass both normally and with Python optimization enabled.
 They include compiled Q32 preflight, short storage and precision rejection,
 legacy admission snapshots, policy division, page crossings, checkpoint capture
 and independent replay transport. The initial compiler diagnostics and harness
-failures are preserved separately. A source-frozen native run with saved-only
-replay remains the next acceptance gate. A target
-miss will be preserved. This profile establishes no unrestricted Hold'em
-accuracy or full-deck admission.
+failures are preserved separately. Recovered acceptance is recorded below.
+This profile establishes no unrestricted Hold'em accuracy or full-deck admission.
+
+## Frozen result and preserved target miss
+
+Source 38f77e49cf2271e5400ee439a6141d86f5161e47 completed one native
+32-sweep call with observed exit 0 and no retries. It took 46.0068 seconds,
+including checkpoint transport, with a 4,964,352-byte peak working set on the
+recorded Windows host. These are scoped measurements.
+
+The original controller was interrupted during first saved review. Its outer
+and review exits remain unobserved. Fresh recovery revalidated all 2,546 live
+and captured source files, the native executable and saved inputs, then ran
+source-only replay without another native producer. Replay exited 0 after
+192.5507 seconds, and the recovery outer observer also exited 0. All 27 executed
+replay sources match their captured bytes; no project bytecode was used.
+
+Independent replay matches all 32 updates and checkpoint hashes, the exported
+policy and visible-information best responses. It reconstructs the exact
+171,408,812-byte wire hash without retaining all 32 images. All physical paging
+and directory receipts match the independent forecast.
+
+Final exploitability is **0.3969423992 big blinds**, above the fixed **0.1**
+target. The exact rational gate is **miss**. Accepted T4 exploitability was
+2.2419870564 in the same game. The first four policy/root sweeps and checkpoint
+images match T4 exactly. This is measured improvement with a preserved target
+miss, not convergence acceptance.
+
+The packet preserves every raw policy grid, exact metrics, process/source
+records, the interrupted attempt, and earlier compiler/control failures.
+Its 748-member archive is 3,142,644 bytes, SHA-256
+96f192f532b78779c19f1d8f6af40f75dd14d988ff64c4ee5b25fd479075ceac.
+All 72 focused checks passed normally and optimized; all 42 source-commit
+GitHub checks passed. Evidence-publication checks are tracked separately.
+
+[Recovered exactness and quality evidence](../benchmarks/results/native-dyadic-proof9-quality32-v1/manifest.json)
+
+Larger-game admission, strategy/history growth and further quality improvement
+remain open.

@@ -684,5 +684,7 @@ rank-free ten- and eleven-card forecasts with authenticated source closure.
 ## Named 32-sweep quality lifecycle
 
 The [N9 quality study](native-dyadic-quality32.md) extends the exact changing-policy
-path to a separately admitted 32-sweep lifecycle, with a predeclared exact
-exploitability target and a separate saved-only replay gate.
+path to a separately admitted 32-sweep lifecycle. Recovered independent replay
+passes every update and the complete wire hash. Exploitability is 0.3969424
+big blinds in this fixed game, above the predeclared 0.1 target. The miss and
+original controller interruption remain preserved.
