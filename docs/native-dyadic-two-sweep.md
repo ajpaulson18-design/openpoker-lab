@@ -661,3 +661,22 @@ is 448,157,615 units, compared with 526,856,639 for linear lookup, under
 the existing 500-million chance-owner ceiling. This is a rank-free
 forecast. Eleven-card precision, storage, transport, whole-request
 admission, training and saved-policy verification remain separate gates.
+
+The frozen run at `0122ce9` passed native execution, independent
+saved-policy replay and the outer source check. All 2,542 tracked files
+retained their captured bytes. The independent structural trace matched
+all eight index fields, including 79,560 nonrecent searches and 17
+successful publications. Both checkpoint images and the numerical
+stream outside its work footer matched the row-batched baseline.
+Sixty-six focused controls passed normally and optimized. Terra supplied
+the independent source review, complete Chance forecast and search trace.
+
+The new Chance reservation is 132,742,404 units on ten cards. Its actual
+metered work is 70,637,650, versus 68,478,558 in the row-batched baseline.
+The broader scalar bookkeeping is explicit in the new model. The
+separate native observations were 8.50 and 7.29 seconds, with about
+5.03 MB peak working set each. They establish no timing improvement.
+Exploitability remains approximately 2.9843 big blinds after two sweeps,
+with an unset quality threshold. The packet also preserves the complete
+rank-free ten- and eleven-card forecasts with authenticated source closure.
+[Indexed-cache evidence](../benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1/manifest.json)

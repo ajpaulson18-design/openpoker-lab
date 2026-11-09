@@ -1,5 +1,41 @@
 # Foundation-first execution record
 
+## Sorted terminal-rank lookup (November 8)
+
+The explicit ten-card indexed-cache profile at `0122ce9` passed a
+source-frozen training run, independent saved-policy replay and the outer
+controller. The full 2,542-file source inventory stayed byte-identical.
+Both checkpoint images, the policy/update payload and exact best responses
+match the row-batched baseline. An independent rank-free traversal
+derives all 412,080 showdown queries and 79,560 nonrecent searches, and
+the observed index receipt matches it exactly.
+
+The fixed index reserves 66 logical entries within the existing chance
+owner's 12,000-entry allowance. Each miss reserves its complete update
+before rank fill and publishes the key-to-slot mapping after successful
+fill. The generic linear cache keeps its previous receipts. Native
+controls include nonmonotone insertion, recent hits, a full 64-plane
+LRU eviction sequence, invalid inputs, poisoning and one-short resource
+limits. Sixty-six focused checks pass normally and optimized. Terra
+independently reviewed the source, implemented the controls and derived
+the complete work forecast.
+
+Ten-card Chance work rises to 132,742,404 reserved units and 70,637,650
+actual metered units, including the additional scalar bookkeeping.
+The single native observation was 8.50 seconds versus the earlier
+row-batched sample's 7.29 seconds. The
+[published evidence](../benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1/manifest.json)
+preserves that comparison.
+
+The independent eleven-card Chance forecast falls from 526,856,639
+linear-lookup units to 448,157,615 indexed units within the existing
+500-million owner ceiling. It performs no native calls or hand ranking.
+The forecast's source closure is captured and authenticated. Eleven-card
+whole-request admission, precision, storage, transport, training and
+saved-policy verification remain open. The executed ten-card result
+retains about 2.9843 big blinds of exploitability and an unset quality
+threshold. Pull-request CI and merge remain publication gates.
+
 ## Contiguous compact row requests (November 8)
 
 The named ten-card T2 row batching run at `7a85266` passed native,
