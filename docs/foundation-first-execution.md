@@ -17,7 +17,13 @@ normally and optimized, including a 44-word boundary read rejected one
 physical word below its required page budget and a one-bit-short State
 payload rejected before file creation. The separate native timing samples
 were 7.29 seconds with row batching and 3.59 seconds in the phase baseline.
-A controlled runtime comparison remains open.
+A separate same-executable comparison then ran four alternating pairs.
+All eight complete streams and checkpoint images matched their accepted
+identities. The median paired row/phase time ratio was 0.9455, with three
+faster pairs and one slower pair. Median times were 6.001 and 6.523
+seconds on this Windows host. The
+[timing packet](../benchmarks/results/native-dyadic-row-batched-ten-card-timing-v1/manifest.json)
+retains all observations and eight additional process receipts.
 
 Terra supplied the independent pager trace. The final Sol implementation
 review stopped at its usage limit. The primary agent completed the source

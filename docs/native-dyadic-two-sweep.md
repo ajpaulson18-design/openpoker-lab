@@ -610,7 +610,21 @@ The composed reservation is 20,038,272 bits before stream scratch, with
 to 1,696,642,046 before transport. The two separate Windows observations
 recorded 7.29 seconds for row batching and 3.59 seconds for the phase
 baseline, with about 5.03 MB of peak working set each. This study
-establishes a request-count reduction. It leaves runtime performance for a
-controlled comparison. The fixture still uses two sweeps and has an
-unset quality threshold.
+establishes a request-count reduction. The fixture still uses two sweeps
+and has an unset quality threshold.
 [Row batching evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1/manifest.json)
+
+A separate comparison used the same authenticated executable for four
+alternating pairs of complete native calls and streamed output. The
+order was phase/row, row/phase, phase/row, row/phase. All eight calls
+matched their accepted numerical stream, complete wire and checkpoint
+images exactly, with the source inventory unchanged. Every observation
+is retained. Row batching was faster in three pairs and slower in one.
+
+Median times were 6.523 seconds for the phase profile and 6.001 seconds
+for row batching. The median within-pair row/phase ratio was 0.9455,
+about 5.45 percent less elapsed time. These measurements cover this
+Windows host and finite ten-card T2 fixture. The numerical acceptance
+study still contains its one training invocation. The timing experiment
+records its eight additional calls separately.
+[Alternating timing evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-timing-v1/manifest.json)
