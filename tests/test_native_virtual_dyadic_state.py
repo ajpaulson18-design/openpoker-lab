@@ -151,7 +151,9 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
         separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
-                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ', 'PHASE_PAYLOAD ' , 'PHASE_PAYLOAD_GUARDS ')
+                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ',
+                             'PROOF9_Q32_STATE ', 'PROOF9_Q32_GUARDS ', 'PROOF9_Q32_PAGER ',
+                             'PHASE_PAYLOAD ' , 'PHASE_PAYLOAD_GUARDS ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
@@ -222,6 +224,15 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
     def test_proof9_t4_pager_profile_and_storage_delta(self):
         self.assertEqual([line for line in self.lines if line.startswith('PROOF9_T4_GUARDS ')],
                          ['PROOF9_T4_GUARDS 7 2 8 512'])
+
+    def test_proof9_q32_state_storage_and_page_crossing(self):
+        self.assertEqual([line.split() for line in self.lines if line.startswith('PROOF9_Q32_STATE ')],
+                         [['PROOF9_Q32_STATE','106399','241969528','PASS']])
+        pager=[line.split() for line in self.lines if line.startswith('PROOF9_Q32_PAGER ')]
+        self.assertEqual(len(pager),1)
+        self.assertEqual(pager[0][-1],'PASS')
+        self.assertEqual((int(pager[0][1]),int(pager[0][2]),int(pager[0][3])),(16384,4,151))
+        self.assertIn('PROOF9_Q32_GUARDS 8 PASS',self.lines)
 
     def test_paged_images_preserve_the_committed_sweep_until_complete(self):
         self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],

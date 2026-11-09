@@ -27,6 +27,11 @@ Larger-game work, integer/payload admission and scalable independent
 verification remain open. PR #285 is the integration review; development
 publication and merge acceptance are separate gates.
 
+A [named N9 32-sweep quality lifecycle](../native-dyadic-quality32.md) is being
+validated with cumulative owner admission and independent replay of every
+checkpoint. Its predeclared exploitability target is 0.1 big blind in that
+fixed game. Training and target acceptance remain separate gates.
+
 ## Earlier component records
 
 The [exact sequence-reach transport](../native-exact-reach.md) is implemented in

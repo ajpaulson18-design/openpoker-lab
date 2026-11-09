@@ -36,11 +36,11 @@ class World:
 
 
 class Fixture:
-    def __init__(self, *, ten_card=False):
+    def __init__(self, *, ten_card=False, quality32=False):
         self.deck = tuple(sorted((*PROOF9, 0))) if ten_card else PROOF9
         require(len(set(self.deck)) == (10 if ten_card else 9), 'reference deck geometry')
         self.denominator = (3480 << 625) if ten_card else D
-        self.value_bits = 644 if ten_card else 642
+        self.value_bits = 644 if ten_card or quality32 else 642
         self.row_count = 119_196 if ten_card else ROWS
         self.slot_count = 281_066 if ten_card else SLOTS
         self.runouts = 120 if ten_card else 20

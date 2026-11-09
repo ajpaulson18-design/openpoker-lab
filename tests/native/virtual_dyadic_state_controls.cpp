@@ -1290,6 +1290,117 @@ void proof9_t4_pager_controls() {
     std::cout<<"PROOF9_T4_GUARDS 7 2 8 512\n";
 }
 
+void proof9_q32_controls(h::History& history,const b::Template& source,const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    constexpr s::Forecast plan{24420,58164,32,15,644,720265152,1867537648};
+    constexpr s::ActionCatalogCapacity catalog{388,410,true};
+    constexpr s::PackedAverageCapacity packed{258694,348036};
+    const pages::Limits page_limits{606730,4096,16,pages::n9_q32_read_words,pages::n9_q32_write_words,
+        pages::n9_q32_logical_requests,2,pages::Profile::proof9_q32,pages::n9_q32_stage_split_words,
+        pages::n9_q32_write_requests,true};
+    const auto storage=s::State::storage_forecast(plan,catalog,packed,page_limits,true,true,true,true,true,
+        s::Lifecycle::quality32,s::PayloadModel::legacy,true);
+    require(storage.entries==106399 && storage.payload_bits==241969528,
+        "Q32 State payload, 32 generation receipts or row codec forecast differs");
+    const auto make_strategy=[&](const std::filesystem::path& path) {
+        return s::PagedStrategy{path,page_limits,true,true,true,true,true,s::State::proof9_q32_directory_page_limit,
+            s::Lifecycle::quality32,p::DivisionKernel::combined,s::PayloadModel::legacy,true};
+    };
+    const auto expect_preflight_rejection=[&](const char* name,s::Forecast altered,s::Limits limits,
+                                               ErrorCode code) {
+        const auto reject_path=scratch/(std::string("q32-")+name);
+        bool failed=false;
+        try {s::State state(history,{2,2},1,altered,limits,catalog,packed,make_strategy(reject_path));}
+        catch (const s::Error& error) {failed=error.code()==code;}
+        require(failed && !std::filesystem::exists(reject_path) &&
+            !std::filesystem::exists(reject_path.string()+"-rows"),
+            "Q32 State preflight rejection allocated files");
+    };
+    const s::Limits adequate{2600000000ULL,702,2000000,storage.payload_bits};
+    auto too_short=adequate;too_short.integer_payload_bits=storage.payload_bits-1;
+    expect_preflight_rejection("payload-short",plan,too_short,ErrorCode::capacity);
+    auto entries_short=adequate;entries_short.entries=storage.entries-1;
+    expect_preflight_rejection("entries-short",plan,entries_short,ErrorCode::capacity);
+    auto bits_short=adequate;bits_short.integer_bits=701;
+    expect_preflight_rejection("bits-short",plan,bits_short,ErrorCode::invalid_forecast);
+    auto work_short=adequate;work_short.work=plan.own_work+plan.quantizer_work-1;
+    expect_preflight_rejection("work-partition-short",plan,work_short,ErrorCode::invalid_forecast);
+    auto quantizer_high=plan;quantizer_high.quantizer_work=p::proof9_q32_work_cap+1;
+    expect_preflight_rejection("quantizer-high",quantizer_high,adequate,ErrorCode::invalid_forecast);
+    auto wrong_width=plan;wrong_width.value_bits=643;
+    expect_preflight_rejection("wrong-width",wrong_width,adequate,ErrorCode::invalid_forecast);
+    auto too_many=plan;too_many.sweeps=33;
+    expect_preflight_rejection("sweep33",too_many,adequate,ErrorCode::invalid_forecast);
+    auto bad_directory_strategy=make_strategy(scratch/"q32-directory-over-cap");
+    bad_directory_strategy.directory_page_limit=s::State::proof9_q32_directory_page_limit+1;
+    bool directory_rejected=false;
+    try {s::State state(history,{2,2},1,plan,adequate,catalog,packed,bad_directory_strategy);}
+    catch (const s::Error& error) {directory_rejected=error.code()==ErrorCode::invalid_forecast;}
+    require(directory_rejected && !std::filesystem::exists(bad_directory_strategy.scratch) &&
+        !std::filesystem::exists(bad_directory_strategy.scratch.string()+"-rows"),
+        "Q32 invalid directory page bound allocated files");
+    const auto reject_forecast=[&](s::Forecast altered,s::ActionCatalogCapacity menus,
+                                   s::PackedAverageCapacity image,bool batch) {
+        try { (void)s::State::storage_forecast(altered,menus,image,page_limits,true,true,true,true,true,
+            s::Lifecycle::quality32,s::PayloadModel::legacy,batch); }
+        catch (const s::Error&) { return; }
+        throw std::runtime_error("unsupported Q32 State forecast accepted");
+    };
+    auto altered=plan;altered.sweeps=31;reject_forecast(altered,catalog,packed,true);
+    reject_forecast(plan,{388,410,false},packed,true);
+    reject_forecast(plan,catalog,packed,false);
+    auto invalid_pages=page_limits;++invalid_pages.requests;
+    bool pager_rejected=false;
+    try {(void)pages::Image::resident_bytes(invalid_pages);}
+    catch (const std::invalid_argument&) {pager_rejected=true;}
+    require(pager_rejected,"Q32 pager accepted a raised logical request cap");
+    require(s::PolicySpillSweep{}.write_words==0 && sizeof(s::PolicySpillSweep)==64,
+        "Q32 per-generation spill receipt ABI differs");
+    std::cout<<"PROOF9_Q32_STATE "<<storage.entries<<' '<<storage.payload_bits<<" PASS\n";
+    std::cout<<"PROOF9_Q32_GUARDS 8 PASS\n";
+    (void)source;
+}
+
+void proof9_q32_pager_controls(const std::filesystem::path& scratch) {
+    namespace pages=openpoker::virtual_dyadic_paged_image;
+    const pages::Limits limits{606730,4096,16,pages::n9_q32_read_words,pages::n9_q32_write_words,
+        pages::n9_q32_logical_requests,2,pages::Profile::proof9_q32,pages::n9_q32_stage_split_words,
+        pages::n9_q32_write_requests,true};
+    constexpr std::size_t split=pages::n9_q32_stage_split_words,total=pages::n9_image_words;
+    pages::Image image(scratch/"proof9-q32-pager",limits);
+    require(image.receipt().physical_write_requests==0 &&
+        std::filesystem::file_size(scratch/"proof9-q32-pager"/"committed.bin")==0,
+        "Q32 virtual initial image was written eagerly");
+    std::vector<std::uint64_t> words(total);
+    for (std::size_t i=0;i<total;++i) words[i]=0x9e3779b97f4a7c15ULL^i;
+    image.begin_sweep();
+    const auto stage_range=[&](std::size_t begin,std::size_t end) {
+        for (auto at=begin;at<end;) {
+            const auto count=std::min(end-at,limits.page_words-at%limits.page_words);
+            image.stage(at,std::span<const std::uint64_t>(words).subspan(at,count));
+            at+=count;
+        }
+    };
+    stage_range(0,split);
+    stage_range(split,total);
+    image.commit_sweep();
+    std::array<std::uint64_t,4> crossing{};
+    image.read(4094,crossing,0);
+    require(std::equal(crossing.begin(),crossing.end(),words.begin()+4094),
+        "Q32 row-batched extent lost words across a physical page boundary");
+    const std::array<std::uint64_t,4> next{1,2,3,4};
+    image.begin_sweep();
+    image.stage(0,next);
+    image.read(4094,crossing,1);
+    require(std::equal(crossing.begin(),crossing.end(),words.begin()+4094) &&
+        image.receipt().completed_sweeps==1,
+        "Q32 staged next generation changed the prior committed image");
+    require(image.receipt().write_words==total && image.receipt().stage_calls==151,
+        "Q32 early pager receipt differs");
+    std::cout<<"PROOF9_Q32_PAGER "<<image.receipt().read_words<<' '
+        <<image.receipt().physical_read_requests<<' '<<image.receipt().stage_calls<<" PASS\n";
+}
+
 void bounded_lifecycle_controls(h::History& history,const b::Template& source,
                                 const std::filesystem::path& scratch) {
     namespace pages=openpoker::virtual_dyadic_paged_image;
@@ -1536,6 +1647,8 @@ int main(int argc,char** argv) {
             row_coverage_controls(history,source,argv[1]);
             bounded_lifecycle_controls(history,source,argv[1]);
             proof9_t4_pager_controls();
+            proof9_q32_controls(history,source,argv[1]);
+            proof9_q32_pager_controls(argv[1]);
         }
         std::cout<<"END\n";
         return 0;

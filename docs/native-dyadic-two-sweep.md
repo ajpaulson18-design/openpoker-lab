@@ -680,3 +680,9 @@ Exploitability remains approximately 2.9843 big blinds after two sweeps,
 with an unset quality threshold. The packet also preserves the complete
 rank-free ten- and eleven-card forecasts with authenticated source closure.
 [Indexed-cache evidence](../benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1/manifest.json)
+
+## Named 32-sweep quality lifecycle
+
+The [N9 quality study](native-dyadic-quality32.md) extends the exact changing-policy
+path to a separately admitted 32-sweep lifecycle, with a predeclared exact
+exploitability target and a separate saved-only replay gate.

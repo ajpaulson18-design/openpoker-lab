@@ -17,9 +17,10 @@ inline constexpr unsigned grid_bits = 52;
 inline constexpr std::uint64_t grid_units = std::uint64_t{1} << grid_bits;
 inline constexpr std::size_t maximum_actions = 20;
 enum class ImageKind { current_regret, exported_average };
-enum class Profile { legacy, proof10 };
+enum class Profile { legacy, proof10, proof9_q32 };
 enum class DivisionKernel { separate, combined };
 inline constexpr std::uint64_t proof10_work_cap = 520000000;
+inline constexpr std::uint64_t proof9_q32_work_cap = 1870000000;
 inline constexpr std::size_t proof10_integer_bits = 702;
 
 enum class ErrorCode { invalid_limits, invalid_row, integer_width, work_limit,
@@ -137,14 +138,15 @@ class Quantizer final {
 public:
     explicit Quantizer(Limits limits = {}) : limits_(limits) {
         const bool proof10=limits.profile==Profile::proof10;
-        if ((limits.profile!=Profile::legacy && !proof10) ||
+        const bool proof9_q32=limits.profile==Profile::proof9_q32;
+        if ((limits.profile!=Profile::legacy && !proof10 && !proof9_q32) ||
                 (limits.division_kernel!=DivisionKernel::separate &&
                  limits.division_kernel!=DivisionKernel::combined) ||
-                (limits.division_kernel==DivisionKernel::combined && !proof10) ||
-                !limits.work || limits.work > (proof10?proof10_work_cap:500000000) || !limits.integer_bits ||
-                limits.integer_bits > (proof10?proof10_integer_bits:65536) ||
+                (limits.division_kernel==DivisionKernel::combined && !proof10 && !proof9_q32) ||
+                !limits.work || limits.work > (proof10?proof10_work_cap:proof9_q32?proof9_q32_work_cap:500000000) || !limits.integer_bits ||
+                limits.integer_bits > ((proof10||proof9_q32)?proof10_integer_bits:65536) ||
                 limits.entries < receipt_.retained_entries ||
-                limits.entries > (proof10?336u:2000000u) || !limits.integer_payload_bits ||
+                limits.entries > ((proof10||proof9_q32)?336u:2000000u) || !limits.integer_payload_bits ||
                 limits.integer_payload_bits > (std::size_t{1} << 30))
             fail(ErrorCode::invalid_limits, "invalid reduce-only dyadic policy limits");
     }
