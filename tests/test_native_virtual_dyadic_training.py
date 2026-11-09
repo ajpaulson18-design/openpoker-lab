@@ -412,6 +412,25 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_admission(receipt,ten_phase_payload=True)
 
+    def test_indexed_cache_admission_reserves_search_updates_and_storage(self):
+        directory,process=self.observe('admit_ten_indexed_cache',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_INDEXED_CACHE',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,ten_indexed_cache=True)
+        self.assertEqual((plan['rank_lookup_work_per_query'],plan['rank_index_entries'],
+                          plan['rank_index_update_work'],plan['rank_index_setup_work']),(46,66,248,84))
+        self.assertEqual((plan['component_work']['chance'],plan['planned_total_work'],plan['parent_allowance']),
+                         (132_742_404,1_701_591_306,1_180_448_724))
+        self.assertEqual((plan['rank_calls'],plan['training_invocations']),(0,0))
+        for key in ('rank_lookup_work_per_query','rank_index_entries','rank_index_update_work',
+                    'rank_index_setup_work','planned_total_work','parent_allowance'):
+            with self.assertRaisesRegex(ValueError,'sorted rank index admission differs'):
+                validate_admission(dict(receipt,**{key:receipt[key]-1}),ten_indexed_cache=True)
+        with self.assertRaises(ValueError):
+            validate_admission(receipt,ten_row_batched=True)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule
