@@ -323,6 +323,7 @@ positive actions, the last quotient and remainder follow from the
 grid total. The experiment verified the derived pair against direct
 division and matched 238,392 saved grid rows, including zero weights and
 ties. One fewer division on 139,514 eligible rows would reduce the
-recorded division count from 325,666 to 186,152. The production quantizer
-and its admission ledger still use the existing method.
+recorded division count from 325,666 to 186,152. The named
+[complement profile](native-dyadic-two-sweep.md#complement-quantization-on-the-fixed-ten-card-profile)
+integrates the shortcut and preserves the original admission ledger.
 [Saved-only quantizer receipt](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)

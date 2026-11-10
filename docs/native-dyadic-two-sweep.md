@@ -706,3 +706,40 @@ on T2 and 4,350,336 on T32. These counts describe the named fixtures.
 The conservative work meter uses the original equation. The observed
 times came from concurrent runs and supply no speed estimate.
 [Terminal scaling evidence](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)
+
+## Complement quantization on the fixed ten-card profile
+
+The opt-in `--ten-complement` cohort uses the indexed ten-card trainer
+and computes the last positive action's quotient and remainder from
+the total grid mass. It divides for each earlier positive weight.
+The prior remainders accumulate modulo the sum of the positive weights,
+with a carry for each subtraction. The last quotient is the grid total
+minus the prior quotients, the carry, and one more unit if the residual
+is nonzero. The final remainder is the denominator minus that residual,
+or zero when the residual is zero. Largest-remainder ordering and
+action-order tie breaking follow the existing path.
+
+The new kernel admits up to four actions in the named ten-card profile.
+One-positive and zero-positive rows follow the existing pure and uniform
+rules. The combined-division admission formula remains conservative.
+The receipt counts actual wide quotient/remainder operations.
+Other named profiles continue to use their prior kernels.
+
+The frozen run at `4ec2929` executed 186,152 wide divisions versus 325,666
+in the indexed baseline, a 42.8 percent reduction. Its complete output
+stream, both checkpoint digests, independently replayed policies and best
+responses, and work receipts match the baseline. Six quantizer tests and
+25 training and admission controls passed with normal and optimized Python.
+The initial pretraining attempt lacked the compiler environment. The
+evidence retains that zero-training exit and the successful source audit
+over all 2,555 tracked files.
+
+The same executable ran four alternating timing pairs with identical
+complete output and checkpoints. The complement was faster in all
+four. Median elapsed times were 6.245 seconds for indexed division and
+5.822 seconds for the complement. The median within-pair ratio was
+0.9541, about 4.6 percent less elapsed time. Peak working sets ranged
+from 4,317,184 to 4,321,280 bytes. These observations cover one Windows
+host and the fixed ten-card, two-sweep fixture. Exploitability remains
+about 2.9843 big blinds, with an unset quality threshold.
+[Complement evidence](../benchmarks/results/native-dyadic-quantizer-complement-v1/manifest.json)
