@@ -161,8 +161,9 @@ class Fixture:
             result[key]=tuple(Fraction(u,Q) for u in units)
         return result
 
-    def sweep(self, policy, previous_regrets=None, previous_average=None, *, root_holding_values=False):
+    def sweep(self, policy, previous_regrets=None, previous_average=None, *, root_holding_values=False, average_weight=1):
         """Literal-world full CFR+ update on one supplied frozen current grid."""
+        require(type(average_weight) is int and 1 <= average_weight <= 32, 'invalid average weight')
         require((previous_regrets is None)==(previous_average is None),'incomplete prior sweep')
         p=self._probabilities(policy)
         delta={key:[Fraction(0)]*len(menu) for key,menu in self.menus.items()}
@@ -184,7 +185,7 @@ class Fixture:
             own_mass=w.mass*own
             for a,q in enumerate(probabilities):
                 delta[key][a]+=signed_other*(values[a]-mixed)
-                averages[key][a]+=own_mass*q
+                averages[key][a]+=average_weight*own_mass*q
             return mixed
         root_values=[Fraction(0)]*4
         for w in self.worlds:

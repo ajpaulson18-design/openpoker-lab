@@ -45,8 +45,22 @@ def run_bounded_quality32_replay(command,request,directory):
             command.count('--module')!=1 or
             command[command.index('--module')+1:command.index('--module')+2]!=['scripts.verify_virtual_dyadic_training'] or
             command.count('--proof9-quality32')!=1 or '--saved' not in command or
-            any(flag in command for flag in ('--proof9-t3','--proof9-t4','--ten-card','--phase-payload','--row-batched','--indexed-cache'))):
+            any(flag in command for flag in ('--proof9-linear32','--proof9-t3','--proof9-t4','--ten-card','--phase-payload','--row-batched','--indexed-cache'))):
         raise ValueError('named Q32 saved replay command required')
+    return _run_streamed_child(command,request,directory,stdout_limit=65536,
+        stderr_limit=65536,timeout=900,request_limit=0,_timeout_profile=_QUALITY32_REPLAY_TIMEOUT)
+
+
+
+def run_bounded_linear32_replay(command,request,directory):
+    """Observe only the named source-only saved linear32 verifier, bounded to 900s."""
+    if (type(command) is not list or any(type(x) is not str for x in command) or
+            request!=b'' or type(request) is not bytes or
+            command.count('--module')!=1 or
+            command[command.index('--module')+1:command.index('--module')+2]!=['scripts.verify_virtual_dyadic_training'] or
+            command.count('--proof9-linear32')!=1 or '--saved' not in command or
+            any(flag in command for flag in ('--proof9-quality32','--proof9-t3','--proof9-t4','--ten-card','--phase-payload','--row-batched','--indexed-cache'))):
+        raise ValueError('named linear32 saved replay command required')
     return _run_streamed_child(command,request,directory,stdout_limit=65536,
         stderr_limit=65536,timeout=900,request_limit=0,_timeout_profile=_QUALITY32_REPLAY_TIMEOUT)
 
@@ -122,14 +136,15 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_INDEXED_CACHE','TRAIN_TEN_INDEXED_CACHE',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
                                              'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4',
-                                             'ADMIT_PROOF9_Q32','TRAIN_PROOF9_Q32'):
+                                             'ADMIT_PROOF9_Q32','TRAIN_PROOF9_Q32','ADMIT_PROOF9_LINEAR32','TRAIN_PROOF9_LINEAR32'):
         raise ValueError('invalid fixed dyadic probe transport mode')
-    proof9_sweeps=32 if mode.endswith('_PROOF9_Q32') else int(mode[-1]) if mode.endswith(('_PROOF9_T3','_PROOF9_T4')) else 0
-    protocol=f'DYADIC_T{proof9_sweeps or 2}_V1'
+    linear32=mode.endswith('_PROOF9_LINEAR32')
+    proof9_sweeps=32 if linear32 or mode.endswith('_PROOF9_Q32') else int(mode[-1]) if mode.endswith(('_PROOF9_T3','_PROOF9_T4')) else 0
+    protocol='DYADIC_L32_V1' if linear32 else f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
     if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_TEN_SINGLE_DIVISION','TRAIN_TEN_PHASE_PAYLOAD',
                 'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE',
-                'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4','TRAIN_PROOF9_Q32'):
+                'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4','TRAIN_PROOF9_Q32','TRAIN_PROOF9_LINEAR32'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
         capture=SweepCapture(proof9_sweeps=proof9_sweeps)
         wire_bytes=capture.contract['wire_bytes']

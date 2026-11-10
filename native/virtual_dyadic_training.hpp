@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -176,6 +176,14 @@ inline std::uint64_t scaled_average_cost(std::size_t past_bits,std::size_t base_
     const auto row_bits=past_bits+base_bits;
     return 32+mul_cost(past_bits+1,base_bits)+copy_cost(row_bits)+actions*(8+mul_cost(row_bits,53));
 }
+inline std::uint64_t checked_weighted_marginal(std::uint64_t marginal,std::size_t sweep) {
+    require(marginal>=1 && marginal<=580 && sweep>=1 && sweep<=32,
+        "linear average marginal or sweep outside PROOF9 bounds");
+    require(marginal<=std::numeric_limits<std::uint64_t>::max()/sweep,
+        "linear average weighted marginal overflows uint64");
+    return marginal*static_cast<std::uint64_t>(sweep);
+}
+static_assert(580ULL*528ULL<(1ULL<<19) && 580ULL*528ULL>=(1ULL<<18));
 
 struct Prefix {
     std::array<std::uint8_t,5> cards{};
@@ -293,8 +301,11 @@ struct Plan {
     [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
     [[nodiscard]] bool proof9_three_sweep() const noexcept { return fixture==&proof9_t3; }
     [[nodiscard]] bool proof9_four_sweep() const noexcept { return fixture==&proof9_t4; }
-    [[nodiscard]] bool proof9_quality32() const noexcept { return fixture==&proof9_q32; }
-    [[nodiscard]] bool bounded_proof9() const noexcept { return proof9_three_sweep() || proof9_four_sweep() || proof9_quality32(); }
+    [[nodiscard]] bool proof9_q32_base() const noexcept { return fixture==&proof9_q32; }
+    [[nodiscard]] bool proof9_quality32() const noexcept { return proof9_q32_base() && !linear_average; }
+    bool linear_average=false;
+    [[nodiscard]] bool proof9_linear32() const noexcept { return proof9_q32_base() && linear_average; }
+    [[nodiscard]] bool bounded_proof9() const noexcept { return proof9_three_sweep() || proof9_four_sweep() || proof9_q32_base(); }
     Counts shape;
     std::array<PrefixStats,4> prefixes{};
     std::array<std::uint64_t,3> quantizer_terms{};
@@ -490,7 +501,8 @@ class Forecast final {
             }
             plan_.quantizer_terms[0]+=rows*(320+48*m);
             plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
-            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+(plan_.proof9_quality32()?5:2)+EA,value_bits);
+            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,
+                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,value_bits);
             for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
                 plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits);
@@ -499,7 +511,8 @@ class Forecast final {
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=plan_.requested_sweeps*np*m*2*add_cost(value_bits);
             if (plan_.scaled_averages) {
-                const auto build=plan_.requested_sweeps*rows*scaled_average_cost(grid_bits*past[actor],base_bits,m);
+                const auto build=plan_.requested_sweeps*rows*(scaled_average_cost(grid_bits*past[actor],
+                    plan_.proof9_linear32()?15:base_bits,m)+(plan_.proof9_linear32()?8:0));
                 plan_.scaled_average_build_work+=build;
                 work[work_index(Work::average)]+=build;
             } else {
@@ -532,7 +545,7 @@ class Forecast final {
             for (std::size_t target=0;target<2;++target) {
                 contractions_+=chance_cost(showdown,showdown?5:k,target,first[1-target]);
                 contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
-                if (plan_.proof9_quality32()) {
+                if (plan_.proof9_q32_base()) {
                     // All later grid-policy operands share the same full-width
                     // bound. Census that bound once and multiply its lifetime.
                     contractions_+=(plan_.requested_sweeps-2)*
@@ -580,10 +593,12 @@ public:
         plan_.traversal=mode;
         const bool t3=profile==StrategyProfile::proof9_three_sweep;
         const bool t4=profile==StrategyProfile::proof9_four_sweep;
-        const bool q32=profile==StrategyProfile::proof9_quality32;
+        const bool linear32=profile==StrategyProfile::proof9_linear32;
+        const bool q32=profile==StrategyProfile::proof9_quality32 || linear32;
         const bool bounded=t3||t4||q32;
         if (bounded) {
             plan_.fixture=q32?&proof9_q32:t3?&proof9_t3:&proof9_t4;
+            plan_.linear_average=linear32;
             plan_.requested_sweeps=plan_.fixture->requested_sweeps;
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
@@ -616,7 +631,7 @@ public:
     Plan make() {
         const bool t3=plan_.proof9_three_sweep();
         const bool t4=plan_.proof9_four_sweep();
-        const bool q32=plan_.proof9_quality32();
+        const bool q32=plan_.proof9_q32_base();
         const bool bounded=t3||t4||q32;
         const auto& game=plan_.game();
         const auto value_bits=game.value_bits;
@@ -869,6 +884,7 @@ template<bool Paired> class Walk final {
     prepared::PreparedPublicChance& chance_;
     state::State& state_;
     std::size_t target_;
+    const std::size_t averaging_sweep_;
     Counts shape_{};
     std::uint64_t showdown_contractions_=0,hidden_candidates_=0;
     static constexpr std::size_t catalog=targets;
@@ -1012,11 +1028,13 @@ template<bool Paired> class Walk final {
                               std::size_t row_shift) {
         require(row_shift<=plan_.shift-grid_bits,"scaled average row shift outside fixed game scale");
         const auto past_bits=plan_.shift-grid_bits-row_shift;
-        meter_.charge(Work::average,scaled_average_cost(past_bits,width(plan_.denominator_base),out.size()));
+        meter_.charge(Work::average,scaled_average_cost(past_bits,
+            plan_.proof9_linear32()?15:width(plan_.denominator_base),out.size())+(plan_.proof9_linear32()?8:0));
         require(own.exponent<=past_bits && prior.scale && prior.numerators[holding]>0 &&
             prior.numerators[holding]<=plan_.denominator_base/prior.scale,
             "scaled average reach exponent or marginal outside fixed bounds");
-        const auto marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
+        const auto raw_marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
+        const auto marginal=plan_.linear_average?checked_weighted_marginal(raw_marginal,averaging_sweep_):raw_marginal;
         // The reduced own reach is at most one. Factor the row scale out
         // before multiplying by the frozen action units, including zeros.
         Integer row_base=own.numerators[holding]*marginal;
@@ -1153,11 +1171,14 @@ template<bool Paired> class Walk final {
     }
 public:
     Walk(const betting::Template& source,const Plan& plan,Meter& meter,history::History& history,
-         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target)
-        :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target) {}
+         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1)
+        :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target),
+         averaging_sweep_(averaging_sweep) {}
     LaneValues run(Cursor root) {
         require(Paired?(target_==0 && plan_.traversal==Traversal::paired):
             (target_==catalog || (target_<catalog && plan_.traversal==Traversal::by_seat)),"invalid fixed sweep target");
+        require(!plan_.linear_average || (averaging_sweep_>=1 && averaging_sweep_<=32),
+            "linear average sweep is outside its admitted one-based horizon");
         const auto support=physical_support(0);
         const auto prior=target_==catalog?Marginals{}:marginal(Prefix{},support);
         auto value=visit(source_.root(),root,Prefix{},support,Reach{},Reach{},prior);
@@ -1291,7 +1312,7 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text(p.proof9_quality32()?"OPLDSQ31":p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
+        out.text(p.proof9_linear32()?"OPLDSL31":p.proof9_quality32()?"OPLDSQ31":p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
         for (const auto word:std::array<std::uint64_t,header_words>{p.bounded_proof9()?p.requested_sweeps:1ULL,grid_bits,integer_words,p.shape.rows,
             p.shape.slots,literal_count,p.requested_sweeps,p.H,p.M,p.denominator_bits,p.game().value_bits,p.output_bytes,2,2,
             p.normalizer,p.game().divisors[3]}) out.u64(word);
@@ -1359,7 +1380,7 @@ class Driver final {
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
         require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
-        out.text(p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
+        out.text(p.proof9_linear32()?"OPLDSL32":p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
@@ -1407,7 +1428,7 @@ public:
     void validate_sweep_stream() const {
         const auto& p=plan_;
         const auto& game=p.game();
-        if (p.proof9_quality32()) {
+        if (p.proof9_q32_base()) {
             require(p.paged_directory && p.split_checkpoint && p.requested_sweeps==32 &&
                 p.shape.rows==24420 && p.shape.slots==58164 && p.game().value_bits==644 &&
                 p.row_batched && !p.phase_payload && p.single_division && p.sparse_chance && !p.indexed_cache &&
@@ -1530,7 +1551,7 @@ public:
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
-                    p.proof9_quality32()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
+                    p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate,
                     p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched}}:std::nullopt);
         const auto root=history.root();
@@ -1550,10 +1571,10 @@ public:
             state.begin_sweep();
             feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory);
             std::array<Values,targets> roots{};
-            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0).run(root);
+            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
             else {
-                auto sb=Walk<false>(source_,p,meter_,history,chance,state,0).run(root);
-                auto bb=Walk<false>(source_,p,meter_,history,chance,state,1).run(root);
+                auto sb=Walk<false>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
+                auto bb=Walk<false>(source_,p,meter_,history,chance,state,1,sweep+1).run(root);
                 roots={std::move(sb[0]),std::move(bb[0])};
             }
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");

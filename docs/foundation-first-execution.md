@@ -1228,3 +1228,11 @@ four policy/root sweeps and checkpoint images match accepted T4. The packet
 preserves all policies, exact metrics, forecasts, process/source records and
 failures. The 72 focused checks pass normally and optimized; all 42 source
 GitHub checks pass. The broad solver foundation goal remains active.
+
+## Linear-weight averaging
+
+The [nine-card linear-weight study](native-dyadic-linear32.md#frozen-result)
+passed the 0.1 big blind target at 0.0800386101 after 32 sweeps. All current
+policy and root blocks match the equal-weight run. The full saved-only
+replay, frozen source checks and a matched storage census passed. The
+published packet preserves the initial pretraining controller rejection.

@@ -228,17 +228,18 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
-    require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32))<=1,
+    require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and type(proof9_linear32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32,proof9_linear32))<=1,
             'select at most one named PROOF9 lifecycle')
-    extended=proof9_t3 or proof9_t4 or proof9_quality32
-    require(not proof9_quality32 or not (phase_payload or row_batched or indexed_cache),
+    extended=proof9_t3 or proof9_t4 or proof9_quality32 or proof9_linear32
+    quality32=proof9_quality32 or proof9_linear32
+    require(not quality32 or not (phase_payload or row_batched or indexed_cache),
             'quality32 selects its own row-batched profile; ten-card profile flags are incompatible')
-    count_policy_divisions = count_policy_divisions or proof9_quality32
+    count_policy_divisions = count_policy_divisions or quality32
     require(type(count_policy_divisions) is bool and
-            (not count_policy_divisions or (ten_card or proof9_quality32) and checkpoint_digests is not None),
+            (not count_policy_divisions or (ten_card or quality32) and checkpoint_digests is not None),
             'counted policy divisions require ten-card digest replay')
     require(type(phase_payload) is bool and (not phase_payload or count_policy_divisions),
             'phase payload requires the counted ten-card digest profile')
@@ -249,7 +250,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
-    sweep_count=32 if proof9_quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 2
+    sweep_count=32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 2
     require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
             'choose one checkpoint transport')
     if checkpoint_digests is not None:
@@ -273,14 +274,14 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'ten-card replay requires paired rank-set training and split images')
     rows = TEN_CARD_ROWS if ten_card else ROWS
     slots = TEN_CARD_SLOTS if ten_card else SLOTS
-    bits = TEN_CARD_VALUE_BITS if ten_card or proof9_quality32 else VALUE_BITS
+    bits = TEN_CARD_VALUE_BITS if ten_card or quality32 else VALUE_BITS
     denominator = TEN_CARD_DENOMINATOR if ten_card else D
     image_bytes = TEN_CARD_IMAGE_BYTES if ten_card else SPLIT_IMAGE_BYTES
-    size = 16_084_908 if proof9_quality32 else 3_045_420 if proof9_t4 else 2_579_724 if proof9_t3 else TEN_CARD_SPLIT_BYTES if ten_card else (SPLIT_BYTES if split else TOTAL_BYTES)
+    size = 16_084_908 if quality32 else 3_045_420 if proof9_t4 else 2_579_724 if proof9_t3 else TEN_CARD_SPLIT_BYTES if ten_card else (SPLIT_BYTES if split else TOTAL_BYTES)
     packed_details=[]
     with ExitStack() as stack:
         r,identity=stack.enter_context(authenticated_reader(path,expected_sha256,size,private=split,value_bits=bits))
-        if proof9_quality32:
+        if quality32:
             r.wire_digest=hashlib.sha256()
         checkpoints=[]
         identities={identity}
@@ -296,11 +297,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             identities.add(identity)
             checkpoints.append((reader,digest))
             packed_details.append({'name':Path(page).name,'sha256':encoded,'bytes':extent})
-        require(r.read(8)==(b'OPLDSQ31' if proof9_quality32 else b'OPLDST41' if proof9_t4 else b'OPLDST31' if proof9_t3 else TEN_CARD_SPLIT_MAGIC if ten_card else SPLIT_MAGIC if split else MAGIC),'saved training magic')
-        require(r.words(16)==(32 if proof9_quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 1,52,INT_WORDS,rows,slots,OCCURRENCES,sweep_count,12,1,637 if ten_card else 635,bits,size,2,2,29,120 if ten_card else 20),
+        require(r.read(8)==(b'OPLDSL31' if proof9_linear32 else b'OPLDSQ31' if proof9_quality32 else b'OPLDST41' if proof9_t4 else b'OPLDST31' if proof9_t3 else TEN_CARD_SPLIT_MAGIC if ten_card else SPLIT_MAGIC if split else MAGIC),'saved training magic')
+        require(r.words(16)==(32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 1,52,INT_WORDS,rows,slots,OCCURRENCES,sweep_count,12,1,637 if ten_card else 635,bits,size,2,2,29,120 if ten_card else 20),
                 'saved fixed fixture or integer contract')
         require(r.natural()==denominator,'saved fixed game denominator')
-        fixture=Fixture(ten_card=ten_card,quality32=proof9_quality32)
+        fixture=Fixture(ten_card=ten_card,quality32=quality32)
         for i,(node_id,parent,token,street,edge) in enumerate(fixture.paths):
             node=fixture.nodes[node_id]
             actor=node.state.player if node.phase=='decision' else 255
@@ -341,9 +342,12 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
                 policy[key]=units
             if t==1:first=policy
             else:changes=sum(first[k]!=policy[k] for k in first)
-            regrets,average,root=fixture.sweep(policy,regrets,average,root_holding_values=True)
+            sweep_options={'root_holding_values':True}
+            if proof9_linear32:
+                sweep_options['average_weight']=t
+            regrets,average,root=fixture.sweep(policy,regrets,average,**sweep_options)
             if split:
-                if checkpoint_digests is not None and not proof9_quality32:
+                if checkpoint_digests is not None and not quality32:
                     digest=digest_compact_checkpoint(ordered,row_scales,regrets,average,image_bytes,value_bits=bits)
                     require(digest==checkpoint_digests[t-1],f'independent compact digest mismatch sweep {t}')
                 elif checkpoint_digests is None:
@@ -355,7 +359,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
                     for key,menu in ordered:
                         require(tuple(r.natural() for _ in range(menu))==values[key],f'saved {family} mismatch sweep {t}: {key}')
             require(tuple(Fraction(r.signed(),denominator) for _ in range(4))==root,f'saved four root values mismatch sweep {t}')
-            if proof9_quality32:
+            if quality32:
                 r.wire_digest.update(struct.pack('<8sQQQ',b'OPLCPG01',t,t%2,image_bytes))
                 digest=digest_compact_checkpoint(ordered,row_scales,regrets,average,image_bytes,
                                                  value_bits=bits,byte_sink=r.wire_digest.update)
@@ -373,7 +377,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             require(units==expected[key],f'saved exported average grid mismatch: {key}')
             saved[key]=units
         require(r.read(rows)==bytes(not any(average[key]) for key,_ in ordered),'saved average fallback flags')
-        require(r.read(8)==(b'OPLDSQ32' if proof9_quality32 else b'OPLDST42' if proof9_t4 else b'OPLDST32' if proof9_t3 else TEN_CARD_SPLIT_END if ten_card else SPLIT_END if split else b'OPLDEND2' if paired else END),'saved complete footer magic')
+        require(r.read(8)==(b'OPLDSL32' if proof9_linear32 else b'OPLDSQ32' if proof9_quality32 else b'OPLDST42' if proof9_t4 else b'OPLDST32' if proof9_t3 else TEN_CARD_SPLIT_END if ten_card else SPLIT_END if split else b'OPLDEND2' if paired else END),'saved complete footer magic')
         plan=dict(zip(FAMILIES,r.words(6)));actual=dict(zip(FAMILIES,r.words(6)))
         parent_plan=dict(zip(PARENT,r.words(9)));parent_actual=dict(zip(PARENT,r.words(9)))
         shape=r.words(8)
@@ -385,7 +389,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(shape==(TEN_CARD_SHAPE if ten_card else EXPECTED_SHAPE) and (completed,passes,invocations)==(sweep_count,sweep_count if paired else 2*sweep_count,1),
             'saved run shape/iteration counters')
     require(feedback==changes,'saved feedback receipt differs')
-    work_limit=5_800_000_000 if proof9_quality32 else 950_000_000 if proof9_t4 else 750_000_000 if proof9_t3 else TEN_CARD_WORK_LIMIT if ten_card else 500_000_000
+    work_limit=5_800_000_000 if quality32 else 950_000_000 if proof9_t4 else 750_000_000 if proof9_t3 else TEN_CARD_WORK_LIMIT if ten_card else 500_000_000
     payload_limit=TEN_CARD_PAYLOAD_LIMIT if ten_card else 1<<30
     require(sum(plan.values())<=work_limit and all(0<actual[k]<=plan[k] for k in plan),'saved composed work receipt')
     require(sum(parent_plan.values())==plan['parent'] and sum(parent_actual.values())==actual['parent']
@@ -417,7 +421,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         require((state_payload,payload)==phase_payload_bits(rows,bits,row_batched=row_batched),
                 'saved phase-specific State or composed payload differs')
     quality=fixture.quality(saved)
-    result={'status':'saved_quality32_exact_replay_pass' if proof9_quality32 else 'saved_four_sweep_exact_replay_pass' if proof9_t4 else 'saved_three_sweep_exact_replay_pass' if proof9_t3 else 'saved_two_sweep_exact_replay_pass','scope':('named ten-card fixture' if ten_card else 'PROOF9')+' only; saved grid quality, no wider game or target pass',
+    result={'status':'saved_linear32_exact_replay_pass' if proof9_linear32 else 'saved_quality32_exact_replay_pass' if proof9_quality32 else 'saved_four_sweep_exact_replay_pass' if proof9_t4 else 'saved_three_sweep_exact_replay_pass' if proof9_t3 else 'saved_two_sweep_exact_replay_pass','scope':('named ten-card fixture' if ten_card else 'PROOF9')+' only; saved grid quality, no wider game or target pass',
             'saved_output_sha256':expected_sha256,'bytes':size,'sweeps':sweeps,'changed_current_rows':changes,
             'profile_and_br':{k:[fraction(x) for x in v] if isinstance(v,tuple) else fraction(v) for k,v in quality.items()},
             'shape':dict(zip(SHAPE,shape)),'work_plan':plan,'work_actual':actual,'chance_actual':chance,
@@ -427,7 +431,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'native_producer_calls':0,'quality_gate':None,'duration_seconds':time.perf_counter()-started,
             'public_walks_per_sweep':passes//completed,
             'source_and_observed_producer_exit':'separate mandatory acceptance checks'}
-    if proof9_quality32:
+    if quality32:
         passed=quality['exploitability'] <= Fraction(1,10)
         result['quality_gate']={'metric':'exploitability_bb','threshold':{'numerator':'1','denominator':'10'},
                                 'status':'pass' if passed else 'miss','passed':passed}
@@ -471,6 +475,7 @@ def main():
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
     lifecycle.add_argument('--proof9-quality32',action='store_true')
+    lifecycle.add_argument('--proof9-linear32',action='store_true')
     parser.add_argument('--rank-sets',action='store_true')
     transport=parser.add_mutually_exclusive_group()
     transport.add_argument('--page-images',type=Path)
@@ -490,7 +495,7 @@ def main():
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
                             packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
                             count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload,
-                            row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32),sort_keys=True))
+                            row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32),sort_keys=True))
 
 
 if __name__=='__main__':main()

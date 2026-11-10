@@ -33,6 +33,11 @@ hash. Fixed-game exploitability improves from 2.242 at T4 to 0.397 at T32;
 the predeclared 0.1-big-blind target remains a miss. The original controller
 interruption and fresh zero-producer recovery are preserved.
 
+The [linear-weight 32-sweep study](../native-dyadic-linear32.md#frozen-result)
+passed the same fixed-game quality target at 0.08004 big blinds. All 32
+current policies and root values match the equal-weight study. Independently
+replayed checkpoints and the full output hash verify the weighted average.
+
 ## Earlier component records
 
 The [exact sequence-reach transport](../native-exact-reach.md) is implemented in
