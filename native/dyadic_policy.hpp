@@ -18,7 +18,7 @@ inline constexpr std::uint64_t grid_units = std::uint64_t{1} << grid_bits;
 inline constexpr std::size_t maximum_actions = 20;
 enum class ImageKind { current_regret, exported_average };
 enum class Profile { legacy, proof10, proof9_q32 };
-enum class DivisionKernel { separate, combined };
+enum class DivisionKernel { separate, combined, complement };
 inline constexpr std::uint64_t proof10_work_cap = 520000000;
 inline constexpr std::uint64_t proof9_q32_work_cap = 1870000000;
 inline constexpr std::size_t proof10_integer_bits = 702;
@@ -141,8 +141,10 @@ public:
         const bool proof9_q32=limits.profile==Profile::proof9_q32;
         if ((limits.profile!=Profile::legacy && !proof10 && !proof9_q32) ||
                 (limits.division_kernel!=DivisionKernel::separate &&
-                 limits.division_kernel!=DivisionKernel::combined) ||
-                (limits.division_kernel==DivisionKernel::combined && !proof10 && !proof9_q32) ||
+                 limits.division_kernel!=DivisionKernel::combined &&
+                 limits.division_kernel!=DivisionKernel::complement) ||
+                ((limits.division_kernel==DivisionKernel::combined && !proof10 && !proof9_q32) ||
+                 (limits.division_kernel==DivisionKernel::complement && !proof10)) ||
                 !limits.work || limits.work > (proof10?proof10_work_cap:proof9_q32?proof9_q32_work_cap:500000000) || !limits.integer_bits ||
                 limits.integer_bits > ((proof10||proof9_q32)?proof10_integer_bits:65536) ||
                 limits.entries < receipt_.retained_entries ||
@@ -172,6 +174,8 @@ private:
             const auto count = regrets.size();
             if (!count || count > maximum_actions)
                 fail(ErrorCode::invalid_row, "dyadic policy menu width");
+            if (limits_.division_kernel==DivisionKernel::complement && count>4)
+                fail(ErrorCode::invalid_row, "complement kernel menu width");
             charge(64+16*count);
             std::size_t positives = 0, positive_index = 0, max_positive_bits = 0;
             for (std::size_t i=0; i<count; ++i) {
@@ -211,9 +215,11 @@ private:
             const auto scaled_bits = effective+grid_bits;
             const auto bits = std::max({sum_bits,scaled_bits,std::size_t{53}});
             const auto division = mul(words(scaled_bits),words(sum_bits));
-            // The combined ledger counts one eval_qr invocation per positive
-            // action. It does not bound backend CPU or its internal iterations.
-            const auto division_factor=limits_.division_kernel==DivisionKernel::combined?1U:2U;
+            const bool combined=limits_.division_kernel!=DivisionKernel::separate;
+            const bool complement=limits_.division_kernel==DivisionKernel::complement;
+            // Keep the conservative combined reservation for the complement.
+            // The separate receipt counts actual divide_qr invocations.
+            const auto division_factor=combined?1U:2U;
             const auto work = add(256,add(mul(16*count,add(words(bits),1)),
                 add(mul(8*positives,add(mul(division_factor,division),add(mul(4,words(bits)),8))),
                     mul(4*count*count,add(words(sum_bits),1)))));
@@ -224,14 +230,21 @@ private:
             std::array<std::size_t,maximum_actions> order{};
             Policy policy; policy.count_ = count; policy.kind_ = kind;
             std::uint64_t allocated = 0;
+            Integer residue = 0;
+            std::uint64_t carry = 0;
             for (std::size_t i=0; i<count; ++i) {
                 order[i] = i;
-                if (regrets[i] <= 0) continue;
+                if (regrets[i]<=0 || (complement && i==positive_index)) continue;
                 const Integer scaled = (regrets[i] >> common) << grid_bits;
                 Integer quotient=0;
-                if (limits_.division_kernel==DivisionKernel::combined) {
+                if (combined) {
                     boost::multiprecision::divide_qr(scaled,sum,quotient,remainders[i]);
                     ++receipt_.combined_divisions;
+                    if (complement) {
+                        // Both summands are below sum, so one subtraction suffices.
+                        residue+=remainders[i];
+                        if (residue>=sum) { residue-=sum; ++carry; }
+                    }
                 } else {
                     quotient=scaled/sum;
                     remainders[i]=scaled%sum;
@@ -242,6 +255,16 @@ private:
                 if (policy.units_[i] > grid_units-allocated)
                     fail(ErrorCode::arithmetic, "dyadic policy allocation overflow");
                 allocated += policy.units_[i];
+            }
+            if (complement) {
+                // The exact scaled quotients sum to grid_units. The previous
+                // residues contribute carry plus residue/sum to that total.
+                const auto credit=carry+static_cast<std::uint64_t>(residue!=0);
+                if (credit>grid_units-allocated)
+                    fail(ErrorCode::arithmetic, "dyadic policy complement underflow");
+                policy.units_[positive_index]=grid_units-allocated-credit;
+                if (residue!=0) remainders[positive_index]=sum-residue;
+                allocated=grid_units-credit;
             }
             // Stable insertion order gives equal remainders to earlier legal
             // actions. At most count*(count-1)/2 bounded comparisons/swaps.

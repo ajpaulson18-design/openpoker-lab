@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -324,6 +324,7 @@ struct Plan {
     bool phase_payload=false;
     bool row_batched=false;
     bool indexed_cache=false;
+    bool complement_division=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -603,7 +604,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache;
+        plan_.complement_division=profile==StrategyProfile::ten_card_complement;
+        plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
         plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache || q32;
         plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload || (plan_.row_batched && !q32);
         plan_.single_division=profile==StrategyProfile::ten_card_single_division || plan_.phase_payload || q32;
@@ -1547,6 +1549,9 @@ public:
         if (p.paged_strategy) meter_.charge(Work::route,p.paging_work);
         if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
+        auto division_kernel=dyadic_policy::DivisionKernel::separate;
+        if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
+        else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),p.requested_sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
@@ -1558,7 +1563,7 @@ public:
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
-                    p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate,
+                    division_kernel,
                     p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);

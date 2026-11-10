@@ -450,10 +450,15 @@ class State final {
         const bool expanded=proof10(paged);
         const bool q32=proof9_q32(paged);
         if (paged && (paged->division_kernel!=dyadic_policy::DivisionKernel::separate &&
-                      paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::combined &&
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::complement))
             fail(ErrorCode::invalid_limits,"unknown state quantizer division kernel");
         if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded && !q32)
             fail(ErrorCode::invalid_forecast,"combined division kernel requires a named profile");
+        if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::complement &&
+            (!expanded || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
+             paged->payload_model!=PayloadModel::paged_phases || !paged->row_batched))
+            fail(ErrorCode::invalid_forecast,"complement division requires the named ten-card row-batched lifecycle");
         if (paged && paged->lifecycle==Lifecycle::quality32 && (!q32 || !paged->row_batched ||
             paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
             fail(ErrorCode::invalid_forecast,"Q32 lifecycle requires its row-batched combined-division pager");

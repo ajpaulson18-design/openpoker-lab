@@ -158,6 +158,25 @@ class NativeDyadicPolicyTests(unittest.TestCase):
     def test_q32_named_quantizer_profile_accepts_combined_divisions(self):
         self.assertIn('Q32_PROFILE PASS',self.lines)
 
+    def test_complement_reconstruction_matches_exact_fraction_oracle(self):
+        rows=[line.split() for line in self.lines if line.startswith('COMPLEMENT ')]
+        self.assertEqual(len(rows),54)
+        divisions=0
+        for fields in rows:
+            kind,profile,count=map(int,fields[1:4])
+            self.assertEqual(len(fields),4+2*count)
+            weights=[int(x,16) for x in fields[4::2]]
+            positives=sum(value>0 for value in weights)
+            if positives>1:
+                divisions+=positives-1
+            units=list(map(int,fields[5::2]))
+            expected,total=allocation(weights,average=bool(kind))
+            self.assertEqual(units,expected,(kind,profile,count))
+            self.assertEqual(sum(units),Q)
+        self.assertIn(f'COMPLEMENT_END 54 {divisions} PASS',self.lines)
+        self.assertIn('GUARD complement_profile PASS',self.lines)
+        self.assertIn('GUARD complement_menu PASS',self.lines)
+
 
 if __name__ == '__main__':
     unittest.main()

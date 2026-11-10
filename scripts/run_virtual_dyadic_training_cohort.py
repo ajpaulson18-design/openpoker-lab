@@ -252,7 +252,14 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
                        ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,proof9_linear32=False,
                        ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False,
-                       ten_row_batched=False,ten_indexed_cache=False):
+                       ten_row_batched=False,ten_indexed_cache=False,ten_complement=False):
+    require(type(ten_complement) is bool and type(receipt) is dict and
+            (receipt.get('complement_division') is True if ten_complement else 'complement_division' not in receipt),
+            'complement division profile differs from requested admission')
+    if ten_complement:
+        earlier={key:value for key,value in receipt.items() if key!='complement_division'}
+        validate_admission(earlier,ten_indexed_cache=True)
+        return receipt
     if ten_indexed_cache:
         cost=rank_index_costs(17)
         require(type(receipt) is dict and receipt.get('sorted_rank_index') is True,
@@ -313,7 +320,7 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
         require(not any((paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,
                          ten_buffered,ten_virtual_zero,ten_ordered_state,ten_row_coverage,ten_shared_policy,
                          ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,proof9_quality32,
-                         ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache)),
+                         ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache,ten_complement)),
                 'select the linear32 admission mode alone')
         return validate_quality32_admission(receipt,linear=True)
     if proof9_quality32:
@@ -1016,6 +1023,48 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
+def compare_ten_card_complement(source,result,path,replay):
+    directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'complement baseline manifest source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_indexed_cache_training_and_replay' and
+            prior['source_head']=='0122ce9de10bac680f3f8aad7d9d68173de7fab2' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted indexed ten-card baseline required')
+    before=prior['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','changed_current_rows',
+            'quality_gate','planned_entries','planned_payload_bits','parent_work_plan',
+            'parent_work_actual','state_payload_bits','work_plan','work_actual','chance_actual')
+    require(all(before[key]==replay[key] for key in fields) and
+            all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','sweep_capture')),
+            'complement changed saved training evidence or work receipts')
+    require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
+            replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152,
+            'complement division counts differ from the frozen ten-card census')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    require(archive.stat().st_size==prior['archive']['bytes']<=50<<20 and
+            sha(archive)==prior['archive']['sha256']==source['files'][archive_name]['raw_sha256'],
+            'indexed ten-card baseline archive differs')
+    with ZipFile(archive) as zipped:
+        member=zipped.getinfo('cohort/train_ten_indexed_cache/stdout.bin')
+        require(member.file_size==TEN_CARD_SPLIT_BYTES,'indexed baseline stream extent differs')
+        old=zipped.read(member)
+    require(path.read_bytes()==old and
+            hashlib.sha256(old).hexdigest()==before['saved_output_sha256']==replay['saved_output_sha256'],
+            'complement changed the retained numerical stream')
+    return {'indexed_baseline_head':prior['source_head'],
+            'combined_divisions_before':before['combined_divisions'],
+            'combined_divisions_after':replay['combined_divisions'],
+            'combined_divisions_removed':before['combined_divisions']-replay['combined_divisions'],
+            'retained_sha256':replay['saved_output_sha256'],
+            'wire_sha256':result['sweep_capture']['wire_sha256']}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1093,11 +1142,11 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
         ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,proof9_linear32=False,ten_sparse_chance=False,ten_single_division=False,
-        ten_phase_payload=False,ten_row_batched=False,ten_indexed_cache=False):
+        ten_phase_payload=False,ten_row_batched=False,ten_indexed_cache=False,ten_complement=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
            ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,proof9_quality32,proof9_linear32,
-           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache)
+           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache,ten_complement)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
@@ -1105,9 +1154,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
                                                  '_PROOF9_T3','_PROOF9_T4','_PROOF9_Q32','_PROOF9_LINEAR32','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
-                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED','_TEN_INDEXED_CACHE'),strict=True) if flag),'')
+                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED','_TEN_INDEXED_CACHE','_TEN_COMPLEMENT'),strict=True) if flag),'')
     paired=any(modes)
-    row_batched=ten_row_batched or ten_indexed_cache
+    indexed_cache=ten_indexed_cache or ten_complement
+    row_batched=ten_row_batched or indexed_cache
     phase_payload=ten_phase_payload or row_batched
     counted_divisions=ten_single_division or phase_payload
     ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or counted_divisions
@@ -1177,7 +1227,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
                 proof9_t3=proof9_t3,proof9_t4=proof9_t4,proof9_quality32=proof9_quality32,ten_sparse_chance=ten_sparse_chance,
                 ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
-                ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache)
+                ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache,ten_complement=ten_complement)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -1195,7 +1245,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
                         'independent bounded PROOF9 pager schedule differs before training')
-            if ten_indexed_cache:
+            if indexed_cache:
                 result['rank_index_trace']=rank_trace()
                 require(result['rank_index_trace']['queries']==4*admission['showdown_contractions_per_pass'],
                         'independent rank cache trace differs before training')
@@ -1238,8 +1288,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--phase-payload')
             if row_batched and not quality32:
                 command.append('--row-batched')
-            if ten_indexed_cache:
+            if indexed_cache:
                 command.append('--indexed-cache')
+            if ten_complement:
+                command.append('--complement-divisions')
             if proof9_sweeps:
                 command.append('--proof9-linear32' if proof9_linear32 else '--proof9-quality32' if quality32 else f'--proof9-t{proof9_sweeps}')
             if split:
@@ -1274,7 +1326,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero,
                                                     row_batched=row_batched)
-                    label='indexed_cache' if ten_indexed_cache else 'row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    label='complement' if ten_complement else 'indexed_cache' if ten_indexed_cache else 'row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -1329,9 +1381,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                               exactness_accepted=True)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
-            if ten_indexed_cache:
+            if indexed_cache:
                 result['rank_index']=verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace'])
-                result['indexed_cache_comparison'].update(compare_ten_card_index(source,result,raw,numeric))
+                if ten_complement:
+                    result['complement_comparison'].update(compare_ten_card_complement(source,result,raw,numeric))
+                else:
+                    result['indexed_cache_comparison'].update(compare_ten_card_index(source,result,raw,numeric))
             if ten_row_batched:
                 result['row_batched_comparison'].update(compare_ten_card_row_batch(source,result,raw,numeric))
             if shared_policy:
@@ -1340,7 +1395,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if paged_directory:
                 require(result['row_directory']==verify_row_directory(output/'page-images-rows',raw,admission),
                         'row directory changed after independent replay')
-            if ten_indexed_cache:
+            if indexed_cache:
                 require(result['rank_index']==verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace']),
                         'rank index receipt changed after independent replay')
             if split:
@@ -1417,6 +1472,7 @@ def main():
     modes.add_argument('--ten-phase-payload',action='store_true')
     modes.add_argument('--ten-row-batched',action='store_true')
     modes.add_argument('--ten-indexed-cache',action='store_true')
+    modes.add_argument('--ten-complement',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
@@ -1432,7 +1488,7 @@ def main():
         ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
         ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
         ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched,
-        ten_indexed_cache=args.ten_indexed_cache),sort_keys=True))
+        ten_indexed_cache=args.ten_indexed_cache,ten_complement=args.ten_complement),sort_keys=True))
 
 
 if __name__=='__main__':main()

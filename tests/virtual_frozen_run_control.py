@@ -134,6 +134,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_PHASE_PAYLOAD','TRAIN_TEN_PHASE_PAYLOAD',
                                              'ADMIT_TEN_ROW_BATCHED','TRAIN_TEN_ROW_BATCHED',
                                              'ADMIT_TEN_INDEXED_CACHE','TRAIN_TEN_INDEXED_CACHE',
+                                             'ADMIT_TEN_COMPLEMENT','TRAIN_TEN_COMPLEMENT',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
                                              'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4',
                                              'ADMIT_PROOF9_Q32','TRAIN_PROOF9_Q32','ADMIT_PROOF9_LINEAR32','TRAIN_PROOF9_LINEAR32'):
@@ -143,7 +144,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
     protocol='DYADIC_L32_V1' if linear32 else f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
     if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_TEN_SINGLE_DIVISION','TRAIN_TEN_PHASE_PAYLOAD',
-                'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE',
+                'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE','TRAIN_TEN_COMPLEMENT',
                 'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4','TRAIN_PROOF9_Q32','TRAIN_PROOF9_LINEAR32'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
         capture=SweepCapture(proof9_sweeps=proof9_sweeps)

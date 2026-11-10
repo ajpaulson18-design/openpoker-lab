@@ -25,7 +25,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_single_division, train_ten_single_division,
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
-                  admit_ten_indexed_cache, train_ten_indexed_cache,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement,
                   admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
@@ -88,6 +88,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_ROW_BATCHED") return Mode::train_ten_row_batched;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_INDEXED_CACHE") return Mode::admit_ten_indexed_cache;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_INDEXED_CACHE") return Mode::train_ten_indexed_cache;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_COMPLEMENT") return Mode::admit_ten_complement;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_COMPLEMENT") return Mode::train_ten_complement;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
@@ -161,6 +163,7 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.ten_card()) std::cout<<",\"ten_card\":true";
     if (plan.sparse_chance) std::cout<<",\"sparse_chance\":true";
     if (plan.single_division) std::cout<<",\"single_division\":true";
+    if (plan.complement_division) std::cout<<",\"complement_division\":true";
     if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     if (plan.row_batched) std::cout<<",\"row_batched\":true";
     if (plan.indexed_cache)
@@ -282,7 +285,9 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
+        const bool complement_admit=mode==Mode::admit_ten_complement;
+        const bool complement_train=mode==Mode::train_ten_complement;
+        const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
             mode==Mode::train_ten_row_coverage || mode==Mode::train_ten_shared_policy ||
@@ -307,6 +312,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (complement_admit || complement_train)
+            profile=training::StrategyProfile::ten_card_complement;
         else if (mode==Mode::admit_ten_indexed_cache || mode==Mode::train_ten_indexed_cache)
             profile=training::StrategyProfile::ten_card_indexed_cache;
         else if (mode==Mode::admit_ten_row_batched || mode==Mode::train_ten_row_batched)
@@ -337,7 +344,7 @@ int main(int argc,char* argv[]) {
         else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
         const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
         training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
-        if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
+        if (complement_admit || mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
@@ -347,13 +354,13 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_proof9_t3 || mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance ||
             mode==Mode::admit_ten_single_division || mode==Mode::admit_ten_phase_payload ||
             mode==Mode::admit_ten_row_batched || mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32)
-            admit(driver,mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
+            admit(driver,complement_admit || mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
                   mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division ||
                   mode==Mode::admit_ten_phase_payload || mode==Mode::admit_ten_row_batched ||
                   mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32,
                 mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4,mode==Mode::admit_proof9_linear32);
         else {
-            const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream ||
+            const auto io=driver.train(std::cout,scratch,complement_train || mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
                 mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
                 mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32);
