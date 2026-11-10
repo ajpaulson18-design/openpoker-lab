@@ -225,7 +225,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 b'DYADIC_T2_V1 TRAIN_TEN_ROW_BATCHED\n',b'DYADIC_T4_V1 ADMIT_TEN_ROW_BATCHED\n',
                 b'DYADIC_T32_V1 TRAIN_PROOF9_Q32\n', b'DYADIC_T4_V1 ADMIT_PROOF9_Q32\n',
                 b'DYADIC_T32_V1 ADMIT_PROOF9_T4\n', b'DYADIC_T31_V1 ADMIT_PROOF9_Q32\n',
-                b'DYADIC_T33_V1 ADMIT_PROOF9_Q32\n',b'x'*65+b'\n')):
+                b'DYADIC_T33_V1 ADMIT_PROOF9_Q32\n',b'DYADIC_T32_V1 ADMIT_PROOF9_LINEAR32\n',
+                b'DYADIC_L32_V1 ADMIT_PROOF9_Q32\n',b'DYADIC_L32_V1 TRAIN_PROOF9_LINEAR32\n',b'x'*65+b'\n')):
             with self.subTest(raw=raw):
                 directory,process=self.observe(f'reject-{index}',lambda p:run_bounded_child(
                     [str(self.exe)],raw,p,stdout_limit=65536))
@@ -379,6 +380,21 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                     **{key:receipt['sweep_stream'][key]-1})),proof9_quality32=True)
         with self.assertRaises(ValueError):
             validate_admission(receipt,proof9_t4=True)
+
+    def test_linear32_admits_only_the_weighted_schedule(self):
+        directory,process=self.observe('admit_proof9_linear32',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_PROOF9_LINEAR32',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        plan=validate_admission(receipt,proof9_linear32=True)
+        self.assertEqual((plan['training_invocations'],plan['rank_calls'],plan['requested_sweeps']),(0,0,32))
+        self.assertEqual((plan['average_weight_sum'],plan['maximum_average_weight']),(528,32))
+        self.assertEqual(plan['planned_total_work']+plan['sweep_stream']['copy_work'],5_654_252_293)
+        for key in ('average_weight_sum','maximum_average_weight','scaled_average_build_work'):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                validate_admission(dict(receipt,**{key:receipt[key]-1}),proof9_linear32=True)
+        with self.assertRaises(ValueError):
+            validate_admission(receipt,proof9_quality32=True)
 
     def test_proof9_t4_admits_all_epochs_without_training(self):
         self.check_bounded_proof9_admission(4)

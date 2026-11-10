@@ -26,7 +26,8 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
                   admit_ten_indexed_cache, train_ten_indexed_cache,
-                  admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32 };
+                  admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
+                  admit_proof9_linear32, train_proof9_linear32 };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -93,15 +94,18 @@ Mode request() {
     if (line=="DYADIC_T4_V1 TRAIN_PROOF9_T4") return Mode::train_proof9_t4;
     if (line=="DYADIC_T32_V1 ADMIT_PROOF9_Q32") return Mode::admit_proof9_q32;
     if (line=="DYADIC_T32_V1 TRAIN_PROOF9_Q32") return Mode::train_proof9_q32;
+    if (line=="DYADIC_L32_V1 ADMIT_PROOF9_LINEAR32") return Mode::admit_proof9_linear32;
+    if (line=="DYADIC_L32_V1 TRAIN_PROOF9_LINEAR32") return Mode::train_proof9_linear32;
     throw training::Error("unsupported fixed dyadic request");
 }
 
-void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false,bool proof9_t4=false) {
+void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false,bool proof9_t4=false,bool linear32=false) {
     if (sweep_stream) driver.validate_sweep_stream();
     const auto& plan=driver.plan();
     const auto& counts=plan.shape;
     const bool q32=plan.proof9_quality32();
-    std::cout<<"{\"protocol\":\""<<(q32?"DYADIC_T32_V1":proof9_t4?"DYADIC_T4_V1":proof9_t3?"DYADIC_T3_V1":"DYADIC_T2_V1")<<"\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
+    const bool q32base=q32 || plan.proof9_linear32();
+    std::cout<<"{\"protocol\":\""<<(linear32?"DYADIC_L32_V1":q32?"DYADIC_T32_V1":proof9_t4?"DYADIC_T4_V1":proof9_t3?"DYADIC_T3_V1":"DYADIC_T2_V1")<<"\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
         "\"target_passes\":0,\"completed_sweeps\":0,\"rank_calls\":0,\"rows\":"<<counts.rows
         <<",\"slots\":"<<counts.slots<<",\"visits\":"<<counts.visits<<",\"actions\":"<<counts.actions
         <<",\"reveals\":"<<counts.reveals<<",\"candidates\":"<<counts.candidates
@@ -193,17 +197,18 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     }
     std::cout<<"},\"actual_admission_work\":"<<plan.template_work+driver.admission_work();
     if (q32) std::cout<<",\"proof9_quality32\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
+    if (linear32) std::cout<<",\"proof9_linear32\":true,\"average_weight_sum\":528,\"maximum_average_weight\":32,\"general_quantizer_work\":"<<plan.general_quantizer_work;
     if (proof9_t3) std::cout<<",\"proof9_t3\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
     if (proof9_t4) std::cout<<",\"proof9_t4\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
-    if (sweep_stream || proof9_t3 || proof9_t4 || q32) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
-        <<(q32?training::proof9_q32_sweep_stream_frames:proof9_t4?training::proof9_t4_sweep_stream_frames:proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
+    if (sweep_stream || proof9_t3 || proof9_t4 || q32 || linear32) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
+        <<(q32base?training::proof9_q32_sweep_stream_frames:proof9_t4?training::proof9_t4_sweep_stream_frames:proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
         <<",\"frame_header_bytes\":"<<training::sweep_stream_header_bytes
-        <<",\"image_bytes\":"<<(q32?training::proof9_q32_sweep_stream_image_bytes:proof9_t4?training::proof9_t4_sweep_stream_image_bytes:proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
-        <<",\"wire_bytes\":"<<(q32?training::proof9_q32_sweep_stream_wire_bytes:proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:training::sweep_stream_wire_bytes)
-        <<",\"retained_bytes\":"<<(q32?training::proof9_q32_sweep_stream_retained_bytes:proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:training::sweep_stream_retained_bytes)
-        <<",\"read_bytes\":"<<(q32?training::proof9_q32_sweep_stream_read_bytes:proof9_t4?training::proof9_t4_sweep_stream_read_bytes:proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
+        <<",\"image_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_image_bytes:proof9_t4?training::proof9_t4_sweep_stream_image_bytes:proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
+        <<",\"wire_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_wire_bytes:proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:training::sweep_stream_wire_bytes)
+        <<",\"retained_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_retained_bytes:proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:training::sweep_stream_retained_bytes)
+        <<",\"read_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_read_bytes:proof9_t4?training::proof9_t4_sweep_stream_read_bytes:proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
         <<",\"scratch_bytes\":"<<training::sweep_stream_scratch_bytes
-        <<",\"copy_work\":"<<(q32?training::proof9_q32_sweep_stream_copy_work:proof9_t4?training::proof9_t4_sweep_stream_copy_work:proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
+        <<",\"copy_work\":"<<(q32base?training::proof9_q32_sweep_stream_copy_work:proof9_t4?training::proof9_t4_sweep_stream_copy_work:proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
     std::cout<<"}\n";
     std::cout.flush();
     training::require(bool(std::cout),"dyadic admission output failed");
@@ -284,13 +289,15 @@ int main(int argc,char* argv[]) {
             mode==Mode::train_ten_paged_directory || mode==Mode::train_ten_sweep_stream ||
             mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
             mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
-            mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32;
+            mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32;
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_proof9_q32 || mode==Mode::train_proof9_q32)
+        if (mode==Mode::admit_proof9_linear32 || mode==Mode::train_proof9_linear32)
+            profile=training::StrategyProfile::proof9_linear32;
+        else if (mode==Mode::admit_proof9_q32 || mode==Mode::train_proof9_q32)
             profile=training::StrategyProfile::proof9_quality32;
         else if (mode==Mode::admit_proof9_t4 || mode==Mode::train_proof9_t4)
             profile=training::StrategyProfile::proof9_four_sweep;
@@ -339,17 +346,17 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_ten_paged_directory || mode==Mode::admit_ten_sweep_stream ||
             mode==Mode::admit_proof9_t3 || mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance ||
             mode==Mode::admit_ten_single_division || mode==Mode::admit_ten_phase_payload ||
-            mode==Mode::admit_ten_row_batched || mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32)
+            mode==Mode::admit_ten_row_batched || mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32)
             admit(driver,mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
                   mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division ||
                   mode==Mode::admit_ten_phase_payload || mode==Mode::admit_ten_row_batched ||
-                  mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32,
-                mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4);
+                  mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32,
+                mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4,mode==Mode::admit_proof9_linear32);
         else {
             const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
                 mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
-                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32);
+                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32);
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
             if (io.bounded_policy) save_policy(scratch,{io.bounded_policy.get(),io.bounded_policy_count});
