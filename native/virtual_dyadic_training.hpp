@@ -641,6 +641,13 @@ public:
             !template_receipt.history_suffix_only,"pinned betting source shape changed");
         meter_.charge(Work::geometry,256*template_count);
         prior_geometry();
+        // Terminal scaling combines a stake significand (at most 16) with
+        // one exact street-divisor ratio before multiplying the wide value.
+        const auto full_divisor=game.divisors.back();
+        require(full_divisor<=std::numeric_limits<std::uint64_t>::max()/16,
+            "pinned terminal scale exceeds uint64");
+        for (const auto divisor:game.divisors)
+            require(divisor && full_divisor%divisor==0,"pinned terminal divisor must divide the full divisor");
         prefixes(Prefix{},physical_support(0));
         const auto& p=plan_.prefixes;
         for (std::size_t i=0;i<p.size();++i)
@@ -960,24 +967,23 @@ template<bool Paired> class Walk final {
             shifts[lane]=static_cast<unsigned>(shift);
         }
         LaneValues result{};
-        std::uint64_t divisor=game.divisors[3];
         if (showdown) {
             if (prefix.size==5) result=ranked(prefix,sb,bb);
             // An all-in has no later information sets. Integrate completions
             // as raw full-board numerators on one scale, with no History reveal.
             else hidden_completions(prefix,sb,bb,result);
         } else {
-            divisor=game.divisors[street_index(prefix.size)];
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
                 auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
                 result[lane]={std::move(raw.numerators[0]),std::move(raw.numerators[1])};
             }
         }
+        const auto divisor=showdown?game.divisors.back():game.divisors[street_index(prefix.size)];
+        const auto factor=money.significand*(game.divisors.back()/divisor);
         for (std::size_t lane=0;lane<lanes;++lane)
             for (auto& value:result[lane]) {
-                value*=money.significand;
-                value*=game.divisors[3]/divisor;
+                value*=factor;
                 value<<=shifts[lane];
                 if (!showdown && node.winner!=seat(lane)) value=-value;
             }

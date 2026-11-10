@@ -1236,3 +1236,14 @@ passed the 0.1 big blind target at 0.0800386101 after 32 sweeps. All current
 policy and root blocks match the equal-weight run. The full saved-only
 replay, frozen source checks and a matched storage census passed. The
 published packet preserves the initial pretraining controller rejection.
+
+## Exact payoff scaling and eleven-card resource forecast
+
+The [terminal scaling comparison](native-dyadic-two-sweep.md#exact-terminal-payoff-scaling)
+reduces wide multiplications while retaining exact saved outputs on two
+frozen fixtures. The [eleven-card resource forecast](native-dyadic-storage-census.md#eleven-card-row-batched-resource-forecast)
+reproduces the accepted ten-card ledger and projects separate work,
+entry, payload and output requirements for the next deck size. The
+paged directory brings the entry reservation below its ceiling.
+Whole-request work and retained output still exceed the current
+profile limits.

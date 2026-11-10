@@ -12,14 +12,16 @@ from tests.virtual_betting_template_reference import build_reference_template
 from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_ranges
 
 
-def directory_trace(*, ten_card=True, sweeps=2, quality32=False):
+def directory_trace(*, ten_card=True, eleven_card=False, sweeps=2, quality32=False):
     """Return the named directory append and exact direct-mapped read schedule."""
-    if type(quality32) is not bool or (quality32 and (ten_card or sweeps!=32)):
+    if type(eleven_card) is not bool or (ten_card and eleven_card):
+        raise ValueError('select at most one expanded deck size')
+    if type(quality32) is not bool or (quality32 and (ten_card or eleven_card or sweeps!=32)):
         raise ValueError('quality32 requires the exact nine-card T32 directory')
-    if not quality32 and (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)):
+    if not quality32 and ((eleven_card and sweeps!=2) or (not eleven_card and (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)))):
         raise ValueError('unsupported directory trace profile')
-    deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
-    if len(set(deck)) != (10 if ten_card else 9):
+    deck = tuple(sorted((*PROOF9, *range(11-len(PROOF9))))) if eleven_card else tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
+    if len(set(deck)) != (11 if eleven_card else 10 if ten_card else 9):
         raise ValueError('unexpected named deck')
     template = build_reference_template(_template_case())
     ranges = scaled_proof9_ranges()
@@ -70,7 +72,8 @@ def directory_trace(*, ten_card=True, sweeps=2, quality32=False):
         events.extend(own_rows)  # staging in postorder
 
     visit(template.root, ())
-    expected_rows, expected_slots = (119196, 281066) if ten_card else (24420, 58164)
+    expected_rows, expected_slots = ((380172, 892910) if eleven_card else
+                                     (119196, 281066) if ten_card else (24420, 58164))
     if (rows, slots, len(events)) != (expected_rows, expected_slots, 2*expected_rows):
         raise ValueError('independent row/slot/trace census differs')
     page_rows, cache_pages, row_bytes = 128, 8, 32

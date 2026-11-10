@@ -292,3 +292,37 @@ physical read and write words. These are rank-free projections. The
 archive contains the source and traces, and the eleven-card request
 still needs its own native admission and training evidence.
 [Projection and ten-card evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)
+
+### Eleven-card row-batched resource forecast
+
+Run `python -m scripts.project_virtual_dyadic_eleven` to reproduce the
+forecast for the same ranges and betting template with an eleven-card
+deck and two sweeps. It reconstructs the pager and directory access
+schedules, uses the indexed-cache study's rank-free Chance ledger,
+and checks the composed equations against the accepted ten-card
+receipt before projecting the larger deck.
+
+The forecast gives 461,895 State entries and 625,412 composed entries
+including stream scratch, below the two-million-entry limit. The earlier
+1,977,942-entry State projection above used the resident row directory.
+The paged directory and row-batched codec yield 22,388,480 composed
+payload bits with stream scratch, below the 1.2-billion-bit ceiling.
+The modeled work totals 5,359,152,175 units including transport, above
+the current 2.15-billion-unit limit. History, State, quantization and the
+combined State-owner work budget also exceed their limits. The indexed
+Chance estimate of 448,157,615 fits the 450-million fixture ceiling.
+Retained numerical output projects to 31,041,732 bytes against the
+existing 9,833,076-byte native profile ceiling. The projected full wire
+is 186,629,028 bytes. This census performs no hand ranking, native
+admission, training, or saved-policy quality run.
+[Eleven-card forecast](../benchmarks/results/native-dyadic-eleven-card-forecast-v1/forecast.json)
+
+A saved-only ten-card experiment checked a candidate quantization
+shortcut. Given the summed quotient and remainder of the earlier
+positive actions, the last quotient and remainder follow from the
+grid total. The experiment verified the derived pair against direct
+division and matched 238,392 saved grid rows, including zero weights and
+ties. One fewer division on 139,514 eligible rows would reduce the
+recorded division count from 325,666 to 186,152. The production quantizer
+and its admission ledger still use the existing method.
+[Saved-only quantizer receipt](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)
