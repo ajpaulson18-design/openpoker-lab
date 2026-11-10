@@ -1,0 +1,392 @@
+{
+  "archive": {
+    "bytes": 2255982,
+    "members": 88,
+    "path": "verification.zip",
+    "sha256": "fc25ca4e92b60d00e1b7201ab750d055828b3f77f70473db6f86f4428ff8929f"
+  },
+  "baseline": "benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1",
+  "baseline_manifest_sha256": "dd8dff3aa4c6ace00ffb88e064a83e75ab651e6d0d62c3a3429eb4c759a68a8d",
+  "comparison": {
+    "baseline_native_observation": {
+      "duration_seconds": 7.7133719000266865,
+      "memory": {
+        "peak_commit_bytes": 10727424,
+        "peak_working_set_bytes": 13742080,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    },
+    "baseline_paging": {
+      "cache_hits": 1966871,
+      "cache_misses": 2679,
+      "completed_sweeps": 2,
+      "logical_read_words": 10555076,
+      "physical_read_requests": 2679,
+      "physical_write_requests": 19560,
+      "read_calls": 1967462,
+      "read_words": 10962056,
+      "stage_calls": 1124264,
+      "write_words": 8888166
+    },
+    "baseline_source_head": "753b6583fd282393fb7272126d4c391399123710",
+    "baseline_stream_sha256": "ee196241624f74ef12b54decf85e5f115e58097bc7c632d7b42ba3358f78782e",
+    "combined_divisions_after": 186152,
+    "combined_divisions_before": 325666,
+    "combined_divisions_removed": 139514,
+    "complement_native_observation": {
+      "duration_seconds": 6.18786530000034,
+      "memory": {
+        "peak_commit_bytes": 1884160,
+        "peak_working_set_bytes": 4362240,
+        "source": "windows.K32GetProcessMemoryInfo"
+      }
+    },
+    "exact_checkpoint_images": [
+      {
+        "bytes": 23701776,
+        "name": "staged.bin",
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "bytes": 23701776,
+        "name": "committed.bin",
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ],
+    "indexed_baseline_head": "0122ce9de10bac680f3f8aad7d9d68173de7fab2",
+    "numeric_bytes": 9832556,
+    "numeric_sha256": "2673127737a800362b5d043625f5bc76b66b95443bed4af7720adc3b7b54021f",
+    "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+    "virtual_zero_paging": {
+      "cache_hits": 476612,
+      "cache_misses": 1498,
+      "completed_sweeps": 2,
+      "logical_read_words": 10555076,
+      "physical_read_requests": 1498,
+      "physical_write_requests": 18836,
+      "read_calls": 834372,
+      "read_words": 6130244,
+      "stage_calls": 476784,
+      "synthetic_read_calls": 357588,
+      "synthetic_read_words": 4629632,
+      "write_words": 5925444
+    },
+    "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+  },
+  "exploitability": {
+    "approx": 2.9843178535722217,
+    "denominator": "144740111546645244279463731260859884816587480832050705049321980009891412049920",
+    "numerator": "431950499016688293634459451154687436409272726758119326237447189567296472767353"
+  },
+  "native_seconds": 6.18786530000034,
+  "pretraining_failure": "RuntimeError: Installed C++20 compiler unavailable; no automatic installation",
+  "quality_gate": null,
+  "scope": "Fixed indexed ten-card T2 fixture, exact complement quantization.",
+  "source_files": 2555,
+  "source_head": "4ec292925b300a983ba897b3c996dd6b0bacc457",
+  "sweep_capture": {
+    "contract": {
+      "copy_work": 11943624,
+      "frame_header_bytes": 32,
+      "frames": 2,
+      "image_bytes": 23701776,
+      "read_bytes": 47403552,
+      "retained_bytes": 9833076,
+      "scratch_bytes": 32768,
+      "version": 1,
+      "wire_bytes": 57236692
+    },
+    "frames": [
+      {
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+        "slot": 1,
+        "sweep": 1
+      },
+      {
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+        "slot": 0,
+        "sweep": 2
+      }
+    ],
+    "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+    "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+  },
+  "timing": {
+    "all_complete_streams_and_checkpoint_images_exact": true,
+    "imported_source_closure": {
+      "tests/virtual_dyadic_sweep_capture.py": "30a52aa166bf4c3b5dcb094c3567fb189fb049b1df9cadc73fd3bce7ee782ad2",
+      "tests/virtual_frozen_run_control.py": "9e6504a4debe72019f5e595dedb9507e13c91a6989370038acea2634e0946f25"
+    },
+    "limits": "one Windows host and this ten-card T2 fixture, four alternating pairs",
+    "median_paired_ratio": 0.9541320439954235,
+    "median_seconds": {
+      "complement": 5.822208400000363,
+      "indexed": 6.2446683999999095
+    },
+    "observations": [
+      {
+        "memory": {
+          "peak_commit_bytes": 1859584,
+          "peak_working_set_bytes": 4317184,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "indexed",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 1,
+        "request": "TRAIN_TEN_INDEXED_CACHE",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 6.36690069999986,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "complement",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 1,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 6.141225499999564,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "complement",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 2,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 5.749267500000315,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1871872,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "indexed",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 2,
+        "request": "TRAIN_TEN_INDEXED_CACHE",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 6.35474639999984,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "indexed",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 3,
+        "request": "TRAIN_TEN_INDEXED_CACHE",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 6.070127899999989,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "complement",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 3,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 5.838411200000337,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1863680,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "complement",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 4,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 5.80600560000039,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1863680,
+          "peak_working_set_bytes": 4321280,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "indexed",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 4,
+        "request": "TRAIN_TEN_INDEXED_CACHE",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 6.134590399999979,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      }
+    ],
+    "paired_complement_to_indexed_ratios": [
+      0.9645549364386504,
+      0.9047202103927325,
+      0.9618267186759522,
+      0.946437369314895
+    ],
+    "pairs": 4,
+    "quality_evidence": "native-dyadic-quantizer-complement-v1",
+    "raw_source_stable": true,
+    "seconds": {
+      "complement": [
+        6.141225499999564,
+        5.749267500000315,
+        5.838411200000337,
+        5.80600560000039
+      ],
+      "indexed": [
+        6.36690069999986,
+        6.35474639999984,
+        6.070127899999989,
+        6.134590399999979
+      ]
+    },
+    "source_files": 2555,
+    "source_head": "4ec292925b300a983ba897b3c996dd6b0bacc457",
+    "status": "same_executable_alternating_timing_complete",
+    "training_invocations": 8
+  },
+  "training_invocations": 1,
+  "version": "native-dyadic-quantizer-complement-v1",
+  "work_actual": {
+    "chance": 70637650,
+    "history": 69825664,
+    "parent": 730434650,
+    "quantizer": 241704336,
+    "state": 261025384,
+    "template": 42556544
+  },
+  "work_plan": {
+    "chance": 132742404,
+    "history": 99754616,
+    "parent": 732040030,
+    "quantizer": 433472328,
+    "state": 261025384,
+    "template": 42556544
+  }
+}

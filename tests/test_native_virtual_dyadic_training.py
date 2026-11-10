@@ -469,6 +469,22 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_admission(receipt,ten_row_batched=True)
 
+    def test_complement_admission_preserves_the_indexed_resource_contract(self):
+        directory,process=self.observe('admit_ten_complement',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_COMPLEMENT',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        validate_admission(receipt,ten_complement=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        with self.assertRaisesRegex(ValueError,'complement division profile differs'):
+            validate_admission(receipt,ten_indexed_cache=True)
+        with self.assertRaisesRegex(ValueError,'complement division profile differs'):
+            validate_admission(dict(receipt,complement_division=False),ten_complement=True)
+        with self.assertRaisesRegex(ValueError,'sorted rank index admission differs'):
+            validate_admission(dict(receipt,planned_total_work=receipt['planned_total_work']-1),
+                               ten_complement=True)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

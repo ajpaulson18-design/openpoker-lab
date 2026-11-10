@@ -1247,3 +1247,11 @@ entry, payload and output requirements for the next deck size. The
 paged directory brings the entry reservation below its ceiling.
 Whole-request work and retained output still exceed the current
 profile limits.
+
+## Exact complement quantization
+
+The [complement quantizer](native-dyadic-two-sweep.md#complement-quantization-on-the-fixed-ten-card-profile)
+integrates the saved-only arithmetic experiment into a named ten-card
+training profile. The existing indexed profile supplies the exact byte,
+checkpoint and resource baseline. The new path records executed wide
+division counts separately from conservative admission work.

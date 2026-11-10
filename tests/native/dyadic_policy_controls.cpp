@@ -148,6 +148,41 @@ bool combined_controls() {
     std::cout<<"Q32_PROFILE "<<(q32_ok?"PASS":"FAIL")<<'\n';
     return rows==80 && width && intermediate && work && counts && q32_ok;
 }
+bool complement_controls() {
+    grid::Limits limits{};
+    limits.profile=grid::Profile::proof10;
+    limits.integer_bits=702; limits.entries=336;
+    limits.division_kernel=grid::DivisionKernel::complement;
+    auto separate_limits=limits; separate_limits.division_kernel=grid::DivisionKernel::separate;
+    grid::Quantizer complement(limits),separate(separate_limits);
+    std::size_t rows=0,divisions=0;
+    for (std::size_t actions=2;actions<=4;++actions)
+    for (int profile=0;profile<10;++profile)
+    for (int kind=0;kind<2;++kind) {
+        if (kind==1 && (profile==1 || profile==2)) continue;
+        auto input=fixture(actions,profile);
+        if (profile==7) for (std::size_t i=0;i<actions;++i) input[i]=Integer(i+1)<<590;
+        if (profile==8) for (std::size_t i=0;i<actions;++i) input[i]=(Integer(1)<<(600+7*i))+(2*i+3)*11;
+        if (profile==9) {input.assign(actions,0);input[0]=1;if(actions>1) input[1]=(Integer(1)<<640)-1;}
+        const auto n=std::count_if(input.begin(),input.end(),[](const Integer& x){return x>0;});
+        if (n>1) divisions+=static_cast<std::size_t>(n-1);
+        const auto a=kind?separate.average_export(input):separate.regret_policy(input);
+        const auto b=kind?complement.average_export(input):complement.regret_policy(input);
+        if (!std::equal(a.units().begin(),a.units().end(),b.units().begin(),b.units().end()))
+            throw std::runtime_error("complement policy differs from exact separate divisions");
+        std::cout<<"COMPLEMENT "<<kind<<' '<<profile<<' '<<actions;
+        for(std::size_t i=0;i<actions;++i) std::cout<<' '<<hex(input[i])<<' '<<b.units()[i];
+        std::cout<<'\n'; ++rows;
+    }
+    const bool count_ok=complement.receipt().combined_divisions==divisions;
+    auto bad=limits; bad.profile=grid::Profile::proof9_q32;
+    const bool profile_ok=rejects("complement_profile",grid::ErrorCode::invalid_limits,[&]{grid::Quantizer q(bad);});
+    auto too_wide=fixture(5,3);
+    const bool width_ok=failed_row("complement_menu",limits,too_wide,grid::ErrorCode::invalid_row);
+    std::cout<<"COMPLEMENT_END "<<rows<<' '<<complement.receipt().combined_divisions<<' '
+        <<(count_ok&&profile_ok&&width_ok?"PASS":"FAIL")<<'\n';
+    return rows==54 && count_ok && profile_ok && width_ok;
+}
 } // namespace
 
 int main() {
@@ -183,7 +218,7 @@ int main() {
             throw std::runtime_error("policy fixed coverage incomplete");
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
-        return combined_controls() && legacy ? 0 : 1;
+        return combined_controls() && complement_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

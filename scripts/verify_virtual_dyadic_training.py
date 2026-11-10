@@ -201,12 +201,12 @@ def bounded_checkpoint_records(digests,image_bytes):
     return epochs,images
 
 
-def division_count(values_by_row):
+def division_count(values_by_row, *, complement=False):
     count=0
     for values in values_by_row.values():
         positives=sum(value>0 for value in values)
         if positives>1:
-            count+=positives
+            count+=positives-int(complement)
     return count
 
 
@@ -228,7 +228,7 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and type(proof9_linear32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32,proof9_linear32))<=1,
@@ -247,6 +247,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'row batching requires the ten-card phase payload profile')
     require(type(indexed_cache) is bool and (not indexed_cache or row_batched),
             'indexed cache requires the row-batched ten-card profile')
+    require(type(complement) is bool and (not complement or indexed_cache and ten_card),
+            'complement divisions require the named indexed ten-card profile')
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
@@ -333,7 +335,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         sweeps=[]
         for t in range(1,sweep_count+1):
             if count_policy_divisions and regrets is not None:
-                divisions+=division_count(regrets)
+                divisions+=division_count(regrets,complement=complement)
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -369,7 +371,7 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
                            'row_count':rows,'regret_comparisons':slots,'average_comparisons':slots})
         require(changes>0,'saved T2 feedback missing')
         if count_policy_divisions:
-            divisions+=division_count(average)
+            divisions+=division_count(average,complement=complement)
         expected=fixture.grid(average,average=True)
         saved={}
         for key,menu in ordered:
@@ -471,6 +473,7 @@ def main():
     parser.add_argument('--phase-payload',action='store_true')
     parser.add_argument('--row-batched',action='store_true')
     parser.add_argument('--indexed-cache',action='store_true')
+    parser.add_argument('--complement-divisions',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -495,7 +498,8 @@ def main():
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
                             packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
                             count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload,
-                            row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32),sort_keys=True))
+                            row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
+                            complement=args.complement_divisions),sort_keys=True))
 
 
 if __name__=='__main__':main()
