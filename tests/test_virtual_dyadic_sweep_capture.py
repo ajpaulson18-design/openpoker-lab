@@ -71,6 +71,11 @@ class SweepCaptureTests(unittest.TestCase):
 
 
 class BoundedProof9CaptureTests(unittest.TestCase):
+    def test_quality32_exact_wire_contract(self):
+        c=capture.sweep_stream_contract(proof9_sweeps=32)
+        self.assertEqual((c['frames'],c['image_bytes'],c['retained_bytes'],c['wire_bytes'],c['copy_work']),
+                         (32,4_853_840,16_084_908,171_408_812,39_136_896))
+
     def test_reused_slots_keep_all_generation_digests(self):
         for sweeps, retained, wire in ((3,2_579_724,17_141_340),(4,3_045_420,22_460_908)):
             with self.subTest(sweeps=sweeps):

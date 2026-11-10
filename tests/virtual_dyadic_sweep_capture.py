@@ -15,7 +15,7 @@ SCRATCH_BYTES = 32768
 
 
 def sweep_stream_contract(*, proof9_sweeps=0):
-    if proof9_sweeps not in (0, 3, 4):
+    if proof9_sweeps not in (0, 3, 4, 32):
         raise ValueError('unsupported sweep stream horizon')
     if proof9_sweeps:
         frames, image_bytes = proof9_sweeps, 4_853_840

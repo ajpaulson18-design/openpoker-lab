@@ -27,6 +27,12 @@ Larger-game work, integer/payload admission and scalable independent
 verification remain open. PR #285 is the integration review; development
 publication and merge acceptance are separate gates.
 
+The [N9 32-sweep study](../native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
+passes recovered source-only replay of every checkpoint and the complete wire
+hash. Fixed-game exploitability improves from 2.242 at T4 to 0.397 at T32;
+the predeclared 0.1-big-blind target remains a miss. The original controller
+interruption and fresh zero-producer recovery are preserved.
+
 ## Earlier component records
 
 The [exact sequence-reach transport](../native-exact-reach.md) is implemented in

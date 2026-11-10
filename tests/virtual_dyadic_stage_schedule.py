@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=False):
+def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=False, quality32=False):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -21,9 +21,11 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
-    if type(batch_rows) is not bool or (batch_rows and not (ten_card and virtual_zero and sweeps==2)):
+    if type(quality32) is not bool or (quality32 and (ten_card or not virtual_zero or sweeps!=32 or not batch_rows)):
+        raise ValueError('quality32 requires the exact nine-card virtual-zero row-batched T32 schedule')
+    if type(batch_rows) is not bool or (batch_rows and not (quality32 or ten_card and virtual_zero and sweeps==2)):
         raise ValueError('row batching requires the named ten-card virtual-zero T2 schedule')
-    if sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
+    if not quality32 and sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
     if len(set(deck)) != (10 if ten_card else 9):
@@ -54,7 +56,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
 
     if suffix(template.root) != 12:
         raise ValueError('unexpected decision horizon')
-    value_bits = 644 if ten_card else 642
+    value_bits = 644 if ten_card or quality32 else 642
     average_words = regret_words = rows = slots = 0
     postorder = []
     preorder = []
@@ -173,6 +175,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
         expected_calls = (465312, 7908, 2426920)
     if batch_rows:
         expected_calls = (476784, 18836, 5925444)
+    if quality32:
+        expected_calls = (1_562_880,63_264,19_415_360)
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
         raise ValueError('independent stage schedule differs from fixed fixture')
     if virtual_zero:
@@ -238,6 +242,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
             expected_reads = (756132,4077758,174492,954766,790,3203674)
         if batch_rows:
             expected_reads = (834372,10555076,357588,4629632,1498,6130244)
+        if quality32:
+            expected_reads = (2_368_740,30_811_206,73_260,954_766,7_566,30_657_954)
         if actual_reads != expected_reads:
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result

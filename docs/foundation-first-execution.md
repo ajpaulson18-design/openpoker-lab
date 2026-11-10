@@ -1213,3 +1213,18 @@ streams the existing wire order. The ten-card source-frozen
 study preserves the prior checkpoints and independent replay,
 with 832,287 composed entries. Its admission covers the
 all-mixed case separately from the observed sparse policy.
+
+## Named N9 32-sweep quality lifecycle
+
+The [Q32 study](native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
+at source 38f77e4 completes one native run and independent replay of all 32
+updates, checkpoint hashes and the complete wire. Its original controller was
+interrupted during review. Fresh source-only recovery exited 0 without another
+native producer, with all source and input identities revalidated.
+
+Exploitability improves from 2.241987 at T4 to 0.396942 at T32 in the same
+finite game. The predeclared 0.1-big-blind target is still a miss. The first
+four policy/root sweeps and checkpoint images match accepted T4. The packet
+preserves all policies, exact metrics, forecasts, process/source records and
+failures. The 72 focused checks pass normally and optimized; all 42 source
+GitHub checks pass. The broad solver foundation goal remains active.

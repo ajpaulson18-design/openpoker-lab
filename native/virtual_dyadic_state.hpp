@@ -60,7 +60,7 @@ struct PackedAverageCapacity {
     std::size_t limb_count = 0;
     std::size_t regret_limbs = 0;
 };
-enum class Lifecycle { fixed_two_sweep, bounded_v1 };
+enum class Lifecycle { fixed_two_sweep, bounded_v1, quality32 };
 enum class PayloadModel { legacy, paged_phases };
 struct PagedStrategy {
     std::filesystem::path scratch;
@@ -253,7 +253,7 @@ class State final {
     public:
         PolicySpill(std::size_t rows,std::size_t words,std::size_t generations=2,bool bounded_lifecycle=false)
             :rows_(rows),words_(words),generations_(generations) {
-            if (!generations_ || generations_>8) throw std::invalid_argument("invalid policy spill generation bound");
+            if (!generations_ || generations_>32) throw std::invalid_argument("invalid policy spill generation bound");
             if (bounded_lifecycle) bounded_receipt_=std::make_unique<PolicySpillSweep[]>(generations_);
         }
 
@@ -442,16 +442,23 @@ class State final {
     static bool proof10(const std::optional<PagedStrategy>& paged) {
         return paged && paged->limits.profile==virtual_dyadic_paged_image::Profile::proof10;
     }
+    static bool proof9_q32(const std::optional<PagedStrategy>& paged) {
+        return paged && paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_q32;
+    }
     static Forecast admit(Forecast f, Limits limits, std::array<std::size_t,2> hands,
                           const std::optional<PagedStrategy>& paged) {
         const bool expanded=proof10(paged);
+        const bool q32=proof9_q32(paged);
         if (paged && (paged->division_kernel!=dyadic_policy::DivisionKernel::separate &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
             fail(ErrorCode::invalid_limits,"unknown state quantizer division kernel");
-        if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded)
-            fail(ErrorCode::invalid_forecast,"combined division kernel requires the exact proof10 profile");
-        if (!limits.work || limits.work>(expanded?proof10_work_cap:500000000) || !limits.integer_bits ||
-            limits.integer_bits>(expanded?dyadic_policy::proof10_integer_bits:65536) ||
+        if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded && !q32)
+            fail(ErrorCode::invalid_forecast,"combined division kernel requires a named profile");
+        if (paged && paged->lifecycle==Lifecycle::quality32 && (!q32 || !paged->row_batched ||
+            paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
+            fail(ErrorCode::invalid_forecast,"Q32 lifecycle requires its row-batched combined-division pager");
+        if (!limits.work || limits.work>(q32?2600000000ULL:expanded?proof10_work_cap:500000000) || !limits.integer_bits ||
+            limits.integer_bits>((expanded||q32)?dyadic_policy::proof10_integer_bits:65536) ||
             !limits.entries || limits.entries>2000000 || !limits.integer_payload_bits ||
             limits.integer_payload_bits>(expanded?proof10_payload_cap:(std::size_t{1}<<30)))
             fail(ErrorCode::invalid_limits,"invalid reduce-only state limits");
@@ -460,8 +467,8 @@ class State final {
             f.max_history_depth>64 || !f.value_bits || f.value_bits>limits.integer_bits ||
             plus(f.value_bits,58)>limits.integer_bits || !f.own_work || !f.quantizer_work ||
             plus(f.own_work,f.quantizer_work)>limits.work ||
-            (expanded && (hands!=std::array<std::size_t,2>{2,2} ||
-                          f.quantizer_work>dyadic_policy::proof10_work_cap)))
+            ((expanded||q32) && (hands!=std::array<std::size_t,2>{2,2} ||
+                f.quantizer_work>(q32?dyadic_policy::proof9_q32_work_cap:dyadic_policy::proof10_work_cap))))
             fail(ErrorCode::invalid_forecast,"invalid state dimensions or work partition");
         return f;
     }
@@ -470,7 +477,7 @@ class State final {
         // Maximum menu20: 32 retained + (12*20+64) scratch logical entries.
         return {f.quantizer_work,limits.integer_bits,336,
             std::min(limits.integer_payload_bits,std::size_t{1}<<30),
-            proof10(paged)?dyadic_policy::Profile::proof10:dyadic_policy::Profile::legacy,
+            proof10(paged)?dyadic_policy::Profile::proof10:proof9_q32(paged)?dyadic_policy::Profile::proof9_q32:dyadic_policy::Profile::legacy,
             paged?paged->division_kernel:dyadic_policy::DivisionKernel::separate};
     }
     static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
@@ -538,12 +545,17 @@ class State final {
         if (paged && paged->payload_model==PayloadModel::paged_phases &&
             paged->scratch.native().size()>1024)
             fail(ErrorCode::invalid_forecast,"paged phase scratch path exceeds its modeled bound");
+        if (paged && paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_q32 &&
+            paged->scratch.native().size()>1024)
+            fail(ErrorCode::invalid_forecast,"Q32 scratch path exceeds its fixed bound");
         const auto lifecycle=paged?paged->lifecycle:Lifecycle::fixed_two_sweep;
         const auto directory_read_limit=paged_directory_read_limit(f,lifecycle);
         if (paged && paged->paged_directory &&
             (!paged->directory_page_limit || paged->directory_page_limit>directory_read_limit ||
              (paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_t4 &&
-              paged->directory_page_limit>proof9_t4_directory_page_limit)))
+              paged->directory_page_limit>proof9_t4_directory_page_limit) ||
+             (paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_q32 &&
+              paged->directory_page_limit>proof9_q32_directory_page_limit)))
             fail(ErrorCode::invalid_forecast,"invalid paged row directory read bound");
         const auto footprint=storage_forecast(f,catalog,packed,paged?std::optional(paged->limits):std::nullopt,
                                               paged && paged->compact_rows,paged && paged->ordered_rows,
@@ -557,7 +569,8 @@ class State final {
     }
     static std::size_t paged_directory_read_limit(const Forecast& f,Lifecycle lifecycle) {
         if (lifecycle==Lifecycle::fixed_two_sweep) return times(10,f.rows);
-        if (lifecycle==Lifecycle::bounded_v1) return times(plus(2,times(4,f.sweeps)),f.rows);
+        if (lifecycle==Lifecycle::bounded_v1 || lifecycle==Lifecycle::quality32)
+            return times(plus(2,times(4,f.sweeps)),f.rows);
         fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
     }
     [[nodiscard]] std::size_t packed_stride(std::size_t shift) const noexcept {
@@ -775,6 +788,7 @@ class State final {
 public:
     static constexpr std::size_t compact_record_bytes=sizeof(CompactRow);
     static constexpr std::size_t row_directory_resident_entries=row_directory_entries;
+    static constexpr std::size_t proof9_q32_directory_page_limit=18942;
     [[nodiscard]] static std::size_t compact_index_slots(std::size_t rows) {
         if (!rows || rows>2'000'000) fail(ErrorCode::invalid_forecast,"invalid compact row count");
         return std::bit_ceil(4*rows);
@@ -799,19 +813,28 @@ public:
             fail(ErrorCode::invalid_forecast,"sealed action catalog requires packed strategy fields");
         const bool expanded=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof10;
         const bool proof9_t4=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof9_t4;
+        const bool proof9_q32=paged && paged->profile==virtual_dyadic_paged_image::Profile::proof9_q32;
         if (proof9_t4 && (lifecycle!=Lifecycle::bounded_v1 || f.rows!=24420 ||
             f.slots!=58164 || f.sweeps!=4 || f.max_history_depth!=15 || f.value_bits!=642 ||
             packed.limb_count!=virtual_dyadic_paged_image::n9_t4_stage_split_words ||
             packed.regret_limbs!=348036))
             fail(ErrorCode::invalid_forecast,"invalid nine-card four-sweep strategy census");
+        if (proof9_q32 && (lifecycle!=Lifecycle::quality32 || f.rows!=24420 || f.slots!=58164 ||
+            f.sweeps!=32 || f.max_history_depth!=15 || f.value_bits!=644 ||
+            packed.limb_count!=258694 || packed.regret_limbs!=348036 || !row_batched ||
+            !catalog.sealed || catalog.keys!=388 || catalog.token_slots!=410 ||
+            sizeof(PolicySpillSweep)!=64))
+            fail(ErrorCode::invalid_forecast,"invalid nine-card Q32 strategy census");
         if (expanded && (!compact_rows || f.rows!=119196 || f.slots!=281066 || f.sweeps!=2 ||
             f.max_history_depth!=15 || f.value_bits!=644 ||
             packed.limb_count!=1295812 || packed.regret_limbs!=1666910))
             fail(ErrorCode::invalid_forecast,"invalid ten-card strategy census");
         if (payload_model!=PayloadModel::legacy && payload_model!=PayloadModel::paged_phases)
             fail(ErrorCode::invalid_forecast,"unknown state payload model");
-        if (row_batched && payload_model!=PayloadModel::paged_phases)
-            fail(ErrorCode::invalid_forecast,"row batching requires the paged phase payload model");
+        if (row_batched && payload_model!=PayloadModel::paged_phases && !proof9_q32)
+            fail(ErrorCode::invalid_forecast,"row batching requires a named batch payload profile");
+        if (proof9_q32 && payload_model!=PayloadModel::legacy)
+            fail(ErrorCode::invalid_forecast,"Q32 requires the legacy-style payload ledger");
         if (payload_model==PayloadModel::paged_phases &&
             (!expanded || lifecycle!=Lifecycle::fixed_two_sweep || !catalog.sealed ||
              catalog.keys!=388 || catalog.token_slots!=410 || packed.limb_count!=1295812 ||
@@ -827,9 +850,12 @@ public:
              pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes ||
              (row_batched && row_batch_codec_words*sizeof(std::uint64_t)!=352)))
             fail(ErrorCode::invalid_forecast,"phase payload model ABI exceeds its named envelope");
-        if (paged && (!catalog.sealed || (!expanded && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
+        if (paged && (!catalog.sealed || (!expanded && !proof9_q32 && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
             paged->image_words!=plus(packed.limb_count,packed.regret_limbs)))
             fail(ErrorCode::invalid_forecast,"invalid paged state profile, width or image word census");
+        if (proof9_q32 && (paged->page_words!=4096 || paged->cache_pages!=16 || paged->cache_banks!=2 ||
+            paged->stage_split_words!=258694 || !paged->virtual_initial_zero))
+            fail(ErrorCode::invalid_forecast,"invalid Q32 page geometry");
         if (compact_rows && (!paged || catalog.keys>std::size_t{UINT16_MAX}+1 || f.slots>UINT32_MAX ||
             packed.limb_count>UINT32_MAX || packed.regret_limbs>UINT32_MAX))
             fail(ErrorCode::invalid_forecast,"invalid compact row layout dimensions");
@@ -838,23 +864,27 @@ public:
             fail(ErrorCode::invalid_forecast,"row coverage requires ordered disjoint packed fields");
         if (shared_policy && (!row_coverage || f.slots<2*f.rows ||
             (lifecycle==Lifecycle::fixed_two_sweep && f.sweeps!=2) ||
-            (lifecycle==Lifecycle::bounded_v1 && (f.sweeps<1 || f.sweeps>8))))
+            ((lifecycle==Lifecycle::bounded_v1 || lifecycle==Lifecycle::quality32) &&
+             (f.sweeps<1 || f.sweeps>(lifecycle==Lifecycle::quality32?32:8)))))
             fail(ErrorCode::invalid_forecast,"shared policy sweep geometry does not match lifecycle");
         if (paged_directory && !shared_policy)
             fail(ErrorCode::invalid_forecast,"paged directory requires shared ordered policy");
         if (lifecycle==Lifecycle::bounded_v1 &&
-            (!paged || (paged->profile!=virtual_dyadic_paged_image::Profile::legacy && !proof9_t4) || !compact_rows ||
+            (!paged || (paged->profile!=virtual_dyadic_paged_image::Profile::legacy && !proof9_t4 && !proof9_q32) || !compact_rows ||
              !ordered_rows || !row_coverage || !shared_policy || !paged_directory ||
              f.sweeps<1 || f.sweeps>8))
             fail(ErrorCode::invalid_forecast,"bounded lifecycle requires a supported pager and all shared ordered row features");
-        if (lifecycle!=Lifecycle::fixed_two_sweep && lifecycle!=Lifecycle::bounded_v1)
+        if (lifecycle==Lifecycle::quality32 &&
+            (!proof9_q32 || !compact_rows || !ordered_rows || !row_coverage || !shared_policy || !paged_directory))
+            fail(ErrorCode::invalid_forecast,"Q32 lifecycle requires exact paged ordered state");
+        if (lifecycle!=Lifecycle::fixed_two_sweep && lifecycle!=Lifecycle::bounded_v1 && lifecycle!=Lifecycle::quality32)
             fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
         auto entries=plus(1024,plus(times(16,f.rows),times(10,f.slots)));
         const auto width_with_scratch=plus(f.value_bits,58);
         // Preserve the original integer/text reservation across all modes.
         auto payload=plus(times(plus(times(5,f.slots),256),width_with_scratch),
             plus(times(128,f.slots),plus(times(512,f.slots),times(16,f.rows))));
-        if (lifecycle==Lifecycle::bounded_v1)
+        if (lifecycle==Lifecycle::bounded_v1 || lifecycle==Lifecycle::quality32)
             payload=plus(payload,times(8,times(sizeof(PolicySpillSweep),f.sweeps)));
         if (catalog.sealed) {
             const auto menu_bits=plus(times(8*sizeof(std::string_view),catalog.token_slots),
@@ -897,7 +927,7 @@ public:
                     const auto build=ordered_rows?common:plus(common,compact_index_slots(f.rows));
                     auto policies=shared_policy?plus(f.rows,policy_spill_entries):
                         times(ordered_rows?1:2,plus(f.rows,f.slots));
-                    if (shared_policy && lifecycle==Lifecycle::bounded_v1)
+                    if (shared_policy && (lifecycle==Lifecycle::bounded_v1 || lifecycle==Lifecycle::quality32))
                         policies=plus(policies,plus(times(sizeof(PolicySpillSweep),f.sweeps),7)/8);
                     const auto frozen=plus(common,plus(policies,plus(resident_bytes,7)/8));
                     entries=std::max(build,frozen);
@@ -919,6 +949,9 @@ public:
                 payload=plus(payload,times(8,(row_batch_codec_words-page_codec_words)*sizeof(std::uint64_t)));
                 entries=plus(entries,row_batch_codec_words-page_codec_words);
             }
+        } else if (row_batched && proof9_q32) {
+            payload=plus(payload,times(8,(row_batch_codec_words-page_codec_words)*sizeof(std::uint64_t)));
+            entries=plus(entries,row_batch_codec_words-page_codec_words);
         }
         if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
             fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
@@ -987,7 +1020,7 @@ public:
     }
     [[nodiscard]] std::optional<PolicySpillReceipt> policy_spill_receipt() const {
         if (!policy_spill_) return std::nullopt;
-        if (paged_ && paged_->lifecycle==Lifecycle::bounded_v1)
+        if (paged_ && (paged_->lifecycle==Lifecycle::bounded_v1 || paged_->lifecycle==Lifecycle::quality32))
             fail(ErrorCode::phase,"bounded lifecycle uses policy_sweep_receipts");
         return policy_spill_->receipt();
     }
@@ -998,7 +1031,7 @@ public:
     // Metadata only; this does not claim immutability or persist an external checkpoint.
     [[nodiscard]] CheckpointEpoch checkpoint_epoch() const {
         healthy();
-        if (!paged_ || paged_->lifecycle!=Lifecycle::bounded_v1 || !paged_image_ ||
+        if (!paged_ || (paged_->lifecycle!=Lifecycle::bounded_v1 && paged_->lifecycle!=Lifecycle::quality32) || !paged_image_ ||
             phase_!=Phase::closed || !receipt_.completed_sweeps)
             fail(ErrorCode::phase,"checkpoint epoch requires a committed bounded lifecycle");
         const auto sweep=receipt_.completed_sweeps;
@@ -1327,11 +1360,11 @@ public:
                 averages_=std::make_unique<Integer[]>(forecast_.slots);
                 staged_averages_=std::make_unique<Integer[]>(forecast_.slots);
             }
-            if (paged_ && paged_->shared_policy)
+            if (paged_ && paged_->shared_policy) {
+                const auto multi_sweep=paged_->lifecycle==Lifecycle::bounded_v1 || paged_->lifecycle==Lifecycle::quality32;
                 policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows,
-                    paged_->lifecycle==Lifecycle::bounded_v1?forecast_.sweeps:2,
-                    paged_->lifecycle==Lifecycle::bounded_v1);
-            else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
+                    multi_sweep?forecast_.sweeps:2,multi_sweep);
+            } else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
             if (row_directory_) row_directory_->freeze();
             if (paged_) {

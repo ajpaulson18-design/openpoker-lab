@@ -35,6 +35,22 @@ def run_bounded_child(command,request,directory,*,stdout_limit,stderr_limit=6553
         stderr_limit=stderr_limit,timeout=timeout,request_limit=1025)
 
 
+_QUALITY32_REPLAY_TIMEOUT=object()
+
+
+def run_bounded_quality32_replay(command,request,directory):
+    """Observe only the named source-only saved Q32 verifier, bounded to 900s."""
+    if (type(command) is not list or any(type(x) is not str for x in command) or
+            request!=b'' or type(request) is not bytes or
+            command.count('--module')!=1 or
+            command[command.index('--module')+1:command.index('--module')+2]!=['scripts.verify_virtual_dyadic_training'] or
+            command.count('--proof9-quality32')!=1 or '--saved' not in command or
+            any(flag in command for flag in ('--proof9-t3','--proof9-t4','--ten-card','--phase-payload','--row-batched','--indexed-cache'))):
+        raise ValueError('named Q32 saved replay command required')
+    return _run_streamed_child(command,request,directory,stdout_limit=65536,
+        stderr_limit=65536,timeout=900,request_limit=0,_timeout_profile=_QUALITY32_REPLAY_TIMEOUT)
+
+
 def run_bounded_probe_batch(command,request,directory):
     """At most 128 independent probe records, each <=1025 LF-framed bytes.
 
@@ -105,14 +121,15 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_ROW_BATCHED','TRAIN_TEN_ROW_BATCHED',
                                              'ADMIT_TEN_INDEXED_CACHE','TRAIN_TEN_INDEXED_CACHE',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
-                                             'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4'):
+                                             'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4',
+                                             'ADMIT_PROOF9_Q32','TRAIN_PROOF9_Q32'):
         raise ValueError('invalid fixed dyadic probe transport mode')
-    proof9_sweeps=int(mode[-1]) if mode.endswith(('_PROOF9_T3','_PROOF9_T4')) else 0
+    proof9_sweeps=32 if mode.endswith('_PROOF9_Q32') else int(mode[-1]) if mode.endswith(('_PROOF9_T3','_PROOF9_T4')) else 0
     protocol=f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
     if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_TEN_SINGLE_DIVISION','TRAIN_TEN_PHASE_PAYLOAD',
                 'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE',
-                'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4'):
+                'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4','TRAIN_PROOF9_Q32'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
         capture=SweepCapture(proof9_sweeps=proof9_sweeps)
         wire_bytes=capture.contract['wire_bytes']
@@ -136,7 +153,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
 
 
 def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,timeout,request_limit,
-                        stdout_ceiling=2135476,measure_peak_memory=False,sweep_capture=None):
+                        stdout_ceiling=2135476,measure_peak_memory=False,sweep_capture=None,_timeout_profile=None):
     if (type(command) is not list or not 1<=len(command)<=64 or
             any(type(a) is not str or not a or len(a)>4096 for a in command)):
         raise ValueError('bounded child command')
@@ -144,14 +161,14 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
     ceilings=(2135476,_DYADIC_T2_STDOUT)
     if sweep_capture is not None:
         from tests.virtual_dyadic_sweep_capture import SweepCapture, sweep_stream_contract
-        ceilings=tuple(sweep_stream_contract(proof9_sweeps=n)['wire_bytes'] for n in (0,3,4))
+        ceilings=tuple(sweep_stream_contract(proof9_sweeps=n)['wire_bytes'] for n in (0,3,4,32))
         if (type(sweep_capture) is not SweepCapture or stdout_limit!=stdout_ceiling or
                 stdout_limit!=sweep_capture.contract['wire_bytes']):
             raise ValueError('invalid sweep checkpoint capture bound')
     if (stdout_ceiling not in ceilings or
             type(stdout_limit) is not int or not 0<stdout_limit<=stdout_ceiling or
             type(stderr_limit) is not int or not 0<stderr_limit<=65536 or
-            type(timeout) not in (int,float) or not 0<timeout<=300):
+            type(timeout) not in (int,float) or not 0<timeout<=(900 if _timeout_profile is _QUALITY32_REPLAY_TIMEOUT else 300)):
         raise ValueError('reduce-only child bounds')
     directory=Path(directory);directory.mkdir(parents=True,exist_ok=False)
     with (directory/'request.bin').open('xb') as output:output.write(request)

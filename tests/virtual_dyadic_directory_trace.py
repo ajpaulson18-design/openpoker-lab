@@ -12,9 +12,11 @@ from tests.virtual_betting_template_reference import build_reference_template
 from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_ranges
 
 
-def directory_trace(*, ten_card=True, sweeps=2):
+def directory_trace(*, ten_card=True, sweeps=2, quality32=False):
     """Return the named directory append and exact direct-mapped read schedule."""
-    if (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)):
+    if type(quality32) is not bool or (quality32 and (ten_card or sweeps!=32)):
+        raise ValueError('quality32 requires the exact nine-card T32 directory')
+    if not quality32 and (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)):
         raise ValueError('unsupported directory trace profile')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
     if len(set(deck)) != (10 if ten_card else 9):

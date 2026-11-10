@@ -139,7 +139,14 @@ bool combined_controls() {
     const bool counts=combined.receipt().combined_divisions==divisions && separate.receipt().combined_divisions==0;
     std::cout<<"COMBINED_END "<<rows<<' '<<combined.receipt().combined_divisions<<' '
         <<(width && intermediate && work && counts ? "PASS":"FAIL")<<'\n';
-    return rows==80 && width && intermediate && work && counts;
+    auto q32_limits=limits;
+    q32_limits.profile=grid::Profile::proof9_q32;
+    q32_limits.work=grid::proof9_q32_work_cap;
+    grid::Quantizer q32(q32_limits);
+    const auto q32_policy=q32.regret_policy(std::array<Integer,2>{3,7});
+    const bool q32_ok=q32_policy.units().size()==2 && q32.receipt().combined_divisions==2;
+    std::cout<<"Q32_PROFILE "<<(q32_ok?"PASS":"FAIL")<<'\n';
+    return rows==80 && width && intermediate && work && counts && q32_ok;
 }
 } // namespace
 

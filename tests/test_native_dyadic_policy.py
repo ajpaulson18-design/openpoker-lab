@@ -151,9 +151,12 @@ class NativeDyadicPolicyTests(unittest.TestCase):
             self.assertEqual(units,expected,(kind,profile,count))
             self.assertEqual(bool(fallback),not total)
             self.assertEqual(sum(units),Q)
-        self.assertEqual(self.lines[-1],f'COMBINED_END 80 {divisions} PASS')
+        self.assertIn(f'COMBINED_END 80 {divisions} PASS',self.lines)
         for label in ('combined_width','combined_intermediate_width','combined_work'):
             self.assertIn('GUARD '+label+' PASS',self.lines)
+
+    def test_q32_named_quantizer_profile_accepts_combined_divisions(self):
+        self.assertIn('Q32_PROFILE PASS',self.lines)
 
 
 if __name__ == '__main__':

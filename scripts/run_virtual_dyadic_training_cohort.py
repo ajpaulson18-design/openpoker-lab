@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from fractions import Fraction
 import shutil
 import struct
 import time
@@ -16,7 +17,7 @@ from scripts.run_virtual_frozen_source_only import FIRST_STAGE, source_only_comm
 from scripts.verify_virtual_dyadic_training import EXPECTED_SHAPE, EXPECTED_TERMINAL_COMPLETIONS, FAMILIES, PARENT, SHAPE, TOTAL_BYTES, require
 from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, SPLIT_IMAGE_NAMES
 from scripts.verify_virtual_dyadic_training import TEN_CARD_IMAGE_BYTES, TEN_CARD_SHAPE, TEN_CARD_SPLIT_BYTES
-from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe
+from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe, run_bounded_quality32_replay
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
 from tests.virtual_dyadic_stage_schedule import stage_schedule
@@ -194,6 +195,40 @@ def validate_bounded_proof9_admission(receipt,sweeps):
     return receipt
 
 
+def validate_quality32_admission(receipt):
+    """Pin the named Q32 census independently of the native receipt."""
+    expected=exact_json((ROOT/'benchmarks/results/native-dyadic-proof9-four-sweep-accepted-v1/manifest.json').read_bytes())['admission']
+    expected.pop('proof9_t4');expected.pop('actual_admission_work')
+    components=dict(template=42_556_544,chance=395_628_627,history=218_731_616,
+                    state=720_265_152,quantizer=1_867_537_648,parent=2_363_985_314)
+    expected.update(protocol='DYADIC_T32_V1',proof9_quality32=True,requested_sweeps=32,
+        sparse_chance=True,single_division=True,row_batched=True,value_bits=644,
+        output_bytes=16_084_908,entries=270_172,payload_bits=255_885_592,
+        packed_average_work=288_075_648,packed_regret_work=503_205_120,
+        scaled_average_build_work=84_343_616,directory_work=60_901_056,
+        row_directory_page_limit=18_942,row_directory_read_call_limit=3_174_600,
+        policy_spill_work=49_728_064,page_write_request_limit=63_264,
+        page_write_word_limit=19_415_360,page_read_word_limit=30_657_954,
+        page_request_limit=3_931_620,paging_work=387_907_074,
+        general_quantizer_work=30*59_307_688,quantizer_terms=[10_606_272,32_153_808,45_546_928],
+        component_work=components,planned_total_work=sum(components.values()),
+        parent_allowance=5_800_000_000-sum(v for k,v in components.items() if k!='parent'),
+        parent_work=dict(geometry=3_000_000,visit=23_950_808,support=78_478_208,reach=172_547_904,
+                         value_add=164_041_920,terminal_scale=491_587_968,average=378_157_760,
+                         route=1_014_867_730,output=37_353_016),
+        sweep_stream=sweep_stream_contract(proof9_sweeps=32))
+    require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
+            all(type(receipt[k]) is type(v) and receipt[k]==v for k,v in expected.items()),
+            'PROOF9 Q32 admission differs from independent fixed census')
+    require(type(receipt['actual_admission_work']) is int and
+            42_556_544<=receipt['actual_admission_work']<=45_556_544,
+            'Q32 admission geometry work')
+    require(sum(expected['parent_work'].values())==components['parent'] and
+            expected['planned_total_work']+expected['sweep_stream']['copy_work']<=5_800_000_000,
+            'Q32 composed transport admission')
+    return receipt
+
+
 # Each sweep stages two fields. Across both sweeps the trainer reads
 # seven extents and stages four per row in the new profile.
 ROW_BATCH_REQUEST_WORK=(16*11+8*4)*(281_066-119_196)
@@ -205,7 +240,7 @@ INDEXED_CACHE_WORK_DELTA=((rank_index_costs(17)['lookup']-2*17)*412_080+
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
-                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
+                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,
                        ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False,
                        ten_row_batched=False,ten_indexed_cache=False):
     if ten_indexed_cache:
@@ -263,6 +298,8 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
         require(composed+8*(contract['scratch_bytes']+contract['frame_header_bytes'])<=1_200_000_000,
                 'phase payload exceeds composed transport cap')
         return receipt
+    if proof9_quality32:
+        return validate_quality32_admission(receipt)
     if proof9_t3 or proof9_t4:
         require(proof9_t3!=proof9_t4,'select one bounded PROOF9 admission')
         return validate_bounded_proof9_admission(receipt,4 if proof9_t4 else 3)
@@ -597,18 +634,18 @@ def verify_division_receipt(directory,admission):
     record=exact_json(path.read_bytes())
     require(type(record) is dict and record.keys()=={'combined_divisions'} and
             type(record['combined_divisions']) is int and
-            0<record['combined_divisions']<=2*admission['slots'],'combined division receipt differs')
+            0<record['combined_divisions']<=(32 if admission.get('proof9_quality32') else 2)*admission['slots'],'combined division receipt differs')
     return record
 
 
 def verify_policy_spill(directory,stream,admission):
     sweeps=admission['requested_sweeps']
-    if sweeps in (3,4):
+    if sweeps in (3,4,32):
         extent=sweep_stream_contract(proof9_sweeps=sweeps)['retained_bytes']
-        magic=f'OPLDST{sweeps}1'.encode('ascii')
+        magic=b'OPLDSQ31' if sweeps==32 else f'OPLDST{sweeps}1'.encode('ascii')
     else:
         extent,magic=TEN_CARD_SPLIT_BYTES,b'OPLDTP01'
-    require(sweeps in (2,3,4) and admission['output_bytes']==extent and
+    require(sweeps in (2,3,4,32) and admission['output_bytes']==extent and
             stream.stat().st_size==extent,'policy spill scaffold byte bound')
     with stream.open('rb') as saved:
         raw=saved.read(extent+1)
@@ -676,7 +713,7 @@ def verify_row_directory(directory, stream, admission):
     receipt=exact_json(receipt_path.read_bytes())
     sweeps=admission.get('requested_sweeps',2)
     ten_card=sweeps==2
-    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps)
+    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
     rows,slots=admission['rows'],admission['slots']
     require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
             and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
@@ -692,9 +729,9 @@ def verify_row_directory(directory, stream, admission):
     data=rows_path.read_bytes()
     require(len(data)==32*rows,'row directory length changed')
     digest=hashlib.sha256(data).hexdigest()
-    fixture=Fixture(ten_card=ten_card)
+    fixture=Fixture(quality32=True) if sweeps==32 else Fixture(ten_card=ten_card)
     scales=compact_scales(fixture)
-    value_bits=644 if ten_card else 642
+    value_bits=644 if ten_card or sweeps==32 else 642
     source_map={}
     reverse_map={}
     avg=reg=offset=0
@@ -1037,11 +1074,11 @@ def compare_proof9_t4_prefix(path,source,frames):
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
-        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False,
+        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,ten_sparse_chance=False,ten_single_division=False,
         ten_phase_payload=False,ten_row_batched=False,ten_indexed_cache=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,proof9_quality32,
            ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
@@ -1049,7 +1086,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
-                                                 '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
+                                                 '_PROOF9_T3','_PROOF9_T4','_PROOF9_Q32','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
                                                  '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED','_TEN_INDEXED_CACHE'),strict=True) if flag),'')
     paired=any(modes)
     row_batched=ten_row_batched or ten_indexed_cache
@@ -1062,7 +1099,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
     ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
     ten_card=ten_card or ten_buffered or ten_virtual_zero
-    proof9_sweeps=4 if proof9_t4 else 3 if proof9_t3 else 0
+    proof9_sweeps=32 if proof9_quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 0
+    row_batched=row_batched or proof9_quality32
+    counted_divisions=counted_divisions or proof9_quality32
     split=split or ten_card or bool(proof9_sweeps)
     shared_policy=ten_shared_policy or bool(proof9_sweeps)
     paged_directory=ten_paged_directory or bool(proof9_sweeps)
@@ -1113,7 +1152,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
             ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
-            proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance,
+            proof9_t3=proof9_t3,proof9_t4=proof9_t4,proof9_quality32=proof9_quality32,ten_sparse_chance=ten_sparse_chance,
             ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
             ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache)
         save(output/'admission.json',admission)
@@ -1127,7 +1166,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero,batch_rows=row_batched
                                     ) if ten_buffered or ten_virtual_zero else None
             if proof9_sweeps:
-                schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps)
+                schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps,batch_rows=proof9_quality32,quality32=proof9_quality32)
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
                          schedule['logical_read_calls']+proof9_sweeps*schedule['per_sweep_stage_calls'])==
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
@@ -1138,14 +1177,14 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 require(result['rank_index_trace']['queries']==4*admission['showdown_contractions_per_pass'],
                         'independent rank cache trace differs before training')
                 save(output/'rank-index-trace.json',result['rank_index_trace'])
-            if row_batched:
+            if row_batched and not proof9_quality32:
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
                          schedule['logical_read_calls']+2*schedule['per_sweep_stage_calls'])==
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
                         'independent row-batched pager schedule differs before training')
             if paged_directory:
-                trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2)
+                trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2,quality32=proof9_quality32)
                 require(trace['misses']==admission['row_directory_page_limit'] and
                         trace['logical_reads']==admission['row_directory_read_call_limit'],
                         'independent row directory trace differs before training')
@@ -1174,12 +1213,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--count-policy-divisions')
             if phase_payload:
                 command.append('--phase-payload')
-            if row_batched:
+            if row_batched and not proof9_quality32:
                 command.append('--row-batched')
             if ten_indexed_cache:
                 command.append('--indexed-cache')
             if proof9_sweeps:
-                command.append(f'--proof9-t{proof9_sweeps}')
+                command.append('--proof9-quality32' if proof9_quality32 else f'--proof9-t{proof9_sweeps}')
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission,schedule)
@@ -1203,7 +1242,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     frames=result['sweep_capture']['frames']
                     result['checkpoint_inputs']['sweep_epochs']=frames
                     compare=compare_proof9_t4_prefix if proof9_t4 else compare_proof9_t3_prefix
-                    comparison=compare(raw,source,frames)
+                    comparison=({'scope':'Q32 changes retained width and policy arithmetic; no legacy prefix identity claim'} if proof9_quality32 else compare(raw,source,frames))
                     comparison['native_observation']={
                         'duration_seconds':process['duration_seconds'],'memory':process.get('memory')}
                     result[f'proof9_t{proof9_sweeps}_comparison']=comparison
@@ -1224,12 +1263,13 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
             replay_dir=output/'saved-review'
-            observed_replay=run_bounded_child(command,b'',replay_dir,stdout_limit=65536)
+            observed_replay=(run_bounded_quality32_replay(command,b'',replay_dir) if proof9_quality32 else
+                             run_bounded_child(command,b'',replay_dir,stdout_limit=65536))
             require_exit(observed_replay,replay_dir)
             compiled=check_verifier_bootstrap(receipt_path,source)
             numeric=exact_json((replay_dir/'stdout.bin').read_bytes())
-            sweep_word={0:'two',3:'three',4:'four'}[proof9_sweeps]
-            replay_status=f'saved_{sweep_word}_sweep_exact_replay_pass'
+            sweep_word={0:'two',3:'three',4:'four',32:'quality32'}[proof9_sweeps]
+            replay_status='saved_quality32_exact_replay_pass' if proof9_quality32 else f'saved_{sweep_word}_sweep_exact_replay_pass'
             require(numeric['status']==replay_status and numeric['saved_output_sha256']==digest
                     and numeric['work_plan']==admission['component_work'] and numeric['parent_work_plan']==admission['parent_work']
                     and numeric['planned_entries']==admission['entries'] and numeric['planned_payload_bits']==admission['payload_bits']
@@ -1250,6 +1290,19 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                         'independent combined division count differs')
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
+            if proof9_quality32:
+                require(numeric['wire_sha256']==process['sweep_capture']['wire_sha256'] and
+                        numeric['wire_bytes']==admission['sweep_stream']['wire_bytes'],
+                        'Q32 independent full wire reconstruction differs from captured transport')
+                gate=numeric['quality_gate']
+                value=numeric['profile_and_br']['exploitability']
+                exact=Fraction(int(value['numerator']),int(value['denominator']))
+                passed=exact<=Fraction(1,10)
+                require(gate=={'metric':'exploitability_bb','threshold':{'numerator':'1','denominator':'10'},
+                               'status':'pass' if passed else 'miss','passed':passed},
+                        'Q32 exact quality target differs from replay')
+                result.update(status='saved_quality32_exact_replay_pass',quality_gate=gate,
+                              exactness_accepted=True)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
             if ten_indexed_cache:
@@ -1342,6 +1395,7 @@ def main():
     modes.add_argument('--ten-indexed-cache',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
+    modes.add_argument('--proof9-quality32',action='store_true')
     args=parser.parse_args()
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
@@ -1350,7 +1404,7 @@ def main():
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
-        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
+        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,proof9_quality32=args.proof9_quality32,
         ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
         ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched,
         ten_indexed_cache=args.ten_indexed_cache),sort_keys=True))
