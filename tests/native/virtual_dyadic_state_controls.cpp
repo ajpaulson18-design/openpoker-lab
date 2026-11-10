@@ -679,6 +679,27 @@ void paged_image_controls(const std::filesystem::path& scratch) {
     check_rejection.operator()<std::length_error>([&] {capped.read(3,boundary);});
     require(boundary==std::array<std::uint64_t,2>{99,99} && capped.receipt().read_words==4,
         "colliding boundary pages exceeded read admission");
+    // A maximum-width row can span two cold pages even though it is only
+    // 44 words long. Both page loads must be admitted before output changes.
+    constexpr std::size_t row_words=44;
+    constexpr std::size_t row_page=pages::default_page_words;
+    std::array<std::uint64_t,row_words> row_values;
+    row_values.fill(99);
+    pages::Image row_short(scratch/"row-read-one-short",
+        {2*row_page,row_page,2,2*row_page-1,2*row_page,3,2});
+    check_rejection.operator()<std::length_error>([&] {row_short.read(row_page-row_words/2,row_values,1);});
+    const auto& short_receipt=row_short.receipt();
+    require(std::all_of(row_values.begin(),row_values.end(),[](auto value) {return value==99;}) &&
+        short_receipt.read_calls==0 && short_receipt.read_words==0 &&
+        short_receipt.cache_hits==0 && short_receipt.cache_misses==0,
+        "row boundary read mutated output or counters before admission");
+    pages::Image row_exact(scratch/"row-read-exact",
+        {2*row_page,row_page,2,2*row_page,2*row_page,3,2});
+    row_exact.read(row_page-row_words/2,row_values,1);
+    require(std::all_of(row_values.begin(),row_values.end(),[](auto value) {return value==0;}) &&
+        row_exact.receipt().read_calls==1 && row_exact.receipt().read_words==2*row_page &&
+        row_exact.receipt().cache_misses==2 && row_exact.receipt().logical_read_words==row_words,
+        "exact row boundary read budget or data differs");
     std::cout<<"PAGED_IMAGE exact_transaction\n";
 
     constexpr std::size_t page=pages::default_page_words, words=page+5, split=page+2;
@@ -1439,8 +1460,12 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
     const auto legacy=s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true);
     const auto phased=s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
         s::Lifecycle::fixed_two_sweep,s::PayloadModel::paged_phases);
+    const auto batched=s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
+        s::Lifecycle::fixed_two_sweep,s::PayloadModel::paged_phases,true);
     require(phased.entries==200886 && phased.entries==legacy.entries && phased.payload_bits==6398880 &&
         legacy.payload_bits==1168510748,"phase payload reservation or legacy parity differs");
+    require(batched.entries==phased.entries+33 && batched.payload_bits==phased.payload_bits+2112,
+        "row-batched codec reservation differs");
     const std::size_t fixed=16384,directory_bytes=36864,views=(410+388)*16,pager=591008,
         tags=119196,spill=1024,codec=88,arithmetic=256*11*8;
     require(8*(fixed+directory_bytes+views+pager+tags+spill+codec+arithmetic)==phased.payload_bits,
@@ -1457,6 +1482,22 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
     } catch (const s::Error& error) {short_rejected=error.code()==ErrorCode::capacity;}
     require(short_rejected && !std::filesystem::exists(path) &&
         !std::filesystem::exists(path.string()+"-rows"),"short payload allocated scratch or escaped admission");
+    const auto batched_path=scratch/"batched-payload-short";
+    s::Limits batched_limits{plan.own_work+plan.quantizer_work,702,batched.entries,batched.payload_bits-1};
+    bool batched_short_rejected=false;
+    try {
+        s::State state(history,{2,2},1,plan,batched_limits,catalog,packed,
+            s::PagedStrategy{batched_path,pages_limits,true,true,true,true,true,7656,
+                s::Lifecycle::fixed_two_sweep,p::DivisionKernel::separate,s::PayloadModel::paged_phases,true});
+    } catch (const s::Error& error) {batched_short_rejected=error.code()==ErrorCode::capacity;}
+    require(batched_short_rejected && !std::filesystem::exists(batched_path) &&
+        !std::filesystem::exists(batched_path.string()+"-rows"),
+        "one-bit-short batched payload allocated scratch");
+    bool mode_mismatch_rejected=false;
+    try {(void)s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
+        s::Lifecycle::fixed_two_sweep,s::PayloadModel::legacy,true);}
+    catch (const s::Error&) {mode_mismatch_rejected=true;}
+    require(mode_mismatch_rejected,"row batching escaped its phase payload model");
     for (int variant=0;variant<5;++variant) {
         bool rejected=false;
         try {

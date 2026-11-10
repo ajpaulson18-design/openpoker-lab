@@ -193,11 +193,41 @@ def validate_bounded_proof9_admission(receipt,sweeps):
     return receipt
 
 
+# Each sweep stages two fields. Across both sweeps the trainer reads
+# seven extents and stages four per row in the new profile.
+ROW_BATCH_REQUEST_WORK=(16*11+8*4)*(281_066-119_196)
+ROW_BATCH_CODEC_WORDS=3*((644+63)//64)
+
+
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
                        ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
-                       ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False):
+                       ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False,
+                       ten_row_batched=False):
+    if ten_row_batched:
+        state_bits,composed=phase_payload_bits(119_196,644,row_batched=True)
+        require(type(receipt) is dict and receipt.get('row_batched') is True,
+                'row-batched profile tag missing')
+        expected={'page_request_limit':11*119_196,'paging_work':153_699_290-ROW_BATCH_REQUEST_WORK,
+                  'planned_total_work':1_730_311_006-ROW_BATCH_REQUEST_WORK,
+                  'entries':360_303+ROW_BATCH_CODEC_WORDS,'state_payload_bits':state_bits,'payload_bits':composed}
+        require(all(type(receipt.get(key)) is int and receipt[key]==value for key,value in expected.items()),
+                'row-batched admission differs from independent fixed census')
+        earlier={key:value for key,value in receipt.items() if key!='row_batched'}
+        earlier.update(page_request_limit=11*281_066,paging_work=153_699_290,
+                       planned_total_work=1_730_311_006,entries=360_303)
+        earlier['state_payload_bits'],earlier['payload_bits']=phase_payload_bits(119_196,644)
+        for owner,key,old_work in (('parent_work','route',351_878_474),('component_work','parent',765_708_990)):
+            group=receipt.get(owner)
+            require(type(group) is dict and type(group.get(key)) is int and group[key]==old_work-ROW_BATCH_REQUEST_WORK,
+                    'row-batched parent work differs from independent fixed census')
+            earlier[owner]=dict(group,**{key:old_work})
+        validate_admission(earlier,ten_phase_payload=True)
+        contract=receipt['sweep_stream']
+        require(composed+8*(contract['scratch_bytes']+contract['frame_header_bytes'])<=1_200_000_000,
+                'row-batched payload exceeds composed transport cap')
+        return receipt
     if ten_phase_payload:
         state_bits,composed=phase_payload_bits(119_196,644)
         require(type(receipt) is dict and receipt.get('phase_payload') is True and
@@ -649,7 +679,7 @@ def verify_row_directory(directory, stream, admission):
             'receipt_sha256':sha(receipt_path),'independent_trace':trace}
 
 
-def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
+def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False,row_batched=False):
     variant='buffered-ten-card' if virtual_zero else 'ten-card'
     directory=f'benchmarks/results/native-dyadic-{variant}-accepted-v1'
     manifest=f'{directory}/manifest.json'
@@ -668,6 +698,8 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
     new_counts=paging['counts']
     invariant=('read_calls','logical_read_words','stage_calls','completed_sweeps') if virtual_zero else (
         key for key in new_counts if key!='physical_write_requests')
+    if row_batched:
+        invariant=('logical_read_words','completed_sweeps')
     require(images==replay['checkpoint_images'] and
             all(old_counts[key]==new_counts[key] for key in invariant),
             'buffered checkpoint or paging parity differs')
@@ -785,6 +817,54 @@ def compare_ten_card_payload(source,replay):
             'phase_payload_bits':replay['planned_payload_bits'],'state_payload_bits':replay['state_payload_bits']}
 
 
+def compare_ten_card_row_batch(source,result,numeric,replay):
+    directory='benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'ten-card row-batched baseline source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_phase_payload_training_and_replay' and
+            prior['source_head']=='bab69e2c5831ae5705bae3cc88707ee39bb812b3' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted ten-card phase payload baseline required')
+    before=prior['saved_only_replay']
+    unchanged=('sweeps','profile_and_br','checkpoint_images','shape','chance_actual',
+               'combined_divisions','changed_current_rows','quality_gate')
+    require(all(before[key]==replay[key] for key in unchanged) and
+            all(prior[key]==result[key] for key in ('policy_spill','row_directory','quantizer')) and
+            prior['paging']['images']==result['paging']['images'],
+            'row batching changed exact training or nonpager owner receipts')
+    for group,owner in (('work_plan','parent'),('work_actual','parent'),
+                        ('parent_work_plan','route'),('parent_work_actual','route')):
+        expected=dict(before[group])
+        expected[owner]-=ROW_BATCH_REQUEST_WORK
+        require(replay[group]==expected,'row batching changed work outside the pager charge')
+    old_counts=prior['paging']['counts']
+    new_counts=result['paging']['counts']
+    differing={'read_calls','stage_calls','synthetic_read_calls','cache_hits'}
+    require({key for key in old_counts if old_counts[key]!=new_counts[key]}==differing,
+            'row batching changed pager traffic outside the logical request model')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    identity=prior['archive']
+    require(archive.stat().st_size==identity['bytes']<=50<<20 and
+            sha(archive)==identity['sha256']==source['files'][archive_name]['raw_sha256'],
+            'phase payload baseline archive identity differs')
+    member='cohort/train_ten_phase_payload/stdout.bin'
+    current=numeric.read_bytes()
+    with ZipFile(archive) as zipped:
+        require(zipped.getinfo(member).file_size==TEN_CARD_SPLIT_BYTES,'phase baseline stream extent differs')
+        old=zipped.read(member)
+    require(len(current)==len(old) and hashlib.sha256(old).hexdigest()==before['saved_output_sha256'] and
+            current[:-520]==old[:-520] and current[-520:-512]==old[-520:-512]==b'OPLDTP02',
+            'row batching changed retained bytes outside the receipt footer')
+    return {'phase_baseline_head':prior['source_head'],'phase_baseline_paging':old_counts,
+            'row_batched_paging':new_counts,'modeled_work_saved':ROW_BATCH_REQUEST_WORK,
+            'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -862,11 +942,11 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
         ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False,
-        ten_phase_payload=False):
+        ten_phase_payload=False,ten_row_batched=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
            ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,
-           ten_sparse_chance,ten_single_division,ten_phase_payload)
+           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
@@ -874,9 +954,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
                                                  '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
-                                                 '_TEN_PHASE_PAYLOAD')) if flag),'')
+                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED'),strict=True) if flag),'')
     paired=any(modes)
-    counted_divisions=ten_single_division or ten_phase_payload
+    phase_payload=ten_phase_payload or ten_row_batched
+    counted_divisions=ten_single_division or phase_payload
     ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or counted_divisions
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
@@ -936,7 +1017,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
             ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
             proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance,
-            ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload)
+            ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
+            ten_row_batched=ten_row_batched)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -945,7 +1027,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
-            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero) if ten_buffered or ten_virtual_zero else None
+            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero,batch_rows=ten_row_batched
+                                    ) if ten_buffered or ten_virtual_zero else None
             if proof9_sweeps:
                 schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps)
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
@@ -953,6 +1036,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
                         'independent bounded PROOF9 pager schedule differs before training')
+            if ten_row_batched:
+                require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
+                         schedule['logical_read_calls']+2*schedule['per_sweep_stage_calls'])==
+                        (admission['page_write_word_limit'],admission['page_read_word_limit'],
+                         admission['page_write_request_limit'],admission['page_request_limit']),
+                        'independent row-batched pager schedule differs before training')
             if paged_directory:
                 trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2)
                 require(trace['misses']==admission['row_directory_page_limit'] and
@@ -981,8 +1070,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--ten-card')
             if counted_divisions:
                 command.append('--count-policy-divisions')
-            if ten_phase_payload:
+            if phase_payload:
                 command.append('--phase-payload')
+            if ten_row_batched:
+                command.append('--row-batched')
             if proof9_sweeps:
                 command.append(f'--proof9-t{proof9_sweeps}')
             if split:
@@ -1015,8 +1106,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     result['independent_stage_schedule']=schedule
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
-                    comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero,
+                                                    row_batched=ten_row_batched)
+                    label='row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -1056,6 +1148,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                           training_stdout_sha256=digest,quality_gate=None)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
+            if ten_row_batched:
+                result['row_batched_comparison'].update(compare_ten_card_row_batch(source,result,raw,numeric))
             if shared_policy:
                 require(result['policy_spill']==verify_policy_spill(output/'page-images',raw,admission),
                         'policy spill bytes changed after independent replay')
@@ -1134,6 +1228,7 @@ def main():
     modes.add_argument('--ten-sparse-chance',action='store_true')
     modes.add_argument('--ten-single-division',action='store_true')
     modes.add_argument('--ten-phase-payload',action='store_true')
+    modes.add_argument('--ten-row-batched',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     args=parser.parse_args()
@@ -1146,7 +1241,7 @@ def main():
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
         ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
         ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
-        ten_phase_payload=args.ten_phase_payload),sort_keys=True))
+        ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched),sort_keys=True))
 
 
 if __name__=='__main__':main()

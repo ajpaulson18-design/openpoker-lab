@@ -577,3 +577,54 @@ rejected before creating scratch files. The two Windows runs recorded
 about 5.04 MB and 5.03 MB of peak working set for the legacy and phase
 ledgers, respectively.
 [Phase payload evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)
+
+## Contiguous row requests
+
+The opt-in `--ten-row-batched` profile uses the same ten-card T2
+training and streamed checkpoints. Policy construction reads the compact
+regret extent once per row. Each sweep stages two complete field extents per
+row. Final policy export reads the compact average extent once per row.
+Each field keeps its original packed offsets, per-action scales and order.
+The pager splits a request when it crosses a page boundary. The staged image
+becomes committed only after the complete row coverage check and flush.
+
+The request bound is seven reads and four writes per row across both
+sweeps, including virtual zero reads. For the 119,196 rows and 281,066
+action slots in this fixture, that gives 1,311,156 logical requests
+instead of 3,091,726. The forecast preserves physical word, dirty-run,
+and read-miss ceilings. It reserves 264 extra bytes for one reusable
+44-word codec buffer. The request and fragment bookkeeping charge falls
+by 33,668,960 modeled work units. Both checkpoint digests, the numerical
+stream prefix, exact policy feedback and visible-information best responses
+are required to match the phase-payload baseline.
+
+The frozen run at `7a85266` passed native execution, independent replay
+and the outer source check. All 2,536 tracked files retained their captured
+raw bytes. Both checkpoint images and 9,832,556 numerical bytes matched
+the phase-payload baseline. The observed pager counts matched every field
+of the independent trace, including 1,498 read misses and 18,836 dirty
+write runs. Fifty focused controls passed normally and optimized.
+
+The composed reservation is 20,038,272 bits before stream scratch, with
+360,336 reserved entries. The modeled total work falls from 1,730,311,006
+to 1,696,642,046 before transport. The two separate Windows observations
+recorded 7.29 seconds for row batching and 3.59 seconds for the phase
+baseline, with about 5.03 MB of peak working set each. This study
+establishes a request-count reduction. The fixture still uses two sweeps
+and has an unset quality threshold.
+[Row batching evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1/manifest.json)
+
+A separate comparison used the same authenticated executable for four
+alternating pairs of complete native calls and streamed output. The
+order was phase/row, row/phase, phase/row, row/phase. All eight calls
+matched their accepted numerical stream, complete wire and checkpoint
+images exactly, with the source inventory unchanged. Every observation
+is retained. Row batching was faster in three pairs and slower in one.
+
+Median times were 6.523 seconds for the phase profile and 6.001 seconds
+for row batching. The median within-pair row/phase ratio was 0.9455,
+about 5.45 percent less elapsed time. These measurements cover this
+Windows host and finite ten-card T2 fixture. The numerical acceptance
+study still contains its one training invocation. The timing experiment
+records its eight additional calls separately.
+[Alternating timing evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-timing-v1/manifest.json)

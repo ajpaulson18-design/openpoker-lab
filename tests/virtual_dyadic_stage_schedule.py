@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
+def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=False):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -21,6 +21,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
+    if type(batch_rows) is not bool or (batch_rows and not (ten_card and virtual_zero and sweeps==2)):
+        raise ValueError('row batching requires the named ten-card virtual-zero T2 schedule')
     if sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
     deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
@@ -140,12 +142,16 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
             count -= extent
 
     for avg_offset, regret_offset, avg_stride, regret_stride, menu in postorder:
-        for action in range(menu):
-            stage(1, average_words + regret_offset + action * regret_stride, regret_stride)
-            stage(0, avg_offset + action * avg_stride, avg_stride)
+        if batch_rows:
+            stage(1, average_words + regret_offset, menu * regret_stride)
+            stage(0, avg_offset, menu * avg_stride)
+        else:
+            for action in range(menu):
+                stage(1, average_words + regret_offset + action * regret_stride, regret_stride)
+                stage(0, avg_offset + action * avg_stride, avg_stride)
     for buffer in dirty:
         flush(buffer)
-    if (stage_calls, flushed_words) != (2 * slots, image_words):
+    if (stage_calls, flushed_words) != (2 * (rows if batch_rows else slots), image_words):
         raise ValueError('incomplete staged image')
     if any(byte != 255 for byte in seen[:-1]):
         raise ValueError('coverage gap')
@@ -165,6 +171,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
         expected_calls = (348984, 5931, 1820190)
     elif sweeps==4:
         expected_calls = (465312, 7908, 2426920)
+    if batch_rows:
+        expected_calls = (476784, 18836, 5925444)
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
         raise ValueError('independent stage schedule differs from fixed fixture')
     if virtual_zero:
@@ -182,13 +190,13 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
             before = (logical_reads, logical_words, virtual_reads, virtual_words,
                       hits, misses, physical_words)
             for avg_offset, regret_offset, avg_stride, regret_stride, menu in records:
-                for action in range(menu):
+                for action in range(1 if batch_rows else menu):
                     for field in fields:
                         if field == 0:
-                            offset, count = avg_offset + action * avg_stride, avg_stride
+                            offset, count = avg_offset + action * avg_stride, avg_stride * (menu if batch_rows else 1)
                         else:
                             offset = average_words + regret_offset + action * regret_stride
-                            count = regret_stride
+                            count = regret_stride * (menu if batch_rows else 1)
                         logical_reads += 1
                         logical_words += count
                         if zero:
@@ -228,6 +236,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
             expected_reads = (581640,3122992,174492,954766,548,2223164)
         elif sweeps==4:
             expected_reads = (756132,4077758,174492,954766,790,3203674)
+        if batch_rows:
+            expected_reads = (834372,10555076,357588,4629632,1498,6130244)
         if actual_reads != expected_reads:
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result
