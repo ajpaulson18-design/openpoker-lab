@@ -1166,14 +1166,18 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             return directory,receipt
         admitted,_=observed('ADMIT'+suffix)
-        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
-            packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
-            rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
-            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
-            ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
-            proof9_t3=proof9_t3,proof9_t4=proof9_t4,proof9_quality32=proof9_quality32,proof9_linear32=proof9_linear32,ten_sparse_chance=ten_sparse_chance,
-            ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
-            ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache)
+        receipt=exact_json((admitted/'stdout.bin').read_bytes())
+        if proof9_linear32:
+            admission=validate_admission(receipt,proof9_linear32=True)
+        else:
+            admission=validate_admission(receipt,paired=paired,
+                packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
+                rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
+                ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
+                ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
+                proof9_t3=proof9_t3,proof9_t4=proof9_t4,proof9_quality32=proof9_quality32,ten_sparse_chance=ten_sparse_chance,
+                ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
+                ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
