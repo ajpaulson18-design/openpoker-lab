@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=False, quality32=False):
+def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, sweeps=2, batch_rows=False, quality32=False):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -21,14 +21,16 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
-    if type(quality32) is not bool or (quality32 and (ten_card or not virtual_zero or sweeps!=32 or not batch_rows)):
+    if type(eleven_card) is not bool or (ten_card and eleven_card):
+        raise ValueError('select at most one expanded deck size')
+    if type(quality32) is not bool or (quality32 and (ten_card or eleven_card or not virtual_zero or sweeps!=32 or not batch_rows)):
         raise ValueError('quality32 requires the exact nine-card virtual-zero row-batched T32 schedule')
-    if type(batch_rows) is not bool or (batch_rows and not (quality32 or ten_card and virtual_zero and sweeps==2)):
-        raise ValueError('row batching requires the named ten-card virtual-zero T2 schedule')
-    if not quality32 and sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
+    if type(batch_rows) is not bool or (batch_rows and not (quality32 or (ten_card or eleven_card) and virtual_zero and sweeps==2)):
+        raise ValueError('row batching requires the named expanded virtual-zero T2 schedule')
+    if not quality32 and sweeps!=2 and (sweeps not in (3,4) or ten_card or eleven_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
-    deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
-    if len(set(deck)) != (10 if ten_card else 9):
+    deck = tuple(sorted((*PROOF9, *range(11-len(PROOF9))))) if eleven_card else tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
+    if len(set(deck)) != (11 if eleven_card else 10 if ten_card else 9):
         raise ValueError('unexpected named deck')
     template = build_reference_template(_template_case())
     ranges = scaled_proof9_ranges()
@@ -56,7 +58,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
 
     if suffix(template.root) != 12:
         raise ValueError('unexpected decision horizon')
-    value_bits = 644 if ten_card or quality32 else 642
+    value_bits = 646 if eleven_card else 644 if ten_card or quality32 else 642
     average_words = regret_words = rows = slots = 0
     postorder = []
     preorder = []
@@ -100,7 +102,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
         postorder.extend(current)
 
     visit(template.root, (), (0, 0))
-    expected = ((119196, 281066, 1295812, 1666910) if ten_card else
+    expected = ((380172, 892910, 4188150, 5536052) if eleven_card else
+                (119196, 281066, 1295812, 1666910) if ten_card else
                 (24420, 58164, 258694, 348036))
     if (rows, slots, average_words, regret_words) != expected or len(postorder) != rows:
         raise ValueError('independent row or extent census differs')
@@ -166,7 +169,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
               'per_sweep_dirty_runs': runs, 'direct_write_calls': initial_calls + sweeps*stage_calls,
               'batched_write_calls': initial_calls + sweeps*runs,
               'written_words': (sweeps+int(not virtual_zero))*image_words, 'sweeps': sweeps}
-    expected_calls = ((1124264, 18836, 5925444) if ten_card else
+    expected_calls = ((1_520_688, 59_328, 19_448_404) if eleven_card else
+                      (1124264, 18836, 5925444) if ten_card else
                       (232656, 3954, 1213460)) if virtual_zero else (
                       (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190))
     if sweeps==3:
@@ -174,7 +178,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
     elif sweeps==4:
         expected_calls = (465312, 7908, 2426920)
     if batch_rows:
-        expected_calls = (476784, 18836, 5925444)
+        expected_calls = ((1_520_688, 59_328, 19_448_404) if eleven_card else
+                          (476784, 18836, 5925444))
     if quality32:
         expected_calls = (1_562_880,63_264,19_415_360)
     if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
@@ -241,7 +246,8 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2, batch_rows=F
         elif sweeps==4:
             expected_reads = (756132,4077758,174492,954766,790,3203674)
         if batch_rows:
-            expected_reads = (834372,10555076,357588,4629632,1498,6130244)
+            expected_reads = ((2_661_204,34_708_658,1_140_516,15_260_254,5068,20_750_932) if eleven_card else
+                              (834372,10555076,357588,4629632,1498,6130244))
         if quality32:
             expected_reads = (2_368_740,30_811_206,73_260,954_766,7_566,30_657_954)
         if actual_reads != expected_reads:

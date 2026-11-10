@@ -1,0 +1,319 @@
+{
+  "archive": {
+    "bytes": 2857761,
+    "members": 85,
+    "path": "verification.zip",
+    "sha256": "85c69033f9fbde97769fcd3d91f2adedc821e23f922938f072caaf555548117c"
+  },
+  "metering": "Existing conservative modeled work and storage receipts are preserved.",
+  "nine": {
+    "baseline_commit": "99e9263863caded61d4f9cd93111f49c0f1baf32",
+    "baseline_path": "benchmarks/results/native-dyadic-proof9-linear32-v1",
+    "checkpoint_digests": [
+      {
+        "bytes": 4853840,
+        "sha256": "c403a48f30487cdf49768bf3cdd3b12ccaa136e23a763f22f0aa0ef0ef1b2488",
+        "slot": 1,
+        "sweep": 1
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "855d1aa00a4cf3db2c0bf67a9a57ecc827ebe9e3f0a6c9a818867e364fee6a1d",
+        "slot": 0,
+        "sweep": 2
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "183ed710d40b46928df2b847cd21a129f54c68d6776849e82fd80fe2bd92f9ff",
+        "slot": 1,
+        "sweep": 3
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "33028a88c9b4c40ec97d212235e50e79e5b963104e81871b095c975c0125fa7b",
+        "slot": 0,
+        "sweep": 4
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "7ba95ac2f74838a0d0b57e88fe8ae7f6904ede2f748077c451914d1cb0bcb859",
+        "slot": 1,
+        "sweep": 5
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "f641710c56c6116ac96101ed8ec4b968d1cc0a4cf53f79b4f60f66ba3e229caa",
+        "slot": 0,
+        "sweep": 6
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "b990d9ebe95bca7cf30cb4c5dba6a65ea25a77014b4f97a289d3a61196f81382",
+        "slot": 1,
+        "sweep": 7
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "c65faf398b9367569455bb6ceae2f775f74f57d6adac6b52e36572386ff6a7f8",
+        "slot": 0,
+        "sweep": 8
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "51f888b0aace0edbd2711e41ecdfe9f040de2a9a091e66fb6055a9963b4c943f",
+        "slot": 1,
+        "sweep": 9
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "778ee9ae1e86d7cb919d7e7ecb5b204d80813c467e3bf892fcfb5654c045158b",
+        "slot": 0,
+        "sweep": 10
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "644ac1275f732a3ca6f065bab65712d99c3653b27738aae8602b2d2512de1daa",
+        "slot": 1,
+        "sweep": 11
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "78580bc5e69efd2454cb4a18b9316cd63facd320047880dde3e760ad618c2d06",
+        "slot": 0,
+        "sweep": 12
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "7f2b7755b935a2e6937be01fe43151525f95a7a2289ee13578736a25dcdb6658",
+        "slot": 1,
+        "sweep": 13
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "e246b78775eda1b2849cc185bf64697185998fdb541b09e53dd40b87631156b0",
+        "slot": 0,
+        "sweep": 14
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "30fbc690f5ddd0de56eb7e412355b46d70fa6fa034a8beb3e509a2f75b61345f",
+        "slot": 1,
+        "sweep": 15
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "9c82f7147bfa2ae1d42f56de15cc8bda1aec03e4783ded54ae0e025a1e3f93d1",
+        "slot": 0,
+        "sweep": 16
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "295668e300df2973cc274a6dec6c7a596ea817bdc5485eee60b3a9b5c5385c1e",
+        "slot": 1,
+        "sweep": 17
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "5899cff7f50708104f2442b4c4102e70c7d7e0e8bbcaed17b3f53a14d602f5ef",
+        "slot": 0,
+        "sweep": 18
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "75c1fd60c68e49981301e574a9c488e5f736da5d3838d87cd57bd250c7f8c7d0",
+        "slot": 1,
+        "sweep": 19
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "ceef430750369436dbfd7a3da3daca3af72431dc2fba4a36d7b1d236126e0f84",
+        "slot": 0,
+        "sweep": 20
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "19c3bf2df5e6af0511568dc18131876c36cd2447883c02393ae666451cbe5e80",
+        "slot": 1,
+        "sweep": 21
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "d2d73d3c4a13ed315399897db43bdc418035f559ed7cc4e8b0794f40a433d173",
+        "slot": 0,
+        "sweep": 22
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "914979bf820e4bec40a49b499a4c75698955420b5901278c13faf1318a613713",
+        "slot": 1,
+        "sweep": 23
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "e35df8115283bc05131dd1d467dfd2d9ee947f33fde37050cb0a9ce2eb97d3d7",
+        "slot": 0,
+        "sweep": 24
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "c2047463d2a7077d0239317a305474b0e12f05eafcdb493498180124a21c9cc8",
+        "slot": 1,
+        "sweep": 25
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "f5c0020b6bdd0359d82d1b530dbfe095291fa2d0c3e7d151ac00c1ac29b0196b",
+        "slot": 0,
+        "sweep": 26
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "e867df5b0e32b07b23d464c7014314129cf5af37e5c1cac1dcf5e2d01ac4ed27",
+        "slot": 1,
+        "sweep": 27
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "c1aa6562a1ad15ca923560d2b3fe43ab1a9d062c46d19f4d1de99df6cbb8a8ac",
+        "slot": 0,
+        "sweep": 28
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "9b36418ab18690e5b0380410ddf5f2949adf6fd4aa6d063123c5f4593459483e",
+        "slot": 1,
+        "sweep": 29
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "65c5304340b77de8d166fc2f80b7ab52644706042bb5d94b30ca899b02079e0c",
+        "slot": 0,
+        "sweep": 30
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "3614e09d0e3757684fb2616f871c3c5e41d5c7caaef19a1ee941beedba76240e",
+        "slot": 1,
+        "sweep": 31
+      },
+      {
+        "bytes": 4853840,
+        "sha256": "6cf58b2387c4f315b59528c7f33a4b49c5ba200d8edf1275c02166446f1de677",
+        "slot": 0,
+        "sweep": 32
+      }
+    ],
+    "exploitability": {
+      "approx": 0.08003861010635743,
+      "denominator": "241967281412915595271311052652019575482337621673214571595563307136110828311088187307288673910784",
+      "numerator": "19366724895503619073274269088914553648276636025209236898851314316925746016783113194003032103181"
+    },
+    "native_memory": {
+      "peak_commit_bytes": 1855488,
+      "peak_working_set_bytes": 4341760,
+      "source": "windows.K32GetProcessMemoryInfo"
+    },
+    "native_seconds": 46.860752599999614,
+    "quality_gate": {
+      "metric": "exploitability_bb",
+      "passed": true,
+      "status": "pass",
+      "threshold": {
+        "denominator": "10",
+        "numerator": "1"
+      }
+    },
+    "retained_policy_sha256": "55b96e99043005f3762e106d71d2ea4b823c863deb61f63d082de296457ef98d",
+    "source_files": 2551,
+    "sweeps": 32,
+    "terminals_per_sweep": 33987,
+    "wide_multiplications_after": 4350336,
+    "wide_multiplications_before": 8700672,
+    "wide_multiplications_removed": 4350336,
+    "wire_bytes": 171408812,
+    "wire_sha256": "3771aa28b3f3af85f9265216606aedba95244a5e5b3bfe1e4abbc7c6746faa15"
+  },
+  "quantizer_complement_saved_only": {
+    "baseline_manifest_sha256": "dd8dff3aa4c6ace00ffb88e064a83e75ab651e6d0d62c3a3429eb4c759a68a8d",
+    "checkpoint_inputs": {
+      "stream": {
+        "bytes": 9833076,
+        "sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9"
+      },
+      "sweep_images": [
+        {
+          "bytes": 23701776,
+          "name": "staged.bin",
+          "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+        },
+        {
+          "bytes": 23701776,
+          "name": "committed.bin",
+          "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+        }
+      ]
+    },
+    "exact_grid_rows_compared": 238392,
+    "one_complement_per_eligible_row": 139514,
+    "positive_average_rows_at_export": {
+      "0": 0,
+      "1": 0,
+      "2": 86894,
+      "3": 21930,
+      "4": 10372
+    },
+    "positive_regret_rows_before_sweep_2": {
+      "0": 32,
+      "1": 98846,
+      "2": 16354,
+      "3": 3964,
+      "4": 0
+    },
+    "projected_combined_divisions": 186152,
+    "recorded_combined_divisions": 325666,
+    "row_directory_sha256": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625",
+    "scope": "Saved-only candidate arithmetic against accepted N10 T2 images; native quantizer unmodified."
+  },
+  "scope": "Exact terminal scaling and byte parity for the fixed N9 and N10 studies.",
+  "source_head": "704fea69e9cb453c46b40c971061cc60d7ee3643",
+  "ten": {
+    "baseline_commit": "53b8aa1a609d1113ef3e739fab105f2600d1150f",
+    "baseline_path": "benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1",
+    "checkpoint_digests": [
+      {
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+        "slot": 1,
+        "sweep": 1
+      },
+      {
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+        "slot": 0,
+        "sweep": 2
+      }
+    ],
+    "exploitability": {
+      "approx": 2.9843178535722217,
+      "denominator": "144740111546645244279463731260859884816587480832050705049321980009891412049920",
+      "numerator": "431950499016688293634459451154687436409272726758119326237447189567296472767353"
+    },
+    "native_memory": {
+      "peak_commit_bytes": 1888256,
+      "peak_working_set_bytes": 4370432,
+      "source": "windows.K32GetProcessMemoryInfo"
+    },
+    "native_seconds": 8.638897299999826,
+    "quality_gate": null,
+    "retained_policy_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+    "source_files": 2551,
+    "sweeps": 2,
+    "terminals_per_sweep": 166147,
+    "wide_multiplications_after": 1329176,
+    "wide_multiplications_before": 2658352,
+    "wide_multiplications_removed": 1329176,
+    "wire_bytes": 57236692,
+    "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+  },
+  "version": "native-dyadic-terminal-scaling-v1"
+}

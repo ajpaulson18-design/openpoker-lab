@@ -688,3 +688,21 @@ path to a separately admitted 32-sweep lifecycle. Recovered independent replay
 passes every update and the complete wire hash. Exploitability is 0.3969424
 big blinds in this fixed game, above the predeclared 0.1 target. The miss and
 original controller interruption remain preserved.
+
+## Exact terminal payoff scaling
+
+The paired trainer precomputes one unsigned scale for each terminal
+from the exact money significand and the integer chance-divisor ratio.
+Admission checks that the full divisor bounds every scale product.
+The lane then applies one wide multiplication and the original exact
+shift and sign.
+
+A frozen build at `704fea6` reproduced the complete wire, every
+checkpoint digest, and the independent saved-policy replay for both the
+indexed ten-card T2 and linear-weight nine-card T32 fixtures. Both
+source audits passed, as did 38 focused controls in normal and optimized
+Python. The source-level wide multiplication count falls by 1,329,176
+on T2 and 4,350,336 on T32. These counts describe the named fixtures.
+The conservative work meter uses the original equation. The observed
+times came from concurrent runs and supply no speed estimate.
+[Terminal scaling evidence](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)
