@@ -4,10 +4,12 @@
 #include <bit>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace chance = openpoker::full_deck_public_chance;
 namespace prepared = openpoker::prepared_public_chance;
@@ -337,11 +339,125 @@ int board_set_controls(prepared::ContractionKernel kernel=prepared::ContractionK
         throw std::runtime_error("rank board-set eviction changed the reloaded contraction");
     return 0;
 }
+int indexed_controls() {
+    using K=prepared::ContractionKernel;
+    using R=prepared::RankCacheKey;
+    using I=prepared::RankCacheIndex;
+    auto limits=kernel_limits(K::sparse_pairs);
+    prepared::PreparedPublicChance sorted(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::board_set,K::sparse_pairs,I::sorted_board_set);
+    prepared::PreparedPublicChance linear(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::board_set,K::sparse_pairs);
+    if (sorted.receipt().setup_work-linear.receipt().setup_work!=
+        prepared::PreparedPublicChance::index_setup_work(2))
+        throw std::runtime_error("indexed setup charge differs");
+    const std::array<std::uint8_t,5> board_d{17,24,33,37,48};
+    const std::array<std::array<std::uint8_t,5>,6> trace{board_a,board_b,board_c,board_d,board_a,board_c};
+    for (std::size_t i=0;i<trace.size();++i) {
+        const auto reach=fixture(i==0?2:0);
+        const auto actual=sorted.contraction(i%2,trace[i],chance::TerminalKind::showdown,reach.n,reach.exponent);
+        const auto expected=linear.contraction(i%2,trace[i],chance::TerminalKind::showdown,reach.n,reach.exponent);
+        if (actual.numerators!=expected.numerators || actual.prefix_divisor!=expected.prefix_divisor ||
+            actual.reach_exponent!=expected.reach_exponent) throw std::runtime_error("indexed result differs");
+        const auto index=sorted.rank_index_receipt();const auto receipt=sorted.receipt();
+        if (!ledger(receipt)) throw std::runtime_error("indexed parent ledger differs");
+        std::cout<<"INDEXED_ROW "<<i<<' '<<(i%2)<<' '<<(i==0?2:0);
+        for (auto card:trace[i]) std::cout<<' '<<static_cast<unsigned>(card);
+        std::cout<<' '<<actual.prefix_divisor<<' '<<actual.reach_exponent;
+        for (const auto& n:actual.numerators) std::cout<<' '<<hex(n);
+        std::cout<<' '<<index.capacity<<' '<<index.entries<<' '<<index.size<<' '<<index.searches
+            <<' '<<index.updates<<' '<<index.lookup_work<<' '<<index.update_work<<' '<<index.setup_work
+            <<' '<<receipt.cache_hits<<' '<<receipt.cache_misses<<' '<<receipt.cache_evictions
+            <<' '<<receipt.cache_lookup_work<<'\n';
+    }
+    for (std::size_t cap:{std::size_t{1},std::size_t{2},std::size_t{17},std::size_t{56},std::size_t{64}})
+        std::cout<<"INDEXED_BOUND "<<cap<<' '<<prepared::PreparedPublicChance::sorted_lookup_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_update_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_setup_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_storage_entries(cap)<<'\n';
+    bool wrong_key=false;
+    try {prepared::PreparedPublicChance bad(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::ordered_prefix,K::sparse_pairs,I::sorted_board_set);}
+    catch (const chance::KernelError&) {wrong_key=true;}
+    if (!wrong_key) throw std::runtime_error("indexed ordered-prefix mode accepted");
+    auto bad_reach=fixture(0);bad_reach.n[0]=-1;
+    const auto before=sorted.rank_index_receipt();
+    bool rejected=false;
+    try {(void)sorted.contraction(0,board_a,chance::TerminalKind::showdown,bad_reach.n,bad_reach.exponent);}
+    catch (const chance::KernelError&) {rejected=true;}
+    const auto after=sorted.rank_index_receipt();
+    if (!rejected || !sorted.failed() || before.searches!=after.searches || before.updates!=after.updates)
+        throw std::runtime_error("invalid blocked reach mutated index");
+    // Fill every sorted slot using a deliberately nonmonotone permutation,
+    // then evict/revisit the true LRU. All boards have canonical sorted flops.
+    {
+        std::vector<std::array<std::uint8_t,5>> all;
+        for (std::size_t a=0;a<deck.size();++a) for (std::size_t b=a+1;b<deck.size();++b)
+        for (std::size_t c=b+1;c<deck.size();++c) for (std::size_t d=c+1;d<deck.size();++d)
+        for (std::size_t e=d+1;e<deck.size();++e)
+            all.push_back({deck[a],deck[b],deck[c],deck[d],deck[e]});
+        if (all.size()!=126) throw std::runtime_error("indexed full-cache board geometry");
+        prepared::PreparedPublicChance indexed(sb,bb,chance::DeckDefinition::reduced(deck),limits,64,
+            R::board_set,K::sparse_pairs,I::sorted_board_set);
+        prepared::PreparedPublicChance baseline(sb,bb,chance::DeckDefinition::reduced(deck),limits,64,
+            R::board_set,K::sparse_pairs);
+        const auto perform=[&](std::size_t position,bool nonzero) {
+            const auto reach=fixture(nonzero?0:2);
+            const auto a=indexed.contraction(position%2,all[position],chance::TerminalKind::showdown,reach.n,reach.exponent);
+            const auto b=baseline.contraction(position%2,all[position],chance::TerminalKind::showdown,reach.n,reach.exponent);
+            if (a.numerators!=b.numerators || a.prefix_divisor!=b.prefix_divisor || a.reach_exponent!=b.reach_exponent)
+                throw std::runtime_error("full indexed cache differs from linear");
+            const auto x=indexed.receipt(),y=baseline.receipt();
+            if (x.cache_hits!=y.cache_hits || x.cache_misses!=y.cache_misses || x.cache_evictions!=y.cache_evictions ||
+                x.rank_calls!=y.rank_calls) throw std::runtime_error("full indexed cache receipt differs");
+        };
+        // gcd(37,126)=1, giving distinct first/middle/last insertion positions.
+        for (std::size_t i=0;i<64;++i) perform((37*i)%126,i%17==0);
+        const auto recent=(37*63)%126;
+        perform(recent,true);
+        if (indexed.receipt().cache_hits!=1 || indexed.receipt().cache_misses!=64 ||
+            indexed.rank_index_receipt().size!=64) throw std::runtime_error("full index warm or recent hit");
+        perform((37*64)%126,true);
+        if (indexed.receipt().cache_evictions!=1 || indexed.receipt().cache_misses!=65)
+            throw std::runtime_error("full index did not evict oldest slot");
+        perform(0,true);
+        const auto index=indexed.rank_index_receipt();
+        if (indexed.receipt().cache_evictions!=2 || indexed.receipt().cache_misses!=66 ||
+            index.capacity!=64 || index.size!=64 || index.updates!=66)
+            throw std::runtime_error("full index did not reload true LRU");
+        std::cout<<"INDEXED_FULL64 PASS\n";
+    }
+    // Independent exact one-short calibration: construction and one complete
+    // miss must fail before granting any rank or index publication.
+    auto make=[&](chance::Limits bounds) {
+        return std::make_unique<prepared::PreparedPublicChance>(sb,bb,chance::DeckDefinition::reduced(deck),
+            kernel_limits(K::sparse_pairs,bounds),2,R::board_set,K::sparse_pairs,I::sorted_board_set);
+    };
+    auto calibrated=make({});
+    const auto construction=calibrated->receipt();
+    auto short_entries=chance::Limits{};
+    short_entries.max_storage_entries=construction.peak_live_entries-1;
+    bool entries_rejected=false;
+    try {(void)make(short_entries);} catch (const chance::KernelError&) {entries_rejected=true;}
+    if (!entries_rejected) throw std::runtime_error("indexed constructor admitted one-short entries");
+    const auto one=fixture(0);
+    (void)calibrated->contraction(0,board_a,chance::TerminalKind::showdown,one.n,one.exponent);
+    auto short_work=chance::Limits{};
+    short_work.max_modeled_work=calibrated->receipt().modeled_work-1;
+    auto capped=make(short_work);
+    bool work_rejected=false;
+    try {(void)capped->contraction(0,board_a,chance::TerminalKind::showdown,one.n,one.exponent);}
+    catch (const chance::KernelError& error) {work_rejected=error.code()==chance::ErrorCode::modeled_work_limit;}
+    const auto failed=capped->receipt();const auto index_failed=capped->rank_index_receipt();
+    if (!work_rejected || !capped->failed() || failed.rank_calls || failed.completed_contractions ||
+        failed.query_array_admissions || index_failed.updates || index_failed.size)
+        throw std::runtime_error("indexed one-short work reached rank publication");
+    std::cout<<"INDEXED_GUARDS PASS\n";
+    return 0;
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
         if (argc==2) {
             const std::string mode=argv[1];
+            if (mode=="indexed") return indexed_controls();
             if (mode=="guards") return guards();
             if (mode=="cache") return cache_control();
             if (mode=="cumulative") return cumulative();

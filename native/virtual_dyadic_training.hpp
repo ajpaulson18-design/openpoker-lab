@@ -35,7 +35,8 @@ enum class StrategyProfile {
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
-    ten_card_row_batched
+    ten_card_row_batched,
+    ten_card_indexed_cache
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -296,6 +297,7 @@ struct Plan {
     bool single_division=false;
     bool phase_payload=false;
     bool row_batched=false;
+    bool indexed_cache=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -410,7 +412,8 @@ class Forecast final {
     }
     std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,std::size_t exp) {
         const auto& population=plan_.prefixes[street_index(size)].unblocked;
-        const auto lookup=plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
+        const auto lookup=plan_.indexed_cache?prepared::PreparedPublicChance::sorted_lookup_work(plan_.rank_planes):
+            plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
         std::uint64_t sum=0;
         for (std::size_t sb=0;sb<3;++sb) for (std::size_t bb=0;bb<3;++bb) {
             meter_.charge(Work::geometry,8);
@@ -564,7 +567,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.row_batched=profile==StrategyProfile::ten_card_row_batched;
+        plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache;
+        plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache;
         plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload || plan_.row_batched;
         plan_.single_division=profile==StrategyProfile::ten_card_single_division || plan_.phase_payload;
         plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance || plan_.single_division;
@@ -652,6 +656,9 @@ public:
         plan_.chance_work=chance_setup_bound+contractions_+
             (plan_.rank_board_sets?4096*plan_.expected_rank_calls+plan_.rank_planes*(512+64+4*plan_.rank_planes):
                 p[3].count*(4*4096+512+64+4*64));
+        if (plan_.indexed_cache)
+            plan_.chance_work+=prepared::PreparedPublicChance::index_setup_work(plan_.rank_planes)+
+                plan_.rank_planes*prepared::PreparedPublicChance::index_update_work(plan_.rank_planes);
         const auto public_walks=plan_.public_walks;
         plan_.history_work=4096*literal_count+1280+(public_walks+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
         const auto lookup=plan_.paged_directory?32:16*logceil(static_cast<std::size_t>(R+1));
@@ -1180,6 +1187,7 @@ struct TrainingIO {
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
     std::uint64_t combined_divisions=0;
+    std::optional<prepared::RankIndexReceipt> rank_index;
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1434,8 +1442,10 @@ public:
         prepared::PreparedPublicChance chance(ranges[0],ranges[1],deck,chance_limits,
             p.rank_board_sets?p.rank_planes:64,
             p.rank_board_sets?prepared::RankCacheKey::board_set:prepared::RankCacheKey::ordered_prefix,
-            p.sparse_chance?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets);
-        require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=chance_setup_bound,
+            p.sparse_chance?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets,
+            p.indexed_cache?prepared::RankCacheIndex::sorted_board_set:prepared::RankCacheIndex::linear);
+        require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=
+            chance_setup_bound+(p.indexed_cache?prepared::PreparedPublicChance::index_setup_work(p.rank_planes):0),
             "prepared prior differs from admitted source prior");
         history::Limits history_limits;
         history_limits.work=p.history_work;
@@ -1527,6 +1537,7 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
         return result;
     }
 };

@@ -18,6 +18,7 @@ using chance::Limits;
 using chance::DeckDefinition;
 
 enum class RankCacheKey { ordered_prefix, board_set };
+enum class RankCacheIndex { linear, sorted_board_set };
 enum class ContractionKernel { blocker_buckets, sparse_pairs };
 
 struct Contraction {
@@ -36,6 +37,11 @@ struct Receipt {
         completed_contractions = 0, query_array_admissions = 0, sparse_pair_visits = 0;
 };
 
+struct RankIndexReceipt {
+    std::size_t capacity=0, entries=0, size=0;
+    std::uint64_t searches=0, updates=0, lookup_work=0, update_work=0, setup_work=0;
+};
+
 class PreparedPublicChance final {
     struct Bucket { Integer total = 0; std::array<Integer,52> cards{}; };
     struct WeightedReach { std::size_t row=0; Integer mass=0; };
@@ -51,6 +57,15 @@ class PreparedPublicChance final {
         std::uint64_t stamp = 0;
         bool valid = false;
     };
+    struct IndexEntry { std::uint64_t key=0; std::size_t slot=0; };
+    struct RankIndex {
+        std::unique_ptr<IndexEntry[]> entries;
+        std::size_t size=0;
+        std::uint64_t searches=0, updates=0, lookup_work=0, update_work=0, setup_work=0;
+    };
+    // Owner metadata, returned diagnostics and bounded search/update scalars.
+    static constexpr std::size_t index_fixed_entries=32;
+    static constexpr std::size_t index_entry_words=(sizeof(IndexEntry)+7)/8;
     static constexpr std::size_t missing = std::numeric_limits<std::size_t>::max();
     [[noreturn]] static void fail(ErrorCode code,const char* text) { throw KernelError(code,text); }
     static std::uint64_t add(std::uint64_t a,std::uint64_t b) { return detail::checked_add_count(a,b); }
@@ -132,6 +147,36 @@ class PreparedPublicChance final {
         std::make_heap(order.begin(),order.end(),less);
         std::sort_heap(order.begin(),order.end(),less);
     }
+    static void validate_index_capacity(std::size_t capacity) {
+        if (!capacity || capacity>64)
+            fail(ErrorCode::invalid_limits,"invalid sorted rank index capacity");
+    }
+    [[nodiscard]] std::size_t index_position(std::uint64_t key) const noexcept {
+        std::size_t lower=0,upper=index_->size;
+        while (lower<upper) {
+            const auto middle=lower+(upper-lower)/2;
+            if (index_->entries[middle].key<key) lower=middle+1;
+            else upper=middle;
+        }
+        return lower;
+    }
+    void publish_index(std::size_t slot,bool replacing,std::uint64_t previous,std::uint64_t key) {
+        auto& index=*index_;
+        if (replacing) {
+            const auto old=index_position(previous);
+            if (old>=index.size || index.entries[old].key!=previous || index.entries[old].slot!=slot)
+                fail(ErrorCode::invalid_query,"sorted rank index lost its evicted plane");
+            for (auto at=old+1;at<index.size;++at) index.entries[at-1]=index.entries[at];
+            --index.size;
+        }
+        const auto position=index_position(key);
+        if (index.size>=cache_.size() || (position<index.size && index.entries[position].key==key))
+            fail(ErrorCode::invalid_query,"sorted rank index has a duplicate or excess plane");
+        for (auto at=index.size;at>position;--at) index.entries[at]=index.entries[at-1];
+        index.entries[position]={key,slot};
+        ++index.size;
+        ++index.updates;
+    }
     std::size_t find_plane(std::span<const std::uint8_t> board,std::uint64_t blocked) {
         const auto matches=[&](std::size_t i) {
             if (rank_cache_key_==RankCacheKey::board_set) {
@@ -143,6 +188,21 @@ class PreparedPublicChance final {
             return cache_[i].valid && std::equal(board.begin(),board.end(),cache_[i].board_key.begin());
         };
         if (recent_!=missing && matches(recent_)) return recent_;
+        if (index_) {
+            // Reserve every possible binary-search probe and final slot check
+            // before reading the index. A recent hit bypasses this reservation.
+            const auto work=sorted_lookup_work(cache_.size())-board_set_probe_work;
+            charge(work,receipt_.cache_lookup_work);
+            index_->lookup_work+=work;
+            ++index_->searches;
+            const auto position=index_position(blocked);
+            if (position==index_->size || index_->entries[position].key!=blocked) return missing;
+            const auto slot=index_->entries[position].slot;
+            if (slot>=cache_.size() || !cache_[slot].valid ||
+                std::bit_cast<std::uint64_t>(cache_[slot].board_key)!=blocked)
+                fail(ErrorCode::invalid_query,"sorted rank index returned a foreign plane");
+            return slot;
+        }
         for (std::size_t i=0;i<cache_.size();++i)
             if (i!=recent_ && matches(i)) return i;
         return missing;
@@ -157,7 +217,9 @@ class PreparedPublicChance final {
     }
     void fill_plane(std::size_t slot,std::span<const std::uint8_t> board,std::uint64_t blocked) {
         auto& plane=cache_[slot];
-        if (plane.valid) ++receipt_.cache_evictions;
+        const bool replacing=plane.valid;
+        const auto previous=std::bit_cast<std::uint64_t>(plane.board_key);
+        if (replacing && !index_) ++receipt_.cache_evictions;
         if (rank_cache_key_==RankCacheKey::board_set)
             plane.board_key=std::bit_cast<decltype(plane.board_key)>(blocked);
         else std::copy(board.begin(),board.end(),plane.board_key.begin());
@@ -177,7 +239,14 @@ class PreparedPublicChance final {
             }
             sort_order(plane,p);
         }
-        plane.valid=true; ++receipt_.cache_misses;
+        plane.valid=true;
+        if (index_) {
+            // All allocations and ranking have succeeded. Publication consists
+            // only of the precharged bounded searches and POD shifts.
+            publish_index(slot,replacing,previous,blocked);
+            if (replacing) ++receipt_.cache_evictions;
+        }
+        ++receipt_.cache_misses;
     }
     Contraction contract(std::size_t player,std::span<const std::uint8_t> prefix,TerminalKind kind,
                          std::span<const Integer> reach,std::size_t exponent) {
@@ -218,7 +287,7 @@ class PreparedPublicChance final {
         if (peak_bits>limits_.max_integer_bits)
             fail(ErrorCode::integer_bit_limit,"prepared contraction intermediate width exceeded");
         std::size_t slot=missing,cache_add=0;
-        std::uint64_t rank_work=0,sort_work=0,cache_work=0;
+        std::uint64_t rank_work=0,sort_work=0,cache_work=0,index_work=0;
         if (kind==TerminalKind::showdown) {
             slot=find_plane(prefix,blocked);
             if (slot==missing) {
@@ -235,6 +304,10 @@ class PreparedPublicChance final {
                 for (std::size_t p=0;p<2;++p)
                     sort_work=add(sort_work,mul(64*source_[p].size(),1+lg(source_[p].size())));
                 cache_work=16+12*total_hands();
+                if (index_) {
+                    index_work=index_update_work(cache_.size());
+                    cache_work=add(cache_work,index_work);
+                }
             }
         }
         // Each live opposite row is inserted into all once, lower at most
@@ -277,6 +350,7 @@ class PreparedPublicChance final {
         admit(cache_add,0,scratch,static_cast<std::size_t>(scratch_payload),peak_bits);
         charge(dynamic,receipt_.contraction_work);
         charge(cache_work,receipt_.cache_lookup_work);
+        if (index_) index_->update_work+=index_work;
         charge(rank_work,receipt_.rank_work); charge(sort_work,receipt_.sort_work);
         ++receipt_.query_array_admissions;
         if (kind==TerminalKind::showdown) {
@@ -368,6 +442,22 @@ class PreparedPublicChance final {
     }
 public:
     static constexpr std::uint64_t board_set_probe_work=2;
+    [[nodiscard]] static std::uint64_t sorted_lookup_work(std::size_t capacity) {
+        validate_index_capacity(capacity);
+        return add(6,mul(8,std::bit_width(capacity)));
+    }
+    [[nodiscard]] static std::uint64_t index_update_work(std::size_t capacity) {
+        validate_index_capacity(capacity);
+        return add(add(mul(8,capacity),mul(16,std::bit_width(capacity))),32);
+    }
+    [[nodiscard]] static std::uint64_t index_setup_work(std::size_t capacity) {
+        validate_index_capacity(capacity);
+        return add(mul(4,capacity),16);
+    }
+    [[nodiscard]] static std::size_t index_storage_entries(std::size_t capacity) {
+        validate_index_capacity(capacity);
+        return static_cast<std::size_t>(add(index_fixed_entries,mul(index_entry_words,capacity)));
+    }
     // Charges every live pair for blocker/rank checks and a possible signed
     // accumulation, plus the caller's summed weighted-product bound, one
     // own-weight multiply per live own row, and output initialization.
@@ -403,7 +493,8 @@ public:
     PreparedPublicChance(std::span<const WeightedHand> sb,std::span<const WeightedHand> bb,
                          DeckDefinition deck=DeckDefinition::full52(),Limits limits={},
                          std::size_t cache_capacity=64,RankCacheKey rank_cache_key=RankCacheKey::ordered_prefix,
-                         ContractionKernel contraction_kernel=ContractionKernel::blocker_buckets)
+                         ContractionKernel contraction_kernel=ContractionKernel::blocker_buckets,
+                         RankCacheIndex cache_index=RankCacheIndex::linear)
         :limits_(limits),deck_(deck),rank_cache_key_(rank_cache_key),contraction_kernel_(contraction_kernel) {
         if (!limits.max_hands_per_side || limits.max_hands_per_side>1326 ||
             !limits.max_integer_bits || limits.max_integer_bits>65536 ||
@@ -414,7 +505,9 @@ public:
             (contraction_kernel_!=ContractionKernel::blocker_buckets &&
              contraction_kernel_!=ContractionKernel::sparse_pairs) ||
             (contraction_kernel_==ContractionKernel::sparse_pairs && limits.max_hands_per_side>2) ||
-            (rank_cache_key_!=RankCacheKey::ordered_prefix && rank_cache_key_!=RankCacheKey::board_set))
+            (rank_cache_key_!=RankCacheKey::ordered_prefix && rank_cache_key_!=RankCacheKey::board_set) ||
+            (cache_index!=RankCacheIndex::linear && cache_index!=RankCacheIndex::sorted_board_set) ||
+            (cache_index==RankCacheIndex::sorted_board_set && rank_cache_key_!=RankCacheKey::board_set))
             fail(ErrorCode::invalid_limits,"invalid prepared reduce-only limits");
         charge(16,receipt_.setup_work);
         if (sb.empty() || bb.empty() || sb.size()>limits.max_hands_per_side || bb.size()>limits.max_hands_per_side)
@@ -459,7 +552,10 @@ public:
         const auto setup_work=add(6*sb.size()*bb.size(),
             add(mul(6*h,copy_cost(raw_weight_bits)),4*words(original_bits)+copy_cost(original_bits)));
         charge(setup_work,receipt_.setup_work);
-        admit(4*h+16*cache_capacity+32,static_cast<std::size_t>(weight_payload),16,
+        const bool indexed=cache_index==RankCacheIndex::sorted_board_set;
+        if (indexed) charge(index_setup_work(cache_capacity),receipt_.setup_work);
+        const auto index_entries=indexed?index_storage_entries(cache_capacity):0;
+        admit(4*h+16*cache_capacity+32+index_entries,static_cast<std::size_t>(weight_payload),16,
             static_cast<std::size_t>(mul(4,std::max(original_bits,raw_weight_bits))),
             std::max(original_bits,raw_weight_bits));
         if (static_cast<std::size_t>(boost::multiprecision::lsb(prior_->normalizer_integer()))<removal)
@@ -481,6 +577,11 @@ public:
         for (std::size_t i=0;i<source_[0].size();++i) for (std::size_t j=0;j<source_[1].size();++j)
             if (masks_[0][i]==masks_[1][j]) { same_[0][i]=j; same_[1][j]=i; }
         cache_.resize(cache_capacity);
+        if (indexed) {
+            index_=std::make_unique<RankIndex>();
+            index_->entries=std::make_unique<IndexEntry[]>(cache_capacity);
+            index_->setup_work=index_setup_work(cache_capacity);
+        }
     }
     PreparedPublicChance(const PreparedPublicChance&)=delete;
     PreparedPublicChance& operator=(const PreparedPublicChance&)=delete;
@@ -495,6 +596,11 @@ public:
     [[nodiscard]] const Integer& normalizer_integer() const noexcept { return normalizer_; }
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
     [[nodiscard]] const chance::Receipt& prior_receipt() const noexcept { return prior_->receipt(); }
+    [[nodiscard]] RankIndexReceipt rank_index_receipt() const noexcept {
+        if (!index_) return {};
+        return {cache_.size(),index_fixed_entries+index_entry_words*cache_.size(),index_->size,
+            index_->searches,index_->updates,index_->lookup_work,index_->update_work,index_->setup_work};
+    }
     [[nodiscard]] bool failed() const noexcept { return failed_; }
 private:
     Limits limits_{}; DeckDefinition deck_{};
@@ -510,6 +616,7 @@ private:
     std::array<std::size_t,2> max_weight_bits_{};
     Integer normalizer_=0;
     std::vector<Plane> cache_;
+    std::unique_ptr<RankIndex> index_;
     std::size_t recent_=missing;
     [[nodiscard]] std::size_t total_hands() const noexcept { return source_[0].size()+source_[1].size(); }
 };

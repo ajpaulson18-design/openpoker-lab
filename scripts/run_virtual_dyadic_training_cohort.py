@@ -24,7 +24,8 @@ from tests.virtual_dyadic_directory_trace import directory_trace
 from tests.virtual_dyadic_sweep_capture import sweep_stream_contract
 from tests.virtual_dyadic_training_reference import Fixture
 from scripts.verify_virtual_dyadic_training import compact_scales
-from scripts.verify_virtual_dyadic_training import phase_payload_bits
+from scripts.verify_virtual_dyadic_training import phase_payload_bits, rank_index_costs
+from tests.virtual_dyadic_rank_trace import rank_trace
 
 ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
@@ -197,6 +198,8 @@ def validate_bounded_proof9_admission(receipt,sweeps):
 # seven extents and stages four per row in the new profile.
 ROW_BATCH_REQUEST_WORK=(16*11+8*4)*(281_066-119_196)
 ROW_BATCH_CODEC_WORDS=3*((644+63)//64)
+INDEXED_CACHE_WORK_DELTA=((rank_index_costs(17)['lookup']-2*17)*412_080+
+                          17*rank_index_costs(17)['update']+rank_index_costs(17)['setup'])
 
 
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
@@ -204,7 +207,26 @@ def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
                        ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
                        ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False,
-                       ten_row_batched=False):
+                       ten_row_batched=False,ten_indexed_cache=False):
+    if ten_indexed_cache:
+        cost=rank_index_costs(17)
+        require(type(receipt) is dict and receipt.get('sorted_rank_index') is True,
+                'sorted rank index profile tag missing')
+        expected={'rank_lookup_work_per_query':cost['lookup'],'rank_index_entries':cost['entries'],
+                  'rank_index_update_work':cost['update'],'rank_index_setup_work':cost['setup'],
+                  'planned_total_work':1_696_642_046+INDEXED_CACHE_WORK_DELTA,
+                  'parent_allowance':1_185_397_984-INDEXED_CACHE_WORK_DELTA}
+        require(all(type(receipt.get(key)) is int and receipt[key]==value for key,value in expected.items()) and
+                type(receipt.get('component_work')) is dict and
+                receipt['component_work'].get('chance')==127_793_144+INDEXED_CACHE_WORK_DELTA,
+                'sorted rank index admission differs from independent fixed census')
+        removed={'sorted_rank_index','rank_index_entries','rank_index_update_work','rank_index_setup_work'}
+        earlier={key:value for key,value in receipt.items() if key not in removed}
+        earlier.update(rank_lookup_work_per_query=34,planned_total_work=1_696_642_046,
+                       parent_allowance=1_185_397_984)
+        earlier['component_work']=dict(receipt['component_work'],chance=127_793_144)
+        validate_admission(earlier,ten_row_batched=True)
+        return receipt
     if ten_row_batched:
         state_bits,composed=phase_payload_bits(119_196,644,row_batched=True)
         require(type(receipt) is dict and receipt.get('row_batched') is True,
@@ -535,8 +557,38 @@ def verify_paging(directory,admission,stage=None):
         names|={'policy.bin','policy.json'}
     if admission.get('single_division',False):
         names.add('quantizer.json')
+    if admission.get('sorted_rank_index',False):
+        names.add('rank-index.json')
     require(set(item.name for item in directory.iterdir())==names,'unexpected paging artifact')
     return {'counts':receipt,'images':files}
+
+
+def verify_rank_index(directory,admission,replay,trace):
+    path=unlinked_path(directory/'rank-index.json')
+    require(path.is_file() and 0<path.stat().st_size<=1024,'rank index receipt extent')
+    record=exact_json(path.read_bytes())
+    fields={'capacity','entries','size','searches','updates','lookup_work','update_work','setup_work'}
+    require(type(record) is dict and record.keys()==fields and
+            all(type(value) is int and value>=0 for value in record.values()),'rank index receipt schema')
+    require(trace['native_calls']==trace['rank_calls']==0 and
+            all(record[key]==trace[key] for key in fields),'rank index differs from independent structural trace')
+    planes=admission['rank_cache_planes']
+    cost=rank_index_costs(planes)
+    chance=replay['chance_actual']
+    queries=chance['cache_hits']+chance['cache_misses']
+    require(queries==4*admission['showdown_contractions_per_pass'] and
+            (record['capacity'],record['entries'],record['size'],record['updates'],record['setup_work'])==
+            (planes,cost['entries'],planes,planes,cost['setup']) and
+            planes==chance['cache_misses'] and queries==trace['queries'] and
+            chance['cache_hits']==trace['cache_hits'] and chance['cache_evictions']==trace['cache_evictions'] and
+            chance['cache_lookup_work']==trace['parent_cache_lookup_work'] and
+            planes<=record['searches']<=queries and
+            record['lookup_work']==(cost['lookup']-2)*record['searches'] and
+            record['update_work']==cost['update']*planes and
+            chance['cache_lookup_work']==2*(queries-1)+record['lookup_work']+
+                record['update_work']+planes*(4*planes+64),
+            'rank index allocation, search or mutation charge differs')
+    return record
 
 
 def verify_division_receipt(directory,admission):
@@ -865,6 +917,50 @@ def compare_ten_card_row_batch(source,result,numeric,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
+def compare_ten_card_index(source,result,path,replay):
+    directory='benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'indexed chance baseline source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_row_batched_training_and_replay' and
+            prior['source_head']=='7a85266f488ad66849cdc67c98aefd4006f7902b' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted row-batched baseline required')
+    before=prior['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','combined_divisions',
+            'changed_current_rows','quality_gate','planned_entries','planned_payload_bits',
+            'parent_work_plan','parent_work_actual','state_payload_bits')
+    require(all(before[key]==replay[key] for key in fields) and
+            all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','quantizer')),
+            'indexed cache changed a shared numerical result or owner receipt')
+    for group in ('work_plan','work_actual'):
+        require(all(before[group][owner]==value for owner,value in replay[group].items() if owner!='chance'),
+                'indexed cache changed work outside its owner')
+    changing={'setup_work','cache_lookup_work','peak_live_entries'}
+    require(all(before['chance_actual'][key]==value for key,value in replay['chance_actual'].items()
+                if key not in changing) and
+            replay['chance_actual']['setup_work']==before['chance_actual']['setup_work']+rank_index_costs(17)['setup'],
+            'indexed cache changed nonindex chance work or ranks')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    require(archive.stat().st_size==prior['archive']['bytes']<=50<<20 and
+            sha(archive)==prior['archive']['sha256']==source['files'][archive_name]['raw_sha256'],
+            'row-batched baseline archive differs')
+    with ZipFile(archive) as zipped:
+        old=zipped.read('cohort/train_ten_row_batched/stdout.bin')
+    current=path.read_bytes()
+    require(len(current)==len(old)==TEN_CARD_SPLIT_BYTES and
+            hashlib.sha256(old).hexdigest()==before['saved_output_sha256'] and
+            current[:-520]==old[:-520] and current[-520:-512]==old[-520:-512]==b'OPLDTP02',
+            'indexed cache changed exact retained bytes outside work receipt')
+    return {'row_baseline_head':prior['source_head'],'baseline_chance_actual':before['chance_actual'],
+            'indexed_chance_actual':replay['chance_actual'],'chance_work_forecast_delta':INDEXED_CACHE_WORK_DELTA,
+            'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -942,11 +1038,11 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
         ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False,
-        ten_phase_payload=False,ten_row_batched=False):
+        ten_phase_payload=False,ten_row_batched=False,ten_indexed_cache=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
            ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,
-           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched)
+           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
@@ -954,9 +1050,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
                                                  '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
-                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED'),strict=True) if flag),'')
+                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED','_TEN_INDEXED_CACHE'),strict=True) if flag),'')
     paired=any(modes)
-    phase_payload=ten_phase_payload or ten_row_batched
+    row_batched=ten_row_batched or ten_indexed_cache
+    phase_payload=ten_phase_payload or row_batched
     counted_divisions=ten_single_division or phase_payload
     ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or counted_divisions
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
@@ -1018,7 +1115,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
             proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance,
             ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
-            ten_row_batched=ten_row_batched)
+            ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -1027,7 +1124,7 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
-            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero,batch_rows=ten_row_batched
+            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero,batch_rows=row_batched
                                     ) if ten_buffered or ten_virtual_zero else None
             if proof9_sweeps:
                 schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps)
@@ -1036,7 +1133,12 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
                         'independent bounded PROOF9 pager schedule differs before training')
-            if ten_row_batched:
+            if ten_indexed_cache:
+                result['rank_index_trace']=rank_trace()
+                require(result['rank_index_trace']['queries']==4*admission['showdown_contractions_per_pass'],
+                        'independent rank cache trace differs before training')
+                save(output/'rank-index-trace.json',result['rank_index_trace'])
+            if row_batched:
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
                          schedule['logical_read_calls']+2*schedule['per_sweep_stage_calls'])==
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
@@ -1072,8 +1174,10 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--count-policy-divisions')
             if phase_payload:
                 command.append('--phase-payload')
-            if ten_row_batched:
+            if row_batched:
                 command.append('--row-batched')
+            if ten_indexed_cache:
+                command.append('--indexed-cache')
             if proof9_sweeps:
                 command.append(f'--proof9-t{proof9_sweeps}')
             if split:
@@ -1107,8 +1211,8 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
                     comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero,
-                                                    row_batched=ten_row_batched)
-                    label='row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                                                    row_batched=row_batched)
+                    label='indexed_cache' if ten_indexed_cache else 'row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -1148,6 +1252,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                           training_stdout_sha256=digest,quality_gate=None)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
+            if ten_indexed_cache:
+                result['rank_index']=verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace'])
+                result['indexed_cache_comparison'].update(compare_ten_card_index(source,result,raw,numeric))
             if ten_row_batched:
                 result['row_batched_comparison'].update(compare_ten_card_row_batch(source,result,raw,numeric))
             if shared_policy:
@@ -1156,6 +1263,9 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             if paged_directory:
                 require(result['row_directory']==verify_row_directory(output/'page-images-rows',raw,admission),
                         'row directory changed after independent replay')
+            if ten_indexed_cache:
+                require(result['rank_index']==verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace']),
+                        'rank index receipt changed after independent replay')
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
@@ -1229,6 +1339,7 @@ def main():
     modes.add_argument('--ten-single-division',action='store_true')
     modes.add_argument('--ten-phase-payload',action='store_true')
     modes.add_argument('--ten-row-batched',action='store_true')
+    modes.add_argument('--ten-indexed-cache',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     args=parser.parse_args()
@@ -1241,7 +1352,8 @@ def main():
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
         ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
         ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
-        ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched),sort_keys=True))
+        ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched,
+        ten_indexed_cache=args.ten_indexed_cache),sort_keys=True))
 
 
 if __name__=='__main__':main()

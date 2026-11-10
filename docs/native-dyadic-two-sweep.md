@@ -628,3 +628,55 @@ Windows host and finite ten-card T2 fixture. The numerical acceptance
 study still contains its one training invocation. The timing experiment
 records its eight additional calls separately.
 [Alternating timing evidence](../benchmarks/results/native-dyadic-row-batched-ten-card-timing-v1/manifest.json)
+
+## Sorted board-set rank index
+
+The explicit `--ten-indexed-cache` profile uses row batching and a
+sorted index of full board masks to stable rank-plane slots. A recent
+match retains the existing fast path. Other lookups use a fixed-capacity
+binary search. The index is allocated and admitted before use. On a
+miss, the complete update bound is reserved before ranking, and the new
+mapping is published only after the rank plane has been filled.
+Exceptions poison the private owner.
+
+The scalar ledger reserves two units for a recent comparison, eight per
+binary-search step and four for the final key and slot checks. At
+capacity `n`, a query is bounded by `6 + 8 * bit_width(n)`. The
+erase/insert reservation is `8*n + 16*bit_width(n) + 32`, including two
+searches and two possible record shifts. Initialization reserves
+`4*n + 16`. Each index record holds a full mask and slot, with 32
+additional logical entries for metadata, diagnostics and bounded scratch.
+The existing linear profile retains its original receipts.
+
+For the ten-card fixture, the new index reserves 66 entries within the
+existing chance-owner allowance. Its conservative chance forecast rises
+from 127,793,144 to 132,742,404 modeled work units, with the additional
+search and maintenance charges included. An independent rank-free
+traversal derives 79,560 nonrecent searches across 412,080 queries and
+pins the complete expected index ledger before training.
+
+The same independent traversal derives 262,080 nonrecent searches for
+the prospective eleven-card T2 workload. Its 56-plane chance forecast
+is 448,157,615 units, compared with 526,856,639 for linear lookup, under
+the existing 500-million chance-owner ceiling. This is a rank-free
+forecast. Eleven-card precision, storage, transport, whole-request
+admission, training and saved-policy verification remain separate gates.
+
+The frozen run at `0122ce9` passed native execution, independent
+saved-policy replay and the outer source check. All 2,542 tracked files
+retained their captured bytes. The independent structural trace matched
+all eight index fields, including 79,560 nonrecent searches and 17
+successful publications. Both checkpoint images and the numerical
+stream outside its work footer matched the row-batched baseline.
+Sixty-six focused controls passed normally and optimized. Terra supplied
+the independent source review, complete Chance forecast and search trace.
+
+The new Chance reservation is 132,742,404 units on ten cards. Its actual
+metered work is 70,637,650, versus 68,478,558 in the row-batched baseline.
+The broader scalar bookkeeping is explicit in the new model. The
+separate native observations were 8.50 and 7.29 seconds, with about
+5.03 MB peak working set each. They establish no timing improvement.
+Exploitability remains approximately 2.9843 big blinds after two sweeps,
+with an unset quality threshold. The packet also preserves the complete
+rank-free ten- and eleven-card forecasts with authenticated source closure.
+[Indexed-cache evidence](../benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1/manifest.json)

@@ -204,6 +204,13 @@ def division_count(values_by_row):
     return count
 
 
+def rank_index_costs(planes):
+    require(type(planes) is int and 1<=planes<=64,'invalid rank index capacity')
+    bits=planes.bit_length()
+    return {'lookup':6+8*bits,'update':8*planes+16*bits+32,
+            'setup':4*planes+16,'entries':32+2*planes}
+
+
 def phase_payload_bits(rows,value_bits,*,row_batched=False):
     fixed_owner=16_384+36_864+1_024
     borrowed_views=(410+388)*16
@@ -215,7 +222,7 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and not (proof9_t3 and proof9_t4),
@@ -228,6 +235,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'phase payload requires the counted ten-card digest profile')
     require(type(row_batched) is bool and (not row_batched or phase_payload),
             'row batching requires the ten-card phase payload profile')
+    require(type(indexed_cache) is bool and (not indexed_cache or row_batched),
+            'indexed cache requires the row-batched ten-card profile')
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
@@ -378,8 +387,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'saved rank-plane reuse accounting')
     if rank_sets:
         planes=len(boards)
+        index=rank_index_costs(planes) if indexed_cache else None
+        lookup=index['lookup'] if index else 2*planes
+        update=index['update'] if index else 0
         require(chance['rank_work']==4096*ranks and chance['sort_work']==512*planes and
-                chance['cache_lookup_work']<=2*planes*2*sweep_count*ranked+planes*(4*planes+64),
+                chance['cache_lookup_work']<=lookup*2*sweep_count*ranked+planes*(4*planes+64+update),
                 'saved rank-set work exceeds cache accounting')
     require(chance['completed_contractions']==2*sweep_count*(shape[4]+ranked+shape[2]+1),'saved terminal and marginal call accounting')
     require(0<history_bytes<=32<<20 and 0<chance['peak_integer_bits']<=65536
@@ -430,6 +442,7 @@ def main():
     parser.add_argument('--count-policy-divisions',action='store_true')
     parser.add_argument('--phase-payload',action='store_true')
     parser.add_argument('--row-batched',action='store_true')
+    parser.add_argument('--indexed-cache',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -452,7 +465,7 @@ def main():
     print(json.dumps(replay(args.saved,args.sha256,paired=args.paired,rank_sets=args.rank_sets,images=images,
                             packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
                             count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload,
-                            row_batched=args.row_batched),sort_keys=True))
+                            row_batched=args.row_batched,indexed_cache=args.indexed_cache),sort_keys=True))
 
 
 if __name__=='__main__':main()

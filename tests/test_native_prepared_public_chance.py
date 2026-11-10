@@ -174,6 +174,41 @@ class NativePreparedChanceTests(unittest.TestCase):
         if cls.temp is not None:
             cls.temp.cleanup()
 
+    def test_indexed_cache_exact_numeric_and_ledger(self):
+        lines=self.invoke('indexed-cache',['indexed'],65536)
+        rows=[line.split() for line in lines if line.startswith('INDEXED_ROW ')]
+        self.assertEqual(len(rows),6)
+        # A and B share a board set; then C evicts/reuses slots under cap 2.
+        expected_hits=[0,1,1,1,1,1]
+        expected_misses=[1,1,2,3,4,5]
+        for i,fields in enumerate(rows):
+            self.assertEqual((fields[0],int(fields[1])),('INDEXED_ROW',i))
+            player,selector=map(int,fields[2:4])
+            board=tuple(map(int,fields[4:9]))
+            d,e=map(int,fields[9:11])
+            values=[int(value,16) for value in fields[11:13]]
+            reach,exponent=fixture(selector)
+            self.assertEqual((d,e),(divisor(board),exponent))
+            self.assertEqual(values,literal(player,board,True,reach))
+            cap,entries,size,searches,updates,lookup,update,setup,hits,misses,evictions,parent_lookup=map(int,fields[13:])
+            self.assertEqual((cap,entries,setup),(2,36,24))
+            self.assertEqual((hits,misses),(expected_hits[i],expected_misses[i]))
+            self.assertEqual(evictions,max(0,misses-2))
+            self.assertEqual(updates,misses)
+            self.assertEqual(size,min(misses,2))
+            self.assertEqual(update,updates*(8*2+16*2+32))
+            self.assertGreaterEqual(searches,1)
+            self.assertEqual(lookup,searches*(6+8*2-2))
+            self.assertEqual(parent_lookup,2*i+lookup+update+misses*(4*cap+16+12*4))
+        bounds=[list(map(int,line.split()[1:])) for line in lines if line.startswith('INDEXED_BOUND ')]
+        self.assertEqual(len(bounds),5)
+        for cap,lookup,update,setup,entries in bounds:
+            bits=cap.bit_length()
+            self.assertEqual((lookup,update,setup,entries),
+                             (6+8*bits,8*cap+16*bits+32,4*cap+16,32+2*cap))
+        self.assertIn('INDEXED_FULL64 PASS',lines)
+        self.assertEqual(lines[-1],'INDEXED_GUARDS PASS')
+
     def invoke(self,name,selectors,cap=2_100_000):
         directory = self.output/name
         expected = self.identity[1]['executable_sha256']
