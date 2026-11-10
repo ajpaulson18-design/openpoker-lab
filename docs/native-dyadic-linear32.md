@@ -23,6 +23,22 @@ profile.
 
 The independent replay checks all 32 current policies, root values and
 checkpoint digests, reconstructs the complete wire hash, and computes the
-final policy and visible-information best responses. The comparison with
-the equal-weight study checks every current policy and root block. The
-accuracy outcome awaits a frozen run.
+final policy and visible-information best responses.
+
+## Frozen result
+
+At source `35db93a7f7d657b82fd24e56546b7f7d01db6473`, exploitability fell
+from **0.3969423992** with equal weights to **0.0800386101 big blinds** with
+linear weights. The exact rational result passed the predeclared 0.1 big blind
+target for this fixed game. All 32 current-policy and root-value blocks
+match the equal-weight run byte for byte. The first checkpoint matches, and
+the final average and checkpoint differ.
+
+The native call, the independent saved-only replay, and the outer observer
+all recorded exit 0. Replay matched every checkpoint and the reconstructed
+171,408,812-byte output hash. All 2,549 tracked source files retained their
+captured bytes. The initial controller attempt rejected its derived flags at
+admission, before any training. The evidence retains that failure and the one
+successful native call. All 76 focused tests passed normally and optimized.
+
+[Verification manifest and archive](../benchmarks/results/native-dyadic-proof9-linear32-v1/manifest.json)
