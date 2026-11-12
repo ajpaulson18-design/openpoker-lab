@@ -1246,16 +1246,17 @@ public:
     void policy(std::span<const std::uint64_t> units,bool compact) {
         // Source-level scalar packing/check operations. The existing output
         // ledger retains common stream emission and policy access charges.
-        if (compact) {
-            require(units.size()<=4,"compact policy menu exceeds packing model");
-            charge_compact(64+32*units.size());
+        if (!compact) {
+            for (const auto unit:units) u64(unit);
+            return;
         }
+        require(units.size()<=4,"compact policy menu exceeds packing model");
+        charge_compact(64+32*units.size());
         std::uint64_t total=0;
         for (std::size_t i=0;i<units.size();++i) {
             require(units[i]<=grid-total,"policy output exceeds fixed grid");
             total+=units[i];
-            if (!compact) u64(units[i]);
-            else if (i+1<units.size()) bounded_word(units[i],7);
+            if (i+1<units.size()) bounded_word(units[i],7);
         }
         require(!units.empty() && units.size()<=4 && total==grid,"policy output partition differs");
     }
