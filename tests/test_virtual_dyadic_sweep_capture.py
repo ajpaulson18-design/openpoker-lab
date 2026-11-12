@@ -111,3 +111,29 @@ class BoundedProof9CaptureTests(unittest.TestCase):
         self.assertEqual(verify_sweep_capture(process,admission,images,receipt['retained_sha256']),receipt)
         with self.assertRaisesRegex(ValueError,'checkpoint bytes or order'):
             verify_sweep_capture(process,admission,images[::-1],receipt['retained_sha256'])
+
+
+class CompactCaptureTests(unittest.TestCase):
+    def test_compact_contract_offsets_and_fragmented_frames(self):
+        with patch.object(capture,'IMAGE_BYTES',11):
+            reader=capture.SweepCapture(compact_wire=True)
+            contract=reader.contract
+            self.assertEqual(contract['retained_bytes'],3_103_848)
+            self.assertEqual(sum(size for kind,size in reader.segments if kind=='numeric'),3_103_848)
+            wire=bytearray()
+            epochs=0
+            for kind,size in reader.segments:
+                if kind=='header':
+                    epochs+=1
+                    wire.extend(capture.FRAME.pack(capture.MAGIC,epochs,epochs%2,11))
+                else:
+                    wire.extend(bytes(size))
+            output=io.BytesIO()
+            for offset in range(0,len(wire),7777):
+                reader.feed(wire[offset:offset+7777],output)
+            receipt=reader.finish()
+            self.assertEqual(len(output.getvalue()),3_103_848)
+            self.assertEqual(receipt['wire_sha256'],hashlib.sha256(wire).hexdigest())
+            self.assertEqual(len(receipt['frames']),2)
+        with self.assertRaises(ValueError):
+            capture.sweep_stream_contract(proof9_sweeps=32,compact_wire=True)

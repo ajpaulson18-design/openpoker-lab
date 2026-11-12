@@ -485,6 +485,21 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             validate_admission(dict(receipt,planned_total_work=receipt['planned_total_work']-1),
                                ten_complement=True)
 
+    def test_compact_wire_admission_changes_only_the_transport_contract(self):
+        from scripts.run_virtual_dyadic_compact_cohort import legacy_admission
+        directory,process=self.observe('admit_ten_compact_wire',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_COMPACT_WIRE',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        legacy=legacy_admission(receipt)
+        self.assertEqual(receipt['output_bytes'],3_103_848)
+        self.assertEqual(legacy['output_bytes'],9_833_076)
+        self.assertEqual(receipt['rank_calls'],0)
+        for key in ('output_bytes','compact_wire'):
+            bad=dict(receipt,**{key:False if key=='compact_wire' else 3_103_847})
+            with self.assertRaises(ValueError):
+                legacy_admission(bad)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

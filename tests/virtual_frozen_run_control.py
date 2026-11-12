@@ -134,7 +134,7 @@ def run_bounded_dyadic_probe(command,mode,directory):
                                              'ADMIT_TEN_PHASE_PAYLOAD','TRAIN_TEN_PHASE_PAYLOAD',
                                              'ADMIT_TEN_ROW_BATCHED','TRAIN_TEN_ROW_BATCHED',
                                              'ADMIT_TEN_INDEXED_CACHE','TRAIN_TEN_INDEXED_CACHE',
-                                             'ADMIT_TEN_COMPLEMENT','TRAIN_TEN_COMPLEMENT',
+                                             'ADMIT_TEN_COMPLEMENT','TRAIN_TEN_COMPLEMENT','ADMIT_TEN_COMPACT_WIRE','TRAIN_TEN_COMPACT_WIRE',
                                              'ADMIT_PROOF9_T3','TRAIN_PROOF9_T3',
                                              'ADMIT_PROOF9_T4','TRAIN_PROOF9_T4',
                                              'ADMIT_PROOF9_Q32','TRAIN_PROOF9_Q32','ADMIT_PROOF9_LINEAR32','TRAIN_PROOF9_LINEAR32'):
@@ -144,10 +144,10 @@ def run_bounded_dyadic_probe(command,mode,directory):
     protocol='DYADIC_L32_V1' if linear32 else f'DYADIC_T{proof9_sweeps or 2}_V1'
     request=(protocol+' '+mode+'\n').encode('ascii')
     if mode in ('TRAIN_TEN_SWEEP_STREAM','TRAIN_TEN_SPARSE_CHANCE','TRAIN_TEN_SINGLE_DIVISION','TRAIN_TEN_PHASE_PAYLOAD',
-                'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE','TRAIN_TEN_COMPLEMENT',
+                'TRAIN_TEN_ROW_BATCHED','TRAIN_TEN_INDEXED_CACHE','TRAIN_TEN_COMPLEMENT','TRAIN_TEN_COMPACT_WIRE',
                 'TRAIN_PROOF9_T3','TRAIN_PROOF9_T4','TRAIN_PROOF9_Q32','TRAIN_PROOF9_LINEAR32'):
         from tests.virtual_dyadic_sweep_capture import SweepCapture
-        capture=SweepCapture(proof9_sweeps=proof9_sweeps)
+        capture=SweepCapture(proof9_sweeps=proof9_sweeps,compact_wire=mode=='TRAIN_TEN_COMPACT_WIRE')
         wire_bytes=capture.contract['wire_bytes']
         return _run_streamed_child(command,request,directory,stdout_limit=wire_bytes,
             stderr_limit=65536,timeout=300,request_limit=len(request),stdout_ceiling=wire_bytes,
@@ -177,7 +177,7 @@ def _run_streamed_child(command,request,directory,*,stdout_limit,stderr_limit,ti
     ceilings=(2135476,_DYADIC_T2_STDOUT)
     if sweep_capture is not None:
         from tests.virtual_dyadic_sweep_capture import SweepCapture, sweep_stream_contract
-        ceilings=tuple(sweep_stream_contract(proof9_sweeps=n)['wire_bytes'] for n in (0,3,4,32))
+        ceilings=tuple(sweep_stream_contract(proof9_sweeps=n)['wire_bytes'] for n in (0,3,4,32))+(sweep_stream_contract(compact_wire=True)['wire_bytes'],)
         if (type(sweep_capture) is not SweepCapture or stdout_limit!=stdout_ceiling or
                 stdout_limit!=sweep_capture.contract['wire_bytes']):
             raise ValueError('invalid sweep checkpoint capture bound')

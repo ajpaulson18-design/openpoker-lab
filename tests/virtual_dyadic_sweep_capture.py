@@ -14,7 +14,9 @@ FINAL_BYTES = RETAINED_BYTES - PRELUDE_BYTES - 2*PROFILE_AND_ROOT_BYTES
 SCRATCH_BYTES = 32768
 
 
-def sweep_stream_contract(*, proof9_sweeps=0):
+def sweep_stream_contract(*, proof9_sweeps=0, compact_wire=False):
+    if type(compact_wire) is not bool or (compact_wire and proof9_sweeps):
+        raise ValueError('compact wire requires the fixed ten-card T2 profile')
     if proof9_sweeps not in (0, 3, 4, 32):
         raise ValueError('unsupported sweep stream horizon')
     if proof9_sweeps:
@@ -23,6 +25,9 @@ def sweep_stream_contract(*, proof9_sweeps=0):
         wire = retained + frames*(FRAME.size + image_bytes)
     else:
         frames, image_bytes, retained, wire = 2, IMAGE_BYTES, RETAINED_BYTES, WIRE_BYTES
+        if compact_wire:
+            retained=3_103_848
+            wire=retained+2*(FRAME.size+image_bytes)
     blocks = (image_bytes+SCRATCH_BYTES-1)//SCRATCH_BYTES
     return {'version': 1, 'frames': frames, 'frame_header_bytes': FRAME.size,
             'image_bytes': image_bytes, 'wire_bytes': wire,
@@ -33,8 +38,8 @@ def sweep_stream_contract(*, proof9_sweeps=0):
 
 class SweepCapture:
     """Use admitted offsets so magic bytes in image data are ordinary bytes."""
-    def __init__(self, *, proof9_sweeps=0):
-        self.contract = sweep_stream_contract(proof9_sweeps=proof9_sweeps)
+    def __init__(self, *, proof9_sweeps=0, compact_wire=False):
+        self.contract = sweep_stream_contract(proof9_sweeps=proof9_sweeps,compact_wire=compact_wire)
         count = self.contract['frames']
         self.image_bytes = self.contract['image_bytes']
         if proof9_sweeps:
@@ -48,6 +53,14 @@ class SweepCapture:
             self.segments.extend((('numeric', profile_and_roots),
                                   ('header', FRAME.size), ('image', self.image_bytes)))
         self.segments.append(('numeric', final))
+        if compact_wire:
+            prelude=8+16*8+11*8+1105*96+6*119196
+            roots=4*12*8
+            profile=7*(281066-119196)
+            final=profile+(119196+7)//8+8+64*8
+            self.segments=[('numeric',prelude+roots),('header',FRAME.size),('image',self.image_bytes),
+                           ('numeric',profile+roots),('header',FRAME.size),('image',self.image_bytes),
+                           ('numeric',final)]
         self.index = self.consumed = self.retained = 0
         self.remaining = self.segments[0][1]
         self.header = bytearray()
