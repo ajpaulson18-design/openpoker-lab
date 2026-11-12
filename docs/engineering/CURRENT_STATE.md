@@ -1045,3 +1045,13 @@ The [completed 8x8 accuracy record](../native-river-range-quality-results.md) pr
 ## Blocker-sensitive AK/KK source counts
 
 One [complete seven-stage physical observation](../preflop-ak-kk-basis-results.md) passed exact native/best-five agreement for three new AK/KK suit classes after current-build all-five conformance and published AA calibration. The original reports and thirteen small raw streams retain all 783 stable source identities and both build identities. These are source counts only; 84-pair joint-suit transport and strategy accuracy remain separate prerequisites. No shared solver or Coach behavior changes.
+
+## Compact exact training evidence
+
+The [compact numerical transport](../native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+passes a frozen ten-card training and independent replay study. It
+preserves the complete legacy numerical stream through exact expansion,
+records additional encoder work within the existing cap, and reduces
+retained numerical output by 68.4 percent. The eleven-card output-size
+projection fits the current ceiling. Whole-request work admission
+and eleven-card quality remain unresolved.

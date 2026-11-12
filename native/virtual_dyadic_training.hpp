@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -325,6 +325,7 @@ struct Plan {
     bool row_batched=false;
     bool indexed_cache=false;
     bool complement_division=false;
+    bool compact_wire=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -372,6 +373,21 @@ inline std::uint64_t artifact_bytes(const Counts& c,bool split,std::size_t reque
     return 8+8*header_words+8*integer_words+literal_count*literal_bytes+c.rows*row_bytes+
         requested_sweeps*(8*c.slots*(1+checkpoint_words)+4*8*(integer_words+1))+
         8*c.slots+c.rows+8+8*footer_words;
+}
+
+inline std::uint64_t compact_artifact_bytes(const Counts& c) {
+    require(c.slots>=c.rows,"compact row geometry");
+    return 8+8*header_words+8*integer_words+literal_count*literal_bytes+
+        6*c.rows+2*4*8*(integer_words+1)+14*(c.slots-c.rows)+(c.rows+7)/8+8+8*footer_words;
+}
+
+inline std::uint64_t compact_encoding_work(const Counts& c) {
+    constexpr auto limit=std::numeric_limits<std::uint64_t>::max();
+    require(c.rows<=limit/224 && c.slots<=limit/128,"compact encoding dimensions overflow");
+    const auto rows=208*c.rows+16*((c.rows+7)/8);
+    const auto slots=64*c.slots;
+    require(slots<=limit-rows,"compact encoding work overflow");
+    return rows+slots;
 }
 
 class Forecast final {
@@ -604,7 +620,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.complement_division=profile==StrategyProfile::ten_card_complement;
+        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire;
+        plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
         plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
         plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache || q32;
         plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload || (plan_.row_batched && !q32);
@@ -839,7 +856,7 @@ public:
             chance_entries+32*literal_count+1+parent_entries+(plan_.shared_policy?Plan::policy_frame_entries:0)+
             (plan_.paged_directory?Plan::directory_frame_entries:0);
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
-        plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint,plan_.requested_sweeps);
+        plan_.output_bytes=plan_.compact_wire?compact_artifact_bytes(g):artifact_bytes(g,plan_.split_checkpoint,plan_.requested_sweeps);
         if (bounded) {
             plan_.entries+=sweep_stream_entries;
             plan_.payload_bits+=sweep_stream_payload_bits;
@@ -1201,9 +1218,10 @@ class Binary final {
     std::ostream& out_;
     std::uint64_t capacity_,written_=0;
     std::size_t value_bits_;
+    std::uint64_t compact_limit_=0,compact_work_=0;
 public:
-    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits)
-        :out_(out),capacity_(capacity),value_bits_(value_bits) {
+    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits,std::uint64_t compact_limit=0)
+        :out_(out),capacity_(capacity),value_bits_(value_bits),compact_limit_(compact_limit) {
         static_assert(std::endian::native==std::endian::little,"fixed binary producer requires little endian");
         require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits || value_bits_==proof9_t3.value_bits ||
             value_bits_==proof9_t4.value_bits,"unsupported fixed output width");
@@ -1216,6 +1234,43 @@ public:
     }
     void text(std::string_view value) { bytes(value.data(),value.size()); }
     void u64(std::uint64_t value) { bytes(&value,sizeof(value)); }
+    void charge_compact(std::uint64_t work) {
+        require(work<=compact_limit_-compact_work_,"compact encoding work cap exceeded");
+        compact_work_+=work;
+    }
+    [[nodiscard]] std::uint64_t compact_work() const noexcept { return compact_work_; }
+    void bounded_word(std::uint64_t value,std::size_t count) {
+        require((count==6 || count==7) && value<(1ULL<<(8*count)),"compact output word exceeds width");
+        bytes(&value,count);
+    }
+    void policy(std::span<const std::uint64_t> units,bool compact) {
+        // Source-level scalar packing/check operations. The existing output
+        // ledger retains common stream emission and policy access charges.
+        if (!compact) {
+            for (const auto unit:units) u64(unit);
+            return;
+        }
+        require(units.size()<=4,"compact policy menu exceeds packing model");
+        charge_compact(64+32*units.size());
+        std::uint64_t total=0;
+        for (std::size_t i=0;i<units.size();++i) {
+            require(units[i]<=grid-total,"policy output exceeds fixed grid");
+            total+=units[i];
+            if (i+1<units.size()) bounded_word(units[i],7);
+        }
+        require(!units.empty() && units.size()<=4 && total==grid,"policy output partition differs");
+    }
+    void fallback_bits(std::span<const unsigned char> flags) {
+        charge_compact(16*flags.size()+16*((flags.size()+7)/8));
+        for (std::size_t start=0;start<flags.size();start+=8) {
+            unsigned char byte=0;
+            for (std::size_t bit=0;bit<8 && start+bit<flags.size();++bit) {
+                require(flags[start+bit]<=1,"compact fallback flag outside boolean range");
+                byte|=static_cast<unsigned char>(flags[start+bit]<<bit);
+            }
+            bytes(&byte,1);
+        }
+    }
     void wide(const Integer& value,bool signed_field=false) {
         const auto& raw=value.backend();
         using Limb=std::remove_cvref_t<decltype(raw.limbs()[0])>;
@@ -1235,6 +1290,7 @@ public:
     }
     void finish() {
         require(written_==capacity_,"fixed training output length changed");
+        require(compact_work_==compact_limit_,"compact encoding work differs from reservation");
         out_.flush();
         require(bool(out_),"fixed training output flush failed");
     }
@@ -1254,7 +1310,7 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
-    std::uint64_t combined_divisions=0;
+    std::uint64_t combined_divisions=0,compact_encoding_work=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
 };
 
@@ -1320,7 +1376,7 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text(p.proof9_linear32()?"OPLDSL31":p.proof9_quality32()?"OPLDSQ31":p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
+        out.text(p.compact_wire?"OPLDTC01":p.proof9_linear32()?"OPLDSL31":p.proof9_quality32()?"OPLDSQ31":p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
         for (const auto word:std::array<std::uint64_t,header_words>{p.bounded_proof9()?p.requested_sweeps:1ULL,grid_bits,integer_words,p.shape.rows,
             p.shape.slots,literal_count,p.requested_sweeps,p.H,p.M,p.denominator_bits,p.game().value_bits,p.output_bytes,2,2,
             p.normalizer,p.game().divisors[3]}) out.u64(word);
@@ -1328,12 +1384,20 @@ class Driver final {
         skeleton(out);
         for (std::size_t i=0;i<state.row_count();++i) {
             const auto row=state.row_at(i);
-            out.u64(row.history_ordinal);
-            out.u64(row.actor|(row.holding_index<<8)|(row.actions.size()<<16));
-            out.u64(row.offset);
+            if (p.compact_wire) {
+                out.charge_compact(64);
+                require(row.history_ordinal<(1ULL<<44) && row.actor<2 && row.holding_index<2 &&
+                    !row.actions.empty() && row.actions.size()<=4,"compact row identity exceeds width");
+                out.bounded_word((static_cast<std::uint64_t>(row.history_ordinal)<<4)|
+                    (row.actor<<3)|(row.holding_index<<2)|(row.actions.size()-1),6);
+            } else {
+                out.u64(row.history_ordinal);
+                out.u64(row.actor|(row.holding_index<<8)|(row.actions.size()<<16));
+                out.u64(row.offset);
+            }
         }
     }
-    static std::uint64_t profile(Binary& out,state::State& state,std::size_t sweep,bool shared_policy,bool paged_directory) {
+    static std::uint64_t profile(Binary& out,state::State& state,std::size_t sweep,bool shared_policy,bool paged_directory,bool compact_wire) {
         std::uint64_t changed=0;
         for (std::size_t row=0;row<state.row_count();++row) {
             std::array<std::uint64_t,4> copied{};
@@ -1349,9 +1413,9 @@ class Driver final {
             bool distinct=false;
             for (std::size_t action=0;action<units.size();++action) {
                 distinct=distinct || units[action]!=uniform_unit(units.size(),action);
-                out.u64(units[action]);
             }
             require(sweep || !distinct,"first policy differs from the admitted uniform grid");
+            if (!compact_wire || sweep) out.policy(units,compact_wire);
             if (distinct) ++changed;
         }
         return changed;
@@ -1497,7 +1561,7 @@ public:
             p.shape.rows==119196 && p.shape.slots==281066 &&
             p.page_limits.profile==paging::Profile::proof10 &&
             p.page_limits.image_words==paging::n10_image_words &&
-            p.output_bytes==sweep_stream_retained_bytes &&
+            p.output_bytes==(p.compact_wire?compact_artifact_bytes(p.shape):sweep_stream_retained_bytes) &&
             p.page_limits.image_words<=std::numeric_limits<std::uint64_t>::max()/8 &&
             8*static_cast<std::uint64_t>(p.page_limits.image_words)==sweep_stream_image_bytes,
             "sweep streaming is restricted to the fixed ten-card paged-directory profile");
@@ -1506,6 +1570,13 @@ public:
             "sweep streaming scratch exceeds existing storage admission");
         require(p.total_work<=game.work_limit && sweep_stream_copy_work<=game.work_limit-p.total_work,
             "sweep streaming copy work exceeds transport work cap");
+        require(!p.compact_wire || compact_encoding_work(p.shape)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work,
+            "compact encoding exceeds composed transport work cap");
+        // Bounded scalar encoder counters, temporary packed row and flag byte.
+        require(!p.compact_wire || (32<=entries_cap-p.entries-sweep_stream_entries &&
+            2048<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits),
+            "compact encoder scratch exceeds composed storage cap");
     }
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
@@ -1575,12 +1646,12 @@ public:
         }
 
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
-        Binary out(stream,p.output_bytes,value_bits);
+        Binary out(stream,p.output_bytes,value_bits,p.compact_wire?compact_encoding_work(p.shape):0);
         prelude(out,state,denominator);
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<p.requested_sweeps;++sweep) {
             state.begin_sweep();
-            feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory);
+            feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory,p.compact_wire);
             std::array<Values,targets> roots{};
             if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
             else {
@@ -1603,10 +1674,11 @@ public:
         }
         if (p.shared_policy) {
             const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
-                for (const auto unit:units) out.u64(unit);
+                out.policy(units,p.compact_wire);
             });
             require(flags.size()==p.shape.rows,"streamed export row count changed");
-            out.bytes(flags.data(),flags.size());
+            if (p.compact_wire) out.fallback_bits(flags);
+            else out.bytes(flags.data(),flags.size());
         } else {
             const auto image=state.export_average(!p.packed_averages);
             require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
@@ -1619,6 +1691,7 @@ public:
         footer(out,chance.receipt(),history.receipt(),state_receipt,feedback);
         out.finish();
         TrainingIO result;
+        result.compact_encoding_work=out.compact_work();
         result.paging=state.paged_receipt();
         if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();

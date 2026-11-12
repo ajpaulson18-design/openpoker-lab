@@ -25,7 +25,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_single_division, train_ten_single_division,
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
-                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire,
                   admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
@@ -90,6 +90,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_INDEXED_CACHE") return Mode::train_ten_indexed_cache;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_COMPLEMENT") return Mode::admit_ten_complement;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_COMPLEMENT") return Mode::train_ten_complement;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_COMPACT_WIRE") return Mode::admit_ten_compact_wire;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_COMPACT_WIRE") return Mode::train_ten_compact_wire;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
@@ -164,6 +166,11 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.sparse_chance) std::cout<<",\"sparse_chance\":true";
     if (plan.single_division) std::cout<<",\"single_division\":true";
     if (plan.complement_division) std::cout<<",\"complement_division\":true";
+    if (plan.compact_wire) std::cout<<",\"compact_wire\":true,\"compact_encoding_work\":"
+        <<training::compact_encoding_work(plan.shape)<<",\"compact_composed_work\":"
+        <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)
+        <<",\"compact_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32
+        <<",\"compact_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048;
     if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     if (plan.row_batched) std::cout<<",\"row_batched\":true";
     if (plan.indexed_cache)
@@ -207,8 +214,8 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
         <<(q32base?training::proof9_q32_sweep_stream_frames:proof9_t4?training::proof9_t4_sweep_stream_frames:proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
         <<",\"frame_header_bytes\":"<<training::sweep_stream_header_bytes
         <<",\"image_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_image_bytes:proof9_t4?training::proof9_t4_sweep_stream_image_bytes:proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
-        <<",\"wire_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_wire_bytes:proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:training::sweep_stream_wire_bytes)
-        <<",\"retained_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_retained_bytes:proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:training::sweep_stream_retained_bytes)
+        <<",\"wire_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_wire_bytes:proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:(plan.compact_wire?plan.output_bytes+training::sweep_stream_read_bytes+2*training::sweep_stream_header_bytes:training::sweep_stream_wire_bytes))
+        <<",\"retained_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_retained_bytes:proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:plan.output_bytes)
         <<",\"read_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_read_bytes:proof9_t4?training::proof9_t4_sweep_stream_read_bytes:proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
         <<",\"scratch_bytes\":"<<training::sweep_stream_scratch_bytes
         <<",\"copy_work\":"<<(q32base?training::proof9_q32_sweep_stream_copy_work:proof9_t4?training::proof9_t4_sweep_stream_copy_work:proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
@@ -285,8 +292,8 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool complement_admit=mode==Mode::admit_ten_complement;
-        const bool complement_train=mode==Mode::train_ten_complement;
+        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire;
+        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire;
         const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
@@ -312,6 +319,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_compact_wire || mode==Mode::train_ten_compact_wire)
+            profile=training::StrategyProfile::ten_card_compact_wire;
         else if (complement_admit || complement_train)
             profile=training::StrategyProfile::ten_card_complement;
         else if (mode==Mode::admit_ten_indexed_cache || mode==Mode::train_ten_indexed_cache)
@@ -370,6 +379,13 @@ int main(int argc,char* argv[]) {
             if (io.directory) save_directory(scratch,*io.directory);
             if (io.combined_divisions) save_divisions(scratch,io.combined_divisions);
             if (io.rank_index) save_rank_index(scratch,*io.rank_index);
+            if (io.compact_encoding_work) {
+                std::ofstream receipt(scratch.parent_path()/"compact-wire.json",std::ios::binary);
+                training::require(bool(receipt),"compact work receipt open failed");
+                receipt<<"{\"compact_encoding_work\":"<<io.compact_encoding_work<<"}\n";
+                receipt.close();
+                training::require(bool(receipt),"compact work receipt write failed");
+            }
         }
         return 0;
     } catch (const std::exception& error) {

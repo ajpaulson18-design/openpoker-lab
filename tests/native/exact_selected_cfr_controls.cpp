@@ -19,10 +19,12 @@ g::Graph fixture(bool symmetry) {
     g::Graph graph;
     const auto first = symmetry ? "2c3c7c" : "2c3d4h";
     const auto second = "2d3d7d";
+    std::vector<g::Branch> flop_branches{{first, 3}};
+    if (symmetry) flop_branches.emplace_back(second, 3);
     graph.vertices = {
         g::Vertex::decision(0, {act("fold"), act("call")}, {1,2}),
         g::Vertex::terminal(g::TerminalKind::fold, 1, {bits(1.),bits(1.)}),
-        g::Vertex::chance(g::Street::flop,4, symmetry ? std::vector<g::Branch>{{first,3},{second,3}} : std::vector<g::Branch>{{first,3}}),
+        g::Vertex::chance(g::Street::flop,4,std::move(flop_branches)),
         g::Vertex::decision(1,{act("fold"),act("call")},{4,5}),
         g::Vertex::terminal(g::TerminalKind::fold,0,{bits(1.),bits(1.)}),
         g::Vertex::chance(g::Street::turn,5,{{symmetry ? "9h" : "7s",6}}),

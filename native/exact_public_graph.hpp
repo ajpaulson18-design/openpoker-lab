@@ -753,10 +753,18 @@ private:
         for (std::size_t side = 0; side < 2; ++side)
             for (std::size_t i = 0; i < ranges_[side].size(); ++i)
                 indices[side].emplace(detail::holding_key(ranges_[side][i].hand), i);
-        std::array<std::uint8_t, 4> permutation{0, 1, 2, 3};
+        static constexpr auto permutations = [] {
+            std::array<std::array<std::uint8_t, 4>, 24> result{};
+            std::array<std::uint8_t, 4> permutation{0, 1, 2, 3};
+            std::size_t index = 0;
+            do {
+                result[index++] = permutation;
+            } while (std::next_permutation(permutation.begin(), permutation.end()));
+            return result;
+        }();
         std::set<std::array<Card, 5>> selected;
         for (const auto& board : boards_) selected.insert(board.cards);
-        do {
+        for (const auto& permutation : permutations) {
             SuitMap mapping{permutation};
             bool preserves = true;
             for (std::size_t side = 0; side < 2 && preserves; ++side) {
@@ -775,7 +783,7 @@ private:
                 preserves = transformed == selected;
             }
             if (preserves) group_.push_back(mapping);
-        } while (std::next_permutation(permutation.begin(), permutation.end()));
+        }
         if (group_.empty() || group_.size() > 24)
             detail::fail(ErrorCode::group_invalid, "weighted range/board stabilizer lacks identity");
         std::sort(group_.begin(), group_.end(), [](const auto& a, const auto& b) { return a.image < b.image; });

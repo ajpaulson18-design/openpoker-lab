@@ -336,13 +336,14 @@ void check_s3_reveal_composition() {
     // The six boards are the S3 suit orbit of 2d3h4s; clubs stay fixed on
     // the turn and river. Every transformed flop is a distinct chance edge.
     std::vector<SelectedBoard> boards;
-    std::array<std::uint8_t, 3> suits{1, 2, 3};
-    do {
+    constexpr std::array<std::array<std::uint8_t, 3>, 6> suit_orders{{
+        {1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}}};
+    for (const auto& suits : suit_orders) {
         SelectedBoard board{{suits[0], static_cast<public_graph::Card>(4 + suits[1]),
                              static_cast<public_graph::Card>(8 + suits[2]), 12, 16}};
         std::sort(board.cards.begin(), board.cards.begin() + 3);
         boards.push_back(board);
-    } while (std::next_permutation(suits.begin(), suits.end()));
+    }
 
     std::vector<std::string> labels;
     labels.reserve(boards.size());
