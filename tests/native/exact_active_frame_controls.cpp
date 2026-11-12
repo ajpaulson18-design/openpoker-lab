@@ -67,11 +67,12 @@ int main() {
             const std::vector<WeightedHand> six_sb{{{48,49},kOneBits},{{48,50},kOneBits},{{48,51},kOneBits}};
             const std::vector<WeightedHand> six_bb{{{44,45},kOneBits},{{44,46},kOneBits},{{44,47},kOneBits}};
             std::vector<SelectedBoard> six_boards;
-            std::array<std::uint8_t,3> suits{1,2,3};
-            do {
+            constexpr std::array<std::array<std::uint8_t,3>,6> suit_orders{{
+                {1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1}}};
+            for (const auto& suits : suit_orders) {
                 SelectedBoard b{{suits[0],static_cast<public_graph::Card>(4+suits[1]),static_cast<public_graph::Card>(8+suits[2]),12,16}};
                 std::sort(b.cards.begin(),b.cards.begin()+3); six_boards.push_back(b);
-            } while (std::next_permutation(suits.begin(),suits.end()));
+            }
             std::vector<std::string> labels;
             for (const auto& b : six_boards) labels.push_back(flop_label(b));
             std::sort(labels.begin(),labels.end());
