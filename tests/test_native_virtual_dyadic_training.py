@@ -500,6 +500,19 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             with self.assertRaises(ValueError):
                 legacy_admission(bad)
 
+    def test_factored_training_admission_preserves_the_packed_lifecycle(self):
+        from scripts.run_virtual_dyadic_compact_cohort import legacy_admission
+        directory,process=self.observe('admit_ten_factored',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_FACTORED',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        legacy_admission(receipt,factored=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['factored_composed_work'],receipt['factored_composed_entries'],
+                          receipt['factored_composed_payload_bits']),(2_137_373_778,372_660,20_827_008))
+        with self.assertRaises(ValueError):legacy_admission(receipt)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

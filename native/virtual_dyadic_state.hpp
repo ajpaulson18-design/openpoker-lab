@@ -2,6 +2,8 @@
 // Persistent simultaneous CFR+ state. The enclosing trainer authenticates menus,
 // physical support and the common fixed game denominator before calling this owner.
 #include "dyadic_policy.hpp"
+#include "factored_execution.hpp"
+#include "packed_signed_update.hpp"
 #include "virtual_dyadic_history.hpp"
 #include "virtual_dyadic_paged_image.hpp"
 #include <algorithm>
@@ -20,6 +22,7 @@
 #include <stdexcept>
 #include <string_view>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 
 namespace openpoker::virtual_dyadic_training { class Driver; }
@@ -75,6 +78,7 @@ struct PagedStrategy {
     dyadic_policy::DivisionKernel division_kernel=dyadic_policy::DivisionKernel::separate;
     PayloadModel payload_model=PayloadModel::legacy;
     bool row_batched=false;
+    factored_dyadic::Execution* factored=nullptr;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -392,6 +396,7 @@ class State final {
     const StorageForecast storage_;
     dyadic_policy::Quantizer quantizer_;
     Receipt receipt_{};
+    packed_signed_update::Counts packed_update_counts_{};
     Integer denominator_;
     std::unique_ptr<Row[]> rows_;
     std::unique_ptr<CompactRow[]> compact_rows_;
@@ -459,6 +464,10 @@ class State final {
             (!expanded || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases || !paged->row_batched))
             fail(ErrorCode::invalid_forecast,"complement division requires the named ten-card row-batched lifecycle");
+        if (paged && paged->factored &&
+            (!expanded || !paged->row_batched || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
+             paged->payload_model!=PayloadModel::paged_phases))
+            fail(ErrorCode::invalid_forecast,"factored updates require the named ten-card packed lifecycle");
         if (paged && paged->lifecycle==Lifecycle::quality32 && (!q32 || !paged->row_batched ||
             paged->division_kernel!=dyadic_policy::DivisionKernel::combined))
             fail(ErrorCode::invalid_forecast,"Q32 lifecycle requires its row-batched combined-division pager");
@@ -1019,6 +1028,9 @@ public:
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }
+    [[nodiscard]] packed_signed_update::Counts packed_update_counts() const noexcept {
+        return packed_update_counts_;
+    }
     [[nodiscard]] std::optional<virtual_dyadic_paged_image::Receipt> paged_receipt() const {
         if (!paged_image_) return std::nullopt;
         return paged_image_->receipt();
@@ -1454,13 +1466,67 @@ public:
         } catch (...) {failed_=true;throw;}
     }
 private:
+    template<class Increment>
+    void stage_direct_row(PackedField field,std::size_t offset,std::size_t shift,
+                          std::span<const Increment> increments,
+                          const factored_dyadic::Value* mixed=nullptr) {
+        if (!paged_ || !paged_->factored || !paged_image_ || !paged_->row_batched ||
+            increments.empty() || increments.size()>row_batch_max_actions)
+            fail(ErrorCode::invalid_row,"invalid direct packed update");
+        const auto stride=packed_stride(shift);
+        if (increments.size()>row_batch_codec_words/stride)
+            fail(ErrorCode::invalid_row,"direct packed row exceeds codec scratch");
+        std::array<std::uint64_t,row_batch_codec_words> scratch;
+        auto live=std::span(scratch).first(increments.size()*stride);
+        paged_image_->read(page_base(field)+offset,live,
+            field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
+        for (std::size_t action=0;action<increments.size();++action) {
+            auto destination=live.subspan(action*stride,stride);
+            if constexpr (std::is_same_v<Increment,factored_dyadic::Value>) {
+                if (field!=PackedField::regret || !mixed)
+                    fail(ErrorCode::invalid_row,"factored regret update needs its mixed value");
+                auto delta=paged_->factored->subtracted(increments[action],*mixed);
+                const auto* coefficient=&delta.coefficient();
+                Integer quotient;
+                std::size_t left=0;
+                if (!delta.is_zero() && delta.shift()<shift) {
+                    const auto right=shift-delta.shift();
+                    const auto& raw=coefficient->backend();
+                    using Limb=std::remove_cvref_t<decltype(raw.limbs()[0])>;
+                    constexpr auto limb_bits=std::numeric_limits<Limb>::digits;
+                    const auto full=right/limb_bits,partial=right%limb_bits;
+                    for (std::size_t word=0;word<std::min<std::size_t>(full,raw.size());++word)
+                        if (raw.limbs()[word])
+                            fail(ErrorCode::arithmetic,"factored regret delta is outside certified scale");
+                    if (partial && full<raw.size() &&
+                        (raw.limbs()[full]&((std::uint64_t{1}<<partial)-1)))
+                        fail(ErrorCode::arithmetic,"factored regret delta has fractional packed units");
+                    quotient=*coefficient>>right;
+                    coefficient=&quotient;
+                } else if (!delta.is_zero()) left=delta.shift()-shift;
+                packed_signed_update::apply(destination,*coefficient,left,true,
+                    forecast_.value_bits-shift,packed_update_counts_);
+            } else {
+                if (field!=PackedField::average || mixed || increments[action]<0)
+                    fail(ErrorCode::invalid_row,"direct average update needs nonnegative reduced units");
+                packed_signed_update::apply(destination,increments[action],0,false,
+                    forecast_.value_bits-shift,packed_update_counts_);
+            }
+        }
+        paged_image_->stage_row_extent(page_base(field)+offset,live);
+    }
+
     // The returned exact mixed numerator belongs to the enclosing traversal.
-    Integer stage_row_impl(std::size_t row,std::span<const Integer> action_values,
+    template<class Value>
+    Value stage_row_impl(std::size_t row,std::span<const Value> action_values,
                            std::span<const Integer> average_action_increments,
                            std::optional<std::size_t> scaled_shift) {
         healthy();
         try {
             if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state staging requires active sweep");
+            constexpr bool factored=std::is_same_v<Value,factored_dyadic::Value>;
+            if (factored!=bool(paged_ && paged_->factored))
+                fail(ErrorCode::phase,"staging representation differs from admitted owner");
             const auto descriptor=describe_row(row);
             const auto r=descriptor.row;const auto count=r.actions.size();
             if (row_seen(row) || action_values.size()!=count || average_action_increments.size()!=count)
@@ -1475,7 +1541,12 @@ private:
             // arithmetic. Inputs are caller-owned and never mutated.
             charge(64+128*count);
             for (std::size_t a=0;a<count;++a) {
-                input_width(action_values[a]);
+                if constexpr (factored) {
+                    const auto bits=action_values[a].expanded_bits();
+                    if (bits>forecast_.value_bits)
+                        fail(ErrorCode::integer_width,"factored state input exceeds fixed value width");
+                    receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,std::size_t{bits});
+                } else input_width(action_values[a]);
                 if (scaled_shift) {
                     const auto bits=width(average_action_increments[a]);
                     receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,bits);
@@ -1487,16 +1558,27 @@ private:
             const auto temp_bits=forecast_.value_bits+58;
             charge(times(16*count+8,words(temp_bits)));
             receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,temp_bits);
-            Integer mixed=0;
+            Value mixed{};
             std::array<std::uint64_t,20> copied{};
             if (policy_spill_) policy_spill_->load(policy_tag(row),r.offset-row,
                 std::span(copied).first(count));
             const auto* policy=policy_spill_?copied.data():units_.get()+r.offset;
-            for (std::size_t a=0;a<count;++a) mixed+=action_values[a]*policy[a];
-            if (mixed%dyadic_policy::grid_units!=0)
-                fail(ErrorCode::arithmetic,"state mixed value is outside fixed denominator grid");
-            mixed>>=dyadic_policy::grid_bits;
-            if (paged_ && paged_->row_batched) {
+            if constexpr (factored) {
+                mixed=paged_->factored->mix(action_values,std::span(policy,count));
+                if (mixed.expanded_bits()>forecast_.value_bits)
+                    fail(ErrorCode::integer_width,"factored mixed value exceeds fixed value width");
+            } else {
+                for (std::size_t a=0;a<count;++a) mixed+=action_values[a]*policy[a];
+                if (mixed%dyadic_policy::grid_units!=0)
+                    fail(ErrorCode::arithmetic,"state mixed value is outside fixed denominator grid");
+                mixed>>=dyadic_policy::grid_bits;
+            }
+            if constexpr (factored) {
+                stage_direct_row(PackedField::regret,regret_row.limb_offset,regret_row.shift,
+                    action_values,&mixed);
+                stage_direct_row(PackedField::average,average_row.limb_offset,average_row.shift,
+                    average_action_increments);
+            } else if (paged_ && paged_->row_batched) {
                 stage_compact_row(PackedField::regret,regret_row.limb_offset,regret_row.shift,
                     action_values,BatchUpdate::regret_delta,
                     "state retained regret exceeds packed admission",&mixed);
@@ -1538,6 +1620,11 @@ public:
     }
     Integer stage_scaled_row(std::size_t row,std::span<const Integer> action_values,
                              ScaledAverageIncrements average_increments) {
+        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
+    }
+    factored_dyadic::Value stage_factored_scaled_row(std::size_t row,
+                std::span<const factored_dyadic::Value> action_values,
+                ScaledAverageIncrements average_increments) {
         return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
     }
     void commit_sweep() {

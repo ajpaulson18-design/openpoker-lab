@@ -1,0 +1,55 @@
+name: Native factored value and packed update controls
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  controls:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            tag: windows
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: linux
+            sanitize: ''
+          - os: ubuntu-latest
+            tag: sanitized
+            sanitize: --sanitize
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Build authenticated arithmetic controls
+        shell: bash
+        run: |
+          for target in factored-dyadic-controls packed-signed-update-controls; do
+            if ! python -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/factored/$target" ${{ matrix.sanitize }}; then
+              cat "$RUNNER_TEMP/factored/$target/build.log"
+              exit 1
+            fi
+          done
+          if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_FACTORED_DYADIC_EXE=$RUNNER_TEMP/factored/factored-dyadic-controls/native-factored-dyadic-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_PACKED_SIGNED_UPDATE_EXE=$RUNNER_TEMP/factored/packed-signed-update-controls/native-packed-signed-update-controls$suffix" >> "$GITHUB_ENV"
+      - name: Check independent arithmetic and coupled resource receipts
+        shell: bash
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          python -O -m unittest tests.test_native_factored_dyadic tests.test_native_packed_signed_update tests.test_virtual_dyadic_factored_receipt -v > "$RUNNER_TEMP/factored/tests.stdout.log" 2> "$RUNNER_TEMP/factored/tests.stderr.log"
+      - name: Preserve source identities and first failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-factored-values-${{ matrix.tag }}
+          path: |
+            ${{ runner.temp }}/factored/**/*.log
+            ${{ runner.temp }}/factored/**/*.json

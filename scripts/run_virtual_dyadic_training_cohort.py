@@ -1474,14 +1474,15 @@ def main():
     modes.add_argument('--ten-indexed-cache',action='store_true')
     modes.add_argument('--ten-complement',action='store_true')
     modes.add_argument('--ten-compact-wire',action='store_true')
+    modes.add_argument('--ten-factored',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire:
+    if args.ten_compact_wire or args.ten_factored:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

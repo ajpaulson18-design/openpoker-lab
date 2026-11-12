@@ -14,7 +14,44 @@ ROOT=cohort.ROOT
 BASELINE="benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1"
 
 
-def legacy_admission(record):
+FACTORED_COUNTS={"from_values":1_447_016,"scales":1_329_176,"additions":1_420_012,
+                 "subtractions":562_132,"mixes":238_392,"expansions":8}
+FACTORED_WORK=64*sum(value for key,value in FACTORED_COUNTS.items() if key!="mixes")+320*FACTORED_COUNTS["mixes"]
+
+
+def verify_factored_execution(record,admission):
+    packed_fields={"packed_additions","packed_subtractions","packed_clipped",
+                   "packed_target_words_read","packed_target_words_written"}
+    metrics={"implicit_zero_bits","maximum_coefficient_bits","maximum_shift"}
+    cohort.require(type(record) is dict and record.keys()==
+                   set(FACTORED_COUNTS)|packed_fields|metrics|{"work"} and
+                   all(type(value) is int and value>=0 for value in record.values()),
+                   "factored execution receipt schema differs")
+    cohort.require(all(record[key]==value for key,value in FACTORED_COUNTS.items()) and
+                   record["work"]==admission["factored_metadata_work"]==FACTORED_WORK and
+                   record["packed_target_words_read"]==record["packed_target_words_written"]==5_925_444 and
+                   0<record["packed_additions"]+record["packed_subtractions"]<=4*281_066 and
+                   record["packed_clipped"]<=record["packed_subtractions"] and
+                   0<record["implicit_zero_bits"]<=sum(FACTORED_COUNTS.values())*704 and
+                   0<record["maximum_shift"]<=644 and 0<record["maximum_coefficient_bits"]<=645,
+                   "factored execution count or scale differs")
+    return record
+
+
+def legacy_admission(record,*,factored=False):
+    cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
+    if factored:
+        cohort.require(record.get("factored_execution") is True and
+                       record.get("factored_metadata_work")==FACTORED_WORK==380_819_456 and
+                       record.get("factored_composed_work")==record.get("compact_composed_work",0)+FACTORED_WORK<=2_150_000_000 and
+                       record.get("factored_composed_entries")==record.get("compact_composed_entries",0)+8192<=2_000_000 and
+                       record.get("factored_composed_payload_bits")==record.get("compact_composed_payload_bits",0)+524288<=1_200_000_000,
+                       "factored composed resource ledger differs")
+        removed={"factored_execution","factored_metadata_work","factored_composed_work",
+                 "factored_composed_entries","factored_composed_payload_bits"}
+        earlier={key:value for key,value in record.items() if key not in removed}
+        return legacy_admission(earlier)
+    cohort.require("factored_execution" not in record,"unexpected factored execution profile")
     cohort.require(type(record) is dict and record.get("compact_wire") is True and
                    record.get("complement_division") is True,
                    "explicit compact complement admission required")
@@ -73,8 +110,9 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False):
-    cohort.require(type(train) is bool,"compact training selector must be boolean")
+def run_compact(output,expected_head,*,train=False,factored=False):
+    cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
+    suffix="TEN_FACTORED" if factored else "TEN_COMPACT_WIRE"
     cohort.require(cohort.require_source_bootstrap(ROOT)["interpreter"]["optimize"]==0,
                    "compact cohort requires normal source-only execution")
     cohort.require(cohort._git(ROOT,["rev-parse","HEAD"]).decode().strip()==expected_head,
@@ -118,13 +156,13 @@ def run_compact(output,expected_head,*,train=False):
             cohort.bind_build(build,source,cohort.TARGET,output/"source",build_dir)
             return folder,process
 
-        folder,_=observed("ADMIT_TEN_COMPACT_WIRE")
+        folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        legacy=legacy_admission(admission)
+        legacy=legacy_admission(admission,factored=factored)
         cohort.save(output/"admission.json",admission)
         result={"head":expected_head,"admission":admission,"legacy_admission":legacy,
                 "training_invocations":0,"quality_gate":None,
-                "scope":"fixed indexed complement ten-card T2 compact transport"}
+                "scope":"fixed indexed complement ten-card T2 with "+("factored execution" if factored else "compact transport")}
         if train:
             stage=cohort.stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True)
             trace=cohort.rank_trace()
@@ -133,7 +171,7 @@ def run_compact(output,expected_head,*,train=False):
                            (admission["page_request_limit"],admission["page_read_word_limit"],
                             admission["page_write_word_limit"]),"compact pager schedule differs")
             entered=1
-            folder,process=observed("TRAIN_TEN_COMPACT_WIRE")
+            folder,process=observed("TRAIN_"+suffix)
             compact=folder/"stdout.bin"
             compact_digest=cohort.sha(compact)
             cohort.require(compact.stat().st_size==admission["output_bytes"] and
@@ -145,6 +183,9 @@ def run_compact(output,expected_head,*,train=False):
             encoding=cohort.exact_json((output/"compact-wire.json").read_bytes())
             cohort.require(encoding=={"compact_encoding_work":admission["compact_encoding_work"]},
                            "native compact encoder work differs")
+            if factored:
+                result["factored_execution"]=verify_factored_execution(
+                    cohort.exact_json((output/"factored-execution.json").read_bytes()),admission)
             expanded=folder/"expanded.bin"
             with compact.open("rb") as reader,expanded.open("x+b") as writer:
                 expansion=expand_compact(reader,writer,source_size=admission["output_bytes"])
@@ -193,6 +234,10 @@ def run_compact(output,expected_head,*,train=False):
                            cohort.sha(compact)==compact_digest and cohort.sha(expanded)==digest and
                            encoding==cohort.exact_json((output/"compact-wire.json").read_bytes()),
                            "compact study input changed after replay")
+            if factored:
+                cohort.require(result["factored_execution"]==verify_factored_execution(
+                    cohort.exact_json((output/"factored-execution.json").read_bytes()),admission),
+                    "factored execution receipt changed after replay")
             result["host_retained_bytes"]={"compact":compact.stat().st_size,
                                           "expanded_for_verification":expanded.stat().st_size}
         result["source_final"]=cohort.verify_source(ROOT,source)

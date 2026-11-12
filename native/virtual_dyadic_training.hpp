@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -326,6 +326,7 @@ struct Plan {
     bool indexed_cache=false;
     bool complement_division=false;
     bool compact_wire=false;
+    bool factored=false;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -389,6 +390,21 @@ inline std::uint64_t compact_encoding_work(const Counts& c) {
     require(slots<=limit-rows,"compact encoding work overflow");
     return rows+slots;
 }
+
+inline factored_dyadic::Receipt factored_census(const Plan& p) {
+    factored_dyadic::Receipt counts;
+    counts.additions=p.parent[work_index(Work::value_add)]/add_cost(p.game().value_bits);
+    require(counts.additions*add_cost(p.game().value_bits)==p.parent[work_index(Work::value_add)],
+        "factored addition census is not integral");
+    counts.from_values=2*p.seat_passes*(p.shape.folds+p.showdown_contractions);
+    counts.scales=4*p.requested_sweeps*(p.shape.folds+p.shape.showdowns);
+    counts.subtractions=p.requested_sweeps*p.shape.slots;
+    counts.expansions=4*p.requested_sweeps;
+    counts.mixes=p.requested_sweeps*p.shape.rows;
+    counts.work=64*(counts.from_values+counts.scales+counts.additions+counts.subtractions+counts.expansions)+320*counts.mixes;
+    return counts;
+}
+inline std::uint64_t factored_metadata_work(const Plan& p) { return factored_census(p).work; }
 
 class Forecast final {
     struct Suffix { std::size_t decisions=0,uniform=0; unsigned mark=0; };
@@ -620,7 +636,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire;
+        plan_.factored=profile==StrategyProfile::ten_card_factored;
+        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
         plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
         plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
         plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache || q32;
@@ -899,8 +916,10 @@ public:
 struct Reach { Values numerators{1,1}; std::size_t exponent=0; };
 struct Marginal { Values numerators{}; std::uint64_t scale=0; };
 
-template<bool Paired> class Walk final {
+template<bool Paired,bool Factored=false> class Walk final {
     static constexpr std::size_t lanes=Paired?targets:1;
+    using Value=std::conditional_t<Factored,factored_dyadic::Value,Integer>;
+    using Values=std::array<Value,2>;
     using LaneValues=std::array<Values,lanes>;
     using Marginals=std::array<Marginal,lanes>;
     const betting::Template& source_;
@@ -911,6 +930,7 @@ template<bool Paired> class Walk final {
     state::State& state_;
     std::size_t target_;
     const std::size_t averaging_sweep_;
+    factored_dyadic::Execution* factored_;
     Counts shape_{};
     std::uint64_t showdown_contractions_=0,hidden_candidates_=0;
     static constexpr std::size_t catalog=targets;
@@ -918,9 +938,16 @@ template<bool Paired> class Walk final {
     [[nodiscard]] std::size_t seat(std::size_t lane) const { return Paired?lane:target_; }
     static const Reach& opposite(std::size_t player,const Reach& sb,const Reach& bb) { return player?sb:bb; }
 
+    Value make_value(Integer value) {
+        if constexpr (Factored) return factored_->from_integer(std::move(value));
+        else return value;
+    }
     void add_values(Values& total,const Values& child) {
         meter_.charge(Work::value_add,2*add_cost(plan_.game().value_bits));
-        for (std::size_t holding=0;holding<2;++holding) total[holding]+=child[holding];
+        for (std::size_t holding=0;holding<2;++holding) {
+            if constexpr (Factored) total[holding]=factored_->added(total[holding],child[holding]);
+            else total[holding]+=child[holding];
+        }
     }
     void add_lanes(LaneValues& total,const LaneValues& child) {
         for (std::size_t lane=0;lane<lanes;++lane) add_values(total[lane],child[lane]);
@@ -953,7 +980,7 @@ template<bool Paired> class Walk final {
         for (std::size_t lane=0;lane<lanes;++lane) {
             const auto target=seat(lane);
             auto result=contraction(target,board,chance::TerminalKind::showdown,opposite(target,sb,bb));
-            values[lane]={std::move(result.numerators[0]),std::move(result.numerators[1])};
+            values[lane]={make_value(std::move(result.numerators[0])),make_value(std::move(result.numerators[1]))};
         }
         return values;
     }
@@ -995,16 +1022,21 @@ template<bool Paired> class Walk final {
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
                 auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
-                result[lane]={std::move(raw.numerators[0]),std::move(raw.numerators[1])};
+                result[lane]={make_value(std::move(raw.numerators[0])),make_value(std::move(raw.numerators[1]))};
             }
         }
         const auto divisor=showdown?game.divisors.back():game.divisors[street_index(prefix.size)];
         const auto factor=money.significand*(game.divisors.back()/divisor);
         for (std::size_t lane=0;lane<lanes;++lane)
             for (auto& value:result[lane]) {
-                value*=factor;
-                value<<=shifts[lane];
-                if (!showdown && node.winner!=seat(lane)) value=-value;
+                if constexpr (Factored) {
+                    value=factored_->scaled(value,factor,shifts[lane],!showdown && node.winner!=seat(lane));
+                    require(value.expanded_bits()<=value_bits,"factored terminal exceeds fixed value width");
+                } else {
+                    value*=factor;
+                    value<<=shifts[lane];
+                    if (!showdown && node.winner!=seat(lane)) value=-value;
+                }
             }
         return result;
     }
@@ -1163,7 +1195,7 @@ template<bool Paired> class Walk final {
             } else policy[holding]=state_.policy_units(row);
         }
         LaneValues result{};
-        std::array<std::array<Integer,4>,2> action_values{};
+        std::array<std::array<Value,4>,2> action_values{};
         const auto& actor_reach=actor?bb:sb;
         const std::size_t acting_lane=Paired?actor:(actor==target_?0:lanes);
         for (std::size_t action=0;action<menu;++action) {
@@ -1182,13 +1214,18 @@ template<bool Paired> class Walk final {
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 std::array<Integer,4> increments{};
                 const std::span<Integer> average{increments.data(),menu};
-                const std::span<const Integer> values{action_values[holding].data(),menu};
+                const std::span<const Value> values{action_values[holding].data(),menu};
                 if (plan_.scaled_averages) {
                     stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
-                    result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
+                    if constexpr (Factored)
+                        result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,{average,row_shift});
+                    else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
                 } else {
-                    stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
-                    result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    if constexpr (Factored) require(false,"factored traversal requires scaled averages");
+                    else {
+                        stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
+                        result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    }
                 }
             }
         }
@@ -1196,9 +1233,11 @@ template<bool Paired> class Walk final {
     }
 public:
     Walk(const betting::Template& source,const Plan& plan,Meter& meter,history::History& history,
-         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1)
+         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1,factored_dyadic::Execution* factored=nullptr)
         :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target),
-         averaging_sweep_(averaging_sweep) {}
+         averaging_sweep_(averaging_sweep),factored_(factored) {
+        require(!Factored || factored_,"factored traversal needs its admitted execution owner");
+    }
     LaneValues run(Cursor root) {
         require(Paired?(target_==0 && plan_.traversal==Traversal::paired):
             (target_==catalog || (target_<catalog && plan_.traversal==Traversal::by_seat)),"invalid fixed sweep target");
@@ -1312,6 +1351,8 @@ struct TrainingIO {
     std::size_t bounded_policy_count=0;
     std::uint64_t combined_divisions=0,compact_encoding_work=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
+    std::optional<factored_dyadic::Receipt> factored;
+    packed_signed_update::Counts packed_updates{};
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1577,6 +1618,11 @@ public:
         require(!p.compact_wire || (32<=entries_cap-p.entries-sweep_stream_entries &&
             2048<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits),
             "compact encoder scratch exceeds composed storage cap");
+        require(!p.factored || (factored_metadata_work(p)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work-compact_encoding_work(p.shape) &&
+            8192<=entries_cap-p.entries-sweep_stream_entries-32 &&
+            524288<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
+            "factored execution exceeds composed resource caps");
     }
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
@@ -1623,6 +1669,9 @@ public:
         auto division_kernel=dyadic_policy::DivisionKernel::separate;
         if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
         else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
+        std::optional<factored_dyadic::Execution> factored_execution;
+        if (p.factored) factored_execution.emplace(factored_metadata_work(p));
+        static_assert(sizeof(factored_dyadic::Value)<=sizeof(Integer)+16);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),p.requested_sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
@@ -1635,7 +1684,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1653,7 +1702,12 @@ public:
             state.begin_sweep();
             feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory,p.compact_wire);
             std::array<Values,targets> roots{};
-            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
+            if (p.factored) {
+                auto values=Walk<true,true>(source_,p,meter_,history,chance,state,0,sweep+1,&*factored_execution).run(root);
+                for (std::size_t lane=0;lane<targets;++lane)
+                    for (std::size_t holding=0;holding<2;++holding)
+                        roots[lane][holding]=factored_execution->expanded(values[lane][holding]);
+            } else if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
             else {
                 auto sb=Walk<false>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
                 auto bb=Walk<false>(source_,p,meter_,history,chance,state,1,sweep+1).run(root);
@@ -1692,6 +1746,16 @@ public:
         out.finish();
         TrainingIO result;
         result.compact_encoding_work=out.compact_work();
+        if (factored_execution) {
+            result.factored=factored_execution->receipt();
+            const auto expected=factored_census(p);
+            const auto& actual=*result.factored;
+            require(actual.work==expected.work && actual.from_values==expected.from_values &&
+                actual.scales==expected.scales && actual.additions==expected.additions &&
+                actual.subtractions==expected.subtractions && actual.mixes==expected.mixes &&
+                actual.expansions==expected.expansions,"factored event realization differs");
+            result.packed_updates=state.packed_update_counts();
+        }
         result.paging=state.paged_receipt();
         if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();
