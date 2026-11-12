@@ -1255,3 +1255,11 @@ integrates the saved-only arithmetic experiment into a named ten-card
 training profile. The existing indexed profile supplies the exact byte,
 checkpoint and resource baseline. The new path records executed wide
 division counts separately from conservative admission work.
+
+## Compact numerical evidence transport
+
+The [compact transport](native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+uses exact reconstruction to reduce the fixed trainer's numerical output.
+The eleven-card rank-free projection fits the current native output
+ceiling with this format. Compute admission, a native eleven-card run
+and independently verified quality remain required.

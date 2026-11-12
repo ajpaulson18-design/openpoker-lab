@@ -743,3 +743,44 @@ from 4,317,184 to 4,321,280 bytes. These observations cover one Windows
 host and the fixed ten-card, two-sweep fixture. Exploitability remains
 about 2.9843 big blinds, with an unset quality threshold.
 [Complement evidence](../benchmarks/results/native-dyadic-quantizer-complement-v1/manifest.json)
+
+
+## Compact exact numerical transport
+
+The opt-in `--ten-compact-wire` cohort retains every ordered row identity
+in a six-byte record, reconstructs cumulative slot offsets, and omits
+the first sweep's canonical uniform policy units after checking them.
+Subsequent policies retain seven bytes for each action except the last,
+whose exact unit count follows from the fixed grid total. Fallback
+flags use one bit per row. Roots, the literal skeleton, denominator,
+receipt footer and all checkpoint frames remain present.
+
+The compact format uses a separate magic and declared length. Its bounded
+decoder reconstructs the existing numerical stream for independent policy,
+update and best-response replay. The cohort authenticates both streams,
+checks compact frame epochs and image hashes, and compares the expanded
+bytes against the accepted indexed result. The verification workflow keeps
+the compact stream and an expanded disk copy, and reports both extents.
+The native output bound and host verification disk usage are distinct.
+
+The rank-free eleven-card geometry gives 9,614,478 compact numerical bytes,
+below the existing 9,833,076-byte native profile ceiling by 218,598 bytes.
+The full proposed wire remains 165,201,774 bytes including checkpoint
+images and headers. This output representation leaves the eleven-card
+work and quality gates open.
+
+The encoder has a separate conservative scalar-operation reservation of
+`208 * rows + 64 * slots + 16 * ceil(rows / 8)`. It reserves 64 units
+before each packed row, 64 plus 32 per action before each of the two
+encoded policies, and 16 per flag plus 16 per packed flag byte. These
+constants cover packing, partition checks and loop/control primitives.
+The earlier output ledger retains common stream I/O, policy access and
+the first uniform-policy check. The extra encoder counter and packed
+scalar scratch reserve 32 logical entries and 2,048 payload bits.
+Admission composes these terms with learning and checkpoint-copy work
+under the existing caps. They measure the declared source-level model.
+The native sidecar records the extra work before acceptance.
+
+Independent reconstruction interleaves saved compact numerical sections,
+canonical epoch headers and both authenticated image files, then compares
+its complete wire length and SHA-256 to the captured native stream.

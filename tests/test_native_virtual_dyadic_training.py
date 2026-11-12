@@ -495,8 +495,8 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(receipt['output_bytes'],3_103_848)
         self.assertEqual(legacy['output_bytes'],9_833_076)
         self.assertEqual(receipt['rank_calls'],0)
-        for key in ('output_bytes','compact_wire'):
-            bad=dict(receipt,**{key:False if key=='compact_wire' else 3_103_847})
+        for key in ('output_bytes','compact_wire','compact_encoding_work','compact_composed_work'):
+            bad=dict(receipt,**{key:False if key=='compact_wire' else receipt[key]-1})
             with self.assertRaises(ValueError):
                 legacy_admission(bad)
 

@@ -381,6 +381,15 @@ inline std::uint64_t compact_artifact_bytes(const Counts& c) {
         6*c.rows+2*4*8*(integer_words+1)+14*(c.slots-c.rows)+(c.rows+7)/8+8+8*footer_words;
 }
 
+inline std::uint64_t compact_encoding_work(const Counts& c) {
+    constexpr auto limit=std::numeric_limits<std::uint64_t>::max();
+    require(c.rows<=limit/224 && c.slots<=limit/128,"compact encoding dimensions overflow");
+    const auto rows=208*c.rows+16*((c.rows+7)/8);
+    const auto slots=64*c.slots;
+    require(slots<=limit-rows,"compact encoding work overflow");
+    return rows+slots;
+}
+
 class Forecast final {
     struct Suffix { std::size_t decisions=0,uniform=0; unsigned mark=0; };
     const betting::Template& source_;
@@ -1209,9 +1218,10 @@ class Binary final {
     std::ostream& out_;
     std::uint64_t capacity_,written_=0;
     std::size_t value_bits_;
+    std::uint64_t compact_limit_=0,compact_work_=0;
 public:
-    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits)
-        :out_(out),capacity_(capacity),value_bits_(value_bits) {
+    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits,std::uint64_t compact_limit=0)
+        :out_(out),capacity_(capacity),value_bits_(value_bits),compact_limit_(compact_limit) {
         static_assert(std::endian::native==std::endian::little,"fixed binary producer requires little endian");
         require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits || value_bits_==proof9_t3.value_bits ||
             value_bits_==proof9_t4.value_bits,"unsupported fixed output width");
@@ -1224,11 +1234,22 @@ public:
     }
     void text(std::string_view value) { bytes(value.data(),value.size()); }
     void u64(std::uint64_t value) { bytes(&value,sizeof(value)); }
+    void charge_compact(std::uint64_t work) {
+        require(work<=compact_limit_-compact_work_,"compact encoding work cap exceeded");
+        compact_work_+=work;
+    }
+    [[nodiscard]] std::uint64_t compact_work() const noexcept { return compact_work_; }
     void bounded_word(std::uint64_t value,std::size_t count) {
         require((count==6 || count==7) && value<(1ULL<<(8*count)),"compact output word exceeds width");
         bytes(&value,count);
     }
     void policy(std::span<const std::uint64_t> units,bool compact) {
+        // Source-level scalar packing/check operations. The existing output
+        // ledger retains common stream emission and policy access charges.
+        if (compact) {
+            require(units.size()<=4,"compact policy menu exceeds packing model");
+            charge_compact(64+32*units.size());
+        }
         std::uint64_t total=0;
         for (std::size_t i=0;i<units.size();++i) {
             require(units[i]<=grid-total,"policy output exceeds fixed grid");
@@ -1239,6 +1260,7 @@ public:
         require(!units.empty() && units.size()<=4 && total==grid,"policy output partition differs");
     }
     void fallback_bits(std::span<const unsigned char> flags) {
+        charge_compact(16*flags.size()+16*((flags.size()+7)/8));
         for (std::size_t start=0;start<flags.size();start+=8) {
             unsigned char byte=0;
             for (std::size_t bit=0;bit<8 && start+bit<flags.size();++bit) {
@@ -1267,6 +1289,7 @@ public:
     }
     void finish() {
         require(written_==capacity_,"fixed training output length changed");
+        require(compact_work_==compact_limit_,"compact encoding work differs from reservation");
         out_.flush();
         require(bool(out_),"fixed training output flush failed");
     }
@@ -1286,7 +1309,7 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
-    std::uint64_t combined_divisions=0;
+    std::uint64_t combined_divisions=0,compact_encoding_work=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
 };
 
@@ -1361,6 +1384,7 @@ class Driver final {
         for (std::size_t i=0;i<state.row_count();++i) {
             const auto row=state.row_at(i);
             if (p.compact_wire) {
+                out.charge_compact(64);
                 require(row.history_ordinal<(1ULL<<44) && row.actor<2 && row.holding_index<2 &&
                     !row.actions.empty() && row.actions.size()<=4,"compact row identity exceeds width");
                 out.bounded_word((static_cast<std::uint64_t>(row.history_ordinal)<<4)|
@@ -1545,6 +1569,13 @@ public:
             "sweep streaming scratch exceeds existing storage admission");
         require(p.total_work<=game.work_limit && sweep_stream_copy_work<=game.work_limit-p.total_work,
             "sweep streaming copy work exceeds transport work cap");
+        require(!p.compact_wire || compact_encoding_work(p.shape)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work,
+            "compact encoding exceeds composed transport work cap");
+        // Bounded scalar encoder counters, temporary packed row and flag byte.
+        require(!p.compact_wire || (32<=entries_cap-p.entries-sweep_stream_entries &&
+            2048<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits),
+            "compact encoder scratch exceeds composed storage cap");
     }
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
@@ -1614,7 +1645,7 @@ public:
         }
 
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
-        Binary out(stream,p.output_bytes,value_bits);
+        Binary out(stream,p.output_bytes,value_bits,p.compact_wire?compact_encoding_work(p.shape):0);
         prelude(out,state,denominator);
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<p.requested_sweeps;++sweep) {
@@ -1659,6 +1690,7 @@ public:
         footer(out,chance.receipt(),history.receipt(),state_receipt,feedback);
         out.finish();
         TrainingIO result;
+        result.compact_encoding_work=out.compact_work();
         result.paging=state.paged_receipt();
         if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();

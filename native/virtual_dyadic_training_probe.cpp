@@ -166,7 +166,11 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.sparse_chance) std::cout<<",\"sparse_chance\":true";
     if (plan.single_division) std::cout<<",\"single_division\":true";
     if (plan.complement_division) std::cout<<",\"complement_division\":true";
-    if (plan.compact_wire) std::cout<<",\"compact_wire\":true";
+    if (plan.compact_wire) std::cout<<",\"compact_wire\":true,\"compact_encoding_work\":"
+        <<training::compact_encoding_work(plan.shape)<<",\"compact_composed_work\":"
+        <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)
+        <<",\"compact_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32
+        <<",\"compact_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048;
     if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     if (plan.row_batched) std::cout<<",\"row_batched\":true";
     if (plan.indexed_cache)
@@ -375,6 +379,13 @@ int main(int argc,char* argv[]) {
             if (io.directory) save_directory(scratch,*io.directory);
             if (io.combined_divisions) save_divisions(scratch,io.combined_divisions);
             if (io.rank_index) save_rank_index(scratch,*io.rank_index);
+            if (io.compact_encoding_work) {
+                std::ofstream receipt(scratch.parent_path()/"compact-wire.json",std::ios::binary);
+                training::require(bool(receipt),"compact work receipt open failed");
+                receipt<<"{\"compact_encoding_work\":"<<io.compact_encoding_work<<"}\n";
+                receipt.close();
+                training::require(bool(receipt),"compact work receipt write failed");
+            }
         }
         return 0;
     } catch (const std::exception& error) {

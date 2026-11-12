@@ -1,11 +1,13 @@
 """Frozen compact numerical transport study using the independent legacy replay."""
 from pathlib import Path
+import hashlib
+import struct
 import shutil
 import time
 import traceback
 
 from scripts import run_virtual_dyadic_training_cohort as cohort
-from scripts.virtual_dyadic_compact_wire import compact_size, expand_compact
+from scripts.virtual_dyadic_compact_wire import compact_size, expand_compact, compact_segments
 from tests.virtual_dyadic_sweep_capture import sweep_stream_contract
 
 ROOT=cohort.ROOT
@@ -19,11 +21,56 @@ def legacy_admission(record):
     cohort.require(record.get("output_bytes")==compact_size() and
                    record.get("sweep_stream")==sweep_stream_contract(compact_wire=True),
                    "compact transport equation differs")
-    legacy={key:value for key,value in record.items() if key!="compact_wire"}
+    rows,slots=119_196,281_066
+    encoding=208*rows+64*slots+16*((rows+7)//8)
+    cohort.require(record.get("compact_encoding_work")==encoding==43_019_392 and
+                   record.get("compact_composed_work")==record["planned_total_work"]+
+                       record["sweep_stream"]["copy_work"]+encoding<=2_150_000_000 and
+                   record.get("compact_composed_entries")==record["entries"]+4100+32<=2_000_000 and
+                   record.get("compact_composed_payload_bits")==record["payload_bits"]+262400+2048<=1_200_000_000,
+                   "compact composed resource ledger differs")
+    removed={"compact_wire","compact_encoding_work","compact_composed_work",
+             "compact_composed_entries","compact_composed_payload_bits"}
+    legacy={key:value for key,value in record.items() if key not in removed}
     legacy["output_bytes"]=cohort.TEN_CARD_SPLIT_BYTES
     legacy["sweep_stream"]=sweep_stream_contract()
     cohort.validate_admission(legacy,ten_complement=True)
     return legacy
+
+
+def reconstruct_wire(compact,pages,images,capture):
+    digest=hashlib.sha256()
+    size=0
+
+    def add(stream,length):
+        nonlocal size
+        remaining=length
+        while remaining:
+            block=stream.read(min(65536,remaining))
+            cohort.require(block,"compact wire reconstruction truncated")
+            digest.update(block)
+            size+=len(block)
+            remaining-=len(block)
+
+    with compact.open("rb") as stream:
+        epoch=0
+        for name,length in compact_segments():
+            add(stream,length)
+            if name in ("sweep1_roots","sweep2_policy_roots"):
+                image=images[epoch]
+                epoch+=1
+                header=struct.pack("<8sQQQ",b"OPLCPG01",epoch,epoch%2,image["bytes"])
+                digest.update(header)
+                size+=len(header)
+                path=pages/image["name"]
+                cohort.require(cohort.sha(path)==image["sha256"],"wire reconstruction image identity differs")
+                with path.open("rb") as source:
+                    add(source,image["bytes"])
+                    cohort.require(not source.read(1),"wire reconstruction image has trailing bytes")
+        cohort.require(not stream.read(1),"compact wire reconstruction has trailing numerical bytes")
+    cohort.require(size==capture["contract"]["wire_bytes"] and
+                   digest.hexdigest()==capture["wire_sha256"],"independent compact wire hash differs")
+    return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
 def run_compact(output,expected_head,*,train=False):
@@ -94,6 +141,10 @@ def run_compact(output,expected_head,*,train=False):
             paging=cohort.verify_paging(output/"page-images",legacy,stage)
             images=[{"name":name,**paging["images"][name]} for name in cohort.SPLIT_IMAGE_NAMES]
             capture=cohort.verify_sweep_capture(process,admission,images,compact_digest)
+            wire_reconstruction=reconstruct_wire(compact,output/"page-images",images,capture)
+            encoding=cohort.exact_json((output/"compact-wire.json").read_bytes())
+            cohort.require(encoding=={"compact_encoding_work":admission["compact_encoding_work"]},
+                           "native compact encoder work differs")
             expanded=folder/"expanded.bin"
             with compact.open("rb") as reader,expanded.open("x+b") as writer:
                 expansion=expand_compact(reader,writer,source_size=admission["output_bytes"])
@@ -130,7 +181,8 @@ def run_compact(output,expected_head,*,train=False):
                            "compact expanded saved-only replay differs")
             result.update(training_invocations=1,paging=paging,quantizer=quantizer,policy_spill=policy,
                           row_directory=directory,sweep_capture=prior["sweep_capture"],
-                          compact_sweep_capture=capture,expansion=expansion,saved_only_replay=replay,
+                          compact_sweep_capture=capture,compact_encoding_receipt=encoding,
+                          wire_reconstruction=wire_reconstruction,expansion=expansion,saved_only_replay=replay,
                           saved_review_compiled_sources=compiled)
             result["rank_index"]=cohort.verify_rank_index(output/"page-images",legacy,replay,trace)
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay)
@@ -138,7 +190,8 @@ def run_compact(output,expected_head,*,train=False):
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy) and
                            directory==cohort.verify_row_directory(output/"page-images-rows",expanded,legacy) and
-                           cohort.sha(compact)==compact_digest and cohort.sha(expanded)==digest,
+                           cohort.sha(compact)==compact_digest and cohort.sha(expanded)==digest and
+                           encoding==cohort.exact_json((output/"compact-wire.json").read_bytes()),
                            "compact study input changed after replay")
             result["host_retained_bytes"]={"compact":compact.stat().st_size,
                                           "expanded_for_verification":expanded.stat().st_size}
