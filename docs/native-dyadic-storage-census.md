@@ -327,3 +327,15 @@ recorded division count from 325,666 to 186,152. The named
 [complement profile](native-dyadic-two-sweep.md#complement-quantization-on-the-fixed-ten-card-profile)
 integrates the shortcut and preserves the original admission ledger.
 [Saved-only quantizer receipt](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)
+
+### Compact numerical output projection
+
+The [compact transport](native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+projects 9,614,478 retained numerical bytes for eleven cards, with
+218,598 bytes of room under the unchanged native output ceiling.
+Including its separate encoder work gives 5,496,134,543 modeled units
+against the 2.15-billion cap. The composed encoder scratch projection
+is 625,444 entries and 22,390,528 payload bits. Ten-card training and
+full exact replay validate the format; eleven-card native admission
+and quality remain open.
+[Output and resource projection](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)

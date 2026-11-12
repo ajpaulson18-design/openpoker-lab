@@ -784,3 +784,37 @@ The native sidecar records the extra work before acceptance.
 Independent reconstruction interleaves saved compact numerical sections,
 canonical epoch headers and both authenticated image files, then compares
 its complete wire length and SHA-256 to the captured native stream.
+
+For ten cards, the additional encoding reservation is 43,019,392 work
+units. Composed learning, checkpoint-copy and encoding work reserve
+1,756,554,322 units within the existing 2.15-billion cap. Encoder scratch
+brings the composed reservation to 364,468 entries and 20,302,720
+payload bits. The earlier learning/footer receipts retain their scope.
+
+Extending the encoder equation to eleven cards adds 136,982,368
+units. The current whole-request projection becomes 5,496,134,543
+units, above the unchanged work ceiling. The output reduction therefore
+resolves a projected representation constraint while compute admission
+remains unfinished.
+
+The final frozen study at `cf5d480` passed native execution, exact
+expansion, independent full policy/update/best-response replay, wire
+reconstruction and both source audits. All 2,560 tracked files retained
+their captured bytes. Numerical output fell from 9,833,076 to 3,103,848
+bytes, a 68.4 percent reduction. The full wire fell from 57,236,692 to
+50,507,464 bytes, including both checkpoint frames. All 38 focused
+controls passed with normal and optimized Python.
+
+Four alternating pairs on the same executable preserved every output
+and checkpoint identity. Compact calls were faster in two pairs and
+slower in two. Median native-call times were 4.367 seconds for legacy
+emission and 4.277 seconds for compact emission. The median within-pair
+compact/legacy ratio was 0.9796. These measurements cover one Windows
+host, complete native calls and streamed transport. Host expansion and
+independent replay follow the captured call. Exploitability remains
+about 2.9843 big blinds, with an unset quality threshold.
+
+The packet preserves the earlier format-only run before separate
+encoding-work accounting, the intermediate metered run, and the final
+compatibility adjustment.
+[Compact transport evidence](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)
