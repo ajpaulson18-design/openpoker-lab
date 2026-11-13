@@ -211,7 +211,7 @@ bool equal_complement_controls() {
         tied_policy.units()[1]!=(grid::grid_units/3) ||
         tied_policy.units()[2]!=(grid::grid_units-(grid::grid_units+2)/3-grid::grid_units/3))
         throw std::runtime_error("equal-complement tie or remainder order changed");
-    const std::array<Integer,3> negative{5,-1,5};
+    const std::vector<Integer> negative{5,-1,5};
     if (!failed_row("equal_negative_average",limits,negative,grid::ErrorCode::invalid_row,true))
         return false;
     const bool receipt_ok=equal.receipt().equal_rows==5 &&
