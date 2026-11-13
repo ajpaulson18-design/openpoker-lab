@@ -540,6 +540,20 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                          (34_741_384,2_072_360_546))
         with self.assertRaises(ValueError):checked_history_baseline(receipt)
 
+    def test_equal_quantizer_admits_comparisons_for_every_potential_mixed_row(self):
+        from scripts.run_virtual_dyadic_compact_cohort import equal_quantizer_baseline
+        directory,process=self.observe('admit_ten_equal_quantizer',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_EQUAL_QUANTIZER',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        equal_quantizer_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['quantizer'],receipt['factored_composed_work']),
+                         (464_268_936,2_103_157_154))
+        bad=dict(receipt,quantizer_terms=[*receipt['quantizer_terms'][:2],receipt['quantizer_terms'][2]-1])
+        with self.assertRaises(ValueError):equal_quantizer_baseline(bad)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

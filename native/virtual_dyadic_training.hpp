@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -329,6 +329,7 @@ struct Plan {
     bool factored=false;
     bool checked_history=false;
     bool history_visit=false;
+    bool equal_quantizer=false;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
@@ -502,7 +503,8 @@ class Forecast final {
     std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) const {
         const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
-        return 64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
+        return (plan_.equal_quantizer?16+4*n*(words(value_bits)+1):0)+
+            64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
             8*n*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
     }
     void literal(std::size_t id,std::array<std::size_t,2> past,std::array<std::size_t,2> first) {
@@ -640,7 +642,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.history_visit=profile==StrategyProfile::ten_card_history_visit;
+        plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer;
+        plan_.history_visit=profile==StrategyProfile::ten_card_history_visit || plan_.equal_quantizer;
         plan_.checked_history=profile==StrategyProfile::ten_card_checked_history || plan_.history_visit;
         plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
         plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
@@ -1376,7 +1379,7 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
-    std::uint64_t combined_divisions=0,compact_encoding_work=0;
+    std::uint64_t combined_divisions=0,compact_encoding_work=0,equal_rows=0,equal_divisions_avoided=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
     std::optional<factored_dyadic::Receipt> factored;
     packed_signed_update::Counts packed_updates{};
@@ -1695,7 +1698,8 @@ public:
         if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
         auto division_kernel=dyadic_policy::DivisionKernel::separate;
-        if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
+        if (p.equal_quantizer) division_kernel=dyadic_policy::DivisionKernel::equal_complement;
+        else if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
         else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
         std::optional<factored_dyadic::Execution> factored_execution;
         if (p.factored) factored_execution.emplace(factored_metadata_work(p));
@@ -1794,6 +1798,8 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        result.equal_rows=state_receipt.equal_rows;
+        result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
         if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
         return result;
     }

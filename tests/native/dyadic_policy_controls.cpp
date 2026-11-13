@@ -183,6 +183,47 @@ bool complement_controls() {
         <<(count_ok&&profile_ok&&width_ok?"PASS":"FAIL")<<'\n';
     return rows==54 && count_ok && profile_ok && width_ok;
 }
+bool equal_complement_controls() {
+    grid::Limits limits{};
+    limits.profile=grid::Profile::proof10;
+    limits.integer_bits=702; limits.entries=336;
+    limits.division_kernel=grid::DivisionKernel::equal_complement;
+    auto baseline_limits=limits; baseline_limits.division_kernel=grid::DivisionKernel::separate;
+    grid::Quantizer equal(limits), baseline(baseline_limits);
+    const std::array<std::vector<Integer>,4> cases{{
+        {Integer(1)<<600,Integer(1)<<600,Integer(1)<<600,Integer(1)<<600},
+        {0,Integer(1)<<640,Integer(1)<<640,0},
+        {7,0,7,7},
+        {(Integer(1)<<640)+3, (Integer(1)<<640)+3, (Integer(1)<<640)+3, (Integer(1)<<640)+3}
+    }};
+    for (const auto& input : cases) {
+        const auto a=baseline.regret_policy(input), b=equal.regret_policy(input);
+        if (!std::equal(a.units().begin(),a.units().end(),b.units().begin(),b.units().end()))
+            throw std::runtime_error("equal-complement policy differs from baseline");
+    }
+    const std::array<Integer,4> unequal{(Integer(1)<<640)+1,(Integer(1)<<639)+7,0,3};
+    const auto a=baseline.regret_policy(unequal), b=equal.regret_policy(unequal);
+    if (!std::equal(a.units().begin(),a.units().end(),b.units().begin(),b.units().end()))
+        throw std::runtime_error("unequal equal-complement fallback differs from baseline");
+    const std::array<Integer,4> tied{3,3,3,0};
+    const auto tied_policy=equal.regret_policy(tied);
+    if (tied_policy.units()[0]!=((grid::grid_units+2)/3) ||
+        tied_policy.units()[1]!=(grid::grid_units/3) ||
+        tied_policy.units()[2]!=(grid::grid_units-(grid::grid_units+2)/3-grid::grid_units/3))
+        throw std::runtime_error("equal-complement tie or remainder order changed");
+    const std::array<Integer,3> negative{5,-1,5};
+    if (!failed_row("equal_negative_average",limits,negative,grid::ErrorCode::invalid_row,true))
+        return false;
+    const bool receipt_ok=equal.receipt().equal_rows==5 &&
+        equal.receipt().equal_divisions_avoided==3+1+2+3+2;
+    const bool restricted=rejects("equal_q32_profile",grid::ErrorCode::invalid_limits,[&]{
+        auto bad=limits; bad.profile=grid::Profile::proof9_q32; grid::Quantizer q(bad);
+    });
+    std::cout<<"EQUAL_COMPLEMENT_END "<<equal.receipt().equal_rows<<' '
+        <<equal.receipt().equal_divisions_avoided<<' '
+        <<(receipt_ok&&restricted?"PASS":"FAIL")<<'\n';
+    return receipt_ok&&restricted;
+}
 } // namespace
 
 int main() {
@@ -218,7 +259,7 @@ int main() {
             throw std::runtime_error("policy fixed coverage incomplete");
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
-        return combined_controls() && complement_controls() && legacy ? 0 : 1;
+        return combined_controls() && complement_controls() && equal_complement_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

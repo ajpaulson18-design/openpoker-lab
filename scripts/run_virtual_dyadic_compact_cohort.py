@@ -65,9 +65,29 @@ def checked_history_baseline(record,*,history_visit=False):
     return legacy_admission(legacy,factored=True)
 
 
+def equal_quantizer_baseline(record):
+    """Check both mixed-phase comparison reserves without assuming any hits."""
+    cohort.require(type(record) is dict,"equal quantizer admission requires a record")
+    extra=16*119_196+48*281_066
+    terms=record.get("quantizer_terms")
+    components=record.get("component_work")
+    cohort.require(record.get("equal_quantizer") is True and type(terms) is list and
+                   len(terms)==3 and all(type(n) is int for n in terms) and
+                   type(components) is dict and components.get("quantizer")==sum(terms),
+                   "equal quantizer reservation differs")
+    normalized=dict(record,quantizer_terms=[terms[0],terms[1]-extra,terms[2]-extra],
+                    component_work=dict(components,quantizer=sum(terms)-2*extra))
+    normalized.pop("equal_quantizer")
+    for field in ("planned_total_work","compact_composed_work","factored_composed_work","parent_allowance"):
+        cohort.require(type(normalized.get(field)) is int,"equal quantizer admission field differs")
+        normalized[field]+=(2*extra if field=="parent_allowance" else -2*extra)
+    return checked_history_baseline(normalized,history_visit=True)
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
-    cohort.require("checked_history" not in record and "history_visit" not in record,"unexpected checked History profile")
+    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record,
+                   "unexpected extended training profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
                        record.get("factored_metadata_work")==FACTORED_WORK==380_819_456 and
@@ -138,13 +158,16 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
     cohort.require(type(history_visit) is bool and (not history_visit or checked_history),
                    "History visit requires checked History training")
-    suffix=("TEN_HISTORY_VISIT" if history_visit else "TEN_CHECKED_HISTORY" if checked_history
+    cohort.require(type(equal_quantizer) is bool and (not equal_quantizer or history_visit),
+                   "equal quantizer requires the visit profile")
+    suffix=("TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+            else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
     cohort.require(cohort.require_source_bootstrap(ROOT)["interpreter"]["optimize"]==0,
@@ -192,7 +215,12 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        legacy=checked_history_baseline(admission,history_visit=history_visit) if checked_history else legacy_admission(admission,factored=factored)
+        if equal_quantizer:
+            legacy=equal_quantizer_baseline(admission)
+        elif checked_history:
+            legacy=checked_history_baseline(admission,history_visit=history_visit)
+        else:
+            legacy=legacy_admission(admission,factored=factored)
         cohort.save(output/"admission.json",admission)
         result={"head":expected_head,"admission":admission,"legacy_admission":legacy,
                 "training_invocations":0,"quality_gate":None,
@@ -243,6 +271,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                   "--count-policy-divisions","--phase-payload","--row-batched","--indexed-cache",
                   "--complement-divisions","--sweep-checkpoint-digest",
                   *(frame["sha256"] for frame in capture["frames"])]
+            if equal_quantizer: args.append("--equal-quantizer")
             command=cohort.source_only_command(bootstrap,
                 source["files"]["scripts/run_virtual_frozen_source_only.py"]["raw_sha256"],
                 "scripts.verify_virtual_dyadic_training",receipt_path,args)
@@ -264,8 +293,19 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 cohort.require(replay["work_plan"]["history"]==replay["work_actual"]["history"]==
                                admission["component_work"]["history"]==history_work,
                                "checked History realization differs")
+            receipt_path_equal=output/"equal-quantizer.json"
+            if equal_quantizer:
+                equal_receipt=cohort.exact_json(receipt_path_equal.read_bytes())
+                cohort.require(type(equal_receipt) is dict and len(equal_receipt)==2 and
+                               all(type(value) is int and value>0 for value in equal_receipt.values()) and
+                               equal_receipt=={key:replay["equal_quantizer"][key] for key in
+                                               ("equal_rows","equal_divisions_avoided")} and
+                               replay["work_plan"]["quantizer"]==admission["component_work"]["quantizer"],
+                               "independent equal quantizer receipt differs")
+                result["equal_quantizer"]=equal_receipt
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
-                checked_history_work=history_work if checked_history else None)
+                checked_history_work=history_work if checked_history else None,
+                equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy) and
@@ -277,6 +317,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 cohort.require(result["factored_execution"]==verify_factored_execution(
                     cohort.exact_json((output/"factored-execution.json").read_bytes()),admission),
                     "factored execution receipt changed after replay")
+            if equal_quantizer:
+                cohort.require(result["equal_quantizer"]==cohort.exact_json(receipt_path_equal.read_bytes()),
+                               "equal quantizer receipt changed after replay")
             result["host_retained_bytes"]={"compact":compact.stat().st_size,
                                           "expanded_for_verification":expanded.stat().st_size}
         result["source_final"]=cohort.verify_source(ROOT,source)

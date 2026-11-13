@@ -93,7 +93,7 @@ struct Receipt {
     std::size_t rows = 0, slots = 0, completed_sweeps = 0, staged_rows = 0;
     std::size_t reserved_entries = 0, reserved_integer_and_text_payload_bits = 0;
     std::size_t peak_input_bits = 0, peak_arithmetic_bits = 0;
-    std::uint64_t combined_divisions=0;
+    std::uint64_t combined_divisions=0,equal_rows=0,equal_divisions_avoided=0;
 };
 struct Row {
     std::size_t history_ordinal = 0, actor = 0, holding_index = 0;
@@ -456,11 +456,13 @@ class State final {
         const bool q32=proof9_q32(paged);
         if (paged && (paged->division_kernel!=dyadic_policy::DivisionKernel::separate &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::combined &&
-                      paged->division_kernel!=dyadic_policy::DivisionKernel::complement))
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::complement &&
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement))
             fail(ErrorCode::invalid_limits,"unknown state quantizer division kernel");
         if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded && !q32)
             fail(ErrorCode::invalid_forecast,"combined division kernel requires a named profile");
-        if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::complement &&
+        if (paged && (paged->division_kernel==dyadic_policy::DivisionKernel::complement ||
+                     paged->division_kernel==dyadic_policy::DivisionKernel::equal_complement) &&
             (!expanded || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases || !paged->row_batched))
             fail(ErrorCode::invalid_forecast,"complement division requires the named ten-card row-batched lifecycle");
@@ -1025,6 +1027,8 @@ public:
         auto answer=receipt_;
         answer.quantizer_work=quantizer_.receipt().work;
         answer.combined_divisions=quantizer_.receipt().combined_divisions;
+        answer.equal_rows=quantizer_.receipt().equal_rows;
+        answer.equal_divisions_avoided=quantizer_.receipt().equal_divisions_avoided;
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }
