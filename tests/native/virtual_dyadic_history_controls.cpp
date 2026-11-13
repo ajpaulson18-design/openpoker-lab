@@ -40,12 +40,13 @@ int main() {
             (void)history.visible_size(cursor);
             const auto legacy=history.receipt().work-before;
             const auto fused_before=history.receipt().work;
-            if (!history.identity_matches(cursor,id,0) || history.identity_matches(cursor,id+1,0) ||
-                history.identity_matches(cursor,id,3))
-                throw std::runtime_error("fused history identity mismatch");
+            if (!history.identity_matches(cursor,id,0))
+                throw std::runtime_error("fused history rejected matching identity");
             const auto fused=history.receipt().work-fused_before;
             if (legacy!=16 || fused!=8 || legacy-fused!=8)
                 throw std::runtime_error("fused history identity work delta mismatch");
+            if (history.identity_matches(cursor,id+1,0) || history.identity_matches(cursor,id,3))
+                throw std::runtime_error("fused history accepted mismatched identity");
         }
         for (std::size_t variant=0;variant<boards.size();++variant) {
             const auto& board=boards[variant];
