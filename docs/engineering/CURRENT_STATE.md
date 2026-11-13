@@ -1074,3 +1074,9 @@ History reservation is 62.9 million work units. Independent saved replay
 matches the earlier numerical result and checkpoints. The eleven-card
 History projection is 185.7 million units against the 100-million cap.
 [Checked History contract](../native-dyadic-two-sweep.md#checked-history-cursor)
+
+The ten-card visit profile reduces the verified History schedule to
+34.7 million units. Its eleven-card rank-free projection is 98.7 million
+against the 100-million History cap. Wider training remains gated by
+State, quantizer and aggregate work admission.
+[Visit reuse evidence](../native-dyadic-two-sweep.md#reusing-a-validated-public-visit)

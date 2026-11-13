@@ -942,3 +942,42 @@ The test-only correction was checked against the original trainer and
 State build source closures.
 [Checked History evidence](../benchmarks/results/native-dyadic-checked-history-v1/manifest.json)
 [Rank-free projection](../scripts/project_virtual_dyadic_history.py)
+
+## Reusing a validated public visit
+
+The ten-card visit profile authenticates the cursor once when it enters
+a traversal frame. The checked occurrence supplies the decision ordinal
+from the already packed board code. Child edges take that same visit
+value. It retains owner and generation identity, and each edge rejects
+a failed or foreign owner before reading the occurrence. The parent can
+use its visit again after returning from a child. Sealed row catalog
+registration still checks each holding and reconstructs its strict
+traversal order.
+
+The History model retains 8 units for the cursor validation at visit
+entry. The existing parent visit reservation covers matching the
+source and street and forming the key from the checked occurrence and
+board code. Action descent reserves 16 units for the bounded owner,
+phase and menu checks, child index read and fixed cursor copy. Reveal
+descent reserves 48 for its guards and the checked three-card flop pack,
+or the short prior-prefix comparison and one checked physical card append.
+Both edge paths charge before running those operations. The separate
+learning ordinal charge disappears because the visit supplies it.
+These are modeled operation units. They do not predict elapsed time.
+
+The complete ten-card schedule reserves 34,741,384 History units, down
+from 62,890,960, and 2,072,360,546 units across the factored profile.
+The rank-free eleven-card History projection is 98,688,160 against
+100,000,000, leaving 1,311,840 units of projected headroom. The State,
+quantizer and composed work gates remain open. The projection uses
+the same three traversal schedule and unchanged catalog charges.
+
+The frozen run at 9a9f48f matched both checkpoint images and every
+numerical section. Only the two History work words differed in the
+expanded artifact. All 55 focused controls passed with normal and
+optimized Python. Across four alternating pairs on one Windows host,
+the median complete native call took 8.241 seconds for checked History
+and 8.282 seconds for visit reuse. The median paired ratio was 1.0050,
+with two faster and two slower pairs. The comparison established
+no elapsed-time improvement.
+[Visit reuse evidence](../benchmarks/results/native-dyadic-history-visit-v1/manifest.json)

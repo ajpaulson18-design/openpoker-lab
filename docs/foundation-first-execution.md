@@ -1283,3 +1283,13 @@ source and visible street checks. The fixed ten-card schedule consumed
 and every numerical section, with two expected work receipt changes.
 The eleven-card projection still exceeds the existing History cap.
 [Cursor contract and evidence](native-dyadic-two-sweep.md#checked-history-cursor)
+
+## Reusing the checked public visit
+
+The ten-card factored trainer reuses the authenticated occurrence along
+child edges. A frozen two-sweep run exactly realized 34,741,384 History
+units. Independent replay reproduced both checkpoints, all policy and
+root values, and the best responses. The eleven-card rank-free History
+projection fits with 1,311,840 units of headroom. State, quantizer and
+whole-request compute admission are still open.
+[Visit contract](native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
