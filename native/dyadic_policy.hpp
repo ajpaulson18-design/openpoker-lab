@@ -182,8 +182,6 @@ private:
                 fail(ErrorCode::invalid_row, "complement kernel menu width");
             charge(64+16*count);
             std::size_t positives = 0, positive_index = 0, max_positive_bits = 0;
-            bool equal_positive_weights = true;
-            const Integer* first_positive = nullptr;
             for (std::size_t i=0; i<count; ++i) {
                 const auto bits = width(regrets[i]);
                 if (bits > limits_.integer_bits)
