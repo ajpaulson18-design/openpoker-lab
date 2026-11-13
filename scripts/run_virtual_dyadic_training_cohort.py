@@ -1112,7 +1112,7 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
             for offset,key,component in (
                     (488,'work_plan','state'),(440,'work_actual','state'),
                     (472,'work_plan','parent'),(424,'work_actual','parent'),
-                    (408,'parent_work_plan','route'),(336,'parent_work_actual','route')):
+                    (360,'parent_work_plan','route'),(288,'parent_work_actual','route')):
                 require(int.from_bytes(old[-offset:-offset+8],'little')==before[key][component],
                         'indexed bootstrap footer location differs')
                 expected_bytes[-offset:-offset+8]=expected[key][component].to_bytes(8,'little')
