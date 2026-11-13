@@ -89,8 +89,8 @@ def reuse_snapshot_baseline(record):
                    record.get("row_directory_page_limit")==7456 and
                    record.get("row_directory_read_call_limit")==8*119_196 and
                    record.get("policy_spill_read_call_limit")==2*119_196 and
-                   record.get("factored_composed_entries")==373_684 and
-                   record.get("factored_composed_payload_bits")==20_892_544,
+                   record.get("factored_composed_entries")==374_708 and
+                   record.get("factored_composed_payload_bits")==20_958_080,
                    "snapshot reuse I/O or storage reservation differs")
     normalized=dict(record,row_directory_page_limit=7656,row_directory_read_call_limit=10*119_196,
                     policy_spill_read_call_limit=3*119_196,factored_composed_entries=372_660,

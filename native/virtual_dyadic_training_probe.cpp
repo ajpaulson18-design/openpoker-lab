@@ -189,8 +189,8 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.factored) std::cout<<",\"factored_execution\":true,\"factored_metadata_work\":"
         <<training::factored_metadata_work(plan)<<",\"factored_composed_work\":"
         <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)+training::factored_metadata_work(plan)
-        <<",\"factored_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32+8192+(plan.reuse_snapshot?1024:0)
-        <<",\"factored_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+(plan.reuse_snapshot?65536:0);
+        <<",\"factored_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32+8192+(plan.reuse_snapshot?2048:0)
+        <<",\"factored_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+(plan.reuse_snapshot?131072:0);
     if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     if (plan.row_batched) std::cout<<",\"row_batched\":true";
     if (plan.indexed_cache)

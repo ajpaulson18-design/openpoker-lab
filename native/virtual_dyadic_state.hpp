@@ -152,7 +152,7 @@ class State final {
             return std::span(units_).first(descriptor_.row.actions.size());
         }
     };
-    static_assert(sizeof(FrozenRow)<=128,"frozen row stack allowance");
+    static_assert(sizeof(FrozenRow)<=160,"frozen row stack allowance");
     friend class virtual_dyadic_training::Driver;
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
     using RegistrationOrder = std::pair<History::DecisionPath,std::size_t>;

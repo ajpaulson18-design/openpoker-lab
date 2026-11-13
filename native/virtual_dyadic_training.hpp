@@ -1661,8 +1661,8 @@ public:
             "compact encoder scratch exceeds composed storage cap");
         require(!p.factored || (factored_metadata_work(p)<=
             game.work_limit-p.total_work-sweep_stream_copy_work-compact_encoding_work(p.shape) &&
-            (8192+(p.reuse_snapshot?1024:0))<=entries_cap-p.entries-sweep_stream_entries-32 &&
-            (524288+(p.reuse_snapshot?65536:0))<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
+            (8192+(p.reuse_snapshot?2048:0))<=entries_cap-p.entries-sweep_stream_entries-32 &&
+            (524288+(p.reuse_snapshot?131072:0))<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
             "factored execution exceeds composed resource caps");
     }
 
