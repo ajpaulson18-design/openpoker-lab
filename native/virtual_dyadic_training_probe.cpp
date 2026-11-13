@@ -25,7 +25,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_single_division, train_ten_single_division,
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
-                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot,
                   admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
@@ -100,6 +100,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_HISTORY_VISIT") return Mode::train_ten_history_visit;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_EQUAL_QUANTIZER") return Mode::admit_ten_equal_quantizer;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_EQUAL_QUANTIZER") return Mode::train_ten_equal_quantizer;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_REUSE_SNAPSHOT") return Mode::admit_ten_reuse_snapshot;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_REUSE_SNAPSHOT") return Mode::train_ten_reuse_snapshot;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
@@ -157,12 +159,12 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.shared_policy)
         std::cout<<",\"shared_policy\":true,\"streamed_average\":true,\"policy_spill_work\":"<<plan.policy_spill_work
             <<",\"policy_spill_word_limit\":"<<counts.slots-counts.rows
-            <<",\"policy_spill_read_call_limit\":"<<3*counts.rows;
+            <<",\"policy_spill_read_call_limit\":"<<(plan.reuse_snapshot?2:3)*counts.rows;
     if (plan.paged_directory)
         std::cout<<",\"paged_row_directory\":true,\"row_directory_entries\":"
             <<training::state::State::row_directory_resident_entries
-            <<",\"row_directory_page_limit\":"<<plan.admitted_directory_page_limit
-            <<",\"row_directory_read_call_limit\":"<<(plan.bounded_proof9()?2+4*plan.requested_sweeps:10)*counts.rows;
+            <<",\"row_directory_page_limit\":"<<(plan.reuse_snapshot?7456:plan.admitted_directory_page_limit)
+            <<",\"row_directory_read_call_limit\":"<<(plan.bounded_proof9()?2+4*plan.requested_sweeps:plan.reuse_snapshot?8:10)*counts.rows;
     if (plan.rank_board_sets)
         std::cout<<",\"rank_cache_planes\":"<<plan.rank_planes
             <<",\"rank_lookup_work_per_query\":"
@@ -179,6 +181,7 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
         <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)
         <<",\"compact_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32
         <<",\"compact_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048;
+    if (plan.reuse_snapshot) std::cout<<",\"reuse_snapshot\":true";
     if (plan.equal_quantizer) std::cout<<",\"equal_quantizer\":true";
     if (plan.history_visit) std::cout<<",\"history_visit\":true";
     if (plan.checked_history) std::cout<<",\"checked_history\":true,\"history_decisions_per_walk\":"
@@ -186,8 +189,8 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.factored) std::cout<<",\"factored_execution\":true,\"factored_metadata_work\":"
         <<training::factored_metadata_work(plan)<<",\"factored_composed_work\":"
         <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)+training::factored_metadata_work(plan)
-        <<",\"factored_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32+8192
-        <<",\"factored_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048+524288;
+        <<",\"factored_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32+8192+(plan.reuse_snapshot?1024:0)
+        <<",\"factored_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+(plan.reuse_snapshot?65536:0);
     if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
     if (plan.row_batched) std::cout<<",\"row_batched\":true";
     if (plan.indexed_cache)
@@ -309,8 +312,8 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer;
-        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer;
+        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot;
+        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot;
         const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
@@ -336,6 +339,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_reuse_snapshot || mode==Mode::train_ten_reuse_snapshot)
+            profile=training::StrategyProfile::ten_card_reuse_snapshot;
         else if (mode==Mode::admit_ten_equal_quantizer || mode==Mode::train_ten_equal_quantizer)
             profile=training::StrategyProfile::ten_card_equal_quantizer;
         else if (mode==Mode::admit_ten_history_visit || mode==Mode::train_ten_history_visit)

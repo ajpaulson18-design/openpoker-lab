@@ -663,7 +663,8 @@ def verify_division_receipt(directory,admission):
     return record
 
 
-def verify_policy_spill(directory,stream,admission):
+def verify_policy_spill(directory,stream,admission,*,reuse_snapshot=False):
+    passes=2 if reuse_snapshot else 3
     sweeps=admission['requested_sweeps']
     if sweeps in (3,4,32):
         extent=sweep_stream_contract(proof9_sweeps=sweeps)['retained_bytes']
@@ -698,7 +699,7 @@ def verify_policy_spill(directory,stream,admission):
     with policy.open('rb') as spilled:
         for sweep in range(sweeps):
             counts=dict(uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0,write_words=0,
-                        read_calls=3*rows,mixed_read_calls=0,read_words=0)
+                        read_calls=passes*rows,mixed_read_calls=0,read_words=0)
             offset=0
             for menu in menus:
                 units=struct.unpack_from(f'<{menu}Q',raw,at)
@@ -717,17 +718,17 @@ def verify_policy_spill(directory,stream,admission):
                         require(spilled.read(8*(menu-1))==raw[at:at+8*(menu-1)],'policy spill word bytes differ')
                 offset+=menu-1
                 at+=8*menu
-            counts['mixed_read_calls']=3*counts['mixed_rows']
-            counts['read_words']=3*counts['write_words']
+            counts['mixed_read_calls']=passes*counts['mixed_rows']
+            counts['read_words']=passes*counts['write_words']
             expected.append(counts)
             at+=4*(1+11)*8
     require(expected==exact_json(receipt.read_bytes()) and size==8*expected[-1]['extent_words']
-            and 3*rows==admission['policy_spill_read_call_limit']
+            and passes*rows==admission['policy_spill_read_call_limit']
             and slots-rows==admission['policy_spill_word_limit'],'policy spill receipt differs from saved grids')
     return {'sweeps':expected,'retained_extent_bytes':size,'sha256':sha(policy)}
 
 
-def verify_row_directory(directory, stream, admission):
+def verify_row_directory(directory, stream, admission, *, reuse_snapshot=False):
     """Authenticate every immutable directory record against independent rows."""
     directory=unlinked_path(directory)
     require(directory.is_dir(),'row directory is missing')
@@ -738,7 +739,7 @@ def verify_row_directory(directory, stream, admission):
     receipt=exact_json(receipt_path.read_bytes())
     sweeps=admission.get('requested_sweeps',2)
     ten_card=sweeps==2
-    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
+    trace=directory_trace(reuse_snapshot=reuse_snapshot) if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
     rows,slots=admission['rows'],admission['slots']
     require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
             and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
@@ -1023,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1054,8 +1055,13 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
         expected=dict(expected,
             work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
             work_actual=dict(expected['work_actual'],quantizer=equal_receipt['work']))
+    io_fields=('paging','sweep_capture') if reuse_snapshot else ('paging','row_directory','policy_spill','sweep_capture')
+    if reuse_snapshot:
+        require(prior['row_directory']['rows_sha256']==result['row_directory']['rows_sha256'] and
+                prior['policy_spill']['sha256']==result['policy_spill']['sha256'],
+                'reused snapshot directory or policy spill content differs')
     require(all(expected[key]==replay[key] for key in fields) and
-            all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','sweep_capture')),
+            all(prior[key]==result[key] for key in io_fields),
             'complement changed saved training evidence or work receipts')
     require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
             replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152-
@@ -1514,16 +1520,18 @@ def main():
     modes.add_argument('--ten-checked-history',action='store_true')
     modes.add_argument('--ten-history-visit',action='store_true')
     modes.add_argument('--ten-equal-quantizer',action='store_true')
+    modes.add_argument('--ten-reuse-snapshot',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer:
+    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer,
-            checked_history=args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer,
-            history_visit=args.ten_history_visit or args.ten_equal_quantizer,equal_quantizer=args.ten_equal_quantizer),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,
+            checked_history=args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,
+            history_visit=args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,equal_quantizer=args.ten_equal_quantizer or args.ten_reuse_snapshot,
+            reuse_snapshot=args.ten_reuse_snapshot),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

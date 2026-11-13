@@ -84,9 +84,27 @@ def equal_quantizer_baseline(record):
     return checked_history_baseline(normalized,history_visit=True)
 
 
+def reuse_snapshot_baseline(record):
+    cohort.require(type(record) is dict and record.get("reuse_snapshot") is True and
+                   record.get("row_directory_page_limit")==7456 and
+                   record.get("row_directory_read_call_limit")==8*119_196 and
+                   record.get("policy_spill_read_call_limit")==2*119_196 and
+                   record.get("factored_composed_entries")==373_684 and
+                   record.get("factored_composed_payload_bits")==20_892_544,
+                   "snapshot reuse I/O or storage reservation differs")
+    normalized=dict(record,row_directory_page_limit=7656,row_directory_read_call_limit=10*119_196,
+                    policy_spill_read_call_limit=3*119_196,factored_composed_entries=372_660,
+                    factored_composed_payload_bits=20_827_008)
+    normalized.pop("reuse_snapshot")
+    legacy=equal_quantizer_baseline(normalized)
+    return dict(legacy,row_directory_page_limit=record["row_directory_page_limit"],
+                row_directory_read_call_limit=record["row_directory_read_call_limit"],
+                policy_spill_read_call_limit=record["policy_spill_read_call_limit"])
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
-    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record,
+    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record,
                    "unexpected extended training profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
@@ -158,7 +176,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -166,7 +184,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "History visit requires checked History training")
     cohort.require(type(equal_quantizer) is bool and (not equal_quantizer or history_visit),
                    "equal quantizer requires the visit profile")
-    suffix=("TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(reuse_snapshot) is bool and (not reuse_snapshot or equal_quantizer),
+                   "snapshot reuse requires equal quantizer profile")
+    suffix=("TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -215,7 +235,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        if equal_quantizer:
+        if reuse_snapshot:
+            legacy=reuse_snapshot_baseline(admission)
+        elif equal_quantizer:
             legacy=equal_quantizer_baseline(admission)
         elif checked_history:
             legacy=checked_history_baseline(admission,history_visit=history_visit)
@@ -255,8 +277,8 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
             cohort.require(expanded.stat().st_size==cohort.TEN_CARD_SPLIT_BYTES,
                            "expanded legacy extent differs")
             quantizer=cohort.verify_division_receipt(output/"page-images",legacy)
-            policy=cohort.verify_policy_spill(output/"page-images",expanded,legacy)
-            directory=cohort.verify_row_directory(output/"page-images-rows",expanded,legacy)
+            policy=cohort.verify_policy_spill(output/"page-images",expanded,legacy,reuse_snapshot=reuse_snapshot)
+            directory=cohort.verify_row_directory(output/"page-images-rows",expanded,legacy,reuse_snapshot=reuse_snapshot)
 
             prior=cohort.exact_json((ROOT/BASELINE/"manifest.json").read_bytes())
             for name in ("manifest.json","verification.zip"):
@@ -305,11 +327,12 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 result["equal_quantizer"]=equal_receipt
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
                 checked_history_work=history_work if checked_history else None,
-                equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None)
+                equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,
+                reuse_snapshot=reuse_snapshot)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
-                           policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy) and
-                           directory==cohort.verify_row_directory(output/"page-images-rows",expanded,legacy) and
+                           policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy,reuse_snapshot=reuse_snapshot) and
+                           directory==cohort.verify_row_directory(output/"page-images-rows",expanded,legacy,reuse_snapshot=reuse_snapshot) and
                            cohort.sha(compact)==compact_digest and cohort.sha(expanded)==digest and
                            encoding==cohort.exact_json((output/"compact-wire.json").read_bytes()),
                            "compact study input changed after replay")

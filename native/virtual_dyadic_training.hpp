@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -330,6 +330,7 @@ struct Plan {
     bool checked_history=false;
     bool history_visit=false;
     bool equal_quantizer=false;
+    bool reuse_snapshot=false;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
@@ -642,7 +643,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer;
+        plan_.reuse_snapshot=profile==StrategyProfile::ten_card_reuse_snapshot;
+        plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer || plan_.reuse_snapshot;
         plan_.history_visit=profile==StrategyProfile::ten_card_history_visit || plan_.equal_quantizer;
         plan_.checked_history=profile==StrategyProfile::ten_card_checked_history || plan_.history_visit;
         plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
@@ -860,6 +862,7 @@ public:
                 if (q32) plan_.admitted_directory_page_limit=state::State::proof9_q32_directory_page_limit;
                 plan_.admitted_directory_read_rows=plan_.admitted_directory_page_limit*128;
             }
+            // Retain the earlier work envelope while changing the read schedule.
             plan_.directory_work=plan_.paged_directory?
                 4*state::State::row_directory_resident_entries+16*R+
                     16*(bounded?(2+4*plan_.requested_sweeps):10)*R+4*plan_.admitted_directory_read_rows:96*R;
@@ -1197,13 +1200,17 @@ template<bool Paired,bool Factored=false> class Walk final {
         const auto key=checked?checked_ordinal:history_.ordinal(cursor);
         std::array<std::size_t,2> row_ids{};
         std::array<std::array<std::uint64_t,4>,2> policy_copies{};
+        std::array<std::optional<state::State::FrozenRow>,2> snapshots{};
         std::array<std::span<const std::uint64_t>,2> policy{};
         for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
             meter_.charge(Work::route,16);
             require(shape_.rows<state_.row_count(),"dense policy row overflow");
             const auto row=static_cast<std::size_t>(shape_.rows++);
             state::PolicySnapshot snapshot{};
-            if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
+            if (plan_.reuse_snapshot) {
+                snapshots[holding].emplace(state_.capture_frozen_row(row));
+                snapshot={snapshots[holding]->descriptor(),snapshots[holding]->units()};
+            } else if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
             const auto record=plan_.paged_directory?snapshot.descriptor.row:state_.row_at(row);
             // Menus come from the same immutable source used at registration.
             // Check the complete identity and packed extent before policy access.
@@ -1247,8 +1254,11 @@ template<bool Paired,bool Factored=false> class Walk final {
                 const std::span<const Value> values{action_values[holding].data(),menu};
                 if (plan_.scaled_averages) {
                     stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
-                    if constexpr (Factored)
-                        result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,{average,row_shift});
+                    if constexpr (Factored) {
+                        if (snapshots[holding])
+                            result[acting_lane][holding]=state_.stage_frozen_row(*snapshots[holding],values,{average,row_shift});
+                        else result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,{average,row_shift});
+                    }
                     else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
                 } else {
                     if constexpr (Factored) require(false,"factored traversal requires scaled averages");
@@ -1651,8 +1661,8 @@ public:
             "compact encoder scratch exceeds composed storage cap");
         require(!p.factored || (factored_metadata_work(p)<=
             game.work_limit-p.total_work-sweep_stream_copy_work-compact_encoding_work(p.shape) &&
-            8192<=entries_cap-p.entries-sweep_stream_entries-32 &&
-            524288<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
+            (8192+(p.reuse_snapshot?1024:0))<=entries_cap-p.entries-sweep_stream_entries-32 &&
+            (524288+(p.reuse_snapshot?65536:0))<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
             "factored execution exceeds composed resource caps");
     }
 
@@ -1713,10 +1723,10 @@ public:
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
-                    p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
+                    p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

@@ -26,6 +26,10 @@
 #include <utility>
 
 namespace openpoker::virtual_dyadic_training { class Driver; }
+namespace openpoker::virtual_dyadic_training {
+template<bool Paired,bool Factored> class Walk;
+}
+
 namespace openpoker::virtual_dyadic_state {
 using Integer = exact_binary64::Integer;
 using History = virtual_dyadic_history::History;
@@ -79,6 +83,7 @@ struct PagedStrategy {
     PayloadModel payload_model=PayloadModel::legacy;
     bool row_batched=false;
     factored_dyadic::Execution* factored=nullptr;
+    bool reuse_snapshot=false;
 };
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
@@ -134,6 +139,20 @@ struct CheckpointEpoch {
 };
 
 class State final {
+    template<bool Paired,bool Factored> friend class openpoker::virtual_dyadic_training::Walk;
+    class FrozenRow {
+        friend class State;
+        const State* owner_=nullptr;
+        std::size_t generation_=0,row_=0;
+        RowDescriptor descriptor_;
+        std::array<std::uint64_t,4> units_{};
+    public:
+        [[nodiscard]] const RowDescriptor& descriptor() const noexcept { return descriptor_; }
+        [[nodiscard]] std::span<const std::uint64_t> units() const {
+            return std::span(units_).first(descriptor_.row.actions.size());
+        }
+    };
+    static_assert(sizeof(FrozenRow)<=128,"frozen row stack allowance");
     friend class virtual_dyadic_training::Driver;
     using Key = std::tuple<std::size_t,std::size_t,std::size_t>;
     using RegistrationOrder = std::pair<History::DecisionPath,std::size_t>;
@@ -243,7 +262,7 @@ class State final {
     class PolicySpill {
         static constexpr std::uint8_t uniform_tag=1,mixed_tag=22;
         const std::size_t rows_,words_;
-        const std::size_t generations_;
+        const std::size_t generations_,read_passes_;
         std::fstream file_;
         PolicySpillReceipt receipt_{};
         std::unique_ptr<PolicySpillSweep[]> bounded_receipt_;
@@ -255,9 +274,9 @@ class State final {
             return q/count+static_cast<std::uint64_t>(action<q%count);
         }
     public:
-        PolicySpill(std::size_t rows,std::size_t words,std::size_t generations=2,bool bounded_lifecycle=false)
-            :rows_(rows),words_(words),generations_(generations) {
-            if (!generations_ || generations_>32) throw std::invalid_argument("invalid policy spill generation bound");
+        PolicySpill(std::size_t rows,std::size_t words,std::size_t generations=2,bool bounded_lifecycle=false,std::size_t read_passes=3)
+            :rows_(rows),words_(words),generations_(generations),read_passes_(read_passes) {
+            if (!generations_ || generations_>32 || (read_passes_!=2 && read_passes_!=3)) throw std::invalid_argument("invalid policy spill generation bound");
             if (bounded_lifecycle) bounded_receipt_=std::make_unique<PolicySpillSweep[]>(generations_);
         }
 
@@ -329,7 +348,7 @@ class State final {
             if (!ready_ || output.size()<2 || output.size()>20 || offset>words_ || output.size()-1>words_-offset)
                 throw std::logic_error("invalid frozen policy spill extent");
             auto& counts=current_receipt();
-            if (counts.read_calls>=3*rows_) throw std::length_error("policy spill read request cap");
+            if (counts.read_calls>=read_passes_*rows_) throw std::length_error("policy spill read request cap");
             if (tag==uniform_tag) {
                 for (std::size_t action=0;action<output.size();++action) output[action]=uniform(output.size(),action);
             } else if (tag>=2 && tag<2+output.size()) {
@@ -337,7 +356,7 @@ class State final {
                 output[tag-2]=dyadic_policy::grid_units;
             } else if (tag==mixed_tag) {
                 const auto words=output.first(output.size()-1);
-                if (offset+words.size()>counts.extent_words || words.size()>3*words_-counts.read_words)
+                if (offset+words.size()>counts.extent_words || words.size()>read_passes_*words_-counts.read_words)
                     throw std::length_error("policy spill physical read bound");
                 file_.seekg(static_cast<std::streamoff>(8*offset));
                 file_.read(reinterpret_cast<char*>(words.data()),static_cast<std::streamsize>(words.size_bytes()));
@@ -466,6 +485,9 @@ class State final {
             (!expanded || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases || !paged->row_batched))
             fail(ErrorCode::invalid_forecast,"complement division requires the named ten-card row-batched lifecycle");
+        if (paged && paged->reuse_snapshot && (!paged->factored || !paged->paged_directory ||
+            !paged->shared_policy || !paged->row_batched))
+            fail(ErrorCode::invalid_forecast,"snapshot reuse requires factored paged policy rows");
         if (paged && paged->factored &&
             (!expanded || !paged->row_batched || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases))
@@ -565,7 +587,7 @@ class State final {
             paged->scratch.native().size()>1024)
             fail(ErrorCode::invalid_forecast,"Q32 scratch path exceeds its fixed bound");
         const auto lifecycle=paged?paged->lifecycle:Lifecycle::fixed_two_sweep;
-        const auto directory_read_limit=paged_directory_read_limit(f,lifecycle);
+        const auto directory_read_limit=paged_directory_read_limit(f,lifecycle,paged && paged->reuse_snapshot);
         if (paged && paged->paged_directory &&
             (!paged->directory_page_limit || paged->directory_page_limit>directory_read_limit ||
              (paged->limits.profile==virtual_dyadic_paged_image::Profile::proof9_t4 &&
@@ -583,8 +605,8 @@ class State final {
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
     }
-    static std::size_t paged_directory_read_limit(const Forecast& f,Lifecycle lifecycle) {
-        if (lifecycle==Lifecycle::fixed_two_sweep) return times(10,f.rows);
+    static std::size_t paged_directory_read_limit(const Forecast& f,Lifecycle lifecycle,bool reuse_snapshot=false) {
+        if (lifecycle==Lifecycle::fixed_two_sweep) return times(reuse_snapshot?8:10,f.rows);
         if (lifecycle==Lifecycle::bounded_v1 || lifecycle==Lifecycle::quality32)
             return times(plus(2,times(4,f.sweeps)),f.rows);
         fail(ErrorCode::invalid_forecast,"unknown state lifecycle");
@@ -1003,7 +1025,7 @@ public:
                 fail(ErrorCode::invalid_forecast,"compact rows support at most two holdings per seat");
             if (paged_->paged_directory)
                 row_directory_=std::make_unique<RowDirectory>(paged_->scratch,forecast_.rows,
-                    paged_->directory_page_limit,paged_directory_read_limit(forecast_,paged_->lifecycle));
+                    paged_->directory_page_limit,paged_directory_read_limit(forecast_,paged_->lifecycle,paged_->reuse_snapshot));
             else compact_rows_=std::make_unique<CompactRow[]>(forecast_.rows);
             if (!paged_->ordered_rows) {
                 compact_index_slots_=compact_index_slots(forecast_.rows);
@@ -1384,7 +1406,7 @@ public:
             if (paged_ && paged_->shared_policy) {
                 const auto multi_sweep=paged_->lifecycle==Lifecycle::bounded_v1 || paged_->lifecycle==Lifecycle::quality32;
                 policy_spill_=std::make_unique<PolicySpill>(forecast_.rows,forecast_.slots-forecast_.rows,
-                    multi_sweep?forecast_.sweeps:2,multi_sweep);
+                    multi_sweep?forecast_.sweeps:2,multi_sweep,paged_->reuse_snapshot?2:3);
             } else units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
             seen_=std::make_unique<unsigned char[]>(forecast_.rows);
             if (row_directory_) row_directory_->freeze();
@@ -1470,6 +1492,24 @@ public:
         } catch (...) {failed_=true;throw;}
     }
 private:
+    [[nodiscard]] FrozenRow capture_frozen_row(std::size_t row) {
+        healthy();
+        try {
+            if (phase_!=Phase::sweeping || !paged_ || !paged_->reuse_snapshot ||
+                !row_directory_ || !policy_spill_)
+                fail(ErrorCode::phase,"frozen row requires the admitted snapshot profile");
+            FrozenRow result;
+            result.owner_=this;
+            result.generation_=receipt_.completed_sweeps;
+            result.row_=row;
+            result.descriptor_=describe_row(row);
+            const auto count=result.descriptor_.row.actions.size();
+            if (count>result.units_.size()) fail(ErrorCode::invalid_row,"frozen row menu exceeds snapshot storage");
+            policy_spill_->load(policy_tag(row),result.descriptor_.row.offset-row,
+                std::span(result.units_).first(count));
+            return result;
+        } catch (...) { failed_=true;throw; }
+    }
     template<class Increment>
     void stage_direct_row(PackedField field,std::size_t offset,std::size_t shift,
                           std::span<const Increment> increments,
@@ -1524,14 +1564,19 @@ private:
     template<class Value>
     Value stage_row_impl(std::size_t row,std::span<const Value> action_values,
                            std::span<const Integer> average_action_increments,
-                           std::optional<std::size_t> scaled_shift) {
+                           std::optional<std::size_t> scaled_shift,
+                           const FrozenRow* snapshot=nullptr) {
         healthy();
         try {
             if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state staging requires active sweep");
             constexpr bool factored=std::is_same_v<Value,factored_dyadic::Value>;
             if (factored!=bool(paged_ && paged_->factored))
                 fail(ErrorCode::phase,"staging representation differs from admitted owner");
-            const auto descriptor=describe_row(row);
+            if (bool(snapshot)!=bool(paged_ && paged_->reuse_snapshot) ||
+                (snapshot && (!factored || snapshot->owner_!=this ||
+                    snapshot->generation_!=receipt_.completed_sweeps || snapshot->row_!=row)))
+                fail(ErrorCode::invalid_row,"foreign, stale or incompatible frozen row");
+            const auto descriptor=snapshot?snapshot->descriptor_:describe_row(row);
             const auto r=descriptor.row;const auto count=r.actions.size();
             if (row_seen(row) || action_values.size()!=count || average_action_increments.size()!=count)
                 fail(ErrorCode::invalid_row,"state duplicate or incomplete staged row");
@@ -1564,9 +1609,10 @@ private:
             receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,temp_bits);
             Value mixed{};
             std::array<std::uint64_t,20> copied{};
-            if (policy_spill_) policy_spill_->load(policy_tag(row),r.offset-row,
+            if (!snapshot && policy_spill_) policy_spill_->load(policy_tag(row),r.offset-row,
                 std::span(copied).first(count));
-            const auto* policy=policy_spill_?copied.data():units_.get()+r.offset;
+            const auto* policy=snapshot?snapshot->units_.data():
+                (policy_spill_?copied.data():units_.get()+r.offset);
             if constexpr (factored) {
                 mixed=paged_->factored->mix(action_values,std::span(policy,count));
                 if (mixed.expanded_bits()>forecast_.value_bits)
@@ -1631,6 +1677,14 @@ public:
                 ScaledAverageIncrements average_increments) {
         return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
     }
+private:
+    factored_dyadic::Value stage_frozen_row(const FrozenRow& snapshot,
+                std::span<const factored_dyadic::Value> action_values,
+                ScaledAverageIncrements average_increments) {
+        return stage_row_impl(snapshot.row_,action_values,average_increments.values,
+            average_increments.shift,&snapshot);
+    }
+public:
     void commit_sweep() {
         healthy();
         try {
