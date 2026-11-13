@@ -818,3 +818,70 @@ The packet preserves the earlier format-only run before separate
 encoding-work accounting, the intermediate metered run, and the final
 compatibility adjustment.
 [Compact transport evidence](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)
+
+## Factored payoff arithmetic and direct packed updates
+
+The opt-in `TEN_FACTORED` profile uses the same ten-card game and two
+completed CFR+ sweeps as compact transport. Each traversal value stores a
+signed integer coefficient and an implicit power of two. Terminal scaling
+multiplies by the exact stake and street-divisor ratio. Addition aligns only
+the coefficient with the larger shift. A row mix factors out the common
+power of two in the nonzero policy units before applying the exact
+`2^52` denominator. Pure rows return the selected value after validating
+the partition. The driver expands four numerators at each sweep boundary.
+
+State subtracts each mixed value from its action values and converts the
+delta to the certified regret row scale. If this conversion requires a
+right shift, the low magnitude bits must be zero. The packed update reads
+the shifted sign and magnitude directly, checks overflow, and clips
+negative regrets at zero. Average increments already arrive in the
+certified row units. The update writes a field's staged words only after
+all actions in that field succeed. If average staging fails after regret
+staging, State marks the owner failed and prevents committing the sweep.
+The packed arithmetic controls cover separate update failure atomicity.
+The fixed full-game replay covers successful State staging and commit.
+Synthetic nondivisible factored deltas and a forced average failure after
+regret staging are still uncovered at the State boundary.
+
+The existing Parent work reservations still cover wide arithmetic.
+At eleven words, each of the 1,329,176 terminal scaling calls frees 60
+units inside that reservation by avoiding the second multiply and
+expanded shift. The 1,420,012 additions need at most 46 extra units each
+for one coefficient copy, one in-place alignment and signed addition.
+The resulting 14,430,008-unit balance stays within Parent. The old footer
+charges are preserved. State's mixed-value allowance covers bounded
+products, alignment, addition and exact division. Its regret arithmetic
+and codec allowance cover the aligned difference and checked quotient.
+The retained per-slot and per-word codec reservation covers packed word
+extraction, comparison, carry or borrow, and scratch copies.
+
+A shared execution counter charges 64 units for each conversion,
+addition, subtraction, terminal scale and root expansion, and 320 per
+policy mix. The native driver and independent host check each realized
+event count. The added metadata reservation is 380,819,456 units.
+Composed work is 2,137,373,778 against the existing 2.15-billion cap.
+With 65,536 bytes of additional scratch reserved, the composed counts are
+372,660 entries and 20,827,008 payload bits. The work and storage
+reservations are modeled. Packed word receipt counts describe the
+target words touched.
+
+The frozen run at `e455b94` verified both checkpoint images and all policy,
+root and compact-wire bytes against the existing exact result. The
+saved-only replay reproduced the updates and best responses. Maximum
+observed coefficient width was 430 bits and maximum implicit shift was
+628 bits, across different values. The two-sweep exploitability was
+2.9843178536 big blinds with no quality threshold set. Eleven-card
+compute admission remains open.
+
+In four alternating pairs on one Windows host, the factored profile
+was faster in three pairs. The median within-pair time ratio was 0.947,
+with medians of 6.464 seconds for the baseline and 5.986 seconds for
+factored execution. Peak working set was 5.04–5.05 MB in both modes.
+Each complete native call and capture reproduced the same bytes. The
+timing excludes host expansion and independent replay.
+
+All 54 controls passed normally and with optimized Python. The evidence
+archive preserves both logs, the initial controller count mismatch,
+source and binary identities, the saved policy, independent replay, and
+all eight timing observations.
+[Factored training evidence](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)

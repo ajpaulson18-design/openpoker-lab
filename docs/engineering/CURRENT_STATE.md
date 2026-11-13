@@ -1055,3 +1055,13 @@ records additional encoder work within the existing cap, and reduces
 retained numerical output by 68.4 percent. The eleven-card output-size
 projection fits the current ceiling. Whole-request work admission
 and eleven-card quality remain unresolved.
+
+## Factored exact traversal
+
+The opt-in ten-card profile keeps powers of two implicit in traversal
+values and updates packed regret and average words directly. Both sweep
+checkpoints, the complete compact stream, and independent replay match
+the earlier two-sweep result. The additional scalar work reservation
+leaves 12,626,222 units in the existing ten-card budget. The eleven-card
+work limits remain open.
+[Factored training contract](../native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)

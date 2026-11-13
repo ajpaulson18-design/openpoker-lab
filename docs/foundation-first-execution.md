@@ -1263,3 +1263,14 @@ uses exact reconstruction to reduce the fixed trainer's numerical output.
 The eleven-card rank-free projection fits the current native output
 ceiling with this format. Compute admission, a native eleven-card run
 and independently verified quality remain required.
+
+## Factored arithmetic in ten-card training
+
+The factored profile runs through both sweeps of the fixed four-street
+game, including direct packed regret and average updates. The frozen
+source study matched the accepted compact wire and both checkpoints
+byte for byte. Independent saved-policy replay passed. The same
+executable comparison recorded a median paired ratio of 0.947 on a
+Windows host. The eleven-card work caps remain unresolved.
+[Execution contract](native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+[Evidence manifest](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
