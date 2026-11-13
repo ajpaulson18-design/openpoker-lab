@@ -1065,3 +1065,12 @@ the earlier two-sweep result. The additional scalar work reservation
 leaves 12,626,222 units in the existing ten-card budget. The eleven-card
 work limits remain open.
 [Factored training contract](../native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+
+## Checked History traversal
+
+The factored ten-card trainer has an opt-in checked cursor that preserves
+complete physical board order and literal betting paths. Its exact
+History reservation is 62.9 million work units. Independent saved replay
+matches the earlier numerical result and checkpoints. The eleven-card
+History projection is 185.7 million units against the 100-million cap.
+[Checked History contract](../native-dyadic-two-sweep.md#checked-history-cursor)

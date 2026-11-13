@@ -885,3 +885,60 @@ archive preserves both logs, the initial controller count mismatch,
 source and binary identities, the saved policy, independent replay, and
 all eight timing observations.
 [Factored training evidence](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
+
+## Checked History cursor
+
+The opt-in ten-card checked History profile uses the factored trainer.
+A private cursor carries the physical board code and card mask. The flop
+establishes their values after verifying sorted, distinct deck members.
+Turn and river each verify the existing prefix and append one checked
+physical card. Betting edges preserve the board bits. The literal path
+ordinal still distinguishes different action histories through a shared
+template node, and the board code still distinguishes turn and river order.
+
+A single checked lookup verifies the expected source node and visible
+street at each visit. Owner, generation, cursor extent and phase guards
+remain in the transition path. The cursor fits the 48-byte bound without
+growing the resident occurrence array. The action, reveal, ordinal and
+ordered registration charges retain their previous rates.
+
+The exact History reservation counts construction, one root acquisition,
+all three public walks, the learning decision ordinals, ordered catalog
+rows and one read per distinct sealed menu. For the fixed two-sweep
+schedule, with action edges A, reveal edges Q, visits V, public decision
+occurrences D, rows R, menu sources M and menu tokens T, this is
+4096 × 1105 + 1288 + 3 × (40A + 72Q + 8V) + 64D + 64R + 24M + 16T.
+The new profile requires the complete History receipt to match the
+reservation. Its 62,890,960 units are 6,934,704 below the earlier realized
+charge and 36,863,656 below the earlier conservative forecast. Composed
+factored admission is 2,100,510,122 units against the 2.15-billion cap.
+
+The frozen run at 8bd8274 reproduced both checkpoints and every numerical
+section. The expanded artifact differed in the two History work words.
+The independent verifier checked both work words, all saved policies
+and updates, and the two best responses. The initial MSVC freeze
+failed on the narrowing of a backwalk index before training. The
+successful freeze explicitly retains occurrence-width backwalk indices.
+
+The independent rank-free schedule projects 185,692,384 History units
+for eleven cards against its 100-million cap. Other owner limits and
+the composed work cap also need separate changes. The forecast script
+counts 355,446 literal decision visits per walk from the physical prefix
+geometry and reconstructs the earlier ten-card ledger as a calibration.
+
+Four alternating pairs on one Windows host reproduced both complete
+streams and both image hashes against their respective frozen receipts.
+Median full native call times were 7.161 seconds for factored training
+and 6.583 seconds for checked traversal. The median paired ratio was
+0.9077. Three checked calls were faster and one was slower. The
+4,096-byte peak working-set difference was one memory page. Host
+expansion and independent replay followed the measured native calls.
+
+The focused controls cover the exact ordinal on 5,525 records and
+reject a changed prefix, a foreign card and a repeated card at the
+turn boundary. The archive preserves the first control failure, caused
+by counting two mismatch checks in the single-call work measurement.
+The test-only correction was checked against the original trainer and
+State build source closures.
+[Checked History evidence](../benchmarks/results/native-dyadic-checked-history-v1/manifest.json)
+[Rank-free projection](../scripts/project_virtual_dyadic_history.py)

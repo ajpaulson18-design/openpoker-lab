@@ -1274,3 +1274,12 @@ executable comparison recorded a median paired ratio of 0.947 on a
 Windows host. The eleven-card work caps remain unresolved.
 [Execution contract](native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
 [Evidence manifest](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
+
+## Checked History in ten-card training
+
+The cursor retains its checked physical board code and combines the
+source and visible street checks. The fixed ten-card schedule consumed
+62,890,960 History work units. A frozen run reproduced both checkpoints
+and every numerical section, with two expected work receipt changes.
+The eleven-card projection still exceeds the existing History cap.
+[Cursor contract and evidence](native-dyadic-two-sweep.md#checked-history-cursor)
