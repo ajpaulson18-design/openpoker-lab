@@ -206,7 +206,7 @@ public:
             // Turn and river each contribute one card. Zero pads shorter paths.
             auto position=p.depth+(p.visible?2:0);
             std::fill_n(order->data()+position,order->size()-position,std::uint8_t{0});
-            for (auto at=c.path_;at;at=paths_[at].parent) {
+            for (std::size_t at=c.path_;at;at=paths_[at].parent) {
                 const auto& child=paths_[at];
                 if (child.reveal) {
                     const auto first=paths_[child.parent].visible;
@@ -294,7 +294,7 @@ public:
             receipt_.peak_scratch_entries=std::max(receipt_.peak_scratch_entries,scratch);
             receipt_.peak_total_bytes=std::max(receipt_.peak_total_bytes,receipt_.owned_bytes+bytes);
             std::vector<std::string> result;result.reserve(depth);
-            for (auto at=c.path_;at;at=paths_[at].parent) {
+            for (std::size_t at=c.path_;at;at=paths_[at].parent) {
                 const auto& p=paths_[at];
                 if (!p.reveal) result.emplace_back(p.incoming.data(),p.incoming_size);
                 else {
