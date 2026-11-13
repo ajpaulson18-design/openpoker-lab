@@ -568,7 +568,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
         self.assertEqual(receipt['quantizer_terms'][0],0)
         self.assertEqual(receipt['component_work']['quantizer'],412_635_048)
-        self.assertEqual(receipt['factored_composed_work'],2_057_244_674)
+        self.assertEqual(receipt['factored_composed_work'],2_053_430_402)
         self.assertEqual(receipt['page_request_limit'],
                          schedule['logical_read_calls']+schedule['direct_write_calls'])
         self.assertEqual(schedule['read_epochs'][0]['logical_reads'],0)

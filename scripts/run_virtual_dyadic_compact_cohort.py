@@ -117,7 +117,8 @@ def zero_policy_bootstrap_baseline(record):
                       paging_work=record["paging_work"]+removed_route,
                       quantizer_terms=[removed_quantizer,*record["quantizer_terms"][1:]],
                       component_work=dict(components,state=components["state"]-added_state,
-                                          quantizer=components["quantizer"]+removed_quantizer),
+                                          quantizer=components["quantizer"]+removed_quantizer,
+                                          parent=components["parent"]+removed_route),
                       parent_work=dict(parent,route=parent["route"]+removed_route),
                       parent_allowance=record["parent_allowance"]-removed_quantizer+added_state)
     normalized.pop("zero_policy_bootstrap")
