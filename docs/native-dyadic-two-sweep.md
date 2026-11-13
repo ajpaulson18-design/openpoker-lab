@@ -1022,3 +1022,45 @@ native calls took 3.475 seconds versus 3.649 seconds for the preceding
 visit profile. The timing excludes host replay and covers only this
 fixed game and budget.
 [Equal-weight quantizer evidence](../benchmarks/results/native-dyadic-equal-quantizer-v1/manifest.json)
+
+## Reusing an owned frozen row during staging
+
+The opt-in ten-card snapshot profile copies the four policy slots into
+an internal State-issued object before visiting children. It retains the
+authenticated descriptor by value, with menu views that borrow immutable
+catalog storage. Staging checks State ownership, the active sweep and
+its generation, and rejects a duplicate row before applying the exact
+regret and average updates. No directory or policy cache pointer is
+retained across recursion. Public copy APIs keep their current behavior.
+
+The two-sweep directory schedule falls from ten to eight reads per row.
+The independent direct-mapped trace predicts 953,568 logical row
+lookups, down from 1,191,960. The modeled
+page-read count falls from 7,656 to 7,456, or 819,200 fewer requested
+bytes. Policy spill loads fall from three passes per sweep to two.
+Packed regret and average traffic is accounted separately. State retains
+the prior conservative work reservations, and the composed entry and
+payload allowances include 16 KiB for the snapshot frames.
+
+The independent eleven-card trace projects 760,344 fewer directory
+lookups across two sweeps and 582 fewer page reads, saving 2,383,872
+requested directory bytes. The policy spill schedule removes one
+logical load per row per sweep. Eleven-card physical mixed reads still
+depend on its policy. The eleven-card training path remains outside
+the current State and quantizer work limits.
+
+The first build caught that the snapshot object exceeded the proposed
+MSVC size bound. The corrected source at 617919c raised the per-object
+ceiling to 160 bytes and reserved 16 KiB for the recursive frame scratch.
+The frozen run and replay reproduced the complete compact output,
+checkpoints and best responses byte for byte. The independent directory
+trace matched all observed logical and physical counters. Both test
+modes passed 61 controls.
+
+Four matched native-call pairs on one Windows host all verified the
+same compact wire and both checkpoints. The snapshot mode was faster
+in two pairs and slower in two. Median full-call time was 5.746 seconds
+versus 5.646 seconds for the preceding path. Median paired time was
+2.0 percent higher. Measured I/O reductions establish no elapsed-time
+gain on this fixture.
+[Owned snapshot evidence](../benchmarks/results/native-dyadic-owned-snapshot-v1/manifest.json)

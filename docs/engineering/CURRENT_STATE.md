@@ -1086,3 +1086,8 @@ allocation and avoids 60.8 percent of wide divisions on the verified
 two-sweep ten-card fixture. Its whole-request forecast allows every
 potentially mixed row to use the generic path.
 [Equal-weight quantizer](../native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+The owned State row snapshot reuses the frozen policy and authenticated
+row descriptor during staging. On the ten-card fixture, it eliminates
+238,392 directory lookups and 238,392 policy loads across two sweeps.
+[Snapshot contract](../native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)

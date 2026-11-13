@@ -1304,3 +1304,12 @@ units. The conservative reservation increases to cover comparisons even
 when every row follows the generic path. Eleven-card admission remains
 open.
 [Quantizer contract](native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+## Owned row snapshots during State staging
+
+The ten-card traversal keeps an owned four-unit row snapshot across
+recursion and gives it back to State during exact staging. The independent
+trace checks directory cache behavior, and saved policies reconstruct
+the mixed policy spill read count. The retained arithmetic work
+reservation has yet to be reduced for the wider fixture.
+[Snapshot verification](native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)
