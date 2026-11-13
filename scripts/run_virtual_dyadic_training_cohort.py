@@ -1024,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1047,21 +1047,36 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
         expected=dict(before,work_plan=dict(before['work_plan'],history=checked_history_work),
             work_actual=dict(before['work_actual'],history=checked_history_work))
     equal_receipt=replay.get('equal_quantizer')
+    rows, slots = before['shape']['rows'], before['shape']['slots']
+    removed_initial_work = 320*rows+48*slots if zero_policy_bootstrap else 0
     if equal_quantizer_plan is not None:
         require(checked_history_work is not None and type(equal_receipt) is dict and
                 0<equal_receipt['equal_divisions_avoided']<186_152 and
-                equal_quantizer_plan>before['work_plan']['quantizer'],
+                equal_quantizer_plan+removed_initial_work>before['work_plan']['quantizer'],
                 'equal quantizer work or savings receipt differs')
         expected=dict(expected,
             work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
             work_actual=dict(expected['work_actual'],quantizer=equal_receipt['work']))
-    io_fields=('paging','sweep_capture') if reuse_snapshot else ('paging','row_directory','policy_spill','sweep_capture')
+    expected_paging=prior['paging']
+    if zero_policy_bootstrap:
+        for phase in ('plan','actual'):
+            work, parent = 'work_'+phase, 'parent_work_'+phase
+            expected[work]=dict(expected[work],state=before[work]['state']+32*rows,
+                                parent=before[work]['parent']-16*rows)
+            expected[parent]=dict(before[parent],route=before[parent]['route']-16*rows)
+        counts=dict(expected_paging['counts'])
+        for key in ('read_calls','synthetic_read_calls'):
+            counts[key]-=rows
+        for key in ('logical_read_words','synthetic_read_words'):
+            counts[key]-=1_666_910
+        expected_paging=dict(expected_paging,counts=counts)
+    io_fields=('sweep_capture',) if reuse_snapshot else ('row_directory','policy_spill','sweep_capture')
     if reuse_snapshot:
         require(prior['row_directory']['rows_sha256']==result['row_directory']['rows_sha256'] and
                 prior['policy_spill']['sha256']==result['policy_spill']['sha256'],
                 'reused snapshot directory or policy spill content differs')
     require(all(expected[key]==replay[key] for key in fields) and
-            all(prior[key]==result[key] for key in io_fields),
+            expected_paging==result['paging'] and all(prior[key]==result[key] for key in io_fields),
             'complement changed saved training evidence or work receipts')
     require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
             replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152-
@@ -1093,6 +1108,14 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
                 require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['quantizer'],
                         'indexed quantizer footer location differs')
                 expected_bytes[-offset:-offset+8]=expected[key]['quantizer'].to_bytes(8,'little')
+        if zero_policy_bootstrap:
+            for offset,key,component in (
+                    (488,'work_plan','state'),(440,'work_actual','state'),
+                    (472,'work_plan','parent'),(424,'work_actual','parent'),
+                    (360,'parent_work_plan','route'),(288,'parent_work_actual','route')):
+                require(int.from_bytes(old[-offset:-offset+8],'little')==before[key][component],
+                        'indexed bootstrap footer location differs')
+                expected_bytes[-offset:-offset+8]=expected[key][component].to_bytes(8,'little')
         old=expected_bytes
     require(candidate==old and hashlib.sha256(candidate).hexdigest()==replay['saved_output_sha256'],
             'retained numerical stream differs beyond admitted work counters')
@@ -1104,7 +1127,8 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
             'wire_sha256':(result['compact_sweep_capture']['wire_sha256'] if checked_history_work is not None
                            else result['sweep_capture']['wire_sha256']),
             **({'expected_history_footer_changes':2} if checked_history_work is not None else {}),
-            **({'expected_quantizer_footer_changes':2} if equal_quantizer_plan is not None else {})}
+            **({'expected_quantizer_footer_changes':2} if equal_quantizer_plan is not None else {}),
+            **({'expected_state_and_parent_footer_changes':6} if zero_policy_bootstrap else {})}
 
 
 def compare_proof9_t3_prefix(path,source,frames):
@@ -1521,17 +1545,22 @@ def main():
     modes.add_argument('--ten-history-visit',action='store_true')
     modes.add_argument('--ten-equal-quantizer',action='store_true')
     modes.add_argument('--ten-reuse-snapshot',action='store_true')
+    modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot:
+    reuse_snapshot=args.ten_reuse_snapshot or args.ten_zero_policy_bootstrap
+    equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
+    history_visit=args.ten_history_visit or equal_quantizer
+    checked_history=args.ten_checked_history or history_visit
+    if args.ten_compact_wire or args.ten_factored or checked_history:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,
-            checked_history=args.ten_checked_history or args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,
-            history_visit=args.ten_history_visit or args.ten_equal_quantizer or args.ten_reuse_snapshot,equal_quantizer=args.ten_equal_quantizer or args.ten_reuse_snapshot,
-            reuse_snapshot=args.ten_reuse_snapshot),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,
+            factored=args.ten_factored or checked_history,checked_history=checked_history,
+            history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
+            zero_policy_bootstrap=args.ten_zero_policy_bootstrap),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

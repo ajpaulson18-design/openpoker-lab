@@ -102,9 +102,34 @@ def reuse_snapshot_baseline(record):
                 policy_spill_read_call_limit=record["policy_spill_read_call_limit"])
 
 
+def zero_policy_bootstrap_baseline(record):
+    rows, slots = 119_196, 281_066
+    removed_quantizer = 320*rows+48*slots
+    added_state, removed_route = 32*rows, 16*rows
+    saved_work = removed_quantizer+removed_route-added_state
+    cohort.require(type(record) is dict and record.get("zero_policy_bootstrap") is True and
+                   record.get("page_request_limit")==10*rows and
+                   record.get("quantizer_terms", [])[:1]==[0],
+                   "initial uniform policy profile or request census differs")
+    components = record["component_work"]
+    parent = record["parent_work"]
+    normalized = dict(record, page_request_limit=11*rows,
+                      paging_work=record["paging_work"]+removed_route,
+                      quantizer_terms=[removed_quantizer,*record["quantizer_terms"][1:]],
+                      component_work=dict(components,state=components["state"]-added_state,
+                                          quantizer=components["quantizer"]+removed_quantizer),
+                      parent_work=dict(parent,route=parent["route"]+removed_route),
+                      parent_allowance=record["parent_allowance"]-removed_quantizer+added_state)
+    normalized.pop("zero_policy_bootstrap")
+    for field in ("planned_total_work","compact_composed_work","factored_composed_work"):
+        normalized[field] += saved_work
+    legacy = reuse_snapshot_baseline(normalized)
+    return dict(legacy, page_request_limit=record["page_request_limit"])
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
-    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record,
+    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record,
                    "unexpected extended training profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
@@ -176,7 +201,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -186,7 +211,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "equal quantizer requires the visit profile")
     cohort.require(type(reuse_snapshot) is bool and (not reuse_snapshot or equal_quantizer),
                    "snapshot reuse requires equal quantizer profile")
-    suffix=("TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(zero_policy_bootstrap) is bool and (not zero_policy_bootstrap or reuse_snapshot),
+                   "initial policy bootstrap requires the owned row snapshot")
+    suffix=("TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -235,7 +262,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        if reuse_snapshot:
+        if zero_policy_bootstrap:
+            legacy=zero_policy_bootstrap_baseline(admission)
+        elif reuse_snapshot:
             legacy=reuse_snapshot_baseline(admission)
         elif equal_quantizer:
             legacy=equal_quantizer_baseline(admission)
@@ -248,7 +277,8 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 "training_invocations":0,"quality_gate":None,
                 "scope":"fixed indexed complement ten-card T2 with "+("factored execution" if factored else "compact transport")}
         if train:
-            stage=cohort.stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True)
+            stage=cohort.stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
+                                        zero_policy_bootstrap=zero_policy_bootstrap)
             trace=cohort.rank_trace()
             cohort.require((stage["logical_read_calls"]+stage["direct_write_calls"],
                             stage["physical_read_words"],stage["written_words"])==
@@ -294,6 +324,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                   "--complement-divisions","--sweep-checkpoint-digest",
                   *(frame["sha256"] for frame in capture["frames"])]
             if equal_quantizer: args.append("--equal-quantizer")
+            if zero_policy_bootstrap: args.append("--zero-policy-bootstrap")
             command=cohort.source_only_command(bootstrap,
                 source["files"]["scripts/run_virtual_frozen_source_only.py"]["raw_sha256"],
                 "scripts.verify_virtual_dyadic_training",receipt_path,args)
@@ -328,7 +359,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
                 checked_history_work=history_work if checked_history else None,
                 equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,
-                reuse_snapshot=reuse_snapshot)
+                reuse_snapshot=reuse_snapshot,zero_policy_bootstrap=zero_policy_bootstrap)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy,reuse_snapshot=reuse_snapshot) and

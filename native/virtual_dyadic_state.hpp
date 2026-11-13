@@ -84,7 +84,9 @@ struct PagedStrategy {
     bool row_batched=false;
     factored_dyadic::Execution* factored=nullptr;
     bool reuse_snapshot=false;
+    bool zero_policy_bootstrap=false;
 };
+inline constexpr std::uint64_t initial_uniform_policy_work=32;
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
     std::size_t token_slots, catalog_keys, stored_tokens, stored_menus;
@@ -273,6 +275,16 @@ class State final {
             const auto q=dyadic_policy::grid_units;
             return q/count+static_cast<std::uint64_t>(action<q%count);
         }
+        PolicySpillSweep& reserve_row(std::size_t offset,std::size_t count) {
+            if (!sweeps_ || ready_ || count<2 || count>20 || offset!=next_word_ ||
+                count-1>words_-next_word_)
+                throw std::logic_error("invalid policy spill row extent");
+            auto& census=current_receipt();
+            if (census.uniform_rows+census.pure_rows+census.mixed_rows>=rows_)
+                throw std::length_error("policy spill row cap");
+            next_word_+=count-1;
+            return census;
+        }
     public:
         PolicySpill(std::size_t rows,std::size_t words,std::size_t generations=2,bool bounded_lifecycle=false,std::size_t read_passes=3)
             :rows_(rows),words_(words),generations_(generations),read_passes_(read_passes) {
@@ -302,14 +314,14 @@ class State final {
             ready_=false;
         }
 
+        [[nodiscard]] std::uint8_t append_initial_uniform(std::size_t offset,std::size_t count) {
+            if (sweeps_!=1) throw std::logic_error("initial uniform policy requires the first generation");
+            ++reserve_row(offset,count).uniform_rows;
+            return uniform_tag;
+        }
+
         [[nodiscard]] std::uint8_t append(std::size_t offset,std::span<const std::uint64_t> units) {
-            if (!sweeps_ || ready_ || units.size()<2 || units.size()>20 || offset!=next_word_ ||
-                units.size()-1>words_-next_word_)
-                throw std::logic_error("invalid policy spill row extent");
-            auto& census=current_receipt();
-            if (census.uniform_rows+census.pure_rows+census.mixed_rows>=rows_)
-                throw std::length_error("policy spill row cap");
-            next_word_+=units.size()-1;
+            auto& census=reserve_row(offset,units.size());
             bool is_uniform=true;
             std::uint8_t pure=0;
             std::uint64_t sum=0;
@@ -488,6 +500,9 @@ class State final {
         if (paged && paged->reuse_snapshot && (!paged->factored || !paged->paged_directory ||
             !paged->shared_policy || !paged->row_batched))
             fail(ErrorCode::invalid_forecast,"snapshot reuse requires factored paged policy rows");
+        if (paged && paged->zero_policy_bootstrap && (!paged->reuse_snapshot ||
+            !paged->limits.virtual_initial_zero || paged->lifecycle!=Lifecycle::fixed_two_sweep))
+            fail(ErrorCode::invalid_forecast,"initial policy bootstrap requires owned virtual-zero rows");
         if (paged && paged->factored &&
             (!expanded || !paged->row_batched || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases))
@@ -1429,12 +1444,21 @@ public:
             receipt_.staged_rows=0;
             if (policy_spill_) policy_spill_->begin(paged_->scratch/"policy.bin");
             if (paged_image_) paged_image_->begin_sweep();
+            // State owns the virtual-zero image and has never committed a sweep here.
+            const bool initial_uniform=paged_ && paged_->zero_policy_bootstrap && !receipt_.completed_sweeps;
             std::optional<std::array<Integer,20>> decoded;
-            if (packed_regrets()) decoded.emplace();
+            if (packed_regrets() && !initial_uniform) decoded.emplace();
             for (std::size_t row_index=0;row_index<row_count();++row_index) {
                 const auto descriptor=describe_row(row_index);
                 const auto row=descriptor.row;
                 charge(16+4*row.actions.size());
+                if (initial_uniform) {
+                    charge(initial_uniform_policy_work);
+                    if (row.actions.size()>row_batch_max_actions)
+                        fail(ErrorCode::invalid_row,"policy row exceeds batched menu cap");
+                    seen_[row_index]=policy_spill_->append_initial_uniform(row.offset-row_index,row.actions.size());
+                    continue;
+                }
                 std::span<const Integer> values;
                 if (packed_regrets()) {
                     const PackedRegretRow packed_row{descriptor.regret_offset,descriptor.regret_shift};

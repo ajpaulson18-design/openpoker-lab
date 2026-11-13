@@ -554,6 +554,29 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         bad=dict(receipt,quantizer_terms=[*receipt['quantizer_terms'][:2],receipt['quantizer_terms'][2]-1])
         with self.assertRaises(ValueError):equal_quantizer_baseline(bad)
 
+    def test_initial_uniform_policy_admission_retires_the_first_regret_read(self):
+        from scripts.run_virtual_dyadic_compact_cohort import zero_policy_bootstrap_baseline
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('admit_ten_zero_policy_bootstrap',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_ZERO_POLICY_BOOTSTRAP',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        zero_policy_bootstrap_baseline(receipt)
+        schedule=stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
+                                zero_policy_bootstrap=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual(receipt['quantizer_terms'][0],0)
+        self.assertEqual(receipt['component_work']['quantizer'],412_635_048)
+        self.assertEqual(receipt['factored_composed_work'],2_057_244_674)
+        self.assertEqual(receipt['page_request_limit'],
+                         schedule['logical_read_calls']+schedule['direct_write_calls'])
+        self.assertEqual(schedule['read_epochs'][0]['logical_reads'],0)
+        self.assertEqual(schedule['physical_read_words'],receipt['page_read_word_limit'])
+        for bad in (dict(receipt,page_request_limit=receipt['page_request_limit']+1),
+                    dict(receipt,quantizer_terms=[1,*receipt['quantizer_terms'][1:]])):
+            with self.assertRaises(ValueError):zero_policy_bootstrap_baseline(bad)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

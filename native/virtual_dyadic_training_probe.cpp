@@ -25,7 +25,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_single_division, train_ten_single_division,
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
-                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot, admit_ten_zero_policy_bootstrap, train_ten_zero_policy_bootstrap,
                   admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
@@ -102,6 +102,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_EQUAL_QUANTIZER") return Mode::train_ten_equal_quantizer;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_REUSE_SNAPSHOT") return Mode::admit_ten_reuse_snapshot;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_REUSE_SNAPSHOT") return Mode::train_ten_reuse_snapshot;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_ZERO_POLICY_BOOTSTRAP") return Mode::admit_ten_zero_policy_bootstrap;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_ZERO_POLICY_BOOTSTRAP") return Mode::train_ten_zero_policy_bootstrap;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
@@ -182,6 +184,7 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
         <<",\"compact_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32
         <<",\"compact_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048;
     if (plan.reuse_snapshot) std::cout<<",\"reuse_snapshot\":true";
+    if (plan.zero_policy_bootstrap) std::cout<<",\"zero_policy_bootstrap\":true";
     if (plan.equal_quantizer) std::cout<<",\"equal_quantizer\":true";
     if (plan.history_visit) std::cout<<",\"history_visit\":true";
     if (plan.checked_history) std::cout<<",\"checked_history\":true,\"history_decisions_per_walk\":"
@@ -312,8 +315,8 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot;
-        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot;
+        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot || mode==Mode::admit_ten_zero_policy_bootstrap;
+        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot || mode==Mode::train_ten_zero_policy_bootstrap;
         const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
@@ -339,6 +342,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_zero_policy_bootstrap || mode==Mode::train_ten_zero_policy_bootstrap)
+            profile=training::StrategyProfile::ten_card_zero_policy_bootstrap;
         else if (mode==Mode::admit_ten_reuse_snapshot || mode==Mode::train_ten_reuse_snapshot)
             profile=training::StrategyProfile::ten_card_reuse_snapshot;
         else if (mode==Mode::admit_ten_equal_quantizer || mode==Mode::train_ten_equal_quantizer)
