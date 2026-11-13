@@ -1293,3 +1293,14 @@ root values, and the best responses. The eleven-card rank-free History
 projection fits with 1,311,840 units of headroom. State, quantizer and
 whole-request compute admission are still open.
 [Visit contract](native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+## Equal-weight quantization in ten-card training
+
+The equal-weight path reproduced both checkpoints, all policy and root
+values, and both best responses. An independent scan of the regenerated
+packed row masses counted 94,164 shortcut rows and 113,224 avoided wide
+divisions. Realized quantizer work fell from 241,704,336 to 206,392,024
+units. The conservative reservation increases to cover comparisons even
+when every row follows the generic path. Eleven-card admission remains
+open.
+[Quantizer contract](native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)

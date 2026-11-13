@@ -981,3 +981,44 @@ and 8.282 seconds for visit reuse. The median paired ratio was 1.0050,
 with two faster and two slower pairs. The comparison established
 no elapsed-time improvement.
 [Visit reuse evidence](../benchmarks/results/native-dyadic-history-visit-v1/manifest.json)
+
+## Equal positive weights in the policy quantizer
+
+The opt-in ten-card equal quantizer inherits the visit profile. After
+validating the entire input, it checks whether all positive weights
+are equal. For k equal positive weights, each receives floor(2^52/k)
+grid units and the first 2^52 mod k positive actions in legal order
+receive one extra unit. Zero and negative regret entries receive
+zero units, and negative average masses are rejected. This rule is
+the same largest-remainder allocation because all positive
+remainders tie. A positive equal row has no uniform fallback flag.
+Unequal rows use the existing complement division path.
+
+The two potentially mixed row phases each reserve 16 plus four times
+the menu size times (maximum limb words plus one) for the equality
+check. Each phase keeps the existing full generic reservation. The
+first sweep starts with zero regrets and never enters the equality
+check. With 119,196 rows and 281,066 action slots, the total additional
+reservation is 30,796,608 units. The quantizer reserves 464,268,936
+units and composed factored admission reserves 2,103,157,154. The
+rank-free eleven-card projection would add 97,884,864 units under
+the same conservative scheme. Equality frequency at eleven cards
+must be measured separately.
+
+The first strict native build rejected two obsolete local declarations.
+The corrected build and exact replay use frozen source 53a2f7b.
+
+Independent saved replay verified every numerical section and both
+checkpoint images. The expected change from the visit profile is in
+the two quantizer work words. It rebuilt the realized quantizer charge
+from exact packed row masses and matched all three figures. The shortcut
+handled 94,164 rows, avoided 113,224 multiprecision divisions, and left
+72,928 such divisions. Realized quantizer work fell to 206,392,024
+from 241,704,336 units. All 61 focused controls passed in both modes.
+
+On a Windows host, the shortcut was faster in all four matched pairs.
+The median within-pair time ratio was 0.9749, and median complete
+native calls took 3.475 seconds versus 3.649 seconds for the preceding
+visit profile. The timing excludes host replay and covers only this
+fixed game and budget.
+[Equal-weight quantizer evidence](../benchmarks/results/native-dyadic-equal-quantizer-v1/manifest.json)

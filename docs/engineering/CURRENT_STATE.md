@@ -1080,3 +1080,9 @@ The ten-card visit profile reduces the verified History schedule to
 against the 100-million History cap. Wider training remains gated by
 State, quantizer and aggregate work admission.
 [Visit reuse evidence](../native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+The opt-in equal-weight quantizer preserves exact largest-remainder
+allocation and avoids 60.8 percent of wide divisions on the verified
+two-sweep ten-card fixture. Its whole-request forecast allows every
+potentially mixed row to use the generic path.
+[Equal-weight quantizer](../native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
