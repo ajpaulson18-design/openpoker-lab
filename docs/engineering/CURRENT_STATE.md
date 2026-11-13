@@ -27,6 +27,12 @@ Larger-game work, integer/payload admission and scalable independent
 verification remain open. PR #285 is the integration review; development
 publication and merge acceptance are separate gates.
 
+The [ten-card initial-policy profile](../native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+uses State's fresh zero image to build the first sweep's uniform policy.
+It retires 119,196 synthetic regret reads and 49,726,752 modeled work units
+with matching policy and checkpoint bytes. The projected eleven-card
+State and quantizer work remain above their caps.
+
 The [N9 32-sweep study](../native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
 passes recovered source-only replay of every checkpoint and the complete wire
 hash. Fixed-game exploitability improves from 2.242 at T4 to 0.397 at T32;

@@ -1313,3 +1313,12 @@ trace checks directory cache behavior, and saved policies reconstruct
 the mixed policy spill read count. The retained arithmetic work
 reservation has yet to be reduced for the wider fixture.
 [Snapshot verification](native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)
+
+## First-sweep policy from the owned zero image
+
+The ten-card trainer now builds its first frozen policy from State's
+virtual-zero invariant. It removes one packed regret read and one
+generic quantizer call per row. The eleven-card forecast retires
+158,431,968 net work units, with 542,211,544 State units and 797,578,200
+quantizer units still above their individual caps.
+[Initial policy contract](native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)

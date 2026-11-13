@@ -1064,3 +1064,26 @@ versus 5.646 seconds for the preceding path. Median paired time was
 2.0 percent higher. Measured I/O reductions establish no elapsed-time
 gain on this fixture.
 [Owned snapshot evidence](../benchmarks/results/native-dyadic-owned-snapshot-v1/manifest.json)
+
+## Initial policy from virtual zero
+
+The opt-in ten-card initial-policy profile uses State's fresh virtual-zero
+image to register the uniform policy tag for each first-sweep row. State
+validates the row menu and spill order. Reading a tag reconstructs the
+same 52-bit policy units in legal-action order, including the extra unit
+for the first action in a three-action menu. The second sweep and average
+export retain the equal-weight quantizer.
+
+The first-sweep build uses 119,196 fewer synthetic regret reads and skips
+1,666,910 synthetic words. The physical read count and requested words
+stay at 1,498 and 6,130,244. Net reserved work across State, quantizer and
+parent falls by 49,726,752 units, from 2,103,157,154 to 2,053,430,402
+including transport and factored execution. The independent byte
+comparison permits eight changed work counters in the expanded footer.
+
+The rank-free eleven-card schedule projects 380,172 fewer synthetic
+reads, 5,536,052 fewer synthetic words and 158,431,968 fewer net work
+units. State and quantizer are still projected above their respective
+caps. The projection uses the same two-sweep lifecycle and contains
+zero native training or hand-ranking calls.
+[Initial policy evidence](../benchmarks/results/native-dyadic-initial-policy-v1/manifest.json)
