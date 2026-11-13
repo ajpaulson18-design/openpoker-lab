@@ -513,6 +513,21 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                           receipt['factored_composed_payload_bits']),(2_137_373_778,372_660,20_827_008))
         with self.assertRaises(ValueError):legacy_admission(receipt)
 
+    def test_checked_history_admission_binds_exact_schedule(self):
+        from scripts.run_virtual_dyadic_compact_cohort import checked_history_baseline
+        directory,process=self.observe('admit_ten_checked_history',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_CHECKED_HISTORY',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        checked_history_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['history'],receipt['factored_composed_work']),
+                         (62_890_960,2_100_510_122))
+        for field in ('history_decisions_per_walk','factored_composed_work','parent_allowance'):
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                checked_history_baseline(dict(receipt,**{field:receipt[field]+1}))
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

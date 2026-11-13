@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -327,6 +327,8 @@ struct Plan {
     bool complement_division=false;
     bool compact_wire=false;
     bool factored=false;
+    bool checked_history=false;
+    std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -517,6 +519,7 @@ class Forecast final {
             const auto actor=node.state.actor;
             require(actor<2 && m>=2 && m<=4,"pinned decision census");
             const auto rows=population.supported[actor],slots=rows*m;
+            plan_.history_decisions+=np;
             shape.rows+=rows;
             shape.slots+=slots;
             shape.actions+=np*m;
@@ -636,7 +639,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.factored=profile==StrategyProfile::ten_card_factored;
+        plan_.checked_history=profile==StrategyProfile::ten_card_checked_history;
+        plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
         plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
         plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
         plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
@@ -755,6 +759,18 @@ public:
         if (plan_.ordered_state) {
             plan_.registration_path_work=history::History::decision_path_work*R;
             plan_.history_work+=plan_.registration_path_work;
+        }
+        if (plan_.checked_history) {
+            // Construction and one root. Three traversals, one checked
+            // source/street lookup per visit, and ordinals only in learning.
+            // Sealed registration calls decision_key once per holding and
+            // decision_actions once for each distinct menu source.
+            require(plan_.ten_card() && plan_.sealed_menus && plan_.ordered_state &&
+                public_walks==plan_.requested_sweeps,"checked History requires the fixed ordered lifecycle");
+            plan_.history_work=4096*literal_count+1288+
+                (public_walks+1)*(40*g.actions+72*g.reveals+8*g.visits)+
+                32*public_walks*plan_.history_decisions+64*R+
+                24*plan_.sealed_menu_count+16*plan_.sealed_token_count;
         }
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
             plan_.requested_sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
@@ -1102,7 +1118,9 @@ template<bool Paired,bool Factored=false> class Walk final {
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
-            id<source_.nodes().size() && history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
+            id<source_.nodes().size() && (plan_.checked_history?
+                history_.identity_matches(cursor,id,prefix.size):
+                history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size),
             "dense public visit identity changed");
         const auto& node=source_.nodes()[id];
         require(node.state.street==prefix.size,"dense visible street changed");
@@ -1492,6 +1510,7 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
+        require(!p.checked_history || history.work==p.history_work,"checked History census realization differs");
         require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
         out.text(p.proof9_linear32()?"OPLDSL32":p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");

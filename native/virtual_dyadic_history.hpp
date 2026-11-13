@@ -2,6 +2,7 @@
 // Literal card-free path + complete visible prefix. No shared-state row alias.
 #include "full_deck_public_chance.hpp"
 #include "virtual_betting_template.hpp"
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cstddef>
@@ -57,7 +58,7 @@ class History final {
         if (work>limits_.work-receipt_.work) {failed_=true;throw Error("compact history work exceeded");}
         receipt_.work+=work;
     }
-    std::uint64_t board_code(std::span<const std::uint8_t> board) const {
+    std::uint64_t board_code(std::span<const std::uint8_t> board,std::uint64_t* checked_mask=nullptr) const {
         const auto n=board.size();
         if (n!=0 && n!=3 && n!=4 && n!=5) throw Error("compact history prefix length");
         if (n>=3 && !(board[0]<board[1] && board[1]<board[2])) throw Error("compact history flop order");
@@ -68,6 +69,7 @@ class History final {
                 throw Error("compact history foreign or repeated card");
             mask|=std::uint64_t{1}<<c;code|=static_cast<std::uint64_t>(c)<<(6*i);
         }
+        if (checked_mask) *checked_mask=mask;
         return code;
     }
 public:
@@ -75,12 +77,17 @@ public:
         friend class History;
         const History* owner_=nullptr;
         std::uint64_t generation_=0;
-        std::size_t path_=0,size_=0;
+        std::uint32_t path_=0;
+        std::uint8_t size_=0;
         std::array<std::uint8_t,5> board_{};
+        std::uint64_t board_code_=0,board_mask_=0;
         Cursor(const History* owner,std::uint64_t gen,std::size_t path,std::size_t size,
-               std::array<std::uint8_t,5> board):owner_(owner),generation_(gen),path_(path),size_(size),board_(board){}
+               std::array<std::uint8_t,5> board,std::uint64_t code,std::uint64_t mask)
+            :owner_(owner),generation_(gen),path_(static_cast<std::uint32_t>(path)),
+             size_(static_cast<std::uint8_t>(size)),board_(board),board_code_(code),board_mask_(mask){}
     public: Cursor()=default;
     };
+    static_assert(sizeof(Cursor)<=48,"compact cursor stack bound");
     struct DecisionKey {
         std::size_t ordinal,source,depth,actor,actions;
     };
@@ -97,8 +104,7 @@ private:
         return p;
     }
     [[nodiscard]] std::size_t encoded_ordinal(Cursor c) const {
-        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|
-            board_code({c.board_.data(),c.size_}));
+        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|c.board_code_);
     }
 public:
     // Template construction is separately charged by the enclosing training owner.
@@ -119,6 +125,7 @@ public:
             deck_mask_|=std::uint64_t{1}<<deck.cards[i];
         }
         const auto count=source.receipt().logical_occurrences;
+        if (count>UINT32_MAX) throw Error("compact history cursor path index overflow");
         if (!count || count>limits.nodes || count>((limits.entries-1)/32) ||
             count>(limits.owned_bytes/sizeof(Occurrence))) throw Error("compact literal history storage admission");
         if (source.receipt().history_suffix_only || source.root()>=source.nodes().size() ||
@@ -181,7 +188,7 @@ public:
     History(History&&)=delete;History& operator=(History&&)=delete;
     [[nodiscard]] Cursor root() const {
         if (failed_) throw Error("compact history owner failed");
-        charge(8);return Cursor(this,generation_,0,0,{});
+        charge(8);return Cursor(this,generation_,0,0,{},0,0);
     }
     [[nodiscard]] std::size_t ordinal(Cursor c) const {
         validate(c);
@@ -232,12 +239,17 @@ public:
     [[nodiscard]] std::size_t depth(Cursor c) const {return validate(c).depth;}
     [[nodiscard]] std::size_t visible_size(Cursor c) const {validate(c);return c.size_;}
     [[nodiscard]] std::array<std::uint8_t,5> visible_board(Cursor c) const {validate(c);return c.board_;}
+    // Fused visit check for callers that need both source identity and visible prefix size.
+    [[nodiscard]] bool identity_matches(Cursor c,std::size_t source,std::size_t visible) const {
+        const auto& p=validate(c);
+        return p.source==source && c.size_==visible;
+    }
     [[nodiscard]] Cursor append_action(Cursor c,std::size_t edge) {
         try {
             const auto& p=validate(c);charge(32);
             if (edge>=p.children.size() || p.phase!=betting::Phase::decision || edge>=p.count)
                 throw Error("compact history invalid action");
-            return Cursor(this,generation_,p.children[edge],c.size_,c.board_);
+            return Cursor(this,generation_,p.children[edge],c.size_,c.board_,c.board_code_,c.board_mask_);
         } catch (...) {failed_=true;throw;}
     }
     [[nodiscard]] Cursor append_reveal(Cursor c,std::span<const std::uint8_t> prefix) {
@@ -247,13 +259,28 @@ public:
             if (p.phase!=betting::Phase::reveal || prefix.size()!=p.next_street ||
                 prefix.size()>board.size() || c.size_>prefix.size())
                 throw Error("compact history invalid reveal phase");
-            (void)board_code(prefix);
-            for (std::size_t i=0;i<prefix.size();++i) {
-                const auto card=prefix[i];
-                if (i<c.size_ && card!=c.board_[i]) throw Error("compact history changed past card");
-                board[i]=card;
+            std::uint64_t code=0,mask=0;
+            if (c.size_==0) {
+                code=board_code(prefix,&mask);
+                std::copy(prefix.begin(),prefix.end(),board.begin());
+            } else {
+                if (prefix.size()!=std::size_t{c.size_}+1)
+                    throw Error("compact history must reveal one card after flop");
+                if (!std::equal(prefix.begin(),prefix.begin()+c.size_,c.board_.begin()))
+                    throw Error("compact history changed past card");
+                const auto card=prefix[c.size_];
+                if (card>=52) throw Error("compact history foreign or repeated card");
+                const auto bit=std::uint64_t{1}<<card;
+                if (!(deck_mask_&bit) || (c.board_mask_&bit))
+                    throw Error("compact history foreign or repeated card");
+                board=c.board_;
+                board[c.size_]=card;
+                mask=c.board_mask_|bit;
+                code=(c.board_code_&~(std::uint64_t{7}<<30))|
+                    (static_cast<std::uint64_t>(card)<<(6*c.size_))|
+                    (static_cast<std::uint64_t>(prefix.size())<<30);
             }
-            return Cursor(this,generation_,p.children[0],prefix.size(),board);
+            return Cursor(this,generation_,p.children[0],prefix.size(),board,code,mask);
         } catch (...) {failed_=true;throw;}
     }
     // Export is charged separately; returned strings belong to the enclosing owner.

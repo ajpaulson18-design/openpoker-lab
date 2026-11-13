@@ -11,6 +11,7 @@ namespace c=openpoker::full_deck_public_chance;
 namespace b=openpoker::virtual_betting_template;
 static_assert(!std::is_copy_constructible_v<h::History> && !std::is_copy_assignable_v<h::History>);
 static_assert(!std::is_move_constructible_v<h::History> && !std::is_move_assignable_v<h::History>);
+static_assert(sizeof(h::History::Cursor)<=48,"cached board identity must retain the bounded cursor footprint");
 namespace {
 constexpr std::array<std::uint8_t,9> deck{16,17,24,32,33,35,37,43,48};
 constexpr std::array<std::array<std::uint8_t,5>,5> boards{{
@@ -32,11 +33,27 @@ int main() {
         const b::Template source(configuration());const auto physical=c::DeckDefinition::reduced(deck);
         h::History history(source,physical);
         std::cout<<"COMPACT_HISTORY_V1 "<<history.receipt().nodes<<' '<<source.nodes().size()<<'\n';
+        {
+            auto cursor=history.root();
+            const auto before=history.receipt().work;
+            const auto id=history.source_node(cursor);
+            (void)history.visible_size(cursor);
+            const auto legacy=history.receipt().work-before;
+            const auto fused_before=history.receipt().work;
+            if (!history.identity_matches(cursor,id,0) || history.identity_matches(cursor,id+1,0) ||
+                history.identity_matches(cursor,id,3))
+                throw std::runtime_error("fused history identity mismatch");
+            const auto fused=history.receipt().work-fused_before;
+            if (legacy!=16 || fused!=8 || legacy-fused!=8)
+                throw std::runtime_error("fused history identity work delta mismatch");
+        }
         for (std::size_t variant=0;variant<boards.size();++variant) {
             const auto& board=boards[variant];
             std::function<void(h::History::Cursor)> walk=[&](auto cursor) {
                 const auto key=history.ordinal(cursor),literal=history.literal_ordinal(cursor);
                 const auto visible=history.visible_size(cursor),id=history.source_node(cursor);
+                if (!history.identity_matches(cursor,id,visible) || history.identity_matches(cursor,id,visible+1))
+                    throw std::runtime_error("history identity parity mismatch");
                 const auto& node=source.nodes().at(id);const auto tokens=history.materialize(cursor);
                 std::cout<<"ROW "<<variant<<' '<<key<<' '<<literal<<' '<<id<<' '<<visible<<' '
                     <<static_cast<unsigned>(node.state.phase)<<' '<<tokens.size();
@@ -135,8 +152,27 @@ int main() {
             };
             return seek(owner.root());
         };
+        const auto later_reveal=[&](h::History& owner,h::History::Cursor start,std::size_t street) {
+            bool matched=false;
+            std::function<h::History::Cursor(h::History::Cursor)> seek=[&](auto cursor)->h::History::Cursor {
+                const auto& node=source.nodes()[owner.source_node(cursor)];
+                if (node.state.phase==b::Phase::reveal && node.state.next_street==street) {matched=true;return cursor;}
+                if (node.state.phase!=b::Phase::decision) return {};
+                for (std::size_t j=0;j<node.edges.size();++j) {
+                    auto found=seek(owner.append_action(cursor,j));
+                    if (matched) return found;
+                }
+                return {};
+            };
+            auto result=seek(start);
+            if (!matched) throw std::runtime_error("fixture later reveal missing");
+            return result;
+        };
         rejected("noncanonical_flop",[&]{h::History other(source,physical);const std::array<std::uint8_t,3> cards{17,16,24};(void)other.append_reveal(first_reveal(other),cards);});
         rejected("foreign_flop",[&]{h::History other(source,physical);const std::array<std::uint8_t,3> cards{0,17,24};(void)other.append_reveal(first_reveal(other),cards);});
+        rejected("changed_turn_prefix",[&]{h::History other(source,physical);auto flop=other.append_reveal(first_reveal(other),{boards[0].data(),3});auto turn=later_reveal(other,flop,4);const std::array<std::uint8_t,4> cards{17,16,24,32};(void)other.append_reveal(turn,cards);});
+        rejected("foreign_turn_card",[&]{h::History other(source,physical);auto flop=other.append_reveal(first_reveal(other),{boards[0].data(),3});auto turn=later_reveal(other,flop,4);const std::array<std::uint8_t,4> cards{16,17,24,0};(void)other.append_reveal(turn,cards);});
+        rejected("duplicate_turn_card",[&]{h::History other(source,physical);auto flop=other.append_reveal(first_reveal(other),{boards[0].data(),3});auto turn=later_reveal(other,flop,4);const std::array<std::uint8_t,4> cards{16,17,24,17};(void)other.append_reveal(turn,cards);});
         std::cout<<"END\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 2;}
 }

@@ -1023,7 +1023,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1039,7 +1039,13 @@ def compare_ten_card_complement(source,result,path,replay):
     fields=('sweeps','profile_and_br','checkpoint_images','shape','changed_current_rows',
             'quality_gate','planned_entries','planned_payload_bits','parent_work_plan',
             'parent_work_actual','state_payload_bits','work_plan','work_actual','chance_actual')
-    require(all(before[key]==replay[key] for key in fields) and
+    expected=before
+    if checked_history_work is not None:
+        require(type(checked_history_work) is int and 0<checked_history_work<before['work_actual']['history'],
+                'checked History budget must reduce realized work')
+        expected=dict(before,work_plan=dict(before['work_plan'],history=checked_history_work),
+            work_actual=dict(before['work_actual'],history=checked_history_work))
+    require(all(expected[key]==replay[key] for key in fields) and
             all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','sweep_capture')),
             'complement changed saved training evidence or work receipts')
     require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
@@ -1054,15 +1060,28 @@ def compare_ten_card_complement(source,result,path,replay):
         member=zipped.getinfo('cohort/train_ten_indexed_cache/stdout.bin')
         require(member.file_size==TEN_CARD_SPLIT_BYTES,'indexed baseline stream extent differs')
         old=zipped.read(member)
-    require(path.read_bytes()==old and
-            hashlib.sha256(old).hexdigest()==before['saved_output_sha256']==replay['saved_output_sha256'],
-            'complement changed the retained numerical stream')
+    require(hashlib.sha256(old).hexdigest()==before['saved_output_sha256'],
+            'indexed retained numerical stream identity differs')
+    candidate=path.read_bytes()
+    if checked_history_work is not None:
+        expected_bytes=bytearray(old)
+        # Six plan words followed by six actual words at the start of the
+        # 512-byte footer payload. History is index 2 in both families.
+        for offset,key in ((496,'work_plan'),(448,'work_actual')):
+            require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['history'],
+                    'indexed History footer location differs')
+            expected_bytes[-offset:-offset+8]=checked_history_work.to_bytes(8,'little')
+        old=expected_bytes
+    require(candidate==old and hashlib.sha256(candidate).hexdigest()==replay['saved_output_sha256'],
+            'retained numerical stream differs beyond admitted History counters')
     return {'indexed_baseline_head':prior['source_head'],
             'combined_divisions_before':before['combined_divisions'],
             'combined_divisions_after':replay['combined_divisions'],
             'combined_divisions_removed':before['combined_divisions']-replay['combined_divisions'],
             'retained_sha256':replay['saved_output_sha256'],
-            'wire_sha256':result['sweep_capture']['wire_sha256']}
+            'wire_sha256':(result['compact_sweep_capture']['wire_sha256'] if checked_history_work is not None
+                           else result['sweep_capture']['wire_sha256']),
+            **({'expected_history_footer_changes':2} if checked_history_work is not None else {})}
 
 
 def compare_proof9_t3_prefix(path,source,frames):
@@ -1475,14 +1494,16 @@ def main():
     modes.add_argument('--ten-complement',action='store_true')
     modes.add_argument('--ten-compact-wire',action='store_true')
     modes.add_argument('--ten-factored',action='store_true')
+    modes.add_argument('--ten-checked-history',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire or args.ten_factored:
+    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history,
+            checked_history=args.ten_checked_history),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

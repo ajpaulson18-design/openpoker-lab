@@ -38,8 +38,31 @@ def verify_factored_execution(record,admission):
     return record
 
 
+CHECKED_HISTORY_DECISIONS=114_774
+CHECKED_HISTORY_ACTUAL=62_890_960
+CHECKED_HISTORY_PLAN_DELTA=99_754_616-CHECKED_HISTORY_ACTUAL
+
+
+def checked_history_baseline(record):
+    """Validate the new ledger, then recover the legacy shape/capacity record."""
+    cohort.require(type(record) is dict and record.get("checked_history") is True and
+                   record.get("history_decisions_per_walk")==CHECKED_HISTORY_DECISIONS,
+                   "checked History profile census differs")
+    components=record.get("component_work")
+    cohort.require(type(components) is dict and components.get("history")==CHECKED_HISTORY_ACTUAL,
+                   "checked History work census differs")
+    legacy=dict(record,component_work=dict(components,history=99_754_616))
+    legacy.pop("checked_history")
+    legacy.pop("history_decisions_per_walk")
+    for key in ("planned_total_work","compact_composed_work","factored_composed_work","parent_allowance"):
+        cohort.require(type(legacy.get(key)) is int,"checked History work field differs")
+        legacy[key]+=(-CHECKED_HISTORY_PLAN_DELTA if key=="parent_allowance" else CHECKED_HISTORY_PLAN_DELTA)
+    return legacy_admission(legacy,factored=True)
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
+    cohort.require("checked_history" not in record,"unexpected checked History profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
                        record.get("factored_metadata_work")==FACTORED_WORK==380_819_456 and
@@ -110,9 +133,11 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
-    suffix="TEN_FACTORED" if factored else "TEN_COMPACT_WIRE"
+    cohort.require(type(checked_history) is bool and (not checked_history or factored),
+                   "checked History requires factored training")
+    suffix="TEN_CHECKED_HISTORY" if checked_history else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE"
     cohort.require(cohort.require_source_bootstrap(ROOT)["interpreter"]["optimize"]==0,
                    "compact cohort requires normal source-only execution")
     cohort.require(cohort._git(ROOT,["rev-parse","HEAD"]).decode().strip()==expected_head,
@@ -158,7 +183,7 @@ def run_compact(output,expected_head,*,train=False,factored=False):
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        legacy=legacy_admission(admission,factored=factored)
+        legacy=checked_history_baseline(admission) if checked_history else legacy_admission(admission,factored=factored)
         cohort.save(output/"admission.json",admission)
         result={"head":expected_head,"admission":admission,"legacy_admission":legacy,
                 "training_invocations":0,"quality_gate":None,
@@ -201,7 +226,7 @@ def run_compact(output,expected_head,*,train=False,factored=False):
                 cohort.require(cohort.sha(ROOT/BASELINE/name)==source["files"][BASELINE+"/"+name]["raw_sha256"],
                                "compact baseline source identity differs")
             cohort.require(capture["frames"]==prior["sweep_capture"]["frames"] and
-                           digest==prior["sweep_capture"]["retained_sha256"],
+                           (checked_history or digest==prior["sweep_capture"]["retained_sha256"]),
                            "compact expansion or checkpoint digests differ from accepted indexed evidence")
             bootstrap=ROOT/"scripts/run_virtual_frozen_source_only.py"
             receipt_path=output/"saved-review-bootstrap.json"
@@ -226,7 +251,12 @@ def run_compact(output,expected_head,*,train=False,factored=False):
                           wire_reconstruction=wire_reconstruction,expansion=expansion,saved_only_replay=replay,
                           saved_review_compiled_sources=compiled)
             result["rank_index"]=cohort.verify_rank_index(output/"page-images",legacy,replay,trace)
-            result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay)
+            if checked_history:
+                cohort.require(replay["work_plan"]["history"]==replay["work_actual"]["history"]==
+                               admission["component_work"]["history"]==CHECKED_HISTORY_ACTUAL,
+                               "checked History realization differs")
+            result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
+                checked_history_work=CHECKED_HISTORY_ACTUAL if checked_history else None)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy) and
