@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -328,6 +328,7 @@ struct Plan {
     bool compact_wire=false;
     bool factored=false;
     bool checked_history=false;
+    bool history_visit=false;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
@@ -639,7 +640,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.checked_history=profile==StrategyProfile::ten_card_checked_history;
+        plan_.history_visit=profile==StrategyProfile::ten_card_history_visit;
+        plan_.checked_history=profile==StrategyProfile::ten_card_checked_history || plan_.history_visit;
         plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
         plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
         plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
@@ -768,8 +770,9 @@ public:
             require(plan_.ten_card() && plan_.sealed_menus && plan_.ordered_state &&
                 public_walks==plan_.requested_sweeps,"checked History requires the fixed ordered lifecycle");
             plan_.history_work=4096*literal_count+1288+
-                (public_walks+1)*(40*g.actions+72*g.reveals+8*g.visits)+
-                32*public_walks*plan_.history_decisions+64*R+
+                (public_walks+1)*((plan_.history_visit?history::History::visit_action_work:40)*g.actions+
+                    (plan_.history_visit?history::History::visit_reveal_work:72)*g.reveals+8*g.visits)+
+                (plan_.history_visit?0:32*public_walks*plan_.history_decisions)+64*R+
                 24*plan_.sealed_menu_count+16*plan_.sealed_token_count;
         }
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
@@ -1118,10 +1121,16 @@ template<bool Paired,bool Factored=false> class Walk final {
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
-            id<source_.nodes().size() && (plan_.checked_history?
-                history_.identity_matches(cursor,id,prefix.size):
-                history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size),
+            id<source_.nodes().size(),"dense public visit identity changed");
+        std::optional<history::History::Visit> checked;
+        std::size_t checked_ordinal=0;
+        if (plan_.history_visit) checked.emplace(history_.enter_visit(cursor,id,prefix.size,checked_ordinal));
+        else require(plan_.checked_history?history_.identity_matches(cursor,id,prefix.size):
+            history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
             "dense public visit identity changed");
+        const auto action_cursor=[&](std::size_t action) {
+            return checked?history_.visit_action(*checked,action):history_.append_action(cursor,action);
+        };
         const auto& node=source_.nodes()[id];
         require(node.state.street==prefix.size,"dense visible street changed");
         if (node.state.phase==betting::Phase::reveal) {
@@ -1135,7 +1144,7 @@ template<bool Paired,bool Factored=false> class Walk final {
                 const auto live=physical_support(next.mask);
                 if (!live[0]) return; // prior physical support only
                 require(++shape_.reveals<=plan_.shape.reveals,"dense positive reveal count changed");
-                const auto child=history_.append_reveal(cursor,next.view());
+                const auto child=checked?history_.visit_reveal(*checked,next.view()):history_.append_reveal(cursor,next.view());
                 if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior,past);
                 else {
                     const auto child_prior=marginal(next,live);
@@ -1177,12 +1186,12 @@ template<bool Paired,bool Factored=false> class Walk final {
             }
             for (std::size_t action=0;action<menu;++action) {
                 ++shape_.actions;
-                const auto child=history_.append_action(cursor,action);
+                const auto child=action_cursor(action);
                 (void)visit(node.edges[action].child,child,prefix,support,sb,bb,prior,past);
             }
             return {};
         }
-        const auto key=history_.ordinal(cursor);
+        const auto key=checked?checked_ordinal:history_.ordinal(cursor);
         std::array<std::size_t,2> row_ids{};
         std::array<std::array<std::uint64_t,4>,2> policy_copies{};
         std::array<std::span<const std::uint64_t>,2> policy{};
@@ -1218,7 +1227,7 @@ template<bool Paired,bool Factored=false> class Walk final {
         const std::size_t acting_lane=Paired?actor:(actor==target_?0:lanes);
         for (std::size_t action=0;action<menu;++action) {
             require(++shape_.actions<=plan_.shape.actions,"dense action count changed");
-            const auto child=history_.append_action(cursor,action);
+            const auto child=action_cursor(action);
             const auto next=advance(actor_reach,policy,action,support[actor]);
             auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior,past):
                 visit(node.edges[action].child,child,prefix,support,next,bb,prior,past);

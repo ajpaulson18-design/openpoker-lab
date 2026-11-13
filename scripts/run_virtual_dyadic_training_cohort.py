@@ -1495,15 +1495,16 @@ def main():
     modes.add_argument('--ten-compact-wire',action='store_true')
     modes.add_argument('--ten-factored',action='store_true')
     modes.add_argument('--ten-checked-history',action='store_true')
+    modes.add_argument('--ten-history-visit',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history:
+    if args.ten_compact_wire or args.ten_factored or args.ten_checked_history or args.ten_history_visit:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history,
-            checked_history=args.ten_checked_history),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,factored=args.ten_factored or args.ten_checked_history or args.ten_history_visit,
+            checked_history=args.ten_checked_history or args.ten_history_visit,history_visit=args.ten_history_visit),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

@@ -48,6 +48,57 @@ int main() {
             if (history.identity_matches(cursor,id+1,0) || history.identity_matches(cursor,id,3))
                 throw std::runtime_error("fused history accepted mismatched identity");
         }
+        {
+            h::History visited(source,physical);
+            for (const auto& board:boards) {
+                const auto compare=[&](auto&& self,auto cursor)->void {
+                    const auto id=visited.source_node(cursor);
+                    const auto visible=visited.visible_size(cursor);
+                    const auto& node=source.nodes().at(id);
+                    const auto before=visited.receipt().work;
+                    std::size_t key=0;
+                    const auto active=visited.enter_visit(cursor,id,visible,key);
+                    if (visited.receipt().work-before!=8 ||
+                        key!=(node.state.phase==b::Phase::decision?visited.ordinal(cursor):0))
+                        throw std::runtime_error("visit entry work or ordinal differs");
+                    if (node.state.phase==b::Phase::reveal) {
+                        const std::span<const std::uint8_t> prefix(board.data(),node.state.next_street);
+                        const auto legacy=visited.append_reveal(cursor,prefix);
+                        const auto edge_work=visited.receipt().work;
+                        const auto next=visited.visit_reveal(active,prefix);
+                        if (visited.receipt().work-edge_work!=48 ||
+                            visited.ordinal(legacy)!=visited.ordinal(next))
+                            throw std::runtime_error("visit reveal work or ordinal differs");
+                        self(self,next);
+                    } else for (std::size_t j=0;j<node.edges.size();++j) {
+                        const auto legacy=visited.append_action(cursor,j);
+                        const auto edge_work=visited.receipt().work;
+                        const auto next=visited.visit_action(active,j);
+                        if (visited.receipt().work-edge_work!=16 ||
+                            visited.ordinal(legacy)!=visited.ordinal(next))
+                            throw std::runtime_error("visit action work or ordinal differs");
+                        self(self,next);
+                    }
+                };
+                compare(compare,visited.root());
+            }
+            const auto check_reject=[](auto&& call) {
+                try { call(); } catch (const h::Error&) { return; }
+                throw std::runtime_error("invalid visit was accepted");
+            };
+            std::size_t key=0;
+            const auto active=visited.enter_visit(visited.root(),source.root(),0,key);
+            h::History foreign(source,physical);
+            check_reject([&]{ (void)foreign.visit_action(active,0); });
+            check_reject([&]{ (void)visited.visit_action(active,20); });
+            check_reject([&]{ (void)visited.visit_action(active,0); });
+            h::Limits budget;
+            budget.work=4096*1105+1288+8+15;
+            h::History bounded(source,physical,budget);
+            const auto admitted=bounded.enter_visit(bounded.root(),source.root(),0,key);
+            check_reject([&]{ (void)bounded.visit_action(admitted,0); });
+            check_reject([&]{ (void)bounded.visit_action(admitted,0); });
+        }
         for (std::size_t variant=0;variant<boards.size();++variant) {
             const auto& board=boards[variant];
             std::function<void(h::History::Cursor)> walk=[&](auto cursor) {

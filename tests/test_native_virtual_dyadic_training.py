@@ -528,6 +528,18 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             with self.subTest(field=field),self.assertRaises(ValueError):
                 checked_history_baseline(dict(receipt,**{field:receipt[field]+1}))
 
+    def test_history_visit_admission_checks_separate_ledger(self):
+        from scripts.run_virtual_dyadic_compact_cohort import checked_history_baseline
+        directory,process=self.observe('admit_ten_history_visit',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_HISTORY_VISIT',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        checked_history_baseline(receipt,history_visit=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['history'],receipt['factored_composed_work']),
+                         (34_741_384,2_072_360_546))
+        with self.assertRaises(ValueError):checked_history_baseline(receipt)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

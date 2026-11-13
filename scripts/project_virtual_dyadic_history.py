@@ -28,16 +28,16 @@ def decision_literals():
     return dict(decision)
 
 
-def history_schedule(projection, fused_visit):
+def history_schedule(projection, fused_visit, *, reuse_visit=False):
     shape = projection["shape"]
     decisions = sum(projection["supported_prefixes"][str(street)] * count
                     for street, count in decision_literals().items())
     charges = {
         "construction_and_root": 4096 * 1105 + 1288,
-        "action_edges": 3 * 40 * shape["actions"],
-        "reveals": 3 * 72 * shape["reveals"],
+        "action_edges": 3 * (16 if reuse_visit else 40) * shape["actions"],
+        "reveals": 3 * (48 if reuse_visit else 72) * shape["reveals"],
         "visits": 3 * (8 if fused_visit else 16) * shape["visits"],
-        "learning_ordinals": 2 * 32 * decisions,
+        "learning_ordinals": 0 if reuse_visit else 2 * 32 * decisions,
         "ordered_catalog_rows": 64 * shape["rows"],
         "sealed_menus": 24 * 146 + 16 * 371,
     }
@@ -61,12 +61,18 @@ def project():
     require(older["work"] == prior["work_actual"]["history"] == 69_825_664 and
             ten["component_work"]["history"] == prior["work_plan"]["history"] == 99_754_616 and
             checked["work"] == 62_890_960, "ten-card schedule calibration differs")
+    ten_visit = history_schedule(ten, True, reuse_visit=True)
     eleven = forecast["n11_prospective"]
     prospective = history_schedule(eleven, True)
     prospective["prior_conservative_work"] = eleven["component_work"]["history"]
     prospective["prior_exact_schedule"] = history_schedule(eleven, False)["work"]
     prospective["history_cap"] = 100_000_000
     prospective["history_work_to_remove"] = max(0, prospective["work"] - prospective["history_cap"])
+    eleven_visit = history_schedule(eleven, True, reuse_visit=True)
+    eleven_visit["history_cap"] = prospective["history_cap"]
+    eleven_visit["history_headroom"] = eleven_visit["history_cap"] - eleven_visit["work"]
+    require(ten_visit["work"] == 34_741_384 and eleven_visit["work"] == 98_688_160,
+            "authenticated visit schedule differs")
     return {
         "status": "rank_free_projection_only",
         "hand_rank_calls": 0, "native_producer_calls": 0,
@@ -76,6 +82,7 @@ def project():
         "n10": {"previous_actual": older, "checked": checked,
                 "removed_forecast_work": ten["component_work"]["history"] - checked["work"]},
         "n11": prospective,
+        "authenticated_visit": {"n10": ten_visit, "n11": eleven_visit},
     }
 
 
