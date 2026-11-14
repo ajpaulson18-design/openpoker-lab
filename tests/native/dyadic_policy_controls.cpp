@@ -248,11 +248,12 @@ bool pair_complement_controls() {
         const auto a=separate.regret_policy(input);
         const auto b=complement.regret_policy(input);
         const auto c=pair.regret_policy(input);
+        const auto d=equal_complement.regret_policy(input);
         const auto equal_units=[](const auto& lhs,const auto& rhs) {
             return lhs.size()==rhs.size() &&
                 std::equal(lhs.units().begin(),lhs.units().end(),rhs.units().begin(),rhs.units().end());
         };
-        if (!equal_units(a,b) || !equal_units(a,c))
+        if (!equal_units(a,b) || !equal_units(a,c) || !equal_units(a,d))
             throw std::runtime_error("pair-complement policy differs from generic division");
         std::size_t positive_count=0,first=0,second=0;
         for (std::size_t i=0;i<input.size();++i) if (input[i]>0) {
