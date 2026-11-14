@@ -876,7 +876,7 @@ compute admission remains open.
 In four alternating pairs on one Windows host, the factored profile
 was faster in three pairs. The median within-pair time ratio was 0.947,
 with medians of 6.464 seconds for the baseline and 5.986 seconds for
-factored execution. Peak working set was 5.04–5.05 MB in both modes.
+factored execution. Peak working set was 5.04â€“5.05 MB in both modes.
 Each complete native call and capture reproduced the same bytes. The
 timing excludes host expansion and independent replay.
 
@@ -907,7 +907,7 @@ all three public walks, the learning decision ordinals, ordered catalog
 rows and one read per distinct sealed menu. For the fixed two-sweep
 schedule, with action edges A, reveal edges Q, visits V, public decision
 occurrences D, rows R, menu sources M and menu tokens T, this is
-4096 × 1105 + 1288 + 3 × (40A + 72Q + 8V) + 64D + 64R + 24M + 16T.
+4096 Ã— 1105 + 1288 + 3 Ã— (40A + 72Q + 8V) + 64D + 64R + 24M + 16T.
 The new profile requires the complete History receipt to match the
 reservation. Its 62,890,960 units are 6,934,704 below the earlier realized
 charge and 36,863,656 below the earlier conservative forecast. Composed
@@ -1231,3 +1231,60 @@ the second pair, and other host load was uncontrolled. The helper remains
 opt-in. Eleven-card training, wider-game quality and primitive-operation
 accounting remain open.
 [Bounded division evidence](../benchmarks/results/native-dyadic-bounded-policy-division-v1/manifest.json)
+
+
+## Policy shortcuts from packed State rows
+
+The opt-in ten-card packed-policy profile reads each scheduled row once
+from the existing pager into bounded scratch. Quantizer validates the
+exact retained width, zero high padding, menu extent, image kind, and
+first-regret support guard. It classifies nonnegative words directly.
+Zero rows use the original full-menu uniform fallback. A pure row selects
+its sole positive action. Equal-positive rows partition the 52-bit grid
+over positive actions with the original legal-order remainder tie rule.
+Only unequal mixed rows import large integers and enter the existing
+bounded-division allocator.
+
+State retains its authenticated row descriptor, committed epoch and
+original field offsets. The first uniform policy still uses the owned
+virtual-zero bootstrap. The second regret policy and final average export
+each read one packed row through the existing pager; no second read or
+new row catalog is introduced.
+
+The new word scan has a separate reservation of
+16 + 4 * actions * (stride + 1) per row, where stride includes every
+retained 64-bit word per action, including leading zeros. Across the
+second-policy and average passes, this adds
+32 * rows + 4 * (average_words + regret_words + 2 * slots).
+It retains all previous logical quantizer charges. The ten-card forecast
+increases from 317,853,256 to 335,766,944 units; realized work increases
+from 154,758,136 to 172,671,824. These units describe the declared work
+model, rather than CPU instructions.
+
+The frozen native run and independent saved-only replay agree on
+238,392 scanned rows: 32 zero, 98,846 pure, 94,164 equal-positive and
+45,350 mixed. They scan 2,962,722 words and import 140,994 action slots,
+compared with the previous 562,132 slots. This avoids 421,138 imports,
+about 75 percent, on this finite T2 fixture. Output-uniform policies
+can still come from unequal masses, so their output tag alone does not
+qualify a row for the exact equal-weight shortcut.
+
+Both checkpoints, policies, fallback flags, root values and best responses
+match the previous bounded-divider profile. The compact and expanded
+numerical files change only the two quantizer work words in their footer.
+All 85 focused controls passed in normal and optimized Python with
+zero skips, including 560 native packed cases checked against the
+independent fraction allocator. The source-frozen packet retains the
+initial test-parser failure and its correction. It also records native
+build identities, source closure, raw vectors, process exits and counters.
+
+Four alternating same-executable pairs were slower with the shortcut
+in every pair. Median native-call times were 3.614 seconds with packed
+classification and 3.552 seconds with the previous integer-input path,
+a 2.1 percent median paired slowdown. These calls include streamed
+transport, on one Windows host and the named ten-card fixture. The
+broader local suite was no longer active; other host load was uncontrolled.
+The shortcut remains opt-in. Avoided imports alone establish no wall-time
+or admission improvement. Eleven-card training and wider-game quality
+remain open.
+[Packed policy evidence](../benchmarks/results/native-dyadic-packed-policy-v1/manifest.json)
