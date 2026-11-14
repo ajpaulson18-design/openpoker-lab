@@ -25,7 +25,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_single_division, train_ten_single_division,
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
-                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot, admit_ten_zero_policy_bootstrap, train_ten_zero_policy_bootstrap, admit_ten_first_regret_bound, train_ten_first_regret_bound, admit_ten_initial_packed_stage, train_ten_initial_packed_stage, admit_ten_bounded_stage_width, train_ten_bounded_stage_width, admit_ten_pair_complement, train_ten_pair_complement,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot, admit_ten_zero_policy_bootstrap, train_ten_zero_policy_bootstrap, admit_ten_first_regret_bound, train_ten_first_regret_bound, admit_ten_initial_packed_stage, train_ten_initial_packed_stage, admit_ten_bounded_stage_width, train_ten_bounded_stage_width, admit_ten_pair_complement, train_ten_pair_complement, admit_ten_bounded_division, train_ten_bounded_division,
                   forecast_eleven, admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
@@ -112,6 +112,8 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_BOUNDED_STAGE_WIDTH") return Mode::train_ten_bounded_stage_width;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_PAIR_COMPLEMENT") return Mode::admit_ten_pair_complement;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_PAIR_COMPLEMENT") return Mode::train_ten_pair_complement;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_BOUNDED_DIVISION") return Mode::admit_ten_bounded_division;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_BOUNDED_DIVISION") return Mode::train_ten_bounded_division;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
     if (line=="DYADIC_T2_V1 FORECAST_ELEVEN") return Mode::forecast_eleven;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
@@ -232,6 +234,7 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.zero_policy_bootstrap) std::cout<<",\"zero_policy_bootstrap\":true";
     if (plan.first_regret_bound) std::cout<<",\"first_regret_bound\":true";
     if (plan.initial_packed_stage) std::cout<<",\"initial_packed_stage\":true";
+    if (plan.bounded_division) std::cout<<",\"bounded_division\":true";
     if (plan.pair_complement) std::cout<<",\"pair_complement\":true";
     if (plan.bounded_stage_width) std::cout<<",\"bounded_stage_width\":true,\"stage_arithmetic_work\":"<<plan.stage_arithmetic_work;
     if (plan.equal_quantizer) std::cout<<",\"equal_quantizer\":true";
@@ -364,8 +367,8 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot || mode==Mode::admit_ten_zero_policy_bootstrap || mode==Mode::admit_ten_first_regret_bound || mode==Mode::admit_ten_initial_packed_stage || mode==Mode::admit_ten_bounded_stage_width || mode==Mode::admit_ten_pair_complement;
-        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot || mode==Mode::train_ten_zero_policy_bootstrap || mode==Mode::train_ten_first_regret_bound || mode==Mode::train_ten_initial_packed_stage || mode==Mode::train_ten_bounded_stage_width || mode==Mode::train_ten_pair_complement;
+        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot || mode==Mode::admit_ten_zero_policy_bootstrap || mode==Mode::admit_ten_first_regret_bound || mode==Mode::admit_ten_initial_packed_stage || mode==Mode::admit_ten_bounded_stage_width || mode==Mode::admit_ten_pair_complement || mode==Mode::admit_ten_bounded_division;
+        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot || mode==Mode::train_ten_zero_policy_bootstrap || mode==Mode::train_ten_first_regret_bound || mode==Mode::train_ten_initial_packed_stage || mode==Mode::train_ten_bounded_stage_width || mode==Mode::train_ten_pair_complement || mode==Mode::train_ten_bounded_division;
         const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
@@ -396,6 +399,8 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_bounded_division || mode==Mode::train_ten_bounded_division)
+            profile=training::StrategyProfile::ten_card_bounded_division;
         else if (mode==Mode::admit_ten_pair_complement || mode==Mode::train_ten_pair_complement)
             profile=training::StrategyProfile::ten_card_pair_complement;
         else if (mode==Mode::admit_ten_bounded_stage_width || mode==Mode::train_ten_bounded_stage_width)

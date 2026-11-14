@@ -20,6 +20,8 @@ DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b48
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
 TARGETS = {
+    "dyadic-policy-division-controls": ("native-dyadic-policy-division-controls", (
+        "tests/native/dyadic_policy_division_controls.cpp", "native/dyadic_policy_division.hpp", "native/exact_binary64.hpp")),
     "factored-dyadic-controls": ("native-factored-dyadic-controls", (
         "tests/native/factored_dyadic_controls.cpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/exact_binary64.hpp")),
     "packed-signed-update-controls": ("native-packed-signed-update-controls", (
@@ -78,7 +80,7 @@ TARGETS = {
         "native/virtual_dyadic_training_probe.cpp", "native/virtual_dyadic_training.hpp",
         "native/prepared_public_chance.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_dyadic_state.hpp",
         "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
-        "native/dyadic_policy.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
+        "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
         "tests/native/virtual_dyadic_history_controls.cpp", "native/virtual_dyadic_history.hpp",
@@ -87,13 +89,13 @@ TARGETS = {
     "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
         "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
         "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
-        "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
+        "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (
         "tests/native/prepared_public_chance_controls.cpp", "native/prepared_public_chance.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "dyadic-policy-controls": ("native-dyadic-policy-controls", (
-        "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/exact_binary64.hpp")),
+        "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/exact_binary64.hpp")),
     "full-deck-prefix-fold-controls": ("native-full-deck-prefix-fold-controls", (
         "tests/native/full_deck_prefix_fold_controls.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
@@ -247,7 +249,8 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
           "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": ("Bounded exact factored value arithmetic controls."
+        "scope": ("Bounded exact policy-grid division controls."
+                  if target == "dyadic-policy-division-controls" else "Bounded exact factored value arithmetic controls."
                   if target == "factored-dyadic-controls" else "Bounded packed signed limb updates."
                   if target == "packed-signed-update-controls" else "Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."

@@ -256,7 +256,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False,bounded_division=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -277,7 +277,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "bounded staging arithmetic requires the preceding owned-row profile")
     cohort.require(type(pair_complement) is bool and (not pair_complement or bounded_stage_width),
                    "two-positive complement requires bounded factored staging")
-    suffix=("TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(bounded_division) is bool and (not bounded_division or pair_complement),
+                   "bounded policy division requires pair complement")
+    suffix=("TEN_BOUNDED_DIVISION" if bounded_division else "TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -331,6 +333,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                            "two-positive complement selection differs")
             normalized=dict(admission)
             normalized.pop("pair_complement",None)
+            cohort.require(admission.get("bounded_division",False) is bounded_division,
+                           "bounded policy division selection differs")
+            normalized.pop("bounded_division",None)
             legacy=bounded_stage_width_baseline(normalized)
         elif initial_packed_stage:
             legacy=initial_packed_stage_baseline(admission)

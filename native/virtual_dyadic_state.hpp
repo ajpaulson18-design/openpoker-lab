@@ -502,13 +502,15 @@ class State final {
                       paged->division_kernel!=dyadic_policy::DivisionKernel::combined &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::complement &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement &&
-                      paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement))
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement &&
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement))
             fail(ErrorCode::invalid_limits,"unknown state quantizer division kernel");
         if (paged && paged->division_kernel==dyadic_policy::DivisionKernel::combined && !expanded && !q32)
             fail(ErrorCode::invalid_forecast,"combined division kernel requires a named profile");
         if (paged && (paged->division_kernel==dyadic_policy::DivisionKernel::complement ||
                      paged->division_kernel==dyadic_policy::DivisionKernel::equal_complement ||
-                     paged->division_kernel==dyadic_policy::DivisionKernel::pair_complement) &&
+                     paged->division_kernel==dyadic_policy::DivisionKernel::pair_complement ||
+                     paged->division_kernel==dyadic_policy::DivisionKernel::bounded_complement) &&
             (!expanded || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases || !paged->row_batched))
             fail(ErrorCode::invalid_forecast,"complement division requires the named ten-card row-batched lifecycle");
@@ -520,7 +522,8 @@ class State final {
             fail(ErrorCode::invalid_forecast,"initial policy bootstrap requires owned virtual-zero rows");
         if (paged && paged->first_regret_bound && (!paged->zero_policy_bootstrap ||
             (paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement &&
-             paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement)))
+             paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement &&
+                      paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement)))
             fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
         if (paged && paged->bounded_stage_width && !paged->first_regret_bound)
             fail(ErrorCode::invalid_forecast,"bounded staging width requires the owned two-sweep zero image");
