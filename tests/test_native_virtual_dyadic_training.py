@@ -618,6 +618,46 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(receipt['component_work']['state'],208_451_944)
         self.assertEqual(receipt['factored_composed_work'],1_902_260_898)
 
+    def test_eleven_card_forecast_is_rank_free_and_matches_independent_ledger(self):
+        from scripts.project_virtual_dyadic_eleven import forecast, stage_arithmetic
+        from tests.virtual_dyadic_directory_trace import directory_trace
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('forecast_eleven',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'FORECAST_ELEVEN',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        path=ROOT/'benchmarks/results/native-dyadic-eleven-card-forecast-v1/forecast.json'
+        prior=exact_json(path.read_bytes())['n11_prospective']
+        pages=stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True,zero_policy_bootstrap=True)
+        rows,slots=pages['rows'],pages['slots']
+        self.assertEqual((receipt['status'],receipt['training_invocations'],receipt['rank_calls']),
+                         ('FORECAST_ONLY',0,0))
+        self.assertEqual((receipt['deck_cards'],receipt['rows'],receipt['slots'],
+                          receipt['D_bits'],receipt['value_bits'],receipt['normalizer'],receipt['d5']),
+                         (11,rows,slots,639,646,29,420))
+        self.assertEqual((receipt['rank_planes'],receipt['rank_calls_per_training']),(56,144))
+        self.assertEqual((receipt['page_image_words'],receipt['page_requests'],receipt['page_read_words'],
+                          receipt['page_write_words'],receipt['page_write_requests']),
+                         (pages['image_words'],pages['logical_read_calls']+pages['direct_write_calls'],
+                          pages['physical_read_words'],pages['written_words'],pages['batched_write_calls']))
+        self.assertEqual(receipt['directory_page_limit'],directory_trace(ten_card=False,eleven_card=True)['misses'])
+        stage=sum(stage_arithmetic(11,646))
+        terms=forecast(11,646,14,1,first_regret_bound=True)
+        self.assertEqual((receipt['stage_arithmetic_work'],receipt['quantizer_terms']),(stage,terms))
+        expected=dict(prior['component_work'],history=98_688_160,
+                      state=prior['component_work']['state']+32*rows-22*(16*slots+8*rows)+stage,
+                      quantizer=sum(terms),parent=prior['component_work']['parent']-16*rows)
+        expected['numerical']=sum(expected.values())
+        factored_events=(8*(prior['shape']['folds']+prior['shape']['showdown_contractions'])+
+                         8*(prior['shape']['folds']+prior['shape']['showdowns'])+
+                         prior['parent_work']['value_add']//35+2*slots+8)
+        expected['composed']=(expected['numerical']+prior['transport_work']+208*rows+64*slots+
+                              16*((rows+7)//8)+64*factored_events+640*rows)
+        self.assertEqual(receipt['work'],expected)
+        self.assertEqual((receipt['compact_retained_bytes'],receipt['wire_bytes']),
+                         (9_614_478,9_614_478+2*(8*pages['image_words']+32)))
+        self.assertGreater(expected['composed'],receipt['comparison_caps']['composed'])
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

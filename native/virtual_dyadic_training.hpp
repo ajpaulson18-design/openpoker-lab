@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement, eleven_card_forecast
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -56,6 +56,7 @@ inline constexpr std::size_t entries_cap=2000000, payload_cap=std::size_t{1}<<30
 inline constexpr std::uint64_t chance_setup_bound=65536;
 inline constexpr std::uint64_t proof9_t3_parent_cap=298417808;
 inline constexpr std::size_t proof9_t3_directory_page_limit=2122;
+inline constexpr std::size_t directory_forecast_pages11=24350;
 inline constexpr std::uint64_t proof9_t3_general_quantizer_expected=78506392;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_copy_work=3669084;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_image_bytes=4853840;
@@ -95,6 +96,7 @@ inline void require(bool condition,const char* message) { if (!condition) throw 
 
 inline constexpr std::array<std::uint8_t,9> deck_cards{16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::uint8_t,10> ten_cards{0,16,17,24,32,33,35,37,43,48};
+inline constexpr std::array<std::uint8_t,11> eleven_cards{0,1,16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::array<chance::WeightedHand,2>,2> ranges{
     std::array{chance::WeightedHand{{43,48},std::bit_cast<std::uint64_t>(.125)},
                chance::WeightedHand{{32,43},std::bit_cast<std::uint64_t>(.75)}},
@@ -273,6 +275,12 @@ inline constexpr Fixture proof10{
     ten_cards,{1,20,60,120},{1,46,156,340},{288946,270487,18458,49182,77857,88290,119196,281066},
     644,637,17,42,103020,70912,2150000000,450000000,100000000,300000000,520000000,1200000000,9833076
 };
+// Apply the ten-card comparison caps to the eleven-card forecast only.
+inline constexpr Fixture proof11_forecast{
+    eleven_cards,{1,35,140,420},{1,75,340,1120},{892441,834475,57965,121355,239515,280372,380172,892910},
+    646,639,56,144,339360,176530,proof10.work_limit,proof10.chance_limit,proof10.history_limit,
+    proof10.state_limit,proof10.quantizer_limit,proof10.payload_limit,proof10.output_limit
+};
 inline constexpr Fixture proof9_t3{
     deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
     642,635,3,7,18180,22168,750000000,125000000,32000000,77000000,184000000,
@@ -299,6 +307,7 @@ struct Plan {
     const Fixture* fixture=&proof9;
     [[nodiscard]] const Fixture& game() const noexcept { return *fixture; }
     [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
+    [[nodiscard]] bool eleven_card_forecast() const noexcept { return fixture==&proof11_forecast; }
     [[nodiscard]] bool proof9_three_sweep() const noexcept { return fixture==&proof9_t3; }
     [[nodiscard]] bool proof9_four_sweep() const noexcept { return fixture==&proof9_t4; }
     [[nodiscard]] bool proof9_q32_base() const noexcept { return fixture==&proof9_q32; }
@@ -647,7 +656,7 @@ class Forecast final {
         const auto flop=remaining*(remaining-1)*(remaining-2)/6;
         require(game.divisors==std::array<std::uint64_t,4>{1,flop,flop*(remaining-3),flop*(remaining-3)*(remaining-4)},"pinned chance divisor drift");
         plan_.denominator_base=plan_.normalizer*game.divisors[3];
-        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.ten_card()?3480u:580u),"pinned root prior changed");
+        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.eleven_card_forecast()?12180u:plan_.ten_card()?3480u:580u),"pinned root prior changed");
     }
 public:
     Forecast(const betting::Template& source,Meter& meter,Traversal mode,StrategyProfile profile)
@@ -667,9 +676,10 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
+        const bool eleven=profile==StrategyProfile::eleven_card_forecast;
         plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
         plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement;
-        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement;
+        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement || eleven;
         plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
             plan_.initial_packed_stage || plan_.bounded_stage_width;
         plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
@@ -691,11 +701,12 @@ public:
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
         const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state || bounded;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
-        if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
-        if (buffered) plan_.page_limits.write_requests=q32?paging::n9_q32_write_requests:t3?5931:t4?paging::n9_t4_write_requests:virtual_zero?18836:19560;
+        if (eleven) plan_.fixture=&proof11_forecast;
+        else if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
+        if (buffered) plan_.page_limits.write_requests=q32?paging::n9_q32_write_requests:t3?5931:t4?paging::n9_t4_write_requests:eleven?59328:virtual_zero?18836:19560;
         plan_.page_limits.virtual_initial_zero=virtual_zero;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded;
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded || eleven;
         require(!plan_.split_checkpoint || (q32 || plan_.requested_sweeps<=4),"split checkpoint sweep count exceeds fixed receipt");
         plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
@@ -712,6 +723,7 @@ public:
         const bool bounded=t3||t4||q32;
         const auto& game=plan_.game();
         const auto value_bits=game.value_bits;
+        const bool eleven=plan_.eleven_card_forecast();
         const auto& template_receipt=source_.receipt();
         require(template_receipt.nodes==template_count && template_receipt.edges==410 &&
             template_receipt.logical_occurrences==literal_count && template_receipt.max_depth==15 &&
@@ -802,7 +814,7 @@ public:
             // source/street lookup per visit, and ordinals only in learning.
             // Sealed registration calls decision_key once per holding and
             // decision_actions once for each distinct menu source.
-            require(plan_.ten_card() && plan_.sealed_menus && plan_.ordered_state &&
+            require((plan_.ten_card() || eleven) && plan_.sealed_menus && plan_.ordered_state &&
                 public_walks==plan_.requested_sweeps,"checked History requires the fixed ordered lifecycle");
             plan_.history_work=4096*literal_count+1288+
                 (public_walks+1)*((plan_.history_visit?history::History::visit_action_work:40)*g.actions+
@@ -854,7 +866,7 @@ public:
             const auto requests=(plan_.split_checkpoint?11:15)*request_units-(plan_.zero_policy_bootstrap?R:0)
                 -(plan_.initial_packed_stage?2*R:0);
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
-            const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
+            const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:eleven?20750932u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
             const auto write_requests=q32?paging::n9_q32_write_requests:t4?paging::n9_t4_write_requests:plan_.page_limits.write_requests;
             plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,
@@ -890,6 +902,10 @@ public:
         if (plan_.compact_directory) {
             // Table initialization plus compact row encode/decode across both
             // sweeps and checkpoint export. Probes use the existing lookup budget.
+            if (eleven) {
+                plan_.admitted_directory_page_limit=directory_forecast_pages11;
+                plan_.admitted_directory_read_rows=directory_forecast_pages11*128;
+            }
             if (bounded) {
                 plan_.admitted_directory_page_limit=proof9_t3_directory_page_limit;
                 if (t4) plan_.admitted_directory_page_limit=state::proof9_t4_directory_page_limit;
@@ -910,12 +926,23 @@ public:
         if (q32) w[work_index(Work::output)]+=plan_.requested_sweeps*sizeof(state::PolicySpillSweep);
         const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
             plan_.state_work+plan_.quantizer_work;
-        require(other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
-        if (plan_.packed_regrets) plan_.parent_allowance=game.work_limit-other_work;
+        require(eleven || other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
+        if (plan_.packed_regrets) plan_.parent_allowance=other_work<=game.work_limit?game.work_limit-other_work:0;
         plan_.total_work=other_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
-        if (plan_.packed_averages) {
+        if (eleven) {
+            // Reuse the fixed State envelope and add the new row-tag bytes.
+            // This projection deliberately does not authorize the pager or State.
+            const auto added_tags=R-proof10.shape.rows;
+            const auto baseline=state::State::storage_forecast(
+                {119196,281066,2,15,644,1,1}, {388,410,true}, {1295812,1666910},
+                paging::Limits{2962722,4096,16,6130244,5925444,1311156,2,
+                    paging::Profile::proof10,1295812,18836,true}, true,true,true,true,true,
+                state::Lifecycle::fixed_two_sweep,state::PayloadModel::paged_phases,true);
+            plan_.state_entries=baseline.entries+added_tags;
+            plan_.state_payload=baseline.payload_bits+8*added_tags;
+        } else if (plan_.packed_averages) {
             const auto storage=state::State::storage_forecast(
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),plan_.requested_sweeps,15,value_bits,
             plan_.state_work,plan_.quantizer_work},
@@ -956,6 +983,7 @@ public:
             require(plan_.parent_allowance==game.work_limit-other_work,
                 "bounded PROOF9 parent allowance setup changed");
         }
+        if (eleven) return plan_;
         require(plan_.template_work<=template_cap,"pinned template forecast exceeds fixture cap");
         require(plan_.chance_work<=game.chance_limit,"pinned chance forecast exceeds fixture cap");
         require(plan_.history_work<=game.history_limit,"pinned history forecast exceeds fixture cap");
@@ -1614,6 +1642,7 @@ public:
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
     void validate_sweep_stream() const {
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no stream entry");
         const auto& p=plan_;
         const auto& game=p.game();
         if (p.proof9_q32_base()) {
@@ -1702,6 +1731,7 @@ public:
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
                      bool streamed_checkpoints=false) {
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no training entry");
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;

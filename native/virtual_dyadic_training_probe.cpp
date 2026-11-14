@@ -26,7 +26,7 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_phase_payload, train_ten_phase_payload,
                   admit_ten_row_batched, train_ten_row_batched,
                   admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot, admit_ten_zero_policy_bootstrap, train_ten_zero_policy_bootstrap, admit_ten_first_regret_bound, train_ten_first_regret_bound, admit_ten_initial_packed_stage, train_ten_initial_packed_stage, admit_ten_bounded_stage_width, train_ten_bounded_stage_width, admit_ten_pair_complement, train_ten_pair_complement,
-                  admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
+                  forecast_eleven, admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
                   admit_proof9_linear32, train_proof9_linear32 };
 
 Mode request() {
@@ -113,6 +113,7 @@ Mode request() {
     if (line=="DYADIC_T2_V1 ADMIT_TEN_PAIR_COMPLEMENT") return Mode::admit_ten_pair_complement;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_PAIR_COMPLEMENT") return Mode::train_ten_pair_complement;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
+    if (line=="DYADIC_T2_V1 FORECAST_ELEVEN") return Mode::forecast_eleven;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
     if (line=="DYADIC_T4_V1 TRAIN_PROOF9_T4") return Mode::train_proof9_t4;
@@ -121,6 +122,39 @@ Mode request() {
     if (line=="DYADIC_L32_V1 ADMIT_PROOF9_LINEAR32") return Mode::admit_proof9_linear32;
     if (line=="DYADIC_L32_V1 TRAIN_PROOF9_LINEAR32") return Mode::train_proof9_linear32;
     throw training::Error("unsupported fixed dyadic request");
+}
+
+void forecast_eleven(const training::Driver& driver) {
+    const auto& p=driver.plan();
+    const auto& game=p.game();
+    const auto& g=p.shape;
+    const auto image_bytes=8ULL*p.page_limits.image_words;
+    const auto copy_work=2*(2*p.page_limits.image_words+
+        64*((image_bytes+training::sweep_stream_scratch_bytes-1)/training::sweep_stream_scratch_bytes)+32);
+    const auto composed=p.total_work+copy_work+training::compact_encoding_work(g)+training::factored_metadata_work(p);
+    std::cout<<"{\"status\":\"FORECAST_ONLY\",\"training_invocations\":0,\"rank_calls\":0"
+        <<",\"deck_cards\":"<<game.deck.size()<<",\"rows\":"<<g.rows<<",\"slots\":"<<g.slots
+        <<",\"D_bits\":"<<p.denominator_bits<<",\"value_bits\":"<<game.value_bits
+        <<",\"normalizer\":"<<p.normalizer<<",\"d5\":"<<game.divisors.back()
+        <<",\"rank_planes\":"<<p.rank_planes<<",\"rank_calls_per_training\":"<<p.expected_rank_calls
+        <<",\"page_image_words\":"<<p.page_limits.image_words<<",\"page_requests\":"<<p.page_limits.requests
+        <<",\"page_read_words\":"<<p.page_limits.read_words<<",\"page_write_words\":"<<p.page_limits.write_words
+        <<",\"page_write_requests\":"<<p.page_limits.write_requests
+        <<",\"directory_page_limit\":"<<p.admitted_directory_page_limit
+        <<",\"compact_retained_bytes\":"<<p.output_bytes
+        <<",\"wire_bytes\":"<<p.output_bytes+2*(image_bytes+training::sweep_stream_header_bytes)
+        <<",\"entries\":"<<p.entries<<",\"payload_bits\":"<<p.payload_bits
+        <<",\"stage_arithmetic_work\":"<<p.stage_arithmetic_work
+        <<",\"quantizer_terms\":["<<p.quantizer_terms[0]<<','<<p.quantizer_terms[1]<<','<<p.quantizer_terms[2]<<']'
+        <<",\"work\":{\"template\":"<<p.template_work<<",\"chance\":"<<p.chance_work
+        <<",\"history\":"<<p.history_work<<",\"state\":"<<p.state_work
+        <<",\"quantizer\":"<<p.quantizer_work<<",\"parent\":"<<training::sum_work(p.parent)
+        <<",\"numerical\":"<<p.total_work<<",\"composed\":"<<composed<<'}'
+        <<",\"comparison_caps\":{\"chance\":"<<game.chance_limit<<",\"history\":"<<game.history_limit
+        <<",\"state\":"<<game.state_limit<<",\"quantizer\":"<<game.quantizer_limit
+        <<",\"composed\":"<<game.work_limit<<"}}\n";
+    std::cout.flush();
+    training::require(bool(std::cout),"eleven-card forecast output failed");
 }
 
 void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false,bool proof9_t4=false,bool linear32=false) {
@@ -341,6 +375,11 @@ int main(int argc,char* argv[]) {
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
+        if (mode==Mode::forecast_eleven) {
+            const training::Driver driver(training::Traversal::paired,training::StrategyProfile::eleven_card_forecast);
+            forecast_eleven(driver);
+            return 0;
+        }
         auto profile=training::StrategyProfile::dense;
         if (mode==Mode::admit_proof9_linear32 || mode==Mode::train_proof9_linear32)
             profile=training::StrategyProfile::proof9_linear32;
