@@ -233,7 +233,9 @@ bool pair_complement_controls() {
     auto complement_limits=limits; complement_limits.division_kernel=grid::DivisionKernel::complement;
     auto equal_limits=limits; equal_limits.division_kernel=grid::DivisionKernel::equal_complement;
     auto separate_limits=limits; separate_limits.division_kernel=grid::DivisionKernel::separate;
+    auto bounded_limits=limits; bounded_limits.division_kernel=grid::DivisionKernel::bounded_complement;
     grid::Quantizer pair(limits),complement(complement_limits),equal_complement(equal_limits),separate(separate_limits);
+    grid::Quantizer bounded(bounded_limits);
     const Integer units=grid::grid_units;
     const std::array<std::vector<Integer>,6> cases{{
         {0,1,-9,2*units-1},               // exact half-unit tie: earlier positive action wins
@@ -249,11 +251,12 @@ bool pair_complement_controls() {
         const auto b=complement.regret_policy(input);
         const auto c=pair.regret_policy(input);
         const auto d=equal_complement.regret_policy(input);
+        const auto e=bounded.regret_policy(input);
         const auto equal_units=[](const auto& lhs,const auto& rhs) {
             return lhs.size()==rhs.size() &&
                 std::equal(lhs.units().begin(),lhs.units().end(),rhs.units().begin(),rhs.units().end());
         };
-        if (!equal_units(a,b) || !equal_units(a,c) || !equal_units(a,d))
+        if (!equal_units(a,b) || !equal_units(a,c) || !equal_units(a,d) || !equal_units(a,e))
             throw std::runtime_error("pair-complement policy differs from generic division");
         std::size_t positive_count=0,first=0,second=0;
         for (std::size_t i=0;i<input.size();++i) if (input[i]>0) {
@@ -276,21 +279,27 @@ bool pair_complement_controls() {
     const std::array<Integer,4> equal{0,Integer(1)<<640,0,Integer(1)<<640};
     const auto eq_pair=pair.regret_policy(equal);
     const auto eq_baseline=equal_complement.regret_policy(equal);
+    const auto eq_bounded=bounded.regret_policy(equal);
     if (!std::equal(eq_pair.units().begin(),eq_pair.units().end(),eq_baseline.units().begin(),eq_baseline.units().end()))
         throw std::runtime_error("pair-complement equal row changed");
     const std::array<Integer,4> avg{0,1,0,2*units-1};
     const auto avg_separate=separate.average_export(avg);
     const auto avg_pair=pair.average_export(avg);
     const auto avg_equal=equal_complement.average_export(avg);
+    const auto avg_bounded=bounded.average_export(avg);
     if (!std::equal(avg_separate.units().begin(),avg_separate.units().end(),avg_pair.units().begin(),avg_pair.units().end()) ||
         !std::equal(avg_equal.units().begin(),avg_equal.units().end(),avg_pair.units().begin(),avg_pair.units().end()) ||
+        !std::equal(avg_bounded.units().begin(),avg_bounded.units().end(),avg_pair.units().begin(),avg_pair.units().end()) ||
+        !std::equal(eq_bounded.units().begin(),eq_bounded.units().end(),eq_pair.units().begin(),eq_pair.units().end()) ||
         avg_pair.units()[1]!=1 || avg_pair.units()[3]!=units-1)
         throw std::runtime_error("pair-complement average tie or generic parity changed");
     expected_divisions+=1;
     const bool receipts=pair.receipt().combined_divisions==expected_divisions &&
         pair.receipt().equal_rows==equal_complement.receipt().equal_rows &&
         pair.receipt().equal_divisions_avoided==equal_complement.receipt().equal_divisions_avoided &&
-        pair.receipt().work==equal_complement.receipt().work;
+        pair.receipt().work==equal_complement.receipt().work &&
+        bounded.receipt().work==pair.receipt().work &&
+        bounded.receipt().combined_divisions==pair.receipt().combined_divisions;
     const bool profile_rejects=rejects("pair_q32_profile",grid::ErrorCode::invalid_limits,[&]{
         auto bad=limits; bad.profile=grid::Profile::proof9_q32; grid::Quantizer q(bad);
     });

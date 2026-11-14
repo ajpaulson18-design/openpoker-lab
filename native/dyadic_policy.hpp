@@ -1,6 +1,7 @@
 #pragma once
 // Finite-grid policy images, independent of poker row/history routing.
 #include "exact_binary64.hpp"
+#include "dyadic_policy_division.hpp"
 #include <boost/multiprecision/integer.hpp>
 #include <algorithm>
 #include <array>
@@ -18,7 +19,7 @@ inline constexpr std::uint64_t grid_units = std::uint64_t{1} << grid_bits;
 inline constexpr std::size_t maximum_actions = 20;
 enum class ImageKind { current_regret, exported_average };
 enum class Profile { legacy, proof10, proof9_q32 };
-enum class DivisionKernel { separate, combined, complement, equal_complement, pair_complement };
+enum class DivisionKernel { separate, combined, complement, equal_complement, pair_complement, bounded_complement };
 inline constexpr std::uint64_t proof10_work_cap = 520000000;
 inline constexpr std::uint64_t proof9_q32_work_cap = 1870000000;
 inline constexpr std::size_t proof10_integer_bits = 702;
@@ -145,11 +146,13 @@ public:
                  limits.division_kernel!=DivisionKernel::combined &&
                  limits.division_kernel!=DivisionKernel::complement &&
                  limits.division_kernel!=DivisionKernel::equal_complement &&
-                 limits.division_kernel!=DivisionKernel::pair_complement) ||
+                 limits.division_kernel!=DivisionKernel::pair_complement &&
+                 limits.division_kernel!=DivisionKernel::bounded_complement) ||
                 ((limits.division_kernel==DivisionKernel::combined && !proof10 && !proof9_q32) ||
                  ((limits.division_kernel==DivisionKernel::complement ||
                   limits.division_kernel==DivisionKernel::equal_complement ||
-                  limits.division_kernel==DivisionKernel::pair_complement) && !proof10)) ||
+                  limits.division_kernel==DivisionKernel::pair_complement ||
+                  limits.division_kernel==DivisionKernel::bounded_complement) && !proof10)) ||
                 !limits.work || limits.work > (proof10?proof10_work_cap:proof9_q32?proof9_q32_work_cap:500000000) || !limits.integer_bits ||
                 limits.integer_bits > ((proof10||proof9_q32)?proof10_integer_bits:65536) ||
                 limits.entries < receipt_.retained_entries ||
@@ -184,7 +187,8 @@ private:
                 fail(ErrorCode::invalid_row, "dyadic policy menu width");
             if ((limits_.division_kernel==DivisionKernel::complement ||
                  limits_.division_kernel==DivisionKernel::equal_complement ||
-                 limits_.division_kernel==DivisionKernel::pair_complement) && count>4)
+                 limits_.division_kernel==DivisionKernel::pair_complement ||
+                 limits_.division_kernel==DivisionKernel::bounded_complement) && count>4)
                 fail(ErrorCode::invalid_row, "complement kernel menu width");
             charge(64+16*count);
             std::size_t positives = 0, first_positive_index = 0, positive_index = 0, max_positive_bits = 0;
@@ -219,7 +223,8 @@ private:
             // Equal-weight rows can be emitted without any wide arithmetic.
             // Charge the bounded equality scan before comparing input integers.
             if (limits_.division_kernel==DivisionKernel::equal_complement ||
-                limits_.division_kernel==DivisionKernel::pair_complement) {
+                limits_.division_kernel==DivisionKernel::pair_complement ||
+                limits_.division_kernel==DivisionKernel::bounded_complement) {
                 charge(add(16,mul(4*count,add(words(max_positive_bits),1))));
                 const Integer* first_positive=nullptr;
                 bool equal_positive_weights=true;
@@ -254,13 +259,14 @@ private:
             const auto scaled_bits = effective+grid_bits;
             const auto bits = std::max({sum_bits,scaled_bits,std::size_t{53}});
             const auto division = mul(words(scaled_bits),words(sum_bits));
-            const bool pair_complement=limits_.division_kernel==DivisionKernel::pair_complement && positives==2;
+            const bool bounded_complement=limits_.division_kernel==DivisionKernel::bounded_complement;
+            const bool pair_complement=(limits_.division_kernel==DivisionKernel::pair_complement || bounded_complement) && positives==2;
             const bool combined=limits_.division_kernel!=DivisionKernel::separate;
             const bool complement=limits_.division_kernel==DivisionKernel::complement ||
                 limits_.division_kernel==DivisionKernel::equal_complement ||
-                limits_.division_kernel==DivisionKernel::pair_complement;
+                limits_.division_kernel==DivisionKernel::pair_complement || bounded_complement;
             // Keep the conservative combined reservation for the complement.
-            // The separate receipt counts actual divide_qr invocations.
+            // The receipt counts completed quotient/remainder operations.
             const auto division_factor=combined?1U:2U;
             const auto work = add(256,add(mul(16*count,add(words(bits),1)),
                 add(mul(8*positives,add(mul(division_factor,division),add(mul(4,words(bits)),8))),
@@ -272,13 +278,23 @@ private:
             if (pair_complement) {
                 const auto first=first_positive_index;
                 const auto second=positive_index;
-                const Integer scaled=(regrets[first] >> common) << grid_bits;
-                Integer quotient=0, remainder=0;
-                boost::multiprecision::divide_qr(scaled,sum,quotient,remainder);
+                const Integer normalized=regrets[first] >> common;
+                std::uint64_t quotient_value=0;
+                Integer remainder=0;
+                if (bounded_complement) {
+                    const auto divided=dyadic_policy_division::divide_grid(normalized,sum);
+                    quotient_value=divided.quotient;
+                    remainder=divided.remainder;
+                } else {
+                    const Integer scaled=normalized << grid_bits;
+                    Integer quotient=0;
+                    boost::multiprecision::divide_qr(scaled,sum,quotient,remainder);
+                    if (quotient<0 || quotient>grid_units)
+                        fail(ErrorCode::arithmetic,"dyadic policy quotient outside unit grid");
+                    quotient_value=quotient.convert_to<std::uint64_t>();
+                }
                 ++receipt_.combined_divisions;
-                if (quotient<0 || quotient>grid_units)
-                    fail(ErrorCode::arithmetic,"dyadic policy quotient outside unit grid");
-                policy.units_[first]=quotient.convert_to<std::uint64_t>();
+                policy.units_[first]=quotient_value;
                 if (remainder==0) {
                     policy.units_[second]=grid_units-policy.units_[first];
                 } else {
@@ -300,10 +316,16 @@ private:
             for (std::size_t i=0; i<count; ++i) {
                 order[i] = i;
                 if (regrets[i]<=0 || (complement && i==positive_index)) continue;
-                const Integer scaled = (regrets[i] >> common) << grid_bits;
                 Integer quotient=0;
                 if (combined) {
-                    boost::multiprecision::divide_qr(scaled,sum,quotient,remainders[i]);
+                    if (bounded_complement) {
+                        const auto divided=dyadic_policy_division::divide_grid(regrets[i] >> common,sum);
+                        quotient=divided.quotient;
+                        remainders[i]=divided.remainder;
+                    } else {
+                        const Integer scaled = (regrets[i] >> common) << grid_bits;
+                        boost::multiprecision::divide_qr(scaled,sum,quotient,remainders[i]);
+                    }
                     ++receipt_.combined_divisions;
                     if (complement) {
                         // Both summands are below sum, so one subtraction suffices.
@@ -311,6 +333,7 @@ private:
                         if (residue>=sum) { residue-=sum; ++carry; }
                     }
                 } else {
+                    const Integer scaled = (regrets[i] >> common) << grid_bits;
                     quotient=scaled/sum;
                     remainders[i]=scaled%sum;
                 }
