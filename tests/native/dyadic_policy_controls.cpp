@@ -230,6 +230,7 @@ bool first_sweep_regret_controls() {
     grid::Limits limits;
     limits.profile=grid::Profile::proof10;
     limits.integer_bits=grid::proof10_integer_bits;
+    limits.entries=336;
     limits.division_kernel=grid::DivisionKernel::equal_complement;
     grid::Quantizer checked(limits), generic(limits);
     const std::array<Integer,4> values{(Integer(1)<<640)+1,0,(Integer(1)<<639)+7,3};
