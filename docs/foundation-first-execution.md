@@ -1332,3 +1332,12 @@ for raw quantizer scans. This retires 94,781,792 quantizer work units
 from the ten-card reservation. The eleven-card quantizer projection
 still exceeds its cap by 494,146,272 work units.
 [Regret support contract](native-dyadic-two-sweep.md#first-sweep-regret-support-and-packed-widths)
+
+
+## Direct first-sweep packed State updates
+
+The ten-card profile writes both first-sweep State fields directly from
+their increments. It skips the synthetic zero image reads while retaining
+the signed exactness checks, row coverage, and fixed checkpoint layout.
+The same schedule projects zero synthetic first-sweep reads at eleven cards.
+[Direct staging contract](native-dyadic-two-sweep.md#direct-first-sweep-packed-updates)

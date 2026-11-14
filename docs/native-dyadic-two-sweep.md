@@ -1112,3 +1112,29 @@ eleven-card structural projection reduces the quantizer forecast
 by 303,431,928 units to 1,014,146,272. The eleven-card State and quantizer
 forecasts remain above their caps.
 [Regret support evidence](../benchmarks/results/native-dyadic-first-regret-bound-v1/manifest.json)
+
+
+## Direct first-sweep packed updates
+
+The opt-in ten-card profile constructs first-sweep packed regret and
+average rows from the owned virtual-zero image. It validates signed
+regret divisibility before clipping and checks the retained width and
+extent before staging. The packed writer records every word, including
+required zero padding. Later sweeps continue to update committed rows.
+
+Compared with the first-regret-bound profile, the ten-card schedule
+removes 238,392 synthetic requests and 2,962,722 synthetic words.
+Physical reads, physical writes and checkpoint coverage keep their
+previous counts. The paging reservation falls by 3,814,272 units while
+the State arithmetic and codec reservations remain conservative.
+Eleven-card geometry projects 760,344 fewer synthetic requests and
+9,724,202 fewer synthetic words. Its State and quantizer admission
+caps still prevent training.
+The independent replay reproduced both policies, checkpoints and best
+responses. The expanded file differs in four paging-work words. All 65
+focused controls passed in both modes. In four alternating same-binary
+pairs on one Windows host, the direct mode was slower in every pair.
+Median native-call times were 4.833 versus 4.337 seconds, a 13.6 percent
+median paired slowdown. The broader local test run was active on the
+host during timing.
+[Direct staging evidence](../benchmarks/results/native-dyadic-initial-packed-stage-v1/manifest.json)
