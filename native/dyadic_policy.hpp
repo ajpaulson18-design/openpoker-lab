@@ -164,6 +164,9 @@ public:
     [[nodiscard]] Policy regret_policy(std::span<const Integer> regrets) {
         return allocate(regrets,ImageKind::current_regret);
     }
+    [[nodiscard]] Policy first_sweep_regret_policy(std::span<const Integer> regrets) {
+        return allocate(regrets,ImageKind::current_regret,true);
+    }
     [[nodiscard]] Policy average_export(std::span<const Integer> masses) {
         return allocate(masses,ImageKind::exported_average);
     }
@@ -171,7 +174,7 @@ private:
     // Each row's inputs share one positive scale/denominator and exact legal
     // action order. Caller owns immutable input and retained returned policies.
     // Scratch is per call; work is cumulative. No reset or owner fork API.
-    [[nodiscard]] Policy allocate(std::span<const Integer> regrets, ImageKind kind) {
+    [[nodiscard]] Policy allocate(std::span<const Integer> regrets, ImageKind kind, bool first_sweep=false) {
         if (failed_) fail(ErrorCode::failed_owner, "dyadic policy owner already failed");
         try {
             const auto count = regrets.size();
@@ -194,6 +197,8 @@ private:
                     max_positive_bits = std::max(max_positive_bits,bits);
                 }
             }
+            if (first_sweep && positives==count)
+                fail(ErrorCode::invalid_row, "first-sweep clipped regret row must contain a zero");
             if (positives < 2) {
                 admit(count,53,256+32*count);
                 Policy policy; policy.count_ = count; policy.kind_ = kind;

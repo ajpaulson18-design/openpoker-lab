@@ -577,6 +577,20 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                     dict(receipt,quantizer_terms=[1,*receipt['quantizer_terms'][1:]])):
             with self.assertRaises(ValueError):zero_policy_bootstrap_baseline(bad)
 
+    def test_first_regret_support_admission(self):
+        from scripts.run_virtual_dyadic_compact_cohort import first_regret_bound_baseline
+        directory,process=self.observe('admit_ten_first_regret_bound',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_FIRST_REGRET_BOUND',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        first_regret_bound_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual(receipt['quantizer_terms'],[0,91_070_736,226_782_520])
+        self.assertEqual(receipt['factored_composed_work'],1_958_648_610)
+        bad=dict(receipt,quantizer_terms=[0,91_070_735,226_782_521])
+        with self.assertRaises(ValueError):first_regret_bound_baseline(bad)
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

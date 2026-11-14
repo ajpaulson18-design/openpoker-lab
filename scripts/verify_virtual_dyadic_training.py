@@ -262,7 +262,7 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False,equal_quantizer=False,zero_policy_bootstrap=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False,equal_quantizer=False,zero_policy_bootstrap=False,first_regret_bound=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and type(proof9_linear32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32,proof9_linear32))<=1,
@@ -291,6 +291,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(type(zero_policy_bootstrap) is bool and
             (not zero_policy_bootstrap or equal_quantizer and count_policy_divisions),
             'initial policy bootstrap requires counted equal-quantizer replay')
+    require(type(first_regret_bound) is bool and (not first_regret_bound or zero_policy_bootstrap),
+            'first regret support bound requires initial policy bootstrap')
     sweep_count=32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 2
     require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
             'choose one checkpoint transport')
@@ -381,6 +383,10 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
                 if equal_quantizer:
                     for field,value in equal_quantizer_schedule(regrets,ordered,row_scales,1).items():
                         equal_receipt[field]+=value
+            if first_regret_bound and t==2:
+                require(all(len(regrets[key])==menu and all(value>=0 for value in regrets[key]) and
+                            any(value==0 for value in regrets[key]) for key,menu in ordered),
+                        'independent first-sweep regret support exceeds its bound')
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -528,6 +534,7 @@ def main():
     parser.add_argument('--complement-divisions',action='store_true')
     parser.add_argument('--equal-quantizer',action='store_true')
     parser.add_argument('--zero-policy-bootstrap',action='store_true')
+    parser.add_argument('--first-regret-bound',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -554,7 +561,7 @@ def main():
                             count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload,
                             row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
                             complement=args.complement_divisions,equal_quantizer=args.equal_quantizer,
-                            zero_policy_bootstrap=args.zero_policy_bootstrap),sort_keys=True))
+                            zero_policy_bootstrap=args.zero_policy_bootstrap,first_regret_bound=args.first_regret_bound),sort_keys=True))
 
 
 if __name__=='__main__':main()

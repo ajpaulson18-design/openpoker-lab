@@ -1024,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1052,7 +1052,7 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
     if equal_quantizer_plan is not None:
         require(checked_history_work is not None and type(equal_receipt) is dict and
                 0<equal_receipt['equal_divisions_avoided']<186_152 and
-                equal_quantizer_plan+removed_initial_work>before['work_plan']['quantizer'],
+                (first_regret_bound or equal_quantizer_plan+removed_initial_work>before['work_plan']['quantizer']),
                 'equal quantizer work or savings receipt differs')
         expected=dict(expected,
             work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
@@ -1546,12 +1546,14 @@ def main():
     modes.add_argument('--ten-equal-quantizer',action='store_true')
     modes.add_argument('--ten-reuse-snapshot',action='store_true')
     modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
+    modes.add_argument('--ten-first-regret-bound',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    reuse_snapshot=args.ten_reuse_snapshot or args.ten_zero_policy_bootstrap
+    zero_policy_bootstrap=args.ten_zero_policy_bootstrap or args.ten_first_regret_bound
+    reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
     equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
     history_visit=args.ten_history_visit or equal_quantizer
     checked_history=args.ten_checked_history or history_visit
@@ -1560,7 +1562,7 @@ def main():
         print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,
             factored=args.ten_factored or checked_history,checked_history=checked_history,
             history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
-            zero_policy_bootstrap=args.ten_zero_policy_bootstrap),sort_keys=True))
+            zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=args.ten_first_regret_bound),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

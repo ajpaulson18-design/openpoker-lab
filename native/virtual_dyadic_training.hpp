@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -332,6 +332,7 @@ struct Plan {
     bool equal_quantizer=false;
     bool reuse_snapshot=false;
     bool zero_policy_bootstrap=false;
+    bool first_regret_bound=false;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
@@ -502,12 +503,19 @@ class Forecast final {
         }
         return sum;
     }
-    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) const {
-        const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
+    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t input_bits,
+                                std::size_t max_positive) const {
+        const auto sparse=256+32*n;
+        const auto inspect=64+16*n;
+        if (max_positive==1) return inspect+sparse;
+        const auto sum=effective+logceil(max_positive)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
-        return (plan_.equal_quantizer?16+4*n*(words(value_bits)+1):0)+
-            64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
-            8*n*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
+        const auto scans=words(input_bits)+1;
+        const auto equal=plan_.equal_quantizer?16+4*n*scans:0;
+        const auto mixed=4*max_positive*scans+256+16*n*(words(bits)+1)+
+            8*max_positive*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+
+            4*n*n*(words(sum)+1);
+        return inspect+equal+std::max(sparse,mixed);
     }
     void literal(std::size_t id,std::array<std::size_t,2> past,std::array<std::size_t,2> first) {
         meter_.charge(Work::geometry,256);
@@ -536,17 +544,23 @@ class Forecast final {
             require(E+plan_.M<=plan_.shift && EA<=plan_.shift,"pinned fixed-scale divisibility forecast");
             if (plan_.packed_averages)
                 plan_.packed_average_limbs+=slots*words(value_bits-(plan_.shift-EA));
+            auto regret_bits=value_bits;
             if (plan_.packed_regrets) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.packed_regret_limbs+=slots*words(value_bits-shift);
+                regret_bits=value_bits-shift;
+                plan_.packed_regret_limbs+=slots*words(regret_bits);
             }
             if (!plan_.zero_policy_bootstrap) plan_.quantizer_terms[0]+=rows*(320+48*m);
-            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
+            // One clipped update from zero has at least one zero action.
+            // The packed image separately bounds raw widths before cancellation.
+            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,
+                plan_.first_regret_bound?regret_bits:value_bits,plan_.first_regret_bound?m-1:m);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,
-                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,value_bits);
+                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,
+                plan_.first_regret_bound?value_bits-(plan_.shift-EA):value_bits,m);
             for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits);
+                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits,m);
             }
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
@@ -644,7 +658,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap;
+        plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound;
+        plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
         plan_.reuse_snapshot=profile==StrategyProfile::ten_card_reuse_snapshot || plan_.zero_policy_bootstrap;
         plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer || plan_.reuse_snapshot;
         plan_.history_visit=profile==StrategyProfile::ten_card_history_visit || plan_.equal_quantizer;
@@ -1729,7 +1744,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

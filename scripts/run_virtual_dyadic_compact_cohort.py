@@ -128,9 +128,26 @@ def zero_policy_bootstrap_baseline(record):
     return dict(legacy, page_request_limit=record["page_request_limit"])
 
 
+def first_regret_bound_baseline(record):
+    from scripts.project_virtual_dyadic_eleven import forecast
+    prior_terms=[0,171_485_216,241_149_832]
+    expected=forecast(10,644,12,1,first_regret_bound=True)
+    components=record.get("component_work")
+    cohort.require(record.get("first_regret_bound") is True and record.get("quantizer_terms")==expected and
+                   type(components) is dict and components.get("quantizer")==sum(expected),
+                   "first-sweep regret support or packed-width forecast differs")
+    restored=sum(prior_terms)-sum(expected)
+    normalized=dict(record,quantizer_terms=prior_terms,component_work=dict(components,quantizer=sum(prior_terms)),
+                    parent_allowance=record["parent_allowance"]-restored)
+    normalized.pop("first_regret_bound")
+    for field in ("planned_total_work","compact_composed_work","factored_composed_work"):
+        normalized[field]+=restored
+    return zero_policy_bootstrap_baseline(normalized)
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
-    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record,
+    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record and "first_regret_bound" not in record,
                    "unexpected extended training profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
@@ -202,7 +219,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -214,7 +231,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "snapshot reuse requires equal quantizer profile")
     cohort.require(type(zero_policy_bootstrap) is bool and (not zero_policy_bootstrap or reuse_snapshot),
                    "initial policy bootstrap requires the owned row snapshot")
-    suffix=("TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(first_regret_bound) is bool and (not first_regret_bound or zero_policy_bootstrap),
+                   "first regret support bound requires the zero bootstrap profile")
+    suffix=("TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -263,7 +282,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        if zero_policy_bootstrap:
+        if first_regret_bound:
+            legacy=first_regret_bound_baseline(admission)
+        elif zero_policy_bootstrap:
             legacy=zero_policy_bootstrap_baseline(admission)
         elif reuse_snapshot:
             legacy=reuse_snapshot_baseline(admission)
@@ -326,6 +347,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                   *(frame["sha256"] for frame in capture["frames"])]
             if equal_quantizer: args.append("--equal-quantizer")
             if zero_policy_bootstrap: args.append("--zero-policy-bootstrap")
+            if first_regret_bound: args.append("--first-regret-bound")
             command=cohort.source_only_command(bootstrap,
                 source["files"]["scripts/run_virtual_frozen_source_only.py"]["raw_sha256"],
                 "scripts.verify_virtual_dyadic_training",receipt_path,args)
@@ -360,7 +382,8 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
                 checked_history_work=history_work if checked_history else None,
                 equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,
-                reuse_snapshot=reuse_snapshot,zero_policy_bootstrap=zero_policy_bootstrap)
+                reuse_snapshot=reuse_snapshot,zero_policy_bootstrap=zero_policy_bootstrap,
+                first_regret_bound=first_regret_bound)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy,reuse_snapshot=reuse_snapshot) and

@@ -226,6 +226,27 @@ bool equal_complement_controls() {
 }
 } // namespace
 
+bool first_sweep_regret_controls() {
+    grid::Limits limits;
+    limits.profile=grid::Profile::proof10;
+    limits.integer_bits=grid::proof10_integer_bits;
+    limits.division_kernel=grid::DivisionKernel::equal_complement;
+    grid::Quantizer checked(limits), generic(limits);
+    const std::array<Integer,4> values{(Integer(1)<<640)+1,0,(Integer(1)<<639)+7,3};
+    const auto a=checked.first_sweep_regret_policy(values), b=generic.regret_policy(values);
+    if (!std::equal(a.units().begin(),a.units().end(),b.units().begin(),b.units().end()) ||
+        checked.receipt().work!=generic.receipt().work)
+        throw std::runtime_error("bounded first regret policy differs from generic allocation");
+    const std::array<Integer,2> full{1,2};
+    try {
+        (void)checked.first_sweep_regret_policy(full);
+    } catch (const grid::Error& error) {
+        return error.code()==grid::ErrorCode::invalid_row && checked.failed() &&
+            checked.receipt().rows==1;
+    }
+    return false;
+}
+
 int main() {
     try {
         grid::Quantizer owner;
@@ -259,7 +280,7 @@ int main() {
             throw std::runtime_error("policy fixed coverage incomplete");
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
-        return combined_controls() && complement_controls() && equal_complement_controls() && legacy ? 0 : 1;
+        return combined_controls() && complement_controls() && equal_complement_controls() && first_sweep_regret_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

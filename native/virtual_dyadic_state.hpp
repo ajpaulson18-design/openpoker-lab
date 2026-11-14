@@ -85,6 +85,7 @@ struct PagedStrategy {
     factored_dyadic::Execution* factored=nullptr;
     bool reuse_snapshot=false;
     bool zero_policy_bootstrap=false;
+    bool first_regret_bound=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
@@ -503,6 +504,9 @@ class State final {
         if (paged && paged->zero_policy_bootstrap && (!paged->reuse_snapshot ||
             !paged->limits.virtual_initial_zero || paged->lifecycle!=Lifecycle::fixed_two_sweep))
             fail(ErrorCode::invalid_forecast,"initial policy bootstrap requires owned virtual-zero rows");
+        if (paged && paged->first_regret_bound && (!paged->zero_policy_bootstrap ||
+            paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement))
+            fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
         if (paged && paged->factored &&
             (!expanded || !paged->row_batched || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases))
@@ -1446,6 +1450,7 @@ public:
             if (paged_image_) paged_image_->begin_sweep();
             // State owns the virtual-zero image and has never committed a sweep here.
             const bool initial_uniform=paged_ && paged_->zero_policy_bootstrap && !receipt_.completed_sweeps;
+            const bool bound_first_regrets=paged_ && paged_->first_regret_bound && receipt_.completed_sweeps==1;
             std::optional<std::array<Integer,20>> decoded;
             if (packed_regrets() && !initial_uniform) decoded.emplace();
             for (std::size_t row_index=0;row_index<row_count();++row_index) {
@@ -1473,7 +1478,8 @@ public:
                     }
                     values={decoded->data(),row.actions.size()};
                 } else values={regrets_.get()+row.offset,row.actions.size()};
-                const auto policy=quantizer_.regret_policy(values);
+                const auto policy=bound_first_regrets?quantizer_.first_sweep_regret_policy(values):
+                    quantizer_.regret_policy(values);
                 if (policy_spill_) {
                     const auto tag=policy_spill_->append(row.offset-row_index,policy.units());
                     if (row_directory_) seen_[row_index]=tag;

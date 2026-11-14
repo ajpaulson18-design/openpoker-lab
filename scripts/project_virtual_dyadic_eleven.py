@@ -47,7 +47,29 @@ def cost(m,e,bits,divisions):
             +8*m*(divisions*words(scaled)*words(total)+4*words(high)+8)
             +4*m*m*(words(total)+1))
 
-def forecast(n,bits,base_bits,divisions):
+def first_regret_bound_cost(menu,positive_limit,effective,input_bits):
+    base=64+16*menu
+    sparse=256+32*menu
+    if positive_limit==1:
+        return base+sparse
+    total=effective+(positive_limit-1).bit_length()+1
+    scaled=effective+52
+    high=max(53,total,scaled)
+    scans=words(input_bits)+1
+    equal=16+4*menu*scans
+    mixed=(4*positive_limit*scans+256+16*menu*(words(high)+1)
+           +8*positive_limit*(words(scaled)*words(total)+4*words(high)+8)
+           +4*menu*menu*(words(total)+1))
+    return base+equal+max(sparse,mixed)
+
+
+@lru_cache(None)
+def decision_tail(i):
+    node=template.nodes[i]
+    return int(node.phase=='decision')+max((decision_tail(e.child) for e in node.edges),default=0)
+
+
+def forecast(n,bits,base_bits,divisions,*,first_regret_bound=False):
     deck=tuple(sorted((*PROOF9,*range(n-9))))
     r={(street,p):sum(supported_prefixes(deck,p,hand,street,ranges) for hand,_ in ranges[p])
        for street in (0,3,4,5) for p in (0,1)}
@@ -60,9 +82,16 @@ def forecast(n,bits,base_bits,divisions):
             rows=r[node.street,p]
             e=first[1-p]+tail(i)
             ea=52*(past[p]+1)
-            out[0]+=rows*(320+48*m)
-            out[1]+=rows*cost(m,base_bits+2+4+1+e,bits,divisions)
-            out[2]+=rows*cost(m,base_bits+2+ea,bits,divisions)
+            if first_regret_bound:
+                regret_shift=52*(decision_tail(template.root)-past[1-p]-decision_tail(i))
+                average_shift=625-ea
+                require(0<=regret_shift<bits and 0<=average_shift<bits,'row shift outside exact width')
+                out[1]+=rows*first_regret_bound_cost(m,m-1,base_bits+7+e,bits-regret_shift)
+                out[2]+=rows*first_regret_bound_cost(m,m,base_bits+2+ea,bits-average_shift)
+            else:
+                out[0]+=rows*(320+48*m)
+                out[1]+=rows*cost(m,base_bits+7+e,bits,divisions)
+                out[2]+=rows*cost(m,base_bits+2+ea,bits,divisions)
             past=tuple(v+int(j==p) for j,v in enumerate(past))
             first=tuple(v+(uniform_exp(m) if j==p else 0) for j,v in enumerate(first))
         for edge in node.edges:
