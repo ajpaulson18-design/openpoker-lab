@@ -1359,3 +1359,13 @@ one quotient/remainder and one complementary-remainder comparison.
 This removes remainder sorting for those rows while preserving the
 policy grid and legal-action tie order.
 [Two-positive policy contract](native-dyadic-two-sweep.md#exact-two-positive-policy-allocation)
+
+
+## Compiled eleven-card resource boundary
+
+The native planner now exposes a forecast-only eleven-card request.
+It matches independent tree and integer schedules with 5,954,402,351
+composed work units and 165,201,774 wire bytes. State, quantizer and
+whole-request limits remain exceeded under the ten-card comparison
+ceilings. The request reports zero training and rank calls.
+[Native forecast contract](native-dyadic-storage-census.md#compiled-eleven-card-forecast)
