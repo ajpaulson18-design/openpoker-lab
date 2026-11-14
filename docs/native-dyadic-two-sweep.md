@@ -1087,3 +1087,28 @@ units. State and quantizer are still projected above their respective
 caps. The projection uses the same two-sweep lifecycle and contains
 zero native training or hand-ranking calls.
 [Initial policy evidence](../benchmarks/results/native-dyadic-initial-policy-v1/manifest.json)
+
+
+## First-sweep regret support and packed widths
+
+Starting at zero, a row's first CFR+ update clips the difference between
+each action value and their policy-weighted mean. At least one action
+value is at or below that mean. Its clipped regret is zero, so a menu
+of size m has at most m minus one positive regrets for the next policy.
+A two-action menu therefore takes the zero-or-single-positive path.
+The named ten-card profile enforces this support bound at quantization.
+
+The forecast also uses each packed column's certified bit width for
+equality and trailing-zero scans. The width used for ratio arithmetic
+continues to follow the separate bound on normalized masses. The export
+receives a narrower scan reservation from its packed layout and may
+still have positive mass on every action.
+
+The ten-card quantizer reservation falls from 412,635,048 to 317,853,256
+work units. The saved-only replay verifies both sweeps and best responses.
+Against the initial-policy profile, the expanded stream changes only
+the quantizer forecast word, and realized work charges match. The
+eleven-card structural projection reduces the quantizer forecast
+by 303,431,928 units to 1,014,146,272. The eleven-card State and quantizer
+forecasts remain above their caps.
+[Regret support evidence](../benchmarks/results/native-dyadic-first-regret-bound-v1/manifest.json)

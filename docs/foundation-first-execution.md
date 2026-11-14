@@ -1322,3 +1322,13 @@ generic quantizer call per row. The eleven-card forecast retires
 158,431,968 net work units, with 542,211,544 State units and 797,578,200
 quantizer units still above their individual caps.
 [Initial policy contract](native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+
+
+## Bounded first-sweep regret support
+
+The ten-card admission forecast now accounts for at least one clipped
+zero after the initial regret update and uses the packed row widths
+for raw quantizer scans. This retires 94,781,792 quantizer work units
+from the ten-card reservation. The eleven-card quantizer projection
+still exceeds its cap by 494,146,272 work units.
+[Regret support contract](native-dyadic-two-sweep.md#first-sweep-regret-support-and-packed-widths)
